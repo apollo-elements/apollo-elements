@@ -1,0 +1,8 @@
+{
+  "extends": ["blink"],
+  "env": { "browser": true },
+  "parserOptions": { "sourceType": "module" },
+  "rules": {
+    "no-console": 2
+  }
+}
