@@ -5,7 +5,7 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "test": "tape ./**/*.test.js"
+    "test": "tape -r esm./**/*.test.js"
   },
   "repository": {
     "type": "git",
