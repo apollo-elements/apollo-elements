@@ -58,8 +58,7 @@ export class ApolloMutation extends ApolloElement {
     const handleError = error =>
       (this.onMutationError(error, mutationId), error);
 
-    const { mutation } = this;
-    const { optimisticResponse, update, variables } = opts;
+    const { mutation, optimisticResponse, update, variables } = this;
     const mutationId = this.generateMutationId();
 
     this.loading = true;
