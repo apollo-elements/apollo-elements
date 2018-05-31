@@ -84,7 +84,7 @@ export class ApolloQuery extends ApolloElement {
 
   set variables(variables) {
     this.setOptions({ variables });
-    setTimeout(() => this.subscribe());
+    this.subscribe();
   }
 
   constructor() {
@@ -104,7 +104,7 @@ export class ApolloQuery extends ApolloElement {
     // Initialize the query
     const { query, variables } = this;
 
-    this.observableQuery = this.client.watchQuery({
+    this.observableQuery = this.observableQuery || this.client.watchQuery({
       ...query && { query },
       ...variables && { variables },
     });
@@ -118,8 +118,10 @@ export class ApolloQuery extends ApolloElement {
 
   setOptions(options) {
     const { query } = this;
+    const { variables } = options;
     this.observableQuery =
-      this.observableQuery || this.client.watchQuery({ query });
+      this.observableQuery ||
+      this.client.watchQuery({ query, ...variables && { variables } });
     this.observableQuery.setOptions(options);
   }
 
