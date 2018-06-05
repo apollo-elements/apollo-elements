@@ -1,4 +1,6 @@
 # lit-apollo
+[![Published on npm](https://img.shields.io/npm/v/lit-apollo.svg)](https://www.npmjs.com/package/lit-apollo)
+
 🚀 A set of custom element base classes that connect to your Apollo cache.
 
 ## Usage
