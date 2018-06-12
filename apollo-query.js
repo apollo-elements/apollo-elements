@@ -83,8 +83,12 @@ export class ApolloQuery extends ApolloElement {
   }
 
   set variables(variables) {
-    this.setOptions({ variables });
+    this.__variables = variables;
     this.subscribe();
+  }
+
+  get variables() {
+    return this.__variables;
   }
 
   constructor() {
