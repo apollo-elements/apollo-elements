@@ -80,11 +80,14 @@ export class ApolloQuery extends ApolloElement {
     const valid = validGql(query);
     this.__query = valid ? query : null;
     if (!valid) throw new Error('Query must be a gql-parsed document');
+    const variables = this.__variables;
+    this.subscribe({ query, variables });
   }
 
   set variables(variables) {
     this.__variables = variables;
-    this.subscribe();
+    const query = this.__query;
+    this.subscribe({ query, variables });
   }
 
   get variables() {
