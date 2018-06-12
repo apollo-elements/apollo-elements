@@ -48,3 +48,50 @@ graphql script to your element like so:
   </script>
 </connected-element>
 ```
+
+# Cool Tricks
+
+## Use in a Polymer Template
+You can define an `<apollo-query>` element which will subscribe to a query and notify on change:
+```js
+customElements.define("apollo-query", class ApolloQueryEl extends ApolloQuery {
+ fire(type, detail) {
+   this.dispatchEvent(new CustomEvent(type, {
+       bubbles: true,
+       composed: true,
+       detail,
+     })
+   );
+ }
+
+ _propertiesChanged(props, changedProps, oldProps) {
+    super._propertiesChanged(props, changedProps, oldProps);
+    const {data, error, loading, networkStatus} = changedProps;
+    (data) && this.fire("data-changed", { value: data });
+    (error) && this.fire("error-changed", { value: error });
+    (loading) && this.fire("loading-changed", { value: loading });
+    (networkStatus) && this.fire("network-status-changed", { value: networkStatus });
+ }
+});
+```
+
+You could then use your new `<apollo-query>` element inside a polymer template:
+```html
+<apollo-query data="{{data}}" variables="[[variables]]">
+  <script type="application/graphql">
+    query User($id: ID!)
+      user(id: $id) {
+        name
+        picture
+      }
+    }
+  </script>
+</apollo-query>
+
+<paper-icon-item>
+  <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
+  [[data.user.name]]
+</paper-icon-item>
+```
+
+In such a case, make sure that any required variables (e.g. `id` here) are defined in `variables` before adding your query element, or else an error will be thrown.
