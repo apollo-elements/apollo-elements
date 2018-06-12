@@ -106,47 +106,22 @@ export class ApolloQuery extends ApolloElement {
     this.__query = null;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    // Initialize the query
-    const { query, variables } = this;
-
-    this.observableQuery = this.observableQuery || this.client.watchQuery({
-      ...query && { query },
-      ...variables && { variables },
-    });
-
-    this.subscribe();
-  }
-
   _shouldRender({ data }, changed, old) {
     return !!data;
   }
 
   setOptions(options) {
-    const { query } = this;
-    const { variables } = options;
-    this.observableQuery =
-      this.observableQuery ||
-      this.client.watchQuery({ query, ...variables && { variables } });
+    this.observableQuery &&
     this.observableQuery.setOptions(options);
   }
 
-  subscribe() {
+  async subscribe({ query, variables }) {
     const next = a => this.nextData(a);
     const error = a => this.nextError(a);
-    if (!this.query) return;
-
-    this.observableQuery = this.observableQuery || this.client.watchQuery({
-      query: this.query,
-      variables: this.variables,
-    });
-
-    const { query } = this.observableQuery.options;
-    const { variables } = this.observableQuery;
-
-    const canQuery = hasAllVariables({ query, variables });
-    if (canQuery) this.observableQuery.subscribe({ next, error });
+    if (!this.query) throw new Error('Tried to subscribe to null query.');
+    if (!hasAllVariables({ query, variables })) throw new Error('Required variables missing.');
+    this.observableQuery = this.client.watchQuery({ query, variables });
+    return this.observableQuery.subscribe({ next, error });
   }
 
   executeQuery(event) {
