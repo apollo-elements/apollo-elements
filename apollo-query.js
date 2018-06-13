@@ -116,9 +116,9 @@ export class ApolloQuery extends ApolloElement {
   }
 
   async subscribe({ query, variables }) {
+    if (!this.query) return;
     const next = a => this.nextData(a);
     const error = a => this.nextError(a);
-    if (!this.query) throw new Error('Tried to subscribe to null query.');
     if (!hasAllVariables({ query, variables })) throw new Error('Required variables missing.');
     this.observableQuery = this.client.watchQuery({ query, variables });
     return this.observableQuery.subscribe({ next, error });
