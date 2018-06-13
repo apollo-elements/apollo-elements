@@ -119,7 +119,7 @@ export class ApolloQuery extends ApolloElement {
     if (!this.query) return;
     const next = a => this.nextData(a);
     const error = a => this.nextError(a);
-    if (!hasAllVariables({ query, variables })) throw new Error('Required variables missing.');
+    if (!hasAllVariables({ query, variables })) return;
     this.observableQuery = this.client.watchQuery({ query, variables });
     return this.observableQuery.subscribe({ next, error });
   }
