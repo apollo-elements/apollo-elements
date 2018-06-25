@@ -66,7 +66,9 @@ export class ApolloQuery extends ApolloElement {
     return {
       /* Enum of network statuses. See https://bit.ly/2sfKLY0 */
       networkStatus: Object,
+      /* A map going from variable name to variable value, where the variables are used within the GraphQL query. */
       variables: Object,
+      /* A GraphQL document that consists of a single query to be sent down to the server. */
       query: Object,
     };
   }
@@ -100,13 +102,36 @@ export class ApolloQuery extends ApolloElement {
 
   constructor() {
     super();
-    this.observableQuery = null;
-    this.skip = false;
-    this.pollInterval = 500;
-    this.notifyOnNetworkStatusChange = false;
-    this.fetchPolicy = 'cache-first';
+
+    /**
+     * Specifies the ErrorPolicy to be used for this query
+     * @type {"none"|"ignore"|"all"}
+     */
     this.errorPolicy = 'none';
-    this.delay = false;
+
+    /**
+     * Specifies the FetchPolicy to be used for this query.
+     * @type {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"}
+     */
+    this.fetchPolicy = 'cache-first';
+
+    /**
+     * Whether or not to fetch results.
+     * @type {Boolean}
+     */
+    this.fetchResults = undefined;
+
+    /**
+     * The time interval (in milliseconds) on which this query shuold be refetched from the server.
+     * @type {Number}
+     */
+    this.pollInterval = undefined;
+
+    /**
+     * Whether or not updates to the network status should trigger next on the observer of this query.
+     * @type {Boolean}
+     */
+    this.notifyOnNetworkStatusChange = undefined;
   }
 
   _shouldRender({ data, loading, networkStatus }, changed, old) {
@@ -120,17 +145,33 @@ export class ApolloQuery extends ApolloElement {
   }
 
   async subscribe({ query, variables }) {
-    if (!this.query) return;
-    const next = a => this.nextData(a);
-    const error = a => this.nextError(a);
-    if (!hasAllVariables({ query, variables })) return;
-    this.observableQuery = this.client.watchQuery({ query, variables });
+    if (!this.query || !hasAllVariables({ query, variables })) return;
+    const next = this.nextData.bind(this);
+    const error = a => this.nextError.bind(this);
+    const {
+      errorPolicy,
+      fetchPolicy,
+      fetchResults,
+      metadata,
+      notifyOnNetworkStatusChange,
+      pollInterval,
+    } = this;
+    this.observableQuery = this.client.watchQuery({
+      errorPolicy,
+      fetchPolicy,
+      fetchResults,
+      metadata,
+      notifyOnNetworkStatusChange,
+      pollInterval,
+      query,
+      variables,
+    });
     return this.observableQuery.subscribe({ next, error });
   }
 
   executeQuery(event) {
-    const { client, query, variables } = this;
-    client.query({ query, variables })
+    const { errorPolicy, fetchPolicy, fetchResults, metadata, query, variables } = this;
+    return this.client.query({ errorPolicy, fetchPolicy, fetchResults, metadata, query, variables })
       .then(this.nextData)
       .catch(this.nextError);
   }
