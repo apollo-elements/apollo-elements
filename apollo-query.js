@@ -176,6 +176,13 @@ export class ApolloQuery extends ApolloElement {
       .catch(this.nextError);
   }
 
+  fetchMore({ query = this.query, updateQuery, variables }) {
+    return (
+      this.observableQuery &&
+      this.observableQuery.fetchMore({ query, updateQuery, variables })
+    );
+  }
+
   nextData({ data, loading, networkStatus, stale }) {
     this.data = data;
     this.loading = loading;
