@@ -8,17 +8,38 @@ export { html } from '@polymer/lit-element';
 export class ApolloElement extends LitElement {
   static get properties() {
     return {
-      /* Response data */
       data: Object,
-      /* Apollo error object */
       error: Object,
-      /* If the query is in-flight */
       loading: Boolean,
     };
   }
 
   constructor() {
     super();
+
+    /**
+     * Latest data.
+     * @type {Object}
+     */
+    this.data = undefined;
+
+    /**
+     * Latest error.
+     * @type {Object}
+     */
+    this.error = undefined;
+
+    /**
+     * Whether a request is in flight.
+     * @type {Boolean}
+     */
+    this.loading = undefined;
+
+    /**
+     * Handle on the apollo client instance.
+     * You must set this yourself when creating your apollo client.
+     * @type {Object}
+     */
     this.client = window.__APOLLO_CLIENT__ || null;
   }
 }
