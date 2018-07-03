@@ -81,19 +81,19 @@ export class ApolloQuery extends ApolloElement {
   }
 
   set query(query) {
-    super.query = query;
     const valid = validGql(query);
-    this.__query = valid ? query : null;
-    if (!valid) throw new Error('Query must be a gql-parsed document');
     const variables = this.__variables;
+    if (!valid) throw new Error('Query must be a gql-parsed document');
+    this.__query = query;
     this.subscribe({ query, variables });
   }
 
   set variables(variables) {
-    super.variables = variables;
     this.__variables = variables;
     const query = this.__query;
-    this.subscribe({ query, variables });
+    this.observableQuery
+      ? this.setVariables(variables)
+      : this.subscribe({ query, variables });
   }
 
   get variables() {
@@ -140,12 +140,17 @@ export class ApolloQuery extends ApolloElement {
   }
 
   setOptions(options) {
-    this.observableQuery &&
+    return this.observableQuery &&
     this.observableQuery.setOptions(options);
   }
 
-  async subscribe({ query, variables }) {
-    if (!this.query || !hasAllVariables({ query, variables })) return;
+  setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
+    return this.observableQuery &&
+    this.observableQuery.setVariables(variables, tryFetch, fetchResults);
+  }
+
+  async subscribe({ query = this.query, variables = this.variables }) {
+    if (!hasAllVariables({ query, variables })) return;
     const next = this.nextData.bind(this);
     const error = a => this.nextError.bind(this);
     const {
@@ -172,8 +177,8 @@ export class ApolloQuery extends ApolloElement {
   executeQuery(event) {
     const { errorPolicy, fetchPolicy, fetchResults, metadata, query, variables } = this;
     return this.client.query({ errorPolicy, fetchPolicy, fetchResults, metadata, query, variables })
-      .then(this.nextData)
-      .catch(this.nextError);
+      .then(this.nextData.bind(this))
+      .catch(this.nextError.bind(this));
   }
 
   fetchMore({ query = this.query, updateQuery, variables }) {
