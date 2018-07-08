@@ -8,6 +8,7 @@ export { html } from '@polymer/lit-element';
 export class ApolloElement extends LitElement {
   static get properties() {
     return {
+      client: Object,
       data: Object,
       error: Object,
       loading: Boolean,
@@ -43,9 +44,9 @@ export class ApolloElement extends LitElement {
 
     /**
      * Handle on the apollo client instance.
-     * You must set this yourself when creating your apollo client.
+     * Defaults to window.__APOLLO_CLIENT__
      * @type {Object}
      */
-    this.client = window.__APOLLO_CLIENT__ || null;
+    this.client = window.__APOLLO_CLIENT__;
   }
 }
