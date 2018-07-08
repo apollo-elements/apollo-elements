@@ -18,6 +18,12 @@ export class ApolloElement extends LitElement {
     super();
 
     /**
+     * Context to be passed to link execution chain.
+     * @type {Object}
+     */
+    this.context = undefined;
+
+    /**
      * Latest data.
      * @type {Object}
      */

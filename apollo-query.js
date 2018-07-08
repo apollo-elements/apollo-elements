@@ -154,6 +154,7 @@ export class ApolloQuery extends ApolloElement {
     const next = this.nextData.bind(this);
     const error = a => this.nextError.bind(this);
     const {
+      context,
       errorPolicy,
       fetchPolicy,
       fetchResults,
@@ -162,6 +163,7 @@ export class ApolloQuery extends ApolloElement {
       pollInterval,
     } = this;
     this.observableQuery = this.client.watchQuery({
+      context,
       errorPolicy,
       fetchPolicy,
       fetchResults,
@@ -175,9 +177,25 @@ export class ApolloQuery extends ApolloElement {
   }
 
   executeQuery(event) {
-    const { errorPolicy, fetchPolicy, fetchResults, metadata, query, variables } = this;
-    return this.client.query({ errorPolicy, fetchPolicy, fetchResults, metadata, query, variables })
-      .then(this.nextData.bind(this))
+    const {
+      context,
+      errorPolicy,
+      fetchPolicy,
+      fetchResults,
+      metadata,
+      query,
+      variables,
+    } = this;
+
+    return this.client.query({
+      context,
+      errorPolicy,
+      fetchPolicy,
+      fetchResults,
+      metadata,
+      query,
+      variables,
+    }).then(this.nextData.bind(this))
       .catch(this.nextError.bind(this));
   }
 
