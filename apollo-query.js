@@ -64,12 +64,8 @@ import { validGql } from './graphql-helpers';
 export class ApolloQuery extends ApolloElement {
   static get properties() {
     return {
-      /* Enum of network statuses. See https://bit.ly/2sfKLY0 */
+      /** Enum of network statuses. See https://bit.ly/2sfKLY0 */
       networkStatus: Object,
-      /* A map going from variable name to variable value, where the variables are used within the GraphQL query. */
-      variables: Object,
-      /* A GraphQL document that consists of a single query to be sent down to the server. */
-      query: Object,
     };
   }
 
@@ -81,10 +77,11 @@ export class ApolloQuery extends ApolloElement {
   }
 
   set query(query) {
+    this.__query = query;
+    if (query == null) return;
     const valid = validGql(query);
     const variables = this.__variables;
     if (!valid) throw new Error('Query must be a gql-parsed document');
-    this.__query = query;
     this.subscribe({ query, variables });
   }
 
@@ -132,6 +129,19 @@ export class ApolloQuery extends ApolloElement {
      * @type {Boolean}
      */
     this.notifyOnNetworkStatusChange = undefined;
+
+    /**
+     * An object map from variable name to variable value,
+     * where the variables are used within the GraphQL query.
+     * @type {Object}
+     */
+    this.variables = undefined;
+
+    /**
+     * A GraphQL document that consists of a single query to be sent down to the server.
+     * @type {GraphQLDocument}
+     */
+    this.query = undefined;
   }
 
   _shouldRender({ data, loading, networkStatus }, changed, old) {
