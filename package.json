@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/bennypowers/lit-apollo#readme",
   "dependencies": {
-    "@polymer/lit-element": "^0.5.1",
+    "@polymer/lit-element": "^0.5.2",
     "crocks": "^0.9.4",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2"
