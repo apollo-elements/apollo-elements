@@ -1,11 +1,11 @@
-import gql from 'graphql-tag';
-import prop from 'crocks/Maybe/prop';
-
-import { hasAllVariables } from './graphql-helpers';
-import { ApolloElement } from './apollo-element.js';
 export { html } from './apollo-element.js';
+import { ApolloElement } from './apollo-element.js';
 
-import { validGql } from './graphql-helpers';
+import gqlFromInnerText from './lib/gql-from-inner-text.js';
+import hasAllVariables from './lib/has-all-variables.js';
+import validGql from './lib/valid-gql.js';
+
+const scriptSelector = 'script[type="application/graphql"]';
 
 /**
  * # ApolloQuery
@@ -79,10 +79,7 @@ export class ApolloQuery extends ApolloElement {
    * @type {DocumentNode} The gql-parsed query.
    */
   get query() {
-    return this.__query ||
-    prop('innerText', this.querySelector('script[type="application/graphql"]'))
-      .map(gql)
-      .option(null);
+    return this.__query || gqlFromInnerText(this.querySelector(scriptSelector));
   }
 
   set query(query) {
