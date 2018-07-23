@@ -27,7 +27,7 @@ const varName =
   propPathOr(undefined, ['variable', 'name', 'value']);
 
 // hasAllVariables :: (Query, Object) -> Bool
-export const hasAllVariables = params =>
+const hasAllVariables = params =>
   prop('definitions', propOr(null, 'query', params))
     .map(map(prop('variableDefinitions'))) // Maybe [ Maybe {} ]
     .chain(head) // Maybe Maybe [ {} ]
@@ -39,5 +39,4 @@ export const hasAllVariables = params =>
     .map(valueOf) // Maybe Bool
     .option(false); // Bool
 
-export const validGql = doc =>
-  !!(doc && typeof doc === 'object');
+export default hasAllVariables;

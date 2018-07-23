@@ -1,4 +1,4 @@
-import { hasAllVariables } from './graphql-helpers.js';
+import hasAllVariables from './has-all-variables';
 import gql from 'graphql-tag';
 import test from 'tape';
 
