@@ -204,7 +204,7 @@ export class ApolloQuery extends ApolloElement {
   async subscribe({ query = this.query, variables = this.variables }) {
     if (!hasAllVariables({ query, variables })) return;
     const next = this.nextData.bind(this);
-    const error = a => this.nextError.bind(this);
+    const error = this.nextError.bind(this);
     const {
       context,
       errorPolicy,
