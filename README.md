@@ -1,17 +1,23 @@
 # lit-apollo
 [![Published on npm](https://img.shields.io/npm/v/lit-apollo.svg)](https://www.npmjs.com/package/lit-apollo)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/lit-apollo)
 
-🚀 A set of custom element base classes that connect to your Apollo cache.
+🚀 A set of custom element base classes that connect to your Apollo cache 🌜
 
-## Usage
+## 👩‍🚀 Usage
 
 ```html
 <script type="module">
-  import gql from 'graphql-tag';
-  import ApolloQuery from '@lit-apollo/lit-apollo/apollo-query';
+  import { cache } from './cache';
+  import { link } from './link';
+  import { ApolloClient } from 'apollo-client';
+  import { ApolloQuery, html } from 'lit-apollo/apollo-query';
 
-  class MyConnectedElement extends ApolloQuery {
-    _render({ data: { helloWorld }, loading, error, networkStatus }) {
+  // Create the Apollo Client
+  const client = new ApolloClient({ cache, link });
+
+  class ConnectedElement extends ApolloQuery {
+    _render({ data, loading, error, networkStatus }) {
       return (
           loading ? html`
             <what-spin></what-spin>`
@@ -19,22 +25,82 @@
             <h1>😢 Such sad, very error!</h1>
             <div>${error.message}</div>`
         : html`
-            <div>${helloWorld.greeting}, ${helloWorld.name}</div>`
+            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>`
       );
      }
 
      constructor() {
        super();
-       this.query = gql`query { helloWorld { name, greeting } }`;
+       this.client = client;
+       this.query = gql`query {
+         helloWorld {
+           name
+           greeting
+         }
+       }`;
      }
   };
-  customElements.define('connected-element', MyConnectedElement)
+
+  customElements.define('connected-element', ConnectedElement)
 </script>
 ```
 
-### Inline Query Scripts
+# 😎 Cool Tricks
+
+## ⌚️ Asynchronous Client
+In some cases, you may want to wait for your ApolloClient to do some initial asynchronous setup before rendering your components' DOM. In that case, you can import a promise of a client and wait for it in `connectedCallback`:
+
+```html
+<async-element></async-element>
+
+<script type="module">
+  import { cache } from './cache';
+  import { link } from './link';
+  import { ApolloClient } from 'apollo-client';
+  import { ApolloQuery, html } from 'lit-apollo/apollo-query';
+  import formatDistance from 'date-fns/esm/formatDistance';
+
+  const clientPromise = new Promise(async function initApollo(resolve) {
+    // Wait for the cache to be restored
+    await persistCache({ cache, storage: localStorage });
+    // Create the Apollo Client
+    resolve(new ApolloClient({ cache, link }));
+  });
+
+  class AsyncElement extends ApolloQuery {
+    _render({ data: { userSession: { name, lastActive }} }) {
+      return html`
+        <h1>👋 ${name}!</h1>
+        <span>Your last activity was </span>
+        <time>${formatDistance(lastActive, Date.now(), { addSuffix: true })}</time>`
+     }
+
+     async connectedCallback() {
+       super.connectedCallback();
+       // first instantiate the client locally
+       this.client = await clientPromise;
+       // afterwards, set the query to trigger fetch-then-render
+       this.query = gql`query {
+         userSession {
+           name
+           lastActive
+         }
+       }`;
+     }
+
+     _shouldRender({ data }) {
+       // only render when there is data.
+       return !!data;
+     }
+  };
+
+  customElements.define('async-element', AsyncElement)
+</script>
+```
+
+## 📜 Inline Query Scripts
 You can also provide a graphql query string in your markup by appending a
-graphql script to your element like so:
+graphql script element to your connected element, like so:
 
 ```html
 <connected-element>
@@ -49,12 +115,11 @@ graphql script to your element like so:
 </connected-element>
 ```
 
-# Cool Tricks
-
-## Use in a Polymer Template
+## 🔥 Use lit-apollo in a Polymer Template
 You can define an `<apollo-query>` element which will subscribe to a query and notify on change:
+
 ```js
-customElements.define("apollo-query", class ApolloQueryEl extends ApolloQuery {
+customElements.define('apollo-query', class ApolloQueryEl extends ApolloQuery {
  fire(type, detail) {
    this.dispatchEvent(new CustomEvent(type, {
        bubbles: true,

@@ -55,42 +55,25 @@ export class ApolloMutation extends ApolloElement {
 
   constructor() {
     super();
-    /**
-     * Whether to ignore the results of the mutation.
-     * @type {Boolean}
-     */
+    /** @type {Boolean} Whether to ignore the results of the mutation. */
     this.ignoreResults = false;
-    /**
-     * The ID number of the most recent mutation since the element was instantiated.
-     * @type {Number}
-     */
+    /** @type {Number} The ID number of the most recent mutation since the element was instantiated. */
     this.mostRecentMutationId = 0;
     /**
-     * Callback for when a mutation is completed.
-     * @type {Function}
+     * @type {Function} Callback for when a mutation is completed.
      * @return {any}
      */
     this.onCompleted = () => undefined;
     /**
-     * Callback for when an error occurs in mutation.
-     * @type {Function}
+     * @type {Function} Callback for when an error occurs in mutation.
      * @return {any}
      */
     this.onError = () => undefined;
-    /**
-     * An object that represents the result of this mutation that will be optimistically stored before the server has actually returned a result. This is most often used for optimistic UI, where we want to be able to see the result of a mutation immediately, and update the UI later if any errors appear.
-     * https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.mutate
-     * @type {Object}
-     */
+    /** @type {Object} An object that represents the result of this mutation that will be optimistically stored before the server has actually returned a result. This is most often used for optimistic UI, where we want to be able to see the result of a mutation immediately, and update the UI later if any errors appear. */
     this.optimisticResponse = undefined;
-    /**
-     * @type {UpdateFunction}
-     */
+    /** @type {UpdateFunction} */
     this.update = undefined;
-    /**
-     * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
-     * @type {Object}
-     */
+    /** @type {Object} An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value. */
     this.variables = undefined;
     this.__explicitlySetMutation = undefined;
   }
@@ -98,6 +81,7 @@ export class ApolloMutation extends ApolloElement {
   /**
    * Increments and returns the most recent mutation id.
    * @return {Number}
+   * @protected
    */
   generateMutationId() {
     this.mostRecentMutationId += 1;
@@ -108,6 +92,7 @@ export class ApolloMutation extends ApolloElement {
    * Returns true when an ID matches the most recent mutation id.
    * @param  {Number}  mutationId
    * @return {Boolean}
+   * @protected
    */
   isMostRecentMutation(mutationId) {
     return this.mostRecentMutationId === mutationId;
