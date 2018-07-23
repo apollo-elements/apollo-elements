@@ -245,7 +245,7 @@ export class ApolloQuery extends ApolloElement {
     pollInterval = this.pollInterval,
     query = this.query,
     variables = this.variables,
-  }) {
+  } = {}) {
     return this.client.watchQuery({
       context,
       errorPolicy,
@@ -256,7 +256,7 @@ export class ApolloQuery extends ApolloElement {
       pollInterval,
       query,
       variables,
-    } = {});
+    });
   }
 
   /**
