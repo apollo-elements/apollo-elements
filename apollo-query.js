@@ -242,8 +242,7 @@ export class ApolloQuery extends ApolloElement {
       query,
       variables,
     } = this;
-
-    return this.client.query({
+    const queryPromise = this.client.query({
       context,
       errorPolicy,
       fetchPolicy,
@@ -251,8 +250,13 @@ export class ApolloQuery extends ApolloElement {
       metadata,
       query,
       variables,
-    }).then(this.nextData.bind(this))
+    });
+
+    queryPromise
+      .then(this.nextData.bind(this))
       .catch(this.nextError.bind(this));
+
+    return queryPromise;
   }
 
   /**
