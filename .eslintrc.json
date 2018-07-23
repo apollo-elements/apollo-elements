@@ -1,8 +1,14 @@
 {
   "extends": ["blink"],
-  "env": { "browser": true },
-  "parserOptions": { "sourceType": "module" },
+  "env": { "browser": true, "es6": true },
+  "parserOptions": { "sourceType": "module", "ecmaVersion": 2018 },
   "rules": {
     "no-console": 2
-  }
+  },
+  "overrides": [{
+    "files": ["**/**/*.test.js"],
+      "rules": {
+        "max-len": [2, 80, {"ignoreStrings": true, "ignoreComments": true}]
+      }
+    }]
 }
