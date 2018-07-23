@@ -54,11 +54,12 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
 <async-element></async-element>
 
 <script type="module">
-  import { cache } from './cache';
-  import { link } from './link';
+  import formatDistance from 'date-fns/esm/formatDistance';
   import { ApolloClient } from 'apollo-client';
   import { ApolloQuery, html } from 'lit-apollo/apollo-query';
-  import formatDistance from 'date-fns/esm/formatDistance';
+  import { persistCache } from 'apollo-cache-persist'
+  import { cache } from './cache';
+  import { link } from './link';
 
   const clientPromise = new Promise(async function initApollo(resolve) {
     // Wait for the cache to be restored
