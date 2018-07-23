@@ -7,6 +7,9 @@ import validGql from './lib/valid-gql.js';
 
 const scriptSelector = 'script[type="application/graphql"]';
 
+/** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
+/** @typedef {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"} FetchPolicy */
+
 /**
  * # ApolloQuery
  *
@@ -66,18 +69,12 @@ const scriptSelector = 'script[type="application/graphql"]';
 export class ApolloQuery extends ApolloElement {
   static get properties() {
     return {
-      /**
-       * Enum of network statuses.
-       * See https://bit.ly/2sfKLY0
-       * @type {Number}
-       */
+      /** @type {Number} Enum of network statuses. See https://bit.ly/2sfKLY0 */
       networkStatus: Object,
     };
   }
 
-  /**
-   * @type {DocumentNode} The gql-parsed query.
-   */
+  /** @type {DocumentNode} A GraphQL document that consists of a single query to be sent down to the server. */
   get query() {
     return this.__query || gqlFromInnerText(this.querySelector(scriptSelector));
   }
@@ -91,9 +88,7 @@ export class ApolloQuery extends ApolloElement {
     this.subscribe({ query, variables });
   }
 
-  /**
-   * @type {Object} Variables object for the query.
-   */
+  /** @type {Object} An object map from variable name to variable value, where the variables are used within the GraphQL query. */
   get variables() {
     return this.__variables;
   }
@@ -108,42 +103,19 @@ export class ApolloQuery extends ApolloElement {
 
   constructor() {
     super();
-    /**
-     * Specifies the ErrorPolicy to be used for this query
-     * @type {"none"|"ignore"|"all"}
-     */
+    /** @type {ErrorPolicy} Specifies the ErrorPolicy to be used for this query. */
     this.errorPolicy = 'none';
-    /**
-     * Specifies the FetchPolicy to be used for this query.
-     * @type {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"}
-     */
+    /** @type {FetchPolicy} Specifies the FetchPolicy to be used for this query. */
     this.fetchPolicy = 'cache-first';
-    /**
-     * Whether or not to fetch results.
-     * @type {Boolean}
-     */
+    /** @type {Boolean} Whether or not to fetch results. */
     this.fetchResults = undefined;
-    /**
-     * The time interval (in milliseconds) on which this query shuold be refetched from the server.
-     * @type {Number}
-     */
+    /** @type {Number} The time interval (in milliseconds) on which this query should be refetched from the server. */
     this.pollInterval = undefined;
-    /**
-     * Whether or not updates to the network status should trigger next on the observer of this query.
-     * @type {Boolean}
-     */
+    /** @type {Boolean} Whether or not updates to the network status should trigger next on the observer of this query. */
     this.notifyOnNetworkStatusChange = undefined;
-    /**
-     * An object map from variable name to variable value,
-     * where the variables are used within the GraphQL query.
-     * @type {Object}
-     */
     this.variables = undefined;
-    /**
-     * A GraphQL document that consists of a single query to be sent down to the server.
-     * @type {DocumentNode}
-     */
     this.query = undefined;
+    this.tryFetch = undefined;
   }
 
   /**
@@ -166,24 +138,18 @@ export class ApolloQuery extends ApolloElement {
   }
 
   /**
-   * Exposes the `ObservableQuery#setOptions` method.
-   * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions
-   * @param {ModifiableWatchQueryOptions} options https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions
+   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
+   * @param {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
    * @return {Promise<ApolloQueryResult>}
    */
   setOptions(options) {
-    return this.observableQuery &&
-    this.observableQuery.setOptions(options);
+    return this.observableQuery && this.observableQuery.setOptions(options);
   }
 
   /**
-   * Exposes the `ObservableQuery#setVariables` method.
-   * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables
-   * @param {Object} variables                         The new set of variables. If there are missing variables,
-   *                                                   the previous values of those variables will be used.
-   * @param {Boolean} [tryFetch=this.tryFetch]         Try and fetch new results even if the variables haven't
-   *                                                    changed (we may still just hit the store,
-   *                                                    but if there's nothing in there will refetch).
+   * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
+   * @param {Object}  variables                        The new set of variables. If there are missing variables, the previous values of those variables will be used.
+   * @param {Boolean} [tryFetch=this.tryFetch]         Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
    * @param {Boolean} [fetchResults=this.fetchResults] Option to ignore fetching results when updating variables.
    * @return {Promise<ApolloQueryResult>}
    */
@@ -193,36 +159,18 @@ export class ApolloQuery extends ApolloElement {
   }
 
   /**
-   * Subscribes the element to a query.
+   * Resets the observableQuery and subscribes.
    * @param  {DocumentNode}               [query=this.query]
    * @param  {Object}                     [variables=this.variables]
    * @return {ZenObservable.Subscription}
    */
   async subscribe({ query = this.query, variables = this.variables }) {
     if (!hasAllVariables({ query, variables })) return;
-    const next = this.nextData.bind(this);
-    const error = this.nextError.bind(this);
-    const {
-      context,
-      errorPolicy,
-      fetchPolicy,
-      fetchResults,
-      metadata,
-      notifyOnNetworkStatusChange,
-      pollInterval,
-    } = this;
-    this.observableQuery = this.client.watchQuery({
-      context,
-      errorPolicy,
-      fetchPolicy,
-      fetchResults,
-      metadata,
-      notifyOnNetworkStatusChange,
-      pollInterval,
-      query,
-      variables,
+    this.observableQuery = this.watchQuery({ query, variables });
+    return this.observableQuery.subscribe({
+      next: this.nextData.bind(this),
+      error: this.nextError.bind(this),
     });
-    return this.observableQuery.subscribe({ next, error });
   }
 
   /**
@@ -270,6 +218,45 @@ export class ApolloQuery extends ApolloElement {
       this.observableQuery &&
       this.observableQuery.fetchMore({ query, updateQuery, variables })
     );
+  }
+
+  /**
+   * Creates an instance of ObservableQuery with the options provided by the element.
+   * @param  {Object}       options
+   * @param  {any}          [options.context=this.context]                                          Context to be passed to link execution chain
+   * @param  {ErrorPolicy}  [options.errorPolicy=this.errorPolicy]                                  Specifies the ErrorPolicy to be used for this query
+   * @param  {FetchPolicy}  [options.fetchPolicy=this.fetchPolicy]                                  Specifies the FetchPolicy to be used for this query
+   * @param  {Boolean}      [options.fetchResults=this.fetchResults]                                Whether or not to fetch results
+   * @param  {any}          [options.metadata=this.metadata]                                        Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.
+   * @param  {Boolean}      [options.notifyOnNetworkStatusChange=this.notifyOnNetworkStatusChange]  Whether or not updates to the network status should trigger next on the observer of this query
+   * @param  {Number}       [options.pollInterval=this.pollInterval]                                The time interval (in milliseconds) on which this query should be refetched from the server.
+   * @param  {DocumentNode} [options.query=this.query]                                              A GraphQL document that consists of a single query to be sent down to the server.
+   * @param  {Object}       [options.variables=this.variables]                                      A map going from variable name to variable value, where the variables are used within the GraphQL query.
+   * @return {ObservableQuery}
+   * @protected
+   */
+  watchQuery({
+    context = this.context,
+    errorPolicy = this.errorPolicy,
+    fetchPolicy = this.fetchPolicy,
+    fetchResults = this.fetchResults,
+    metadata = this.metadata,
+    notifyOnNetworkStatusChange = this.notifyOnNetworkStatusChange,
+    pollInterval = this.pollInterval,
+    query = this.query,
+    variables = this.variables,
+  }) {
+    return this.client.watchQuery({
+      context,
+      errorPolicy,
+      fetchPolicy,
+      fetchResults,
+      metadata,
+      notifyOnNetworkStatusChange,
+      pollInterval,
+      query,
+      variables,
+    } = {});
   }
 
   /**

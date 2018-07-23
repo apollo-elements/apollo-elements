@@ -1,5 +1,5 @@
-import { LitElement } from '@polymer/lit-element';
 export { html } from '@polymer/lit-element';
+import { LitElement } from '@polymer/lit-element';
 
 /**
  * @extends LitElement
@@ -39,7 +39,6 @@ export class ApolloElement extends LitElement {
     this.loading = undefined;
     /**
      * Handle on the apollo client instance.
-     * Defaults to window.__APOLLO_CLIENT__
      * @type {ApolloClient}
      */
     this.client = window.__APOLLO_CLIENT__;

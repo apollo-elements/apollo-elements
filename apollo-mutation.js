@@ -187,6 +187,7 @@ export class ApolloMutation extends ApolloElement {
    * @param  {Error} error
    * @param  {Number} mutationId [description]
    * @return {any}
+   * @protected
    */
   onMutationError(error, mutationId) {
     if (this.isMostRecentMutation(mutationId)) {
