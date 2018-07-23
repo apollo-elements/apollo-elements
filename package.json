@@ -1,6 +1,6 @@
 {
   "name": "lit-apollo",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A set of base classes to help create custom elements connected to an ApolloClient cache",
   "main": "index.js",
   "typings": "index.d.ts",
