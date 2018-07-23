@@ -1,4 +1,6 @@
 import { DocumentNode } from 'graphql';
+import { LitElement } from '@polymer/lit-element';
+
 declare global {
   interface Window { __APOLLO_CLIENT__?: any; }
 }
@@ -9,7 +11,7 @@ declare global {
 
 declare function hasAllVariables(params: any): (document: DocumentNode) => Boolean
 
-declare class ApolloElement extends HTMLElement {
+declare class ApolloElement extends LitElement {
   constructor();
   client: any;
 }
