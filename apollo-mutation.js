@@ -99,12 +99,31 @@ export class ApolloMutation extends ApolloElement {
     this.__explicitlySetMutation = undefined;
   }
 
-  mutate(opts) {
-    const handleMutation = response =>
-      (this.onCompletedMutation(response, mutationId), response);
-    const handleError = error =>
-      (this.onMutationError(error, mutationId), error);
-
+  /**
+   * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
+   * @param  {Object}           opts
+   * @param  {Object}           opts.context
+   * @param  {ErrorPolicy}      opts.errorPolicy
+   * @param  {FetchPolicy}      opts.fetchPolicy
+   * @param  {DocumentNode}     opts.mutation
+   * @param  {Object|Function}  opts.optimisticResponse
+   * @param  {Array<String>}    opts.refetchQueries
+   * @param  {UpdateFunction}   opts.update
+   * @param  {MutationQueriesReducersMap}    opts.updateQueries
+   * @param  {Object}           opts.variables
+   * @return {Promise<FetchResult>}
+   */
+  async mutate({
+    context = this.context,
+    errorPolicy = this.errorPolicy,
+    fetchPolicy = this.fetchPolicy,
+    mutation = this.mutation,
+    optimisticResponse = this.optimisticResponse,
+    refetchQueries = this.refetchQueries,
+    update = this.update,
+    updateQueries = this.updateQueries,
+    variables = this.variables,
+  }) {
     const mutationId = this.generateMutationId();
 
     this.loading = true;
@@ -112,24 +131,25 @@ export class ApolloMutation extends ApolloElement {
     this.data = undefined;
     this.called = true;
 
-    const {
-      context,
-      mutation,
-      optimisticResponse,
-      update,
-      variables,
-    } = this;
+    try {
+      const response = await this.client.mutate({
+        context,
+        errorPolicy,
+        fetchPolicy,
+        mutation,
+        optimisticResponse,
+        refetchQueries,
+        update,
+        updateQueries,
+        variables,
+      });
 
-    return this.client.mutate({
-      context,
-      mutation,
-      optimisticResponse,
-      update,
-      variables,
-      ...opts,
-    })
-      .then(handleMutation)
-      .catch(handleError);
+      this.onCompletedMutation(response, mutationId);
+      return response;
+    } catch (error) {
+      this.onMutationError(error, mutationId);
+      return error;
+    }
   }
 
   /**
