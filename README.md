@@ -4,6 +4,20 @@
 
 🚀 A set of custom element base classes that connect to your Apollo cache 🌜
 
+## 📓 Contents
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Cool Tricks](#-cool-tricks)
+  - [Asynchronous Client](#-asynchronous-client)
+  - [Inline Query Scripts](#-inline-query-scripts)
+  - [Use lit-apollo in a Polymer Template](#-use-lit-apollo-in-a-polymer-template)
+
+## 🔧 Installation
+`lit-apollo` is distributed through `npm`. To install a copy of the latest version of `lit-apollo` in your project's `node_modules` directory, first [Install npm on your system](https://www.npmjs.com/get-npm), then run the following command in your project's root directory
+```bash
+npm install --save lit-apollo
+```
+
 ## 👩‍🚀 Usage
 
 ```html
