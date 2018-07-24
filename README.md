@@ -4,6 +4,16 @@
 
 🚀 A set of custom element base classes that connect to your Apollo cache 🌜
 
+## ⚙️ Installation
+
+```bash
+npm install --save lit-apollo
+```
+Or with Yarn
+```bash
+yarn add lit-apollo
+```
+
 ## 👩‍🚀 Usage
 
 ```html
