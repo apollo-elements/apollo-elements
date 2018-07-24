@@ -1,5 +1,5 @@
 export { html } from './apollo-element.js';
-import { ApolloElement, html } from './apollo-element.js';
+import { ApolloElement } from './apollo-element.js';
 
 import gqlFromInnerText from './lib/gql-from-inner-text.js';
 import validGql from './lib/valid-gql.js';
@@ -19,7 +19,45 @@ const scriptSelector = 'script[type="application/graphql"]';
 /**
  *  ApolloMutation
  *
- * 👩‍🚀 A custom element base class that issues mutations via your Apollo cache.
+ * 👩‍🚀 A custom element base class to issue mutations via your Apollo cache.
+ *
+ * ## Usage
+ *
+ * ```html
+ * <script type="module">
+ *   import { client } from './apollo-client';
+ *   import { ApolloMutation, html } from 'lit-apollo/apollo-mutation';
+ *
+ *   class MutationElement extends ApolloMutation {
+ *     _render({ data }) {
+ *       return html`<input on-input="${this.onInput.bind(this)}"
+ *     }
+ *
+ *     constructor() {
+ *       super();
+ *       this.client = client;
+ *       this.mutation = gql`mutation InputMutation {
+ *         updateInput {
+ *           input
+ *         }
+ *       }`;
+ *     }
+ *
+ *     onInput(event) {
+ *       const { mutation } = this;
+ *       const variables = { input: event.target.value };
+ *       return this.mutate({
+ *         mutation,
+ *         variables,
+ *         // update,
+ *         // optimisticResponse,
+ *       });
+ *     }
+ *   };
+ *
+ *   customElements.define('mutation-element', MutationElement)
+ * </script>
+ * ```
  *
  * @customElement
  * @type {Class}
@@ -28,10 +66,6 @@ const scriptSelector = 'script[type="application/graphql"]';
  * @extends HTMLElement
  */
 export class ApolloMutation extends ApolloElement {
-  _render() {
-    return html`<slot></slot>`;
-  }
-
   static get properties() {
     return {
       /* If the mutation has been called */
@@ -182,5 +216,3 @@ export class ApolloMutation extends ApolloElement {
     return this.onError(error);
   }
 }
-
-customElements.define('apollo-mutation', ApolloMutation);

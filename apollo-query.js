@@ -19,46 +19,41 @@ const scriptSelector = 'script[type="application/graphql"]';
  *
  * ```html
  * <script type="module">
- *   import gql from 'graphql-tag';
- *   import ApolloQuery from 'lit-apollo/apollo-query';
+ *   import { cache } from './cache';
+ *   import { link } from './link';
+ *   import { ApolloClient } from 'apollo-client';
+ *   import { ApolloQuery, html } from 'lit-apollo/apollo-query';
  *
- * class ConnectedElement extends ApolloQuery {
- *   _render({ data: { helloWorld }, loading, error, networkStatus }) {
- *    return (
- *        loading ? html`
- *          <what-spin></what-spin>`
- *      : error ? html`
- *          <h1>😢 Such sad, very error!</h1>
- *          <div>${error.message}</div>`
- *      : html`
- *          <div>${helloWorld.greeting}, ${helloWorld.name}</div>`
- *    );
- *  }
+ *   // Create the Apollo Client
+ *   const client = new ApolloClient({ cache, link });
  *
- *  constructor() {
- *     super();
- *     this.query = gql`query { helloWorld { name, greeting } }`;
- *   }
- * }
- * customElements.define('connected-element', ConnectedElement);
- * </script>
- * ```
- *
- * ### Inline Query Scripts
- * You can also provide a graphql query string in your markup by appending a
- * graphql script to your element like so:
- *
- * ```html
- * <connected-element>
- *   <script type="application/graphql">
- *     query {
- *       helloWorld {
- *         name
- *         greeting
- *       }
+ *   class ConnectedElement extends ApolloQuery {
+ *     _render({ data, loading, error, networkStatus }) {
+ *      return (
+ *          loading ? html`
+ *            <what-spin></what-spin>`
+ *        : error ? html`
+ *            <h1>😢 Such sad, very error!</h1>
+ *            <div>${error.message}</div>`
+ *        : html`
+ *            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>`
+ *      );
  *     }
- *   </script>
- * </connected-element>
+ *
+ *     constructor() {
+ *       super();
+ *       this.client = client;
+ *       this.query = gql`query {
+ *         helloWorld {
+ *           name
+ *           greeting
+ *         }
+ *       }`;
+ *     }
+ *   };
+ *
+ *   customElements.define('connected-element', ConnectedElement)
+ * </script>
  * ```
  *
  * @type {Class}
