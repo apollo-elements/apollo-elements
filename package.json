@@ -1,15 +1,15 @@
 {
   "name": "lit-apollo",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "A set of base classes to help create custom elements connected to an ApolloClient cache",
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
     "test": "tape -r esm./**/*.test.js"
   },
-	"logo": {
-		"file": "./logo.png"
-	},
+  "logo": {
+    "file": "./logo.png"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bennypowers/lit-apollo.git"
