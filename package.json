@@ -7,6 +7,9 @@
   "scripts": {
     "test": "tape -r esm./**/*.test.js"
   },
+	"logo": {
+		"file": "./logo.png"
+	},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bennypowers/lit-apollo.git"
