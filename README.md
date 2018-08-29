@@ -1,6 +1,7 @@
 # lit-apollo
 [![Published on npm](https://img.shields.io/npm/v/lit-apollo.svg)](https://www.npmjs.com/package/lit-apollo)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/lit-apollo)
+[![Build Status](https://travis-ci.org/bennypowers/lit-apollo.svg?branch=master)](https://travis-ci.org/bennypowers/lit-apollo)
 
 🚀 A set of custom element base classes that connect to your Apollo cache 🌜
 
