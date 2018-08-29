@@ -28,7 +28,7 @@ const scriptSelector = 'script[type="application/graphql"]';
  *   const client = new ApolloClient({ cache, link });
  *
  *   class ConnectedElement extends ApolloQuery {
- *     _render({ data, loading, error, networkStatus }) {
+ *     render({ data, loading, error, networkStatus }) {
  *      return (
  *          loading ? html`
  *            <what-spin></what-spin>`
@@ -160,7 +160,7 @@ export class ApolloQuery extends ApolloElement {
    * @return {Boolean}                     Whether the component should render.
    * @protected
    */
-  _shouldRender({ data, error, loading, networkStatus }, changed, old) {
+  shouldUpdate({ data, error, loading, networkStatus }, changed, old) {
     return !!data || !!error || loading != null;
   }
 
@@ -170,7 +170,10 @@ export class ApolloQuery extends ApolloElement {
    * @return {Promise<ApolloQueryResult>}
    */
   setOptions(options) {
-    return this.observableQuery && this.observableQuery.setOptions(options);
+    return (
+      this.observableQuery &&
+      this.observableQuery.setOptions(options)
+    );
   }
 
   /**
@@ -181,8 +184,10 @@ export class ApolloQuery extends ApolloElement {
    * @return {Promise<ApolloQueryResult>}
    */
   setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
-    return this.observableQuery &&
-    this.observableQuery.setVariables(variables, tryFetch, fetchResults);
+    return (
+      this.observableQuery &&
+      this.observableQuery.setVariables(variables, tryFetch, fetchResults)
+    );
   }
 
   /**

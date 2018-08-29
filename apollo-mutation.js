@@ -19,7 +19,7 @@ const scriptSelector = 'script[type="application/graphql"]';
  *   import { ApolloMutation, html } from 'lit-apollo/apollo-mutation';
  *
  *   class MutationElement extends ApolloMutation {
- *     _render({ data }) {
+ *     render({ data }) {
  *       return html`<input on-input="${this.onInput.bind(this)}"
  *     }
  *

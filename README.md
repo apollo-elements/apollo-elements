@@ -31,7 +31,7 @@ npm install --save lit-apollo
   const client = new ApolloClient({ cache, link });
 
   class ConnectedElement extends ApolloQuery {
-    _render({ data, loading, error, networkStatus }) {
+    render({ data, loading, error, networkStatus }) {
       return (
           loading ? html`
             <what-spin></what-spin>`
@@ -83,7 +83,7 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
   });
 
   class AsyncElement extends ApolloQuery {
-    _render({ data: { userSession: { name, lastActive }} }) {
+    render({ data: { userSession: { name, lastActive }} }) {
       return html`
         <h1>👋 ${name}!</h1>
         <span>Your last activity was </span>
@@ -103,7 +103,7 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
        }`;
      }
 
-     _shouldRender({ data }) {
+     shouldUpdate({ data }) {
        // only render when there is data.
        return !!data;
      }
@@ -144,8 +144,8 @@ customElements.define('apollo-query', class ApolloQueryEl extends ApolloQuery {
    );
  }
 
- _propertiesChanged(props, changedProps, oldProps) {
-    super._propertiesChanged(props, changedProps, oldProps);
+ update(changedProps) {
+    super.update(changedProps);
     const {data, error, loading, networkStatus} = changedProps;
     (data) && this.fire("data-changed", { value: data });
     (error) && this.fire("error-changed", { value: error });
