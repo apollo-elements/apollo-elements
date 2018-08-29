@@ -98,26 +98,58 @@ export class ApolloQuery extends ApolloElement {
 
   constructor() {
     super();
-    /** @type {ErrorPolicy} Specifies the ErrorPolicy to be used for this query. */
+    /**
+     * Specifies the ErrorPolicy to be used for this query.
+     * @type {ErrorPolicy}
+     */
     this.errorPolicy = 'none';
-    /** @type {FetchPolicy} Specifies the FetchPolicy to be used for this query. */
+    /**
+     * Specifies the FetchPolicy to be used for this query.
+     * @type {FetchPolicy}
+     */
     this.fetchPolicy = 'cache-first';
-    /** @type {Boolean} Whether or not to fetch results. */
+    /**
+     * Whether or not to fetch results.
+     * @type {Boolean}
+     */
     this.fetchResults = undefined;
-    /** @type {Number} The time interval (in milliseconds) on which this query should be refetched from the server. */
+    /**
+     * The time interval (in milliseconds) on which this query should be refetched from the server.
+     * @type {Number}
+     */
     this.pollInterval = undefined;
-    /** @type {Boolean} Whether or not updates to the network status should trigger next on the observer of this query. */
+    /**
+     * Whether or not updates to the network status should trigger next on the observer of this query.
+     * @type {Boolean}
+     */
     this.notifyOnNetworkStatusChange = undefined;
+    /**
+     * Variables used in the query.
+     * @type {Object}
+     */
     this.variables = undefined;
+    /**
+     * Apollo Query Object. e.g. gql`query { foo { bar } }`
+     * @type {DocumentNode}
+     */
     this.query = undefined;
+    /**
+     * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
+     * @type {Boolean}
+     */
     this.tryFetch = undefined;
+    /**
+     * The apollo ObservableQuery watching this element's query.
+     * @type {ZenObservable}
+     */
+    this.observableQuery = undefined;
   }
 
   /**
    * By default, will only render if
-   *   - The component has `data`
-   *   - The component has an `error`
-   *   - The component is `loading`
+   *   - The component has `data` or
+   *   - The component has an `error` or
+   *   - The component is `loading`.
    * @param  {Object}  props               Element's observed properties.
    * @param  {Object}  changed             Changed properties.
    * @param  {Object}  old                 Previous properties.
