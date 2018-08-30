@@ -7,6 +7,7 @@
 
 ## 📓 Contents
 - [Installation](#-installation)
+- [Bundling](#-bundling)
 - [Usage](#-usage)
 - [Cool Tricks](#-cool-tricks)
   - [Asynchronous Client](#-asynchronous-client)
@@ -19,17 +20,89 @@
 npm install --save lit-apollo
 ```
 
+## 📦 Bundling
+Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle apollo-client in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. Your `rollup.config.js` might look something like this:
+
+```js
+// rollup 0.62.0
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+
+export default {
+  experimentalCodeSplitting: true,
+  experimentalDynamicImport: true,
+
+  input: [
+    'src/components/app-shell/app-shell.js',
+    'src/components/app-view1/app-view1.js',
+    'src/components/app-view2/app-view2.js',
+    'src/components/app-view404/app-view404.js',
+  ],
+
+  output: [{
+    dir: 'build/modern',
+    format: 'es',
+    sourcemap: true,
+  }, {
+    dir: 'build/nomodule',
+    format: 'amd',
+    sourcemap: true,
+  }],
+
+  plugins: [
+
+    // REQUIRED to roll apollo-client up
+    resolve({
+      browser: true,
+      jsnext: true,
+      module: true,
+    }),
+
+    // REQUIRED to roll apollo-client up
+    commonjs({
+      namedExports: {
+        'apollo-cache-persist': ['persistCache'],
+        'graphql-anywhere/lib/async': ['graphql'],
+      },
+    })
+
+  ]
+}
+```
+
+An alternative to bundling your whole app is to bundle and export your apollo-client separately, then import it into your browser-friendly component modules.
+
 ## 👩‍🚀 Usage
 
 ```html
 <script type="module">
-  import { cache } from './cache';
-  import { link } from './link';
+  import gql from 'graphql-tag'
   import { ApolloClient } from 'apollo-client';
   import { ApolloQuery, html } from 'lit-apollo/apollo-query';
+  import { cache } from './cache';
+  import { link } from './link';
 
   // Create the Apollo Client
   const client = new ApolloClient({ cache, link });
+
+  // Compute graphql documents statically for performance
+  const query = gql`
+    query {
+      helloWorld {
+        name
+        greeting
+      }
+    }
+  `;
+
+  const childQuery = gql`
+    query {
+      child {
+        foo
+        bar
+      }
+    }
+  `;
 
   class ConnectedElement extends ApolloQuery {
     render({ data, loading, error, networkStatus }) {
@@ -40,19 +113,18 @@ npm install --save lit-apollo
             <h1>😢 Such sad, very error!</h1>
             <div>${error.message}</div>`
         : html`
-            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>`
+            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>
+            <connected-child id="child-component"
+                .client="${client}"
+                .query="${childQuery}"
+            ></connected-child>`
       );
      }
 
      constructor() {
        super();
        this.client = client;
-       this.query = gql`query {
-         helloWorld {
-           name
-           greeting
-         }
-       }`;
+       this.query = query;
      }
   };
 
@@ -61,6 +133,23 @@ npm install --save lit-apollo
 ```
 
 # 😎 Cool Tricks
+
+## 📜 Inline Query Scripts
+You can also provide a graphql query string in your markup by appending a
+graphql script element to your connected element, like so:
+
+```html
+<connected-element>
+  <script type="application/graphql">
+    query {
+      helloWorld {
+        name
+        greeting
+      }
+    }
+  </script>
+</connected-element>
+```
 
 ## ⌚️ Asynchronous Client
 In some cases, you may want to wait for your ApolloClient to do some initial asynchronous setup before rendering your components' DOM. In that case, you can import a promise of a client and wait for it in `connectedCallback`:
@@ -112,23 +201,6 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
 
   customElements.define('async-element', AsyncElement)
 </script>
-```
-
-## 📜 Inline Query Scripts
-You can also provide a graphql query string in your markup by appending a
-graphql script element to your connected element, like so:
-
-```html
-<connected-element>
-  <script type="application/graphql">
-    query {
-      helloWorld {
-        name
-        greeting
-      }
-    }
-  </script>
-</connected-element>
 ```
 
 ## 🔥 Use lit-apollo in a Polymer Template
