@@ -96,7 +96,7 @@ export class ApolloMutation extends ApolloElement {
     /** @type {Object} An object that represents the result of this mutation that will be optimistically stored before the server has actually returned a result. This is most often used for optimistic UI, where we want to be able to see the result of a mutation immediately, and update the UI later if any errors appear. */
     this.optimisticResponse = undefined;
     /** @type {UpdateFunction} */
-    this.update = undefined;
+    this.onUpdate = undefined;
     /** @type {Object} An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value. */
     this.variables = undefined;
     this.__explicitlySetMutation = undefined;
@@ -143,7 +143,7 @@ export class ApolloMutation extends ApolloElement {
     mutation = this.mutation,
     optimisticResponse = this.optimisticResponse,
     refetchQueries = this.refetchQueries,
-    update = this.update,
+    update = this.onUpdate,
     updateQueries = this.updateQueries,
     variables = this.variables,
   }) {

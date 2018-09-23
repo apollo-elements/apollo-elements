@@ -10,9 +10,10 @@
 - [Bundling](#-bundling)
 - [Usage](#-usage)
 - [Cool Tricks](#-cool-tricks)
-  - [Asynchronous Client](#-asynchronous-client)
   - [Inline Query Scripts](#-inline-query-scripts)
-  - [Use lit-apollo in a Polymer Template](#-use-lit-apollo-in-a-polymer-template)
+  - [Managing the Cache](#-managing-the-cache)
+  - [Asynchronous Client](#-asynchronous-client)
+  - [Use lit-apollo elements in a Polymer Template](#-use-lit-apollo-in-a-polymer-template)
 
 ## 🔧 Installation
 `lit-apollo` is distributed through `npm`. To install a copy of the latest version of `lit-apollo` in your project's `node_modules` directory, first [Install npm on your system](https://www.npmjs.com/get-npm), then run the following command in your project's root directory
@@ -149,6 +150,59 @@ graphql script element to your connected element, like so:
     }
   </script>
 </connected-element>
+```
+
+## 🏦 Managing the Cache
+When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `onUpdate` property on elements that extend from `ApolloMutation`
+```js
+import gql from 'graphql-tag';
+import { render } from 'lit-html/lit-html';
+import { client } from './client';
+import { ApolloMutation, html } from 'lit-apollo/apollo-mutation';
+
+class MutatingElement extends ApolloMutation {
+  render() {
+    return html`
+      <loading-overlay ?active="${this.loading}"></loading-overlay>
+      <button ?hidden="${this.data}" @click="${e => this.mutate()}"></button>
+      <div ?hidden="${!this.data}">${this.data.myResponse}</div>
+      `;
+  }
+}
+
+customElements.define('mutating-element', MutatingElement);
+
+const mutation = gql`
+  mutation($id: ID!) {
+    MyMutation(id: $id) {
+      mutationResult
+    }
+  }
+`;
+
+const updateFunc = (cache, response) => {
+  // ostensibly looks up the cached object for mutationResult
+  const query = MyMutationResultQuery;
+  const variables = { id: 1 };
+
+  const data = cache.readQuery({ query, variables });
+
+  const changed = computeChanges(data);
+  const mutationResult = mergeMutationResult(data, changed);
+
+  return cache.writeData({ query, data: { mutationResult } });
+};
+
+const template = html`
+  <mutating-element
+    .client="${client}"
+    .mutation="${mutation}"
+    .variables="${{id: 1}}"
+    .onUpdate="${updateFunc}"
+  ></mutating-element>
+`;
+
+render(template, container);
 ```
 
 ## ⌚️ Asynchronous Client
