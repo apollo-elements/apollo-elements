@@ -150,18 +150,16 @@ export class ApolloQuery extends ApolloElement {
    *   - The component has `data` or
    *   - The component has an `error` or
    *   - The component is `loading`.
-   * @param  {Object}  props               Element's observed properties.
-   * @param  {Object}  changed             Changed properties.
-   * @param  {Object}  old                 Previous properties.
-   * @param  {Object}  props.data          Latest data from the query subscription.
-   * @param  {Error}   props.error         Latest error from the query subscription.
-   * @param  {Boolean} props.loading       Whether the component is loading new data.
-   * @param  {Number}  props.networkStatus Apollo query network status. https://bit.ly/2sfKLY0.
+   * @param  {Map}  changedProps           Changed properties.
    * @return {Boolean}                     Whether the component should render.
    * @protected
    */
-  shouldUpdate({ data, error, loading, networkStatus }, changed, old) {
-    return !!data || !!error || loading != null;
+  shouldUpdate(changedProps) {
+    return (
+      !!this.data ||
+      !!this.error ||
+      this.loading != null
+    );
   }
 
   /**
