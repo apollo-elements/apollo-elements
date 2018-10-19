@@ -134,6 +134,19 @@ An alternative to bundling your whole app is to bundle and export your apollo-cl
 </script>
 ```
 
+*NOTE*: By default, components will only render while loading or after receiving data or an error. Override the `shouldUpdate` method to control when the component renders.
+
+```js
+shouldUpdate(changedProps) {
+  return (
+    changedProps.has('someProp') ||
+    this.loading != null ||
+    this.data ||
+    this.error ||
+  );
+}
+```
+
 # 😎 Cool Tricks
 
 ## 📜 Inline Query Scripts
@@ -248,9 +261,9 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
        }`;
      }
 
-     shouldUpdate({ data }) {
+     shouldUpdate() {
        // only render when there is data.
-       return !!data;
+       return !!this.data;
      }
   };
 

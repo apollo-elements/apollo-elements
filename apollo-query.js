@@ -156,9 +156,9 @@ export class ApolloQuery extends ApolloElement {
    */
   shouldUpdate(changedProps) {
     return (
-      !!this.data ||
+      this.loading != null ||
       !!this.error ||
-      this.loading != null
+      !!this.data
     );
   }
 
