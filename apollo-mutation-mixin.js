@@ -1,6 +1,9 @@
-import { LitElement } from '@polymer/lit-element';
+import { ApolloElementMixin } from './apollo-element-mixin';
 
-import { ApolloMutationMixin } from './apollo-mutation-mixin';
+import gqlFromInnerText from './lib/gql-from-inner-text.js';
+import validGql from './lib/valid-gql.js';
+
+const scriptSelector = 'script[type="application/graphql"]';
 
 /**
  *  ApolloMutation
@@ -47,19 +50,11 @@ import { ApolloMutationMixin } from './apollo-mutation-mixin';
  *
  * @customElement
  * @type {Class}
+ * @extends ApolloElement
  * @extends LitElement
  * @extends HTMLElement
- * @mixes ApolloMutationMixin
- * @mixes ApolloElementMixin
  */
-export class ApolloMutation extends ApolloMutationMixin(LitElement) {
-  static get properties() {
-    return {
-      /* If the mutation has been called */
-      called: Boolean,
-    };
-  }
-
+export const ApolloMutationMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
    * The mutation.
    * @type {DocumentNode}
@@ -202,7 +197,7 @@ export class ApolloMutation extends ApolloMutationMixin(LitElement) {
     }
     return this.onError(error);
   }
-}
+};
 
 /** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
 
