@@ -1,7 +1,7 @@
-import { ApolloElementMixin } from './apollo-element-mixin';
-import gqlFromInnerText from './lib/gql-from-inner-text.js';
-import hasAllVariables from './lib/has-all-variables.js';
-import validGql from './lib/valid-gql.js';
+import { ApolloElementMixin } from './apollo-element-mixin.js';
+import gqlFromInnerText from '../lib/gql-from-inner-text.js';
+import hasAllVariables from '../lib/has-all-variables.js';
+import validGql from '../lib/valid-gql.js';
 
 const scriptSelector = 'script[type="application/graphql"]';
 
@@ -9,55 +9,13 @@ const scriptSelector = 'script[type="application/graphql"]';
 /** @typedef {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"} FetchPolicy */
 
 /**
- * # ApolloQuery
+ * `ApolloQueryMixin`: class mixin for apollo-query elements.
  *
- * 🚀 A custom element base class that connects to your Apollo cache.
+ * @mixinFunction
+ * @appliesMixin ApolloElementMixin
  *
- * ## Usage
- *
- * ```html
- * <script type="module">
- *   import { cache } from './cache';
- *   import { link } from './link';
- *   import { ApolloClient } from 'apollo-client';
- *   import { ApolloQuery, html } from 'lit-apollo/apollo-query';
- *
- *   // Create the Apollo Client
- *   const client = new ApolloClient({ cache, link });
- *
- *   class ConnectedElement extends ApolloQuery {
- *     render({ data, loading, error, networkStatus }) {
- *      return (
- *          loading ? html`
- *            <what-spin></what-spin>`
- *        : error ? html`
- *            <h1>😢 Such sad, very error!</h1>
- *            <div>${error.message}</div>`
- *        : html`
- *            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>`
- *      );
- *     }
- *
- *     constructor() {
- *       super();
- *       this.client = client;
- *       this.query = gql`query {
- *         helloWorld {
- *           name
- *           greeting
- *         }
- *       }`;
- *     }
- *   };
- *
- *   customElements.define('connected-element', ConnectedElement)
- * </script>
- * ```
- *
- * @type {Class}
- * @extends ApolloElement
- * @extends LitElement
- * @extends HTMLElement
+ * @param {Class} superclass
+ * @return {Class}
  */
 export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
@@ -95,6 +53,9 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   constructor() {
     super();
+    this.nextData = this.nextData.bind(this);
+    this.nextError = this.nextError.bind(this);
+
     /**
      * Specifies the ErrorPolicy to be used for this query.
      * @type {ErrorPolicy}
@@ -174,12 +135,12 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @param  {Object}                     [variables=this.variables]
    * @return {ZenObservable.Subscription}
    */
-  async subscribe({ query = this.query, variables = this.variables }) {
+  async subscribe({ query = this.query, variables = this.variables } = {}) {
     if (!hasAllVariables({ query, variables })) return;
     this.observableQuery = this.watchQuery({ query, variables });
     return this.observableQuery.subscribe({
-      next: this.nextData.bind(this),
-      error: this.nextError.bind(this),
+      next: this.nextData,
+      error: this.nextError,
     });
   }
 

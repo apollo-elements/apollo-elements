@@ -1,3 +1,11 @@
+/**
+ * `ApolloElementMixin`: class mixin for apollo custom elements.
+ *
+ * @mixinFunction
+ *
+ * @param {Class} superclass
+ * @return {Class}
+ */
 export const ApolloElementMixin = superclass => class extends superclass {
   constructor() {
     super();

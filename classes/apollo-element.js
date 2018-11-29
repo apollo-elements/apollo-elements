@@ -1,12 +1,14 @@
 export { html } from '@polymer/lit-element';
 import { LitElement } from '@polymer/lit-element';
-import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { ApolloElementMixin } from '../mixins/apollo-element-mixin.js';
 
 /**
- * @type {Class}
+ * # ApolloElement
+ *
+ * Custom Element base class for apollo custom elements.
+ *
  * @extends LitElement
- * @extends HTMLElement
- * @mixes ApolloElementMixin
+ * @appliesMixin ApolloElementMixin
  */
 export class ApolloElement extends ApolloElementMixin(LitElement) {
   static get properties() {

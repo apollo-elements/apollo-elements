@@ -1,7 +1,5 @@
-import { LitElement } from '@polymer/lit-element';
-
-import { ApolloQueryMixin } from './apollo-query-mixin';
-
+import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
+import { ApolloElement } from './apollo-element.js';
 export { html } from './apollo-element.js';
 
 /** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
@@ -24,17 +22,17 @@ export { html } from './apollo-element.js';
  *   // Create the Apollo Client
  *   const client = new ApolloClient({ cache, link });
  *
+ *   const errorTemplate = ({message = 'Unknown Error'}) => html`
+ *     <h1>😢 Such Sad, Very Error! 😰</h1>
+ *     <div>${message}</div>`
+ *
  *   class ConnectedElement extends ApolloQuery {
- *     render({ data, loading, error, networkStatus }) {
- *      return (
- *          loading ? html`
- *            <what-spin></what-spin>`
- *        : error ? html`
- *            <h1>😢 Such sad, very error!</h1>
- *            <div>${error.message}</div>`
- *        : html`
- *            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>`
- *      );
+ *     render() {
+ *       const { data, error, loading, networkStatus } = this;
+ *       return
+ *           loading ? html`<such-overlay-very-spin></such-overlay-very-spin>`
+ *         : error ? errorTemplate(error)
+ *         : html`<p>${data.helloWorld.greeting}, ${data.helloWorld.name}</p>`
  *     }
  *
  *     constructor() {
@@ -53,13 +51,10 @@ export { html } from './apollo-element.js';
  * </script>
  * ```
  *
- * @type {Class}
  * @extends LitElement
- * @extends HTMLElement
- * @mixes ApolloMutationMixin
- * @mixes ApolloElementMixin
+ * @appliesMixin ApolloQueryMixin
  */
-export class ApolloQuery extends ApolloQueryMixin(LitElement) {
+export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
   static get properties() {
     return {
       /**

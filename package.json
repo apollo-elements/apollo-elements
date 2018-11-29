@@ -29,10 +29,10 @@
   },
   "homepage": "https://github.com/bennypowers/lit-apollo#readme",
   "dependencies": {
-    "@polymer/lit-element": "^0.6.0-dev.5",
     "crocks": "^0.9.4",
     "graphql": "^0.13.2",
-    "graphql-tag": "^2.9.2"
+    "graphql-tag": "^2.9.2",
+    "@polymer/lit-element": "^0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
