@@ -4,20 +4,23 @@
 [![Build Status](https://travis-ci.org/bennypowers/lit-apollo.svg?branch=master)](https://travis-ci.org/bennypowers/lit-apollo)
 [![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/bennyp?utm_source=github&utm_medium=button&utm_term=bennyp&utm_campaign=github)
 
-🚀 A set of custom element base classes that connect to your Apollo cache 🌜
+🚀 Custom element base classes & mixins that connect to your Apollo cache 🌜
+👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀
 
 ## 📓 Contents
-- [Installation](#-installation)
-- [Bundling](#-bundling)
-- [Usage](#-usage)
-- [Cool Tricks](#-cool-tricks)
-  - [Inline Query Scripts](#-inline-query-scripts)
-  - [Managing the Cache](#-managing-the-cache)
-  - [Asynchronous Client](#-asynchronous-client)
-  - [Use lit-apollo elements in a Polymer Template](#-use-lit-apollo-in-a-polymer-template)
+- [🔧 Installation](#-installation)
+- [📦 Bundling](#-bundling)
+- [👩‍🚀 Usage](#-usage)
+- [🍹 Using as a Mixin](#-using-as-a-mixin)
+- [😎 Cool Tricks](#-cool-tricks)
+  - [📜 Inline Query Scripts](#-inline-query-scripts)
+  - [🏦 Managing the Cache](#-managing-the-cache)
+  - [⌚️ Asynchronous Client](#-asynchronous-client)
+  - [🔥 Use lit-apollo elements in a Polymer Template](#-use-lit-apollo-in-a-polymer-template)
 
 ## 🔧 Installation
 `lit-apollo` is distributed through `npm`. To install a copy of the latest version of `lit-apollo` in your project's `node_modules` directory, first [Install npm on your system](https://www.npmjs.com/get-npm), then run the following command in your project's root directory
+
 ```bash
 npm install --save lit-apollo
 ```
@@ -107,17 +110,19 @@ An alternative to bundling your whole app is to bundle and export your apollo-cl
   `;
 
   class ConnectedElement extends ApolloQuery {
-    render({ data, loading, error, networkStatus }) {
+    render() {
+      const { data, error, loading } = this;
+      const { helloWorld = {} } = data || {}
       return (
           loading ? html`
             <what-spin></what-spin>`
         : error ? html`
             <h1>😢 Such sad, very error!</h1>
-            <div>${error.message}</div>`
+            <div>${error && error.message}</div>`
         : html`
-            <div>${data.helloWorld.greeting}, ${data.helloWorld.name}</div>
+            <div>${helloWorld.greeting}, ${helloWorld.name}</div>
             <connected-child id="child-component"
-                .client="${client}"
+                .client="${this.client}"
                 .query="${childQuery}"
             ></connected-child>`
       );
@@ -147,9 +152,36 @@ shouldUpdate(changedProps) {
 }
 ```
 
-# 😎 Cool Tricks
+## 🍹 Using as a Mixin
+You don't need to use `LitElement` base class for your components if you use the mixins. You just have to handle the rendering part on your own: e.g. for a query component, you'd implement yourself what happens after `data`, `error`, `loading`, or `networkStatus` change.
 
-## 📜 Inline Query Scripts
+Here's an example that uses `GluonElement` instead of `LitElement`.
+
+```js
+import { ApolloQueryMixin } from 'lit-apollo/apollo-query-mixin.js';
+import { GluonElement, html } from '@gluon/gluon';
+
+class GluonQuery extends ApolloQueryMixin(GluonElement) {
+  set data(data) {
+    this.__data = data;
+    this.render();
+  }  
+
+  get data() {
+    return this.__data;
+  }
+
+  get template() {
+    return html`
+      <h1>${this.data.title}</h1>
+    `;
+  }
+}
+```
+
+## 😎 Cool Tricks
+
+### 📜 Inline Query Scripts
 You can also provide a graphql query string in your markup by appending a
 graphql script element to your connected element, like so:
 
@@ -178,7 +210,7 @@ class MutatingElement extends ApolloMutation {
   render() {
     return html`
       <loading-overlay ?active="${this.loading}"></loading-overlay>
-      <button ?hidden="${this.data}" @click="${e => this.mutate()}"></button>
+      <button ?hidden="${this.data}" @click="${this.mutate}"></button>
       <div ?hidden="${!this.data}">${this.data.myResponse}</div>
       `;
   }
@@ -241,11 +273,13 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
   });
 
   class AsyncElement extends ApolloQuery {
-    render({ data: { userSession: { name, lastActive }} }) {
+    render() {
+      const { userSession: { name, lastActive } = {} } = this.data || {}
+      const time = formatDistance(lastActive, Date.now(), { addSuffix: true });
+
       return html`
         <h1>👋 ${name}!</h1>
-        <span>Your last activity was </span>
-        <time>${formatDistance(lastActive, Date.now(), { addSuffix: true })}</time>`
+        <span>Your last activity was <time>${time}</time></span>`
      }
 
      async connectedCallback() {
