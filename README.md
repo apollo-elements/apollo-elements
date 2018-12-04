@@ -5,12 +5,14 @@
 [![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/bennyp?utm_source=github&utm_medium=button&utm_term=bennyp&utm_campaign=github)
 
 🚀 Custom element base classes & mixins that connect to your Apollo cache 🌜
+
 👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
 - [🍹 Mixins](#-mixins)
+- [📖 Subscriptions](#-subscriptions)
 - [😎 Cool Tricks](#-cool-tricks)
   - [📜 Inline Query Scripts](#-inline-query-scripts)
   - [🏦 Managing the Cache](#-managing-the-cache)
@@ -128,6 +130,11 @@ class GluonQuery extends ApolloQueryMixin(GluonElement) {
   }
 }
 ```
+
+## 📖 Subscriptions
+You can create components which use GraphQL subscriptions to update over websockets. See this simple chat-app demo which does exactly that:
+
+[Chat App Demo](https://lit-apollo-subscriptions.herokuapp.com/)
 
 ## 😎 Cool Tricks
 
