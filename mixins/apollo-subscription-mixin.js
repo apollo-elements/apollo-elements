@@ -2,6 +2,7 @@ import { ApolloElementMixin } from './apollo-element-mixin.js';
 import gqlFromInnerText from '../lib/gql-from-inner-text.js';
 import hasAllVariables from '../lib/has-all-variables.js';
 import validGql from '../lib/valid-gql.js';
+import isFunction from 'crocks/predicates/isFunction';
 
 const scriptSelector = 'script[type="application/graphql"]';
 
@@ -162,6 +163,8 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
    * @protected
    */
   nextData({ data }) {
+    const { client, onSubscriptionData } = this;
+    if (isFunction(onSubscriptionData)) onSubscriptionData({ client, subscriptionData: { data } });
     this.data = data;
     this.loading = false;
     this.error = undefined;
