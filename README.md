@@ -13,12 +13,12 @@
 - [👩‍🚀 Usage](#-usage)
 - [🍹 Mixins](#-mixins)
 - [📖 Subscriptions](#-subscriptions)
+- [☝️ Notifying Elements for Polymer Templates](#-notifying-elements-for-polymer-templates)
+- [📦 Bundling](#-bundling)
 - [😎 Cool Tricks](#-cool-tricks)
   - [📜 Inline Query Scripts](#-inline-query-scripts)
   - [🏦 Managing the Cache](#-managing-the-cache)
   - [⌚️ Asynchronous Client](#-asynchronous-client)
-  - [☝️ Notifying Elements for Polymer Templates](#-notifying-elements-for-polymer-templates)
-- [📦 Bundling](#-bundling)
 
 ## 🔧 Installation
 `lit-apollo` is distributed through `npm` the node package manager. To install a copy of the latest version of `lit-apollo` in your project's `node_modules` directory, first [Install npm on your system](https://www.npmjs.com/get-npm), then run the following command in your project's root directory:
@@ -31,64 +31,62 @@ npm install --save lit-apollo
 You'll need to bundle the Apollo library with a tool like Rollup. See [instructions for bundling Apollo](#-bundling) for advice on how to build a working Apollo client.
 After that, typical usage involves importing the base class and extending from it to define your component:
 
-```html
-<script type="module">
-  import gql from 'graphql-tag'
-  import { ApolloClient } from 'apollo-client';
-  import { ApolloQuery, html } from 'lit-apollo';
-  import { cache } from './cache';
-  import { link } from './link';
+```js
+import gql from 'graphql-tag'
+import { ApolloClient } from 'apollo-client';
+import { ApolloQuery, html } from 'lit-apollo';
+import { cache } from './cache';
+import { link } from './link';
 
-  // Create the Apollo Client
-  const client = new ApolloClient({ cache, link });
+// Create the Apollo Client
+const client = new ApolloClient({ cache, link });
 
-  // Compute graphql documents statically for performance
-  const query = gql`
-    query {
-      helloWorld {
-        name
-        greeting
-      }
+// Compute graphql documents statically for performance
+const query = gql`
+  query {
+    helloWorld {
+      name
+      greeting
     }
-  `;
+  }
+`;
 
-  const childQuery = gql`
-    query {
-      child {
-        foo
-        bar
-      }
+const childQuery = gql`
+  query {
+    child {
+      foo
+      bar
     }
-  `;
+  }
+`;
 
-  class ConnectedElement extends ApolloQuery {
-    render() {
-      const { data, error, loading } = this;
-      const { helloWorld = {} } = data || {}
-      return (
-          loading ? html`
-            <what-spin></what-spin>`
-        : error ? html`
-            <h1>😢 Such Sad, Very Error! 😰</h1>
-            <div>${error ? error.message : 'Unknown Error'}</div>`
-        : html`
-            <div>${helloWorld.greeting}, ${helloWorld.name}</div>
-            <connected-child id="child-component"
-                .client="${this.client}"
-                .query="${childQuery}"
-            ></connected-child>`
-      );
-     }
+class ConnectedElement extends ApolloQuery {
+  render() {
+    const { data, error, loading } = this;
+    const { helloWorld = {} } = data || {}
+    return (
+        loading ? html`
+          <what-spin></what-spin>`
+      : error ? html`
+          <h1>😢 Such Sad, Very Error! 😰</h1>
+          <div>${error ? error.message : 'Unknown Error'}</div>`
+      : html`
+          <div>${helloWorld.greeting}, ${helloWorld.name}</div>
+          <connected-child id="child-component"
+              .client="${this.client}"
+              .query="${childQuery}"
+          ></connected-child>`
+    );
+   }
 
-     constructor() {
-       super();
-       this.client = client;
-       this.query = query;
-     }
-  };
+   constructor() {
+     super();
+     this.client = client;
+     this.query = query;
+   }
+};
 
-  customElements.define('connected-element', ConnectedElement)
-</script>
+customElements.define('connected-element', ConnectedElement)
 ```
 
 *NOTE*: By default, components will only render while loading or after receiving data or an error. Override the `shouldUpdate` method to control when the component renders.
@@ -132,138 +130,77 @@ class GluonQuery extends ApolloQueryMixin(GluonElement) {
 ```
 
 ## 📖 Subscriptions
-You can create components which use GraphQL subscriptions to update over websockets. See this simple chat-app demo which does exactly that:
-
-[Chat App Demo](https://lit-apollo-subscriptions.herokuapp.com/)
-
-## 😎 Cool Tricks
-
-### 📜 Inline Query Scripts
-You can also provide a graphql query string in your markup by appending a
-graphql script element to your connected element, like so:
-
-```html
-<connected-element>
-  <script type="application/graphql">
-    query {
-      helloWorld {
-        name
-        greeting
-      }
-    }
-  </script>
-</connected-element>
-```
-
-## 🏦 Managing the Cache
-When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `onUpdate` property on elements that extend from `ApolloMutation`
+You can create components which use GraphQL subscriptions to update over websockets.
 
 ```js
+import { ApolloQuery, html } from 'lit-apollo';
+import { client } from '../client';
+import { format } from 'date-fns/fp';
+import { errorTemplate } from './error-template.js';
 import gql from 'graphql-tag';
-import { render, html } from 'lit-html/lit-html';
-import { client } from './client';
-import { ApolloMutation } from 'lit-apollo';
+import './chat-subscription.js';
 
-class MutatingElement extends ApolloMutation {
+const messageTemplate = ({ message, user, date }) => html`
+  <div>
+    <dt><time>${format('HH:mm', date)}</time> ${user}:</dt>
+    <dd>${message}</dd>
+  </div>
+`;
+
+const subscription = gql`
+  subscription {
+    messageSent {
+      date
+      message
+      user
+    }
+  }`
+
+/**
+ * <chat-query>
+ * @customElement
+ * @extends LitElement
+ */
+class ChatQuery extends ApolloQuery {
   render() {
     return html`
-      <loading-overlay ?active="${this.loading}"></loading-overlay>
-      <button ?hidden="${this.data}" @click="${this.mutate}"></button>
-      <div ?hidden="${!this.data}">${this.data.myResponse}</div>
-      `;
+    <chat-subscription
+        .client="${this.client}"
+        .subscription="${subscription}"
+        .onSubscriptionData=${this.onSubscriptionData}>
+    </chat-subscription>
+    ${( this.loading ? html`Loading...`
+      : this.error ? errorTemplate(this.error)
+      : html`<dl>${this.data.messages.map(messageTemplate)}</dl>`
+      )}`;
+  }
+
+  constructor() {
+    super();
+    this.client = client;
+    this.onSubscriptionData = this.onSubscriptionData.bind(this);
+    this.query = gql`
+    query {
+      messages {
+        date
+        message
+        user
+      }
+    }`;
+  }
+
+  onSubscriptionData({ client, subscriptionData: { data: { messageSent } } }) {
+    const { query } = this;
+    const { messages } = client.readQuery({ query });
+    const data = { messages: [...messages, messageSent] };
+    client.writeQuery({ query, data });
   }
 }
 
-customElements.define('mutating-element', MutatingElement);
-
-const mutation = gql`
-  mutation($id: ID!) {
-    MyMutation(id: $id) {
-      mutationResult
-    }
-  }
-`;
-
-/**
- * Example update function which reads a cached query result, merges
- * it with the mutation result, and then writes it back to the cache.
- */
-const updateFunc = (cache, response) => {
-  // ostensibly looks up the cached object for mutationResult
-  const query = MyQuery;
-  const variables = { id: 1 };
-  const cached = cache.readQuery({ query, variables });
-  const changed = computeChanges(cached);
-  // mergeMutationResult is a made-up function.
-  const mutationResult = mergeMutationResult(cached, changed);
-  return cache.writeData({ query, data: { mutationResult } });
-};
-
-const template = html`
-  <mutating-element
-    .client="${client}"
-    .mutation="${mutation}"
-    .variables="${{id: 1}}"
-    .onUpdate="${updateFunc}"
-  ></mutating-element>
-`;
-
-render(template, container);
+customElements.define('chat-query', ChatQuery);
 ```
 
-## ⌚️ Asynchronous Client
-In some cases, you may want to wait for your ApolloClient to do some initial asynchronous setup before rendering your components' DOM. In that case, you can import a promise of a client and wait for it in `connectedCallback`:
-
-```html
-<async-element></async-element>
-
-<script type="module">
-  import formatDistance from 'date-fns/esm/formatDistance';
-  import { ApolloClient } from 'apollo-client';
-  import { ApolloQuery, html } from 'lit-apollo';
-  import { persistCache } from 'apollo-cache-persist'
-  import { cache } from './cache';
-  import { link } from './link';
-
-  const clientPromise = new Promise(async function initApollo(resolve) {
-    // Wait for the cache to be restored
-    await persistCache({ cache, storage: localStorage });
-    // Create the Apollo Client
-    resolve(new ApolloClient({ cache, link }));
-  });
-
-  class AsyncElement extends ApolloQuery {
-    render() {
-      const { userSession: { name, lastActive } = {} } = this.data || {}
-      const time = formatDistance(lastActive, Date.now(), { addSuffix: true });
-
-      return html`
-        <h1>👋 ${name}!</h1>
-        <span>Your last activity was <time>${time}</time></span>`
-     }
-
-     async connectedCallback() {
-       super.connectedCallback();
-       // first instantiate the client locally
-       this.client = await clientPromise;
-       // afterwards, set the query to trigger fetch-then-render
-       this.query = gql`query {
-         userSession {
-           name
-           lastActive
-         }
-       }`;
-     }
-
-     shouldUpdate() {
-       // only render when there is data.
-       return !!this.data;
-     }
-  };
-
-  customElements.define('async-element', AsyncElement)
-</script>
-```
+See this simple chat-app demo which demonstrates building custom elements which subscribe to a GraphQL server over websockets: [Chat App Demo](https://lit-apollo-subscriptions.herokuapp.com/)
 
 ## ☝️ Notifying Elements for Polymer Templates
 If you want data elements which notify about changes to their properties,
@@ -342,16 +279,140 @@ export default {
       module: true,
     }),
 
-    // REQUIRED to roll apollo-client up
-    commonjs({
-      namedExports: {
-        'apollo-cache-persist': ['persistCache'],
-        'graphql-anywhere/lib/async': ['graphql'],
-      },
-    })
+    commonjs()
 
   ]
 }
 ```
 
+You may also need to patch certain versions of some apollo packages in order for them to play nicely with standard tools. [See the chat app demo for examples of how to patch packages](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions/tree/master/patches).
+
 An alternative to bundling your whole app is to bundle and export your apollo-client separately, then import it into your browser-friendly component modules.
+## 😎 Cool Tricks
+
+### 📜 Inline Query Scripts
+You can also provide a graphql query string in your markup by appending a
+graphql script element to your connected element, like so:
+
+```html
+<connected-element>
+  <script type="application/graphql">
+    query {
+      helloWorld {
+        name
+        greeting
+      }
+    }
+  </script>
+</connected-element>
+```
+
+### 🏦 Managing the Cache
+When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `onUpdate` property on elements that extend from `ApolloMutation`
+
+```js
+import gql from 'graphql-tag';
+import { render, html } from 'lit-html/lit-html';
+import { client } from './client';
+import { ApolloMutation } from 'lit-apollo';
+
+class MutatingElement extends ApolloMutation {
+  render() {
+    return html`
+      <loading-overlay ?active="${this.loading}"></loading-overlay>
+      <button ?hidden="${this.data}" @click="${this.mutate}"></button>
+      <div ?hidden="${!this.data}">${this.data.myResponse}</div>
+      `;
+  }
+}
+
+customElements.define('mutating-element', MutatingElement);
+
+const mutation = gql`
+  mutation($id: ID!) {
+    MyMutation(id: $id) {
+      mutationResult
+    }
+  }
+`;
+
+/**
+ * Example update function which reads a cached query result, merges
+ * it with the mutation result, and then writes it back to the cache.
+ */
+const updateFunc = (cache, response) => {
+  // ostensibly looks up the cached object for mutationResult
+  const query = MyQuery;
+  const variables = { id: 1 };
+  const cached = cache.readQuery({ query, variables });
+  const changed = computeChanges(cached);
+  // mergeMutationResult is a made-up function.
+  const mutationResult = mergeMutationResult(cached, changed);
+  return cache.writeData({ query, data: { mutationResult } });
+};
+
+const template = html`
+  <mutating-element
+    .client="${client}"
+    .mutation="${mutation}"
+    .variables="${{id: 1}}"
+    .onUpdate="${updateFunc}"
+  ></mutating-element>
+`;
+
+render(template, container);
+```
+
+### ⌚️ Asynchronous Client
+In some cases, you may want to wait for your ApolloClient to do some initial asynchronous setup before rendering your components' DOM. In that case, you can import a promise of a client and wait for it in `connectedCallback`:
+
+```html
+<async-element></async-element>
+
+<script type="module">
+  import formatDistance from 'date-fns/esm/formatDistance';
+  import { ApolloClient } from 'apollo-client';
+  import { ApolloQuery, html } from 'lit-apollo';
+  import { persistCache } from 'apollo-cache-persist'
+  import { cache } from './cache';
+  import { link } from './link';
+
+  const clientPromise = new Promise(async function initApollo(resolve) {
+    // Wait for the cache to be restored
+    await persistCache({ cache, storage: localStorage });
+    // Create the Apollo Client
+    resolve(new ApolloClient({ cache, link }));
+  });
+
+  class AsyncElement extends ApolloQuery {
+    render() {
+      const { userSession: { name, lastActive } = {} } = this.data || {}
+      const time = formatDistance(lastActive, Date.now(), { addSuffix: true });
+
+      return html`
+        <h1>👋 ${name}!</h1>
+        <span>Your last activity was <time>${time}</time></span>`
+     }
+
+     async connectedCallback() {
+       super.connectedCallback();
+       // first instantiate the client locally
+       this.client = await clientPromise;
+       // afterwards, set the query to trigger fetch-then-render
+       this.query = gql`query {
+         userSession {
+           name
+           lastActive
+         }
+       }`;
+     }
+
+     shouldUpdate() {
+       // only render when there is data.
+       return !!this.data;
+     }
+  };
+
+  customElements.define('async-element', AsyncElement)
+</script>
+```
