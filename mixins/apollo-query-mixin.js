@@ -100,7 +100,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
      * The apollo ObservableQuery watching this element's query.
      * @type {ZenObservable}
      */
-    this.observableQuery = undefined;
+    this.observableQuery;
   }
 
   /**
@@ -142,6 +142,27 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
       next: this.nextData,
       error: this.nextError,
     });
+  }
+
+  /**
+   * Lets you pass a GraphQL subscription and updateQuery function
+   * to subscribe to more updates for your query.
+   *
+   * The updateQuery function takes as its first parameter the previous
+   * query result's data, and as it's second parameter, an object containing
+   * `subscriptionData`, which will be the latest result from the subscription.
+   * It should return the merged query data, of the same interface as the first parameter.
+   *
+   * @param  {Object} options
+   * @param  {DocumentNode} options.document
+   * @param  {Function} options.updateQuery
+   * @return {[type]}      [description]
+   */
+  subscribeToMore({ document, updateQuery }) {
+    return (
+      this.observableQuery &&
+      this.observableQuery.subscribeToMore({ document, updateQuery })
+    );
   }
 
   /**

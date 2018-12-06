@@ -200,6 +200,34 @@ class ChatQuery extends ApolloQuery {
 customElements.define('chat-query', ChatQuery);
 ```
 
+Alternatively, you can call `subscribeToMore` on a query component with a subscription `document` and an `updateQuery` function to have your component update it's data based on subscription results:
+
+```js
+updateQuery(prev, { subscriptionData }) {
+  if (!subscriptionData.data) return prev;
+  return {
+    ...prev,
+    messages: [...prev.messages, subscriptionData.data.messageSent]
+  };
+}
+
+firstUpdated() {
+  const { updateQuery } = this;
+  this.subscribeToMore({
+    updateQuery,
+    document: gql`
+      subscription {
+        messageSent {
+          date
+          message
+          user
+        }
+      }`
+  });
+}
+
+```
+
 See this simple chat-app demo which demonstrates building custom elements which subscribe to a GraphQL server over websockets: [Chat App Demo](https://lit-apollo-subscriptions.herokuapp.com/)
 
 ## ☝️ Notifying Elements for Polymer Templates
