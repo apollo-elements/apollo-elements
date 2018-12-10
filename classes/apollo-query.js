@@ -2,9 +2,6 @@ import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element.js';
 export { html } from './apollo-element.js';
 
-/** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
-/** @typedef {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"} FetchPolicy */
-
 /**
  * # ApolloQuery
  *
@@ -12,43 +9,39 @@ export { html } from './apollo-element.js';
  *
  * ## Usage
  *
- * ```html
- * <script type="module">
- *   import { cache } from './cache';
- *   import { link } from './link';
- *   import { ApolloClient } from 'apollo-client';
- *   import { ApolloQuery, html } from 'lit-apollo/apollo-query';
+ * ```js
+ * import { client } from './apollo-client.js';
+ * import { ApolloQuery, html } from 'lit-apollo';
+ * import gql from 'graphql-tag';
  *
- *   // Create the Apollo Client
- *   const client = new ApolloClient({ cache, link });
+ * const errorTemplate = ({message = 'Unknown Error'}) => html`
+ *   <h1>😢 Such Sad, Very Error! 😰</h1>
+ *   <div>${message}</div>`
  *
- *   const errorTemplate = ({message = 'Unknown Error'}) => html`
- *     <h1>😢 Such Sad, Very Error! 😰</h1>
- *     <div>${message}</div>`
+ * class ConnectedElement extends ApolloQuery {
+ *   render() {
+ *     const { data, error, loading, networkStatus } = this;
+ *     return
+ *         loading ? html`<such-overlay-very-spin></such-overlay-very-spin>`
+ *       : error ? errorTemplate(error)
+ *       : html`<p>${data.helloWorld.greeting}, ${data.helloWorld.name}</p>`
+ *   }
  *
- *   class ConnectedElement extends ApolloQuery {
- *     render() {
- *       const { data, error, loading, networkStatus } = this;
- *       return
- *           loading ? html`<such-overlay-very-spin></such-overlay-very-spin>`
- *         : error ? errorTemplate(error)
- *         : html`<p>${data.helloWorld.greeting}, ${data.helloWorld.name}</p>`
- *     }
- *
- *     constructor() {
- *       super();
- *       this.client = client;
- *       this.query = gql`query {
+ *   constructor() {
+ *     super();
+ *     this.client = client;
+ *     this.query = gql`
+ *       query {
  *         helloWorld {
  *           name
  *           greeting
  *         }
- *       }`;
- *     }
- *   };
+ *       }
+ *     `;
+ *   }
+ * };
  *
- *   customElements.define('connected-element', ConnectedElement)
- * </script>
+ * customElements.define('connected-element', ConnectedElement)
  * ```
  *
  * @extends LitElement
@@ -74,7 +67,7 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
    * @return {Boolean}                     Whether the component should render.
    * @protected
    */
-  shouldUpdate(changedProps) {
+  shouldUpdate() {
     return (
       this.loading != null ||
       !!this.error ||

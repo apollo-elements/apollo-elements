@@ -1,12 +1,9 @@
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 import gqlFromInnerText from '../lib/gql-from-inner-text.js';
 import hasAllVariables from '../lib/has-all-variables.js';
-import validGql from '../lib/valid-gql.js';
+import isValidGql from '../lib/is-valid-gql.js';
 
 const scriptSelector = 'script[type="application/graphql"]';
-
-/** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
-/** @typedef {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"} FetchPolicy */
 
 /**
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
@@ -15,7 +12,7 @@ const scriptSelector = 'script[type="application/graphql"]';
  * @appliesMixin ApolloElementMixin
  *
  * @param {Class} superclass
- * @return {Class}
+ * @return {ApolloQuery}
  */
 export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
@@ -29,7 +26,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   set query(query) {
     this.__query = query;
     if (query == null) return;
-    const valid = validGql(query);
+    const valid = isValidGql(query);
     const variables = this.__variables;
     if (!valid) throw new Error('Query must be a gql-parsed document');
     this.subscribe({ query, variables });
@@ -61,41 +58,49 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
      * @type {ErrorPolicy}
      */
     this.errorPolicy = 'none';
+
     /**
      * Specifies the FetchPolicy to be used for this query.
      * @type {FetchPolicy}
      */
     this.fetchPolicy = 'cache-first';
+
     /**
      * Whether or not to fetch results.
      * @type {Boolean}
      */
     this.fetchResults = undefined;
+
     /**
      * The time interval (in milliseconds) on which this query should be refetched from the server.
      * @type {Number}
      */
     this.pollInterval = undefined;
+
     /**
      * Whether or not updates to the network status should trigger next on the observer of this query.
      * @type {Boolean}
      */
     this.notifyOnNetworkStatusChange = undefined;
+
     /**
      * Variables used in the query.
      * @type {Object}
      */
     this.variables = undefined;
+
     /**
      * Apollo Query Object. e.g. gql`query { foo { bar } }`
      * @type {DocumentNode}
      */
     this.query = undefined;
+
     /**
      * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
      * @type {Boolean}
      */
     this.tryFetch = undefined;
+
     /**
      * The apollo ObservableQuery watching this element's query.
      * @type {ZenObservable}
@@ -131,8 +136,9 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Resets the observableQuery and subscribes.
-   * @param  {DocumentNode}               [query=this.query]
-   * @param  {Object}                     [variables=this.variables]
+   * @param  {Object}                     [params]
+   * @param  {DocumentNode}               [params.query=this.query]
+   * @param  {Object}                     [params.variables=this.variables]
    * @return {ZenObservable.Subscription}
    */
   async subscribe({ query = this.query, variables = this.variables } = {}) {
@@ -156,7 +162,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @param  {Object} options
    * @param  {DocumentNode} options.document
    * @param  {Function} options.updateQuery
-   * @return {[type]}      [description]
+   * @return {Function}
    */
   subscribeToMore({ document, updateQuery }) {
     return (
@@ -199,10 +205,10 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   /**
    * Exposes the `ObservableQuery#fetchMore` method.
    * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.fetchMore
-   * @param  {fetchMoreOptions} options
-   * @param  {DocumentNode} [options.query=this.query] The Query.
-   * @param  {Function} options.updateQuery            Function that defines how to update the query data with the new results.
-   * @param  {Object} options.variables                New variables. Any variables not provided will be filled-in using the previous variables.
+   * @param  {fetchMoreOptions} params
+   * @param  {DocumentNode}     [params.query=this.query] The Query.
+   * @param  {Function}         params.updateQuery        Function that defines how to update the query data with the new results.
+   * @param  {Object}           params.variables          New variables. Any variables not provided will be filled-in using the previous variables.
    * @return {Promise<ApolloQueryResult>}
    */
   fetchMore({ query = this.query, updateQuery, variables }) {

@@ -1,13 +1,10 @@
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 import gqlFromInnerText from '../lib/gql-from-inner-text.js';
 import hasAllVariables from '../lib/has-all-variables.js';
-import validGql from '../lib/valid-gql.js';
+import isValidGql from '../lib/is-valid-gql.js';
 import isFunction from 'crocks/predicates/isFunction';
 
 const scriptSelector = 'script[type="application/graphql"]';
-
-/** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
-/** @typedef {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"} FetchPolicy */
 
 /**
  * `ApolloSubscriptionMixin`: class mixin for apollo-subscription elements.
@@ -15,13 +12,13 @@ const scriptSelector = 'script[type="application/graphql"]';
  * @mixinFunction
  * @appliesMixin ApolloElementMixin
  *
- * @param {Class} superclass
- * @return {Class}
+ * @param {class} superclass
+ * @return {class}
  */
 export const ApolloSubscriptionMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
    * A GraphQL document that consists of a single subscription.
-   * @type {DocumentNode}
+   * @type {DocumentNode|null}
    */
   get subscription() {
     return this.__subscription || gqlFromInnerText(this.querySelector(scriptSelector));
@@ -30,7 +27,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
   set subscription(subscription) {
     this.__subscription = subscription;
     if (subscription == null) return;
-    const valid = validGql(subscription);
+    const valid = isValidGql(subscription);
     const variables = this.__variables;
     if (!valid) throw new Error('Subscription must be a gql-parsed document');
     this.subscribe({ query: subscription, variables });
@@ -107,7 +104,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
     /**
      * The apollo ObservableQuery watching this element's subscription.
-     * @type {ZenObservable}
+     * @type {Observable}
      */
     this.observableQuery = undefined;
   }
@@ -138,9 +135,11 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * Resets the observableQuery and subscribes.
-   * @param  {DocumentNode}               [query=this.subscription]
-   * @param  {Object}                     [variables=this.variables]
-   * @return {ZenObservable.Subscription}
+   * @param  {Object} options
+   * @param  {FetchPolicy}                [options.fetchPolicy=this.fetchPolicy]
+   * @param  {DocumentNode}               [options.query=this.subscription]
+   * @param  {Object}                     [options.variables=this.variables]
+   * @return {Observable.Subscription}
    */
   async subscribe({
     fetchPolicy = this.fetchPolicy,

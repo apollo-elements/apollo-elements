@@ -2,9 +2,6 @@ import { ApolloElement } from './apollo-element.js';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin.js';
 export { html } from './apollo-element.js';
 
-/** @typedef {"none" | "ignore" | "all"} ErrorPolicy */
-/** @typedef {"cache-first" | "cache-and-network" | "network-only" | "cache-only" | "no-cache" | "standby"} FetchPolicy */
-
 /**
  * # ApolloSubscription
  *
@@ -13,13 +10,9 @@ export { html } from './apollo-element.js';
  * ## Usage
  *
  * ```js
- * import { cache } from './cache';
- * import { link } from './link';
- * import { ApolloClient } from 'apollo-client';
- * import { ApolloSubscription, html } from 'lit-apollo/classes/apollo-subscription';
- *
- * // Create the Apollo Client
- * const client = new ApolloClient({ cache, link });
+ * import { client } from './apollo-client.js';
+ * import { ApolloSubscription, html } from 'lit-apollo';
+ * import gql from 'graphql-tag';
  *
  * const errorTemplate = ({message = 'Unknown Error'}) => html`
  *   <h1>😢 Such Sad, Very Error! 😰</h1>
@@ -37,12 +30,14 @@ export { html } from './apollo-element.js';
  *   constructor() {
  *     super();
  *     this.client = client;
- *     this.subscription = gql`subscription {
- *       helloWorld {
- *         name
- *         greeting
+ *     this.subscription = gql`
+ *       subscription {
+ *         helloWorld {
+ *           name
+ *           greeting
+ *         }
  *       }
- *     }`;
+ *     `;
  *   }
  * };
  *
@@ -62,7 +57,7 @@ export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) {
    * @return {Boolean}                     Whether the component should render.
    * @protected
    */
-  shouldUpdate(changedProps) {
+  shouldUpdate() {
     return (
       this.loading != null ||
       !!this.error ||

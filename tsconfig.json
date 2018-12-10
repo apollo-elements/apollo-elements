@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["es2018", "DOM"],
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types"
+    ]
+  }
+}
