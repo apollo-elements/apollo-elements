@@ -8,14 +8,12 @@ import {
   litFixture,
   unsafeStatic,
 } from '@open-wc/testing';
-import { nextFrame } from '@open-wc/testing-helpers';
 import { match, stub, spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
 import { client } from '../test/client';
 import { getMixinInstance } from '../test/helpers';
-import { ObservableQuery } from 'apollo-client';
 
 // I'm going to cry
 const isSubscription = x => (

@@ -1,4 +1,3 @@
 node_modules
-test/client*
 coverage
 .nyc_output
