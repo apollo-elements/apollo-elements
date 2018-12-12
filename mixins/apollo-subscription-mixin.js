@@ -25,12 +25,15 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
   }
 
   set subscription(subscription) {
-    this.__subscription = subscription;
     if (subscription == null) return;
-    const valid = isValidGql(subscription);
-    const variables = this.__variables;
-    if (!valid) throw new Error('Subscription must be a gql-parsed document');
-    this.subscribe({ query: subscription, variables });
+    if (!isValidGql(subscription)) {
+      this.subscription = null;
+      throw new Error('Subscription must be a gql-parsed document');
+    } else {
+      this.__subscription = subscription;
+      const variables = this.__variables;
+      this.subscribe({ query: subscription, variables });
+    }
   }
 
   /**

@@ -36,11 +36,15 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   }
 
   set query(query) {
-    this.__query = query;
     if (query == null) return;
-    if (!isValidGql(query)) throw new Error('Query must be a gql-parsed document');
-    const variables = this.__variables;
-    this.subscribe({ query, variables });
+    if (!isValidGql(query)) {
+      this.__query = null;
+      throw new Error('Query must be a gql-parsed DocumentNode');
+    } else {
+      this.__query = query;
+      const variables = this.__variables;
+      this.subscribe({ query, variables });
+    }
   }
 
   /**

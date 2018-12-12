@@ -1,4 +1,5 @@
 import { chai, expect, html } from '@open-wc/testing';
+import { nextFrame } from '@open-wc/testing-helpers';
 import sinonChai from 'sinon-chai';
 import gql from 'graphql-tag';
 import pick from 'crocks/helpers/pick';
@@ -68,11 +69,19 @@ describe('ApolloMutationMixin', function describeApolloMutationMixin() {
     expect(el.mutation).to.equal(mutation);
   });
 
-  it('rejects a bad mutation', async function badMutation() {
-    const mutation = `mutation { foo { bar } }`;
+  it('accepts a parsed mutation in setter', async function parsedMutation() {
+    const mutation = gql`mutation { foo { bar } }`;
     const el = await getElement({ client });
-    expect(() => el.mutation = mutation).to.throw;
-    expect(el.mutation).to.be.null;
+    el.mutation = mutation;
+    expect(el.mutation).to.equal(mutation);
+  });
+
+  it('rejects a bad mutation', async function badMutation() {
+    const el = await getElement();
+    expect(() => {
+      el.mutation = 'foo';
+    }).to.throw('Mutation must be a gql-parsed DocumentNode');
+    expect(el.mutation).to.not.be.ok;
   });
 
   describe('generateMutationId', function generateMutationId() {

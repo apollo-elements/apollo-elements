@@ -24,9 +24,13 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
   }
 
   set mutation(mutation) {
-    const valid = isValidGql(mutation);
-    this.__mutation = valid ? mutation : null;
-    if (!valid) throw new Error('Mutation must be a gql-parsed document');
+    if (mutation == null) return;
+    if (!isValidGql(mutation)) {
+      this.__mutation = null;
+      throw new Error('Mutation must be a gql-parsed DocumentNode');
+    } else {
+      this.__mutation = mutation;
+    }
   }
 
   constructor() {
