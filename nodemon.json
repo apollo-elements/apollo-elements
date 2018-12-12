@@ -1,0 +1,4 @@
+{
+  "ignore": ["test/client.js", "test/client.js.map"],
+  "ext": "js,graphql,html,md,ts"
+}

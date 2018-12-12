@@ -2,6 +2,7 @@
 [![Published on npm](https://img.shields.io/npm/v/lit-apollo.svg)](https://www.npmjs.com/package/lit-apollo)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/lit-apollo)
 [![Build Status](https://travis-ci.org/bennypowers/lit-apollo.svg?branch=master)](https://travis-ci.org/bennypowers/lit-apollo)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/bennypowers/lit-apollo/test_coverage)
 [![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/bennyp?utm_source=github&utm_medium=button&utm_term=bennyp&utm_campaign=github)
 
 🚀 Custom element base classes & mixins that connect to your Apollo cache 🌜
