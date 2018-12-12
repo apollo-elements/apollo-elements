@@ -127,7 +127,7 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
     update = this.onUpdate,
     awaitRefetchQueries = this.awaitRefetchQueries,
     variables = this.variables,
-  } = {}) {
+  } = this) {
     const mutationId = this.generateMutationId();
 
     this.loading = true;
@@ -167,6 +167,7 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
     const { data } = response;
     if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
       this.loading = false;
+      this.error = null;
       this.data = data;
     }
     return this.onCompleted(data);
@@ -182,6 +183,7 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
   onMutationError(error, mutationId) {
     if (this.isMostRecentMutation(mutationId)) {
       this.loading = false;
+      this.data = null;
       this.error = error;
     }
     return this.onError(error);

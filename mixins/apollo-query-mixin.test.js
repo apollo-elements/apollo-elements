@@ -44,6 +44,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
   it('accepts a script child as query', async function scriptChild() {
     const script = `query { foo { bar } }`;
     const el = await getElement({ client, script });
+    expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
     expect(el.query).to.deep.equal(gql(script));
     expect(el.observableQuery).to.be.ok;
     // const subscribeStub = stub(el, 'subscribe');
@@ -53,14 +54,14 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     // expect(subscribeStub).to.have.been.called;
   });
 
-  it('accepts a parsed query', async function scriptChild() {
+  it('accepts a parsed query', async function parsedQuery() {
     const query = gql`query { foo { bar } }`;
     const el = await getElement({ client, query });
     expect(el.query).to.equal(query);
     expect(el.observableQuery).to.be.ok;
   });
 
-  it('rejects a bad query', async function scriptChild() {
+  it('rejects a bad query', async function badQuery() {
     const query = `query { foo { bar } }`;
     const el = await getElement({ client });
     expect(() => el.query = query).to.throw;
