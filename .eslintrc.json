@@ -3,12 +3,28 @@
   "env": { "browser": true, "es6": true },
   "parserOptions": { "sourceType": "module", "ecmaVersion": 2018 },
   "rules": {
-    "no-console": 2
-  },
-  "overrides": [{
-    "files": ["**/**/*.test.js"],
-      "rules": {
-        "max-len": [2, 80, {"ignoreStrings": true, "ignoreComments": true}]
-      }
+    "no-console": "error",
+    "indent": ["error", 2, {
+      "flatTernaryExpressions": true
     }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.js"],
+      "rules": {
+        "require-jsdoc": "off",
+        "max-len": [2, 80, {
+          "ignoreStrings": true,
+          "ignoreComments": true,
+          "ignoreTemplateLiterals": true
+        }]
+      }
+    }, {
+      "files": ["**/*.tape.test.js"],
+      "env": {"node": true}
+    }, {
+      "files": ["**/*.mocha.test.js"],
+      "env": {"mocha": true}
+    }
+  ]
 }

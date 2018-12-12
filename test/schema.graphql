@@ -1,0 +1,18 @@
+type Message {
+  message: String
+  user: String
+  date: String
+}
+
+type Query {
+  messages: [Message]
+}
+
+type Subscription {
+  messageSent: Message
+}
+
+type Mutation {
+  sendMessage(user: String, message: String): Message
+  reset: [Message]
+}
