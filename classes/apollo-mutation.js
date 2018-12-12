@@ -1,5 +1,4 @@
-import { LitElement } from '@polymer/lit-element';
-
+import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '../mixins/apollo-mutation-mixin';
 
 /**
@@ -46,7 +45,7 @@ import { ApolloMutationMixin } from '../mixins/apollo-mutation-mixin';
  * @extends LitElement
  * @appliesMixin ApolloMutationMixin
  */
-export class ApolloMutation extends ApolloMutationMixin(LitElement) {
+export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   static get properties() {
     return {
       /**
