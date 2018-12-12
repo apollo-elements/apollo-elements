@@ -4,6 +4,14 @@ import { createServer } from 'http';
 import { readFileSync } from 'fs';
 import { ApolloServer, PubSub, gql } from 'apollo-server-express';
 
+const prettyPrint = (x, tag = '') =>
+  // eslint-disable-next-line no-console
+  console.log(tag,
+    typeof x !== 'object'
+      ? x.toString()
+      : JSON.stringify(x, null, 2)
+  );
+
 const pubsub = new PubSub();
 
 const MESSAGE_SENT = 'MESSAGE_SENT';
@@ -15,6 +23,7 @@ let messages = [];
 const resolvers = {
   Mutation: {
     sendMessage(_, { user, message }) {
+      prettyPrint({ user, message }, 'Mutation sendMessage');
       const date = new Date().toISOString();
       const messageSent = { user, message, date };
       messages.push(messageSent);
@@ -23,18 +32,23 @@ const resolvers = {
     },
 
     reset() {
+      prettyPrint({ previous: messages }, 'Mutation reset');
       messages = [];
       return messages;
     },
   },
 
   Query: {
-    messages: () => messages,
+    messages: () =>
+      prettyPrint(messages, 'Query messages') ||
+      messages,
   },
 
   Subscription: {
     messageSent: {
-      subscribe: () => pubsub.asyncIterator(MESSAGE_SENT),
+      subscribe: () =>
+        prettyPrint('Subscription messageSent') ||
+        pubsub.asyncIterator(MESSAGE_SENT),
     },
   },
 };
@@ -45,7 +59,8 @@ export const apolloServer = new ApolloServer({
 });
 
 const port = process.env.PORT || 8000;
-const url = process.env.URL || `http://localhost:${port}`;
+const host = process.env.HOST || 'localhost';
+const url = process.env.URL || `http://${host}:${port}`;
 const app = express();
 const http = createServer(app);
 
@@ -58,6 +73,15 @@ apolloServer.applyMiddleware({ app, path: '/graphql' });
 
 apolloServer.installSubscriptionHandlers(http);
 
-http.listen({ port }, () => {
-  console.log(`🚀  Apollo Server at ${url}${apolloServer.graphqlPath}`);
-});
+http.listen({ port }, () =>
+  prettyPrint(`🚀 ${new Date().toISOString()} Apollo Server Listening at ${url}${apolloServer.graphqlPath}`)
+);
+
+const shutdown = () => process.kill(process.pid, 'SIGUSR2');
+
+const onCloseSignal = code => {
+  prettyPrint(`⏲️ ${new Date().toISOString()} Shutting down Apollo server with code ${code}.`);
+  http.close(shutdown);
+};
+
+['SIGUSR2', 'SIGTERM'].forEach(sig => process.once(sig, onCloseSignal));

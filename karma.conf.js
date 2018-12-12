@@ -6,9 +6,11 @@ module.exports = config => {
   config.set({
     ...baseConfig,
 
-    files: [
-      // if --grep flag is set, run those tests instead
-      config.grep ? config.grep : '**/*.mocha.test.js',
+    files: config.grep ? [config.grep] : [
+      'classes/*.test.js',
+      'elements/*.test.js',
+      'lib/*.test.js',
+      'mixins/*.test.js',
     ],
 
   });

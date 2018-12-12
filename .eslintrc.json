@@ -20,11 +20,11 @@
         }]
       }
     }, {
-      "files": ["**/*.tape.test.js"],
-      "env": {"node": true}
-    }, {
-      "files": ["**/*.mocha.test.js"],
+      "files": ["**/*.test.js"],
       "env": {"mocha": true}
+    }, {
+      "files": ["karma.conf.js"],
+      "env": {"node": true}
     }
   ]
 }

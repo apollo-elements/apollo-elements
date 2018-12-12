@@ -1,51 +1,31 @@
 import gql from 'graphql-tag';
 
-import {
-  chai,
-  defineCE,
-  expect,
-  html,
-  litFixture,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { chai, expect, html } from '@open-wc/testing';
+import { ifDefined } from 'lit-html/directives/if-defined';
 import { match, stub, spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
 import { client } from '../test/client';
-import { getMixinInstance } from '../test/helpers';
-
-// I'm going to cry
-const isSubscription = x => (
-  x.constructor.toString().startsWith('function Subscription') &&
-  typeof x.unsubscribe === 'function' &&
-  '_state' in x &&
-  '_observer' in x &&
-  typeof x._observer.next === 'function' &&
-  typeof x._observer.error === 'function'
-);
+import { getElementWithLitTemplate, isSubscription } from '../test/helpers';
 
 chai.use(sinonChai);
 
-const getElement = async ({ query, variables, client, script } = {}) => {
-  const tagName = defineCE(class extends ApolloQueryMixin(HTMLElement) { });
-  const tag = unsafeStatic(tagName);
-  const template = !script
-    ? html`<${tag} .client="${client}" .query="${query}" .variables="${variables}"></${tag}>`
-    : html`
-      <${tag} .client="${client}" .variables="${variables}">
-        <script type="application/graphql">
-          ${script}
-        </script>
-      </${tag}>`;
+const scriptTemplate = script => html`<script type="application/graphql">${script}</script>`;
+const getClass = () => ApolloQueryMixin(HTMLElement);
+const getTemplate = (tag, { query, variables, client, script } = {}) => html`
+  <${tag}
+      .client="${ifDefined(client)}"
+      .query="${ifDefined(query)}"
+      .variables="${variables}">
+    ${script && scriptTemplate(script)}
+  </${tag}>`;
 
-  return await litFixture(template);
-};
+const getElement = getElementWithLitTemplate({ getClass, getTemplate });
 
 describe('ApolloQueryMixin', function describeApolloQueryMixin() {
-  const getInstance = getMixinInstance(ApolloQueryMixin);
-  it('returns an instance of the superclass', function returnsClass() {
-    expect(getInstance(HTMLElement)).to.be.an.instanceOf(HTMLElement);
+  it('returns an instance of the superclass', async function returnsClass() {
+    expect(await getElement()).to.be.an.instanceOf(HTMLElement);
   });
 
   it('sets default properties', async function setsDefaultProperties() {

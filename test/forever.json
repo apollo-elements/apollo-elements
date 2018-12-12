@@ -1,0 +1,12 @@
+{
+    "append": true,
+    "command": "node -r esm",
+    "errFile": "forever-error.log",
+    "killSignal": "SIGTERM",
+    "logFile": "forever.log",
+    "outFile": "forever-out.log",
+    "script": "server.js",
+    "sourceDir": "./test",
+    "uid": "server",
+    "workingDir": "."
+}
