@@ -3,7 +3,19 @@ import gqlFromInnerText from '../lib/gql-from-inner-text.js';
 import hasAllVariables from '../lib/has-all-variables.js';
 import isValidGql from '../lib/is-valid-gql.js';
 
+import pick from 'crocks/helpers/pick';
+
 const scriptSelector = 'script[type="application/graphql"]';
+
+const getQueryProperties = pick([
+  'context',
+  'errorPolicy',
+  'fetchPolicy',
+  'fetchResults',
+  'metadata',
+  'query',
+  'variables',
+]);
 
 /**
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
@@ -26,9 +38,8 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   set query(query) {
     this.__query = query;
     if (query == null) return;
-    const valid = isValidGql(query);
+    if (!isValidGql(query)) throw new Error('Query must be a gql-parsed document');
     const variables = this.__variables;
-    if (!valid) throw new Error('Query must be a gql-parsed document');
     this.subscribe({ query, variables });
   }
 
@@ -103,9 +114,14 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
     /**
      * The apollo ObservableQuery watching this element's query.
-     * @type {ZenObservable}
+     * @type {ObservableQuery}
      */
     this.observableQuery;
+  }
+
+  connectedCallback() {
+    if (typeof super.connectedCallback === 'function') super.connectedCallback();
+    if (this.query) this.subscribe();
   }
 
   /**
@@ -164,7 +180,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @param  {Function} options.updateQuery
    * @return {Function}
    */
-  subscribeToMore({ document, updateQuery }) {
+  subscribeToMore({ document, updateQuery } = {}) {
     return (
       this.observableQuery &&
       this.observableQuery.subscribeToMore({ document, updateQuery })
@@ -176,28 +192,13 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @return {Promise<ApolloQueryResult>}
    */
   executeQuery() {
-    const {
-      context,
-      errorPolicy,
-      fetchPolicy,
-      fetchResults,
-      metadata,
-      query,
-      variables,
-    } = this;
-    const queryPromise = this.client.query({
-      context,
-      errorPolicy,
-      fetchPolicy,
-      fetchResults,
-      metadata,
-      query,
-      variables,
-    });
+    const queryProperties = getQueryProperties({ ...this });
+    const queryPromise =
+      this.client
+        .query(queryProperties)
+        .catch(this.nextError.bind(this));
 
-    queryPromise
-      .then(this.nextData.bind(this))
-      .catch(this.nextError.bind(this));
+    queryPromise.then(this.nextData.bind(this));
 
     return queryPromise;
   }
@@ -211,7 +212,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @param  {Object}           params.variables          New variables. Any variables not provided will be filled-in using the previous variables.
    * @return {Promise<ApolloQueryResult>}
    */
-  fetchMore({ query = this.query, updateQuery, variables }) {
+  fetchMore({ query = this.query, updateQuery, variables } = {}) {
     return (
       this.observableQuery &&
       this.observableQuery.fetchMore({ query, updateQuery, variables })
@@ -243,7 +244,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
     pollInterval = this.pollInterval,
     query = this.query,
     variables = this.variables,
-  } = {}) {
+  } = this) {
     return this.client.watchQuery({
       context,
       errorPolicy,
