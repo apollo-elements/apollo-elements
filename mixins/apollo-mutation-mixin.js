@@ -1,7 +1,5 @@
 import { ApolloElementMixin } from './apollo-element-mixin';
 
-import isValidGql from '../lib/is-valid-gql.js';
-
 /**
  * `ApolloMutationMixin`: class mixin for apollo-mutation elements.
  *
@@ -17,14 +15,14 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
    * @type {DocumentNode}
    */
   get mutation() {
-    return this.__mutation || null;
+    return this.document;
   }
 
   set mutation(mutation) {
-    if (isValidGql(mutation)) {
-      this.__mutation = mutation;
-    } else {
-      if (mutation) throw new Error('Mutation must be a gql-parsed DocumentNode');
+    try {
+      this.document = mutation;
+    } catch (error) {
+      throw new TypeError('Mutation must be a gql-parsed DocumentNode');
     }
   }
 

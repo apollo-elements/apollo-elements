@@ -19,16 +19,19 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
    * @type {DocumentNode|null}
    */
   get subscription() {
-    return this.__subscription || null;
+    return this.document;
   }
 
   set subscription(query) {
-    if (isValidGql(query)) {
-      this.__subscription = query;
-      const variables = this.__variables;
+    try {
+      this.document = query;
+    } catch (error) {
+      throw new TypeError('Subscription must be a gql-parsed document');
+    }
+
+    if (!this.noAutoSubscribe && query) {
+      const { variables } = this;
       this.subscribe({ query, variables });
-    } else {
-      if (query) throw new Error('Subscription must be a gql-parsed document');
     }
   }
 

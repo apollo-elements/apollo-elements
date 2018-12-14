@@ -1,7 +1,5 @@
 import { ApolloElementMixin } from './apollo-element-mixin.js';
-import gqlFromInnerText from '../lib/gql-from-inner-text.js';
 import hasAllVariables from '../lib/has-all-variables.js';
-import isValidGql from '../lib/is-valid-gql.js';
 
 import pick from 'crocks/helpers/pick';
 
@@ -30,16 +28,18 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @type {DocumentNode}
    */
   get query() {
-    return this.__query || null;
+    return this.document;
   }
 
   set query(query) {
-    if (isValidGql(query)) {
-      this.__query = query;
-      const variables = this.__variables;
-      this.subscribe({ query, variables });
-    } else {
-      if (query) throw new Error('Query must be a gql-parsed document');
+    try {
+      this.document = query;
+    } catch (error) {
+      throw new TypeError('Query must be a gql-parsed document');
+    }
+
+    if (!this.noAutoSubscribe && query) {
+      this.subscribe({ query, variables: this.variables });
     }
   }
 

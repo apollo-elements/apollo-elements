@@ -6,12 +6,14 @@
  * @param {Class} superclass
  * @return {Class}
  */
+import when from 'crocks/logic/when';
+
 import {
   getGraphQLScriptChildDocument,
 } from '../lib/get-graphql-script-child-document';
-import { isGraphQLScript } from '../lib/pointfree';
+import { isGraphQLScript } from '../lib/helpers.js';
 import gqlFromInnerText from '../lib/gql-from-inner-text';
-import when from 'crocks/logic/when';
+import isValidGql from '../lib/is-valid-gql';
 
 export const ApolloElementMixin = superclass => class extends superclass {
   constructor() {
@@ -52,6 +54,18 @@ export const ApolloElementMixin = superclass => class extends superclass {
 
     this.elementMutationObserver = new MutationObserver(this.onElementMutation);
     this.scriptChildMutationObserver = new MutationObserver(this.onScriptChildMutation);
+  }
+
+  get document() {
+    return this.__document || null;
+  }
+
+  set document(doc) {
+    if (isValidGql(doc)) {
+      this.__document = doc;
+    } else {
+      if (doc) throw new TypeError('document must be a gql-parsed DocumentNode');
+    }
   }
 
   connectedCallback() {
