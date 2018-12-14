@@ -1,9 +1,6 @@
 import { ApolloElementMixin } from './apollo-element-mixin';
 
-import gqlFromInnerText from '../lib/gql-from-inner-text.js';
 import isValidGql from '../lib/is-valid-gql.js';
-
-const scriptSelector = 'script[type="application/graphql"]';
 
 /**
  * `ApolloMutationMixin`: class mixin for apollo-mutation elements.
@@ -20,21 +17,21 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
    * @type {DocumentNode}
    */
   get mutation() {
-    return this.__mutation || gqlFromInnerText(this.querySelector(scriptSelector));
+    return this.__mutation || null;
   }
 
   set mutation(mutation) {
-    if (mutation == null) return;
-    if (!isValidGql(mutation)) {
-      this.__mutation = null;
-      throw new Error('Mutation must be a gql-parsed DocumentNode');
-    } else {
+    if (isValidGql(mutation)) {
       this.__mutation = mutation;
+    } else {
+      if (mutation) throw new Error('Mutation must be a gql-parsed DocumentNode');
     }
   }
 
   constructor() {
     super();
+    this.__gqlScriptPropertyName = 'mutation';
+
     /**
      * Whether to ignore the results of the mutation.
      * @type {Boolean}

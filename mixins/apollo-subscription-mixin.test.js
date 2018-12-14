@@ -1,5 +1,7 @@
+import gql from 'graphql-tag';
 import { chai, expect, html } from '@open-wc/testing';
-import { match, stub } from 'sinon';
+import { nextFrame } from '@open-wc/testing-helpers';
+import { spy, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { ApolloSubscriptionMixin } from './apollo-subscription-mixin.js';
@@ -37,6 +39,55 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     expect(el.observableQuery, 'observableQuery').to.be.undefined;
   });
 
+  describe('subscription property', function describeNextData() {
+    it('accepts a script child', async function scriptChild() {
+      const getStubbedClass = () => {
+        const klass = class extends ApolloSubscriptionMixin(HTMLElement) { };
+        spy(klass.prototype, 'subscribe');
+        return klass;
+      };
+
+      const getStubbedElement = getElementWithLitTemplate({
+        getClass: getStubbedClass,
+        getTemplate,
+      });
+
+      const script = 'subscription { foo }';
+      const el = await getStubbedElement({ client, script });
+
+      expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
+      expect(el.subscription).to.deep.equal(gql(script));
+      expect(el.subscribe).to.have.been.called;
+      expect(el.observableQuery).to.be.ok;
+    });
+
+    it('accepts a DocumentNode', async function() {
+      const subscription = gql`subscription { foo }`;
+      const el = await getElement({ client });
+      el.subscription = subscription;
+      expect(el.subscription).to.equal(subscription);
+    });
+
+    it('rejects a non-DocumentNode', async function() {
+      const subscription = `subscription { foo }`;
+      const el = await getElement({ client });
+      expect(() => el.subscription = subscription).to.throw;
+      expect(el.subscription).to.not.be.ok;
+    });
+
+    it('calls subscribe', async function() {
+      const subscription = gql`subscription { foo }`;
+      const el = await getElement({ client });
+      const subscribeStub = stub(el, 'subscribe');
+      const variables = { bar: 1 };
+      el.variables = variables;
+      el.subscription = subscription;
+      expect(subscribeStub).to.have.been.calledWith({
+        query: subscription,
+        variables,
+      });
+    });
+  });
   describe('nextData', function describeNextData() {
     it('calls onSubscriptionData if defined', async function callsOnSubscriptionData() {
       const el = await getElement({ client });

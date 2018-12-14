@@ -1,10 +1,8 @@
-import { ApolloElementMixin } from './apollo-element-mixin.js';
-import gqlFromInnerText from '../lib/gql-from-inner-text.js';
-import hasAllVariables from '../lib/has-all-variables.js';
-import isValidGql from '../lib/is-valid-gql.js';
 import isFunction from 'crocks/predicates/isFunction';
 
-const scriptSelector = 'script[type="application/graphql"]';
+import { ApolloElementMixin } from './apollo-element-mixin.js';
+import hasAllVariables from '../lib/has-all-variables.js';
+import isValidGql from '../lib/is-valid-gql.js';
 
 /**
  * `ApolloSubscriptionMixin`: class mixin for apollo-subscription elements.
@@ -21,18 +19,16 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
    * @type {DocumentNode|null}
    */
   get subscription() {
-    return this.__subscription || gqlFromInnerText(this.querySelector(scriptSelector));
+    return this.__subscription || null;
   }
 
-  set subscription(subscription) {
-    if (subscription == null) return;
-    if (!isValidGql(subscription)) {
-      this.subscription = null;
-      throw new Error('Subscription must be a gql-parsed document');
-    } else {
-      this.__subscription = subscription;
+  set subscription(query) {
+    if (isValidGql(query)) {
+      this.__subscription = query;
       const variables = this.__variables;
-      this.subscribe({ query: subscription, variables });
+      this.subscribe({ query, variables });
+    } else {
+      if (query) throw new Error('Subscription must be a gql-parsed document');
     }
   }
 
@@ -54,6 +50,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   constructor() {
     super();
+    this.__gqlScriptPropertyName = 'subscription';
     this.nextData = this.nextData.bind(this);
     this.nextError = this.nextError.bind(this);
 
@@ -97,7 +94,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
      * `
      * @type {DocumentNode}
      */
-    this.subscription = undefined;
+    this.subscription = null;
 
     /**
      * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).

@@ -5,8 +5,6 @@ import isValidGql from '../lib/is-valid-gql.js';
 
 import pick from 'crocks/helpers/pick';
 
-const scriptSelector = 'script[type="application/graphql"]';
-
 const getQueryProperties = pick([
   'context',
   'errorPolicy',
@@ -32,18 +30,16 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @type {DocumentNode}
    */
   get query() {
-    return this.__query || gqlFromInnerText(this.querySelector(scriptSelector));
+    return this.__query || null;
   }
 
   set query(query) {
-    if (query == null) return;
-    if (!isValidGql(query)) {
-      this.__query = null;
-      throw new Error('Query must be a gql-parsed DocumentNode');
-    } else {
+    if (isValidGql(query)) {
       this.__query = query;
       const variables = this.__variables;
       this.subscribe({ query, variables });
+    } else {
+      if (query) throw new Error('Query must be a gql-parsed document');
     }
   }
 
@@ -65,6 +61,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   constructor() {
     super();
+    this.__gqlScriptPropertyName = 'query';
     this.nextData = this.nextData.bind(this);
     this.nextError = this.nextError.bind(this);
 
