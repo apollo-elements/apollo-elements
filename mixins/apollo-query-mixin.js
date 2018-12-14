@@ -59,9 +59,21 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
       : this.subscribe({ query, variables });
   }
 
+  /**
+   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
+   * @type {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
+   */
+  get options() {
+    return this.__options;
+  }
+
+  set options(options) {
+    this.__options = options;
+    this.observableQuery && this.observableQuery.setOptions(options);
+  }
+
   constructor() {
     super();
-    this.__gqlScriptPropertyName = 'query';
     this.nextData = this.nextData.bind(this);
     this.nextError = this.nextError.bind(this);
 
@@ -123,18 +135,6 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   connectedCallback() {
     if (typeof super.connectedCallback === 'function') super.connectedCallback();
     if (this.query) this.subscribe();
-  }
-
-  /**
-   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
-   * @param {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
-   * @return {Promise<ApolloQueryResult>}
-   */
-  setOptions(options) {
-    return (
-      this.observableQuery &&
-      this.observableQuery.setOptions(options)
-    );
   }
 
   /**

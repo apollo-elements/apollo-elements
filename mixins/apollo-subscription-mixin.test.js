@@ -13,10 +13,10 @@ chai.use(sinonChai);
 
 const scriptTemplate = script => html`<script type="application/graphql">${script}</script>`;
 const getClass = () => ApolloSubscriptionMixin(HTMLElement);
-const getTemplate = (tag, { mutation, variables, client, script } = {}) => html`
+const getTemplate = (tag, { subscription, variables, client, script } = {}) => html`
   <${tag}
       .client="${ifDefined(client)}"
-      .mutation="${ifDefined(mutation)}"
+      .subscription="${ifDefined(subscription)}"
       .variables="${variables}">
     ${script && scriptTemplate(script)}
   </${tag}>`;
@@ -58,7 +58,6 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
       expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
       expect(el.subscription).to.deep.equal(gql(script));
       expect(el.subscribe).to.have.been.called;
-      expect(el.observableQuery).to.be.ok;
     });
 
     it('accepts a DocumentNode', async function() {
@@ -82,12 +81,10 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
       const variables = { bar: 1 };
       el.variables = variables;
       el.subscription = subscription;
-      expect(subscribeStub).to.have.been.calledWith({
-        query: subscription,
-        variables,
-      });
+      expect(subscribeStub).to.have.been.called;
     });
   });
+
   describe('nextData', function describeNextData() {
     it('calls onSubscriptionData if defined', async function callsOnSubscriptionData() {
       const el = await getElement({ client });

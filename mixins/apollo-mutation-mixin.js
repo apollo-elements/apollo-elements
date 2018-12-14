@@ -28,7 +28,6 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   constructor() {
     super();
-    this.__gqlScriptPropertyName = 'mutation';
 
     /**
      * Whether to ignore the results of the mutation.

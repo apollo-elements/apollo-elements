@@ -6,21 +6,16 @@
  * @param {Class} superclass
  * @return {Class}
  */
-import when from 'crocks/logic/when';
 
 import {
   getGraphQLScriptChildDocument,
 } from '../lib/get-graphql-script-child-document';
-import { isGraphQLScript } from '../lib/helpers.js';
-import gqlFromInnerText from '../lib/gql-from-inner-text';
 import isValidGql from '../lib/is-valid-gql';
 
 export const ApolloElementMixin = superclass => class extends superclass {
   constructor() {
     super();
     this.onElementMutation = this.onElementMutation.bind(this);
-    this.observeScriptChild = this.observeScriptChild.bind(this);
-    this.onScriptChildMutation = this.onScriptChildMutation.bind(this);
 
     /**
      * Context to be passed to link execution chain.
@@ -53,7 +48,6 @@ export const ApolloElementMixin = superclass => class extends superclass {
     this.client = window.__APOLLO_CLIENT__;
 
     this.elementMutationObserver = new MutationObserver(this.onElementMutation);
-    this.scriptChildMutationObserver = new MutationObserver(this.onScriptChildMutation);
   }
 
   get document() {
@@ -70,8 +64,12 @@ export const ApolloElementMixin = superclass => class extends superclass {
 
   connectedCallback() {
     super.connectedCallback && super.connectedCallback();
-    this.elementMutationObserver.observe(this, { subtree: true, childList: true });
-    this[this.__gqlScriptPropertyName] = getGraphQLScriptChildDocument(this) || null;
+    this.elementMutationObserver.observe(this, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+    this.document = getGraphQLScriptChildDocument(this) || null;
   }
 
   disconnectedCallback() {
@@ -83,15 +81,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
   }
 
   onElementMutation() {
-    this.children.forEach(when(isGraphQLScript, this.observeScriptChild));
-  }
-
-  onScriptChildMutation({ target }) {
-    const doc = gqlFromInnerText(target);
-    this[this.__gqlScriptPropertyName] = doc;
-  }
-
-  observeScriptChild(script) {
-    this.scriptChildMutationObserver.observe(script);
+    const doc = getGraphQLScriptChildDocument(this);
+    if (doc) this.document = doc;
   }
 };

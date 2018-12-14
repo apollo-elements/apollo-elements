@@ -29,10 +29,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
       throw new TypeError('Subscription must be a gql-parsed document');
     }
 
-    if (!this.noAutoSubscribe && query) {
-      const { variables } = this;
-      this.subscribe({ query, variables });
-    }
+    if (query) this.subscribe();
   }
 
   /**
@@ -45,15 +42,25 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   set variables(variables) {
     this.__variables = variables;
-    const subscription = this.__subscription;
-    this.observableQuery
-      ? this.setVariables(variables)
-      : this.subscribe({ query: subscription, variables });
+    if (this.observableQuery) this.setVariables(variables);
+    else this.subscribe();
+  }
+
+  /**
+   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
+   * @type {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
+   */
+  get options() {
+    return this.__options;
+  }
+
+  set options(options) {
+    this.__options = options;
+    this.observableQuery && this.observableQuery.setOptions(options);
   }
 
   constructor() {
     super();
-    this.__gqlScriptPropertyName = 'subscription';
     this.nextData = this.nextData.bind(this);
     this.nextError = this.nextError.bind(this);
 
@@ -109,31 +116,12 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
      * The apollo ObservableQuery watching this element's subscription.
      * @type {Observable}
      */
-    this.observableQuery = undefined;
+    this.observableQuery;
   }
 
-  /**
-   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
-   * @param {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
-   * @return {Promise<ApolloQueryResult>}
-   */
-  setOptions(options) {
-    return (
-      this.observableQuery &&
-      this.observableQuery.setOptions(options)
-    );
-  }
-
-  /**
-   * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
-   * @param {Object}  variables                        The new set of variables. If there are missing variables, the previous values of those variables will be used.
-   * @return {Promise<ApolloQueryResult>}
-   */
-  setVariables(variables) {
-    return (
-      this.observableQuery &&
-      this.observableQuery.setVariables(variables)
-    );
+  connectedCallback() {
+    super.connectedCallback && super.connectedCallback();
+    this.subscribe();
   }
 
   /**

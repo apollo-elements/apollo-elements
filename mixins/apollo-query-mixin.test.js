@@ -41,18 +41,26 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     expect(el.observableQuery, 'observableQuery').to.be.undefined;
   });
 
-  it('accepts a script child as query', async function scriptChild() {
-    const script = `query { foo { bar } }`;
-    const el = await getElement({ client, script });
+  it('accepts a script child', async function scriptChild() {
+    const getStubbedClass = () => {
+      const klass = class extends ApolloQueryMixin(HTMLElement) { };
+      spy(klass.prototype, 'subscribe');
+      return klass;
+    };
+
+    const getStubbedElement = getElementWithLitTemplate({
+      getClass: getStubbedClass,
+      getTemplate,
+    });
+
+    const script = 'subscription { foo }';
+    const el = await getStubbedElement({ client, script });
+
     expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
     expect(el.query).to.deep.equal(gql(script));
-    expect(el.observableQuery).to.be.ok;
-    // const subscribeStub = stub(el, 'subscribe');
-    // subscribe fires in connectedCallback if there is a query set.
-    // by the time the stub is created, subscribe has already been called.
-    // so now the stub wont pick it up, since the call already happend
-    // expect(subscribeStub).to.have.been.called;
+    expect(el.subscribe).to.have.been.called;
   });
+
 
   it('accepts a parsed query', async function parsedQuery() {
     const query = gql`query { foo { bar } }`;
@@ -69,26 +77,27 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     expect(el.observableQuery).to.not.be.ok;
   });
 
-  describe('setOptions', function describeSetOptions() {
+  describe('setting options', function describeSetOptions() {
     it('does nothing when there is no observableQuery', async function setOptionsNoQuery() {
       const el = await getElement({ client });
-      expect(el.setOptions(({ errorPolicy: 'foo' }))).to.be.undefined;
+      el.options = { errorPolicy: 'foo' };
+      expect(el.options).to.deep.equal({ errorPolicy: 'foo' });
     });
 
     it('calls observableQuery.subscribe when there is a query', async function setOptionsCallsObservableQuerySetOptions() {
       const query = gql`query { foo { bar } }`;
       const el = await getElement({ client, query });
       const setOptionsSpy = stub(el.observableQuery, 'setOptions');
-      // shouldn't this be an instance of ObservableQuery?
-      expect(el.setOptions(({ errorPolicy: 'foo' }))).to.be.undefined;
+      el.options = { errorPolicy: 'foo' };
       expect(setOptionsSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
     });
   });
 
-  describe('setVariables', function describeSetVariables() {
+  describe('setting variables', function describeSetVariables() {
     it('does nothing when there is no observableQuery', async function setVariablesNoQuery() {
       const el = await getElement({ client });
-      expect(el.setVariables(({ errorPolicy: 'foo' }))).to.be.undefined;
+      el.variables = { errorPolicy: 'foo' };
+      expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
     });
 
     it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
@@ -96,7 +105,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       const el = await getElement({ client, query });
       const setVariablesSpy = stub(el.observableQuery, 'setVariables');
       // shouldn't this be an instance of ObservableQuery?
-      expect(el.setVariables(({ errorPolicy: 'foo' }))).to.be.undefined;
+      el.variables = { errorPolicy: 'foo' };
       expect(setVariablesSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
     });
   });
