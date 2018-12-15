@@ -2,7 +2,8 @@ import { ApolloElement } from "./apollo-element";
 import { DocumentNode } from "graphql";
 import { FetchResult } from "apollo-link";
 import { ModifiableWatchQueryOptions, FetchPolicy } from "apollo-client/core/watchQueryOptions";
-import ApolloClient, { ApolloError, ObservableQuery, ApolloQueryResult } from "apollo-client";
+import ApolloClient, { ApolloError, ApolloQueryResult } from "apollo-client";
+import { Observable } from 'apollo-link';
 
 export interface SubscriptionResult<TData> {
   loading: boolean;
@@ -19,7 +20,7 @@ declare class ApolloSubscription<TBase, TData, TVariables> extends ApolloElement
   subscription: DocumentNode | null;
   variables?: TVariables;
   fetchPolicy?: FetchPolicy;
-  observableQuery: ObservableQuery<TData, TVariables>;
+  observable: Observable<TData>;
   onSubscriptionData?: (options: OnSubscriptionDataOptions<TData>) => any;
   private nextData(result: { data: TData }): undefined;
   private nextError(error: ApolloError): undefined;

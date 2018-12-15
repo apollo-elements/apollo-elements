@@ -54,7 +54,7 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
        * Enum of network statuses. See https://bit.ly/2sfKLY0
        * @type {Number}
        */
-      networkStatus: { type: Object },
+      networkStatus: { type: Number },
     };
   }
 
@@ -62,16 +62,16 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
    * By default, will only render if
    *   - The component has `data` or
    *   - The component has an `error` or
-   *   - The component is `loading`.
+   *   - The component has a `loading` status.
    * @param  {Map}  changedProps           Changed properties.
    * @return {Boolean}                     Whether the component should render.
    * @protected
    */
   shouldUpdate() {
     return (
-      this.loading != null ||
+      !!this.data ||
       !!this.error ||
-      !!this.data
+      this.loading != null
     );
   }
 }

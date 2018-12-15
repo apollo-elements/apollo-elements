@@ -1,18 +1,6 @@
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 import hasAllVariables from '../lib/has-all-variables.js';
 
-import pick from 'crocks/helpers/pick';
-
-const getQueryProperties = pick([
-  'context',
-  'errorPolicy',
-  'fetchPolicy',
-  'fetchResults',
-  'metadata',
-  'query',
-  'variables',
-]);
-
 /**
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
  *
@@ -35,7 +23,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
     try {
       this.document = query;
     } catch (error) {
-      throw new TypeError('Query must be a gql-parsed document');
+      throw new TypeError('Query must be a gql-parsed DocumentNode');
     }
 
     if (!this.noAutoSubscribe && query) {
@@ -133,7 +121,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   }
 
   connectedCallback() {
-    if (typeof super.connectedCallback === 'function') super.connectedCallback();
+    super.connectedCallback && super.connectedCallback();
     if (this.query) this.subscribe();
   }
 
@@ -192,11 +180,26 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * Executes a Query once and updates the component with the result
    * @return {Promise<ApolloQueryResult>}
    */
-  executeQuery() {
-    const queryProperties = getQueryProperties({ ...this });
+  executeQuery({
+    metadata,
+    context,
+    query = this.query,
+    variables = this.variables,
+    fetchPolicy = this.fetchPolicy,
+    errorPolicy = this.errorPolicy,
+    fetchResults = this.fetchResults,
+  } = this) {
     const queryPromise =
       this.client
-        .query(queryProperties)
+        .query({
+          context,
+          errorPolicy,
+          fetchPolicy,
+          fetchResults,
+          metadata,
+          query,
+          variables,
+        })
         .catch(this.nextError.bind(this));
 
     queryPromise.then(this.nextData.bind(this));

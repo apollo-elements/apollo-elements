@@ -2,7 +2,6 @@ const defaultNotifyingProps = [
   'data',
   'error',
   'loading',
-  'networkStatus',
 ];
 
 /**
@@ -46,9 +45,8 @@ export const NotifyingElementMixin = (superclass, notifyingProps = defaultNotify
 
     update(changedProps) {
       super.update(changedProps);
-      const shouldUpdate = propName =>
-      !changedProps.has(propName) ? undefined :
-      this.notify(propName, changedProps.get(propName));
+      const shouldUpdate = name =>
+        changedProps.has(name) && this.notify(name, this[name]);
       this.notifyingProps.forEach(shouldUpdate);
     }
   };

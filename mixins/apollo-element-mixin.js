@@ -75,9 +75,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
   disconnectedCallback() {
     super.disconnectedCallback && super.disconnectedCallback();
     this.elementMutationObserver && this.elementMutationObserver.disconnect();
-    this.scriptChildMutationObserver && this.scriptChildMutationObserver.disconnect();
     this.elementMutationObserver = null;
-    this.scriptChildMutationObserver = null;
   }
 
   onElementMutation() {
