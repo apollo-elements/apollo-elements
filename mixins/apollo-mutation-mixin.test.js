@@ -1,5 +1,4 @@
 import { chai, expect, html } from '@open-wc/testing';
-import { nextFrame } from '@open-wc/testing-helpers';
 import sinonChai from 'sinon-chai';
 import gql from 'graphql-tag';
 import pick from 'crocks/helpers/pick';
@@ -137,6 +136,14 @@ describe('ApolloMutationMixin', function describeApolloMutationMixin() {
         mutateStub.restore();
         onMutationErrorStub.restore();
       }
+    });
+
+    it('defaults to element\'s mutation', async function() {
+      const el = await getElement({ client, mutation });
+      const mutateStub = stub(client, 'mutate');
+      await el.mutate({ mutation: undefined });
+      expect(mutateStub).to.have.been.calledWith(match({ mutation }));
+      mutateStub.restore();
     });
   });
 

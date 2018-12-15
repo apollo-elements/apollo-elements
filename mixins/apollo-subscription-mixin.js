@@ -2,7 +2,6 @@ import isFunction from 'crocks/predicates/isFunction';
 
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 import hasAllVariables from '../lib/has-all-variables.js';
-import isValidGql from '../lib/is-valid-gql.js';
 
 /**
  * `ApolloSubscriptionMixin`: class mixin for apollo-subscription elements.
@@ -22,14 +21,13 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
     return this.document;
   }
 
-  set subscription(query) {
+  set subscription(subscription) {
     try {
-      this.document = query;
+      this.document = subscription;
     } catch (error) {
-      throw new TypeError('Subscription must be a gql-parsed document');
+      throw new TypeError('Subscription must be a gql-parsed DocumentNode');
     }
-
-    if (query) this.subscribe();
+    if (subscription && !this.observable) this.subscribe();
   }
 
   /**
@@ -42,21 +40,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   set variables(variables) {
     this.__variables = variables;
-    if (this.observableQuery) this.setVariables(variables);
-    else this.subscribe();
-  }
-
-  /**
-   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
-   * @type {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
-   */
-  get options() {
-    return this.__options;
-  }
-
-  set options(options) {
-    this.__options = options;
-    this.observableQuery && this.observableQuery.setOptions(options);
+    if (!this.observable) this.subscribe();
   }
 
   constructor() {
@@ -113,10 +97,10 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
     this.tryFetch = undefined;
 
     /**
-     * The apollo ObservableQuery watching this element's subscription.
+     * Observable watching this element's subscription.
      * @type {Observable}
      */
-    this.observableQuery;
+    this.observable;
   }
 
   connectedCallback() {
@@ -125,7 +109,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
   }
 
   /**
-   * Resets the observableQuery and subscribes.
+   * Resets the observable and subscribes.
    * @param  {Object} options
    * @param  {FetchPolicy}                [options.fetchPolicy=this.fetchPolicy]
    * @param  {DocumentNode}               [options.query=this.subscription]
@@ -136,10 +120,10 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
     fetchPolicy = this.fetchPolicy,
     query = this.subscription,
     variables = this.variables,
-  } = {}) {
+  } = this) {
     if (!hasAllVariables({ query, variables })) return;
-    this.observableQuery = this.client.subscribe({ query, variables, fetchPolicy });
-    return this.observableQuery.subscribe({
+    this.observable = this.client.subscribe({ query, variables, fetchPolicy });
+    return this.observable.subscribe({
       next: this.nextData,
       error: this.nextError,
     });

@@ -5,13 +5,12 @@ module.exports = config => {
 
   config.set({
     ...baseConfig,
-
     files: config.grep ? [config.grep] : [
       'classes/*.test.js',
       'elements/*.test.js',
       'lib/*.test.js',
       'mixins/*.test.js',
     ],
-
+    exclude: ['test/*'],
   });
 };

@@ -15,7 +15,6 @@ const ApolloMutationElement = NotifyingElementMixin(ApolloMutation, [
   'data',
   'error',
   'loading',
-  'networkStatus',
 ]);
 
 customElements.define('apollo-mutation', ApolloMutationElement);

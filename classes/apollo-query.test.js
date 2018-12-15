@@ -28,5 +28,8 @@ describe('ApolloQuery', function describeApolloQuery() {
     expect(hasGetterSetter(el, 'error'), 'error').to.be.true;
     expect(hasGetterSetter(el, 'loading'), 'loading').to.be.true;
     expect(hasGetterSetter(el, 'client'), 'client').to.be.true;
+    // NB: the following is just to satisfy istanbul. k whatev
+    el.normalProperty = 'foo';
+    expect(hasGetterSetter(el, 'normalProperty')).to.be.false;
   });
 });

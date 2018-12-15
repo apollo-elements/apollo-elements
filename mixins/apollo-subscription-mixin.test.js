@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 import { chai, expect, html } from '@open-wc/testing';
-import { nextFrame } from '@open-wc/testing-helpers';
 import { spy, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
+import { Observable } from 'apollo-link';
 
 import { ApolloSubscriptionMixin } from './apollo-subscription-mixin.js';
 import { client } from '../test/client.js';
@@ -39,7 +39,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     expect(el.observableQuery, 'observableQuery').to.be.undefined;
   });
 
-  describe('subscription property', function describeNextData() {
+  describe('subscription property', function describeSubscription() {
     it('accepts a script child', async function scriptChild() {
       const getStubbedClass = () => {
         const klass = class extends ApolloSubscriptionMixin(HTMLElement) { };
@@ -70,18 +70,115 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     it('rejects a non-DocumentNode', async function() {
       const subscription = `subscription { foo }`;
       const el = await getElement({ client });
-      expect(() => el.subscription = subscription).to.throw;
+      expect(() => el.subscription = subscription).to.throw('Subscription must be a gql-parsed DocumentNode');
       expect(el.subscription).to.not.be.ok;
     });
 
-    it('calls subscribe', async function() {
-      const subscription = gql`subscription { foo }`;
+    it('calls subscribe if subscription not yet initialized', async function() {
       const el = await getElement({ client });
       const subscribeStub = stub(el, 'subscribe');
       const variables = { bar: 1 };
       el.variables = variables;
-      el.subscription = subscription;
       expect(subscribeStub).to.have.been.called;
+    });
+
+    it('does not call subscribe if subscription already initialized', async function() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'qux' };
+      const el = await getElement({ client, subscription, variables });
+      const subscribeStub = stub(el, 'subscribe');
+      el.variables = { bar: 'quux' };
+      expect(subscribeStub).to.not.have.been.calledTwice;
+    });
+  });
+
+  describe('variables property', function describeVariables() {
+    it('calls subscribe when element has not yet initialized the subscription', async function() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'qux' };
+      const el = await getElement({ client, subscription });
+      const subscribeStub = stub(el, 'subscribe');
+      el.variables = variables;
+      expect(subscribeStub).to.have.been.called;
+    });
+
+    it('does not call subscribe when element already initialized the subscription', async function() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'qux' };
+      const el = await getElement({ client, subscription, variables });
+      const subscribeStub = stub(el, 'subscribe');
+      el.variables = { bar: 'quux' };
+      expect(subscribeStub).to.not.have.been.calledTwice;
+    });
+  });
+
+  describe('subscribe', function describeSubscribe() {
+    it('creates an observable', async function createsObservable() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'quux' };
+      const el = await getElement({ client, subscription });
+      el.variables = variables;
+      el.subscribe();
+      expect(el.observable).to.be.an.instanceof(Observable);
+    });
+
+    it('does nothing when there are not enough variables', async function notEnoughVariables() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = {};
+      const el = await getElement({ client, subscription });
+      el.variables = variables;
+      el.subscribe();
+      expect(el.observable).to.not.be.ok;
+    });
+
+    it('can take a specific fetchPolicy', async function specificFetchPolicy() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'quux' };
+      const fetchPolicy = 'cache-only';
+      const el = await getElement({ client, subscription });
+      const clientSubscribeSpy = spy(client, 'subscribe');
+      el.variables = variables;
+      el.subscribe({ fetchPolicy });
+      expect(clientSubscribeSpy).to.have.been.calledWith({
+        query: subscription,
+        variables,
+        fetchPolicy,
+      });
+      clientSubscribeSpy.restore();
+    });
+
+    it('uses fetchPolicy set on the element', async function specificFetchPolicy() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'quux' };
+      const fetchPolicy = 'cache-only';
+      const el = await getElement({ client, subscription });
+      const clientSubscribeSpy = spy(client, 'subscribe');
+      el.fetchPolicy = fetchPolicy;
+      el.variables = variables;
+      el.subscribe();
+      expect(clientSubscribeSpy).to.have.been.calledWith({
+        query: subscription,
+        variables,
+        fetchPolicy,
+      });
+      clientSubscribeSpy.restore();
+    });
+
+    it('defaults to fetchPolicy set on the element', async function specificFetchPolicy() {
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const variables = { bar: 'quux' };
+      const fetchPolicy = 'cache-only';
+      const el = await getElement({ client, subscription });
+      const clientSubscribeSpy = spy(client, 'subscribe');
+      el.fetchPolicy = fetchPolicy;
+      el.variables = variables;
+      el.subscribe({ fetchPolicy: undefined });
+      expect(clientSubscribeSpy).to.have.been.calledWith({
+        query: subscription,
+        variables,
+        fetchPolicy,
+      });
+      clientSubscribeSpy.restore();
     });
   });
 

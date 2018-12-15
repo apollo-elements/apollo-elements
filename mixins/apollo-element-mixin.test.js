@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { chai, expect, html } from '@open-wc/testing';
-import { aTimeout, nextFrame } from '@open-wc/testing-helpers';
+import { nextFrame } from '@open-wc/testing-helpers';
 import sinonChai from 'sinon-chai';
 
 import { ApolloElementMixin } from './apollo-element-mixin.js';
@@ -47,5 +47,14 @@ describe('ApolloElementMixin', function describeApolloElementMixin() {
     el.innerHTML = `<script type="application/graphql">${doc}</script>`;
     await nextFrame();
     expect(el.document).to.equal(gql(doc));
+  });
+
+  it('does not change document for invalid children', async function() {
+    const doc = `query newQuery { new }`;
+    const el = await getElement();
+    expect(el.document).to.be.null;
+    el.innerHTML = `<script>${doc}</script>`;
+    await nextFrame();
+    expect(el.document).to.be.null;
   });
 });

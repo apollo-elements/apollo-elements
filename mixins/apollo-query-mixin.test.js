@@ -5,6 +5,7 @@ import { ifDefined } from 'lit-html/directives/if-defined';
 import { match, stub, spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import { ObservableQuery } from 'apollo-client';
 import { ApolloQueryMixin } from './apollo-query-mixin';
 import { client } from '../test/client';
 import { getElementWithLitTemplate, isSubscription } from '../test/helpers';
@@ -61,7 +62,6 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     expect(el.subscribe).to.have.been.called;
   });
 
-
   it('accepts a parsed query', async function parsedQuery() {
     const query = gql`query { foo { bar } }`;
     const el = await getElement({ client, query });
@@ -72,7 +72,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
   it('rejects a bad query', async function badQuery() {
     const query = `query { foo { bar } }`;
     const el = await getElement({ client });
-    expect(() => el.query = query).to.throw;
+    expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
     expect(el.query).to.be.null;
     expect(el.observableQuery).to.not.be.ok;
   });
@@ -184,9 +184,13 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       const el = await getElement({ client });
       const queryStub = stub(el.client, 'query');
       queryStub.resolves(true);
-      const { errorPolicy, fetchPolicy } = el;
+      const { errorPolicy, fetchPolicy, query } = el;
       el.executeQuery();
-      expect(queryStub).to.have.been.calledWith({ errorPolicy, fetchPolicy });
+      expect(queryStub).to.have.been.calledWith(match({
+        errorPolicy,
+        fetchPolicy,
+        query,
+      }));
       queryStub.restore();
     });
 
@@ -207,6 +211,30 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       queryStub.rejects(error);
       await el.executeQuery();
       expect(el.error).to.equal(error);
+      queryStub.restore();
+    });
+
+    it('accepts custom args', async function() {
+      const query = gql`query foo { bar { baz } }`;
+      const el = await getElement({ client });
+      const queryStub = stub(el.client, 'query');
+      queryStub.resolves(true);
+      el.executeQuery({ query });
+      expect(queryStub).to.have.been.calledWith(match({
+        query,
+      }));
+      queryStub.restore();
+    });
+
+    it('defaults to element query', async function() {
+      const query = gql`query foo { bar { baz } }`;
+      const el = await getElement({ client, query });
+      const queryStub = stub(el.client, 'query');
+      queryStub.resolves(true);
+      el.executeQuery({ query: undefined });
+      expect(queryStub).to.have.been.calledWith(match({
+        query,
+      }));
       queryStub.restore();
     });
   });
@@ -231,9 +259,9 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
 
   describe('watchQuery', function describeWatchQuery() {
     it('calls client watchQuery', async function callsClientWatchQuery() {
+      const watchQueryStub = stub(client, 'watchQuery');
       const query = gql`query { foo { bar } }`;
       const el = await getElement({ client, query });
-      const watchQueryStub = stub(el.client, 'watchQuery');
       const args = { query };
       expect(el.watchQuery(args)).to.be.undefined;
       expect(watchQueryStub).to.have.been.calledWith(match(args));
@@ -243,8 +271,25 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     it('returns an ObservableQuery', async function returnsObservableQuery() {
       const query = gql`query { foo { bar } }`;
       const el = await getElement({ client, query });
-      // yuck!
-      expect(el.watchQuery().constructor.toString().startsWith('function ObservableQuery')).to.be.true;
+      expect(el.watchQuery()).to.be.an.instanceof(ObservableQuery);
+    });
+
+    it('accepts a specific query', async function() {
+      const watchQueryStub = stub(client, 'watchQuery');
+      const query = gql`query { foo { bar } }`;
+      const el = await getElement({ client });
+      el.watchQuery({ query });
+      expect(watchQueryStub).to.have.been.calledWith(match({ query }));
+      watchQueryStub.restore();
+    });
+
+    it('defaults to the element\'s query', async function() {
+      const watchQueryStub = stub(client, 'watchQuery');
+      const query = gql`query { foo { bar } }`;
+      const el = await getElement({ client, query });
+      el.watchQuery({ query: undefined });
+      expect(watchQueryStub).to.have.been.calledWith(match({ query }));
+      watchQueryStub.restore();
     });
   });
 
