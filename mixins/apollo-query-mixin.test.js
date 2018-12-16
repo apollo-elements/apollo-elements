@@ -42,39 +42,41 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     expect(el.observableQuery, 'observableQuery').to.be.undefined;
   });
 
-  it('accepts a script child', async function scriptChild() {
-    const getStubbedClass = () => {
-      const klass = class extends ApolloQueryMixin(HTMLElement) { };
-      spy(klass.prototype, 'subscribe');
-      return klass;
-    };
+  describe('query property', function() {
+    it('accepts a script child', async function scriptChild() {
+      const getStubbedClass = () => {
+        const klass = class extends ApolloQueryMixin(HTMLElement) { };
+        spy(klass.prototype, 'subscribe');
+        return klass;
+      };
 
-    const getStubbedElement = getElementWithLitTemplate({
-      getClass: getStubbedClass,
-      getTemplate,
+      const getStubbedElement = getElementWithLitTemplate({
+        getClass: getStubbedClass,
+        getTemplate,
+      });
+
+      const script = 'subscription { foo }';
+      const el = await getStubbedElement({ client, script });
+
+      expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
+      expect(el.query).to.deep.equal(gql(script));
+      expect(el.subscribe).to.have.been.called;
     });
 
-    const script = 'subscription { foo }';
-    const el = await getStubbedElement({ client, script });
+    it('accepts a parsed query', async function parsedQuery() {
+      const query = gql`query { foo { bar } }`;
+      const el = await getElement({ client, query });
+      expect(el.query).to.equal(query);
+      expect(el.observableQuery).to.be.ok;
+    });
 
-    expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-    expect(el.query).to.deep.equal(gql(script));
-    expect(el.subscribe).to.have.been.called;
-  });
-
-  it('accepts a parsed query', async function parsedQuery() {
-    const query = gql`query { foo { bar } }`;
-    const el = await getElement({ client, query });
-    expect(el.query).to.equal(query);
-    expect(el.observableQuery).to.be.ok;
-  });
-
-  it('rejects a bad query', async function badQuery() {
-    const query = `query { foo { bar } }`;
-    const el = await getElement({ client });
-    expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
-    expect(el.query).to.be.null;
-    expect(el.observableQuery).to.not.be.ok;
+    it('rejects a bad query', async function badQuery() {
+      const query = `query { foo { bar } }`;
+      const el = await getElement({ client });
+      expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
+      expect(el.query).to.be.null;
+      expect(el.observableQuery).to.not.be.ok;
+    });
   });
 
   describe('setting options', function describeSetOptions() {
