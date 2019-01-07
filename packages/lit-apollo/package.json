@@ -1,0 +1,38 @@
+{
+	"name": "@apollo-elements/lit-apollo",
+	"version": "0.8.1",
+	"description": "👩‍🚀🌛 LitElements for Apollo GraphQL 🚀👨‍🚀",
+	"main": "index.js",
+	"typings": "index.d.ts",
+	"logo": {
+		"file": "./logo.png"
+	},
+	"scripts": {
+		"test": "karma start karma.conf.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bennypowers/lit-apollo.git"
+	},
+	"keywords": [
+		"Apollo",
+		"GraphQL",
+		"Web Components",
+		"Custom Elements",
+		"LitElement",
+		"lit-html"
+	],
+	"author": "Benny Powers <web@bennypowers.com>",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/bennypowers/lit-apollo/issues"
+	},
+	"homepage": "https://github.com/bennypowers/lit-apollo#readme",
+	"dependencies": {
+		"@apollo-elements/mixins": "^0.0.1",
+		"@polymer/lit-element": "^0.6.5"
+	},
+	"devDependencies": {
+		"@apollo-elements/test-helpers": "^0.0.1"
+	}
+}

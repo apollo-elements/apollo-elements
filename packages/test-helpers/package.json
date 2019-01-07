@@ -1,0 +1,27 @@
+{
+  "name": "@apollo-elements/test-helpers",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Testing helper functions for apollo-elements",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git"
+  },
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements"
+  ],
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apollo-elements/apollo-elements/issues"
+  },
+  "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
+  "dependencies": {
+    "crocks": "^0.9.4",
+    "graphql-tag": "^2.10.0"
+  }
+}

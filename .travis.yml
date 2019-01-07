@@ -4,7 +4,7 @@ node_js:
 
 env:
   global:
-    - CC_TEST_REPORTER_ID=48668e18fdc1b94f73cbe23fe51a44e0c642093b9292d486aeb4f08bd7355b8f
+    - CC_TEST_REPORTER_ID=c246b8f33eb255c3ae057afe6581a3db4275e1f7c2668b972532b83235af75d6
 
 cache:
   directories:
@@ -18,5 +18,15 @@ before_script:
 script:
   - npm test
 
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+after_success:
+  # See https://github.com/codeclimate/test-reporter/issues/263
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      for f in packages/*; do
+        if [ -d $f -a -d $f/coverage ]; then
+          echo $f;
+          ./cc-test-reporter format-coverage -t lcov -o coverage/coverage.${f//\//-}.json $f/coverage/lcov.info;
+        fi
+      done;
+      ./cc-test-reporter sum-coverage -o coverage/coverage.total.json coverage/coverage.*.json;
+      ./cc-test-reporter upload-coverage -i coverage/coverage.total.json;
+    fi
