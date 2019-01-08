@@ -1,6 +1,9 @@
 {
   "name": "root",
   "private": true,
+  "logo": {
+    "file": "./logo.png"
+  },
   "scripts": {
     "postinstall": "lerna bootstrap --hoist",
     "posttest": "forever stopall",

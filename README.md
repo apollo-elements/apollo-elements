@@ -1,4 +1,7 @@
+<img alt="Rocket Ship in Angle Brackets" align="center" width="512" src="https://raw.githubusercontent.com/apollo-elements/apollo-elements/master/logo.png" />
+
 # 🚀 Apollo Elements 👩‍🚀
+
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/lit-apollo.svg)](https://www.npmjs.com/package/@apollo-elements/lit-apollo)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/lit-apollo)
 [![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
