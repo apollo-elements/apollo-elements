@@ -13,13 +13,17 @@
 
 ## 📓 Contents
 - [📦 Packages](#-packages)
-- [📦 Bundling](#-bundling)
+  - [🔥 `lit-apollo`](#-lit-apollo)
+  - [👩‍🔬 `gluon`](#-gluon)
+  - [🧱 `polymer`](#-polymer)
+  - [🍸 `mixins`](#-mixins)
+- [🗞 Bundling](#-bundling)
 - [😎 Cool Tricks](#-cool-tricks)
   - [📜 Inline Query Scripts](#-inline-query-scripts)
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 📦 Packages
-### [`lit-apollo`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo#apollo-elementslit-apollo)
+### [🔥 `lit-apollo`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo#apollo-elementslit-apollo)
 Base classes that extend from `LitElement`, to help you quickly get up and running creating declarative front-ends with Apollo GraphQL.
 ```bash
 npm i -S @apollo-elements/lit-apollo
@@ -60,7 +64,67 @@ render(
 )
 ```
 
-### [`mixins`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins#apollo-elementsmixins)
+### [👩‍🔬 `gluon`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon#apollo-elementsgluon)
+Base classes that extend from `GluonElement`, to help you quickly get up and running creating declarative front-ends with Apollo GraphQL.
+```bash
+npm i -S @apollo-elements/gluon
+```
+
+```js
+import gql from 'graphql-tag'
+import { ApolloQuery, html, render } from '@apollo-elements/gluon';
+import { client } from './apollo-client';
+
+class ApolloApp extends ApolloQuery {
+  get template() {
+    const { data, error, loading } = this;
+    return (
+        loading ? html`<what-spin></what-spin>`
+      : error ? html` <h1>😢 Such Sad, Very Error! 😰</h1> <div>${error.message}</div>`
+      : html`<div>${data.helloWorld.greeting}, ${helloWorld.name}</div>`
+    );
+   }
+};
+
+customElements.define('apollo-app', ConnectedElement);
+
+render(
+  html`<apollo-app
+      .client="${client}"
+      .query="${gql`
+        query {
+          helloWorld {
+            greeting
+            name
+          }
+        }
+      `}"
+  ></apollo-app>`,
+  document.body
+)
+```
+
+### [🧱 `polymer`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer#apollo-elementspolymer)
+Custom Elements which fire `*-changed` events when the Apollo cache updates their state. Perfect for use in Polymer templates.
+
+```bash
+npm i -S @apollo-elements/polymer
+```
+
+```html
+<apollo-query data="{{data}}" variables="[[variables]]">
+  <script type="application/graphql">
+    query User($id: ID!)
+      user(id: $id) {
+        name
+        picture
+      }
+    }
+  </script>
+</apollo-query>
+```
+
+### [🍸 `mixins`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins#apollo-elementsmixins)
 Custom Element class mixins which give you all the same apollo features as `lit-apollo` but without imposing a component library on you.
 
 ```bash
@@ -82,27 +146,7 @@ class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
 }
 ```
 
-### [`polymer`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer#apollo-elementspolymer)
-Custom Elements which fire `*-changed` events when the Apollo cache updates their state. Perfect for use in Polymer templates.
-
-```bash
-npm i -S @apollo-elements/polymer
-```
-
-```html
-<apollo-query data="{{data}}" variables="[[variables]]">
-  <script type="application/graphql">
-    query User($id: ID!)
-      user(id: $id) {
-        name
-        picture
-      }
-    }
-  </script>
-</apollo-query>
-```
-
-## 📦 Bundling
+## 🗞 Bundling
 Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle apollo-client in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. Your `rollup.config.js` might look something like this:
 
 ```js

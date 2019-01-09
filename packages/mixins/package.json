@@ -27,6 +27,7 @@
     "crocks": "^0.9.4"
   },
   "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.1"
+    "@apollo-elements/test-helpers": "^0.0.1",
+    "@types/crocks": "^0.0.1"
   }
 }

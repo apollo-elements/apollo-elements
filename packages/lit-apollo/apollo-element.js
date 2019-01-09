@@ -15,7 +15,7 @@ export class ApolloElement extends ApolloElementMixin(LitElement) {
     return {
       /**
        * The Apollo client.
-       * See https://github.com/bennypowers/lit-apollo#-bundling
+       * See https://github.com/apollo-elements/apollo-elements#-bundling
        * @type {Object}
        */
       client: { type: Object },

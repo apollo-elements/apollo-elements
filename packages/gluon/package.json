@@ -1,7 +1,7 @@
 {
-	"name": "@apollo-elements/lit-apollo",
-	"version": "0.8.1",
-	"description": "👩‍🚀🌛 LitElements for Apollo GraphQL 🚀👨‍🚀",
+	"name": "@apollo-elements/gluon",
+	"version": "0.0.1",
+	"description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"logo": {
@@ -19,7 +19,7 @@
 		"GraphQL",
 		"Web Components",
 		"Custom Elements",
-		"LitElement",
+		"Gluon",
 		"lit-html"
 	],
 	"author": "Benny Powers <web@bennypowers.com>",
@@ -30,7 +30,7 @@
 	"homepage": "https://github.com/apollo-elements/apollo-elements#readme",
 	"dependencies": {
 		"@apollo-elements/mixins": "^0.0.1",
-		"@polymer/lit-element": "^0.6.5"
+		"@gluon/gluon": "^2.5.1"
 	},
 	"devDependencies": {
 		"@apollo-elements/test-helpers": "^0.0.1",

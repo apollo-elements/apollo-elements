@@ -31,6 +31,7 @@
     "@open-wc/testing": "^0.9.1",
     "@open-wc/testing-helpers": "^0.7.1",
     "@open-wc/testing-karma": "^0.4.2",
+    "@types/crocks": "^0.0.1",
     "@types/sinon-chai": "^3.2.2",
     "apollo-link": "^1.2.6",
     "graphql": "^14.0.2",
