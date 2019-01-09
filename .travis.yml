@@ -2,16 +2,13 @@ language: node_js
 node_js:
   - "10"
 
-env:
-  global:
-    - CC_TEST_REPORTER_ID=c246b8f33eb255c3ae057afe6581a3db4275e1f7c2668b972532b83235af75d6
-
 cache:
   directories:
     - node_modules
 
 jobs:
   include:
+    if: branch = master
     stage: test
     before_script:
       - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
