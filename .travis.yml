@@ -19,6 +19,7 @@ script:
   - npm test
 
 after_success:
+  - npm run docs
   # See https://github.com/codeclimate/test-reporter/issues/263
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
       for f in packages/*; do
@@ -30,3 +31,12 @@ after_success:
       ./cc-test-reporter sum-coverage -o coverage/coverage.total.json coverage/coverage.*.json;
       ./cc-test-reporter upload-coverage -i coverage/coverage.total.json;
     fi
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  local-dir: docs
+  on:
+    branch: master

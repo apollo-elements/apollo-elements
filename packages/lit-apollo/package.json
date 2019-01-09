@@ -4,10 +4,8 @@
 	"description": "👩‍🚀🌛 LitElements for Apollo GraphQL 🚀👨‍🚀",
 	"main": "index.js",
 	"typings": "index.d.ts",
-	"logo": {
-		"file": "./logo.png"
-	},
 	"scripts": {
+		"docs": "polymer analyze > docs/analysis.json",
 		"test": "karma start karma.conf.js"
 	},
 	"repository": {

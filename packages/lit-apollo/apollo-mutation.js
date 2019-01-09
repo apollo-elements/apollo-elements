@@ -6,7 +6,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  *
  * 👩‍🚀 A custom element base class to issue mutations via your Apollo cache.
  *
- * ## Usage
+ * ## 👩‍🚀 Usage
  *
  * ```js
  * import { client } from './apollo-client';
@@ -42,6 +42,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * customElements.define('mutation-element', MutationElement)
  * ```
  *
+ * @polymer
  * @extends LitElement
  * @appliesMixin ApolloMutationMixin
  */

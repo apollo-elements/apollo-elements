@@ -6,6 +6,26 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js'
  * when its `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
+ * ## 👩‍🚀 Usage
+ * ```html
+ * <apollo-query data="{{data}}" variables="[[variables]]">
+ *   <script type="application/graphql">
+ *     query User($id: ID!) {
+ *       user(id: $id) {
+ *         name
+ *         picture
+ *       }
+ *     }
+ *   </script>
+ * </apollo-query>
+ *
+ * <paper-icon-item>
+ *   <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
+ *   [[data.user.name]]
+ * </paper-icon-item>
+ * ```
+ *
+ * @polymer
  * @customElement
  * @extends ApolloQuery
  * @appliesMixin NotifyingElementMixin

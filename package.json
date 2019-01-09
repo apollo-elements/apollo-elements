@@ -5,6 +5,9 @@
     "file": "./logo.png"
   },
   "scripts": {
+    "docs": "lerna run docs --stream",
+    "predocs": "cp -Rf node_modules/@webcomponents/webcomponentsjs docs && rollup -c docs/rollup.config.js",
+    "postdocs": "cd packages && for p in $( ls ); do if [ -d $p/docs ]; then rsync -a --delete $p/docs/ ../docs/$p/; fi done",
     "postinstall": "lerna bootstrap --hoist",
     "posttest": "forever stopall",
     "pretest": "forever start forever.json",
@@ -14,6 +17,7 @@
     "@open-wc/testing": "^0.9.1",
     "@open-wc/testing-helpers": "^0.7.1",
     "@open-wc/testing-karma": "^0.4.2",
+    "@polymer/iron-component-page": "^3.0.0-pre.20",
     "@polymer/lit-element": "^0.6.5",
     "@types/graphql": "^14.0.4",
     "@types/sinon-chai": "^3.2.2",
@@ -45,6 +49,9 @@
     "mocha": "^5.2.0",
     "node-fetch": "^2.3.0",
     "npm-run-all": "^4.1.5",
+    "polymer-cli": "^1.9.4",
+    "rollup": "^1.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
     "sinon": "^7.2.2",
     "sinon-chai": "^3.3.0"
   }

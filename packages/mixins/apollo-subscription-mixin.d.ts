@@ -26,7 +26,7 @@ declare class ApolloSubscription<TBase, TData, TVariables> extends ApolloElement
   private nextError(error: ApolloError): undefined;
   public setOptions(options: ModifiableWatchQueryOptions): Promise<ApolloQueryResult<TData>>;
   public setVariables<TVariables>(variables: TVariables, tryFetch: boolean, fetchResults: boolean): Promise<ApolloQueryResult<TData>>;
-  public subscribe<TVariables>(options?: { query?: DocumentNode, variables?: TVariables, fetchPolicy?: FetchPolicy }): ZenObservable.Observer<SubscriptionResult<TData>> | undefined
+  public subscribe<TVariables>(options?: { query?: DocumentNode, variables?: TVariables, fetchPolicy?: FetchPolicy }): Promise<ZenObservable.Observer<SubscriptionResult<TData>>>
 }
 
 type Constructor<T = {}> = new (...args: any[]) => T;

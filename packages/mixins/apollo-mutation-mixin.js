@@ -3,16 +3,17 @@ import { ApolloElementMixin } from './apollo-element-mixin';
 /**
  * `ApolloMutationMixin`: class mixin for apollo-mutation elements.
  *
+ * @polymer
  * @mixinFunction
- *
  * @appliesMixin ApolloElementMixin
+ *
  * @param {Class} superclass
  * @return {Class}
  */
 export const ApolloMutationMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
    * The mutation.
-   * @type {DocumentNode}
+   * @return {DocumentNode}
    */
   get mutation() {
     return this.document;

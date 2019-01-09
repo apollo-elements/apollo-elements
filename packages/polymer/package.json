@@ -4,6 +4,7 @@
   "description": "👩‍🚀🌛 Polymer Elements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "scripts": {
+    "docs": "polymer analyze > docs/analysis.json",
     "test": "karma start karma.conf.js"
   },
   "repository": {

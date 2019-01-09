@@ -6,6 +6,7 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 /**
  * `ApolloSubscriptionMixin`: class mixin for apollo-subscription elements.
  *
+ * @polymer
  * @mixinFunction
  * @appliesMixin ApolloElementMixin
  *
@@ -14,8 +15,8 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
  */
 export const ApolloSubscriptionMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
-   * A GraphQL document that consists of a single subscription.
-   * @type {DocumentNode|null}
+   * A GraphQL document containing a single subscription.
+   * @return {DocumentNode}
    */
   get subscription() {
     return this.document;
@@ -32,7 +33,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
-   * @type {Object}
+   * @return {Object<string, *>}
    */
   get variables() {
     return this.__variables;
@@ -73,24 +74,6 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
     this.notifyOnNetworkStatusChange = undefined;
 
     /**
-     * Variables used in the subscription.
-     * @type {Object}
-     */
-    this.variables = undefined;
-
-    /**
-     * Apollo Subscription Object.
-     * e.g. gql`
-     * subscription MySubscription {
-     *   mySubscription {
-     *     foo
-     *   }
-     * `
-     * @type {DocumentNode}
-     */
-    this.subscription = null;
-
-    /**
      * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
      * @type {Boolean}
      */
@@ -103,6 +86,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
     this.observable;
   }
 
+  /** @protected */
   connectedCallback() {
     super.connectedCallback && super.connectedCallback();
     this.subscribe();
@@ -110,17 +94,14 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * Resets the observable and subscribes.
-   * @param  {Object} options
-   * @param  {FetchPolicy}                [options.fetchPolicy=this.fetchPolicy]
-   * @param  {DocumentNode}               [options.query=this.subscription]
-   * @param  {Object}                     [options.variables=this.variables]
-   * @return {Observable.Subscription}
+   * @param  {{fetchPolicy: FetchPolicy, query: DocumentNode, variables: Object}} options
+   * @return {Promise<ZenObservable.Observer<SubscriptionResult<TData>>>}
    */
   async subscribe({
     fetchPolicy = this.fetchPolicy,
     query = this.subscription,
     variables = this.variables,
-  } = this) {
+  } = {}) {
     if (!hasAllVariables({ query, variables })) return;
     this.observable = this.client.subscribe({ query, variables, fetchPolicy });
     return this.observable.subscribe({

@@ -7,7 +7,7 @@ export { html } from './apollo-element.js';
  *
  * 🚀 A custom element base class that updates with an Apollo GraphQL subscription.
  *
- * ## Usage
+ * ## 👩‍🚀 Usage
  *
  * ```js
  * import { client } from './apollo-client.js';
@@ -44,6 +44,7 @@ export { html } from './apollo-element.js';
  * customElements.define('connected-element', ConnectedElement)
  * ```
  *
+ * @polymer
  * @extends LitElement
  * @appliesMixin ApolloSubscriptionMixin
  */

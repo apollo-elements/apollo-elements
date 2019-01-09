@@ -41,8 +41,8 @@ export declare class ApolloQuery<TBase, TData, TVariables, TSubscriptionData = T
   private watchQuery(params: ApolloQueryProperties<TData, TVariables>): ObservableQuery<TData>
   public setOptions(options: ModifiableWatchQueryOptions): Promise<ApolloQueryResult<TData>>;
   public setVariables<TVariables>(variables: TVariables, tryFetch: boolean, fetchResults: boolean): Promise<ApolloQueryResult<TData>>;
-  public subscribe(params?: { query?: DocumentNode, variables?: TVariables }): ZenObservable.Observer<ApolloQueryResult<TData>>;
-  public subscribeToMore<TSubscriptionData>(options: SubscribeToMoreOptions<TData, TVariables, TSubscriptionData>);
+  public subscribe(params?: { query?: DocumentNode, variables?: TVariables }): Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>;
+  public subscribeToMore<TSubscriptionData>(options: SubscribeToMoreOptions<TData, TVariables, TSubscriptionData>): () => void;
   public executeQuery(): Promise<FetchResult<TData>>;
   public fetchMore(params: FetchMoreOptions<TData, TVariables>): Promise<ApolloQueryResult<TData>>
 }

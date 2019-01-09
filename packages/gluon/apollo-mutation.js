@@ -42,13 +42,14 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * customElements.define('mutation-element', MutationElement)
  * ```
  *
+ * @polymer
  * @extends GluonElement
  * @appliesMixin ApolloMutationMixin
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   /**
-   * If the mutation has been called
-   * @type {Boolean}
+   * Whether the mutation has been called
+   * @return {boolean}
    */
   get called() {
     return this.__called;

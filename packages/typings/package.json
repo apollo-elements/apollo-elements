@@ -1,5 +1,8 @@
 {
   "name": "@types/crocks",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "rollup-plugin-node-resolve": "^4.0.0"
+  }
 }

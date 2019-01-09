@@ -4,6 +4,7 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 /**
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
  *
+ * @polymer
  * @mixinFunction
  * @appliesMixin ApolloElementMixin
  *
@@ -12,8 +13,8 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
  */
 export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
-   * A GraphQL document that consists of a single query to be sent down to the server.
-   * @type {DocumentNode}
+   * A GraphQL document containing a single query.
+   * @return {DocumentNode}
    */
   get query() {
     return this.document;
@@ -33,7 +34,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
-   * @type {Object}
+   * @return {Object<string, *>}
    */
   get variables() {
     return this.__variables;
@@ -49,7 +50,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
-   * @type {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
+   * @return {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
    */
   get options() {
     return this.__options;
@@ -96,18 +97,6 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
     this.notifyOnNetworkStatusChange = undefined;
 
     /**
-     * Variables used in the query.
-     * @type {Object}
-     */
-    this.variables = undefined;
-
-    /**
-     * Apollo Query Object. e.g. gql`query { foo { bar } }`
-     * @type {DocumentNode}
-     */
-    this.query = undefined;
-
-    /**
      * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
      * @type {Boolean}
      */
@@ -120,6 +109,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
     this.observableQuery;
   }
 
+  /** @protected */
   connectedCallback() {
     super.connectedCallback && super.connectedCallback();
     if (this.query) this.subscribe();
@@ -127,9 +117,9 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
-   * @param {Object}  variables                        The new set of variables. If there are missing variables, the previous values of those variables will be used.
-   * @param {Boolean} [tryFetch=this.tryFetch]         Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-   * @param {Boolean} [fetchResults=this.fetchResults] Option to ignore fetching results when updating variables.
+   * @param {Object}   variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
+   * @param {boolean=} tryFetch       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
+   * @param {boolean=} fetchResults   Option to ignore fetching results when updating variables.
    * @return {Promise<ApolloQueryResult>}
    */
   setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
@@ -141,10 +131,8 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Resets the observableQuery and subscribes.
-   * @param  {Object}                     [params]
-   * @param  {DocumentNode}               [params.query=this.query]
-   * @param  {Object}                     [params.variables=this.variables]
-   * @return {ZenObservable.Subscription}
+   * @param  {{query: DocumentNode, variables: Object}=} params
+   * @return {Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>}
    */
   async subscribe({ query = this.query, variables = this.variables } = {}) {
     if (!hasAllVariables({ query, variables })) return;
@@ -159,15 +147,12 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * Lets you pass a GraphQL subscription and updateQuery function
    * to subscribe to more updates for your query.
    *
-   * The updateQuery function takes as its first parameter the previous
-   * query result's data, and as it's second parameter, an object containing
-   * `subscriptionData`, which will be the latest result from the subscription.
-   * It should return the merged query data, of the same interface as the first parameter.
+   * The `updateQuery` parameter is a function that takes the previous query data,
+   * then a `{ subscriptionData: TSubscriptionResult }` object,
+   * and returns an object with updated query data based on the new results.
    *
-   * @param  {Object} options
-   * @param  {DocumentNode} options.document
-   * @param  {Function} options.updateQuery
-   * @return {Function}
+   * @param  {{document: DocumentNode, updateQuery: Function}=} options
+   * @return {function(): void}
    */
   subscribeToMore({ document, updateQuery } = {}) {
     return (
@@ -178,6 +163,15 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Executes a Query once and updates the component with the result
+   * @param {{
+   *    metadata: Object,
+   *    context: Object,
+   *    query: DocumentNode,
+   *    variables: Object,
+   *    fetchPolicy: FetchPolicy,
+   *    errorPolicy: ErrorPolicy,
+   *    fetchResults: boolean,
+   * }=}
    * @return {Promise<ApolloQueryResult>}
    */
   executeQuery({
@@ -210,10 +204,18 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   /**
    * Exposes the `ObservableQuery#fetchMore` method.
    * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.fetchMore
-   * @param  {fetchMoreOptions} params
-   * @param  {DocumentNode}     [params.query=this.query] The Query.
-   * @param  {Function}         params.updateQuery        Function that defines how to update the query data with the new results.
-   * @param  {Object}           params.variables          New variables. Any variables not provided will be filled-in using the previous variables.
+   *
+   * The optional `updateQuery` parameter is a function that takes the previous query data,
+   * then a `{ subscriptionData: TSubscriptionResult }` object,
+   * and returns an object with updated query data based on the new results.
+   *
+   * The optional `variables` parameter is an optional new variables object.
+   *
+   * @param  {{
+   *    query: DocumentNode,
+   *    updateQuery: function(prev: TData, { subscriptionData: TSubscriptionResult }): TData,
+   *    variables: Object
+   * }=} params
    * @return {Promise<ApolloQueryResult>}
    */
   fetchMore({ query = this.query, updateQuery, variables } = {}) {
@@ -225,16 +227,28 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Creates an instance of ObservableQuery with the options provided by the element.
-   * @param  {Object}       options
-   * @param  {any}          [options.context=this.context]                                          Context to be passed to link execution chain
-   * @param  {ErrorPolicy}  [options.errorPolicy=this.errorPolicy]                                  Specifies the ErrorPolicy to be used for this query
-   * @param  {FetchPolicy}  [options.fetchPolicy=this.fetchPolicy]                                  Specifies the FetchPolicy to be used for this query
-   * @param  {Boolean}      [options.fetchResults=this.fetchResults]                                Whether or not to fetch results
-   * @param  {any}          [options.metadata=this.metadata]                                        Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.
-   * @param  {Boolean}      [options.notifyOnNetworkStatusChange=this.notifyOnNetworkStatusChange]  Whether or not updates to the network status should trigger next on the observer of this query
-   * @param  {Number}       [options.pollInterval=this.pollInterval]                                The time interval (in milliseconds) on which this query should be refetched from the server.
-   * @param  {DocumentNode} [options.query=this.query]                                              A GraphQL document that consists of a single query to be sent down to the server.
-   * @param  {Object}       [options.variables=this.variables]                                      A map going from variable name to variable value, where the variables are used within the GraphQL query.
+   * - `context` Context to be passed to link execution chain
+   * - `errorPolicy` Specifies the ErrorPolicy to be used for this query
+   * - `fetchPolicy` Specifies the FetchPolicy to be used for this query
+   * - `fetchResults` Whether or not to fetch results
+   * - `metadata` Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.
+   * - `notifyOnNetworkStatusChange` Whether or not updates to the network status should trigger next on the observer of this query
+   * - `pollInterval` The time interval (in milliseconds) on which this query should be refetched from the server.
+   * - `query` A GraphQL document that consists of a single query to be sent down to the server.
+   * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
+   *
+   * @param  {{
+   *    context: Object,
+   *    errorPolicy: ErrorPolicy,
+   *    fetchPolicy: FetchPolicy,
+   *    fetchResults: boolean,
+   *    metadata: Object,
+   *    notifyOnNetworkStatusChange: boolean,
+   *    pollInterval: number,
+   *    query: DocumentNode,
+   *    variables: Object,
+   * }=}       options
+   *
    * @return {ObservableQuery}
    * @protected
    */

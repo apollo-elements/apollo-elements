@@ -2,3 +2,10 @@ node_modules
 coverage
 .nyc_output
 forever*.log
+docs/gluon
+docs/lit-apollo
+docs/mixins
+docs/polymer
+docs/webcomponentsjs
+docs/bundle.js
+analysis.json

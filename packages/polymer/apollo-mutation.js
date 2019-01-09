@@ -6,6 +6,32 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * when its `called`, `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
+ * ## 👩‍🚀 Usage
+ * ```html
+ * <apollo-mutation id="userMutation" data="{{data}}">
+ *   <script type="application/graphql">
+ *     mutation User($id: ID!, $name: String, $picture: String) {
+ *       user(id: $id, name: $name, picture: $picture) {
+ *         name
+ *         picture
+ *       }
+ *     }
+ *   </script>
+ * </apollo-mutation>
+ *
+ * <paper-input label="Name" value="{{name}}"></paper-input>
+ * <paper-input label="Picture URL" value="{{picture}}"></paper-input>
+ * <paper-button on-click="mutate">Submit</paper-button>
+ * ```
+ *
+ * ```js
+ * mutate() {
+ *   const { name, picture } = this;
+ *   return this.$.userMutation.mutate({ variables: { name, picture } })
+ * }
+ * ```
+ *
+ * @polymer
  * @customElement
  * @extends ApolloMutation
  * @appliesMixin NotifyingElementMixin

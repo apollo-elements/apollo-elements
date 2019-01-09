@@ -44,6 +44,7 @@ export { html } from './apollo-element.js';
  * customElements.define('connected-element', ConnectedElement)
  * ```
  *
+ * @polymer
  * @extends GluonElement
  * @appliesMixin ApolloSubscriptionMixin
  */

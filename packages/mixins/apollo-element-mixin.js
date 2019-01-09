@@ -1,17 +1,17 @@
-/**
- * `ApolloElementMixin`: class mixin for apollo custom elements.
- *
- * @mixinFunction
- *
- * @param {Class} superclass
- * @return {Class}
- */
-
 import {
   getGraphQLScriptChildDocument,
 } from '@apollo-elements/lib/get-graphql-script-child-document';
 import isValidGql from '@apollo-elements/lib/is-valid-gql';
 
+/**
+ * `ApolloElementMixin`: class mixin for apollo custom elements.
+ *
+ * @polymer
+ * @mixinFunction
+ *
+ * @param {Class} superclass
+ * @return {Class}
+ */
 export const ApolloElementMixin = superclass => class extends superclass {
   constructor() {
     super();
@@ -42,7 +42,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
     this.loading = undefined;
 
     /**
-     * Handle on the apollo client instance.
+     * The apollo client instance.
      * @type {ApolloClient}
      */
     this.client = window.__APOLLO_CLIENT__;
@@ -50,11 +50,16 @@ export const ApolloElementMixin = superclass => class extends superclass {
     this.elementMutationObserver = new MutationObserver(this.onElementMutation);
   }
 
+  /**
+   * GraphQL Document
+   * @return {DocumentNode}
+   */
   get document() {
     return this.__document || null;
   }
 
   set document(doc) {
+    if (!doc) return;
     if (isValidGql(doc)) {
       this.__document = doc;
     } else {
@@ -62,6 +67,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
     }
   }
 
+  /** @protected */
   connectedCallback() {
     super.connectedCallback && super.connectedCallback();
     this.elementMutationObserver.observe(this, {
@@ -72,12 +78,14 @@ export const ApolloElementMixin = superclass => class extends superclass {
     this.document = getGraphQLScriptChildDocument(this) || null;
   }
 
+  /** @protected */
   disconnectedCallback() {
     super.disconnectedCallback && super.disconnectedCallback();
     this.elementMutationObserver && this.elementMutationObserver.disconnect();
     this.elementMutationObserver = null;
   }
 
+  /** @protected */
   onElementMutation() {
     const doc = getGraphQLScriptChildDocument(this);
     if (doc) this.document = doc;

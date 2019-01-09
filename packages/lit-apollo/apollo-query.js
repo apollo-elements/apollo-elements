@@ -7,7 +7,7 @@ export { html } from './apollo-element.js';
  *
  * 🚀 A custom element base class that connects to your Apollo cache.
  *
- * ## Usage
+ * ## 👩‍🚀 Usage
  *
  * ```js
  * import { client } from './apollo-client.js';
@@ -44,6 +44,7 @@ export { html } from './apollo-element.js';
  * customElements.define('connected-element', ConnectedElement)
  * ```
  *
+ * @polymer
  * @extends LitElement
  * @appliesMixin ApolloQueryMixin
  */

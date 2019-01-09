@@ -23,8 +23,11 @@
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 📦 Packages
+Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
+
 ### [🔥 `lit-apollo`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo#apollo-elementslit-apollo)
-Base classes that extend from `LitElement`, to help you quickly get up and running creating declarative front-ends with Apollo GraphQL.
+These base classes extend from `LitElement`, so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
+
 ```bash
 npm i -S @apollo-elements/lit-apollo
 ```
@@ -65,7 +68,8 @@ render(
 ```
 
 ### [👩‍🔬 `gluon`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon#apollo-elementsgluon)
-Base classes that extend from `GluonElement`, to help you quickly get up and running creating declarative front-ends with Apollo GraphQL.
+These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonjs), a simplified <abbr title="web components">wc</abbr> library that uses `lit-html` for templating while keeping component state and lifecycle concerns 'close to the metal'.
+
 ```bash
 npm i -S @apollo-elements/gluon
 ```
@@ -105,7 +109,7 @@ render(
 ```
 
 ### [🧱 `polymer`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer#apollo-elementspolymer)
-Custom Elements which fire `*-changed` events when the Apollo cache updates their state. Perfect for use in Polymer templates.
+These custom elements fire polymer-style `*-changed` events when the Apollo cache updates their state. They extend directly from `HTMLElement` so they're small in size, and their notifying properties make them perfect for use in Polymer templates.
 
 ```bash
 npm i -S @apollo-elements/polymer
@@ -125,7 +129,7 @@ npm i -S @apollo-elements/polymer
 ```
 
 ### [🍸 `mixins`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins#apollo-elementsmixins)
-Custom Element class mixins which give you all the same apollo features as `lit-apollo` but without imposing a component library on you.
+These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/) give you all the features you need to connect your components to your Apollo cache without imposing a specific component library.
 
 ```bash
 npm i -S @apollo-elements/mixins

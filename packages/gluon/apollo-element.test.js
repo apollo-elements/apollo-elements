@@ -23,10 +23,6 @@ const getElement = getElementWithLitTemplate({ getClass, getTemplate });
 describe('ApolloElement', function describeApolloElement() {
   it('caches observed properties', async function cachesObservedProperties() {
     const el = await getElement();
-    const client = {};
-
-    el.client = client;
-    expect(el.client).to.equal(client);
 
     el.data = 'data';
     expect(el.data).to.equal('data');
