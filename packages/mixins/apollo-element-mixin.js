@@ -1,6 +1,4 @@
-import {
-  getGraphQLScriptChildDocument,
-} from '@apollo-elements/lib/get-graphql-script-child-document';
+import getGraphQLScriptChildDocument from '@apollo-elements/lib/get-graphql-script-child-document';
 import isValidGql from '@apollo-elements/lib/is-valid-gql';
 
 /**

@@ -163,15 +163,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Executes a Query once and updates the component with the result
-   * @param {{
-   *    metadata: Object,
-   *    context: Object,
-   *    query: DocumentNode,
-   *    variables: Object,
-   *    fetchPolicy: FetchPolicy,
-   *    errorPolicy: ErrorPolicy,
-   *    fetchResults: boolean,
-   * }=}
+   * @param {{ metadata: Object, context: Object, query: DocumentNode, variables: Object, fetchPolicy: FetchPolicy, errorPolicy: ErrorPolicy, fetchResults: boolean }=} options
    * @return {Promise<ApolloQueryResult>}
    */
   executeQuery({
