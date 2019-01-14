@@ -1,0 +1,31 @@
+{
+  "name": "@apollo-elements/hybrids",
+  "version": "0.0.1",
+  "description": "Hybrids Starter Cultures for Apollo",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/apollo-elements/apollo-elements.git"
+  },
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements",
+    "Hybrids"
+  ],
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo-elements/lib": "^0.0.1",
+    "crocks": "^0.9.4",
+    "hybrids": "^2.0.0"
+  },
+  "devDependencies": {
+    "@apollo-elements/test-helpers": "^0.0.1",
+    "@types/crocks": "^0.0.1"
+  }
+}

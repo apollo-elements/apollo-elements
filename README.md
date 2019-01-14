@@ -15,6 +15,7 @@
 - [📦 Packages](#-packages)
   - [🔥 `lit-apollo`](#-lit-apollo)
   - [👩‍🔬 `gluon`](#-gluon)
+  - [‍🦄 `hybrids`](#-hybrids)
   - [🧱 `polymer`](#-polymer)
   - [🍸 `mixins`](#-mixins)
 - [🗞 Bundling](#-bundling)
@@ -25,7 +26,7 @@
 ## 📦 Packages
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
-### [🔥 `lit-apollo`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo#apollo-elementslit-apollo)
+### [🔥 `lit-apollo`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo)
 These base classes extend from `LitElement`, so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
 
 ```bash
@@ -67,7 +68,7 @@ render(
 )
 ```
 
-### [👩‍🔬 `gluon`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon#apollo-elementsgluon)
+### [👩‍🔬 `gluon`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon)
 These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonjs), a simplified <abbr title="web components">wc</abbr> library that uses `lit-html` for templating while keeping component state and lifecycle concerns 'close to the metal'.
 
 ```bash
@@ -108,7 +109,30 @@ render(
 )
 ```
 
-### [🧱 `polymer`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer#apollo-elementspolymer)
+### [🦄 `hybrids`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/hybrids)
+
+A set of objects you can roll into your hybrids to make it easier to connect to your Apollo cache.
+
+```bash
+npm i -S @apollo-elements/hybrids
+```
+
+```js
+import { ApolloQuery, queryFactory, define, html } from '@apollo-elements/hybrids';
+import gql from 'graphql-tag';
+import client from './apollo-client';
+
+const ConnectedElement = {
+  ...ApolloQuery,
+  client,
+  query: queryFactory(gql`query { hello }`),
+  render: ({data}) => html`<div>${data.hello}</div>`
+};
+
+define('connected-element', ConnectedElement);
+```
+
+### [🧱 `polymer`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer)
 These custom elements fire polymer-style `*-changed` events when the Apollo cache updates their state. They extend directly from `HTMLElement` so they're small in size, and their notifying properties make them perfect for use in Polymer templates.
 
 ```bash
@@ -128,7 +152,7 @@ npm i -S @apollo-elements/polymer
 </apollo-query>
 ```
 
-### [🍸 `mixins`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins#apollo-elementsmixins)
+### [🍸 `mixins`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins)
 These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/) give you all the features you need to connect your components to your Apollo cache without imposing a specific component library.
 
 ```bash
