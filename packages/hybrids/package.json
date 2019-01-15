@@ -1,7 +1,7 @@
 {
   "name": "@apollo-elements/hybrids",
   "version": "0.0.1",
-  "description": "Hybrids Starter Cultures for Apollo",
+  "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "scripts": {
     "test": "karma start karma.conf.js"
