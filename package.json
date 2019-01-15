@@ -9,8 +9,6 @@
     "predocs": "cp -Rf node_modules/@webcomponents/webcomponentsjs docs && rollup -c docs/rollup.config.js",
     "postdocs": "cd packages && for p in $( ls ); do if [ -d $p/docs ]; then rsync -a --delete $p/docs/ ../docs/$p/; fi done",
     "postinstall": "lerna bootstrap --hoist",
-    "posttest": "forever stopall",
-    "pretest": "forever start forever.json",
     "test": "lerna run test --stream --concurrency 1"
   },
   "devDependencies": {
@@ -40,9 +38,9 @@
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-no-loops": "^0.3.0",
     "esm": "^3.0.84",
-    "forever": "^0.15.3",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
+    "graphql-tools": "^4.0.3",
     "karma": "^3.1.4",
     "karma-mocha": "^1.3.0",
     "lerna": "^3.6.0",

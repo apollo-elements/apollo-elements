@@ -2,7 +2,6 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables';
 
 import { clientFactory } from './factories/client';
 import { queryFactory } from './factories/query';
-import { variablesFactory } from './factories/variables';
 
 const onNext = host => ({ data, loading, networkStatus, stale }) => {
   host.data = data;
@@ -44,9 +43,19 @@ const executeQuery = {
 };
 
 const subscribeToMore = {
-  get: host => ({ document, updateQuery } = {}) =>
-    host.observableQuery &&
-    host.observableQuery.subscribeToMore({ document, updateQuery }),
+  get: ({ observableQuery }) => ({ document, updateQuery } = {}) =>
+    observableQuery && observableQuery.subscribeToMore({ document, updateQuery }),
+};
+
+const updateQuery = {
+  set: ({ subscribeToMore, subscription }, updateQuery) => {
+    updateQuery && subscription && subscribeToMore({ updateQuery, document: subscription });
+    return updateQuery;
+  },
+  connect: ({ subscribeToMore, subscription, updateQuery }) =>
+    updateQuery &&
+    subscription &&
+    subscribeToMore({ updateQuery, document: subscription }),
 };
 
 const fetchMore = {
@@ -54,6 +63,7 @@ const fetchMore = {
     host.observableQuery &&
     host.observableQuery.fetchMore({ query, updateQuery, variables }),
 };
+
 
 const subscribe = {
   get: host => ({ query = host.query, variables = host.variables } = {}) => {
@@ -80,6 +90,20 @@ const watchQuery = {
     }),
 };
 
+const variables = {
+  connect: (host, key) => {
+    const onInvalidate = ({ target }) => {
+      const variables = host[key];
+      if (host === target && variables) {
+        host.observableQuery
+          ? host.observableQuery.setVariables(variables)
+          : host.subscribe({ variables });
+      }
+    };
+    host.addEventListener('@invalidate', onInvalidate);
+    return () => host.removeEventListener('@invalidate', onInvalidate);
+  },
+};
 
 export const ApolloQuery = {
   client: clientFactory(),
@@ -88,9 +112,10 @@ export const ApolloQuery = {
   fetchPolicy: 'cache-first',
   options: options(),
   query: queryFactory(),
-  variables: variablesFactory(),
+  variables,
   watchQuery,
   subscribeToMore,
+  updateQuery,
   executeQuery,
   fetchMore,
   subscribe,

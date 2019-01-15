@@ -74,14 +74,14 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('accepts a parsed query', async function parsedQuery() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       expect(el.query, 'set query').to.equal(query);
       expect(el.observableQuery, 'get observableQuery').to.be.ok;
     });
 
     it('rejects a bad query', async function badQuery() {
-      const query = `query { foo { bar } }`;
+      const query = `query { foo }`;
       const el = await getElement({ client });
       expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
       expect(el.query).to.be.null;
@@ -89,13 +89,13 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('sets query based on GraphQL script child', async function() {
-      const script = 'query foo { bar }';
+      const script = 'query { foo }';
       const el = await getElement({ script });
       expect(el.query).to.deep.equal(gql(script));
     });
 
     it('observes children for addition of query script', async function() {
-      const doc = `query newQuery { new }`;
+      const doc = `query { foo }`;
       const el = await getElement({});
       expect(el.query).to.be.null;
       el.innerHTML = `<script type="application/graphql">${doc}</script>`;
@@ -104,7 +104,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('does not change document for invalid children', async function() {
-      const doc = `query newQuery { new }`;
+      const doc = `query { foo }`;
       const el = await getElement({});
       expect(el.query).to.be.null;
       el.innerHTML = `<script>${doc}</script>`;
@@ -121,7 +121,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.subscribe when there is a query', async function setOptionsCallsObservableQuerySetOptions() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const setOptionsSpy = stub(el.observableQuery, 'setOptions');
       el.options = { errorPolicy: 'foo' };
@@ -136,13 +136,13 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
       expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
     });
 
-    it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
-      const query = gql`query { foo { bar } }`;
+    it('calls observableQuery.setVariables when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
-      const setVariablesSpy = stub(el.observableQuery, 'setVariables');
+      const setVariablesStub = stub(el.observableQuery, 'setVariables');
       // shouldn't this be an instance of ObservableQuery?
       el.variables = { errorPolicy: 'foo' };
-      expect(setVariablesSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
+      expect(setVariablesStub).to.have.been.calledWith({ errorPolicy: 'foo' });
     });
   });
 
@@ -154,10 +154,16 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
 
     it('does nothing when the query variables do not satisfy the query', async function subscribeNotEnoughVariables() {
       const variables = {};
-      const el = await getElement({ client, query, variables });
-      const subscribeSpy = spy(el.observableQuery, 'subscribe');
-      expect(await el.subscribe()).to.be.undefined;
-      expect(subscribeSpy).to.not.have.been.called;
+      const watchQueryStub = stub();
+      watchQueryStub.returns({ subscribe: () => null });
+      const apolloQuery = {
+        ...ApolloQuery,
+        watchQuery: {
+          get: () => watchQueryStub,
+        },
+      };
+      const el = await getElement({ apolloQuery, client, query, variables });
+      expect(el.watchQuery).to.not.have.been.called;
     });
 
     it('calls watchQuery when there are enough variables', async function subscribeEnoughVariables() {
@@ -187,9 +193,8 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     it('binds nextData to the subscription\'s next', async function bindsNextToNext() {
       const variables = { needed: 'needed' };
       const el = await getElement({ client, query, variables });
-      const subscription = await el.subscribe();
-      subscription._observer.next({ data: { foo: 'foo' } });
-      expect(el.data).to.deep.equal({ foo: 'foo' });
+      // mocked client will return 'needed'
+      expect(el.data).to.deep.equal({ needy: 'needed' });
     });
 
     it('binds nextError to the subscription\'s error', async function bindsErrorToError() {
@@ -208,7 +213,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.subscribeToMore when there is a query', async function subscribeToMoreCallsObservableQuerySubscribeToMore() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const subscribeToMoreSpy = stub(el.observableQuery, 'subscribeToMore');
       // shouldn't this be an instance of ObservableQuery?
@@ -254,7 +259,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('accepts custom args', async function() {
-      const query = gql`query foo { bar { baz } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client });
       const queryStub = stub(el.client, 'query');
       queryStub.resolves(true);
@@ -266,7 +271,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('defaults to element query', async function() {
-      const query = gql`query foo { bar { baz } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const queryStub = stub(el.client, 'query');
       queryStub.resolves(true);
@@ -286,7 +291,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.fetchMore when there is a query', async function fetchMoreCallsObservableQuerySubscribeToMore() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const fetchMoreSpy = stub(el.observableQuery, 'fetchMore');
       const args = { query, updateQuery: x => x };
@@ -298,7 +303,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
 
   describe('watchQuery', function describeWatchQuery() {
     it('calls client watchQuery', async function callsClientWatchQuery() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const watchQueryStub = stub(el.client, 'watchQuery');
       const args = { query };
@@ -308,14 +313,14 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('returns an ObservableQuery', async function returnsObservableQuery() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       expect(el.watchQuery()).to.be.an.instanceof(ObservableQuery);
     });
 
     it('accepts a specific query', async function() {
       const watchQueryStub = stub(client, 'watchQuery');
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client });
       el.watchQuery({ query });
       expect(watchQueryStub).to.have.been.calledWith(match({ query }));
@@ -323,7 +328,7 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
     });
 
     it('defaults to the element\'s query', async function() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const watchQueryStub = stub(el.client, 'watchQuery');
       el.watchQuery({ query: undefined });

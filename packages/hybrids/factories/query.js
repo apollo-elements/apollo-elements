@@ -1,6 +1,5 @@
 import { documentFactory } from './document.js';
 
-export const queryFactory = documentFactory({
-  errorMessage: 'Query must be a gql-parsed DocumentNode',
-  onSet: host => !host.noAutoSubscribe && host.subscribe(),
-});
+const errorMessage = 'Query must be a gql-parsed DocumentNode';
+
+export const queryFactory = documentFactory({ errorMessage });

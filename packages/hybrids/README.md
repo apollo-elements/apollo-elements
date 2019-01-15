@@ -29,7 +29,7 @@ Spread in the ApolloQuery hybrid prototype to define a querying element.
 ```js
 import { ApolloQuery, define, html } from '@apollo-elements/hybrids';
 
-const render = ({data}) =>
+const render = ({ data }) =>
   html`<div>${data.hello}</div>`;
 
 define('connected-element', { ...ApolloQuery, render });
@@ -55,11 +55,11 @@ Spread in the ApolloMutation hybrid prototype to define a mutating element.
 ```js
 import { ApolloMutation, define, html } from '@apollo-elements/hybrids';
 
-const onKeyup = (host, ({ key, target: { value: name } })) => {
-  if (key === 'Enter') host.mutate({ variables: { name } });
+const onKeyup = ({ mutate }, ({ key, target: { value: name } })) => {
+  if (key === 'Enter') mutate({ variables: { name } });
 }
 
-const render = ({data}) =>
+const render = ({ data }) =>
   html`<input aria-label="Name" placeholder="Name" onkeyup="${onKeyup}"/>`;
 
 define('name-input', { ...ApolloMutation, render });
@@ -143,7 +143,7 @@ import { ApolloQuery, clientFactory, queryFactory, define, html } from '@apollo-
 import gql from 'graphql-tag';
 import client from './apollo-client';
 
-const render = ({data}) =>
+const render = ({ data }) =>
   html`<div>${data.hello}</div>`;
 
 define('connected-element', {

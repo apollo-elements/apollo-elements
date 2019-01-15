@@ -1,17 +1,26 @@
 import { isValidGql, getGraphQLScriptChildDocument } from '@apollo-elements/lib';
 
-export const documentFactory = ({ errorMessage, onSet = () => null }) => doc => {
+export const documentFactory = ({ errorMessage }) => doc => {
   const set = (host, next) => {
     if (!next) return doc || null;
     if (!isValidGql(next)) throw new Error(errorMessage);
-    onSet(host);
     return next;
   };
 
   const get = (host, previous) =>
-    doc || getGraphQLScriptChildDocument(host) || previous || null;
+    previous || getGraphQLScriptChildDocument(host) || doc || null;
 
   const connect = (host, key) => {
+    const onInvalidate = ({ target }) => {
+      if (key === 'mutation') return;
+      if (host === target && host[key]) {
+        key === 'query' && host.observableQuery
+          ? host.observableQuery.setVariables(host[key])
+          : host.subscribe();
+      }
+    };
+    host.addEventListener('@invalidate', onInvalidate);
+
     if (!host[key]) host[key] = getGraphQLScriptChildDocument(host);
     if (key !== 'mutation' && host[key]) host.subscribe();
 
@@ -21,7 +30,11 @@ export const documentFactory = ({ errorMessage, onSet = () => null }) => doc => 
     });
 
     scriptChildMutation.observe(host, { characterData: true, childList: true, subtree: true });
-    return () => scriptChildMutation.disconnect();
+
+    return () => {
+      host.removeEventListener('@invalidate', onInvalidate);
+      scriptChildMutation.disconnect();
+    };
   };
 
   return { connect, get, set };

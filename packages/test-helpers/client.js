@@ -1,24 +1,69 @@
 import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
+import { SchemaLink } from 'apollo-link-schema';
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
-const host = '127.0.0.1:8000';
+const typeDefs = `
+  type Message {
+    message: String
+    user: String
+    date: String
+  }
 
-const WS_ENDPOINT = `ws://${host}/graphql`;
-const HTTP_ENDPOINT = `http://${host}/graphql`;
+  type Query {
+    messages: [Message]
+    needy(needed: String!): String
+    foo: String
+  }
 
-function isWsOperation({ query }) {
-  const { kind, operation } = getMainDefinition(query);
-  return kind === 'OperationDefinition' && operation === 'subscription';
-}
+  type Subscription {
+    messageSent: Message
+    foo(bar: String): String
+  }
 
-const httpLink = new HttpLink({ uri: HTTP_ENDPOINT });
-const wsLink = new WebSocketLink({ uri: WS_ENDPOINT, options: { reconnect: true } });
-const link = split(isWsOperation, wsLink, httpLink);
-const cache = new InMemoryCache();
+  type Mutation {
+    sendMessage(user: String, message: String): Message
+    reset: [Message]
+    foo: String
+  }
+`;
 
+const mocks = {
+  Mutation: () => ({
+    sendMessage(_, { user, message }) {
+      const date = new Date().toISOString();
+      const messageSent = { user, message, date };
+      return messageSent;
+    },
+
+    reset() {
+      return [];
+    },
+
+    foo() {
+      return 'bar';
+    },
+  }),
+
+  Query: () => ({
+    messages: () => [],
+    needy: () => 'needed',
+    foo() {
+      return 'bar';
+    },
+  }),
+
+  Subscription: () => ({
+    messageSent: { subscribe() { } },
+    foo: { subscribe() { } },
+  }),
+};
+
+const schema = makeExecutableSchema({ typeDefs });
+addMockFunctionsToSchema({ schema, mocks });
+
+const link = new SchemaLink({ schema });
+
+const cache = new InMemoryCache(window.__APOLLO_STATE__);
 // Create the Apollo Client
 export const client = new ApolloClient({ cache, link });

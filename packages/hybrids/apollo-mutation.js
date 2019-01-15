@@ -1,6 +1,5 @@
 import { clientFactory } from './factories/client';
 import { mutationFactory } from './factories/mutation';
-import { variablesFactory } from './factories/variables';
 
 const isMostRecentMutation = (host, mutationId) => host.mostRecentMutationId === mutationId;
 
@@ -74,5 +73,4 @@ export const ApolloMutation = {
   mutation: mutationFactory(),
   onCompleted: { get: (_, last) => (last || noop), set: (_, v) => v },
   onError: { get: (_, last) => (last || noop), set: (_, v) => v },
-  variables: variablesFactory(),
 };
