@@ -115,22 +115,40 @@ const template = html`
 `;
 ```
 
-If you'd like to set up a subscription with an initial value from a query, then update that query's cached value each time the subscription reports new data, pass a subscription document and an `updateQuery` function with signature `(prev: CachedValue, { subscriptionData }): next: CachedValue` to the `subscribeToMore` property on a query element:
+If you'd like to set up a subscription with an initial value from a query, then update that query's cached value each time the subscription reports new data, pass a subscription `document` and an `updateQuery` function with signature `(prev: CachedValue, { subscriptionData }): next: CachedValue` to the `subscribeToMore` method on a query element:
 
 ```js
 import gql from 'graphql-tag';
 
-const query = gql`query { messages }`;
-
-const updateQuery = (prev, { subscriptionData }) =>
-  !subscriptionData.data ? prev : [subscriptionData.data.messagePosted, ...prev];
-
-const template = html`
-  <messages-list
-      query="${query}"
-      subscribeToMore="${{ document: subscription, updateQuery }}
-  "></messages-list>
+const query = gql`
+  query {
+    messages
+  }
 `;
+
+const subscription = gql`
+  subscription {
+    messagePosted
+  }
+`;
+
+const updateQuery = (previous = [], { subscriptionData }) =>
+    !subscriptionData.data ? previous
+  : [subscriptionData.data.messagePosted, ...previous];
+
+const message = message => html`<li>${message}</li>`;
+const render = ({messages}) =>
+  html`<ul>${messages.map(message)}</ul>`;
+
+const messageList = document.createElement('message-list');
+messagesList.subscribeToMore({ document: subscription, updateQuery });
+document.body.append(messageList);
+
+define('messages-list', {
+  ...ApolloQuery,
+  render,
+  query: queryFactory(query)
+}
 ```
 
 *NOTE*: If you set `window.__APOLLO_CLIENT__`, you don't need to specify the `client` property when instantiating your elements, the way we do above.

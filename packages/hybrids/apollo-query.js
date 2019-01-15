@@ -47,17 +47,6 @@ const subscribeToMore = {
     observableQuery && observableQuery.subscribeToMore({ document, updateQuery }),
 };
 
-const updateQuery = {
-  set: ({ subscribeToMore, subscription }, updateQuery) => {
-    updateQuery && subscription && subscribeToMore({ updateQuery, document: subscription });
-    return updateQuery;
-  },
-  connect: ({ subscribeToMore, subscription, updateQuery }) =>
-    updateQuery &&
-    subscription &&
-    subscribeToMore({ updateQuery, document: subscription }),
-};
-
 const fetchMore = {
   get: host => ({ query = host.query, updateQuery, variables } = {}) =>
     host.observableQuery &&
@@ -115,7 +104,6 @@ export const ApolloQuery = {
   variables,
   watchQuery,
   subscribeToMore,
-  updateQuery,
   executeQuery,
   fetchMore,
   subscribe,
