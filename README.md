@@ -27,7 +27,7 @@
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
 ### [🔥 `lit-apollo`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo)
-These base classes extend from `LitElement`, so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
+These base classes extend from [`LitElement`](https://lit-element.polymer-project.org), so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
 
 ```bash
 npm i -S @apollo-elements/lit-apollo
@@ -111,7 +111,7 @@ render(
 
 ### [🦄 `hybrids`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/hybrids)
 
-A set of objects you can roll into your hybrids to make it easier to connect to your Apollo cache.
+A set of objects you can roll into your [hybrids](https://hybrids.js.org) to make it easier to connect to your Apollo cache.
 
 ```bash
 npm i -S @apollo-elements/hybrids
@@ -131,7 +131,7 @@ define('connected-element', ConnectedElement);
 ```
 
 ### [🧱 `polymer`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer)
-These custom elements fire polymer-style `*-changed` events when the Apollo cache updates their state. They extend directly from `HTMLElement` so they're small in size, and their notifying properties make them perfect for use in Polymer templates.
+These custom elements fire [polymer](https://polymer-library.polymer-project.org)-style `*-changed` events when the Apollo cache updates their state. They extend directly from `HTMLElement` so they're small in size, and their notifying properties make them perfect for use in Polymer templates.
 
 ```bash
 npm i -S @apollo-elements/polymer
