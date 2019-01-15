@@ -10,10 +10,7 @@ chai.use(sinonChai);
 const scriptTemplate = script => html`<script type="application/graphql">${script}</script>`;
 const getClass = () => ApolloQuery;
 const getTemplate = (tag, { query, variables, client, script } = {}) => html`
-  <${tag}
-      .client="${ifDefined(client)}"
-      .query="${ifDefined(query)}"
-      .variables="${variables}">
+  <${tag} .client="${ifDefined(client)}">
     ${script && scriptTemplate(script)}
   </${tag}>`;
 

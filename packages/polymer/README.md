@@ -4,9 +4,9 @@
 [![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
 
-🚀 Custom Elements that support two-way binding to your Apollo cache 🌜
+<strong>🚀 Custom Elements that support two-way binding from your Apollo cache 🌜</strong>
 
-👩‍🚀 It's one small step for a dev, one giant leap for Polymer apps! 👨‍🚀
+<strong>👩‍🚀 For developing with space-age Polymers 👨‍🚀</strong>
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)

@@ -1,34 +1,39 @@
-import { chai, expect, html } from '@open-wc/testing';
+import { chai, expect, fixture, unsafeStatic, html as litHtml } from '@open-wc/testing';
+import { nextFrame } from '@open-wc/testing-helpers';
 import gql from 'graphql-tag';
 import sinonChai from 'sinon-chai';
 
 import { ObservableQuery } from 'apollo-client';
-import { ifDefined } from 'lit-html/directives/if-defined';
 import { match, stub, spy } from 'sinon';
 
+import { define, html } from 'hybrids';
+
 import { client } from '@apollo-elements/test-helpers/client';
-import { getElementWithLitTemplate, isSubscription } from '@apollo-elements/test-helpers/helpers';
-import { ApolloQueryMixin } from './apollo-query-mixin';
+import { isSubscription } from '@apollo-elements/test-helpers/helpers';
+import { ApolloQuery } from './apollo-query';
 
 chai.use(sinonChai);
 
-const scriptTemplate = script => html`<script type="application/graphql">${script}</script>`;
-const getClass = () => ApolloQueryMixin(HTMLElement);
-const getTemplate = (tag, { query, variables, client, script } = {}) => html`
-  <${tag}
-      .client="${ifDefined(client)}"
-      .query="${ifDefined(query)}"
-      .variables="${variables}">
-    ${script && scriptTemplate(script)}
-  </${tag}>`;
+let counter = 0;
+const getElement = async ({ query, variables, client, script, apolloQuery = ApolloQuery, render = () => html`hi` }) => {
+  const tag = `element-${counter}`;
+  const unsafeTag = unsafeStatic(tag);
 
-const getElement = getElementWithLitTemplate({ getClass, getTemplate });
+  define(tag, { ...apolloQuery, render });
 
-describe('ApolloQueryMixin', function describeApolloQueryMixin() {
-  it('returns an instance of the superclass', async function returnsClass() {
-    expect(await getElement()).to.be.an.instanceOf(HTMLElement);
-  });
+  const template = litHtml`
+  <${unsafeTag} .client="${client}" .query="${query}" .variables="${variables}">
+    ${script && litHtml`<script type="application/graphql">${script}</script>`}
+  </${unsafeTag}>`;
 
+  const element = await fixture(template);
+
+  counter++;
+
+  return element;
+};
+
+describe('ApolloQuery', function describeApolloQueryMixin() {
   it('sets default properties', async function setsDefaultProperties() {
     const el = await getElement({ client });
     expect(el.errorPolicy, 'errorPolicy').to.equal('none');
@@ -42,22 +47,27 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     expect(el.observableQuery, 'observableQuery').to.be.undefined;
   });
 
+  it('defaults to window.__APOLLO_CLIENT__ as client if set', async function defaultsToGlobalClient() {
+    const cached = window.__APOLLO_CLIENT__;
+    window.__APOLLO_CLIENT__ = {};
+    const el = await getElement({});
+    expect(el.client).to.equal(window.__APOLLO_CLIENT__);
+    window.__APOLLO_CLIENT__ = cached;
+  });
+
+  it('defaults to null as client', async function defaultsToGlobalClient() {
+    const cached = window.__APOLLO_CLIENT__;
+    delete window.__APOLLO_CLIENT__;
+    const el = await getElement({});
+    expect(el.client).to.equal(null);
+    window.__APOLLO_CLIENT__ = cached;
+  });
+
   describe('query property', function() {
     it('accepts a script child', async function scriptChild() {
-      const getStubbedClass = () => {
-        const klass = class extends ApolloQueryMixin(HTMLElement) { };
-        spy(klass.prototype, 'subscribe');
-        return klass;
-      };
-
-      const getStubbedElement = getElementWithLitTemplate({
-        getClass: getStubbedClass,
-        getTemplate,
-      });
-
-      const script = 'subscription { foo }';
-      const el = await getStubbedElement({ client, script });
-
+      const script = 'query { foo }';
+      const apolloQuery = { ...ApolloQuery, subscribe: { get: () => stub() } };
+      const el = await getElement({ client, script, apolloQuery });
       expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
       expect(el.query).to.deep.equal(gql(script));
       expect(el.subscribe).to.have.been.called;
@@ -66,8 +76,8 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     it('accepts a parsed query', async function parsedQuery() {
       const query = gql`query { foo }`;
       const el = await getElement({ client, query });
-      expect(el.query).to.equal(query);
-      expect(el.observableQuery).to.be.ok;
+      expect(el.query, 'set query').to.equal(query);
+      expect(el.observableQuery, 'get observableQuery').to.be.ok;
     });
 
     it('rejects a bad query', async function badQuery() {
@@ -76,6 +86,30 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
       expect(el.query).to.be.null;
       expect(el.observableQuery).to.not.be.ok;
+    });
+
+    it('sets query based on GraphQL script child', async function() {
+      const script = 'query { foo }';
+      const el = await getElement({ script });
+      expect(el.query).to.deep.equal(gql(script));
+    });
+
+    it('observes children for addition of query script', async function() {
+      const doc = `query { foo }`;
+      const el = await getElement({});
+      expect(el.query).to.be.null;
+      el.innerHTML = `<script type="application/graphql">${doc}</script>`;
+      await nextFrame();
+      expect(el.query).to.deep.equal(gql(doc));
+    });
+
+    it('does not change document for invalid children', async function() {
+      const doc = `query { foo }`;
+      const el = await getElement({});
+      expect(el.query).to.be.null;
+      el.innerHTML = `<script>${doc}</script>`;
+      await nextFrame();
+      expect(el.query).to.be.null;
     });
   });
 
@@ -102,13 +136,13 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
     });
 
-    it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
+    it('calls observableQuery.setVariables when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
       const query = gql`query { foo }`;
       const el = await getElement({ client, query });
-      const setVariablesSpy = stub(el.observableQuery, 'setVariables');
+      const setVariablesStub = stub(el.observableQuery, 'setVariables');
       // shouldn't this be an instance of ObservableQuery?
       el.variables = { errorPolicy: 'foo' };
-      expect(setVariablesSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
+      expect(setVariablesStub).to.have.been.calledWith({ errorPolicy: 'foo' });
     });
   });
 
@@ -120,18 +154,25 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
 
     it('does nothing when the query variables do not satisfy the query', async function subscribeNotEnoughVariables() {
       const variables = {};
-      const el = await getElement({ client, query, variables });
-      const watchQuerySpy = spy(el, 'watchQuery');
-      expect(await el.subscribe()).to.be.undefined;
-      expect(watchQuerySpy).to.not.have.been.called;
+      const watchQueryStub = stub();
+      watchQueryStub.returns({ subscribe: () => null });
+      const apolloQuery = {
+        ...ApolloQuery,
+        watchQuery: {
+          get: () => watchQueryStub,
+        },
+      };
+      const el = await getElement({ apolloQuery, client, query, variables });
+      expect(el.watchQuery).to.not.have.been.called;
     });
 
     it('calls watchQuery when there are enough variables', async function subscribeEnoughVariables() {
       const variables = { needed: 'needed' };
       const el = await getElement({ client, query, variables });
-      const watchQuerySpy = spy(el, 'watchQuery');
+      const watchQuerySpy = spy(el.client, 'watchQuery');
       expect(await el.subscribe()).to.be.ok;
       expect(watchQuerySpy).to.have.been.called;
+      watchQuerySpy.restore();
     });
 
     it('creates an observableQuery', async function subscribeCreatesObservableQuery() {
@@ -152,15 +193,16 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     it('binds nextData to the subscription\'s next', async function bindsNextToNext() {
       const variables = { needed: 'needed' };
       const el = await getElement({ client, query, variables });
-      const subscription = await el.subscribe();
-      expect(subscription._observer.next).to.equal(el.nextData);
+      // mocked client will return 'needed'
+      expect(el.data).to.deep.equal({ needy: 'needed' });
     });
 
     it('binds nextError to the subscription\'s error', async function bindsErrorToError() {
       const variables = { needed: 'needed' };
       const el = await getElement({ client, query, variables });
       const subscription = await el.subscribe();
-      expect(subscription._observer.error).to.equal(el.nextError);
+      subscription._observer.error('error');
+      expect(el.error).to.equal('error');
     });
   });
 
@@ -261,9 +303,9 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
 
   describe('watchQuery', function describeWatchQuery() {
     it('calls client watchQuery', async function callsClientWatchQuery() {
-      const watchQueryStub = stub(client, 'watchQuery');
       const query = gql`query { foo }`;
       const el = await getElement({ client, query });
+      const watchQueryStub = stub(el.client, 'watchQuery');
       const args = { query };
       expect(el.watchQuery(args)).to.be.undefined;
       expect(watchQueryStub).to.have.been.calledWith(match(args));
@@ -286,45 +328,55 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('defaults to the element\'s query', async function() {
-      const watchQueryStub = stub(client, 'watchQuery');
       const query = gql`query { foo }`;
       const el = await getElement({ client, query });
+      const watchQueryStub = stub(el.client, 'watchQuery');
       el.watchQuery({ query: undefined });
       expect(watchQueryStub).to.have.been.calledWith(match({ query }));
       watchQueryStub.restore();
     });
   });
 
-  describe('nextData', function describeNextData() {
-    it('assigns to this.data', async function dataAssigned() {
-      const el = await getElement();
-      el.nextData({ data: 1 });
-      expect(el.data).to.equal(1);
+  describe('receiving data', function describeNextData() {
+    it('assigns to host\'s data property', async function dataAssigned() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      const subscription = await el.subscribe();
+      subscription._observer.next({ data: { foo: 'bar ' } });
+      expect(el.data).to.deep.equal({ foo: 'bar ' });
     });
 
-    it('assigns to this.loading', async function loadingAssigned() {
-      const el = await getElement();
-      el.nextData({ loading: 1 });
+    it('assigns to host\'s loading property', async function loadingAssigned() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      const subscription = await el.subscribe();
+      subscription._observer.next({ data: {}, loading: 1 });
       expect(el.loading).to.equal(1);
     });
 
-    it('assigns to this.networkStatus', async function networkStatusAssigned() {
-      const el = await getElement();
-      el.nextData({ networkStatus: 1 });
+    it('assigns to host\'s networkStatus property', async function networkStatusAssigned() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      const subscription = await el.subscribe();
+      subscription._observer.next({ data: {}, networkStatus: 1 });
       expect(el.networkStatus).to.equal(1);
     });
 
-    it('assigns to this.stale', async function staleAssigned() {
-      const el = await getElement();
-      el.nextData({ stale: 1 });
+    it('assigns to host\'s stale property', async function staleAssigned() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      const subscription = await el.subscribe();
+      subscription._observer.next({ data: {}, stale: 1 });
       expect(el.stale).to.equal(1);
     });
   });
 
   describe('nextError', function describeNextError() {
-    it('assigns to this.error', async function errorAssigned() {
-      const el = await getElement();
-      el.nextError(1);
+    it('assigns to host\'s error property', async function errorAssigned() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      const subscription = await el.subscribe();
+      subscription._observer.error(1);
       expect(el.error).to.equal(1);
     });
   });

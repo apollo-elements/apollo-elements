@@ -1,5 +1,9 @@
 # @apollo-elements/mixins
 
+<strong>🍹 Moon mixins for cosmic components 👩‍🚀</strong>
+
+A set of [class mixin functions](https://alligator.io/js/class-composition/#composition-with-javascript-classes) that add Apollo GraphQL goodness to your web component classes.
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -12,31 +16,23 @@
 Apollo element mixins are distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
 ```bash
-npm install --save @apollo-elements/lit-apollo
+npm install --save @apollo-elements/mixins
 ```
 
-
-Here's an example that uses `GluonElement` instead of `LitElement`.
+Here's an example that uses `HTMLElement`
 
 ```js
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
-import { GluonElement, html } from '@gluon/gluon';
 
-class GluonQuery extends ApolloQueryMixin(GluonElement) {
-  set data(data) {
-    this.__data = data;
-    this.render();
-  }  
-
+class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
   get data() {
     return this.__data;
   }
 
-  get template() {
-    return html`
-      <h1>${this.data.title}</h1>
-    `;
-  }
+  set data(data) {
+    this.__data = data;
+    this.shadowRoot.innerText = `${data.helloWorld.greeting}, ${data.helloWorld.name}`;
+  }  
 }
 ```
 
