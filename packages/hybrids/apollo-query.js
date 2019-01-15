@@ -1,5 +1,6 @@
 import hasAllVariables from '@apollo-elements/lib/has-all-variables';
 
+import { clientFactory } from './factories/client';
 import { queryFactory } from './factories/query';
 import { variablesFactory } from './factories/variables';
 
@@ -54,11 +55,6 @@ const fetchMore = {
     host.observableQuery.fetchMore({ query, updateQuery, variables }),
 };
 
-const client = {
-  get: (_, client = window.__APOLLO_CLIENT__ || null) => client,
-  set: (_, v) => v,
-};
-
 const subscribe = {
   get: host => ({ query = host.query, variables = host.variables } = {}) => {
     if (!hasAllVariables({ query, variables })) return;
@@ -86,7 +82,7 @@ const watchQuery = {
 
 
 export const ApolloQuery = {
-  client,
+  client: clientFactory(),
   data: null,
   errorPolicy: 'none',
   fetchPolicy: 'cache-first',

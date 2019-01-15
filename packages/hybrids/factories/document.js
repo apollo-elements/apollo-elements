@@ -13,7 +13,7 @@ export const documentFactory = ({ errorMessage, onSet = () => null }) => doc => 
 
   const connect = (host, key) => {
     if (!host[key]) host[key] = getGraphQLScriptChildDocument(host);
-    if (host[key]) host.subscribe();
+    if (key !== 'mutation' && host[key]) host.subscribe();
 
     const scriptChildMutation = new MutationObserver(() => {
       const doc = getGraphQLScriptChildDocument(host);

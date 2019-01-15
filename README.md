@@ -120,11 +120,9 @@ npm i -S @apollo-elements/hybrids
 ```js
 import { ApolloQuery, queryFactory, define, html } from '@apollo-elements/hybrids';
 import gql from 'graphql-tag';
-import client from './apollo-client';
 
 const ConnectedElement = {
   ...ApolloQuery,
-  client,
   query: queryFactory(gql`query { hello }`),
   render: ({data}) => html`<div>${data.hello}</div>`
 };
