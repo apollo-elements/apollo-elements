@@ -9,3 +9,4 @@ docs/polymer
 docs/webcomponentsjs
 docs/bundle.js
 analysis.json
+lerna-debug.log
