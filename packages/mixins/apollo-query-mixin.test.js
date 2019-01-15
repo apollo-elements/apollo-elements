@@ -64,14 +64,14 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('accepts a parsed query', async function parsedQuery() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       expect(el.query).to.equal(query);
       expect(el.observableQuery).to.be.ok;
     });
 
     it('rejects a bad query', async function badQuery() {
-      const query = `query { foo { bar } }`;
+      const query = `query { foo }`;
       const el = await getElement({ client });
       expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
       expect(el.query).to.be.null;
@@ -87,7 +87,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.subscribe when there is a query', async function setOptionsCallsObservableQuerySetOptions() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const setOptionsSpy = stub(el.observableQuery, 'setOptions');
       el.options = { errorPolicy: 'foo' };
@@ -103,7 +103,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const setVariablesSpy = stub(el.observableQuery, 'setVariables');
       // shouldn't this be an instance of ObservableQuery?
@@ -171,7 +171,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.subscribeToMore when there is a query', async function subscribeToMoreCallsObservableQuerySubscribeToMore() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const subscribeToMoreSpy = stub(el.observableQuery, 'subscribeToMore');
       // shouldn't this be an instance of ObservableQuery?
@@ -217,7 +217,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('accepts custom args', async function() {
-      const query = gql`query foo { bar { baz } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client });
       const queryStub = stub(el.client, 'query');
       queryStub.resolves(true);
@@ -229,7 +229,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('defaults to element query', async function() {
-      const query = gql`query foo { bar { baz } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const queryStub = stub(el.client, 'query');
       queryStub.resolves(true);
@@ -249,7 +249,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('calls observableQuery.fetchMore when there is a query', async function fetchMoreCallsObservableQuerySubscribeToMore() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const fetchMoreSpy = stub(el.observableQuery, 'fetchMore');
       const args = { query, updateQuery: x => x };
@@ -262,7 +262,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
   describe('watchQuery', function describeWatchQuery() {
     it('calls client watchQuery', async function callsClientWatchQuery() {
       const watchQueryStub = stub(client, 'watchQuery');
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       const args = { query };
       expect(el.watchQuery(args)).to.be.undefined;
@@ -271,14 +271,14 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
 
     it('returns an ObservableQuery', async function returnsObservableQuery() {
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       expect(el.watchQuery()).to.be.an.instanceof(ObservableQuery);
     });
 
     it('accepts a specific query', async function() {
       const watchQueryStub = stub(client, 'watchQuery');
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client });
       el.watchQuery({ query });
       expect(watchQueryStub).to.have.been.calledWith(match({ query }));
@@ -287,7 +287,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
 
     it('defaults to the element\'s query', async function() {
       const watchQueryStub = stub(client, 'watchQuery');
-      const query = gql`query { foo { bar } }`;
+      const query = gql`query { foo }`;
       const el = await getElement({ client, query });
       el.watchQuery({ query: undefined });
       expect(watchQueryStub).to.have.been.calledWith(match({ query }));

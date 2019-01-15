@@ -85,7 +85,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     });
 
     it('does not call subscribe if subscription already initialized', async function() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'qux' };
       const el = await getElement({ client, subscription, variables });
       const subscribeStub = stub(el, 'subscribe');
@@ -96,7 +96,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
 
   describe('variables property', function describeVariables() {
     it('calls subscribe when element has not yet initialized the subscription', async function() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'qux' };
       const el = await getElement({ client, subscription });
       const subscribeStub = stub(el, 'subscribe');
@@ -105,7 +105,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     });
 
     it('does not call subscribe when element already initialized the subscription', async function() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'qux' };
       const el = await getElement({ client, subscription, variables });
       const subscribeStub = stub(el, 'subscribe');
@@ -116,7 +116,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
 
   describe('subscribe', function describeSubscribe() {
     it('creates an observable', async function createsObservable() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'quux' };
       const el = await getElement({ client, subscription });
       el.variables = variables;
@@ -125,7 +125,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     });
 
     it('does nothing when there are not enough variables', async function notEnoughVariables() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = {};
       const el = await getElement({ client, subscription });
       el.variables = variables;
@@ -134,7 +134,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     });
 
     it('can take a specific fetchPolicy', async function specificFetchPolicy() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'quux' };
       const fetchPolicy = 'cache-only';
       const el = await getElement({ client, subscription });
@@ -150,7 +150,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     });
 
     it('uses fetchPolicy set on the element', async function specificFetchPolicy() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'quux' };
       const fetchPolicy = 'cache-only';
       const el = await getElement({ client, subscription });
@@ -167,7 +167,7 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
     });
 
     it('defaults to fetchPolicy set on the element', async function specificFetchPolicy() {
-      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) { baz } }`;
+      const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
       const variables = { bar: 'quux' };
       const fetchPolicy = 'cache-only';
       const el = await getElement({ client, subscription });
