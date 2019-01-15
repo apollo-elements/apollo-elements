@@ -21,8 +21,10 @@
   "license": "ISC",
   "dependencies": {
     "@apollo-elements/lib": "^0.0.1",
-    "crocks": "^0.9.4",
-    "hybrids": "^2.0.0"
+    "crocks": "^0.9.4"
+  },
+  "peerDependencies": {
+    "hybrids": ">= 2"
   },
   "devDependencies": {
     "@apollo-elements/test-helpers": "^0.0.1",

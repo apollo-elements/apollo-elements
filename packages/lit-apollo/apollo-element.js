@@ -1,5 +1,5 @@
-export { html } from '@polymer/lit-element';
-import { LitElement } from '@polymer/lit-element';
+export { html } from 'lit-element';
+import { LitElement } from 'lit-element';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin.js';
 
 /**

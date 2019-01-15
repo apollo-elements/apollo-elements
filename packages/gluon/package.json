@@ -27,8 +27,10 @@
 	},
 	"homepage": "https://github.com/apollo-elements/apollo-elements#readme",
 	"dependencies": {
-		"@apollo-elements/mixins": "^0.0.1",
-		"@gluon/gluon": "^2.5.1"
+		"@apollo-elements/mixins": "^0.0.1"
+	},
+	"peerDependencies": {
+		"@gluon/gluon": ">= 2"
 	},
 	"devDependencies": {
 		"@apollo-elements/test-helpers": "^0.0.1",

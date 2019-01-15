@@ -1,4 +1,4 @@
 import { ApolloSubscription as ApolloSubscriptionBase } from "@apollo-elements/mixins/apollo-subscription-mixin";
-import { LitElement } from "@polymer/lit-element";
+import { LitElement } from "lit-element";
 
 declare class ApolloSubscription<TData, TVariables> extends ApolloSubscriptionBase<LitElement, TData, TVariables> { }

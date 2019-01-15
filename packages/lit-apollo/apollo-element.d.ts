@@ -1,4 +1,4 @@
-import { LitElement } from "@polymer/lit-element";
+import { LitElement } from "lit-element";
 
 import { ApolloElement as ApolloElementBase } from '@apollo-elements/mixins/apollo-element-mixin';
 
