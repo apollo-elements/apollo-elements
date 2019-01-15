@@ -57,6 +57,6 @@ You can now use them in your polymer template:
 Always make sure that any required variables (e.g. `id` here) are defined in `variables` before adding your query element, or else an error will be thrown.
 
 ## 👷‍♂️ Maintainers
-`apollo-elements` is maintained by Benny Powers.
+`apollo-elements` is a community project maintained by Benny Powers.
 
 [![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/bennyp?utm_source=github&utm_medium=button&utm_term=bennyp&utm_campaign=github)

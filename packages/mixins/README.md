@@ -56,6 +56,6 @@ graphql script element to your connected element, like so:
 ```
 
 ## 👷‍♂️ Maintainers
-`apollo-elements` is maintained by Benny Powers.
+`apollo-elements` is a community project maintained by Benny Powers.
 
 [![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/bennyp?utm_source=github&utm_medium=button&utm_term=bennyp&utm_campaign=github)
