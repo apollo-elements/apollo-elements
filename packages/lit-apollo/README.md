@@ -4,9 +4,9 @@
 [![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
 
-🚀 LitElement base classes that connect to your Apollo cache 🌜
+<strong>🚀 LitElement base classes that connect to your Apollo cache 🌜</strong>
 
-👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀
+<strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong>
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)

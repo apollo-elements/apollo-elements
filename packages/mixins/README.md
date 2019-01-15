@@ -1,6 +1,8 @@
 # @apollo-elements/mixins
 
-A set of class mixin functions that add Apollo GraphQL goodness to your web component classes.
+<strong>🍹 Moon mixins for cosmic components 👩‍🚀</strong>
+
+A set of [class mixin functions](https://alligator.io/js/class-composition/#composition-with-javascript-classes) that add Apollo GraphQL goodness to your web component classes.
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)

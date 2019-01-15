@@ -4,9 +4,11 @@
 [![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
 
-🚀 GluonElement base classes that connect to your Apollo cache 🌜
+<strong>🚀 GluonElement base classes that connect to your Apollo cache 🌜</strong>
 
-👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀
+<strong>👩‍🚀 We choose to Use the Platform not because it is easy, but because it is awesome 👨‍🚀</strong>
+
+Gluon is a simple, unopinionated UI library which uses `lit-html` for templating without piling on property observation or lifecycle cruft. Check out the [gluon repository](https://github.com/ruphin/gluon) or this [introductory blog post](https://dev.to/bennypowers/lets-build-web-components-part-6-gluon-27ll)
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)

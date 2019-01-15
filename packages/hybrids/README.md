@@ -1,5 +1,11 @@
 # @apollo-elements/hybrids
 
+<strong>👾 hybrids element descriptors that shoot for the moon 🚀</strong>
+
+`hybrids` is a modern, functional, and opinionated UI library based on the web component standards. It sports a refreshing take on ui-as-value. Take a look at the [repository](https://github.com/hybridsjs/hybrids) and [documentation](https://hybrids.js.org), and this [blog post introduction to hybrids](https://dev.to/bennypowers/lets-build-web-components-part-7-hybrids-187l)
+
+Apollo Elements hybrids make it easy to take existing hybrids component descriptors and connect them to your Apollo cache.
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -13,7 +19,7 @@
 
 ## 🔧 Installation
 
-Apollo element mixins are distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
+Apollo Elements hybrids are distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
 ```bash
 npm install --save @apollo-elements/hybrids
@@ -21,10 +27,10 @@ npm install --save @apollo-elements/hybrids
 
 ## 👩‍🚀 Usage
 
-This package provides `ApolloQuery`, `ApolloMutation`, and `ApolloSubscription` objects which you can spread in to your hybrid prototypes.
+This package provides `ApolloQuery`, `ApolloMutation`, and `ApolloSubscription` objects which you can spread in to your hybrid property descriptors.
 
 ### ❓ Queries
-Spread in the ApolloQuery hybrid prototype to define a querying element.
+Spread in the ApolloQuery hybrid property descriptors to define a querying element.
 
 ```js
 import { ApolloQuery, define, html } from '@apollo-elements/hybrids';
@@ -50,7 +56,7 @@ const template = html`
 *NOTE*: If you set `window.__APOLLO_CLIENT__`, you don't need to specify the `client` property when instantiating your elements, the way we do above.
 
 ### 👾 Mutations
-Spread in the ApolloMutation hybrid prototype to define a mutating element.
+Spread in the ApolloMutation hybrid property descriptors to define a mutating element.
 
 ```js
 import { ApolloMutation, define, html } from '@apollo-elements/hybrids';
