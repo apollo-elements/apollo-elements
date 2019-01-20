@@ -1,42 +1,42 @@
 {
-	"name": "@apollo-elements/lit-apollo",
-	"version": "0.0.1",
-	"description": "👩‍🚀🌛 LitElements for Apollo GraphQL 🚀👨‍🚀",
-	"main": "index.js",
-	"typings": "index.d.ts",
-	"scripts": {
-		"docs": "polymer analyze > docs/analysis.json",
-		"test": "karma start karma.conf.js"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/apollo-elements/apollo-elements.git"
-	},
-	"keywords": [
-		"Apollo",
-		"GraphQL",
-		"Web Components",
-		"Custom Elements",
-		"LitElement",
-		"lit-html"
-	],
-	"author": "Benny Powers <web@bennypowers.com>",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/apollo-elements/apollo-elements/issues"
-	},
-	"homepage": "https://github.com/apollo-elements/apollo-elements#readme",
-	"dependencies": {
-		"@apollo-elements/mixins": "^0.0.1"
-	},
-	"peerDependencies": {
-		"lit-element": ">=2.0.0-rc || >= 2"
-	},
-	"devDependencies": {
-		"@apollo-elements/test-helpers": "^0.0.1",
-		"@types/crocks": "^0.0.1"
-	}
+  "name": "@apollo-elements/lit-apollo",
+  "version": "0.0.1",
+  "description": "👩‍🚀🌛 LitElements for Apollo GraphQL 🚀👨‍🚀",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "scripts": {
+    "docs": "polymer analyze > docs/analysis.json",
+    "test": "karma start karma.conf.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollo-elements/apollo-elements.git"
+  },
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements",
+    "LitElement",
+    "lit-html"
+  ],
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apollo-elements/apollo-elements/issues"
+  },
+  "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
+  "dependencies": {
+    "@apollo-elements/mixins": "^0.0.1"
+  },
+  "peerDependencies": {
+    "lit-element": ">=2.0.0-rc.3 || >= 2"
+  },
+  "devDependencies": {
+    "@apollo-elements/test-helpers": "^0.0.1",
+    "@types/crocks": "^0.0.1"
+  }
 }

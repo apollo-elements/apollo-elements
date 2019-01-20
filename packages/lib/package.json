@@ -27,17 +27,10 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "crocks": "^0.9.4",
-    "graphql-tag": "^2.10.0"
+    "graphql-tag": "^2.10.1"
   },
   "devDependencies": {
     "@apollo-elements/test-helpers": "^0.0.1",
-    "@open-wc/testing": "^0.9.1",
-    "@open-wc/testing-helpers": "^0.7.1",
-    "@open-wc/testing-karma": "^0.4.2",
-    "@types/crocks": "^0.0.1",
-    "@types/sinon-chai": "^3.2.2",
-    "apollo-link": "^1.2.6",
-    "graphql": "^14.0.2",
-    "karma": "^3.1.4"
+    "@types/crocks": "^0.0.1"
   }
 }
