@@ -19,25 +19,25 @@ export const ApolloElementMixin = superclass => class extends superclass {
      * Context to be passed to link execution chain.
      * @type {Object}
      */
-    this.context = undefined;
+    this.context;
 
     /**
      * Latest data.
      * @type {Object}
      */
-    this.data = undefined;
+    this.data;
 
     /**
      * Latest error.
      * @type {Object}
      */
-    this.error = undefined;
+    this.error;
 
     /**
      * Whether a request is in flight.
      * @type {Boolean}
      */
-    this.loading = undefined;
+    this.loading;
 
     /**
      * The apollo client instance.

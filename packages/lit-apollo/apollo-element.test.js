@@ -1,30 +1,61 @@
-import { chai, expect, html } from '@open-wc/testing';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { chai, expect, defineCE, fixture, unsafeStatic, aTimeout, html } from '@open-wc/testing';
 import sinonChai from 'sinon-chai';
+import { chaiDomEquals } from '@open-wc/chai-dom-equals';
 
 import { ApolloElement } from './apollo-element';
-import { getElementWithLitTemplate, hasGetterSetter } from '@apollo-elements/test-helpers/helpers';
 
 chai.use(sinonChai);
 
-const scriptTemplate = script => html`<script type="application/graphql">${script}</script>`;
-const getClass = () => ApolloElement;
-const getTemplate = (tag, { query, variables, client, script } = {}) => html`
-  <${tag}
-      .client="${ifDefined(client)}"
-      .query="${ifDefined(query)}"
-      .variables="${variables}">
-    ${script && scriptTemplate(script)}
-  </${tag}>`;
-
-const getElement = getElementWithLitTemplate({ getClass, getTemplate });
+chai.use(chaiDomEquals);
 
 describe('ApolloElement', function describeApolloElement() {
-  it('defines observed properties', async function definesObserveProperties() {
-    const el = await getElement();
-    expect(hasGetterSetter(el, 'client'), 'client').to.be.true;
-    expect(hasGetterSetter(el, 'data'), 'data').to.be.true;
-    expect(hasGetterSetter(el, 'error'), 'error').to.be.true;
-    expect(hasGetterSetter(el, 'loading'), 'loading').to.be.true;
+  it('renders when client is set', async function rendersOnClient() {
+    const tagName = defineCE(class extends ApolloElement {
+      render() {
+        const { test = 'FAIL' } = this.client || {};
+        return html`${test}`;
+      }
+    });
+    const tag = unsafeStatic(tagName);
+    const el = await fixture(html`<${tag} .client="${{ test: 'CLIENT' }}"></${tag}>`);
+    await aTimeout(1500);
+    expect(el).shadowDom.to.equal('CLIENT');
+  });
+
+  it('renders when data is set', async function rendersOnData() {
+    const tagName = defineCE(class extends ApolloElement {
+      render() {
+        const { foo = 'FAIL' } = this.data || {};
+        return html`${foo}`;
+      }
+    });
+    const tag = unsafeStatic(tagName);
+    const el = await fixture(html`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+    await aTimeout(1500);
+    expect(el).shadowDom.to.equal('bar');
+  });
+
+  it('renders when error is set', async function rendersOnError() {
+    const tagName = defineCE(class extends ApolloElement {
+      render() {
+        const { error = 'FAIL' } = this;
+        return html`${error}`;
+      }
+    });
+    const tag = unsafeStatic(tagName);
+    const el = await fixture(html`<${tag} .error="${'error'}"></${tag}>`);
+    expect(el).shadowDom.to.equal('error');
+  });
+
+  it('renders when loading is set', async function rendersOnLoading() {
+    const tagName = defineCE(class extends ApolloElement {
+      render() {
+        const { loading = false } = this;
+        return html`${loading ? 'LOADING' : 'FAIL'}`;
+      }
+    });
+    const tag = unsafeStatic(tagName);
+    const el = await fixture(html`<${tag} .loading="${true}"></${tag}>`);
+    expect(el).shadowDom.to.equal('LOADING');
   });
 });
