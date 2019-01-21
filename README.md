@@ -1,16 +1,14 @@
-<img alt="Rocket Ship in Angle Brackets" align="center" width="512" src="https://raw.githubusercontent.com/apollo-elements/apollo-elements/master/logo.png" />
+<div align="center">
+  <img alt="Rocket Ship in Angle Brackets" width="256" src="https://raw.githubusercontent.com/apollo-elements/apollo-elements/master/logo.png" />
+  <h1>🚀 Apollo Elements 👩‍🚀</h1>
+  <p><strong>🚀 Custom elements meet Apollo GraphQL 🌜</strong></p>
+  <p><strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong></p>
+</div>
 
-# 🚀 Apollo Elements 👩‍🚀
-
-[![Published on npm](https://img.shields.io/npm/v/@apollo-elements/lit-apollo.svg)](https://www.npmjs.com/package/@apollo-elements/lit-apollo)
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/lit-apollo)
 [![Maintained with Lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/apollo-elements/apollo-elements/issues)
 [![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
-
-🚀 Custom element base classes, mixins, and more to connect to your Apollo cache 🌜
-
-👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀
 
 ## 📓 Contents
 - [📦 Packages](#-packages)
