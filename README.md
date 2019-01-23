@@ -34,7 +34,7 @@ npm i -S @apollo-elements/lit-apollo
 
 ```js
 import gql from 'graphql-tag'
-import { ApolloQuery, html, render } from '@apollo-elements/lit-apollo';
+import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
 import { client } from './apollo-client';
 import { render } from ''
 
@@ -51,20 +51,17 @@ class ApolloApp extends ApolloQuery {
 
 customElements.define('apollo-app', ConnectedElement);
 
-render(
-  html`<apollo-app
-      .client="${client}"
-      .query="${gql`
+const app = document.createElement('apollo-app');
+      app.client = client;
+      app.query = gql`
         query {
           helloWorld {
             greeting
             name
           }
-        }
-      `}"
-  ></apollo-app>`,
-  document.body
-)
+        }`;
+
+document.body.appendChild(app);
 ```
 
 ### [👩‍🔬 `gluon`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon)
@@ -76,7 +73,7 @@ npm i -S @apollo-elements/gluon
 
 ```js
 import gql from 'graphql-tag'
-import { ApolloQuery, html, render } from '@apollo-elements/gluon';
+import { ApolloQuery, html } from '@apollo-elements/gluon';
 import { client } from './apollo-client';
 
 class ApolloApp extends ApolloQuery {
@@ -91,21 +88,6 @@ class ApolloApp extends ApolloQuery {
 };
 
 customElements.define('apollo-app', ConnectedElement);
-
-render(
-  html`<apollo-app
-      .client="${client}"
-      .query="${gql`
-        query {
-          helloWorld {
-            greeting
-            name
-          }
-        }
-      `}"
-  ></apollo-app>`,
-  document.body
-)
 ```
 
 ### [🦄 `hybrids`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/hybrids)
@@ -137,6 +119,8 @@ npm i -S @apollo-elements/polymer
 ```
 
 ```html
+<script type="module" src="/node_modules/@apollo-elements/polymer/apollo-query.js"></script>
+
 <apollo-query data="{{data}}" variables="[[variables]]">
   <script type="application/graphql">
     query User($id: ID!)
