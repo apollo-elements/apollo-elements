@@ -26,7 +26,7 @@ export declare class ApolloMutation<TBase, TData, TVariables> extends ApolloElem
   fetchPolicy: FetchPolicy;
   ignoreResults?: boolean;
   mutation: DocumentNode;
-  onUpdate?: MutationUpdaterFn<TData>;
+  update?: MutationUpdaterFn<TData>;
   optimisticResponse?: TData;
   refetchQueries?: (string | PureQueryOptions)[] | RefetchQueriesProviderFn;
   variables?: TVariables;
