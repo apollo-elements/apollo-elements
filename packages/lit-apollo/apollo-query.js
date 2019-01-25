@@ -56,6 +56,7 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
        * @type {Number}
        */
       networkStatus: { type: Number },
+      noAutoSubscribe: { type: Boolean, attribute: 'no-auto-subscribe' },
     };
   }
 
