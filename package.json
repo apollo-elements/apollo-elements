@@ -5,9 +5,7 @@
     "file": "./logo.png"
   },
   "scripts": {
-    "docs": "lerna run docs --stream",
-    "predocs": "cp -Rf node_modules/@webcomponents/webcomponentsjs docs && rollup -c docs/rollup.config.js",
-    "postdocs": "cd packages && for p in $( ls ); do if [ -d $p/docs ]; then rsync -a --delete $p/docs/ ../docs/$p/; fi done",
+    "docs": "sh docs.sh",
     "postinstall": "lerna bootstrap --hoist",
     "test": "lerna run test --stream --concurrency 1"
   },
