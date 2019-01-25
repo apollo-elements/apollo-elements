@@ -92,6 +92,15 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
       el.variables = { bar: 'quux' };
       expect(subscribeStub).to.not.have.been.calledTwice;
     });
+
+    it('does not call subscribe if subscription is falsy', async function() {
+      const subscription = null;
+      const variables = { bar: 'qux' };
+      const el = await getElement({ client, subscription, variables });
+      const subscribeStub = stub(el, 'subscribe');
+      el.variables = { bar: 'quux' };
+      expect(subscribeStub).to.not.have.been.calledTwice;
+    });
   });
 
   describe('variables property', function describeVariables() {

@@ -77,6 +77,23 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(el.query).to.be.null;
       expect(el.observableQuery).to.not.be.ok;
     });
+
+    it('calls subscribe when set', async function callsSubscribe() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client });
+      const subscribeStub = stub(el, 'subscribe');
+      el.query = query;
+      expect(subscribeStub).to.have.been.called;
+    });
+
+    it('does not call subscribe when set if noAutoSubscribe is set', async function noAutoSubscribe() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client });
+      const subscribeStub = stub(el, 'subscribe');
+      el.noAutoSubscribe = true;
+      el.query = query;
+      expect(subscribeStub).to.not.have.been.called;
+    });
   });
 
   describe('setting options', function describeSetOptions() {
@@ -162,6 +179,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       const subscription = await el.subscribe();
       expect(subscription._observer.error).to.equal(el.nextError);
     });
+
   });
 
   describe('subscribeToMore', function describeSubscribeToMore() {

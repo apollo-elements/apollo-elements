@@ -61,7 +61,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
     if (isValidGql(doc)) {
       this.__document = doc;
     } else {
-      if (doc) throw new TypeError('document must be a gql-parsed DocumentNode');
+      throw new TypeError('document must be a gql-parsed DocumentNode');
     }
   }
 
