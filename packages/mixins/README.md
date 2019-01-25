@@ -1,4 +1,8 @@
 # @apollo-elements/mixins
+[![Published on npm](https://img.shields.io/npm/v/@apollo-elements/mixins.svg)](https://www.npmjs.com/package/@apollo-elements/mixins)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/mixins)
+[![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
+
 
 <strong>🍹 Moon mixins for cosmic components 👩‍🚀</strong>
 
