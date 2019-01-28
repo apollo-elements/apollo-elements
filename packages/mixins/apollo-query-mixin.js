@@ -151,13 +151,13 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    *
-   * @param  {{document: DocumentNode, updateQuery: Function}=} options
+   * @param  {{document: DocumentNode, updateQuery: Function, variables: Object, onError: Function}=} options
    * @return {function(): void}
    */
-  subscribeToMore({ document, updateQuery } = {}) {
+  subscribeToMore(options) {
     return (
       this.observableQuery &&
-      this.observableQuery.subscribeToMore({ document, updateQuery })
+      this.observableQuery.subscribeToMore(options)
     );
   }
 

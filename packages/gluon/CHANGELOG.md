@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.3 
+- Updates `@apollo-elements/mixins`
+
 ## 0.0.2
 - Updates README
 - Adds CHANGELOG
