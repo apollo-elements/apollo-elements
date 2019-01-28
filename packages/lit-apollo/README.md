@@ -262,22 +262,32 @@ render(template, container);
 ```
 
 ### ⌚️ Asynchronous Client
-In some cases, you may want to wait for your ApolloClient to do some initial asynchronous setup before rendering your components' DOM. In that case, you can import a promise of a client and wait for it in `connectedCallback`:
+In some cases, you may want to wait for your Apollo client to do some initial asynchronous setup (for example reloading a persistent cache or getting a user token) before you can make your client available to your app.
 
 ```js
-import formatDistance from 'date-fns/esm/formatDistance';
+// client.js
 import { ApolloClient } from 'apollo-client';
-import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
 import { persistCache } from 'apollo-cache-persist'
-import { cache } from './cache';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { link } from './link';
 
-const clientPromise = new Promise(async function initApollo(resolve) {
+const cache = new InMemoryCache();
+
+export async function getClient() {
   // Wait for the cache to be restored
   await persistCache({ cache, storage: localStorage });
   // Create the Apollo Client
-  resolve(new ApolloClient({ cache, link }));
-});
+  return new ApolloClient({ cache, link });
+};
+```
+
+In that case, you can import a promise of a client and wait for it in `connectedCallback`:
+
+```js
+// async-element.js
+import formatDistance from 'date-fns/esm/formatDistance';
+import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
+import { getClient } from './client';
 
 class AsyncElement extends ApolloQuery {
   render() {
@@ -309,6 +319,20 @@ class AsyncElement extends ApolloQuery {
 };
 
 customElements.define('async-element', AsyncElement)
+```
+
+Alternatively, you can use the dynamic `import()` feature to wait on your client before loading element modules:
+
+```js
+// app.js
+import { getClient } from './client.js';
+(async function init() {
+  window.__APOLLO_CLIENT__ = await getClient();
+  await Promise.all([
+    import('./components/connected-element.js'),
+    import('./components/connected-input.js'),
+  ]);
+})();
 ```
 
 ## 👷‍♂️ Maintainers
