@@ -1,4 +1,5 @@
 import { ApolloElementMixin } from './apollo-element-mixin';
+import { ApolloError } from 'apollo-client'
 
 /**
  * `ApolloMutationMixin`: class mixin for apollo-mutation elements.
@@ -175,10 +176,11 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
    * @protected
    */
   onCompletedMutation(response, mutationId) {
-    const { data } = response;
+    const { data, errors = [] } = response;
+    const error = errors.length ? new ApolloError({ graphQLErrors: errors }) : null;
     if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
       this.loading = false;
-      this.error = null;
+      this.error = error;
       this.data = data;
     }
     return this.onCompleted(data);

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.4
+- Sets error if needed after ApolloMutation#mutate
+
 ## 0.0.3
 - Updates `@apollo-elements/mixins`
 
