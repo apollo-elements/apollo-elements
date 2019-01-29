@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.5 
+- Fixes `onCompleted` and `onError` prototype bug.
+
 ## 0.0.4
 - Sets error if needed after ApolloMutation#mutate
 

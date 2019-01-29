@@ -44,20 +44,6 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
     this.mostRecentMutationId = 0;
 
     /**
-     * Callback for when a mutation is completed.
-     * @type {Function}
-     * @return {any}
-     */
-    this.onCompleted = () => undefined;
-
-    /**
-     * Callback for when an error occurs in mutation.
-     * @type {Function}
-     * @return {any}
-     */
-    this.onError = () => undefined;
-
-    /**
      * An object that represents the result of this mutation that
      * will be optimistically stored before the server has actually returned a
      * result.
@@ -201,4 +187,18 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
     }
     return this.onError(error);
   }
+
+  /**
+   * Callback for when a mutation is completed.
+   * @type {Function}
+   * @return {any}
+   */
+  onCompleted() { };
+
+  /**
+   * Callback for when an error occurs in mutation.
+   * @type {Function}
+   * @return {any}
+   */
+  onError() { };
 };
