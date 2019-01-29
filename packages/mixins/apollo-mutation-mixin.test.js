@@ -1,4 +1,5 @@
 import { chai, expect, html } from '@open-wc/testing';
+import { ApolloError } from 'apollo-client'
 import sinonChai from 'sinon-chai';
 import gql from 'graphql-tag';
 import pick from 'crocks/helpers/pick';
@@ -165,14 +166,34 @@ describe('ApolloMutationMixin', function describeApolloMutationMixin() {
       onCompletedStub.restore();
     });
 
-    it('sets data, error, loading', async function() {
+    it('sets loading', async function() {
+      const el = await getElement({ client, mutation });
+      const mutateStub = stub(client, 'mutate');
+      mutateStub.resolves({ data: null, errors: null });
+      await el.mutate();
+      expect(el.loading).to.be.false;
+      mutateStub.restore();
+    });
+
+    it('sets data', async function() {
       const el = await getElement({ client, mutation });
       const mutateStub = stub(client, 'mutate');
       mutateStub.resolves({ data: 2 });
       await el.mutate();
       expect(el.data).to.equal(2);
-      expect(el.error).to.be.null;
-      expect(el.loading).to.be.false;
+      mutateStub.restore();
+    });
+
+    it('sets error', async function() {
+      const el = await getElement({ client, mutation });
+      const mutateStub = stub(client, 'mutate');
+      const errors = [{ message: 'error' }];
+      mutateStub.resolves({ errors });
+      await el.mutate();
+      const expected = JSON.stringify(new ApolloError({ graphQLErrors: [{ message: 'error' }] }))
+      const actual = JSON.stringify(el.error)
+      expect(actual).to.equal(expected);
+      expect(el.error).to.be.an.instanceof(ApolloError);
       mutateStub.restore();
     });
   });
