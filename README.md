@@ -9,8 +9,10 @@
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/apollo-elements/apollo-elements/issues)
 [![Build Status](https://travis-ci.org/apollo-elements/apollo-elements.svg?branch=master)](https://travis-ci.org/apollo-elements/apollo-elements)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
+[![Demo Online](https://img.shields.io/badge/demo-online-brightgreen.svg)](https://lit-apollo-subscriptions.herokuapp.com)
 
 ## 📓 Contents
+- [🤖 Demo](#-demo)
 - [📦 Packages](#-packages)
   - [🔥 `lit-apollo`](#-lit-apollo)
   - [👩‍🔬 `gluon`](#-gluon)
@@ -22,6 +24,12 @@
   - [📜 Inline Query Scripts](#-inline-query-scripts)
 - [👷‍♂️ Maintainers](#-maintainers)
 
+## 🤖 Demo
+[`#leeway`](https://lit-apollo-subscriptions.herokuapp.com) is a progressive web app that uses `lit-apollo` and GraphQL subscriptions to make it easier for you to avoid doing actual work. Check out the [source repo](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions) for an example of how to build apps with Apollo Elements.
+
+[![Lighthouse Scores: 98 (performance), 100 (accessibility), 93 (best practises), 100 (SEO), 12/12 (PWA)](https://user-images.githubusercontent.com/1466420/52176144-5c25f280-27b7-11e9-8e14-290651f98e36.png)](https://github.com/apollo-elements/apollo-elements/files/2825459/lit-apollo-subscriptions.herokuapp.com-20190203T132249.zip)
+
+
 ## 📦 Packages
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
@@ -32,13 +40,30 @@ These base classes extend from [`LitElement`](https://lit-element.polymer-projec
 npm i -S @apollo-elements/lit-apollo
 ```
 
+```html
+<!-- index.html -->
+<script type="module" src="app.bundle.js"></script>
+<script nomodule src="app.bundle.system.js"></script>
+<apollo-app>
+  <script type="application/graphql">
+    query {
+      helloWorld {
+        greeting
+        name
+      }
+    }
+  </script>
+</apollo-app>
+```
+
 ```js
+// app.js
 import gql from 'graphql-tag'
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
 import { client } from './apollo-client';
 import { render } from ''
 
-class ApolloApp extends ApolloQuery {
+customElements.define('apollo-app', class ApolloApp extends ApolloQuery {
   render() {
     const { data, error, loading } = this;
     return (
@@ -47,21 +72,7 @@ class ApolloApp extends ApolloQuery {
       : html`<div>${data.helloWorld.greeting}, ${helloWorld.name}</div>`
     );
    }
-};
-
-customElements.define('apollo-app', ConnectedElement);
-
-const app = document.createElement('apollo-app');
-      app.client = client;
-      app.query = gql`
-        query {
-          helloWorld {
-            greeting
-            name
-          }
-        }`;
-
-document.body.appendChild(app);
+});
 ```
 
 ### [👩‍🔬 `gluon`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon)
@@ -76,7 +87,7 @@ import gql from 'graphql-tag'
 import { ApolloQuery, html } from '@apollo-elements/gluon';
 import { client } from './apollo-client';
 
-class ApolloApp extends ApolloQuery {
+customElements.define('apollo-app', class ApolloApp extends ApolloQuery {
   get template() {
     const { data, error, loading } = this;
     return (
@@ -85,9 +96,7 @@ class ApolloApp extends ApolloQuery {
       : html`<div>${data.helloWorld.greeting}, ${helloWorld.name}</div>`
     );
    }
-};
-
-customElements.define('apollo-app', ConnectedElement);
+});
 ```
 
 ### [🦄 `hybrids`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/hybrids)
@@ -102,7 +111,7 @@ npm i -S @apollo-elements/hybrids
 import { ApolloQuery, queryFactory, define, html } from '@apollo-elements/hybrids';
 import gql from 'graphql-tag';
 
-const ConnectedElement = {
+export const ConnectedElement = {
   ...ApolloQuery,
   query: queryFactory(gql`query { hello }`),
   render: ({data}) => html`<div>${data.hello}</div>`
@@ -118,19 +127,51 @@ These custom elements fire [polymer](https://polymer-library.polymer-project.org
 npm i -S @apollo-elements/polymer
 ```
 
-```html
-<script type="module" src="/node_modules/@apollo-elements/polymer/apollo-query.js"></script>
+```js
+// app.js
+import { client } from './apollo-client.js'
+import '@apollo-elements/polymer/apollo-query.js';
+window.__APOLLO_CLIENT__ = client
+```
 
-<apollo-query data="{{data}}" variables="[[variables]]">
-  <script type="application/graphql">
-    query User($id: ID!)
-      user(id: $id) {
-        name
-        picture
+```js
+import { PolymerElement, html } from '@polymer/polymer';
+import '@apollo-elements/polymer/apollo-query.js';
+import '@polymer/paper-card/paper-card.js';
+
+customElements.define('my-app', class MyTemplate extends PolymerElement {
+  static get template() {
+    return html`
+    <apollo-query data="{{data}}" variables="[[variables]]">
+      <script type="application/graphql">
+        query User($id: ID!)
+          user(id: $id) {
+            name
+            picture
+          }
+        }
+      </script>
+    </apollo-query>
+
+    <paper-card heading="[[data.name]]" image="[[data.picture]]"></paper-card>
+    `;
+  }
+
+  static get properties() {
+    return {
+      variables: {
+        type: Object,
+        value: () => ({id: ''});
       }
     }
-  </script>
-</apollo-query>
+  }
+
+  async connectedCallback() {
+    super.connectedCallback();
+    const { id = '' } = await getToken();
+    this.variables = { id };
+  }
+}
 ```
 
 ### [🍸 `mixins`](https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins)
@@ -143,7 +184,7 @@ npm i -S @apollo-elements/mixins
 ```js
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 
-class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
+customElements.define('vanilla-query', class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
   get data() {
     return this.__data;
   }
@@ -152,21 +193,17 @@ class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
     this.__data = data;
     this.shadowRoot.innerText = `${data.helloWorld.greeting}, ${data.helloWorld.name}`;
   }  
-}
+});
 ```
 
 ## 🗞 Bundling
 Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle apollo-client in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. Your `rollup.config.js` might look something like this:
 
 ```js
-// rollup 0.62.0
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 
 export default {
-  experimentalCodeSplitting: true,
-  experimentalDynamicImport: true,
-
   input: [
     'src/components/app-shell/app-shell.js',
     'src/components/app-view1/app-view1.js',
@@ -180,7 +217,7 @@ export default {
     sourcemap: true,
   }, {
     dir: 'build/nomodule',
-    format: 'amd',
+    format: 'system',
     sourcemap: true,
   }],
 
@@ -193,13 +230,19 @@ export default {
       module: true,
     }),
 
-    commonjs()
+    commonjs({
+      namedExports: {
+        // Necessary to roll apollo-link-state up.
+        // until graphql-anywhere 5.0
+        'graphql-anywhere/lib/async': ['graphql'],
+        // Needed to roll up apollo-cache-persist
+        'apollo-cache-persist': ['persistCache']
+      }
+    }),
 
   ]
 }
 ```
-
-You may also need to patch certain versions of some Apollo packages in order for them to play nicely with standard tools. [See the chat app demo for examples of how to patch packages](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions/tree/master/patches).
 
 Alternatively, you might bundle and export your Apollo client separately, then import it into your browser-friendly component modules.
 
