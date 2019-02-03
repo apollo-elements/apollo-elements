@@ -119,13 +119,13 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
     });
 
-    it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
+    it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQueryRefetch() {
       const query = gql`query { foo }`;
       const el = await getElement({ client, query });
-      const setVariablesSpy = stub(el.observableQuery, 'setVariables');
+      const refetchSpy = stub(el.observableQuery, 'refetch');
       // shouldn't this be an instance of ObservableQuery?
       el.variables = { errorPolicy: 'foo' };
-      expect(setVariablesSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
+      expect(refetchSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
     });
   });
 

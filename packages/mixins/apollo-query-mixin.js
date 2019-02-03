@@ -116,16 +116,14 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
   }
 
   /**
-   * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
+   * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    * @param {Object}   variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
-   * @param {boolean=} tryFetch       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-   * @param {boolean=} fetchResults   Option to ignore fetching results when updating variables.
    * @return {Promise<ApolloQueryResult>}
    */
-  setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
+  setVariables(variables) {
     return (
       this.observableQuery &&
-      this.observableQuery.setVariables(variables, tryFetch, fetchResults)
+      this.observableQuery.refetch(variables)
     );
   }
 
