@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/lit-apollo",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "👩‍🚀🌛 LitElements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@apollo-elements/mixins": "^0.0.5"
+    "@apollo-elements/mixins": "^0.0.6"
   },
   "peerDependencies": {
     "lit-element": ">=2.0.0-rc.3 || >= 2"
