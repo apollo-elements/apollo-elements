@@ -112,6 +112,22 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     });
   });
 
+  describe('refetch', function describeRefetch() {
+    it('calls observableQuery.refetch', async function callsOQRefetch() {
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      const refetchSpy = spy(el.observableQuery, 'refetch');
+      el.refetch({ foo: 'bar' });
+      expect(refetchSpy).to.have.been.calledWith({ foo: 'bar' });
+      refetchSpy.restore();
+    });
+
+    it('performs no operation when there is no observable query', async function noopRefetch() {
+      const el = await getElement({ client });
+      expect(el.refetch({ foo: 'bar' })).to.be.undefined;
+    });
+  });
+
   describe('setting variables', function describeSetVariables() {
     it('does nothing when there is no observableQuery', async function setVariablesNoQuery() {
       const el = await getElement({ client });

@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## 0.0.5 
+## 0.0.6
+- Adds `refetch` method to `ApolloQuery`;
+
+## 0.0.5
 - Fixes `onCompleted` and `onError` prototype bug.
 
 ## 0.0.4
