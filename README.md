@@ -25,7 +25,14 @@
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 🤖 Demo
-[`#leeway`](https://lit-apollo-subscriptions.herokuapp.com) is a progressive web app that uses `lit-apollo` and GraphQL subscriptions to make it easier for you to avoid doing actual work. Check out the [source repo](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions) for an example of how to build apps with Apollo Elements.
+[`#leeway`](https://lit-apollo-subscriptions.herokuapp.com) is a progressive web app that uses `lit-apollo` to make it easier for you to avoid doing actual work. Check out the [source repo](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions) for an example of how to build apps with Apollo Elements. The demo includes:
+
+- <abbr title="server side rendering">SSR</abbr>
+- Code Splitting
+- Aggressive minification, including `lit-html` template literals
+- CSS-in-CSS ( e.g. `import shared from '../shared-styles.css';`)
+- GQL-in-GQL ( e.g. `import query from './my-component-query.graphql';`)
+- GraphQL Subscriptions over websocket
 
 [![Lighthouse Scores: 98 (performance), 100 (accessibility), 93 (best practises), 100 (SEO), 12/12 (PWA)](https://user-images.githubusercontent.com/1466420/52176144-5c25f280-27b7-11e9-8e14-290651f98e36.png)](https://github.com/apollo-elements/apollo-elements/files/2825459/lit-apollo-subscriptions.herokuapp.com-20190203T132249.zip)
 
