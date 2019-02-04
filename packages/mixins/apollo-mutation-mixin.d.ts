@@ -7,11 +7,11 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export type RefetchQueriesProviderFn = (...args: any[]) => Array<string | PureQueryOptions>;
 
 export interface MutationResult<TData> {
+  called: boolean;
+  client: ApolloClient<Object>;
   data?: TData;
   error?: ApolloError;
   loading: boolean;
-  called: boolean;
-  client: ApolloClient<Object>;
 }
 
 export interface MutationContext<TVariables> {
@@ -26,10 +26,11 @@ export declare class ApolloMutation<TBase, TData, TVariables> extends ApolloElem
   fetchPolicy: FetchPolicy;
   ignoreResults?: boolean;
   mutation: DocumentNode;
-  update?: MutationUpdaterFn<TData>;
   optimisticResponse?: TData;
   refetchQueries?: (string | PureQueryOptions)[] | RefetchQueriesProviderFn;
+  update?: MutationUpdaterFn<TData>;
   variables?: TVariables;
+
   private generateMutationId: number;
   private isMostRecentMutation: number;
   private mostRecentMutationId: number;
@@ -37,6 +38,7 @@ export declare class ApolloMutation<TBase, TData, TVariables> extends ApolloElem
   private nextError(error: ApolloError): undefined;
   private onCompletedMutation(response: FetchResult<TData>, mutationId: number): any;
   private onMutationError(error: ApolloError, mutationId: number): any;
+
   public mutate(options: MutationOptions<TData, TVariables>): Promise<FetchResult<TData>>
   public onCompleted?(data: TData): any;
   public onError?(error: ApolloError): any;

@@ -24,27 +24,31 @@ export interface ApolloQueryProperties<TData, TVariables> {
 }
 
 export declare class ApolloQuery<TBase, TData, TVariables, TSubscriptionData = TData> extends ApolloElement<TBase, TData> implements ApolloQueryProperties<TData, TVariables> {
-  variables: TVariables;
-  tryFetch: Boolean;
-  query: DocumentNode;
-  pollInterval: Number;
-  observableQuery: ObservableQuery<TData, TVariables>;
-  errorPolicy: ErrorPolicy;
-  metadata: any;
-  fetchResults: boolean;
-  fetchPolicy: FetchPolicy;
   context: QueryContext<TVariables>;
+  errorPolicy: ErrorPolicy;
+  fetchPolicy: FetchPolicy;
+  fetchResults: boolean;
+  metadata: any;
   notifyOnNetworkStatusChange: Boolean;
+  observableQuery: ObservableQuery<TData, TVariables>;
+  options: ModifiableWatchQueryOptions;
+  pollInterval: Number;
+  query: DocumentNode;
+  tryFetch: Boolean;
   updateQuery?: UpdateQueryFn<TData, TVariables, TSubscriptionData>
+  variables: TVariables;
+
   private nextData(result: ApolloQueryResult<TData>): undefined;
   private nextError(error: ApolloError): undefined;
   private watchQuery(params: ApolloQueryProperties<TData, TVariables>): ObservableQuery<TData>
-  public setOptions(options: ModifiableWatchQueryOptions): Promise<ApolloQueryResult<TData>>;
-  public setVariables<TVariables>(variables: TVariables, tryFetch: boolean, fetchResults: boolean): Promise<ApolloQueryResult<TData>>;
-  public subscribe(params?: { query?: DocumentNode, variables?: TVariables }): Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>;
-  public subscribeToMore<TSubscriptionData>(options: SubscribeToMoreOptions<TData, TVariables, TSubscriptionData>): () => void;
+
   public executeQuery(): Promise<FetchResult<TData>>;
   public fetchMore(params: FetchMoreOptions<TData, TVariables>): Promise<ApolloQueryResult<TData>>
+  public refetch(variables?: TVariables): Promise<ApolloQueryResult<TData>>;
+  public setOptions(options: ModifiableWatchQueryOptions): Promise<ApolloQueryResult<TData>>;
+  public setVariables(variables: TVariables, tryFetch: boolean, fetchResults: boolean): Promise<ApolloQueryResult<TData>>;
+  public subscribe(params?: { query?: DocumentNode, variables?: TVariables }): Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>;
+  public subscribeToMore(options: SubscribeToMoreOptions<TData, TVariables, TSubscriptionData>): () => void;
 }
 
 type Constructor<T = {}> = new (...args: any[]) => T;

@@ -1,7 +1,11 @@
 # CHANGELOG
 
+## 0.0.6
+- Adds `refetch` method to ApolloQuery
+- Adds deprecation notice to `setVariables` method
+
 ## 0.0.5
-- Fixes `onCompleted` and `onError` prototype bug.
+- Fixes `onCompleted` and `onError` prototype bug
 
 ## 0.0.4
 - Sets error if needed after ApolloMutation#mutate
