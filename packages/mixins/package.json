@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@apollo-elements/test-helpers": "^0.0.2",
-    "@types/crocks": "^0.0.1"
+    "@types/crocks": "^0.0.1",
+    "graphql": "^14.1.1"
   }
 }
