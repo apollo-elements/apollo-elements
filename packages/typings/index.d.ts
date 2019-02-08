@@ -1,6 +1,8 @@
 type PredicateFunction = (x: any) => boolean
 
 declare module 'crocks/logic/and' { export default function and(p: PredicateFunction, q: PredicateFunction): PredicateFunction; }
+declare module 'crocks/logic/or' { export default function or(p: PredicateFunction, q: PredicateFunction): PredicateFunction; }
+declare module 'crocks/logic/not' { export default function not(p: PredicateFunction): PredicateFunction; }
 declare module 'crocks/predicates/hasProp' { export default function hasProp(x: any): Boolean; }
 declare module 'crocks/predicates/isArray' { export default function isArray(x: any): Boolean; }
 declare module 'crocks/predicates/isBoolean' { export default function isBoolean(x: any): Boolean; }
