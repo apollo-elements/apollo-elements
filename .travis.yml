@@ -11,14 +11,13 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
-script: npm test
-
 after_success:
   - sh ./merge-coverage.sh
   - npm run docs
 
+script: npm test
+
 deploy:
-  if: branch = master
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
