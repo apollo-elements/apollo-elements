@@ -28,6 +28,7 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "@apollo-elements/lib": "^0.0.2",
+    "apollo-client": "^2.4.12",
     "crocks": "^0.9.4"
   },
   "devDependencies": {

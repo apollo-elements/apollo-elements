@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.7
+- Updates dependency graph
+
 ## 0.0.6
 - Adds `refetch` method to `<apollo-query>`;
 
