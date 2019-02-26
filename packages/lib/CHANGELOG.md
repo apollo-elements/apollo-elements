@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.4
+- Sets the NPM registry explicitly
+
 ## 0.0.3
 - Updates dev dependencies
 

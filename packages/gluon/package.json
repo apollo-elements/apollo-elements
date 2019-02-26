@@ -8,9 +8,10 @@
 		"docs": "polymer analyze > docs/analysis.json",
 		"test": "karma start karma.conf.js"
 	},
-	"publishConfig": {
-		"access": "public"
-	},
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/apollo-elements/apollo-elements.git"

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.9
+- Sets the NPM registry explicitly
+
 ## 0.0.8
 - Fixes bug in mutation observer for script children.
 
