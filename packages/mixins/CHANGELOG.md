@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.8
+- Initializes MutationObserver in `connectedCallback`.
+
 ## 0.0.7
 - Updates dependency graph
 

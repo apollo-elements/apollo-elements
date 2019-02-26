@@ -44,8 +44,6 @@ export const ApolloElementMixin = superclass => class extends superclass {
      * @type {ApolloClient}
      */
     this.client = window.__APOLLO_CLIENT__;
-
-    this.elementMutationObserver = new MutationObserver(this.onElementMutation);
   }
 
   /**
@@ -68,6 +66,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
   /** @protected */
   connectedCallback() {
     super.connectedCallback && super.connectedCallback();
+    this.elementMutationObserver = new MutationObserver(this.onElementMutation);
     this.elementMutationObserver.observe(this, {
       characterData: true,
       childList: true,

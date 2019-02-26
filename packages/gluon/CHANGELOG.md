@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.8
+- Fixes bug in mutation observer for script children.
+
 ## 0.0.7
 - Updates dependency graph
 
