@@ -1,6 +1,6 @@
 {
 	"name": "@apollo-elements/gluon",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
 	"main": "index.js",
 	"typings": "index.d.ts",
@@ -8,10 +8,10 @@
 		"docs": "polymer analyze > docs/analysis.json",
 		"test": "karma start karma.conf.js"
 	},
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.com"
-  },
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.com"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/apollo-elements/apollo-elements.git"
@@ -31,7 +31,7 @@
 	},
 	"homepage": "https://github.com/apollo-elements/apollo-elements#readme",
 	"dependencies": {
-		"@apollo-elements/mixins": "^0.0.8"
+		"@apollo-elements/mixins": "^0.0.9"
 	},
 	"peerDependencies": {
 		"@gluon/gluon": ">= 2"
