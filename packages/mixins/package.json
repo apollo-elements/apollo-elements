@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/mixins",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "👩‍🚀🌛 Custom Element class mixins for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "scripts": {
@@ -27,13 +27,13 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@apollo-elements/lib": "^0.0.2",
+    "@apollo-elements/lib": "^0.0.3",
     "apollo-client": "^2.4.12",
     "crocks": "^0.9.4"
   },
   "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.2",
-    "@types/crocks": "^0.0.1",
+    "@apollo-elements/test-helpers": "^0.0.3",
+    "@types/crocks": "^0.0.2",
     "graphql": "^14.1.1"
   }
 }

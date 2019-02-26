@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/lib",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Library functions for apollo-elements",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "graphql-tag": "^2.10.1"
   },
   "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.2",
-    "@types/crocks": "^0.0.1"
+    "@apollo-elements/test-helpers": "^0.0.3",
+    "@types/crocks": "^0.0.2"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/hybrids",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "scripts": {
@@ -23,14 +23,14 @@
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "dependencies": {
-    "@apollo-elements/lib": "^0.0.2",
+    "@apollo-elements/lib": "^0.0.3",
     "crocks": "^0.9.4"
   },
   "peerDependencies": {
     "hybrids": ">= 2"
   },
   "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.2",
-    "@types/crocks": "^0.0.1"
+    "@apollo-elements/test-helpers": "^0.0.3",
+    "@types/crocks": "^0.0.2"
   }
 }
