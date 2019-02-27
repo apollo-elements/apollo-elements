@@ -79,16 +79,21 @@ const watchQuery = {
     }),
 };
 
+function subscribeOrSetVariables(host, variables) {
+  return variables && host.observableQuery
+    ? host.observableQuery.setVariables(variables)
+    : host.subscribe({ variables });
+}
+
+function canSubscribe(host, key, target) {
+  return !!(host === target && host[key]);
+}
+
 const variables = {
   connect: (host, key) => {
-    const onInvalidate = ({ target }) => {
-      const variables = host[key];
-      if (host === target && variables) {
-        host.observableQuery
-          ? host.observableQuery.setVariables(variables)
-          : host.subscribe({ variables });
-      }
-    };
+    const onInvalidate = ({ target }) =>
+      canSubscribe(host, key, target) &&
+      subscribeOrSetVariables(host, host[key]);
     host.addEventListener('@invalidate', onInvalidate);
     return () => host.removeEventListener('@invalidate', onInvalidate);
   },
