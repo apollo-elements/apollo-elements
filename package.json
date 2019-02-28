@@ -6,8 +6,9 @@
   },
   "scripts": {
     "docs": "sh docs.sh",
-    "postinstall": "lerna bootstrap --hoist",
     "lint": "eslint .",
+    "postinstall": "lerna bootstrap --hoist",
+    "publish": "lerna publish --message 'chore: release new versions'",
     "test": "lerna run test --stream --concurrency 1"
   },
   "lint-staged": {
@@ -41,7 +42,6 @@
     "codecov": "^3.1.0",
     "commitizen": "^3.0.7",
     "crocks": "^0.9.4",
-    "cz-lerna-changelog": "^2.0.2",
     "eslint": "^5.12.1",
     "eslint-config-google": "^0.11.0",
     "eslint-config-recommended": "^4.0.0",
