@@ -30,10 +30,11 @@ const getQuery = propOr(null, 'query');
 
 /**
  * hasAllVariables :: ({query, variables}) -> Bool
+ *
  * @param  {Object}         params
  * @param  {DocumentNode}   params.query
  * @param  {Object}         params.variables
- * @return {Boolean}
+ * @return {boolean}
  */
 const hasAllVariables = params =>
   prop('definitions', getQuery(params))

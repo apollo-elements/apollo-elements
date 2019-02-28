@@ -54,8 +54,9 @@ export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) {
    *   - The component has `data` or
    *   - The component has an `error` or
    *   - The component is `loading`.
+   *
    * @param  {Map}  changedProps           Changed properties.
-   * @return {Boolean}                     Whether the component should render.
+   * @return {boolean}                     Whether the component should render.
    * @protected
    */
   shouldUpdate() {

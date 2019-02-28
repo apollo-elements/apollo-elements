@@ -2,7 +2,7 @@ import { chai, defineCE, unsafeStatic, fixture, expect, html } from '@open-wc/te
 import sinonChai from 'sinon-chai';
 import gql from 'graphql-tag';
 import { spy, stub, match } from 'sinon';
-import { client } from '@apollo-elements/test-helpers/client'
+import { client } from '@apollo-elements/test-helpers/client';
 
 import { ApolloMutation } from './apollo-mutation';
 
@@ -35,7 +35,7 @@ describe('ApolloMutation', function describeApolloMutation() {
     const el = await fixture(html`<${tag} .client="${client}" .mutation="${mutation}"></${tag}>`);
     const clientSpy = spy(el.client, 'mutate');
     await el.mutate();
-    expect(clientSpy).to.have.been.calledWith(match({ update: el.onUpdate }))
+    expect(clientSpy).to.have.been.calledWith(match({ update: el.onUpdate }));
     clientSpy.restore();
   });
 
@@ -54,7 +54,7 @@ describe('ApolloMutation', function describeApolloMutation() {
     const el = await fixture(html`<${tag} .client="${client}" .mutation="${mutation}"></${tag}>`);
     const clientSpy = spy(el.client, 'mutate');
     await el.mutate({ update });
-    expect(clientSpy).to.have.been.calledWith(match({ update }))
+    expect(clientSpy).to.have.been.calledWith(match({ update }));
     clientSpy.restore();
   });
 
@@ -74,7 +74,7 @@ describe('ApolloMutation', function describeApolloMutation() {
     const el = await fixture(html`<${tag} .client="${client}" .mutation="${mutation}"></${tag}>`);
     const clientSpy = spy(el.client, 'mutate');
     await el.mutate();
-    expect(clientSpy).to.not.have.been.calledWith(match({ update: el.update }))
+    expect(clientSpy).to.not.have.been.calledWith(match({ update: el.update }));
     clientSpy.restore();
-  })
+  });
 });

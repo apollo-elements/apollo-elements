@@ -4,13 +4,14 @@
  * @polymer
  * @mixinFunction
  *
- * @param {Class}    superclass
- * @return {Class}
+ * @param {class}    superclass the class to extend
+ * @return {class}
  */
 export const NotifyingElementMixin = superclass => class extends superclass {
   /**
    * Fires a `*-changed` event.
-   * @param  {String}     propName Name of the property.
+   *
+   * @param  {string}     propName Name of the property.
    * @param  {any} value  property value
    */
   notify(propName, value) {

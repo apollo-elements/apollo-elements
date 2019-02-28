@@ -1,8 +1,9 @@
 /**
  * isValidGql :: DocumentNode a => a -> Bool
  * Validates a graphql document node.
+ *
  * @param  {DocumentNode} doc
- * @return {Boolean}
+ * @return {boolean}
  */
 const isValidGql = doc =>
   !!(

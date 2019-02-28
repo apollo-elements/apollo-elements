@@ -64,15 +64,16 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
    *
    * NOTE: this `LitElement` version passes `this.onUpdate` as the update function
    * by default, instead of `this.update`, which is provided by `LitElement`.
+   *
    * @param  {Object}           params
    * @param  {Object}           params.context
    * @param  {ErrorPolicy}      params.errorPolicy
    * @param  {FetchPolicy}      params.fetchPolicy
    * @param  {DocumentNode}     params.mutation
    * @param  {Object|Function}  params.optimisticResponse
-   * @param  {Array<String>}    params.refetchQueries
+   * @param  {Array<string>}    params.refetchQueries
    * @param  {UpdateFunction}   params.update
-   * @param  {Boolean}          params.awaitRefetchQueries
+   * @param  {boolean}          params.awaitRefetchQueries
    * @param  {Object}           params.variables
    * @return {Promise<FetchResult>}
    */

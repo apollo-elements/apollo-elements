@@ -25,6 +25,7 @@ const isApplicationGraphQL = el =>
 
 /**
  * Throws a TypeError
+ *
  * @param  {string} message
  */
 function throwTypeError(message) {

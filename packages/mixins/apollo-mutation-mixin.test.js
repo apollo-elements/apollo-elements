@@ -1,5 +1,5 @@
 import { chai, expect, html } from '@open-wc/testing';
-import { ApolloError } from 'apollo-client'
+import { ApolloError } from 'apollo-client';
 import sinonChai from 'sinon-chai';
 import gql from 'graphql-tag';
 import pick from 'crocks/helpers/pick';
@@ -190,8 +190,8 @@ describe('ApolloMutationMixin', function describeApolloMutationMixin() {
       const errors = [{ message: 'error' }];
       mutateStub.resolves({ errors });
       await el.mutate();
-      const expected = JSON.stringify(new ApolloError({ graphQLErrors: [{ message: 'error' }] }))
-      const actual = JSON.stringify(el.error)
+      const expected = JSON.stringify(new ApolloError({ graphQLErrors: [{ message: 'error' }] }));
+      const actual = JSON.stringify(el.error);
       expect(actual).to.equal(expected);
       expect(el.error).to.be.an.instanceof(ApolloError);
       mutateStub.restore();
