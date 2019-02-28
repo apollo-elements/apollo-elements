@@ -103,16 +103,16 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
-   * @param  {Object}           params
-   * @param  {Object}           params.context
-   * @param  {ErrorPolicy}      params.errorPolicy
-   * @param  {FetchPolicy}      params.fetchPolicy
-   * @param  {DocumentNode}     params.mutation
-   * @param  {Object|Function}  params.optimisticResponse
-   * @param  {Array<String>}    params.refetchQueries
-   * @param  {UpdateFunction}   params.update
-   * @param  {Boolean}          params.awaitRefetchQueries
-   * @param  {Object}           params.variables
+   * @param  {Object}               params
+   * @param  {Object}               params.context
+   * @param  {ErrorPolicy}          params.errorPolicy
+   * @param  {FetchPolicy}          params.fetchPolicy
+   * @param  {DocumentNode}         params.mutation
+   * @param  {Object|Function}      params.optimisticResponse
+   * @param  {Array<DocumentNode>}  params.refetchQueries
+   * @param  {UpdateFunction}       params.update
+   * @param  {Boolean}              params.awaitRefetchQueries
+   * @param  {Object}               params.variables
    * @return {Promise<FetchResult>}
    */
   async mutate({
