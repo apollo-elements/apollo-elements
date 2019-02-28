@@ -14,6 +14,7 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
 export class ApolloElement extends ApolloElementMixin(GluonElement) {
   /**
    * The latest data for the query from the Apollo cache
+   *
    * @return {Object}
    */
   get data() {
@@ -27,6 +28,7 @@ export class ApolloElement extends ApolloElementMixin(GluonElement) {
 
   /**
    * The latest error for the query from the Apollo cache
+   *
    * @return {Object}
    */
   get error() {
@@ -40,6 +42,7 @@ export class ApolloElement extends ApolloElementMixin(GluonElement) {
 
   /**
    * Whether the query is currently in-flight.
+   *
    * @return {boolean}
    */
   get loading() {

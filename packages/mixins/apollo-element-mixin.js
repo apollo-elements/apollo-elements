@@ -48,6 +48,7 @@ export const ApolloElementMixin = superclass => class extends superclass {
 
   /**
    * GraphQL Document
+   *
    * @return {DocumentNode}
    */
   get document() {

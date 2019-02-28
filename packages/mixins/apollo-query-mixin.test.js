@@ -195,7 +195,6 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       const subscription = await el.subscribe();
       expect(subscription._observer.error).to.equal(el.nextError);
     });
-
   });
 
   describe('subscribeToMore', function describeSubscribeToMore() {

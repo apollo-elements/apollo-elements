@@ -14,6 +14,7 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
    * A GraphQL document containing a single query.
+   *
    * @return {DocumentNode}
    */
   get query() {
@@ -34,6 +35,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
+   *
    * @return {Object<string, *>}
    */
   get variables() {
@@ -50,6 +52,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
+   *
    * @return {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
    */
   get options() {
@@ -117,6 +120,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
+   *
    * @param  {Object} variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    * @return {Promise<ApolloQueryResult>}
    */
@@ -129,6 +133,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
+   *
    * @deprecated: This method on ObservableQuery is meant to be private. It will be removed.
    * @param {Object}   variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
    * @param {boolean=} tryFetch       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
@@ -144,6 +149,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Resets the observableQuery and subscribes.
+   *
    * @param  {{query: DocumentNode, variables: Object}=} params
    * @return {Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>}
    */
@@ -176,6 +182,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Executes a Query once and updates the component with the result
+   *
    * @param {{ metadata: Object, context: Object, query: DocumentNode, variables: Object, fetchPolicy: FetchPolicy, errorPolicy: ErrorPolicy, fetchResults: boolean }=} options
    * @return {Promise<ApolloQueryResult>}
    */
@@ -283,11 +290,12 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Updates the element with the result of a query.
+   *
    * @param  {ApolloQueryResult} result The result of the query.
    * @param  {Object}  result.data          The data from the query.
-   * @param  {Boolean} result.loading       Whether the query is loading.
-   * @param  {Number}  result.networkStatus The networkStatus of the query.
-   * @param  {Boolean} result.stale         Whether the query is stale.
+   * @param  {boolean} result.loading       Whether the query is loading.
+   * @param  {number}  result.networkStatus The networkStatus of the query.
+   * @param  {boolean} result.stale         Whether the query is stale.
    * @protected
    */
   nextData({ data, loading, networkStatus, stale }) {
@@ -299,6 +307,7 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
 
   /**
    * Updates the element with the error when the query fails.
+   *
    * @param  {Error} error
    * @protected
    */

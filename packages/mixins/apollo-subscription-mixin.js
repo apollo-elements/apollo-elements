@@ -16,6 +16,7 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 export const ApolloSubscriptionMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
    * A GraphQL document containing a single subscription.
+   *
    * @return {DocumentNode}
    */
   get subscription() {
@@ -33,6 +34,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
+   *
    * @return {Object<string, *>}
    */
   get variables() {
@@ -94,6 +96,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * Resets the observable and subscribes.
+   *
    * @param  {{fetchPolicy: FetchPolicy, query: DocumentNode, variables: Object}} options
    * @return {Promise<ZenObservable.Observer<SubscriptionResult<TData>>>}
    */
@@ -112,9 +115,10 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * Updates the element with the result of a subscription.
+   *
    * @param  {ApolloQueryResult} result The result of the subscription.
    * @param  {Object}  result.data          The data from the subscription.
-   * @param  {Boolean} result.loading       Whether the subscription is loading.
+   * @param  {boolean} result.loading       Whether the subscription is loading.
    * @protected
    */
   nextData({ data }) {
@@ -127,6 +131,7 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
 
   /**
    * Updates the element with the error when the subscription fails.
+   *
    * @param  {Error} error
    * @protected
    */

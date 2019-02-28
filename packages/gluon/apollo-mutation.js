@@ -49,6 +49,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   /**
    * Whether the mutation has been called
+   *
    * @return {boolean}
    */
   get called() {

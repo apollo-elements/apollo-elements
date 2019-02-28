@@ -1,5 +1,5 @@
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { ApolloError } from 'apollo-client'
+import { ApolloError } from 'apollo-client';
 
 /**
  * `ApolloMutationMixin`: class mixin for apollo-mutation elements.
@@ -14,6 +14,7 @@ import { ApolloError } from 'apollo-client'
 export const ApolloMutationMixin = superclass => class extends ApolloElementMixin(superclass) {
   /**
    * The mutation.
+   *
    * @return {DocumentNode}
    */
   get mutation() {
@@ -83,7 +84,8 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * Increments and returns the most recent mutation id.
-   * @return {Number}
+   *
+   * @return {number}
    * @protected
    */
   generateMutationId() {
@@ -93,8 +95,9 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * Returns true when an ID matches the most recent mutation id.
-   * @param  {Number}  mutationId
-   * @return {Boolean}
+   *
+   * @param  {number}  mutationId
+   * @return {boolean}
    * @protected
    */
   isMostRecentMutation(mutationId) {
@@ -103,6 +106,7 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
+   *
    * @param  {Object}               params
    * @param  {Object}               params.context
    * @param  {ErrorPolicy}          params.errorPolicy
@@ -111,7 +115,7 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
    * @param  {Object|Function}      params.optimisticResponse
    * @param  {Array<DocumentNode>}  params.refetchQueries
    * @param  {UpdateFunction}       params.update
-   * @param  {Boolean}              params.awaitRefetchQueries
+   * @param  {boolean}              params.awaitRefetchQueries
    * @param  {Object}               params.variables
    * @return {Promise<FetchResult>}
    */
@@ -156,8 +160,9 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * Callback for when a mutation is completed.
+   *
    * @param  {FetchResult} response
-   * @param  {Number} mutationId
+   * @param  {number} mutationId
    * @return {any}
    * @protected
    */
@@ -174,8 +179,9 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * Callback for when a mutation fails.
-   * @param  {Error} error
-   * @param  {Number} mutationId [description]
+   *
+   * @param  {Error} error mutation error
+   * @param  {number} mutationId id of the mutation
    * @return {any}
    * @protected
    */
@@ -190,15 +196,15 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
 
   /**
    * Callback for when a mutation is completed.
-   * @type {Function}
-   * @return {any}
+   *
+   * @abstract
    */
-  onCompleted() { };
+  onCompleted() { }
 
   /**
    * Callback for when an error occurs in mutation.
-   * @type {Function}
-   * @return {any}
+   *
+   * @abstract
    */
-  onError() { };
+  onError() { }
 };
