@@ -1,3 +1,16 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [0.0.10](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@0.0.9...@apollo-elements/gluon@0.0.10) (2019-02-28)
+
+**Note:** Version bump only for package @apollo-elements/gluon
+
+
+
+
+
 # CHANGELOG
 
 ## 0.0.9
