@@ -98,6 +98,7 @@ module.exports = {
     'prefer-const': ERROR,
     'prefer-destructuring': ERROR,
     'prefer-object-spread': ERROR,
+    'prefer-promise-reject-errors': OFF,
     'prefer-spread': ERROR,
     'prefer-template': ERROR,
     'require-jsdoc': OFF,
