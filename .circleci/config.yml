@@ -55,6 +55,36 @@ jobs:
           name: Publish package
           command: "npm run publish -- --yes"
 
+  docs-build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Build docs
+          command: npm run docs
+      - persist_to_workspace:
+          root: docs_build
+          paths: docs
+
+  docs-deploy:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: docs_build
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "ci-build@klukas.net"
+            git config user.name "ci-build"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dist docs_build/docs
+
 workflows:
   version: 2
   test-deploy:
