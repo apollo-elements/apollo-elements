@@ -93,6 +93,14 @@ workflows:
   test-deploy:
     jobs:
       - test
+      - docs-build
+      - docs-deploy:
+          requires:
+            - test
+            - docs-build
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - test
