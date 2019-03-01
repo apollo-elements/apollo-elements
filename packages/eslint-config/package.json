@@ -11,6 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/apollo-elements/apollo-elements.git"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
   "main": "index.js",
   "engines": {
     "node": ">= 8.x",
