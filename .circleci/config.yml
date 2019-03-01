@@ -64,7 +64,7 @@ jobs:
           command: npm ci
       - run:
           name: Build docs
-          command: npm run docs
+          command: sudo apt install rsync && npm run docs
       - persist_to_workspace:
           root: ~/repo
           paths: .
