@@ -23,6 +23,7 @@
     "@commitlint/config-conventional": "^7.5.0",
     "@commitlint/config-lerna-scopes": "^7.5.1",
     "@gluon/gluon": "^2.5.1",
+    "@material/mwc-button": "^0.3.6",
     "@open-wc/testing": "^0.9.9",
     "@open-wc/testing-helpers": "^0.7.7",
     "@open-wc/testing-karma": "^0.4.12",
@@ -69,6 +70,7 @@
     "polymer-cli": "^1.9.6",
     "rollup": "^1.1.1",
     "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.4",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0"
   },
