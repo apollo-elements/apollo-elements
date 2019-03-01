@@ -66,7 +66,7 @@ jobs:
           name: Build docs
           command: npm run docs
       - persist_to_workspace:
-          root: docs_build
+          root: docs/_build
           paths: docs
 
   docs-deploy:
@@ -74,7 +74,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: docs_build
+          at: docs/_build
       - run:
           name: Install and configure dependencies
           command: |
@@ -86,7 +86,7 @@ jobs:
             - "5d:d2:63:74:76:80:77:e9:29:55:b0:9d:ab:56:66:5d"
       - run:
           name: Deploy docs to gh-pages branch
-          command: gh-pages --dist docs_build/docs
+          command: gh-pages --dist docs/_build
 
 workflows:
   version: 2
