@@ -114,14 +114,19 @@ module.exports = {
     'template-curly-spacing': ERROR,
   },
   overrides: [{
-    files: ['**/*.test.js'],
+    files: ['**/*.test.js', '**/*.spec.js'],
     env: { node: true, mocha: true },
     rules: {
       'max-len': OFF,
+      'no-console': OFF,
       'require-jsdoc': OFF,
     },
   }, {
     files: ['*.conf*.js', '.*rc.js', 'packages/eslint-config/index.js'],
     env: { node: true },
+    rules: {
+      'no-console': OFF,
+      'require-jsdoc': OFF,
+    },
   }],
 };
