@@ -74,19 +74,20 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: docs
+          at: ~/repo
       - add_ssh_keys:
           fingerprints:
             - "31:19:97:06:2b:8b:a1:b2:62:d2:18:10:c4:62:ee:44"
       - run: git config --global user.email circleci@circleci
       - run: git config --global user.name CircleCI
+      - run: ls docs
       - run:
           name: Deploy docs to gh-pages branch
           command: npx gh-pages --dist docs
 
 workflows:
   version: 2
-  test-deploy:
+  test-docs-deploy:
     jobs:
       - test
       - docs-build
