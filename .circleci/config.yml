@@ -67,14 +67,14 @@ jobs:
           command: sudo apt install rsync && npm run docs
       - persist_to_workspace:
           root: ~/repo
-          paths: .
+          paths: docs
 
   docs-deploy:
     <<: *defaults
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: docs
       - run:
           name: Install and configure dependencies
           command: |
@@ -86,7 +86,7 @@ jobs:
             - "5d:d2:63:74:76:80:77:e9:29:55:b0:9d:ab:56:66:5d"
       - run:
           name: Deploy docs to gh-pages branch
-          command: gh-pages --dist docs/
+          command: gh-pages --dist docs
 
 workflows:
   version: 2
