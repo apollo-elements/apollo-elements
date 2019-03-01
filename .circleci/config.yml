@@ -78,14 +78,11 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "31:19:97:06:2b:8b:a1:b2:62:d2:18:10:c4:62:ee:44"
-      - run:
-          name: Install and configure dependencies
-          command: npm install -g --silent gh-pages@2.0.1
       - run: git config --global user.email circleci@circleci
       - run: git config --global user.name CircleCI
       - run:
           name: Deploy docs to gh-pages branch
-          command: gh-pages --dist docs
+          command: npx gh-pages --dist docs
 
 workflows:
   version: 2
