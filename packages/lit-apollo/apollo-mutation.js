@@ -44,4 +44,28 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
       called: { type: Boolean },
     };
   }
+
+  /**
+   * This resolves a single mutation according to the options specified and returns
+   * a Promise which is either resolved with the resulting data or rejected with an
+   * error.
+   *
+   * NOTE: this `LitElement` version passes `this.onUpdate` as the update function
+   * by default, instead of `this.update`, which is provided by `LitElement`.
+   *
+   * @param  {Object}           params
+   * @param  {Object}           params.context
+   * @param  {ErrorPolicy}      params.errorPolicy
+   * @param  {FetchPolicy}      params.fetchPolicy
+   * @param  {DocumentNode}     params.mutation
+   * @param  {Object|Function}  params.optimisticResponse
+   * @param  {Array<string>}    params.refetchQueries
+   * @param  {UpdateFunction}   params.update
+   * @param  {boolean}          params.awaitRefetchQueries
+   * @param  {Object}           params.variables
+   * @return {Promise<FetchResult>}
+   */
+  async mutate({ update = this.onUpdate || null, ...opts } = {}) {
+    return super.mutate({ update, ...opts });
+  }
 }
