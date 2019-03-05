@@ -8,7 +8,7 @@
     "docs": "sh scripts/docs.sh",
     "lint": "eslint .",
     "postinstall": "lerna bootstrap --hoist",
-    "publish": "lerna publish --message 'chore: release new versions'",
+    "publish": "lerna publish from-package --message 'chore: release new versions'",
     "test": "lerna run test --stream --concurrency 1"
   },
   "lint-staged": {
