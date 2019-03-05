@@ -114,7 +114,9 @@ jobs:
             git config --global user.name CircleCI
       - run:
           name: Deploy docs to gh-pages branch
-          command: npx gh-pages --dist docs
+          command: |
+            echo "apolloelements.dev" > docs/CNAME
+            npx gh-pages --dist docs
 
 master_only: &master_only
   filters:
