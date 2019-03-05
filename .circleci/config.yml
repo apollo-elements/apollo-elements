@@ -45,10 +45,6 @@ jobs:
           name: Run Tests
           command: npm run test
 
-      - run:
-          name: Merge Coverage Reports
-          command: sh ./scripts/merge-coverage.sh
-
       - persist_to_workspace:
           root: ~/repo
           paths: .
@@ -90,10 +86,12 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: npm ci
+          command: |
+            sudo apt install rsync
+            npm ci
       - run:
           name: Build docs
-          command: sudo apt install rsync && npm run docs
+          command: npm run docs
       - persist_to_workspace:
           root: ~/repo
           paths: docs
@@ -107,9 +105,11 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "31:19:97:06:2b:8b:a1:b2:62:d2:18:10:c4:62:ee:44"
-      - run: git config --global user.email circleci@circleci
-      - run: git config --global user.name CircleCI
-      - run: ls docs
+      - run:
+          name: "Configure CI Git User"
+          command: |
+            git config --global user.email circleci@circleci
+            git config --global user.name CircleCI
       - run:
           name: Deploy docs to gh-pages branch
           command: npx gh-pages --dist docs
