@@ -60,9 +60,7 @@ jobs:
           at: ~/repo
       - run:
           name: Upload coverage results to Code Climate
-          command: |
-            ./cc-test-reporter sum-coverage tmp/codeclimate.*.json -p 2 -o tmp/codeclimate.total.json
-            ./cc-test-reporter upload-coverage -i tmp/codeclimate.total.js
+          command: sh ./scripts/upload-coverage.sh
 
   deploy:
     <<: *defaults
