@@ -20,21 +20,49 @@ jobs:
             - v3-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v3-dependencies-
-      - run: npm install
+
+      - run:
+          name: NPM Installation
+          command: npm install
+
       - save_cache:
           paths:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
 
-      # run lint
-      - run: npm run lint
+      - run:
+          name: Lint
+          command: npm run lint
 
-      # run tests
-      - run: npm run test
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+
+      - run:
+          name: Run Tests
+          command: npm run test
+
+      - run:
+          name: Merge Coverage Reports
+          command: sh ./scripts/merge-coverage.sh
 
       - persist_to_workspace:
           root: ~/repo
           paths: .
+
+  upload-coverage:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Upload coverage results to Code Climate
+          command: |
+            ./cc-test-reporter sum-coverage tmp/codeclimate.*.json -p 2 -o tmp/codeclimate.total.json
+            ./cc-test-reporter upload-coverage -i tmp/codeclimate.total.js
 
   deploy:
     <<: *defaults
@@ -47,10 +75,13 @@ jobs:
           fingerprints:
             - "31:19:97:06:2b:8b:a1:b2:62:d2:18:10:c4:62:ee:44"
       - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-      - run: git config --global user.email circleci@circleci
-      - run: git config --global user.name CircleCI
+          name: Authenticate with Registry
+          command: npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN -q
+      - run:
+          name: "Configure CI Git User"
+          command: |
+            git config --global user.email circleci@circleci
+            git config --global user.name CircleCI
       - run:
           name: Publish package
           command: "npm run publish -- --yes"
@@ -85,6 +116,11 @@ jobs:
           name: Deploy docs to gh-pages branch
           command: npx gh-pages --dist docs
 
+master_only: &master_only
+  filters:
+    branches:
+      only: master
+
 workflows:
   version: 2
   test-docs-deploy:
@@ -92,15 +128,15 @@ workflows:
       - test
       - docs-build
       - docs-deploy:
+          <<: *master_only
           requires:
             - test
             - docs-build
-          filters:
-            branches:
-              only: master
-      - deploy:
+      - upload-coverage:
+          <<: *master_only
           requires:
             - test
-          filters:
-            branches:
-              only: master
+      - deploy:
+          <<: *master_only
+          requires:
+            - test
