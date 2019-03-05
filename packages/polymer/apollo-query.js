@@ -7,22 +7,26 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js'
  * properties change.
  *
  * ## 👩‍🚀 Usage
- * ```html
- * <apollo-query data="{{data}}" variables="[[variables]]">
- *   <script type="application/graphql">
- *     query User($id: ID!) {
- *       user(id: $id) {
- *         name
- *         picture
- *       }
- *     }
- *   </script>
- * </apollo-query>
+ * ```js
+ * class QueryElement extends PolymerElement {
+ *   static template = html`
+ *     <apollo-query data="{{data}}" variables="[[variables]]">
+ *       <script type="application/graphql">
+ *         query User($id: ID!) {
+ *           user(id: $id) {
+ *             name
+ *             picture
+ *           }
+ *         }
+ *       </script>
+ *     </apollo-query>
  *
- * <paper-icon-item>
- *   <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
- *   [[data.user.name]]
- * </paper-icon-item>
+ *     <paper-icon-item>
+ *       <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
+ *       [[data.user.name]]
+ *     </paper-icon-item>
+ *   `;
+ * }
  * ```
  *
  * @polymer
@@ -31,6 +35,10 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js'
  * @appliesMixin NotifyingElementMixin
  */
 const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLElement) {
+  /**
+   * Latest data.
+   * @type {Object}
+   */
   get data() {
     return this.__data;
   }
@@ -40,6 +48,10 @@ const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLEle
     this.notify('data', value);
   }
 
+  /**
+   * Latest error.
+   * @type {Object}
+   */
   get error() {
     return this.__error;
   }
@@ -49,6 +61,10 @@ const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLEle
     this.notify('error', value);
   }
 
+  /**
+   * Whether a request is in flight.
+   * @type {Boolean}
+   */
   get loading() {
     return this.__loading;
   }
@@ -58,6 +74,10 @@ const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLEle
     this.notify('loading', value);
   }
 
+  /**
+   * Enum of network statuses. See https://bit.ly/2sfKLY0
+   * @type {Number}
+   */
   get networkStatus() {
     return this.__networkStatus;
   }

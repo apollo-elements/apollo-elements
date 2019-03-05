@@ -12,32 +12,22 @@ export { html } from './apollo-element.js';
  * ```js
  * import { client } from './apollo-client.js';
  * import { ApolloSubscription, html } from 'lit-apollo';
- * import gql from 'graphql-tag';
+ * import subscription from './subscribing-element.graphql';
  *
  * const errorTemplate = ({message = 'Unknown Error'}) => html`
  *   <h1>😢 Such Sad, Very Error! 😰</h1>
  *   <div>${message}</div>`
  *
  * class SubscribingElement extends ApolloSubscription {
+ *   client = client;
+ *   subcscription = subscription;
  *   render() {
  *     const { data, error = {}, loading } = this;
- *     return
+ *     return (
  *         loading ? html`<such-overlay-very-spin></such-overlay-very-spin>`
  *       : error ? errorTemplate(error)
  *       : html`<p>${data.helloWorld.greeting}, ${data.helloWorld.name}</p>`
- *   }
- *
- *   constructor() {
- *     super();
- *     this.client = client;
- *     this.subscription = gql`
- *       subscription {
- *         helloWorld {
- *           name
- *           greeting
- *         }
- *       }
- *     `;
+ *     );
  *   }
  * };
  *
@@ -45,7 +35,7 @@ export { html } from './apollo-element.js';
  * ```
  *
  * @polymer
- * @extends LitElement
+ * @extends ApolloElement
  * @appliesMixin ApolloSubscriptionMixin
  */
 export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) {

@@ -13,6 +13,7 @@ export const NotifyingElementMixin = superclass => class extends superclass {
    *
    * @param  {string}     propName Name of the property.
    * @param  {any} value  property value
+   * @protected
    */
   notify(propName, value) {
     this.dispatchEvent(

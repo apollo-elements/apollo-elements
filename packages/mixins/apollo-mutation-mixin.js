@@ -33,6 +33,12 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
     super();
 
     /**
+     * Whether the mutation has been called
+     * @type {Boolean}
+     */
+    this.called = false;
+
+    /**
      * Whether to ignore the results of the mutation.
      * @type {Boolean}
      */

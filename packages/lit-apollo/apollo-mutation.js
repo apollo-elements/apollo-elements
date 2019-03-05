@@ -11,31 +11,19 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * ```js
  * import { client } from './apollo-client';
  * import { ApolloMutation, html } from 'lit-apollo';
+ * import mutation from './mutation-element.graphql';
  *
  * class MutationElement extends ApolloMutation {
+ *   client = client;
+ *   mutation = mutation;
+ *
  *   render() {
- *     return html`<input on-input="${this.onInput.bind(this)}"
+ *     return html`<input @keyup="${this.onInput}"/>`
  *   }
  *
- *   constructor() {
- *     super();
- *     this.client = client;
- *     this.mutation = gql`
- *       mutation InputMutation {
- *         updateInput {
- *           input
- *         }
- *       }
- *     `;
- *   }
- *
- *   onInput(event) {
- *     const { mutation } = this;
- *     const variables = { input: event.target.value };
- *     return this.mutate({
- *       mutation,
- *       variables,
- *     });
+ *   onInput({ target: { value: input }, key }) {
+ *     this.variables = { input };
+ *     if (key === 'Enter') return this.mutate();
  *   }
  * };
  *
@@ -43,7 +31,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * ```
  *
  * @polymer
- * @extends LitElement
+ * @extends ApolloElement
  * @appliesMixin ApolloMutationMixin
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
@@ -55,29 +43,5 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
        */
       called: { type: Boolean },
     };
-  }
-
-  /**
-   * This resolves a single mutation according to the options specified and returns
-   * a Promise which is either resolved with the resulting data or rejected with an
-   * error.
-   *
-   * NOTE: this `LitElement` version passes `this.onUpdate` as the update function
-   * by default, instead of `this.update`, which is provided by `LitElement`.
-   *
-   * @param  {Object}           params
-   * @param  {Object}           params.context
-   * @param  {ErrorPolicy}      params.errorPolicy
-   * @param  {FetchPolicy}      params.fetchPolicy
-   * @param  {DocumentNode}     params.mutation
-   * @param  {Object|Function}  params.optimisticResponse
-   * @param  {Array<string>}    params.refetchQueries
-   * @param  {UpdateFunction}   params.update
-   * @param  {boolean}          params.awaitRefetchQueries
-   * @param  {Object}           params.variables
-   * @return {Promise<FetchResult>}
-   */
-  async mutate({ update = this.onUpdate || null, ...opts } = {}) {
-    return super.mutate({ update, ...opts });
   }
 }

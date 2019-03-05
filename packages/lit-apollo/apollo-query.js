@@ -12,32 +12,23 @@ export { html } from './apollo-element.js';
  * ```js
  * import { client } from './apollo-client.js';
  * import { ApolloQuery, html } from 'lit-apollo';
- * import gql from 'graphql-tag';
+ * import query from './connected-element.graphql';
  *
  * const errorTemplate = ({message = 'Unknown Error'}) => html`
  *   <h1>😢 Such Sad, Very Error! 😰</h1>
  *   <div>${message}</div>`
  *
  * class ConnectedElement extends ApolloQuery {
+ *   client = client;
+ *   query = query;
+ *
  *   render() {
  *     const { data, error, loading, networkStatus } = this;
- *     return
+ *     return (
  *         loading ? html`<such-overlay-very-spin></such-overlay-very-spin>`
  *       : error ? errorTemplate(error)
  *       : html`<p>${data.helloWorld.greeting}, ${data.helloWorld.name}</p>`
- *   }
- *
- *   constructor() {
- *     super();
- *     this.client = client;
- *     this.query = gql`
- *       query {
- *         helloWorld {
- *           name
- *           greeting
- *         }
- *       }
- *     `;
+ *     );
  *   }
  * };
  *
@@ -45,7 +36,7 @@ export { html } from './apollo-element.js';
  * ```
  *
  * @polymer
- * @extends LitElement
+ * @extends ApolloElement
  * @appliesMixin ApolloQueryMixin
  */
 export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
@@ -56,6 +47,11 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
        * @type {Number}
        */
       networkStatus: { type: Number },
+
+      /**
+       * If the query should not subscribe until `subscribe` is explicitly called.
+       * @type {boolean}
+       */
       noAutoSubscribe: { type: Boolean, attribute: 'no-auto-subscribe' },
     };
   }

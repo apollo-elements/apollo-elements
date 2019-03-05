@@ -11,31 +11,16 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * ```js
  * import { client } from './apollo-client';
  * import { ApolloMutation, html } from '@apollo-elements/gluon';
+ * import mutation from './mutation-element.graphql';
  *
  * class MutationElement extends ApolloMutation {
- *   get template() {
- *     return html`<input on-input="${this.onInput.bind(this)}"
- *   }
+ *   client = client;
+ *   mutation = mutation;
+ *   template =  html`<input @keyup="${this.onInput}"/>`
  *
- *   constructor() {
- *     super();
- *     this.client = client;
- *     this.mutation = gql`
- *       mutation InputMutation {
- *         updateInput {
- *           input
- *         }
- *       }
- *     `;
- *   }
- *
- *   onInput(event) {
- *     const { mutation } = this;
- *     const variables = { input: event.target.value };
- *     return this.mutate({
- *       mutation,
- *       variables,
- *     });
+ *   onInput({ target: { value: input }, key }) {
+ *     this.variables = { input };
+ *     if (key === 'Enter') return this.mutate();
  *   }
  * };
  *
@@ -48,7 +33,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   /**
-   * Whether the mutation has been called
+   * If the mutation has been called
    *
    * @return {boolean}
    */
