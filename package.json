@@ -5,7 +5,7 @@
     "file": "./logo.png"
   },
   "scripts": {
-    "docs": "sh docs.sh",
+    "docs": "sh scripts/docs.sh",
     "lint": "eslint .",
     "postinstall": "lerna bootstrap --hoist",
     "publish": "lerna publish --message 'chore: release new versions'",
