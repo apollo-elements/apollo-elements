@@ -78,7 +78,9 @@ jobs:
             git config --global user.name CircleCI
       - run:
           name: Publish package
-          command: "npm run publish -- --yes"
+          command: |
+            npm whoami
+            npm run publish -- --yes
 
   docs-build:
     <<: *defaults
