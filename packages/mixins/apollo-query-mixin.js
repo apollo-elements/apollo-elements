@@ -1,5 +1,36 @@
 import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
 import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
+import pick from 'crocks/helpers/pick';
+import compose from 'crocks/helpers/compose';
+
+const pickExecuteQueryOpts = compose(
+  stripUndefinedValues,
+  pick([
+    'context',
+    'errorPolicy',
+    'fetchPolicy',
+    'fetchResults',
+    'metadata',
+    'query',
+    'variables',
+  ])
+);
+
+const pickOpts = compose(
+  stripUndefinedValues,
+  pick([
+    'context',
+    'errorPolicy',
+    'fetchPolicy',
+    'fetchResults',
+    'metadata',
+    'notifyOnNetworkStatusChange',
+    'pollInterval',
+    'query',
+    'variables',
+  ])
+);
 
 /**
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
@@ -187,25 +218,15 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @return {Promise<ApolloQueryResult>}
    */
   executeQuery({
-    metadata,
-    context,
     query = this.query,
     variables = this.variables,
-    fetchPolicy = this.fetchPolicy,
-    errorPolicy = this.errorPolicy,
-    fetchResults = this.fetchResults,
+    ...options
   } = this) {
+    const opts = pickExecuteQueryOpts({ ...this, ...options, query, variables });
+
     const queryPromise =
       this.client
-        .query({
-          context,
-          errorPolicy,
-          fetchPolicy,
-          fetchResults,
-          metadata,
-          query,
-          variables,
-        })
+        .query(opts)
         .catch(this.nextError.bind(this));
 
     queryPromise.then(this.nextData.bind(this));
@@ -265,27 +286,12 @@ export const ApolloQueryMixin = superclass => class extends ApolloElementMixin(s
    * @protected
    */
   watchQuery({
-    context = this.context,
-    errorPolicy = this.errorPolicy,
-    fetchPolicy = this.fetchPolicy,
-    fetchResults = this.fetchResults,
-    metadata = this.metadata,
-    notifyOnNetworkStatusChange = this.notifyOnNetworkStatusChange,
-    pollInterval = this.pollInterval,
     query = this.query,
     variables = this.variables,
+    ...options
   } = this) {
-    return this.client.watchQuery({
-      context,
-      errorPolicy,
-      fetchPolicy,
-      fetchResults,
-      metadata,
-      notifyOnNetworkStatusChange,
-      pollInterval,
-      query,
-      variables,
-    });
+    const opts = pickOpts({ ...this, ...options, query, variables });
+    return this.client.watchQuery(opts);
   }
 
   /**

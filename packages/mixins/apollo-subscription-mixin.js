@@ -1,7 +1,7 @@
 import isFunction from 'crocks/predicates/isFunction';
-
-import { ApolloElementMixin } from './apollo-element-mixin.js';
 import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
+import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
+import { ApolloElementMixin } from './apollo-element-mixin.js';
 
 /**
  * `ApolloSubscriptionMixin`: class mixin for apollo-subscription elements.
@@ -106,7 +106,9 @@ export const ApolloSubscriptionMixin = superclass => class extends ApolloElement
     variables = this.variables,
   } = {}) {
     if (!hasAllVariables({ query, variables })) return;
-    this.observable = this.client.subscribe({ query, variables, fetchPolicy });
+    this.observable = this.client.subscribe(
+      stripUndefinedValues({ query, variables, fetchPolicy })
+    );
     return this.observable.subscribe({
       next: this.nextData,
       error: this.nextError,

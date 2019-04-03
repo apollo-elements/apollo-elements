@@ -1,5 +1,23 @@
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { ApolloError } from 'apollo-client';
+import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
+import pick from 'crocks/helpers/pick';
+import compose from 'crocks/helpers/compose';
+
+const pickOptions = compose(
+  stripUndefinedValues,
+  pick([
+    'context',
+    'errorPolicy',
+    'fetchPolicy',
+    'mutation',
+    'optimisticResponse',
+    'refetchQueries',
+    'update',
+    'awaitRefetchQueries',
+    'variables',
+  ])
+);
 
 /**
  * `ApolloMutationMixin`: class mixin for apollo-mutation elements.
@@ -113,29 +131,23 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
   /**
    * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
    *
-   * @param  {Object}               params
-   * @param  {Object}               params.context
-   * @param  {ErrorPolicy}          params.errorPolicy
-   * @param  {FetchPolicy}          params.fetchPolicy
-   * @param  {DocumentNode}         params.mutation
-   * @param  {Object|Function}      params.optimisticResponse
-   * @param  {Array<DocumentNode>}  params.refetchQueries
-   * @param  {UpdateFunction}       params.update
-   * @param  {boolean}              params.awaitRefetchQueries
-   * @param  {Object}               params.variables
+   * @param  {Object}               options
+   * @param  {Object}               options.context
+   * @param  {ErrorPolicy}          options.errorPolicy
+   * @param  {FetchPolicy}          options.fetchPolicy
+   * @param  {DocumentNode}         options.mutation
+   * @param  {Object|Function}      options.optimisticResponse
+   * @param  {Array<DocumentNode>}  options.refetchQueries
+   * @param  {UpdateFunction}       options.update
+   * @param  {boolean}              options.awaitRefetchQueries
+   * @param  {Object}               options.variables
    * @return {Promise<FetchResult>}
    */
   async mutate({
-    context = this.context,
-    errorPolicy = this.errorPolicy,
-    fetchPolicy = this.fetchPolicy,
     mutation = this.mutation,
-    optimisticResponse = this.optimisticResponse,
-    refetchQueries = this.refetchQueries,
-    update = this.update,
-    awaitRefetchQueries = this.awaitRefetchQueries,
     variables = this.variables,
-  } = {}) {
+    ...options
+  } = this) {
     const mutationId = this.generateMutationId();
 
     this.loading = true;
@@ -144,18 +156,12 @@ export const ApolloMutationMixin = superclass => class extends ApolloElementMixi
     this.called = true;
 
     try {
-      const response = await this.client.mutate({
-        context,
-        errorPolicy,
-        fetchPolicy,
-        mutation,
-        optimisticResponse,
-        refetchQueries,
-        update,
-        awaitRefetchQueries,
-        variables,
-      });
-
+      const response =
+        await this.client.mutate(pickOptions({
+          mutation,
+          variables,
+          ...options,
+        }));
       this.onCompletedMutation(response, mutationId);
       return response;
     } catch (error) {
