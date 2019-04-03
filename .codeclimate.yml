@@ -1,4 +1,5 @@
 exclude_patterns:
+  - karma.conf.js
+  - test/unit/*
   - packages/**/*.test.js
-  - packages/**/karma.conf.js
   - packages/**/*.d.ts

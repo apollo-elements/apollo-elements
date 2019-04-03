@@ -3,6 +3,7 @@ import {
   isGraphQLScript,
   getGraphQLScriptChild,
   replace,
+  stripUndefinedValues,
 } from './helpers.js';
 
 describe('isGraphQLScript', function() {
@@ -41,5 +42,12 @@ describe('replace', function() {
 
   it('is identity otherwise', function() {
     expect(replace('foo', '')(1)).to.equal(1);
+  });
+});
+
+describe('stripUndefinedValues', function() {
+  it('strips undefined values', function() {
+    const input = { foo: 'bar', u: undefined };
+    expect(stripUndefinedValues(input)).to.eql({ foo: 'bar' });
   });
 });

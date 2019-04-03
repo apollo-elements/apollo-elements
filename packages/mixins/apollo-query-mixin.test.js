@@ -306,7 +306,8 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
     it('returns an ObservableQuery', async function returnsObservableQuery() {
       const query = gql`query { foo }`;
       const el = await getElement({ client, query });
-      expect(el.watchQuery()).to.be.an.instanceof(ObservableQuery);
+      const actual = el.watchQuery();
+      expect(actual).to.be.an.instanceof(ObservableQuery);
     });
 
     it('accepts a specific query', async function() {
@@ -325,6 +326,31 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       el.watchQuery({ query: undefined });
       expect(watchQueryStub).to.have.been.calledWith(match({ query }));
       watchQueryStub.restore();
+    });
+
+    it('uses default options', async function() {
+      const cache = client.defaultOptions;
+      client.defaultOptions = {
+        watchQuery: {
+          notifyOnNetworkStatusChange: true,
+          SOMETHING_SILLY: true,
+        },
+      };
+      // HACK: oof
+      client.initQueryManager();
+
+      const watchQueryStub = stub(client.queryManager, 'watchQuery');
+      const query = gql`query { foo }`;
+      const el = await getElement({ client, query });
+      el.watchQuery({ query: undefined });
+      expect(watchQueryStub).to.have.been.calledWith(match({
+        query,
+        notifyOnNetworkStatusChange: true,
+        SOMETHING_SILLY: true,
+      }));
+
+      watchQueryStub.restore();
+      client.defaultOptions = cache;
     });
   });
 

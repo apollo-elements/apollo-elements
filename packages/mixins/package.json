@@ -1,11 +1,11 @@
 {
   "name": "@apollo-elements/mixins",
-  "version": "0.0.11",
+  "version": "1.0.0",
   "description": "👩‍🚀🌛 Custom Element class mixins for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "scripts": {
     "docs": "polymer analyze -i index.js > docs/analysis.json",
-    "test": "karma start karma.conf.js"
+    "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {
     "access": "public",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@apollo-elements/lib": "^0.0.6",
+    "@apollo-elements/lib": "^1.0.0",
     "apollo-client": "^2.4.12",
     "crocks": "^0.11.1"
   },

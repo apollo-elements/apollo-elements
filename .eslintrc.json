@@ -1,3 +1,7 @@
 {
-  "extends": ["@apollo-elements"]
+  "extends": ["@apollo-elements"],
+  "overrides": [{
+    "files": "test/unit/*.js",
+    "env": { "node": true }
+  }]
 }

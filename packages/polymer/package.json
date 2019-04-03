@@ -1,11 +1,11 @@
 {
   "name": "@apollo-elements/polymer",
-  "version": "0.0.11",
+  "version": "1.0.0",
   "description": "👩‍🚀🌛 Polymer Elements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "scripts": {
     "docs": "polymer analyze > docs/analysis.json",
-    "test": "karma start karma.conf.js"
+    "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {
     "access": "public",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@apollo-elements/mixins": "^0.0.11"
+    "@apollo-elements/mixins": "^1.0.0"
   },
   "devDependencies": {
     "@apollo-elements/test-helpers": "^0.0.3",

@@ -18,8 +18,6 @@ export const NotifyingElementMixin = superclass => class extends superclass {
   notify(propName, value) {
     this.dispatchEvent(
       new CustomEvent(`${propName}-changed`, {
-        bubbles: true,
-        composed: true,
         detail: { value },
       })
     );

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@0.0.6...@apollo-elements/hybrids@1.0.0) (2019-04-03)
+
+**Note:** Version bump only for package @apollo-elements/hybrids
+
+
+
+
+
 ## [0.0.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@0.0.5...@apollo-elements/hybrids@0.0.6) (2019-03-01)
 
 **Note:** Version bump only for package @apollo-elements/hybrids

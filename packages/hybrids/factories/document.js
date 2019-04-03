@@ -1,9 +1,10 @@
 import { isValidGql, getGraphQLScriptChildDocument } from '@apollo-elements/lib';
 
-export const documentFactory = ({ errorMessage }) => doc => {
+export const documentFactory = ({ errorMessage, onSet }) => doc => {
   const set = (host, next) => {
     if (!next) return doc || null;
     if (!isValidGql(next)) throw new Error(errorMessage);
+    if (onSet && typeof onSet === 'function') onSet(next);
     return next;
   };
 
