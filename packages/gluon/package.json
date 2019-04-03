@@ -6,7 +6,7 @@
 	"typings": "index.d.ts",
 	"scripts": {
 		"docs": "polymer analyze > docs/analysis.json",
-		"test": "karma start karma.conf.js"
+		"test": "echo \"Please run tests from the repository root\" && exit 1"
 	},
 	"publishConfig": {
 		"access": "public",

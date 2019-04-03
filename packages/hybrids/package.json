@@ -4,7 +4,7 @@
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "scripts": {
-    "test": "karma start karma.conf.js"
+    "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {
     "access": "public",
