@@ -2,3 +2,5 @@ import { ApolloSubscription as ApolloSubscriptionBase } from "@apollo-elements/m
 import { LitElement } from "lit-element";
 
 declare class ApolloSubscription<TData, TVariables> extends ApolloSubscriptionBase<LitElement, TData, TVariables> { }
+
+declare interface ApolloSubscription<TData, TVariables> extends LitElement {}
