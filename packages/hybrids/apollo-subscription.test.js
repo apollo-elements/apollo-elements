@@ -89,25 +89,40 @@ describe('ApolloSubscription', function describeApolloSubscription() {
       expect(el.subscription).to.not.be.ok;
     });
 
-    it('calls subscribe if subscription not yet initialized', async function() {
-      const subscribeStub = stub();
-      const apolloSubscription = {
-        ...ApolloSubscription,
-        subscribe: { get: () => subscribeStub },
-      };
-      const el = await getElement({ client, apolloSubscription });
+    describe('if subscription not yet initialized', function() {
       const subscription = gql`subscription { foo }`;
-      el.subscription = subscription;
-      expect(subscribeStub).to.have.been.called;
+      let el;
+      let subscribeStub;
+      beforeEach(async function() {
+        subscribeStub = stub();
+        const apolloSubscription = {
+          ...ApolloSubscription,
+          subscribe: { get: () => subscribeStub },
+        };
+        el = await getElement({ client, apolloSubscription });
+        el.subscription = subscription;
+      });
+
+      it('calls subscribe ', async function() {
+        expect(subscribeStub).to.have.been.called;
+      });
     });
 
-    it('does not call subscribe if subscription already initialized', async function() {
+    describe('if subscription is already initialized', function() {
       const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
-      const variables = { bar: 'qux' };
-      const el = await getElement({ client, subscription, variables });
-      const subscribeStub = stub(el, 'subscribe');
-      el.variables = { bar: 'quux' };
-      expect(subscribeStub).to.not.have.been.calledTwice;
+      let el;
+      let subscribeStub;
+
+      beforeEach(async function() {
+        const variables = { bar: 'qux' };
+        el = await getElement({ client, subscription, variables });
+        subscribeStub = stub(el, 'subscribe');
+        el.variables = { bar: 'quux' };
+      });
+
+      it('does not call subscribe', async function() {
+        expect(subscribeStub).to.not.have.been.calledTwice;
+      });
     });
   });
 
@@ -135,23 +150,35 @@ describe('ApolloSubscription', function describeApolloSubscription() {
 
   describe('subscribe', function describeSubscribe() {
     const subscription = gql`subscription Foo($bar: String!) { foo(bar: $bar) }`;
-    it('creates an observable', async function createsObservable() {
-      const el = await getElement({ client });
-      el.subscription = subscription;
-      el.variables = { bar: 'qux' };
-      expect(el.observable).to.be.an.instanceof(Observable);
+
+    let el;
+    describe('with enough variables', function() {
+      beforeEach(async function() {
+        el = await getElement({ client });
+        el.subscription = subscription;
+        el.variables = { bar: 'qux' };
+      });
+
+      it('creates an observable', function createsObservable() {
+        expect(el.observable).to.be.an.instanceof(Observable);
+      });
     });
 
-    it('does nothing when there are not enough variables', async function notEnoughVariables() {
-      const variables = {};
-      try {
-        const el = await getElement({ client, subscription });
-        el.variables = variables;
-        el.subscribe();
+    describe('with not enough variables', function() {
+      beforeEach(async function() {
+        const variables = {};
+        try {
+          el = await getElement({ client, subscription });
+          el.variables = variables;
+          el.subscribe();
+        } catch (error) {
+          expect.fail(error);
+        }
+      });
+
+      it('does nothing when there are not enough variables', function notEnoughVariables() {
         expect(el.observable).to.not.be.ok;
-      } catch (error) {
-        expect.fail(error);
-      }
+      });
     });
 
     it('can take a specific fetchPolicy', async function specificFetchPolicy() {

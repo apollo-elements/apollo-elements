@@ -129,19 +129,37 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
   });
 
   describe('setting variables', function describeSetVariables() {
-    it('does nothing when there is no observableQuery', async function setVariablesNoQuery() {
-      const el = await getElement({ client });
-      el.variables = { errorPolicy: 'foo' };
-      expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
-    });
+    describe('without observableQuery', function() {
+      let el;
 
-    it('calls observableQuery.subscribe when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
+      beforeEach(async function() {
+        el = await getElement({ client });
+        el.variables = { errorPolicy: 'foo' };
+      });
+
+      it('does nothing', async function setVariablesNoQuery() {
+        expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
+      });
+    });
+    describe('with an observableQuery', function() {
+      let el;
+      let setVariablesSpy;
       const query = gql`query { foo }`;
-      const el = await getElement({ client, query });
-      const setVariablesSpy = stub(el.observableQuery, 'setVariables');
-      // shouldn't this be an instance of ObservableQuery?
-      el.variables = { errorPolicy: 'foo' };
-      expect(setVariablesSpy).to.have.been.calledWith({ errorPolicy: 'foo' });
+
+      beforeEach(async function() {
+        el = await getElement({ client, query });
+        setVariablesSpy = spy(el.observableQuery, 'setVariables');
+      });
+
+      afterEach(function() {
+        setVariablesSpy.restore();
+      });
+
+      it('calls observableQuery.subscribe', async function setVariablesCallsObservableQuerySetVariables() {
+        // shouldn't this be an instance of ObservableQuery?
+        el.variables = { errorPolicy: 'foo' };
+        expect(setVariablesSpy).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+      });
     });
   });
 
@@ -336,8 +354,6 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
           SOMETHING_SILLY: true,
         },
       };
-      // HACK: oof
-      client.initQueryManager();
 
       const watchQueryStub = stub(client.queryManager, 'watchQuery');
       const query = gql`query { foo }`;
