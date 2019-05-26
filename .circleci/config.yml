@@ -80,7 +80,7 @@ jobs:
           name: Publish package
           command: |
             npm whoami
-            yarn publish --yes
+            yarn deploy --yes
 
   docs-build:
     <<: *defaults
