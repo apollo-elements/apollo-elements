@@ -1,43 +1,39 @@
 {
-	"name": "@apollo-elements/gluon",
-	"version": "1.0.0",
-	"description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
-	"main": "index.js",
-	"typings": "index.d.ts",
-	"scripts": {
-		"docs": "polymer analyze > docs/analysis.json",
-		"test": "echo \"Please run tests from the repository root\" && exit 1"
-	},
-	"publishConfig": {
-		"access": "public",
-		"registry": "https://registry.npmjs.com"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/apollo-elements/apollo-elements.git"
-	},
-	"keywords": [
-		"Apollo",
-		"GraphQL",
-		"Web Components",
-		"Custom Elements",
-		"Gluon",
-		"lit-html"
-	],
-	"author": "Benny Powers <web@bennypowers.com>",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/apollo-elements/apollo-elements/issues"
-	},
-	"homepage": "https://github.com/apollo-elements/apollo-elements#readme",
-	"dependencies": {
-		"@apollo-elements/mixins": "^1.0.0"
-	},
-	"peerDependencies": {
-		"@gluon/gluon": ">= 2"
-	},
-	"devDependencies": {
-		"@apollo-elements/test-helpers": "^0.0.3",
-		"@types/crocks": "^0.0.2"
-	}
+  "name": "@apollo-elements/gluon",
+  "version": "1.0.0",
+  "description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "scripts": {
+    "docs": "polymer analyze > docs/analysis.json",
+    "test": "echo \"Please run tests from the repository root\" && exit 1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollo-elements/apollo-elements.git"
+  },
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements",
+    "Gluon",
+    "lit-html"
+  ],
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "bugs": {
+  	"url": "https://github.com/apollo-elements/apollo-elements/issues"
+  },
+  "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
+  "dependencies": {
+  	"@apollo-elements/mixins": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@gluon/gluon": ">= 2"
+  }
 }

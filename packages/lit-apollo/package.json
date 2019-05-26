@@ -36,9 +36,5 @@
   "peerDependencies": {
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0"
-  },
-  "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.3",
-    "@types/crocks": "^0.0.2"
   }
 }

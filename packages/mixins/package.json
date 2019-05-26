@@ -29,12 +29,7 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "@apollo-elements/lib": "^1.0.0",
-    "apollo-client": "^2.4.12",
+    "apollo-client": "^2.6.0",
     "crocks": "^0.11.1"
-  },
-  "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.3",
-    "@types/crocks": "^0.0.2",
-    "graphql": "^14.1.1"
   }
 }
