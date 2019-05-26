@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@0.0.11...@apollo-elements/mixins@1.0.1) (2019-05-26)
+
+
+### Bug Fixes
+
+* **mixins:** allow default options in queries ([4a8895e](https://github.com/apollo-elements/apollo-elements/commit/4a8895e))
+
+
+
+
+
 # [1.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@0.0.11...@apollo-elements/mixins@1.0.0) (2019-04-03)
 
 
