@@ -12,6 +12,7 @@
 [![Demo Online](https://img.shields.io/badge/demo-online-brightgreen.svg)](https://lit-apollo-subscriptions.herokuapp.com)
 
 ## 📓 Contents
+- [📑 API Docs](#-api-docs)
 - [🤖 Demo](#-demo)
 - [📦 Packages](#-packages)
   - [🔥 `lit-apollo`](#-lit-apollo)
@@ -23,6 +24,9 @@
 - [😎 Cool Tricks](#-cool-tricks)
   - [📜 Inline Query Scripts](#-inline-query-scripts)
 - [👷‍♂️ Maintainers](#-maintainers)
+
+## 📑 API Docs
+If you just want to see the API Docs, check them out for all our packages at [apolloelements.dev](https://apolloelements.dev)
 
 ## 🤖 Demo
 [`#leeway`](https://lit-apollo-subscriptions.herokuapp.com) is a progressive web app that uses `lit-apollo` to make it easier for you to avoid doing actual work. Check out the [source repo](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions) for an example of how to build apps with Apollo Elements. The demo includes:
