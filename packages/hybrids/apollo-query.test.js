@@ -130,22 +130,39 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
   });
 
   describe('setting variables', function describeSetVariables() {
-    it('does nothing when there is no observableQuery', async function setVariablesNoQuery() {
-      const el = await getElement({ client });
-      el.variables = { errorPolicy: 'foo' };
-      expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
+    describe('without observableQuery', function() {
+      let el;
+
+      beforeEach(async function() {
+        el = await getElement({ client });
+        el.variables = { errorPolicy: 'foo' };
+      });
+
+      it('does nothing', async function setVariablesNoQuery() {
+        expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
+      });
     });
 
-    it('calls observableQuery.setVariables when there is a query', async function setVariablesCallsObservableQuerySetVariables() {
+    describe('with an observableQuery', function() {
+      let el;
+      let setVariablesSpy;
       const query = gql`query { foo }`;
-      const el = await getElement({ client, query });
-      const setVariablesStub = stub(el.observableQuery, 'setVariables');
-      // shouldn't this be an instance of ObservableQuery?
-      el.variables = { errorPolicy: 'foo' };
-      expect(setVariablesStub).to.have.been.calledWith({ errorPolicy: 'foo' });
+
+      beforeEach(async function() {
+        el = await getElement({ client, query });
+        setVariablesSpy = spy(el.observableQuery, 'setVariables');
+        el.variables = { errorPolicy: 'foo' };
+      });
+
+      afterEach(function() {
+        setVariablesSpy.restore();
+      });
+
+      it('calls observableQuery.subscribe', async function setVariablesCallsObservableQuerySetVariables() {
+        expect(setVariablesSpy).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+      });
     });
   });
-
   describe('subscribe', function describeSubscribe() {
     const query = gql`
       query NeedyQuery($needed: String!) {

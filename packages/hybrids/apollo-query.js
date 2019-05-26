@@ -80,7 +80,10 @@ const watchQuery = {
 };
 
 function subscribeOrSetVariables(host, variables) {
-  return variables && host.observableQuery
+  return variables &&
+      host.observableQuery &&
+      host.observableQuery.setVariables &&
+      typeof host.observableQuery.setVariables === 'function'
     ? host.observableQuery.setVariables(variables)
     : host.subscribe({ variables });
 }
