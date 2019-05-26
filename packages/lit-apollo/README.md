@@ -8,6 +8,7 @@
 <strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong>
 
 ## 📓 Contents
+- [📑 API Docs](#-api-docs)
 - [🤖 Demo](#-demo)
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -17,6 +18,9 @@
   - [🏦 Managing the Cache](#-managing-the-cache)
   - [⌚️ Asynchronous Client](#-asynchronous-client)
 - [👷‍♂️ Maintainers](#-maintainers)
+
+## 📑 API Docs
+If you just want to see the API Docs, check them out at [apolloelements.dev/lit-apollo/](https://apolloelements.dev/lit-apollo/)
 
 ## 🤖 Demo
 [`#leeway`](https://lit-apollo-subscriptions.herokuapp.com) is a progressive web app that uses `lit-apollo` to make it easier for you to avoid doing actual work. Check out the [source repo](https://gitlab.com/bennyp/demo-lit-apollo-subscriptions) for an example of how to build apps with Apollo Elements. The demo includes:
@@ -42,11 +46,17 @@ You'll need to bundle the Apollo library with a tool like Rollup. See [instructi
 After that, typical usage involves importing the base class and extending from it to define your component:
 
 ```js
-import gql from 'graphql-tag'
-import { ApolloClient } from 'apollo-client';
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
-import { cache } from './cache';
-import { link } from './link';
+
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+import gql from 'graphql-tag'
+
+const protocol = host.includes('localhost') ? 'http' : 'https';
+const uri = `${protocol}://${host}/graphql`;
+const link = new HttpLink({ uri });
+const cache = new InMemoryCache();
 
 // Create the Apollo Client
 const client = new ApolloClient({ cache, link });
