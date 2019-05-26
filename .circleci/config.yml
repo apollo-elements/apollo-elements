@@ -23,7 +23,7 @@ jobs:
 
       - run:
           name: NPM Installation
-          command: npm install
+          command: yarn
 
       - save_cache:
           paths:
@@ -32,7 +32,7 @@ jobs:
 
       - run:
           name: Lint
-          command: npm run lint
+          command: yarn lint
 
       - run:
           name: Setup Code Climate test-reporter
@@ -43,7 +43,7 @@ jobs:
 
       - run:
           name: Run Tests
-          command: npm run test
+          command: yarn test
 
       - persist_to_workspace:
           root: ~/repo
@@ -80,7 +80,7 @@ jobs:
           name: Publish package
           command: |
             npm whoami
-            npm run publish -- --yes
+            yarn publish --yes
 
   docs-build:
     <<: *defaults
@@ -90,10 +90,10 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt install rsync
-            npm ci
+            yarn
       - run:
           name: Build docs
-          command: npm run docs
+          command: yarn docs
       - persist_to_workspace:
           root: ~/repo
           paths: docs
