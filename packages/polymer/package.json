@@ -29,9 +29,5 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "@apollo-elements/mixins": "^1.0.0"
-  },
-  "devDependencies": {
-    "@apollo-elements/test-helpers": "^0.0.3",
-    "@types/crocks": "^0.0.2"
   }
 }
