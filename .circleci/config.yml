@@ -79,7 +79,7 @@ jobs:
           name: Publish package
           command: |
             npm whoami
-            yarn deploy --yes
+            yarn deploy --yes --loglevel silly
 
   docs-build:
     <<: *defaults
