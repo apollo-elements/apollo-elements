@@ -40,6 +40,10 @@ class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
 }
 ```
 
+## Aren't Mixins Considered Harmful?
+
+Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
+
 ## 😎 Cool Tricks
 
 ### 📜 Inline Query Scripts

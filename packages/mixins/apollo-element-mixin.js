@@ -7,85 +7,91 @@ import isValidGql from '@apollo-elements/lib/is-valid-gql';
  * @polymer
  * @mixinFunction
  *
- * @param {Class} superclass
- * @return {Class}
+ * @param {*} superclass the class to mix into
+ * @return {ApolloElement~mixin} The mixed class
  */
-export const ApolloElementMixin = superclass => class extends superclass {
-  constructor() {
-    super();
-    this.onElementMutation = this.onElementMutation.bind(this);
-
-    /**
-     * Context to be passed to link execution chain.
-     * @type {Object}
-     */
-    this.context;
-
-    /**
-     * Latest data.
-     * @type {Object}
-     */
-    this.data;
-
-    /**
-     * Latest error.
-     * @type {Object}
-     */
-    this.error;
-
-    /**
-     * Whether a request is in flight.
-     * @type {Boolean}
-     */
-    this.loading;
-
-    /**
-     * The apollo client instance.
-     * @type {ApolloClient}
-     */
-    this.client = window.__APOLLO_CLIENT__;
-  }
-
+export const ApolloElementMixin = superclass =>
   /**
-   * GraphQL Document
-   *
-   * @return {DocumentNode}
+   * Class mixin for apollo elements
+   * @mixin
+   * @alias ApolloElementMixin~mixin
    */
-  get document() {
-    return this.__document || null;
-  }
+  class extends superclass {
+    constructor() {
+      super();
+      this.onElementMutation = this.onElementMutation.bind(this);
 
-  set document(doc) {
-    if (!doc) return;
-    if (isValidGql(doc)) {
-      this.__document = doc;
-    } else {
-      throw new TypeError('document must be a gql-parsed DocumentNode');
+      /**
+       * Context to be passed to link execution chain.
+       * @type {Object}
+       */
+      this.context;
+
+      /**
+       * Latest data.
+       * @type {Object}
+       */
+      this.data;
+
+      /**
+       * Latest error.
+       * @type {Object}
+       */
+      this.error;
+
+      /**
+       * Whether a request is in flight.
+       * @type {Boolean}
+       */
+      this.loading;
+
+      /**
+       * The apollo client instance.
+       * @type {ApolloClient}
+       */
+      this.client = window.__APOLLO_CLIENT__;
     }
-  }
 
-  /** @protected */
-  connectedCallback() {
-    super.connectedCallback && super.connectedCallback();
-    this.elementMutationObserver = new MutationObserver(this.onElementMutation);
-    this.elementMutationObserver.observe(this, {
-      characterData: true,
-      childList: true,
-      subtree: true,
-    });
-    this.document = getGraphQLScriptChildDocument(this) || null;
-  }
+    /**
+     * GraphQL Document
+     *
+     * @return {DocumentNode}
+     */
+    get document() {
+      return this.__document || null;
+    }
 
-  /** @protected */
-  disconnectedCallback() {
-    super.disconnectedCallback && super.disconnectedCallback();
-    this.elementMutationObserver && this.elementMutationObserver.disconnect();
-    this.elementMutationObserver = null;
-  }
+    set document(doc) {
+      if (!doc) return;
+      if (isValidGql(doc)) {
+        this.__document = doc;
+      } else {
+        throw new TypeError('document must be a gql-parsed DocumentNode');
+      }
+    }
 
-  /** @protected */
-  onElementMutation() {
-    const doc = getGraphQLScriptChildDocument(this);
-    if (doc) this.document = doc;
-  }
-};
+    /** @protected */
+    connectedCallback() {
+      super.connectedCallback && super.connectedCallback();
+      this.elementMutationObserver = new MutationObserver(this.onElementMutation);
+      this.elementMutationObserver.observe(this, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+      });
+      this.document = getGraphQLScriptChildDocument(this) || null;
+    }
+
+    /** @protected */
+    disconnectedCallback() {
+      super.disconnectedCallback && super.disconnectedCallback();
+      this.elementMutationObserver && this.elementMutationObserver.disconnect();
+      this.elementMutationObserver = null;
+    }
+
+    /** @protected */
+    onElementMutation() {
+      const doc = getGraphQLScriptChildDocument(this);
+      if (doc) this.document = doc;
+    }
+  };
