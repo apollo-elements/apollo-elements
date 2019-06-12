@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
+  "module": "index.js",
   "typings": "index.d.ts",
   "scripts": {
     "docs": "polymer analyze > docs/analysis.json",

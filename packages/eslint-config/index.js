@@ -8,7 +8,7 @@ const NEVER = 'never';
 const IGNORE = 'ignore';
 /* eslint-enable no-unused-vars */
 
-module.exports = {
+export default {
   extends: ['eslint:recommended', 'google'],
   env: { browser: true, es6: true },
   parserOptions: { ecmaVersion: 2018, sourceType: 'module' },

@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "👩‍🚀🌛 Custom Element class mixins for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
+  "module": "index.js",
   "scripts": {
     "docs": "polymer analyze -i index.js > docs/analysis.json",
     "test": "echo \"Please run tests from the repository root\" && exit 1"

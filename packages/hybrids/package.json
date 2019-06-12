@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
+  "module": "index.js",
   "scripts": {
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
