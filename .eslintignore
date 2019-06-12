@@ -1,3 +1,4 @@
 node_modules
 docs/webcomponentsjs
 docs/bundle.js
+packages/eslint-config/index.cjs.js
