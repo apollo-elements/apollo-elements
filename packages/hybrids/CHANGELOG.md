@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@1.0.1...@apollo-elements/hybrids@1.1.0) (2019-06-12)
+
+
+### Features
+
+* add module field ([0424d54](https://github.com/apollo-elements/apollo-elements/commit/0424d54))
+
+
+
+
+
 ## [1.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@0.0.6...@apollo-elements/hybrids@1.0.1) (2019-05-26)
 
 **Note:** Version bump only for package @apollo-elements/hybrids

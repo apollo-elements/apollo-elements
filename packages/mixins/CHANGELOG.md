@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.0.2...@apollo-elements/mixins@1.1.0) (2019-06-12)
+
+
+### Features
+
+* add module field ([0424d54](https://github.com/apollo-elements/apollo-elements/commit/0424d54))
+
+
+
+
+
 ## [1.0.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.0.1...@apollo-elements/mixins@1.0.2) (2019-06-06)
 
 
