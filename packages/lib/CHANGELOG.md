@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@1.1.0...@apollo-elements/lib@1.1.1) (2019-07-01)
+
+
+### Bug Fixes
+
+* **lib:** depend on graphql ([d2d2097](https://github.com/apollo-elements/apollo-elements/commit/d2d2097))
+
+
+
+
+
 # [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@1.0.1...@apollo-elements/lib@1.1.0) (2019-06-12)
 
 
