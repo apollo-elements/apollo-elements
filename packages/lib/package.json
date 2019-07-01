@@ -29,6 +29,7 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "crocks": "^0.11.1",
+    "graphql": "^14.4.1",
     "graphql-tag": "^2.10.1"
   }
 }
