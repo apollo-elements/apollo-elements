@@ -31,7 +31,6 @@ describe('ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
 
   it('sets default properties', async function setsDefaultProperties() {
     const el = await getElement({ client });
-    expect(el.fetchPolicy, 'fetchPolicy').to.equal('cache-first');
     expect(el.fetchResults, 'fetchResults').to.be.undefined;
     expect(el.pollInterval, 'pollInterval').to.be.undefined;
     expect(el.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;

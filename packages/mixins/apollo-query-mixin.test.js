@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import sinonChai from 'sinon-chai';
 
 import { ObservableQuery } from 'apollo-client';
+
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { match, stub, spy } from 'sinon';
 
@@ -14,8 +15,9 @@ chai.use(sinonChai);
 
 const scriptTemplate = script => html`<script type="application/graphql">${script}</script>`;
 const getClass = () => ApolloQueryMixin(HTMLElement);
-const getTemplate = (tag, { query, variables, client, script } = {}) => html`
+const getTemplate = (tag, { query, variables, client, script, fetchPolicy } = {}) => html`
   <${tag}
+      .fetchPolicy="${ifDefined(fetchPolicy)}"
       .client="${ifDefined(client)}"
       .query="${ifDefined(query)}"
       .variables="${variables}">
@@ -32,7 +34,7 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
   it('sets default properties', async function setsDefaultProperties() {
     const el = await getElement({ client });
     expect(el.errorPolicy, 'errorPolicy').to.equal('none');
-    expect(el.fetchPolicy, 'fetchPolicy').to.equal('cache-first');
+    expect(el.fetchResults, 'fetchPolicy').to.be.undefined;
     expect(el.fetchResults, 'fetchResults').to.be.undefined;
     expect(el.pollInterval, 'pollInterval').to.be.undefined;
     expect(el.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
@@ -76,6 +78,32 @@ describe('ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(() => el.query = query).to.throw('Query must be a gql-parsed DocumentNode');
       expect(el.query).to.be.null;
       expect(el.observableQuery).to.not.be.ok;
+    });
+
+    describe('fetchPolicy', function() {
+      let queryStub;
+      beforeEach(function() {
+        queryStub = stub(client.queryManager, 'watchQuery');
+      });
+
+      afterEach(function() {
+        queryStub.restore();
+      });
+
+      it('respects client default fetchPolicy', async function() {
+        const query = gql`query { foo }`;
+        const el = await getElement({ client, query });
+        expect(el.fetchPolicy).to.be.undefined;
+        expect(queryStub).to.have.been.calledWith(match({ fetchPolicy: 'network-only' }));
+      });
+
+      it('respects instance-specific fetchPolicy', async function() {
+        const query = gql`query { foo }`;
+        const fetchPolicy = 'cache-and-network';
+        const el = await getElement({ client, query, fetchPolicy });
+        expect(el.fetchPolicy).to.equal(fetchPolicy);
+        expect(queryStub).to.have.been.calledWith(match({ fetchPolicy: 'cache-and-network' }));
+      });
     });
 
     it('calls subscribe when set', async function callsSubscribe() {

@@ -31,6 +31,8 @@ export const ApolloSubscriptionMixin = superclass =>
   /**
    * Class mixin for apollo-subscription elements
    * @mixin
+   * @template TVariables
+   * @template TData
    * @alias ApolloSubscriptionMixin~mixin
    */
   class extends ApolloElementMixin(superclass) {
@@ -55,7 +57,7 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
      *
-     * @return {Object<string, *>}
+     * @return {TVariables}
      */
     get variables() {
       return this.__variables;
@@ -75,7 +77,7 @@ export const ApolloSubscriptionMixin = superclass =>
        * Specifies the FetchPolicy to be used for this subscription.
        * @type {FetchPolicy}
        */
-      this.fetchPolicy = 'cache-first';
+      this.fetchPolicy;
 
       /**
        * Whether or not to fetch results.
@@ -117,7 +119,6 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * Resets the observable and subscribes.
      *
-     * @template {Object} TData
      * @param  {SubscriptionOptions} options
      * @return {Promise<Observer<SubscriptionResult<TData>>>}
      */
@@ -139,7 +140,6 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * Updates the element with the result of a subscription.
      *
-     * @template TData
      * @param  {SubscriptionResult<TData>} result The result of the subscription.
      * @protected
      */

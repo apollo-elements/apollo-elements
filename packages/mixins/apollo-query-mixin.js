@@ -89,7 +89,7 @@ export const ApolloQueryMixin = superclass =>
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL query.
      *
-     * @return {Object<string, *>}
+     * @return {TVariables}
      */
     get variables() {
       return this.__variables;
@@ -132,7 +132,7 @@ export const ApolloQueryMixin = superclass =>
        * Specifies the FetchPolicy to be used for this query.
        * @type {FetchPolicy}
        */
-      this.fetchPolicy = 'cache-first';
+      this.fetchPolicy;
 
       /**
        * Whether or not to fetch results.
@@ -306,7 +306,7 @@ export const ApolloQueryMixin = superclass =>
      * Updates the element with the result of a query.
      *
      * @param  {ApolloQueryResult} result The result of the query.
-     * @param  {Object}  result.data          The data from the query.
+     * @param  {TData}  result.data          The data from the query.
      * @param  {boolean} result.loading       Whether the query is loading.
      * @param  {number}  result.networkStatus The networkStatus of the query.
      * @param  {boolean} result.stale         Whether the query is stale.

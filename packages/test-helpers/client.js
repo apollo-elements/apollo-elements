@@ -65,5 +65,10 @@ addMockFunctionsToSchema({ schema, mocks });
 const link = new SchemaLink({ schema });
 
 const cache = new InMemoryCache(window.__APOLLO_STATE__);
+
+const fetchPolicy = 'network-only';
+
+const defaultOptions = { watchQuery: { fetchPolicy } };
+
 // Create the Apollo Client
-export const client = new ApolloClient({ cache, link });
+export const client = new ApolloClient({ cache, link, defaultOptions });

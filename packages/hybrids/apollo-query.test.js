@@ -37,7 +37,6 @@ describe('ApolloQuery', function describeApolloQueryMixin() {
   it('sets default properties', async function setsDefaultProperties() {
     const el = await getElement({ client });
     expect(el.errorPolicy, 'errorPolicy').to.equal('none');
-    expect(el.fetchPolicy, 'fetchPolicy').to.equal('cache-first');
     expect(el.fetchResults, 'fetchResults').to.be.undefined;
     expect(el.pollInterval, 'pollInterval').to.be.undefined;
     expect(el.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;

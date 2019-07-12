@@ -106,7 +106,6 @@ export const ApolloQuery = {
   client: clientFactory(),
   data: null,
   errorPolicy: 'none',
-  fetchPolicy: 'cache-first',
   options: options(),
   query: queryFactory(),
   variables,
