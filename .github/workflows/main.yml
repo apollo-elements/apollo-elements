@@ -1,0 +1,57 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Install rsync
+        run: sudo apt install rsync
+
+      - name: Install yarn
+        run: |
+          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+          sudo apt-get update
+          sudo apt-get install yarn
+
+      - name: Install Packages
+        run: yarn install
+
+      - name: Test
+        run: yarn test
+
+      - name: Upload coverage results to Code Climate
+        run: sh ./scripts/upload-coverage.sh
+
+      - name: Authenticate with Registry
+        run: |
+          rm .npmrc
+          echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email octobot@github.com
+          git config --global user.name GitHub Actions
+
+      - name: Publish package
+        run: yarn deploy --yes --loglevel silly
+
+      - name: Build Docs
+        uses: Borales/actions-yarn@master
+        run: yarn docs
+
+      - name: Deploy Docs
+        run: |
+          echo "apolloelements.dev" > docs/CNAME
+          npx gh-pages --dist docs
