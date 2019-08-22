@@ -8,7 +8,7 @@
     "docs": "sh scripts/docs.sh",
     "lint": "eslint .",
     "postinstall": "lerna bootstrap --hoist",
-    "deploy": "lerna publish",
+    "deploy": "lerna publish --message 'chore: release new versions'",
     "test": "karma start",
     "test:watch": "karma start --auto-watch=true --single-run=false"
   },
