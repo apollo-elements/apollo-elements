@@ -7,7 +7,7 @@
 
 [![Maintained with Lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/apollo-elements/apollo-elements/issues)
-[![Build Status](https://circleci.com/gh/apollo-elements/apollo-elements/tree/master.svg?style=svg)](https://circleci.com/gh/apollo-elements/apollo-elements/tree/master)
+[![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
 [![Demo Online](https://img.shields.io/badge/demo-online-brightgreen.svg)](https://lit-apollo-subscriptions.herokuapp.com)
 
@@ -207,6 +207,8 @@ customElements.define('vanilla-query', class VanillaQuery extends ApolloQueryMix
 ```
 
 ## 🗞 Bundling
+Apollo Elements uses `Object.fromEntries` and object spread syntax, so you may need to transpile and polyfill those features in these packages.
+
 Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle apollo-client in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. Your `rollup.config.js` might look something like this:
 
 ```js

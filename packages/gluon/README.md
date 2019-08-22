@@ -1,7 +1,7 @@
 # @apollo-elements/gluon
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/gluon.svg)](https://www.npmjs.com/package/@apollo-elements/gluon)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/gluon)
-[![Build Status](https://circleci.com/gh/apollo-elements/apollo-elements/tree/master.svg?style=svg)](https://circleci.com/gh/apollo-elements/apollo-elements/tree/master)
+[![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
 <strong>🚀 GluonElement base classes that connect to your Apollo cache 🌜</strong>
 

@@ -1,7 +1,7 @@
 # @apollo-elements/polymer
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/polymer.svg)](https://www.npmjs.com/package/@apollo-elements/polymer)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/polymer)
-[![Build Status](https://circleci.com/gh/apollo-elements/apollo-elements/tree/master.svg?style=svg)](https://circleci.com/gh/apollo-elements/apollo-elements/tree/master)
+[![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
 <strong>🚀 Custom Elements that support two-way binding from your Apollo cache 🌜</strong>
 
