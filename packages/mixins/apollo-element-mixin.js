@@ -1,5 +1,7 @@
-import getGraphQLScriptChildDocument from '@apollo-elements/lib/get-graphql-script-child-document';
-import isValidGql from '@apollo-elements/lib/is-valid-gql';
+// eslint-disable-next-line max-len
+import getGraphQLScriptChildDocument from '@apollo-elements/lib/get-graphql-script-child-document.js';
+import isValidGql from '@apollo-elements/lib/is-valid-gql.js';
+import { dedupeMixin } from './dedupe-mixin.js';
 
 /**
  * `ApolloElementMixin`: class mixin for apollo custom elements.
@@ -10,11 +12,15 @@ import isValidGql from '@apollo-elements/lib/is-valid-gql';
  * @param {*} superclass the class to mix into
  * @return {ApolloElement~mixin} The mixed class
  */
-export const ApolloElementMixin = superclass =>
+export const ApolloElementMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo elements
    * @mixin
+   * @element
+   * @template TCacheShape
+   * @template TData
    * @alias ApolloElementMixin~mixin
+   * @inheritdoc
    */
   class extends superclass {
     constructor() {
@@ -29,7 +35,7 @@ export const ApolloElementMixin = superclass =>
 
       /**
        * Latest data.
-       * @type {Object}
+       * @type {TData}
        */
       this.data;
 
@@ -47,7 +53,7 @@ export const ApolloElementMixin = superclass =>
 
       /**
        * The apollo client instance.
-       * @type {ApolloClient}
+       * @type {ApolloClient<TCacheShape>}
        */
       this.client = window.__APOLLO_CLIENT__;
     }
@@ -94,4 +100,4 @@ export const ApolloElementMixin = superclass =>
       const doc = getGraphQLScriptChildDocument(this);
       if (doc) this.document = doc;
     }
-  };
+  });

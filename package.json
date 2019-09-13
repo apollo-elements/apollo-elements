@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "postinstall": "lerna bootstrap --hoist",
     "deploy": "lerna publish --message 'chore: release new versions'",
-    "test": "karma start",
+    "test": "run-s test:types test:karma",
+    "test:karma": "karma start",
+    "test:types": "tsc",
     "test:watch": "karma start --auto-watch=true --single-run=false"
   },
   "lint-staged": {
@@ -32,6 +34,7 @@
     "@open-wc/testing-helpers": "^0.9.5",
     "@open-wc/testing-karma": "^2.0.3",
     "@polymer/iron-component-page": "^4.0.1",
+    "@polymer/polymer": "^3.3.0",
     "@types/graphql": "^14.2.0",
     "@types/sinon-chai": "^3.2.2",
     "ajv": "^6.10.0",
@@ -77,7 +80,8 @@
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-terser": "^5.0.0",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "typescript-temporary-fork-for-jsdoc": "^3.6.0-insiders.20190802"
   },
   "config": {
     "commitizen": {

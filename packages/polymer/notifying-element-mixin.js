@@ -1,3 +1,5 @@
+import { dedupeMixin } from '@apollo-elements/mixins/dedupe-mixin.js';
+
 /**
  * `NotifyingElementMixin`: mixin which fires Polymer-style notification events.
  *
@@ -7,7 +9,7 @@
  * @param {class}    superclass the class to extend
  * @return {class}
  */
-export const NotifyingElementMixin = superclass => class extends superclass {
+export const NotifyingElementMixin = dedupeMixin(superclass => class extends superclass {
   /**
    * Fires a `*-changed` event.
    *
@@ -22,4 +24,4 @@ export const NotifyingElementMixin = superclass => class extends superclass {
       })
     );
   }
-};
+});

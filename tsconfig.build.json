@@ -1,10 +1,14 @@
 {
+  "noEmit": false,
+  "declaration": true,
   "allowJs": true,
   "checkJs": true,
+  "emitDeclarationOnly": true,
   "compilerOptions": {
     "lib": ["es2018", "DOM"],
     "typeRoots": [
       "./typings",
+      "./node_modules/@types"
     ]
   }
 }

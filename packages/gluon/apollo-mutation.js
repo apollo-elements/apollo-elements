@@ -30,6 +30,8 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * @polymer
  * @extends GluonElement
  * @appliesMixin ApolloMutationMixin
+ * @element
+ * @inheritdoc
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   /**

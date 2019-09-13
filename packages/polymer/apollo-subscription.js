@@ -31,12 +31,15 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
  * @customElement
  * @extends ApolloSubscription
  * @appliesMixin NotifyingElementMixin
+ * @element
+ * @inheritdoc
+ * @template TData
  */
 const ApolloSubscription = ApolloSubscriptionMixin(class extends Notify(HTMLElement) {
   /**
    * Latest data.
    *
-   * @type {Object}
+   * @type {TData}
    */
   get data() {
     return this.__data;

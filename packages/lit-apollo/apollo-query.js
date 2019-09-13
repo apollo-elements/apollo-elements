@@ -38,6 +38,8 @@ export { html } from './apollo-element.js';
  * @polymer
  * @extends ApolloElement
  * @appliesMixin ApolloQueryMixin
+ * @element
+ * @inheritdoc
  */
 export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
   static get properties() {
@@ -62,9 +64,10 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
    *   - The component has an `error` or
    *   - The component has a `loading` status.
    *
-   * @param  {Map}  changedProps           Changed properties.
    * @return {boolean}                     Whether the component should render.
    * @protected
+   * @abstract
+   * @inheritdoc
    */
   shouldUpdate() {
     return (

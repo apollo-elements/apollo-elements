@@ -10,12 +10,15 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * @polymer
  * @extends GluonElement
  * @appliesMixin ApolloElementMixin
+ * @element
+ * @inheritdoc
+ * @template TData
  */
 export class ApolloElement extends ApolloElementMixin(GluonElement) {
   /**
    * The latest data for the query from the Apollo cache
    *
-   * @return {Object}
+   * @return {TData}
    */
   get data() {
     return this.__data;

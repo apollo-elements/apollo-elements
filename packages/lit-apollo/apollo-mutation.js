@@ -1,6 +1,8 @@
 import { ApolloElement } from './apollo-element.js';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin.js';
 
+/** @typedef {import('apollo-client').MutationUpdaterFn} MutationUpdaterFn */
+
 /**
  * # ApolloMutation
  *
@@ -33,6 +35,10 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * @polymer
  * @extends ApolloElement
  * @appliesMixin ApolloMutationMixin
+ * @element
+ * @template TData
+ * @template TVariables
+ * @inheritdoc
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   static get properties() {
@@ -53,17 +59,17 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
    * NOTE: this `LitElement` version passes `this.onUpdate` as the update function
    * by default, instead of `this.update`, which is provided by `LitElement`.
    *
-   * @param  {Object}           params
-   * @param  {Object}           params.context
-   * @param  {ErrorPolicy}      params.errorPolicy
-   * @param  {FetchPolicy}      params.fetchPolicy
-   * @param  {DocumentNode}     params.mutation
-   * @param  {Object|Function}  params.optimisticResponse
-   * @param  {Array<string>}    params.refetchQueries
-   * @param  {UpdateFunction}   params.update
-   * @param  {boolean}          params.awaitRefetchQueries
-   * @param  {Object}           params.variables
-   * @return {Promise<FetchResult>}
+   * @param  {Object}                       [params={}]
+   * @param  {Object}                       [params.context]
+   * @param  {ErrorPolicy}                  [params.errorPolicy]
+   * @param  {FetchPolicy}                  [params.fetchPolicy]
+   * @param  {DocumentNode}                 [params.mutation]
+   * @param  {Object|Function}              [params.optimisticResponse]
+   * @param  {Array<string>}                [params.refetchQueries]
+   * @param  {MutationUpdaterFn<TData>}     [params.update]
+   * @param  {boolean}                      [params.awaitRefetchQueries]
+   * @param  {TVariables}                   [params.variables]
+   * @return {Promise<FetchResult<TData>>}
    */
   async mutate({ update = this.onUpdate || null, ...opts } = {}) {
     return super.mutate({ update, ...opts });

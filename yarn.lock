@@ -2111,7 +2111,7 @@
     "@polymer/iron-overlay-behavior" "^3.0.0-pre.27"
     "@polymer/polymer" "^3.0.0"
 
-"@polymer/polymer@^3.0.0":
+"@polymer/polymer@^3.0.0", "@polymer/polymer@^3.3.0":
   version "3.3.0"
   resolved "https://registry.npmjs.com/@polymer/polymer/-/polymer-3.3.0.tgz#52a0665ac29654728e8f46e8ee178c02c49efdd0"
   integrity sha1-UqBmWsKWVHKOj0bo7heMAsSe/dA=
@@ -14291,6 +14291,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npmjs.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript-temporary-fork-for-jsdoc@^3.6.0-insiders.20190802:
+  version "3.6.0-insiders.20190802"
+  resolved "https://registry.yarnpkg.com/typescript-temporary-fork-for-jsdoc/-/typescript-temporary-fork-for-jsdoc-3.6.0-insiders.20190802.tgz#aece6f3f5d53c6e06e5e1c4af5a19183d7124ab6"
+  integrity sha512-j76opNh6ljAXDUDXr03+pOkITiATPbUlQlMp9pxD/SR3eNKAtIdHwOTf3dDspyGs8TGJQjQXMUiYqJr0gW+nCg==
 
 typical@^2.6.1:
   version "2.6.1"

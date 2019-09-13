@@ -1,5 +1,6 @@
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
+import { dedupeMixin } from './dedupe-mixin.js';
 import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 import pick from 'crocks/helpers/pick';
 import compose from 'crocks/helpers/compose';
@@ -56,13 +57,15 @@ const pickOpts = compose(
  * @param {*} superclass
  * @return {ApolloQueryMixin~mixin}
  */
-export const ApolloQueryMixin = superclass =>
+export const ApolloQueryMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo-query elements
    * @mixin
+   * @template TCacheShape
    * @template TData
    * @template TVariables
    * @alias ApolloQueryMixin~mixin
+   * @inheritdoc
    */
   class extends ApolloElementMixin(superclass) {
     /**
@@ -89,7 +92,7 @@ export const ApolloQueryMixin = superclass =>
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL query.
      *
-     * @return {Object<string, *>}
+     * @return {TVariables}
      */
     get variables() {
       return this.__variables;
@@ -106,7 +109,7 @@ export const ApolloQueryMixin = superclass =>
     /**
      * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
      *
-     * @return {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
+     * @return {ModifiableWatchQueryOptions<TVariables>} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
      */
     get options() {
       return this.__options;
@@ -153,6 +156,29 @@ export const ApolloQueryMixin = superclass =>
       this.notifyOnNetworkStatusChange = undefined;
 
       /**
+       * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)
+       * depending on your network status as it provides a more detailed view into the state of a network request
+       * on your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.
+       * These number values each represent a different network state.
+       *
+       * 1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.
+       * 2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.
+       * 3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.
+       * 4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.
+       * 5. Unused.
+       * 6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.
+       * 7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.
+       * 8. `error`: No request is in flight for this query, but one or more errors were detected.
+       *
+       * If the network status is less then 7 then it is equivalent to `loading` being true. In fact you could
+       * replace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.
+       * It is recommended that you use `loading`, however.
+       *
+       * @return {1|2|3|4|5|6|7|8}
+       */
+      this.networkStatus;
+
+      /**
        * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
        * @type {Boolean}
        */
@@ -160,9 +186,14 @@ export const ApolloQueryMixin = superclass =>
 
       /**
        * The apollo ObservableQuery watching this element's query.
-       * @type {ObservableQuery}
+       * @type {ObservableQuery<TData, TVariables>}
        */
       this.observableQuery;
+
+      /**
+       * @type {ApolloClient<TCacheShape>}
+       */
+      this.client;
     }
 
     /** @protected */
@@ -174,8 +205,8 @@ export const ApolloQueryMixin = superclass =>
     /**
      * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
      *
-     * @param  {Object} variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
-     * @return {Promise<ApolloQueryResult>}
+     * @param  {TVariables} variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
+     * @return {Promise<ApolloQueryResult<TData>>}
      */
     refetch(...args) {
       return (
@@ -188,10 +219,10 @@ export const ApolloQueryMixin = superclass =>
      * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
      *
      * @deprecated: This method on ObservableQuery is meant to be private. It will be removed.
-     * @param {Object}   variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
-     * @param {boolean=} tryFetch       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-     * @param {boolean=} fetchResults   Option to ignore fetching results when updating variables.
-     * @return {Promise<ApolloQueryResult>}
+     * @param {TVariables}   variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
+     * @param {boolean} [tryFetch=this.tryFetch]       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
+     * @param {boolean} [fetchResults=this.fetchResults]   Option to ignore fetching results when updating variables.
+     * @return {Promise<ApolloQueryResult<TData>>}
      */
     setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
       return (
@@ -203,8 +234,8 @@ export const ApolloQueryMixin = superclass =>
     /**
      * Resets the observableQuery and subscribes.
      *
-     * @param  {SubscriptionOptions=} params
-     * @return {Promise<ZenObservable.Observer<ApolloQueryResult>>}
+     * @param  {SubscriptionOptions<TVariables>} [params={}]
+     * @return {Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>}
      */
     async subscribe({ query = this.query, variables = this.variables } = {}) {
       if (!hasAllVariables({ query, variables })) return;
@@ -223,7 +254,7 @@ export const ApolloQueryMixin = superclass =>
      * then a `{ subscriptionData: TSubscriptionResult }` object,
      * and returns an object with updated query data based on the new results.
      *
-     * @param  {SubscribeToMoreOptions=} options
+     * @param  {SubscribeToMoreOptions<TData, TVariables>} options
      * @return {function(): void}
      */
     subscribeToMore(options) {
@@ -236,8 +267,8 @@ export const ApolloQueryMixin = superclass =>
     /**
      * Executes a Query once and updates the component with the result
      *
-     * @param {QueryOptions} options
-     * @return {Promise<ApolloQueryResult>}
+     * @param {QueryOptions<TVariables>} [options=this]
+     * @return {Promise<ApolloQueryResult<TData>>}
      */
     executeQuery({
       query = this.query,
@@ -266,8 +297,8 @@ export const ApolloQueryMixin = superclass =>
      *
      * The optional `variables` parameter is an optional new variables object.
      *
-     * @param  {FetchMoreQueryOptions=} params
-     * @return {Promise<ApolloQueryResult>}
+     * @param  {FetchMoreQueryOptions<TVariables>} [params={}]
+     * @return {Promise<ApolloQueryResult<TData>>}
      */
     fetchMore({ query = this.query, updateQuery, variables } = {}) {
       return (
@@ -288,9 +319,9 @@ export const ApolloQueryMixin = superclass =>
      * - `query` A GraphQL document that consists of a single query to be sent down to the server.
      * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
      *
-     * @param  {WatchQueryOptions=}       options
+     * @param  {WatchQueryOptions<TVariables>}       [options=this]
      *
-     * @return {ObservableQuery}
+     * @return {ObservableQuery<TData, TVariables>}
      * @protected
      */
     watchQuery({
@@ -305,8 +336,8 @@ export const ApolloQueryMixin = superclass =>
     /**
      * Updates the element with the result of a query.
      *
-     * @param  {ApolloQueryResult} result The result of the query.
-     * @param  {Object}  result.data          The data from the query.
+     * @param  {ApolloQueryResult<TData>} result The result of the query.
+     * @param  {TData}  result.data          The data from the query.
      * @param  {boolean} result.loading       Whether the query is loading.
      * @param  {number}  result.networkStatus The networkStatus of the query.
      * @param  {boolean} result.stale         Whether the query is stale.
@@ -328,4 +359,4 @@ export const ApolloQueryMixin = superclass =>
     nextError(error) {
       this.error = error;
     }
-  };
+  });

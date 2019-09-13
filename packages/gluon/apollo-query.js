@@ -37,6 +37,8 @@ export { html } from './apollo-element.js';
  * @polymer
  * @extends ApolloElement
  * @appliesMixin ApolloQueryMixin
+ * @element
+ * @inheritdoc
  */
 export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
   /**

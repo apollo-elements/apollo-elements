@@ -33,11 +33,14 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js'
  * @customElement
  * @extends ApolloQuery
  * @appliesMixin NotifyingElementMixin
+ * @element
+ * @inheritdoc
+ * @template TData
  */
 const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLElement) {
   /**
    * Latest data.
-   * @type {Object}
+   * @type {TData}
    */
   get data() {
     return this.__data;

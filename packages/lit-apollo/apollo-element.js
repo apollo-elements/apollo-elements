@@ -2,14 +2,21 @@ export { html } from 'lit-element';
 import { LitElement } from 'lit-element';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin.js';
 
+/** @typedef {import('apollo-client').ApolloClient} ApolloClient */
+
 /**
  * # ApolloElement
  *
  * Custom Element base class for apollo custom elements.
  *
+ * @element
  * @polymer
  * @extends LitElement
  * @appliesMixin ApolloElementMixin
+ *
+ * @template TCacheShape
+ * @template TData
+ * @inheritdoc
  */
 export class ApolloElement extends ApolloElementMixin(LitElement) {
   static get properties() {
@@ -17,13 +24,13 @@ export class ApolloElement extends ApolloElementMixin(LitElement) {
       /**
        * The Apollo client.
        * See https://github.com/apollo-elements/apollo-elements#-bundling
-       * @type {Object}
+       * @type {ApolloClient<TCacheShape>}
        */
       client: { type: Object },
 
       /**
        * The latest data for the query from the Apollo cache
-       * @type {Object}
+       * @type {TData}
        */
       data: { type: Object },
 

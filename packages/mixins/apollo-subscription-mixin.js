@@ -1,8 +1,10 @@
 import isFunction from 'crocks/predicates/isFunction';
 import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
+import { dedupeMixin } from './dedupe-mixin.js';
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 
+/** @typedef {import('apollo-client').ApolloClient} ApolloClient */
 /** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
 /** @typedef {import('apollo-client').ApolloError} ApolloError */
 /** @typedef {import('apollo-client').SubscriptionOptions} SubscriptionOptions */
@@ -27,11 +29,16 @@ import { ApolloElementMixin } from './apollo-element-mixin.js';
  * @param {*} superclass the class to mix in to
  * @return {ApolloSubscriptionMixin~mixin} the mixed class
  */
-export const ApolloSubscriptionMixin = superclass =>
+export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo-subscription elements
    * @mixin
+   * @element
+   * @template TData
+   * @template TVariables
+   * @template TCacheShape
    * @alias ApolloSubscriptionMixin~mixin
+   * @inheritdoc
    */
   class extends ApolloElementMixin(superclass) {
     /**
@@ -55,7 +62,7 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
      *
-     * @return {Object<string, *>}
+     * @return {TVariables}
      */
     get variables() {
       return this.__variables;
@@ -103,9 +110,14 @@ export const ApolloSubscriptionMixin = superclass =>
 
       /**
        * Observable watching this element's subscription.
-       * @type {Observable}
+       * @type {Observable<FetchResult<TData>}
        */
       this.observable;
+
+      /**
+       * @type {ApolloClient<TCacheShape>}
+       */
+      this.client;
     }
 
     /** @protected */
@@ -117,8 +129,7 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * Resets the observable and subscribes.
      *
-     * @template {Object} TData
-     * @param  {SubscriptionOptions} options
+     * @param  {SubscriptionOptions<TVariables>} [options={}]
      * @return {Promise<Observer<SubscriptionResult<TData>>>}
      */
     async subscribe({
@@ -139,7 +150,6 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * Updates the element with the result of a subscription.
      *
-     * @template TData
      * @param  {SubscriptionResult<TData>} result The result of the subscription.
      * @protected
      */
@@ -162,4 +172,4 @@ export const ApolloSubscriptionMixin = superclass =>
       this.error = error;
       this.loading = false;
     }
-  };
+  });

@@ -38,5 +38,7 @@ export { html } from './apollo-element.js';
  * @polymer
  * @extends ApolloElement
  * @appliesMixin ApolloSubscriptionMixin
+ * @element
+ * @inheritdoc
  */
 export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) { }

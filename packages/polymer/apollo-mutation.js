@@ -49,6 +49,9 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * @customElement
  * @extends ApolloMutation
  * @appliesMixin NotifyingElementMixin
+ * @element
+ * @inheritdoc
+ * @template TData
  */
 const ApolloMutation = ApolloMutationMixin(class extends NotifyingElementMixin(HTMLElement) {
   /**
@@ -66,7 +69,7 @@ const ApolloMutation = ApolloMutationMixin(class extends NotifyingElementMixin(H
 
   /**
    * Latest data.
-   * @type {Object}
+   * @type {TData}
    */
   get data() {
     return this.__data;

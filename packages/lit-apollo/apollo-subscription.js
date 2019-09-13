@@ -37,6 +37,8 @@ export { html } from './apollo-element.js';
  * @polymer
  * @extends ApolloElement
  * @appliesMixin ApolloSubscriptionMixin
+ * @inheritdoc
+ * @element
  */
 export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) {
   /**
@@ -48,6 +50,7 @@ export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) {
    * @param  {Map}  changedProps           Changed properties.
    * @return {boolean}                     Whether the component should render.
    * @protected
+   * @inheritdoc
    */
   shouldUpdate() {
     return (
