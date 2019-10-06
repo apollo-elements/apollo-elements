@@ -50,12 +50,10 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * @appliesMixin NotifyingElementMixin
  * @element
  * @inheritdoc
- * @template TData
  */
-export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(class extends HTMLElement {})) {
+export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(HTMLElement)) {
   /**
    * Whether the mutation has been called
-   * @type {Boolean}
    */
   get called() {
     return this.__called;
@@ -68,7 +66,6 @@ export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(cl
 
   /**
    * Latest data.
-   * @type {TData}
    */
   get data() {
     return this.__data;
@@ -81,7 +78,6 @@ export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(cl
 
   /**
    * Latest error.
-   * @type {Object}
    */
   get error() {
     return this.__error;
@@ -94,7 +90,6 @@ export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(cl
 
   /**
    * Whether a request is in flight.
-   * @type {Boolean}
    */
   get loading() {
     return this.__loading;

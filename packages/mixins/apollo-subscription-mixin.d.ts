@@ -32,7 +32,15 @@ extends ApolloElement<TCacheShape, TData> {
   public subscribe<TVariables>(options?: { query?: DocumentNode, variables?: TVariables, fetchPolicy?: FetchPolicy }): Promise<ZenObservable.Observer<SubscriptionResult<TData>>>
 }
 
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor = new (...args: any[]) => HTMLElement;
 
-export function ApolloSubscriptionMixin<TBase extends Constructor, TCacheShape, TData, TVariables>
-(superclass: TBase): TBase & ApolloSubscription<TCacheShape, TData, TVariables>;
+type ReturnConstructor<TCacheShape, TData, TVariables> = new (...args: any[]) =>
+HTMLElement & ApolloSubscription<TCacheShape, TData, TVariables>;
+
+export function ApolloSubscriptionMixin<
+  TBase extends Constructor,
+  TCacheShape,
+  TData,
+  TVariables
+>(superclass: TBase):
+  TBase & ReturnConstructor<TCacheShape, TData, TVariables>;

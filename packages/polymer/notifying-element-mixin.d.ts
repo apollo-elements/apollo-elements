@@ -1,7 +1,12 @@
-export declare class NotifyingElement {
+declare class NotifyingElement {
   public notify(propName: string, value: any): void
 }
 
-type Constructor<T = HTMLElement> = new (...args: any[]) => T;
-export function NotifyingElementMixin<TBase extends Constructor>
-(superclass: TBase): TBase & NotifyingElement;
+type Constructor = new (...args: any[]) => HTMLElement;
+
+type ReturnConstructor = new (...args: any[]) =>
+HTMLElement & NotifyingElement;
+
+export function NotifyingElementMixin
+<TBase extends Constructor>
+(superclass: TBase): ReturnConstructor

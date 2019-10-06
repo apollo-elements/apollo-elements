@@ -67,7 +67,7 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
    * @param  {DocumentNode}                 [params.mutation]
    * @param  {Object|Function}              [params.optimisticResponse]
    * @param  {Array<string>}                [params.refetchQueries]
-   * @param  {MutationUpdaterFn}            [params.update]
+   * @param  {MutationUpdaterFn}            [params.update=this.onUpdate]
    * @param  {boolean}                      [params.awaitRefetchQueries]
    * @param  {TVariables}                   [params.variables]
    * @return {Promise<FetchResult>}

@@ -2,8 +2,6 @@ import ApolloClient, { OperationVariables, MutationOptions, ApolloError, Mutatio
 import { FetchResult, DocumentNode } from "apollo-link";
 import { ApolloElement } from "./apollo-element-mixin";
 
-type Constructor<T = {}> = new (...args: any[]) => T;
-
 export type RefetchQueriesProviderFn = (...args: any[]) => Array<string | PureQueryOptions>;
 
 export interface MutationResult<TData> {
@@ -44,5 +42,15 @@ declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloEleme
   public onError?(error: ApolloError): any;
 }
 
-export function ApolloMutationMixin<TBase extends Constructor, TCacheShape, TData, TVariables>(superclass: TBase):
-  TBase & ApolloMutation<TCacheShape, TData, TVariables>;
+type Constructor = new (...args: any[]) => HTMLElement;
+
+type ReturnConstructor<TCacheShape, TData, TVariables> = new (...args: any[]) =>
+HTMLElement & ApolloMutation<TCacheShape, TData, TVariables>;
+
+export function ApolloMutationMixin<
+  TBase extends Constructor,
+  TCacheShape,
+  TData,
+  TVariables
+>(superclass: TBase):
+  TBase & ReturnConstructor<TCacheShape, TData, TVariables>;
