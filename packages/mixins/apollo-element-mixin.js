@@ -9,84 +9,77 @@ import { dedupeMixin } from './dedupe-mixin.js';
 /**
  * `ApolloElementMixin`: class mixin for apollo custom elements.
  */
-const ApolloElementMixinImplementation = superclass =>
-  /**
-   * Class mixin for apollo elements
-   * @template TBase
-   * @template TCacheShape
-   * @template TData
-   */
-  class ApolloElement extends superclass {
-    constructor() {
-      super();
-      this.onElementMutation = this.onElementMutation.bind(this);
+export const ApolloElementMixin = dedupeMixin(
+  function ApolloElementMixin(superclass) {
+    return class ApolloElement extends superclass {
+      constructor() {
+        super();
+        this.onElementMutation = this.onElementMutation.bind(this);
 
-      /**
+        /**
        * Context to be passed to link execution chain.
        */
-      this.context;
+        this.context;
 
-      /**
+        /**
        * Latest data.
        */
-      this.data;
+        this.data;
 
-      /**
+        /**
        * Latest error.
        */
-      this.error;
+        this.error;
 
-      /**
+        /**
        * Whether a request is in flight.
        */
-      this.loading;
+        this.loading;
 
-      /**
+        /**
        * The apollo client instance.
        */
-      this.client = window.__APOLLO_CLIENT__;
-    }
+        this.client = window.__APOLLO_CLIENT__;
+      }
 
-    /**
+      /**
      * GraphQL Document
      */
-    get document() {
-      return this.__document || null;
-    }
-
-    set document(doc) {
-      if (!doc) return;
-      if (isValidGql(doc)) {
-        this.__document = doc;
-      } else {
-        throw new TypeError('document must be a gql-parsed DocumentNode');
+      get document() {
+        return this.__document || null;
       }
-    }
 
-    /** @protected */
-    connectedCallback() {
-      super.connectedCallback && super.connectedCallback();
-      this.elementMutationObserver = new MutationObserver(this.onElementMutation);
-      this.elementMutationObserver.observe(this, {
-        characterData: true,
-        childList: true,
-        subtree: true,
-      });
-      this.document = getGraphQLScriptChildDocument(this) || null;
-    }
+      set document(doc) {
+        if (!doc) return;
+        if (isValidGql(doc)) {
+          this.__document = doc;
+        } else {
+          throw new TypeError('document must be a gql-parsed DocumentNode');
+        }
+      }
 
-    /** @protected */
-    disconnectedCallback() {
-      super.disconnectedCallback && super.disconnectedCallback();
-      this.elementMutationObserver && this.elementMutationObserver.disconnect();
-      this.elementMutationObserver = null;
-    }
+      /** @protected */
+      connectedCallback() {
+        super.connectedCallback && super.connectedCallback();
+        this.elementMutationObserver = new MutationObserver(this.onElementMutation);
+        const characterData = true;
+        const childList = true;
+        const subtree = true;
+        this.elementMutationObserver.observe(this, { characterData, childList, subtree });
+        this.document = getGraphQLScriptChildDocument(this) || null;
+      }
 
-    /** @protected */
-    onElementMutation() {
-      const doc = getGraphQLScriptChildDocument(this);
-      if (doc) this.document = doc;
-    }
-  };
+      /** @protected */
+      disconnectedCallback() {
+        super.disconnectedCallback && super.disconnectedCallback();
+        this.elementMutationObserver && this.elementMutationObserver.disconnect();
+        this.elementMutationObserver = null;
+      }
 
-export const ApolloElementMixin = dedupeMixin(ApolloElementMixinImplementation);
+      /** @protected */
+      onElementMutation() {
+        const doc = getGraphQLScriptChildDocument(this);
+        if (doc) this.document = doc;
+      }
+    };
+  });

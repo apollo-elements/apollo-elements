@@ -17,7 +17,7 @@ export interface MutationContext<TVariables> {
   operations: Map<string, { query: DocumentNode; variables: TVariables }>;
 }
 
-declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloElement<TCacheShape, TData> {
+export declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloElement<TCacheShape, TData> {
   awaitRefetchQueries?: boolean;
   context: MutationContext<TVariables>;
   errorPolicy: ErrorPolicy;
@@ -26,7 +26,6 @@ declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloEleme
   mutation: DocumentNode;
   optimisticResponse?: TData;
   refetchQueries?: (string | PureQueryOptions)[] | RefetchQueriesProviderFn;
-  update?: MutationUpdaterFn<TData>;
   variables?: TVariables;
 
   private generateMutationId: number;
@@ -37,6 +36,8 @@ declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloEleme
   private onCompletedMutation(response: FetchResult<TData>, mutationId: number): any;
   private onMutationError(error: ApolloError, mutationId: number): any;
 
+  public update?: MutationUpdaterFn<TData>;
+  public onUpdate?: MutationUpdaterFn<TData>;
   public mutate(options: MutationOptions<TData, TVariables>): Promise<FetchResult<TData>>
   public onCompleted?(data: TData): any;
   public onError?(error: ApolloError): any;
@@ -45,7 +46,8 @@ declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloEleme
 type Constructor = new (...args: any[]) => HTMLElement;
 
 type ReturnConstructor<TCacheShape, TData, TVariables> = new (...args: any[]) =>
-HTMLElement & ApolloMutation<TCacheShape, TData, TVariables>;
+  HTMLElement &
+  ApolloMutation<TCacheShape, TData, TVariables>;
 
 export function ApolloMutationMixin<
   TBase extends Constructor,
@@ -53,4 +55,7 @@ export function ApolloMutationMixin<
   TData,
   TVariables
 >(superclass: TBase):
-  TBase & ReturnConstructor<TCacheShape, TData, TVariables>;
+  HTMLElement &
+  TBase &
+  ApolloMutation<TCacheShape, TData, TVariables> &
+  ReturnConstructor<TCacheShape, TData, TVariables>;

@@ -9,15 +9,17 @@ export declare class ApolloElement<TCacheShape, TData> {
   loading: boolean;
 }
 
+declare type Constructor = new (...args: any[]) => HTMLElement;
 
-type Constructor = new (...args: any[]) => HTMLElement;
-
-type ReturnConstructor<TCacheShape, TData> = new (...args: any[]) =>
-ApolloElement<TCacheShape, TData>;
+declare type ReturnConstructor<TCacheShape, TData> = new (...args: any[]) =>
+  HTMLElement &
+  ApolloElement<TCacheShape, TData>;
 
 export function ApolloElementMixin<
   TBase extends Constructor,
   TCacheShape,
   TData
 >(superclass: TBase):
-  TBase & HTMLElement & ReturnConstructor<TCacheShape, TData>;
+  TBase &
+  HTMLElement &
+  ReturnConstructor<TCacheShape, TData>;

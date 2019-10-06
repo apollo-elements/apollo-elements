@@ -4,6 +4,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
 /** @typedef {import('apollo-client').MutationUpdaterFn} MutationUpdaterFn */
 /** @typedef {import('apollo-client').ErrorPolicy} ErrorPolicy */
 /** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
+/** @typedef {import('apollo-client').MutationOptions} MutationOptions */
 /** @typedef {import('apollo-link').FetchResult} FetchResult */
 /** @typedef {import('graphql/language').DocumentNode} DocumentNode */
 
@@ -40,8 +41,6 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * @extends ApolloElement
  * @appliesMixin ApolloMutationMixin
  * @element
- * @template TData
- * @template TVariables
  * @inheritdoc
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
@@ -60,19 +59,11 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
    * NOTE: this `LitElement` version passes `this.onUpdate` as the update function
    * by default, instead of `this.update`, which is provided by `LitElement`.
    *
-   * @param  {Object}                       [params={}]
-   * @param  {Object}                       [params.context]
-   * @param  {ErrorPolicy}                  [params.errorPolicy]
-   * @param  {FetchPolicy}                  [params.fetchPolicy]
-   * @param  {DocumentNode}                 [params.mutation]
-   * @param  {Object|Function}              [params.optimisticResponse]
-   * @param  {Array<string>}                [params.refetchQueries]
-   * @param  {MutationUpdaterFn}            [params.update=this.onUpdate]
-   * @param  {boolean}                      [params.awaitRefetchQueries]
-   * @param  {TVariables}                   [params.variables]
+   * @param  {MutationOptions}                       [params]
    * @return {Promise<FetchResult>}
    */
-  async mutate({ update = this.onUpdate || null, ...opts } = {}) {
-    return super.mutate({ update, ...opts });
+  async mutate(params) {
+    const update = params && params.update || this.onUpdate || null;
+    return super.mutate({ update, ...params });
   }
 }

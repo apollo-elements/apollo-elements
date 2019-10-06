@@ -55,8 +55,8 @@ implements ApolloQueryProperties<TData, TVariables> {
 
 type Constructor = new (...args: any[]) => HTMLElement;
 
-type ReturnConstructor<TBase extends Constructor, TCacheShape, TData, TVariables> = new (...args: any[]) =>
-TBase & HTMLElement & ApolloQuery<TCacheShape, TData, TVariables>;
+type ReturnConstructor<TCacheShape, TData, TVariables> = new (...args: any[]) =>
+HTMLElement & ApolloQuery<TCacheShape, TData, TVariables>;
 
 export function ApolloQueryMixin<
   TBase extends Constructor,
@@ -64,4 +64,6 @@ export function ApolloQueryMixin<
   TData,
   TVariables
 >(superclass: TBase):
-  TBase & ReturnConstructor<TBase, TCacheShape, TData, TVariables>;
+  HTMLElement &
+  TBase &
+  ReturnConstructor<TCacheShape, TData, TVariables>;

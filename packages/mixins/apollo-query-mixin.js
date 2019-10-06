@@ -209,7 +209,7 @@ export const ApolloQueryMixin = dedupeMixin(
       refetch(variables) {
         return (
           this.observableQuery &&
-        this.observableQuery.refetch(variables)
+          this.observableQuery.refetch(variables)
         );
       }
 
@@ -225,7 +225,7 @@ export const ApolloQueryMixin = dedupeMixin(
       setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
         return (
           this.observableQuery &&
-        this.observableQuery.setVariables(variables, tryFetch, fetchResults)
+          this.observableQuery.setVariables(variables, tryFetch, fetchResults)
         );
       }
 
