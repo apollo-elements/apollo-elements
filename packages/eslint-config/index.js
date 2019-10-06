@@ -102,6 +102,7 @@ export default {
     'prefer-spread': ERROR,
     'prefer-template': ERROR,
     'require-jsdoc': OFF,
+    'valid-jsdoc': OFF,
     'spaced-comment': [ERROR, ALWAYS, { markers: ['/'] }],
     'space-before-function-paren': [ERROR, {
       anonymous: NEVER,

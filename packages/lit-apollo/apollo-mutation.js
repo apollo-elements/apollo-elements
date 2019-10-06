@@ -2,6 +2,10 @@ import { ApolloElement } from './apollo-element.js';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin.js';
 
 /** @typedef {import('apollo-client').MutationUpdaterFn} MutationUpdaterFn */
+/** @typedef {import('apollo-client').ErrorPolicy} ErrorPolicy */
+/** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
+/** @typedef {import('apollo-link').FetchResult} FetchResult */
+/** @typedef {import('graphql/language').DocumentNode} DocumentNode */
 
 /**
  * # ApolloMutation
@@ -43,10 +47,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   static get properties() {
     return {
-      /**
-       * If the mutation has been called
-       * @type {Boolean}
-       */
+      /** If the mutation has been called */
       called: { type: Boolean },
     };
   }
@@ -66,10 +67,10 @@ export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
    * @param  {DocumentNode}                 [params.mutation]
    * @param  {Object|Function}              [params.optimisticResponse]
    * @param  {Array<string>}                [params.refetchQueries]
-   * @param  {MutationUpdaterFn<TData>}     [params.update]
+   * @param  {MutationUpdaterFn}            [params.update]
    * @param  {boolean}                      [params.awaitRefetchQueries]
    * @param  {TVariables}                   [params.variables]
-   * @return {Promise<FetchResult<TData>>}
+   * @return {Promise<FetchResult>}
    */
   async mutate({ update = this.onUpdate || null, ...opts } = {}) {
     return super.mutate({ update, ...opts });

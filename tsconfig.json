@@ -5,10 +5,8 @@
     "noEmit": true,
     "moduleResolution": "node",
     "lib": [
-      "es2018",
-      "ES2018",
-      "dom",
-      "DOM"
+      "es2019",
+      "dom"
     ],
     "target": "ES2019",
     "typeRoots": [
@@ -22,6 +20,7 @@
     "**/*.conf.js",
     "test/*",
     "coverage/*",
+    "packages/**/coverage/*",
     "packages/eslint-config/*"
   ]
 }

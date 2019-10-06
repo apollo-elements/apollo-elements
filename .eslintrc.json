@@ -1,5 +1,8 @@
 {
   "extends": ["@apollo-elements"],
+  "rules": {
+    "valid-jsdoc": "off"
+  },
   "overrides": [{
     "files": "test/unit/*.js",
     "env": { "node": true }

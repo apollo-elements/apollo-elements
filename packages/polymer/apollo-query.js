@@ -1,8 +1,6 @@
 import { NotifyingElementMixin } from './notifying-element-mixin.js';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 
-class BaseClass extends HTMLElement {}
-
 /**
  * `<apollo-query>` fires Polymer-style prop-changed events
  * when its `data`, `error`, `loading` or `networkStatus`
@@ -37,7 +35,7 @@ class BaseClass extends HTMLElement {}
  * @element
  * @inheritdoc
  */
-export class ApolloQuery extends NotifyingElementMixin(ApolloQueryMixin(BaseClass)) {
+export class ApolloQuery extends NotifyingElementMixin(ApolloQueryMixin(HTMLElement)) {
   /**
    * Latest data.
    */

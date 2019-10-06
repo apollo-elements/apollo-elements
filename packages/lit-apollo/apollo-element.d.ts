@@ -2,5 +2,7 @@ import { LitElement } from "lit-element";
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
-declare class ApolloElement<TData>
+export * from 'lit-element'
+
+export declare class ApolloElement<TCacheShape, TData>
 extends ApolloElementMixin(LitElement) { }

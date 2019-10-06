@@ -16,8 +16,8 @@ export interface OnSubscriptionDataOptions<TData> {
   subscriptionData: SubscriptionResult<TData>;
 }
 
-declare class ApolloSubscription<TData, TVariables>
-extends ApolloElement<TData> {
+declare class ApolloSubscription<TCacheShape, TData, TVariables>
+extends ApolloElement<TCacheShape, TData> {
   fetchPolicy?: FetchPolicy;
   observable: Observable<FetchResult<TData>>;
   onSubscriptionData?: (options: OnSubscriptionDataOptions<TData>) => any;
@@ -34,5 +34,5 @@ extends ApolloElement<TData> {
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-export function ApolloSubscriptionMixin<TBase extends Constructor, TData, TVariables>
-(superclass: TBase): TBase & ApolloSubscription<TData, TVariables>;
+export function ApolloSubscriptionMixin<TBase extends Constructor, TCacheShape, TData, TVariables>
+(superclass: TBase): TBase & ApolloSubscription<TCacheShape, TData, TVariables>;

@@ -1,6 +1,6 @@
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element.js';
-export { html } from './apollo-element.js';
+export * from './apollo-element.js';
 
 /**
  * # ApolloQuery
@@ -36,7 +36,6 @@ export { html } from './apollo-element.js';
  * ```
  *
  * @polymer
- * @extends ApolloElement
  * @appliesMixin ApolloQueryMixin
  * @element
  * @inheritdoc

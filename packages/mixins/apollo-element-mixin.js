@@ -8,12 +8,6 @@ import { dedupeMixin } from './dedupe-mixin.js';
 
 /**
  * `ApolloElementMixin`: class mixin for apollo custom elements.
- *
- * @template TBase
- * @template TCacheShape
- * @template TData
- * @param {TBase} superclass the class to mix into
- * @return {import('.').ApolloElement<TBase, TCacheShape, TData>} The mixed class
  */
 const ApolloElementMixinImplementation = superclass =>
   /**
@@ -29,41 +23,32 @@ const ApolloElementMixinImplementation = superclass =>
 
       /**
        * Context to be passed to link execution chain.
-       * @type {Object}
        */
       this.context;
 
       /**
        * Latest data.
-       * @type {TData}
        */
       this.data;
 
       /**
        * Latest error.
-       * @type {Object}
        */
       this.error;
 
       /**
        * Whether a request is in flight.
-       * @type {Boolean}
        */
       this.loading;
 
       /**
        * The apollo client instance.
-       * @type {import('apollo-client').ApolloClient<TCacheShape>}
        */
-      this.client =
-        /** @type {import('apollo-client').ApolloClient<TCacheShape>} */
-        window.__APOLLO_CLIENT__;
+      this.client = window.__APOLLO_CLIENT__;
     }
 
     /**
      * GraphQL Document
-     *
-     * @return {DocumentNode}
      */
     get document() {
       return this.__document || null;

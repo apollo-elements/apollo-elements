@@ -1,4 +1,7 @@
 import { ApolloMutation as ApolloMutationBase } from "@apollo-elements/mixins/apollo-mutation-mixin";
 import { LitElement } from "lit-element";
+import { MutationUpdaterFn } from "apollo-client";
 
-declare class ApolloMutation<TData, TVariables> extends ApolloMutationBase<LitElement, TData, TVariables> { }
+declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloMutationBase<TCacheShape, TData, TVariables> {
+  onUpdate?: MutationUpdaterFn<TData>
+}

@@ -19,7 +19,7 @@ export interface MutationContext<TVariables> {
   operations: Map<string, { query: DocumentNode; variables: TVariables }>;
 }
 
-declare class ApolloMutation<TData, TVariables> extends ApolloElement<TData> {
+declare class ApolloMutation<TCacheShape, TData, TVariables> extends ApolloElement<TCacheShape, TData> {
   awaitRefetchQueries?: boolean;
   context: MutationContext<TVariables>;
   errorPolicy: ErrorPolicy;
@@ -44,5 +44,5 @@ declare class ApolloMutation<TData, TVariables> extends ApolloElement<TData> {
   public onError?(error: ApolloError): any;
 }
 
-export function ApolloMutationMixin<TBase extends Constructor, TData, TVariables>(superclass: TBase):
-  TBase & ApolloMutation<TData, TVariables>;
+export function ApolloMutationMixin<TBase extends Constructor, TCacheShape, TData, TVariables>(superclass: TBase):
+  TBase & ApolloMutation<TCacheShape, TData, TVariables>;

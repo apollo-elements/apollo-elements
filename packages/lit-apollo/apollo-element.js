@@ -1,8 +1,6 @@
-export { html } from 'lit-element';
+export * from 'lit-element';
 import { LitElement } from 'lit-element';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin.js';
-
-/** @typedef {import('apollo-client').ApolloClient} ApolloClient */
 
 /**
  * # ApolloElement

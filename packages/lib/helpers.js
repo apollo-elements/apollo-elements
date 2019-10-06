@@ -33,6 +33,12 @@ export const replace =
 
 const valueIsUndefined = ([, v]) => v !== undefined;
 
+/**
+ * @function
+ * @template T
+ * @param {T} object with possibly-undefined values
+ * @return {T} stripped object
+ */
 export const stripUndefinedValues = compose(
   Object.fromEntries,
   filter(valueIsUndefined),

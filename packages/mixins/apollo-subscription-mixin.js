@@ -1,6 +1,5 @@
 import isFunction from 'crocks/predicates/isFunction';
 import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
-import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
 import { dedupeMixin } from './dedupe-mixin.js';
 import { ApolloElementMixin } from './apollo-element-mixin.js';
 
@@ -9,7 +8,7 @@ import { ApolloElementMixin } from './apollo-element-mixin.js';
 /** @typedef {import('apollo-client').ApolloError} ApolloError */
 /** @typedef {import('apollo-client').SubscriptionOptions} SubscriptionOptions */
 /** @typedef {import('graphql').DocumentNode} DocumentNode */
-/** @typedef {import('zen-observable')} Observable */
+/** @typedef {import('zen-observable-ts').Observable} Observable */
 
 /**
  * @typedef {Object} SubscriptionResult
@@ -26,6 +25,11 @@ import { ApolloElementMixin } from './apollo-element-mixin.js';
  * @mixinFunction
  * @appliesMixin ApolloElementMixin
  *
+ * @template T
+ * @template TCacheShape
+ * @template TData
+ * @template TVariables
+ *
  * @param {typeof HTMLElement & T} superclass the class to mix in to
  * @return {ApolloSubscription} the mixed class
  */
@@ -34,10 +38,8 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
    * Class mixin for apollo-subscription elements
    * @mixin
    * @element
-   * @template TData
-   * @template TVariables
-   * @template TCacheShape
    * @alias ApolloSubscriptionMixin~mixin
+   * @typedef {import('zen-observable-ts').Observable<SubscriptionResult<TData>>} SubscribeResult
    * @inheritdoc
    */
   class ApolloSubscription extends ApolloElementMixin(superclass) {
@@ -110,7 +112,7 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
 
       /**
        * Observable watching this element's subscription.
-       * @type {Observable}
+       * @type {import('zen-observable-ts').Observable<SubscriptionResult<TData>>}
        */
       this.observable;
 
@@ -126,13 +128,10 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
       this.subscribe();
     }
 
-    /** @typedef {import('zen-observable-ts').Observable<SubscriptionResult<TData>>} SubscribeResult */
-
     /**
      * Resets the observable and subscribes.
      *
      * @param  {SubscriptionOptions} [options={}]
-     * @return {Promise<SubscribeResult>}
      */
     async subscribe({
       fetchPolicy = this.fetchPolicy,
@@ -145,14 +144,12 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
     }) {
       if (!hasAllVariables({ query, variables })) return;
 
-      this.observable = this.client.subscribe(
-        stripUndefinedValues({ query, variables, fetchPolicy })
-      );
+      this.observable = this.client.subscribe({ query, variables, fetchPolicy });
 
-      return this.observable.subscribe({
-        next: this.nextData,
-        error: this.nextError,
-      });
+      const next = this.nextData;
+      const error = this.nextError;
+
+      return this.observable.subscribe({ next, error });
     }
 
     /**

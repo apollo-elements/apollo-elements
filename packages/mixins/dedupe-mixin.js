@@ -1,4 +1,8 @@
 /* eslint-disable no-loops/no-loops */
+/**
+ * @template T
+ * @typedef {(superclass: T) => T} MixinFunction
+ */
 
 /**
  * Deduping Mixin
@@ -11,7 +15,7 @@
 /**
  * Cache of applied class mixins, for later deduplication
  * @template TBase
- * @type {WeakMap<MixinFunction<TBase>, MixinFunction<TBase>>}
+ * @type {WeakMap<any, MixinFunction<TBase>>}
  */
 const appliedClassMixins = new WeakMap();
 
@@ -30,7 +34,6 @@ function getPrototypeChain(obj) {
 }
 
 /**
- * @template TBase
  * @param {MixinFunction<TBase>} mixin
  * @param {TBase} superClass
  * @return {boolean}
@@ -39,11 +42,6 @@ function wasApplied(mixin, superClass) {
   const classes = getPrototypeChain(superClass);
   return classes.reduce((res, klass) => res || appliedClassMixins.get(klass) === mixin, false);
 }
-
-/**
- * @template TBase
- * @typedef {(superclass: TBase) => TBase} MixinFunction
- */
 
 /**
  * # dedupeMixin
@@ -64,11 +62,6 @@ function wasApplied(mixin, superClass) {
  * The more generic the mixin is, the higher the chance of being applied more than once.
  * As a mixin author you can't control how it is used, and can't always predict it.
  * So as a safety measure it is always recommended to create deduping mixins.
- *
- * @function
- * @template TBase
- * @param {MixinFunction<TBase>} mixin
- * @return {MixinFunction<TBase>}
  *
  * @example
  * // makes a conventional ES mixin deduping
@@ -97,6 +90,7 @@ function wasApplied(mixin, superClass) {
  * // component inherits from both M1 and M2
  * // MyCustomElement -> M2 -> M1 -> BaseMixin -> BaseCustomElement;
  * class MyCustomElement extends M2(M1(BaseCustomElement)) { ... }
+ *
  */
 export function dedupeMixin(mixin) {
   return superClass => {

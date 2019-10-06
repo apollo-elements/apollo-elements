@@ -33,12 +33,8 @@ const pickOptions = compose(
  * @polymer
  * @mixinFunction
  * @appliesMixin ApolloElementMixin
- *
- * @template TBase
- * @template TData
  * @template TVariables
- * @param {TBase} superclass the class to mix into
- * @return {import('.').ApolloMutation<TBase, TData, TVariables> & TBase} the mixed class
+ *
  */
 const ApolloMutationMixinImplementation = superclass =>
   /**
