@@ -3,6 +3,13 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables';
 import { clientFactory } from './factories/client';
 import { queryFactory } from './factories/query';
 
+/** @typedef {import('graphql/language').DocumentNode} DocumentNode */
+/** @typedef {import('apollo-client/core/watchQueryOptions').UpdateQueryFn} UpdateQueryFn */
+/** @typedef {import('apollo-client').SubscribeToMoreOptions} SubscribeToMoreOptions */
+/** @typedef {import('apollo-client').FetchMoreOptions} FetchMoreOptions */
+/** @typedef {import('apollo-client').FetchMoreQueryOptions} FetchMoreQueryOptions */
+
+
 const onNext = host => ({ data, loading, networkStatus, stale }) => {
   host.data = data;
   host.loading = loading;
@@ -43,14 +50,33 @@ const executeQuery = {
 };
 
 const subscribeToMore = {
-  get: ({ observableQuery }) => ({ document, updateQuery } = {}) =>
-    observableQuery && observableQuery.subscribeToMore({ document, updateQuery }),
+  /**
+   * @param  {typeof ApolloQuery} host
+   * @return {(opts: SubscribeToMoreOptions) => () => void}                 [description]
+   */
+  get: ({ observableQuery }) =>
+    ({ document, updateQuery } = { document: undefined, updateQuery: undefined }) =>
+      observableQuery && observableQuery.subscribeToMore({ document, updateQuery }),
 };
 
 const fetchMore = {
-  get: host => ({ query = host.query, updateQuery, variables } = {}) =>
-    host.observableQuery &&
-    host.observableQuery.fetchMore({ query, updateQuery, variables }),
+  /**
+   * @template TData
+   * @param  {typeof ApolloQuery} host
+   * @return {(opts?: FetchMoreOptions & FetchMoreQueryOptions) => Promise<import('apollo-client').ApolloQueryResult<TData>>}
+   */
+  get: ({ observableQuery, query: hostQuery }) =>
+    ({
+      query = hostQuery,
+      updateQuery = null,
+      variables = {},
+    } = {
+      query: hostQuery,
+      updateQuery: null,
+      variables: {},
+    }) =>
+      observableQuery &&
+      observableQuery.fetchMore({ query, updateQuery, variables }),
 };
 
 

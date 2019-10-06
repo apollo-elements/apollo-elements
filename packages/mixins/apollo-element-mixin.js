@@ -3,26 +3,26 @@ import getGraphQLScriptChildDocument from '@apollo-elements/lib/get-graphql-scri
 import isValidGql from '@apollo-elements/lib/is-valid-gql.js';
 import { dedupeMixin } from './dedupe-mixin.js';
 
+/** @typedef {import('apollo-client').ApolloClient} ApolloClient */
+/** @typedef {import('graphql/language').DocumentNode} DocumentNode */
+
 /**
  * `ApolloElementMixin`: class mixin for apollo custom elements.
  *
- * @polymer
- * @mixinFunction
- *
- * @param {*} superclass the class to mix into
- * @return {ApolloElement~mixin} The mixed class
+ * @template TBase
+ * @template TCacheShape
+ * @template TData
+ * @param {TBase} superclass the class to mix into
+ * @return {import('.').ApolloElement<TBase, TCacheShape, TData>} The mixed class
  */
-export const ApolloElementMixin = dedupeMixin(superclass =>
+const ApolloElementMixinImplementation = superclass =>
   /**
    * Class mixin for apollo elements
-   * @mixin
-   * @element
+   * @template TBase
    * @template TCacheShape
    * @template TData
-   * @alias ApolloElementMixin~mixin
-   * @inheritdoc
    */
-  class extends superclass {
+  class ApolloElement extends superclass {
     constructor() {
       super();
       this.onElementMutation = this.onElementMutation.bind(this);
@@ -53,9 +53,11 @@ export const ApolloElementMixin = dedupeMixin(superclass =>
 
       /**
        * The apollo client instance.
-       * @type {ApolloClient<TCacheShape>}
+       * @type {import('apollo-client').ApolloClient<TCacheShape>}
        */
-      this.client = window.__APOLLO_CLIENT__;
+      this.client =
+        /** @type {import('apollo-client').ApolloClient<TCacheShape>} */
+        window.__APOLLO_CLIENT__;
     }
 
     /**
@@ -100,4 +102,6 @@ export const ApolloElementMixin = dedupeMixin(superclass =>
       const doc = getGraphQLScriptChildDocument(this);
       if (doc) this.document = doc;
     }
-  });
+  };
+
+export const ApolloElementMixin = dedupeMixin(ApolloElementMixinImplementation);

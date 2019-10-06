@@ -46,13 +46,11 @@ export class ApolloQuery extends ApolloQueryMixin(ApolloElement) {
     return {
       /**
        * Enum of network statuses. See https://bit.ly/2sfKLY0
-       * @type {Number}
        */
       networkStatus: { type: Number },
 
       /**
        * If the query should not subscribe until `subscribe` is explicitly called.
-       * @type {boolean}
        */
       noAutoSubscribe: { type: Boolean, attribute: 'no-auto-subscribe' },
     };

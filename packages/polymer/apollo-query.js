@@ -1,6 +1,8 @@
 import { NotifyingElementMixin } from './notifying-element-mixin.js';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 
+class BaseClass extends HTMLElement {}
+
 /**
  * `<apollo-query>` fires Polymer-style prop-changed events
  * when its `data`, `error`, `loading` or `networkStatus`
@@ -31,16 +33,13 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js'
  *
  * @polymer
  * @customElement
- * @extends ApolloQuery
  * @appliesMixin NotifyingElementMixin
  * @element
  * @inheritdoc
- * @template TData
  */
-const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLElement) {
+export class ApolloQuery extends NotifyingElementMixin(ApolloQueryMixin(BaseClass)) {
   /**
    * Latest data.
-   * @type {TData}
    */
   get data() {
     return this.__data;
@@ -65,9 +64,9 @@ const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLEle
   }
 
   /**
-   * Whether a request is in flight.
-   * @type {Boolean}
-   */
+     * Whether a request is in flight.
+     * @type {Boolean}
+     */
   get loading() {
     return this.__loading;
   }
@@ -78,9 +77,9 @@ const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLEle
   }
 
   /**
-   * Enum of network statuses. See https://bit.ly/2sfKLY0
-   * @type {Number}
-   */
+     * Enum of network statuses. See https://bit.ly/2sfKLY0
+     * @type {Number}
+     */
   get networkStatus() {
     return this.__networkStatus;
   }
@@ -89,6 +88,6 @@ const ApolloQuery = ApolloQueryMixin(class extends NotifyingElementMixin(HTMLEle
     this.__networkStatus = value;
     this.notify('networkStatus', value);
   }
-});
+}
 
 customElements.define('apollo-query', ApolloQuery);

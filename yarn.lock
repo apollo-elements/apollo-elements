@@ -5615,6 +5615,11 @@ crocks@^0.11.1:
   resolved "https://registry.npmjs.com/crocks/-/crocks-0.11.1.tgz#58a59e0a565258ece048540f6f287525e129f08c"
   integrity sha1-WKWeClZSWOzgSFQPbyh1JeEp8Iw=
 
+crocks@^0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/crocks/-/crocks-0.12.4.tgz#b4a4512f64e90c42d31375e1a2902a0f9d4b4916"
+  integrity sha512-paln6xJUrR9e/OWMFsyTi4dLyr+q99C5f7PQbGgSDHtwsfW0sCNZvnpHzvniI2dAE0uoBgeIP1Ukmme8Z0HxxA==
+
 cross-spawn@^5.0.1:
   version "5.1.0"
   resolved "https://registry.npmjs.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -14292,10 +14297,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript-temporary-fork-for-jsdoc@^3.6.0-insiders.20190802:
-  version "3.6.0-insiders.20190802"
-  resolved "https://registry.yarnpkg.com/typescript-temporary-fork-for-jsdoc/-/typescript-temporary-fork-for-jsdoc-3.6.0-insiders.20190802.tgz#aece6f3f5d53c6e06e5e1c4af5a19183d7124ab6"
-  integrity sha512-j76opNh6ljAXDUDXr03+pOkITiATPbUlQlMp9pxD/SR3eNKAtIdHwOTf3dDspyGs8TGJQjQXMUiYqJr0gW+nCg==
+typescript@^3.7.0-beta:
+  version "3.7.0-dev.20191003"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.0-dev.20191003.tgz#938b4c37ab8ec74d2618fa4019942ae1a9b06a76"
+  integrity sha512-t72YA4cJot0Ih8NCZLthoGUbGAQyg15gAeX1S9j8gASCZtj+rxEZIy/eOLqmHouVy7BvA1o/aXPiTfTpNImkPA==
 
 typical@^2.6.1:
   version "2.6.1"

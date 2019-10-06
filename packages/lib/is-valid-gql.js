@@ -1,3 +1,5 @@
+/** @typedef {import('graphql/language').DocumentNode} DocumentNode */
+
 /**
  * isValidGql :: DocumentNode a => a -> Bool
  * Validates a graphql document node.

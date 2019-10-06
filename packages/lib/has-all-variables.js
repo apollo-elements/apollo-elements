@@ -14,6 +14,8 @@ import propPathOr from 'crocks/helpers/propPathOr';
 import unit from 'crocks/helpers/unit';
 import valueOf from 'crocks/pointfree/valueOf';
 
+/** @typedef {import('graphql/language').DocumentNode} DocumentNode */
+
 /** isInObj :: Object -> String -> Boolean */
 const isInObj =
   flip(hasProp);

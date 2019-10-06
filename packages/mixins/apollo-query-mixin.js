@@ -5,15 +5,14 @@ import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 import pick from 'crocks/helpers/pick';
 import compose from 'crocks/helpers/compose';
 
+/** @typedef {import('apollo-client').ApolloClient} ApolloClient */
 /** @typedef {import('apollo-client').ApolloError} ApolloError */
-/** @typedef {import('apollo-client').ApolloQueryResult} ApolloQueryResult */
 /** @typedef {import('apollo-client').ErrorPolicy} ErrorPolicy */
 /** @typedef {import('apollo-client').FetchMoreQueryOptions} FetchMoreQueryOptions */
+/** @typedef {import('apollo-client').FetchMoreOptions} FetchMoreOptions */
 /** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
-/** @typedef {import('apollo-client').ObservableQuery} ObservableQuery */
 /** @typedef {import('apollo-client').QueryOptions} QueryOptions */
 /** @typedef {import('apollo-client').SubscribeToMoreOptions} SubscribeToMoreOptions */
-/** @typedef {import('apollo-client').SubscriptionOptions} SubscriptionOptions */
 /** @typedef {import('apollo-client').WatchQueryOptions} WatchQueryOptions */
 /** @typedef {import('apollo-client/core/watchQueryOptions').ModifiableWatchQueryOptions} ModifiableWatchQueryOptions */
 /** @typedef {import('graphql').DocumentNode} DocumentNode */
@@ -55,16 +54,14 @@ const pickOpts = compose(
  * @appliesMixin ApolloElementMixin
  *
  * @param {*} superclass
- * @return {ApolloQueryMixin~mixin}
+ * @return {typeof ApolloQuery}
  */
 export const ApolloQueryMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo-query elements
-   * @mixin
    * @template TCacheShape
    * @template TData
    * @template TVariables
-   * @alias ApolloQueryMixin~mixin
    * @inheritdoc
    */
   class extends ApolloElementMixin(superclass) {
@@ -109,7 +106,7 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
     /**
      * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
      *
-     * @return {ModifiableWatchQueryOptions<TVariables>} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
+     * @return {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
      */
     get options() {
       return this.__options;
@@ -186,12 +183,12 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
 
       /**
        * The apollo ObservableQuery watching this element's query.
-       * @type {ObservableQuery<TData, TVariables>}
+       * @type {import('apollo-client').ObservableQuery<TData>}
        */
       this.observableQuery;
 
       /**
-       * @type {ApolloClient<TCacheShape>}
+       * @type {ApolloClient}
        */
       this.client;
     }
@@ -206,12 +203,12 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
      * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
      *
      * @param  {TVariables} variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
-     * @return {Promise<ApolloQueryResult<TData>>}
+     * @return {Promise<import('apollo-client').ApolloQueryResult<TData>>}
      */
-    refetch(...args) {
+    refetch(variables) {
       return (
         this.observableQuery &&
-        this.observableQuery.refetch(...args)
+        this.observableQuery.refetch(variables)
       );
     }
 
@@ -222,7 +219,7 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
      * @param {TVariables}   variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
      * @param {boolean} [tryFetch=this.tryFetch]       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
      * @param {boolean} [fetchResults=this.fetchResults]   Option to ignore fetching results when updating variables.
-     * @return {Promise<ApolloQueryResult<TData>>}
+     * @return {Promise<void | import('apollo-client').ApolloQueryResult<TData>>}
      */
     setVariables(variables, tryFetch = this.tryFetch, fetchResults = this.fetchResults) {
       return (
@@ -231,13 +228,21 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
       );
     }
 
+    /** @typedef {import('zen-observable-ts').Observable<import('apollo-client').ApolloQueryResult<TData>>} QueryResultObservable */
+
     /**
      * Resets the observableQuery and subscribes.
      *
-     * @param  {SubscriptionOptions<TVariables>} [params={}]
-     * @return {Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>}
+     * @param  {import('apollo-client').SubscriptionOptions<TVariables>} [params={}]
+     * @return {Promise<QueryResultObservable>}
      */
-    async subscribe({ query = this.query, variables = this.variables } = {}) {
+    async subscribe({
+      query = this.query,
+      variables = this.variables,
+    } = {
+      query: this.query,
+      variables: this.variables,
+    }) {
       if (!hasAllVariables({ query, variables })) return;
       this.observableQuery = this.watchQuery({ query, variables });
       return this.observableQuery.subscribe({
@@ -254,8 +259,8 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
      * then a `{ subscriptionData: TSubscriptionResult }` object,
      * and returns an object with updated query data based on the new results.
      *
-     * @param  {SubscribeToMoreOptions<TData, TVariables>} options
-     * @return {function(): void}
+     * @param  {SubscribeToMoreOptions} options
+     * @return {() => void}
      */
     subscribeToMore(options) {
       return (
@@ -267,8 +272,8 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
     /**
      * Executes a Query once and updates the component with the result
      *
-     * @param {QueryOptions<TVariables>} [options=this]
-     * @return {Promise<ApolloQueryResult<TData>>}
+     * @param {QueryOptions} [options=this]
+     * @return {Promise<import('apollo-client').ApolloQueryResult<TData>>}
      */
     executeQuery({
       query = this.query,
@@ -287,6 +292,8 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
       return queryPromise;
     }
 
+    /** @typedef {import('apollo-client').ApolloQueryResult<TData>} FetchMoreResult */
+
     /**
      * Exposes the `ObservableQuery#fetchMore` method.
      * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.fetchMore
@@ -297,10 +304,18 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
      *
      * The optional `variables` parameter is an optional new variables object.
      *
-     * @param  {FetchMoreQueryOptions<TVariables>} [params={}]
-     * @return {Promise<ApolloQueryResult<TData>>}
+     * @param  {FetchMoreQueryOptions & FetchMoreOptions} [params={}]
+     * @return {Promise<FetchMoreResult>}
      */
-    fetchMore({ query = this.query, updateQuery, variables } = {}) {
+    fetchMore({
+      query = this.query,
+      updateQuery,
+      variables,
+    } = {
+      query: this.query,
+      updateQuery: undefined,
+      variables: undefined,
+    }) {
       return (
         this.observableQuery &&
         this.observableQuery.fetchMore({ query, updateQuery, variables })
@@ -319,9 +334,9 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
      * - `query` A GraphQL document that consists of a single query to be sent down to the server.
      * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
      *
-     * @param  {WatchQueryOptions<TVariables>}       [options=this]
+     * @param  {WatchQueryOptions}       [options=this]
      *
-     * @return {ObservableQuery<TData, TVariables>}
+     * @return {import('apollo-client').ObservableQuery<TData, TVariables>}
      * @protected
      */
     watchQuery({
@@ -336,11 +351,7 @@ export const ApolloQueryMixin = dedupeMixin(superclass =>
     /**
      * Updates the element with the result of a query.
      *
-     * @param  {ApolloQueryResult<TData>} result The result of the query.
-     * @param  {TData}  result.data          The data from the query.
-     * @param  {boolean} result.loading       Whether the query is loading.
-     * @param  {number}  result.networkStatus The networkStatus of the query.
-     * @param  {boolean} result.stale         Whether the query is stale.
+     * @param  {import('apollo-client').ApolloQueryResult<TData>} result The result of the query.
      * @protected
      */
     nextData({ data, loading, networkStatus, stale }) {

@@ -26,8 +26,8 @@ import { ApolloElementMixin } from './apollo-element-mixin.js';
  * @mixinFunction
  * @appliesMixin ApolloElementMixin
  *
- * @param {*} superclass the class to mix in to
- * @return {ApolloSubscriptionMixin~mixin} the mixed class
+ * @param {typeof HTMLElement & T} superclass the class to mix in to
+ * @return {ApolloSubscription} the mixed class
  */
 export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
   /**
@@ -40,7 +40,7 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
    * @alias ApolloSubscriptionMixin~mixin
    * @inheritdoc
    */
-  class extends ApolloElementMixin(superclass) {
+  class ApolloSubscription extends ApolloElementMixin(superclass) {
     /**
      * A GraphQL document containing a single subscription.
      *
@@ -110,12 +110,12 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
 
       /**
        * Observable watching this element's subscription.
-       * @type {Observable<FetchResult<TData>}
+       * @type {Observable}
        */
       this.observable;
 
       /**
-       * @type {ApolloClient<TCacheShape>}
+       * @type {ApolloClient}
        */
       this.client;
     }
@@ -126,21 +126,29 @@ export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
       this.subscribe();
     }
 
+    /** @typedef {import('zen-observable-ts').Observable<SubscriptionResult<TData>>} SubscribeResult */
+
     /**
      * Resets the observable and subscribes.
      *
-     * @param  {SubscriptionOptions<TVariables>} [options={}]
-     * @return {Promise<Observer<SubscriptionResult<TData>>>}
+     * @param  {SubscriptionOptions} [options={}]
+     * @return {Promise<SubscribeResult>}
      */
     async subscribe({
       fetchPolicy = this.fetchPolicy,
       query = this.subscription,
       variables = this.variables,
-    } = {}) {
+    } = {
+      fetchPolicy: this.fetchPolicy,
+      query: this.subscription,
+      variables: this.variables,
+    }) {
       if (!hasAllVariables({ query, variables })) return;
+
       this.observable = this.client.subscribe(
         stripUndefinedValues({ query, variables, fetchPolicy })
       );
+
       return this.observable.subscribe({
         next: this.nextData,
         error: this.nextError,

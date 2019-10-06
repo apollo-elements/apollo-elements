@@ -1,4 +1,5 @@
-import { ApolloMutation as ApolloMutationBase } from "@apollo-elements/mixins/apollo-mutation-mixin";
+import { ApolloMutationMixin } from "@apollo-elements/mixins/apollo-mutation-mixin";
 import { GluonElement } from "@gluon/gluon";
 
-declare class ApolloMutation<TData, TVariables> extends ApolloMutationBase<GluonElement, TData, TVariables> { }
+export declare class ApolloMutation<TData, TVariables>
+  extends ApolloMutationMixin(GluonElement) { }

@@ -8,7 +8,7 @@ export type RefetchQueriesProviderFn = (...args: any[]) => Array<string | PureQu
 
 export interface MutationResult<TData> {
   called: boolean;
-  client: ApolloClient<Object>;
+  client?: ApolloClient<Object>;
   data?: TData;
   error?: ApolloError;
   loading: boolean;
@@ -19,7 +19,7 @@ export interface MutationContext<TVariables> {
   operations: Map<string, { query: DocumentNode; variables: TVariables }>;
 }
 
-export declare class ApolloMutation<TBase, TData, TVariables> extends ApolloElement<TBase, TData> {
+declare class ApolloMutation<TData, TVariables> extends ApolloElement<TData> {
   awaitRefetchQueries?: boolean;
   context: MutationContext<TVariables>;
   errorPolicy: ErrorPolicy;
@@ -44,4 +44,5 @@ export declare class ApolloMutation<TBase, TData, TVariables> extends ApolloElem
   public onError?(error: ApolloError): any;
 }
 
-export function ApolloMutationMixin<TBase extends Constructor, TData, TVariables>(superclass: TBase): ApolloMutation<TBase, TData, TVariables>;
+export function ApolloMutationMixin<TBase extends Constructor, TData, TVariables>(superclass: TBase):
+  TBase & ApolloMutation<TData, TVariables>;

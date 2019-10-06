@@ -1,7 +1,7 @@
-type Constructor<T = {}> = new (...args: any[]) => T;
-
-declare class NotifyingElement<TBase> extends HTMLElement {
-  notify(propName: string, value: any): undefined
+export declare class NotifyingElement {
+  public notify(propName: string, value: any): void
 }
 
-export function NotifyingElementMixin<TBase extends Constructor>(superclass: TBase, notifyingProps?: string[]): NotifyingElement<TBase>
+type Constructor<T = HTMLElement> = new (...args: any[]) => T;
+export function NotifyingElementMixin<TBase extends Constructor>
+(superclass: TBase): TBase & NotifyingElement;

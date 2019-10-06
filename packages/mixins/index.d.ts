@@ -1,4 +1,4 @@
-export { ApolloElementMixin } from "./apollo-element-mixin";
-export { ApolloMutationMixin } from "./apollo-mutation-mixin";
-export { ApolloQueryMixin } from "./apollo-query-mixin";
-export { ApolloSubscriptionMixin } from "./apollo-subscription-mixin";
+export { ApolloElement, ApolloElementMixin } from "./apollo-element-mixin";
+export { ApolloMutation, ApolloMutationMixin } from "./apollo-mutation-mixin";
+export { ApolloQuery, ApolloQueryMixin } from "./apollo-query-mixin";
+export { ApolloSubscription, ApolloSubscriptionMixin } from "./apollo-subscription-mixin";

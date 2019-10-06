@@ -24,25 +24,21 @@ export class ApolloElement extends ApolloElementMixin(LitElement) {
       /**
        * The Apollo client.
        * See https://github.com/apollo-elements/apollo-elements#-bundling
-       * @type {ApolloClient<TCacheShape>}
        */
       client: { type: Object },
 
       /**
        * The latest data for the query from the Apollo cache
-       * @type {TData}
        */
       data: { type: Object },
 
       /**
        * The latest error for the query from the Apollo cache
-       * @type {Object}
        */
       error: { type: Object },
 
       /**
        * If the query is currently in-flight.
-       * @type {Object}
        */
       loading: { type: Boolean },
     };

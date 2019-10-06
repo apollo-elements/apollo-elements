@@ -10,7 +10,8 @@
 
 /**
  * Cache of applied class mixins, for later deduplication
- * @type {WeakMap<klass: any, mixin: Function>}
+ * @template TBase
+ * @type {WeakMap<MixinFunction<TBase>, MixinFunction<TBase>>}
  */
 const appliedClassMixins = new WeakMap();
 
@@ -29,14 +30,20 @@ function getPrototypeChain(obj) {
 }
 
 /**
- * @param {function()} mixin
- * @param {function()} superClass
+ * @template TBase
+ * @param {MixinFunction<TBase>} mixin
+ * @param {TBase} superClass
  * @return {boolean}
  */
 function wasApplied(mixin, superClass) {
   const classes = getPrototypeChain(superClass);
   return classes.reduce((res, klass) => res || appliedClassMixins.get(klass) === mixin, false);
 }
+
+/**
+ * @template TBase
+ * @typedef {(superclass: TBase) => TBase} MixinFunction
+ */
 
 /**
  * # dedupeMixin
@@ -58,8 +65,10 @@ function wasApplied(mixin, superClass) {
  * As a mixin author you can't control how it is used, and can't always predict it.
  * So as a safety measure it is always recommended to create deduping mixins.
  *
- * @param {function()} mixin
- * @return {function()}
+ * @function
+ * @template TBase
+ * @param {MixinFunction<TBase>} mixin
+ * @return {MixinFunction<TBase>}
  *
  * @example
  * // makes a conventional ES mixin deduping

@@ -1,4 +1,4 @@
-import { NotifyingElementMixin as Notify } from './notifying-element-mixin.js';
+import { NotifyingElementMixin } from './notifying-element-mixin.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin.js';
 
 /**
@@ -27,54 +27,52 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
  * }
  * ```
  *
- * @polymer
  * @customElement
- * @extends ApolloSubscription
- * @appliesMixin NotifyingElementMixin
- * @element
- * @inheritdoc
+ * @mixes NotifyingElement
+ * @mixes ApolloSubscription
  * @template TData
  */
-const ApolloSubscription = ApolloSubscriptionMixin(class extends Notify(HTMLElement) {
-  /**
-   * Latest data.
-   *
-   * @type {TData}
-   */
-  get data() {
-    return this.__data;
-  }
+const ApolloSubscription =
+  ApolloSubscriptionMixin(NotifyingElementMixin(class extends HTMLElement {
+    /**
+     * Latest data.
+     *
+     * @type {TData}
+     */
+    get data() {
+      return this.__data;
+    }
 
-  set data(value) {
-    this.__data = value;
-    this.notify('data', value);
-  }
+    set data(value) {
+      this.__data = value;
+      this.notify('data', value);
+    }
 
-  /**
+    /**
    * Latest error.
    * @type {Object}
    */
-  get error() {
-    return this.__error;
-  }
+    get error() {
+      return this.__error;
+    }
 
-  set error(value) {
-    this.__error = value;
-    this.notify('error', value);
-  }
+    set error(value) {
+      this.__error = value;
+      this.notify('error', value);
+    }
 
-  /**
-   * Whether a request is in flight.
-   * @type {Boolean}
-   */
-  get loading() {
-    return this.__loading;
-  }
+    /**
+     * Whether a request is in flight.
+     * @type {Boolean}
+     */
+    get loading() {
+      return this.__loading;
+    }
 
-  set loading(value) {
-    this.__loading = value;
-    this.notify('loading', value);
-  }
-});
+    set loading(value) {
+      this.__loading = value;
+      this.notify('loading', value);
+    }
+  }));
 
 customElements.define('apollo-subscription', ApolloSubscription);

@@ -47,13 +47,12 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  *
  * @polymer
  * @customElement
- * @extends ApolloMutation
  * @appliesMixin NotifyingElementMixin
  * @element
  * @inheritdoc
  * @template TData
  */
-const ApolloMutation = ApolloMutationMixin(class extends NotifyingElementMixin(HTMLElement) {
+export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(class extends HTMLElement {})) {
   /**
    * Whether the mutation has been called
    * @type {Boolean}
@@ -105,6 +104,6 @@ const ApolloMutation = ApolloMutationMixin(class extends NotifyingElementMixin(H
     this.__loading = value;
     this.notify('loading', value);
   }
-});
+}
 
 customElements.define('apollo-mutation', ApolloMutation);

@@ -1,10 +1,27 @@
 {
-  "allowJs": true,
-  "checkJs": true,
   "compilerOptions": {
-    "lib": ["es2018", "DOM"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "lib": [
+      "es2018",
+      "ES2018",
+      "dom",
+      "DOM"
+    ],
+    "target": "ES2019",
     "typeRoots": [
-      "./typings",
+      "./typings"
     ]
-  }
+  },
+  "exclude": [
+    "**/docs/*",
+    "**/*.test.js",
+    "**/*.config.js",
+    "**/*.conf.js",
+    "test/*",
+    "coverage/*",
+    "packages/eslint-config/*"
+  ]
 }

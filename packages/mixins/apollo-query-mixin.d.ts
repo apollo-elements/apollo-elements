@@ -23,7 +23,9 @@ export interface ApolloQueryProperties<TData, TVariables> {
   variables: TVariables;
 }
 
-export declare class ApolloQuery<TBase, TData, TVariables, TSubscriptionData = TData> extends ApolloElement<TBase, TData> implements ApolloQueryProperties<TData, TVariables> {
+export declare class ApolloQuery<TCacheShape, TData, TVariables, TSubscriptionData = TData>
+extends ApolloElement<TCacheShape, TData>
+implements ApolloQueryProperties<TData, TVariables> {
   context: QueryContext<TVariables>;
   errorPolicy: ErrorPolicy;
   fetchPolicy: FetchPolicy;
@@ -51,6 +53,7 @@ export declare class ApolloQuery<TBase, TData, TVariables, TSubscriptionData = T
   public subscribeToMore(options: SubscribeToMoreOptions<TData, TVariables, TSubscriptionData>): () => void;
 }
 
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor<T = HTMLElement> = new (...args: any[]) => T;
 
-export function ApolloQueryMixin<TBase extends Constructor, TData, TVariables>(superclass: TBase): ApolloQuery<TBase, TData, TVariables>;
+export function ApolloQueryMixin<TBase extends Constructor, TCacheShape, TData, TVariables>
+(superclass: TBase): ApolloQuery<TCacheShape, TData, TVariables> & TBase;

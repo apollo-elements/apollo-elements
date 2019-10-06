@@ -1,5 +1,11 @@
-import { GluonElement } from "@gluon/gluon";
+import { TemplateResult } from 'lit-html';
+import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
-import { ApolloElement as ApolloElementBase } from '@apollo-elements/mixins/apollo-element-mixin';
+export * from "lit-html";
 
-declare class ApolloElement<TData> extends ApolloElementBase<GluonElement, TData> { }
+export declare class GluonElement extends HTMLElement {
+  render({ sync: boolean }?): Promise<any>
+}
+
+export declare class ApolloElement<TBase, TCacheShape, TData>
+extends ApolloElementMixin(GluonElement) { }

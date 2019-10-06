@@ -8,7 +8,6 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * Custom Element base class for apollo custom elements.
  *
  * @polymer
- * @extends GluonElement
  * @appliesMixin ApolloElementMixin
  * @element
  * @inheritdoc

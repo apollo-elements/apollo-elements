@@ -8,6 +8,8 @@
     "docs": "sh scripts/docs.sh",
     "lint": "eslint .",
     "postinstall": "lerna bootstrap --hoist",
+    "build": "run-s build:*",
+    "build:types": "tsc",
     "deploy": "lerna publish --message 'chore: release new versions'",
     "test": "run-s test:types test:karma",
     "test:karma": "karma start",
@@ -49,7 +51,7 @@
     "chai": "^4.2.0",
     "codecov": "^3.5.0",
     "commitizen": "^3.1.1",
-    "crocks": "^0.11.1",
+    "crocks": "^0.12.4",
     "cz-lerna-changelog": "^2.0.2",
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.13.0",
@@ -81,7 +83,7 @@
     "rollup-plugin-terser": "^5.0.0",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
-    "typescript-temporary-fork-for-jsdoc": "^3.6.0-insiders.20190802"
+    "typescript": "^3.7.0-beta"
   },
   "config": {
     "commitizen": {

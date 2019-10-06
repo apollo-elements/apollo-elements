@@ -1,6 +1,6 @@
 import { ApolloElement } from './apollo-element.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin.js';
-export { html } from './apollo-element.js';
+export { html } from 'lit-element';
 
 /**
  * # ApolloSubscription
@@ -47,12 +47,12 @@ export class ApolloSubscription extends ApolloSubscriptionMixin(ApolloElement) {
    *   - The component has an `error` or
    *   - The component is `loading`.
    *
-   * @param  {Map}  changedProps           Changed properties.
+   * @param  {Map}  _changedProps           Changed properties.
    * @return {boolean}                     Whether the component should render.
    * @protected
    * @inheritdoc
    */
-  shouldUpdate() {
+  shouldUpdate(_changedProps) {
     return (
       this.loading != null ||
       !!this.error ||
