@@ -1,8 +1,10 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "moduleResolution": "node",
     "lib": [
       "es2019",
@@ -11,7 +13,8 @@
     "target": "es2019",
     "typeRoots": [
       "./typings"
-    ]
+    ],
+    "outDir": "./typings"
   },
   "exclude": [
     "**/docs/*",

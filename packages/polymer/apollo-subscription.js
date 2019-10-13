@@ -1,4 +1,4 @@
-import { NotifyingElementMixin } from './notifying-element-mixin.js';
+import { NotifyingElementMixin } from '@apollo-elements/mixins/notifying-element-mixin.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin.js';
 
 /**
@@ -31,6 +31,7 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
  * @mixes NotifyingElement
  * @mixes ApolloSubscription
  * @template TData
+ * @extends HTMLElement
  */
 class ApolloSubscription extends ApolloSubscriptionMixin(NotifyingElementMixin(HTMLElement)) {
   /**

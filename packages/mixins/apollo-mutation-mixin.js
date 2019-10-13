@@ -39,6 +39,7 @@ const pickOptions = compose(
 const ApolloMutationMixinImplementation = superclass =>
   /**
    * Class mixin for apollo-mutation elements
+   * @implements {ApolloMutation<TCacheShape, TData, TVariables}
    */
   class ApolloMutation extends ApolloElementMixin(superclass) {
     /**

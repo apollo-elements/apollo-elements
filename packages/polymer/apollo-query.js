@@ -1,4 +1,4 @@
-import { NotifyingElementMixin } from './notifying-element-mixin.js';
+import { NotifyingElementMixin } from '@apollo-elements/mixins/notifying-element-mixin.js';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 
 /**

@@ -1,5 +1,3 @@
-/* eslint-disable no-loops/no-loops */
-
 /**
  * # dedupeMixin
  *
@@ -56,38 +54,4 @@
  * @param {T} mixin
  * @return {T}
  */
-export function dedupeMixin(mixin) {
-  return superClass => {
-    if (wasApplied(mixin, superClass)) {
-      return superClass;
-    }
-    const mixedClass = mixin(superClass);
-    appliedClassMixins.set(mixedClass, mixin);
-    return mixedClass;
-  };
-}
-
-
-/**
- * Cache of applied class mixins, for later deduplication
- */
-const appliedClassMixins = new WeakMap();
-
-/**
- * @param {Object} obj
- * @return {Array}
- */
-function getPrototypeChain(obj) {
-  const chain = [];
-  let proto = obj;
-  while (proto) {
-    chain.push(proto);
-    proto = Object.getPrototypeOf(proto);
-  }
-  return chain;
-}
-
-function wasApplied(mixin, superClass) {
-  const classes = getPrototypeChain(superClass);
-  return classes.reduce((res, klass) => res || appliedClassMixins.get(klass) === mixin, false);
-}
+export function dedupeMixin<T>(mixin: T): T;

@@ -23,7 +23,8 @@
     ]
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "typings/*"
   ],
   "devDependencies": {
     "@apollo-elements/eslint-config": "^1.0.4",

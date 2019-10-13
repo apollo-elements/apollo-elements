@@ -7,14 +7,14 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  *
  * Custom Element base class for apollo custom elements.
  *
+ * @template TCacheShape
+ * @template TData
+ *
  * @element
  * @polymer
  * @extends LitElement
  * @appliesMixin ApolloElementMixin
- *
- * @template TCacheShape
- * @template TData
- * @inheritdoc
+ * @implements {import('@apollo-elements/mixins/apollo-element')<TCacheShape, TData>}
  */
 export class ApolloElement extends ApolloElementMixin(LitElement) {
   static get properties() {

@@ -38,10 +38,10 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * ```
  *
  * @polymer
+ * @element
  * @extends ApolloElement
  * @appliesMixin ApolloMutationMixin
- * @element
- * @inheritdoc
+ * @implements {import('@apollo-elements/mixins/apollo-mutation')<TCacheShape, TData>}
  */
 export class ApolloMutation extends ApolloMutationMixin(ApolloElement) {
   static get properties() {

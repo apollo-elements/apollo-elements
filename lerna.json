@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "typings/*"
   ],
   "version": "independent",
   "command": {

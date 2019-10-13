@@ -1,6 +1,3 @@
-import { NotifyingElementMixin } from '@apollo-elements/mixins/notifying-element-mixin.js';
-import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin.js';
-
 /**
  * `<apollo-mutation>` fires Polymer-style prop-changed events
  * when its `called`, `data`, `error`, `loading` or `networkStatus`
@@ -51,54 +48,29 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
  * @element
  * @inheritdoc
  */
-export class ApolloMutation extends ApolloMutationMixin(NotifyingElementMixin(HTMLElement)) {
-  /**
-   * Whether the mutation has been called
-   */
-  get called() {
-    return this.__called;
-  }
-
-  set called(value) {
-    this.__called = value;
-    this.notify('called', value);
-  }
-
-  /**
-   * Latest data.
-   */
-  get data() {
-    return this.__data;
-  }
-
-  set data(value) {
-    this.__data = value;
-    this.notify('data', value);
-  }
-
-  /**
-   * Latest error.
-   */
-  get error() {
-    return this.__error;
-  }
-
-  set error(value) {
-    this.__error = value;
-    this.notify('error', value);
-  }
-
-  /**
-   * Whether a request is in flight.
-   */
-  get loading() {
-    return this.__loading;
-  }
-
-  set loading(value) {
-    this.__loading = value;
-    this.notify('loading', value);
-  }
+export class ApolloMutation {
+    set called(arg: any);
+    /**
+     * Whether the mutation has been called
+     */
+    get called(): any;
+    __called: any;
+    set data(arg: any);
+    /**
+     * Latest data.
+     */
+    get data(): any;
+    __data: any;
+    set error(arg: any);
+    /**
+     * Latest error.
+     */
+    get error(): any;
+    __error: any;
+    set loading(arg: any);
+    /**
+     * Whether a request is in flight.
+     */
+    get loading(): any;
+    __loading: any;
 }
-
-customElements.define('apollo-mutation', ApolloMutation);

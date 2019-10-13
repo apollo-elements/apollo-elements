@@ -1,0 +1,1 @@
+export type ReturnConstructor<D, E> = new (...args: any[]) => D & E;
