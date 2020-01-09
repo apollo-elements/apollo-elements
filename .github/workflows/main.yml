@@ -29,11 +29,17 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       - name: Authenticate with Registry
-        run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+        run: |
+          echo "@apollo-elements:registry=//registry.npmjs.org/" > ~/.npmrc
+          echo "registry=//registry.npmjs.org/" >> ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish package
-        run: yarn deploy:ci
+        run: |
+          yarn logout
+          npm whoami
+          npm run deploy:ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
