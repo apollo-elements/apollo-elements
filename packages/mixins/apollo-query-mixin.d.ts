@@ -49,6 +49,9 @@ export declare class ApolloQuery<TBase, TData, TVariables, TSubscriptionData = T
   public setVariables(variables: TVariables, tryFetch: boolean, fetchResults: boolean): Promise<ApolloQueryResult<TData>>;
   public subscribe(params?: { query?: DocumentNode, variables?: TVariables }): Promise<ZenObservable.Observer<ApolloQueryResult<TData>>>;
   public subscribeToMore(options: SubscribeToMoreOptions<TData, TVariables, TSubscriptionData>): () => void;
+
+  public onData?(result: ApolloQueryResult<TData>): any;
+  public onError?(error: ApolloError): any;
 }
 
 type Constructor<T = {}> = new (...args: any[]) => T;
