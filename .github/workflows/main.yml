@@ -11,9 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install rsync
+        run: sudo apt install rsync
+
       - uses: actions/checkout@master
-        with:
-          token: ${{ secrets.GITHUB_PAT }}
 
       - name: Configure CI Git User
         run: |
@@ -24,12 +25,6 @@ jobs:
         env:
           USER_NAME: ${{ secrets.DEPLOYING_USER_NAME }}
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
-
-      - name: Checkout master
-        run: git checkout master
-
-      - name: Install rsync
-        run: sudo apt install rsync
 
       - name: Install yarn
         run: |
