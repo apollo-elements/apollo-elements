@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.1.3...@apollo-elements/mixins@1.2.0) (2020-01-09)
+
+
+### Features
+
+* **mixins:** add onData, onError to ApolloQuery ([0a34e00](https://github.com/apollo-elements/apollo-elements/commit/0a34e00)), closes [#42](https://github.com/apollo-elements/apollo-elements/issues/42)
+
+
+
+
+
 ## [1.1.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.1.2...@apollo-elements/mixins@1.1.3) (2020-01-09)
 
 
