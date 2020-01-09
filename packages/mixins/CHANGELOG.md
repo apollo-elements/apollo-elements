@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.2.0...@apollo-elements/mixins@1.2.1) (2020-01-09)
+
+
+### Performance Improvements
+
+* **mixins:** deduplicate mixins ([3130b0a](https://github.com/apollo-elements/apollo-elements/commit/3130b0a)), closes [#38](https://github.com/apollo-elements/apollo-elements/issues/38)
+
+
+
+
+
 # [1.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.1.3...@apollo-elements/mixins@1.2.0) (2020-01-09)
 
 

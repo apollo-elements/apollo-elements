@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@1.1.4...@apollo-elements/polymer@1.1.5) (2020-01-09)
+
+**Note:** Version bump only for package @apollo-elements/polymer
+
+
+
+
+
 ## [1.1.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@1.1.3...@apollo-elements/polymer@1.1.4) (2020-01-09)
 
 **Note:** Version bump only for package @apollo-elements/polymer
