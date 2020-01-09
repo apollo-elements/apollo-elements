@@ -31,7 +31,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       - name: Publish package
-        run: yarn lerna publish --yes --registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN} --message 'chore: release new versions'
+        run: yarn deploy:ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
