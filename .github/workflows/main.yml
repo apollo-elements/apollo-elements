@@ -15,8 +15,7 @@ jobs:
         run: |
           git config --global user.name '@bennypowers'
           git config --global user.email 'bennypowers@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${GITHUB_PAT}@github.com/$GITHUB_REPOSITORY
-          git fetch
+          git remote set-url origin https://${GITHUB_PAT}@github.com/bennypowers/apollo-elements
         env:
           USER_NAME: ${{ secrets.DEPLOYING_USER_NAME }}
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
