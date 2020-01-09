@@ -1,6 +1,11 @@
 import getGraphQLScriptChildDocument from '@apollo-elements/lib/get-graphql-script-child-document';
 import isValidGql from '@apollo-elements/lib/is-valid-gql';
 
+import { dedupeMixin } from './dedupe-mixin';
+
+/** @typedef {import('apollo-client').ApolloClient} ApolloClient */
+/** @typedef {import('graphql').DocumentNode} DocumentNode */
+
 /**
  * `ApolloElementMixin`: class mixin for apollo custom elements.
  *
@@ -10,7 +15,7 @@ import isValidGql from '@apollo-elements/lib/is-valid-gql';
  * @param {*} superclass the class to mix into
  * @return {ApolloElement~mixin} The mixed class
  */
-export const ApolloElementMixin = superclass =>
+export const ApolloElementMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo elements
    * @mixin
@@ -94,4 +99,4 @@ export const ApolloElementMixin = superclass =>
       const doc = getGraphQLScriptChildDocument(this);
       if (doc) this.document = doc;
     }
-  };
+  });

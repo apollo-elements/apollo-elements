@@ -1,22 +1,10 @@
-import { ApolloElementMixin } from './apollo-element-mixin.js';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
+import compose from 'crocks/helpers/compose';
 import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 import pick from 'crocks/helpers/pick';
-import compose from 'crocks/helpers/compose';
 
-/** @typedef {import('apollo-client').ApolloError} ApolloError */
-/** @typedef {import('apollo-client').ApolloQueryResult} ApolloQueryResult */
-/** @typedef {import('apollo-client').ErrorPolicy} ErrorPolicy */
-/** @typedef {import('apollo-client').FetchMoreQueryOptions} FetchMoreQueryOptions */
-/** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
-/** @typedef {import('apollo-client').ObservableQuery} ObservableQuery */
-/** @typedef {import('apollo-client').QueryOptions} QueryOptions */
-/** @typedef {import('apollo-client').SubscribeToMoreOptions} SubscribeToMoreOptions */
-/** @typedef {import('apollo-client').SubscriptionOptions} SubscriptionOptions */
-/** @typedef {import('apollo-client').WatchQueryOptions} WatchQueryOptions */
-/** @typedef {import('apollo-client/core/watchQueryOptions').ModifiableWatchQueryOptions} ModifiableWatchQueryOptions */
-/** @typedef {import('graphql').DocumentNode} DocumentNode */
-/** @typedef {import('zen-observable')} Observable */
+import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { dedupeMixin } from './dedupe-mixin';
 
 const pickExecuteQueryOpts = compose(
   stripUndefinedValues,
@@ -54,17 +42,32 @@ const pickOpts = compose(
  * @appliesMixin ApolloElementMixin
  *
  * @param {*} superclass
- * @return {ApolloQueryMixin~mixin}
+ * @return {mixin}
  */
-export const ApolloQueryMixin = superclass =>
+export const ApolloQueryMixin = dedupeMixin(superclass =>
+
   /**
    * Class mixin for apollo-query elements
    * @mixin
    * @template TData
    * @template TVariables
-   * @alias ApolloQueryMixin~mixin
+   * @alias mixin
    */
   class extends ApolloElementMixin(superclass) {
+    /** @typedef {import('apollo-client').ApolloError} ApolloError */
+    /** @typedef {import('apollo-client').ApolloQueryResult<TData>} ApolloQueryResult */
+    /** @typedef {import('apollo-client').ErrorPolicy} ErrorPolicy */
+    /** @typedef {import('apollo-client').FetchMoreQueryOptions} FetchMoreQueryOptions */
+    /** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
+    /** @typedef {import('apollo-client').ObservableQuery} ObservableQuery */
+    /** @typedef {import('apollo-client').QueryOptions} QueryOptions */
+    /** @typedef {import('apollo-client').SubscribeToMoreOptions} SubscribeToMoreOptions */
+    /** @typedef {import('apollo-client').SubscriptionOptions} SubscriptionOptions */
+    /** @typedef {import('apollo-client').WatchQueryOptions} WatchQueryOptions */
+    /** @typedef {import('apollo-client/core/watchQueryOptions').ModifiableWatchQueryOptions} ModifiableWatchQueryOptions */
+    /** @typedef {import('graphql').DocumentNode} DocumentNode */
+    /** @typedef {import('zen-observable')} Observable */
+
     /**
      * A GraphQL document containing a single query.
      *
@@ -89,7 +92,7 @@ export const ApolloQueryMixin = superclass =>
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL query.
      *
-     * @return {Object<string, *>}
+     * @return {TVariables}
      */
     get variables() {
       return this.__variables;
@@ -344,4 +347,4 @@ export const ApolloQueryMixin = superclass =>
      * @abstract
      */
     onError() {}
-  };
+  });
