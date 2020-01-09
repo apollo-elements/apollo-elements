@@ -33,13 +33,11 @@ jobs:
           yarn logout
           echo "@apollo-elements:registry=http://registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
           echo "registry=http://registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          npm whoami
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish package
-        run: |
-          yarn logout
-          npm whoami
-          npm run deploy:ci
+        run: npm run deploy:ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
