@@ -30,9 +30,9 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       - name: Authenticate with Registry
         run: |
-          echo "@apollo-elements:registry=//registry.npmjs.org/" > ~/.npmrc
-          echo "registry=//registry.npmjs.org/" >> ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          echo "@apollo-elements:registry=http://registry.npmjs.org/" > ~/.npmrc
+          echo "registry=http://registry.npmjs.org/" >> ~/.npmrc
+          echo "http://registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish package
