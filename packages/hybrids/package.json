@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/hybrids",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
@@ -25,7 +25,7 @@
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "dependencies": {
-    "@apollo-elements/lib": "^1.1.0",
+    "@apollo-elements/lib": "^1.1.2",
     "crocks": "^0.11.1"
   },
   "peerDependencies": {

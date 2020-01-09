@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/test-helpers",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "description": "Testing helper functions for apollo-elements",
   "main": "index.js",
@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@types/crocks": "^0.0.7"
+    "@types/crocks": "^0.0.8"
   }
 }
