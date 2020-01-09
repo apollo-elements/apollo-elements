@@ -317,6 +317,7 @@ export const ApolloQueryMixin = superclass =>
       this.loading = loading;
       this.networkStatus = networkStatus;
       this.stale = stale;
+      this.onData({ data, loading, networkStatus, stale });
     }
 
     /**
@@ -327,5 +328,20 @@ export const ApolloQueryMixin = superclass =>
      */
     nextError(error) {
       this.error = error;
+      this.onError(error);
     }
+
+    /**
+     * Callback for when a query is completed.
+     *
+     * @abstract
+     */
+    onData() {}
+
+    /**
+     * Callback for when an error occurs in mutation.
+     *
+     * @abstract
+     */
+    onError() {}
   };
