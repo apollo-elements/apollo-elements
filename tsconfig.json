@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["es2018", "DOM"],
+    "lib": ["ES2018", "DOM"],
+    "target": "ES2018",
+    "allowJs": true,
+    "checkJs": true,
     "typeRoots": [
       "./typings",
       "./node_modules/@types"
