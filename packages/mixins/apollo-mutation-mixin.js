@@ -1,8 +1,10 @@
-import { ApolloElementMixin } from './apollo-element-mixin';
 import { ApolloError } from 'apollo-client';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
-import pick from 'crocks/helpers/pick';
 import compose from 'crocks/helpers/compose';
+import pick from 'crocks/helpers/pick';
+
+import { ApolloElementMixin } from './apollo-element-mixin';
+import { dedupeMixin } from './dedupe-mixin';
 
 /** @typedef {import('apollo-client').ErrorPolicy} ErrorPolicy */
 /** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
@@ -35,7 +37,7 @@ const pickOptions = compose(
  * @param {*} superclass the class to mix into
  * @return {ApolloMutationMixin~mixin} the mixed class
  */
-export const ApolloMutationMixin = superclass =>
+export const ApolloMutationMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo-mutation elements
    * @mixin
@@ -235,4 +237,4 @@ export const ApolloMutationMixin = superclass =>
      * @abstract
      */
     onError() { }
-  };
+  });

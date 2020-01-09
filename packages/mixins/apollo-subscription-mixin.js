@@ -1,7 +1,9 @@
-import isFunction from 'crocks/predicates/isFunction';
-import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers.js';
+import hasAllVariables from '@apollo-elements/lib/has-all-variables.js';
+import isFunction from 'crocks/predicates/isFunction';
+
 import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { dedupeMixin } from './dedupe-mixin';
 
 /** @typedef {import('apollo-client').FetchPolicy} FetchPolicy */
 /** @typedef {import('apollo-client').ApolloError} ApolloError */
@@ -25,13 +27,13 @@ import { ApolloElementMixin } from './apollo-element-mixin.js';
  * @appliesMixin ApolloElementMixin
  *
  * @param {*} superclass the class to mix in to
- * @return {ApolloSubscriptionMixin~mixin} the mixed class
+ * @return {mixin} the mixed class
  */
-export const ApolloSubscriptionMixin = superclass =>
+export const ApolloSubscriptionMixin = dedupeMixin(superclass =>
   /**
    * Class mixin for apollo-subscription elements
    * @mixin
-   * @alias ApolloSubscriptionMixin~mixin
+   * @alias mixin
    */
   class extends ApolloElementMixin(superclass) {
     /**
@@ -55,7 +57,7 @@ export const ApolloSubscriptionMixin = superclass =>
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
      *
-     * @return {Object<string, *>}
+     * @return {TVariables}
      */
     get variables() {
       return this.__variables;
@@ -162,4 +164,4 @@ export const ApolloSubscriptionMixin = superclass =>
       this.error = error;
       this.loading = false;
     }
-  };
+  });

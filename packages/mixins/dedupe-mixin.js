@@ -52,11 +52,14 @@
  * // MyCustomElement -> M2 -> M1 -> BaseMixin -> BaseCustomElement;
  * class MyCustomElement extends M2(M1(BaseCustomElement)) { ... }
  *
- * @template  T
- * @param {T} mixin
- * @return {T}
+ * @param {function} mixin
+ * @return {function}
  */
 export function dedupeMixin(mixin) {
+  /**
+   * @param {*} superClass
+   * @return {*}
+   */
   return superClass => {
     if (wasApplied(mixin, superClass)) {
       return superClass;
