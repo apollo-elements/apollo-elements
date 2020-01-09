@@ -13,7 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_PAT }}
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.name '@bennypowers'
+          git config --global user.email 'bennypowers@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_PAT}@github.com/$GITHUB_REPOSITORY
+          git fetch
+        env:
+          USER_NAME: ${{ secrets.DEPLOYING_USER_NAME }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
       - name: Checkout master
         run: git checkout master
@@ -43,16 +53,6 @@ jobs:
         run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Configure CI Git User
-        run: |
-          git config --global user.email octobot@github.com
-          git config --global user.name GitHub Actions
-          git remote set-url origin https://x-access-token:${GITHUB_PAT}@github.com/$GITHUB_REPOSITORY
-          git fetch
-        env:
-          USER_NAME: ${{ secrets.DEPLOYING_USER_NAME }}
-          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
       - name: Publish package
         run: yarn deploy --yes
