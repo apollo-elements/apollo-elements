@@ -7,15 +7,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-      - name: Install rsync
-        run: sudo apt install rsync
-
-      - uses: actions/checkout@master
-
+      - name: checkout
+        uses: actions/checkout@v1
       - name: Configure CI Git User
         run: |
           git config --global user.name '@bennypowers'
@@ -25,40 +20,28 @@ jobs:
         env:
           USER_NAME: ${{ secrets.DEPLOYING_USER_NAME }}
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
-
-      - name: Install yarn
-        run: |
-          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-          sudo apt-get update
-          sudo apt-get install yarn
-
+      - name: Checkout and pull branch
+        run: git checkout "${GITHUB_REF:11}" && git pull
       - name: Install Packages
         run: yarn install
-
       - name: Test
         run: yarn test
-
       - name: Upload coverage results to Code Climate
         run: sh ./scripts/upload-coverage.sh
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-
-      - name: Authenticate with Registry
-        run: echo "registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Publish package
-        run: yarn deploy --yes
+        run: yarn lerna publish --yes --registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN} --message 'chore: release new versions'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
-
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build Docs
         run: yarn docs
-
+      - run: echo "apolloelements.dev" > docs/CNAME
       - name: Deploy Docs
-        run: |
-          echo "apolloelements.dev" > docs/CNAME
-          npx gh-pages --dist docs
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_PAT }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: docs # The folder the action should deploy.
