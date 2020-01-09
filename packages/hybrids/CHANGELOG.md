@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@1.1.1...@apollo-elements/hybrids@1.1.4) (2020-01-09)
+
+
+### Bug Fixes
+
+* **hybrids:** remove bad import from index.js ([c60ef05](https://github.com/apollo-elements/apollo-elements/commit/c60ef05)), closes [#63](https://github.com/apollo-elements/apollo-elements/issues/63)
+
+
+
+
+
 ## [1.1.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@1.1.1...@apollo-elements/hybrids@1.1.3) (2020-01-09)
 
 
