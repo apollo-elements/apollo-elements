@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@1.1.2...@apollo-elements/lib@1.1.3) (2020-01-09)
+
+
+### Bug Fixes
+
+* **lib:** add missing exports to .d.ts ([20e4acc](https://github.com/apollo-elements/apollo-elements/commit/20e4acc))
+
+
+
+
+
 ## [1.1.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@1.1.1...@apollo-elements/lib@1.1.2) (2020-01-09)
 
 **Note:** Version bump only for package @apollo-elements/lib
