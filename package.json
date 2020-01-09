@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "postinstall": "lerna bootstrap --hoist",
     "deploy": "lerna publish --message 'chore: release new versions'",
+    "deploy:ci": "lerna publish --yes --message 'chore: release new versions' --registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN}",
     "test": "karma start",
     "test:watch": "karma start --auto-watch=true --single-run=false"
   },
