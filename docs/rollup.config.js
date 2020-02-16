@@ -1,5 +1,5 @@
 import { terser } from 'rollup-plugin-terser';
-import resolve from 'rollup-plugin-node-resolve';
+import resolve from '@rollup/plugin-node-resolve';
 
 export default {
   input: 'docs/src.js',
@@ -9,7 +9,6 @@ export default {
     terser({
       warnings: true,
       keep_fnames: true,
-      sourcemap: true,
       compress: { passes: 2 },
       mangle: { properties: false, keep_fnames: true },
     }),

@@ -1,4 +1,7 @@
 node_modules
 docs/webcomponentsjs
 docs/bundle.js
-packages/eslint-config/index.cjs.js
+packages/**/*.js
+packages/*/*.js
+packages/**/*.d.ts
+packages/*/*.d.ts

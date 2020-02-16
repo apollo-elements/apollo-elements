@@ -1,3 +1,0 @@
-describe('NotifyingElementMixin', function describeNotifyingElementMixin() {
-
-});

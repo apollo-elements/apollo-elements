@@ -10,3 +10,16 @@ docs/webcomponentsjs
 docs/bundle.js
 analysis.json
 lerna-debug.log
+
+packages/*/*.js
+packages/*/*.js.map
+packages/*/*.d.ts
+packages/*/*.d.ts.map
+
+!packages/*/global.d.ts
+!packages/gluon/gluon.d.ts
+packages/hybrids/factories/*.d.ts
+packages/hybrids/factories/*.js
+packages/hybrids/factories/*.js.map
+packages/@types/crocks/predicates/isArray.js
+packages/@types/crocks/predicates/isArray.js.map

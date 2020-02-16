@@ -1,0 +1,5 @@
+mutation ParamMutation($param: String!) {
+  noParam {
+    noParam
+  }
+}

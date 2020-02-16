@@ -5,6 +5,9 @@
   "main": "index.js",
   "module": "index.js",
   "scripts": {
+    "prepublishOnly": "tsc -b .",
+    "build": "tsc",
+    "start": "tsc -w",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {
@@ -28,8 +31,9 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "crocks": "^0.11.1",
-    "graphql": "^14.4.1",
-    "graphql-tag": "^2.10.1"
+    "crocks": "^0.12.4",
+    "graphql": "^15.0.0",
+    "graphql-tag": "^2.10.3",
+    "tslib": "^2.0.0"
   }
 }

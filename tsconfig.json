@@ -1,12 +1,9 @@
 {
+  "extends": "./tsconfig.settings.json",
   "compilerOptions": {
-    "lib": ["ES2018", "DOM"],
-    "target": "ES2018",
-    "allowJs": true,
-    "checkJs": true,
-    "typeRoots": [
-      "./typings",
-      "./node_modules/@types"
-    ]
+    "baseUrl": ".",
+    "paths": {
+       "@apollo-elements/*": ["packages/*/src"]
+    }
   }
 }
