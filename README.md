@@ -202,7 +202,7 @@ customElements.define('vanilla-query', class VanillaQuery extends ApolloQueryMix
   set data(data) {
     this.__data = data;
     this.shadowRoot.innerText = `${data.helloWorld.greeting}, ${data.helloWorld.name}`;
-  }  
+  }
 });
 ```
 
@@ -212,8 +212,12 @@ Apollo Elements uses `Object.fromEntries` and object spread syntax, so you may n
 Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle apollo-client in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. Your `rollup.config.js` might look something like this:
 
 ```js
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+// necessary for apollo
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+// optional, but nice
+import litcss from 'rollup-plugin-lit-css';
+import graphql from '@kocal/rollup-plugin-graphql';
 
 export default {
   input: [
@@ -224,7 +228,7 @@ export default {
   ],
 
   output: [{
-    dir: 'build/modern',
+    dir: 'build',
     format: 'es',
     sourcemap: true,
   }, {
@@ -234,24 +238,8 @@ export default {
   }],
 
   plugins: [
-
-    // REQUIRED to roll apollo-client up
-    resolve({
-      browser: true,
-      jsnext: true,
-      module: true,
-    }),
-
-    commonjs({
-      namedExports: {
-        // Necessary to roll apollo-link-state up.
-        // until graphql-anywhere 5.0
-        'graphql-anywhere/lib/async': ['graphql'],
-        // Needed to roll up apollo-cache-persist
-        'apollo-cache-persist': ['persistCache']
-      }
-    }),
-
+    resolve(),
+    commonjs(),
   ]
 }
 ```

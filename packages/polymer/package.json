@@ -5,7 +5,12 @@
   "main": "index.js",
   "module": "index.js",
   "scripts": {
-    "docs": "polymer analyze > docs/analysis.json",
+    "prepublishOnly": "tsc -b .",
+    "build": "tsc",
+    "start": "tsc -w",
+    "docs": "run-s docs:*",
+    "docs:polymer": "polymer analyze > docs/analysis.json",
+    "docs:wca": "wca analyze './*.ts' --format json --outFile custom-elements.json",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {
@@ -29,6 +34,7 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@apollo-elements/mixins": "^1.2.1"
+    "@apollo-elements/mixins": "^1.2.1",
+    "tslib": "^2.0.0"
   }
 }

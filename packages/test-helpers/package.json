@@ -8,6 +8,11 @@
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git"
   },
+  "scripts": {
+    "prepublishOnly": "tsc -b .",
+    "build": "tsc",
+    "start": "tsc -w"
+  },
   "keywords": [
     "Apollo",
     "GraphQL",
@@ -21,6 +26,6 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@types/crocks": "^0.0.8"
+    "tslib": "^2.0.0"
   }
 }

@@ -1,0 +1,5 @@
+query NullableParamQuery($nullable: String) {
+  nullableParam(nullable: $nullable) {
+    nullable
+  }
+}

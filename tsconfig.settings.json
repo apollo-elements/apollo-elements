@@ -1,0 +1,18 @@
+{
+  "files": ["./declaration.d.ts"],
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM", "DOM.ITERABLE"],
+    "target": "ES2017",
+    "module": "ESNext",
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noEmitOnError": false,
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "plugins": [
+      { "name": "typescript-lit-html-plugin" },
+      { "name": "ts-lit-plugin" }
+    ]
+  }
+}

@@ -197,7 +197,7 @@ See this simple chat-app demo which demonstrates building custom elements which 
 ## 😎 Cool Tricks
 
 ### 🏦 Managing the Cache
-When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `onUpdate` property on elements that extend from `ApolloMutation`
+When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `updater` property on elements that extend from `ApolloMutation`
 
 ```js
 import gql from 'graphql-tag';
@@ -244,7 +244,7 @@ const template = html`
     .client="${client}"
     .mutation="${mutation}"
     .variables="${{id: 1}}"
-    .onUpdate="${updateFunc}"
+    .updater="${updateFunc}"
   ></mutating-element>
 `;
 

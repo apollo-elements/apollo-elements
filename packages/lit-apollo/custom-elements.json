@@ -1,0 +1,60 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "apollo-element",
+      "path": "./apollo-element.ts",
+      "description": "# ApolloElement\n\nCustom Element base class for apollo custom elements.",
+      "attributes": [
+        {
+          "name": "client",
+          "description": "The Apollo client.",
+          "type": "ApolloClient<NormalizedCacheObject> | undefined",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "data",
+          "description": "The latest data for the query from the Apollo cache",
+          "type": "TData"
+        },
+        {
+          "name": "error",
+          "description": "The latest error for the query from the Apollo cache",
+          "type": "Error"
+        },
+        {
+          "name": "loading",
+          "description": "If the query is currently in-flight.",
+          "type": "boolean"
+        }
+      ],
+      "properties": [
+        {
+          "name": "client",
+          "attribute": "client",
+          "description": "The Apollo client.",
+          "type": "ApolloClient<NormalizedCacheObject> | undefined",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "data",
+          "attribute": "data",
+          "description": "The latest data for the query from the Apollo cache",
+          "type": "TData"
+        },
+        {
+          "name": "error",
+          "attribute": "error",
+          "description": "The latest error for the query from the Apollo cache",
+          "type": "Error"
+        },
+        {
+          "name": "loading",
+          "attribute": "loading",
+          "description": "If the query is currently in-flight.",
+          "type": "boolean"
+        }
+      ]
+    }
+  ]
+}
