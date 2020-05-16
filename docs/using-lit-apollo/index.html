@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Using lit-apollo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta name="description" content="Declarative Data that Uses the Platform" />
+    <meta name="theme-color" content="#7ED9D9">
+    <meta property="og:title" content="Using lit-apollo" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:description" content="Declarative Data that Uses the Platform" />
+    <meta property="og:site_name" content="Using lit-apollo" />
+    <meta property="og:image" content="https://apolloelements.dev/using-lit-apollo/images/poster.png" />
+    <meta property="og:image:alt" content="Using lit-apollo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://apolloelements.dev/using-lit-apollo/" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@PowersBenny" />
+    <meta name="twitter:creator" content="@PowersBenny" />
+
+    <link rel="preload" as="image" href="https://i.imgflip.com/41sc82.jpg"/>
+    <link rel="preload" as="image" href="https://media.giphy.com/media/Utu9EoKlfEyVF082Ks/giphy.gif"/>
+    <link rel="preload" as="image" href="https://media.giphy.com/media/JsJfghwzAP8St2JcfG/giphy.gif"/>
+
+    <link rel="preload" as="script" href="https://unpkg.com/@webcomponents/webcomponentsjs/webcomponents-loader.js"/>
+    <link rel="preload" as="script" href="https://unpkg.com/marked@1.1.0/lib/marked.js"/>
+    <link rel="preload" as="script" href="https://unpkg.com/prismjs@1.20.0/prism.js"/>
+    <link rel="preload" as="script" href="https://unpkg.com/prismjs@1.20.0/components/prism-graphql.min.js"/>
+    <link rel="preload" as="script" href="https://unpkg.com/prismjs@1.20.0/components/prism-typescript.min.js"/>
+    <link rel="preload" as="script" href="./zero-md.js"/>
+
+    <link rel="preload" as="font" href="Recursive_VF_1.051.woff2" type="font/woff2"/>
+
+    <link rel="modulepreload" href="https://unpkg.com/@power-elements/json-viewer/json-viewer.js?module"/>
+    <link rel="modulepreload" href="https://unpkg.com/@power-elements/service-worker?module"/>
+    <link rel="modulepreload" href="https://unpkg.com/slidem/slidem-deck.js?module"/>
+    <link rel="modulepreload" href="https://unpkg.com/slidem/slidem-slide.js?module"/>
+    <link rel="modulepreload" href="https://unpkg.com/@gluon/keybinding/gluon-keybinding.js?module"/>
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="canonical" href="https://apolloelements.dev/using-lit-apollo/">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+      window.ZeroMd = { config: { cssUrls: ['prism.css'] } };
+    </script>
+
+    <script type="module" src="https://unpkg.com/@power-elements/json-viewer/json-viewer.js?module"></script>
+    <script type="module" src="https://unpkg.com/@power-elements/service-worker?module"></script>
+    <script type="module" src="https://unpkg.com/slidem/slidem-deck.js?module"></script>
+    <script type="module" src="https://unpkg.com/slidem/slidem-slide.js?module"></script>
+    <script type="module" src="https://unpkg.com/@gluon/keybinding/gluon-keybinding.js?module"></script>
+
+  </head>
+  <noscript>
+    <style>
+      body {
+        padding-top: 80px;
+      }
+
+      h1 {
+        text-transform: uppercase;
+      }
+
+      h1, p {
+        text-align: center;
+      }
+
+      h1 span:first-child {
+        line-height: 0.6;
+        color: var(--tertiary);
+        font-size: 40vw;
+      }
+
+      h1 span:last-child {
+        line-height: 0.2;
+        color: var(--primary);
+        font-size: 20vw;
+      }
+
+      p {
+        font-size: 24px;
+      }
+    </style>
+  </noscript>
+  <body>
+
+    <noscript>
+      <h1>
+        <span>&nbsp;Lit&nbsp;</span>
+        <span><code>Apollo</code></span>
+      </h1>
+
+      <p>Data-Driven Components that Use the Platform</p>
+      <p>This presentation relies on JavaScript. Please consider enabling JavaScript for this site.</p>
+    </noscript>
+
+    <script>
+      addEventListener('keyup', event => {
+        if (event.key !== 'f') return;
+        if (document.fullscreen) document.exitFullscreen();
+        else document.body.requestFullscreen();
+      });
+    </script>
+
+    <slidem-deck id="deck"
+                 transition="slide-in slide-out"
+                 itemscope
+                 itemtype="http://schema.org/PresentationDigitalDocument"
+                 loading>
+      <gluon-keybinding key="Backspace" slot="backward"></gluon-keybinding>
+      <gluon-keybinding key=" " slot="forward"></gluon-keybinding>
+      <gluon-keybinding key="h" slot="backward"></gluon-keybinding>
+      <gluon-keybinding key="j" slot="forward"></gluon-keybinding>
+      <gluon-keybinding key="k" slot="backward"></gluon-keybinding>
+      <gluon-keybinding key="l" slot="forward"></gluon-keybinding>
+
+      <slidem-slide name="intro"
+                    slide-out
+                    center>
+        <h1>
+          <span uppercase fit line-height="0.6" color="--tertiary">&nbsp;Lit&nbsp;</span>
+          <span uppercase fit line-height="0.2" color="--primary"><code style="--slnt:-12">Apollo</code></span>
+        </h1>
+
+        <p center>Data-Driven Components that Use the Platform</p>
+        <p center font-size="24px">(Space, <kbd>H</kbd><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd> or <kbd>→</kbd><kbd>←</kbd> Keys to Navigate)</p>
+        <p center font-size="24px">(<kbd>F</kbd> for Fullscreen)</p>
+      </slidem-slide>
+
+      <slidem-slide name="graphql">
+        <h2 fit uppercase color="--primary">GraphQL</h2>
+        <p>Query Language for APIs</p>
+        <p>Published by Facebook in 2015</p>
+      </slidem-slide>
+
+      <slidem-slide name="tradeoffs">
+        <h2>Tradeoffs ⚖️</h2>
+        <section reveal>
+          <h3>✅ Pros</h3>
+          <ul>
+            <li>Strongly Typed at Runtime</li>
+            <li>Highly Abstract and Expressive</li>
+            <li>Easily Manage Deeply Nested Data</li>
+            <li>Fields Defined by Functions Called Resolvers</li>
+          </ul>
+        </section>
+        <section reveal>
+          <h3>😕 Cons</h3>
+          <ul>
+            <li>Implementation Overhead</li>
+            <li>Unfamiliar Debugging Story</li>
+            <li>Performance Pitfalls</li>
+            <li>Rife with Gotcha's</li>
+          </ul>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="queries-and-mutations">
+        <h2>Queries and Mutations</h2>
+        <p>Unlike REST APIs, GraphQL exposes a single endpoint.</p>
+        <p reveal>Consumers read data from the graph with <code>Queries</code>, and change data on the graph with <code>Mutations</code></p>
+        <section reveal>
+          <p>By analogy to REST:</p>
+          <dl class="analogy">
+            <dt><code>GET</code></dt>
+            <dd><code>query</code></dd>
+            <dt><code>POST</code>,<br/><code>PUT</code>,<br/><code>DELETE</code></dt>
+            <dd><code>mutation</code></dd>
+          </dl>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="example-query">
+        <h2>Queries</h2>
+        <figure class="progressive">
+
+          <zero-md>
+            <script type="text/markdown">
+              ```graphql
+              query PersonQuery           {
+
+
+
+
+
+
+
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```graphql
+              query PersonQuery($id: ID!) {
+
+
+
+
+
+
+
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```graphql
+              query PersonQuery($id: ID!) { # query document
+                person(id: $id) {           # query resolver
+
+
+
+
+
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```graphql
+              query PersonQuery($id: ID!) {
+                person(id: $id) {
+                  name
+                  picture
+
+
+
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```graphql
+              query PersonQuery($id: ID!) {
+                person(id: $id) {
+                  name
+                  picture
+                  friends {
+                    name
+                  }
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <json-viewer reveal>
+            <script type="application/json">
+              {
+                "data": {
+                  "person": {
+                    "name": "Boris Johnson",
+                    "picture": "https://www.pri.org/file/london-mayor-boris-johnson-zip-line-2012-01-08jpg",
+                    "friends": [
+                      { "name": "Dominic Raab" },
+                      { "name": "Sajid Javid" },
+                      { "name": "Priti Patel" }
+                    ]
+                  }
+                }
+              }
+            </script>
+          </json-viewer>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="example-database">
+        <p>Even if the database schema doesn't match your query...</p>
+        <json-viewer>
+          <script type="application/json">
+            {
+              "id": "bojojo",
+              "first_name": "Boris",
+              "last_name": "Johnson",
+              "address": "10 Downing Street,London,UK",
+              "friend_ids": [ "raabster1974", "sajidlad", "pat-l" ]
+            }
+          </script>
+        </json-viewer>
+        <p>...you can still respond sensibly.</p>
+      </slidem-slide>
+
+      <slidem-slide name="schema-resolvers">
+        <section>
+          <p>The GraphQL Schema tells your server the type of each object.</p>
+          <figure class="progressive" style="height:6em">
+            <zero-md>
+              <script type="text/markdown">
+                ```graphql
+                type Person {
+
+
+
+                }
+                ```
+              </script>
+            </zero-md>
+
+            <zero-md reveal>
+              <script type="text/markdown">
+                ```graphql
+                type Person {
+                  name: String
+                  picture: String
+
+                }
+                ```
+              </script>
+            </zero-md>
+
+            <zero-md reveal>
+              <script type="text/markdown">
+                ```graphql
+                type Person {
+                  name: String
+                  picture: String
+                  friends: [Person]
+                }
+                ```
+              </script>
+            </zero-md>
+          </figure>
+        </section>
+
+        <section reveal>
+          <p>The resolvers define the contents of each field.</p>
+          <figure class="progressive">
+            <zero-md>
+              <script type="text/markdown">
+                ```js
+                export const friends =
+                  (parent, args, context) =>
+                    parent.friends
+                      .map(context.dataSources.Person.getPersonById)
+
+
+
+
+                ```
+              </script>
+            </zero-md>
+
+            <zero-md reveal>
+              <script type="text/markdown">
+                ```js
+                export const friends =
+                  (parent, args, context) =>
+                    parent.friends
+                      .map(context.dataSources.Person.getPersonById)
+
+                export const picture =
+                  (parent, args, context) =>
+                    context.dataSources.Person.getPictureById(parent.id)
+                ```
+              </script>
+            </zero-md>
+          </figure>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="apollo">
+        <h2 fit uppercase color="--primary">Apollo</h2>
+        <p reveal>An opinionated framework for implementing GraphQL Apps</p>
+        <section grid>
+          <article reveal id="apollo-client">
+            <h3>Apollo Client</h3>
+            <ul>
+              <li>Front-end data store</li>
+              <li>"Redux", but GraphQL</li>
+              <li>Network & Client State</li>
+            </ul>
+          </article>
+
+          <article reveal id="apollo-server">
+            <h3>Apollo Server</h3>
+            <ul>
+              <li>NodeJS Framework</li>
+              <li>Quickly Bootstrap your Server</li>
+              <li>Deploy to Cloud Providers</li>
+            </ul>
+          </article>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="apollo-client">
+        <h2>Apollo Client</h2>
+        <p>Stores its data in a <strong>normalized cache</strong></p>
+        <p>Manage <strong>local state</strong> with GraphQL queries and mutations</p>
+        <figure class="progressive">
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```graphql
+              query Dashboard {
+                kpiCharts {
+                  id
+                  chartType
+                  series { title data { x y } }
+
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```graphql
+              query Dashboard {
+                kpiCharts {
+                  id
+                  chartType
+                  series { title data { x y } }
+                  expanded @client
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="apollo-elements">
+        <h2 fit uppercase color="--primary">Apollo Elements</h2>
+        <p>Base-classes and Mixins for many Web Component Libraries</p>
+        <figure reveal>
+          <figcaption>
+            Apollo Client,
+            <em>but <strong>web components</strong></em>
+          </figcaption>
+          <img alt="Super Nintendo Chalmers" src="steamed.jpg"/>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="apollo-elements-mixins">
+        <figure class="progressive">
+          <zero-md>
+            <script type="text/markdown">
+              ```js
+
+
+              class PersonElement extends HTMLElement {
+                constructor() {
+                  super();
+                  this.attachShadow({ mode: 'open' });
+                }
+              }
+
+              customElements.define('person-element', PersonElement);
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              import { ApolloQueryMixin } from '@apollo-elements/mixins';
+
+              class PersonElement extends ApolloQueryMixin(HTMLElement) {
+                constructor() { /* ... */ }
+
+
+
+
+
+
+
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              import { ApolloQueryMixin } from '@apollo-elements/mixins';
+
+              class PersonElement extends ApolloQueryMixin(HTMLElement) {
+                constructor() { /* ... */ }
+
+                attributeChangedCallback(name, old, id) {
+                  switch (name) {
+                    case 'person-id': this.variables = val ? { id }; break;
+                    default: this.variables = null;
+                  }
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              import { ApolloQueryMixin } from '@apollo-elements/mixins';
+
+              class PersonElement extends ApolloQueryMixin(HTMLElement) {
+                get data() { return this._data; }
+
+                set data(data) {
+                  this._data = data;
+                  const person = data?.person;
+                  const name = person?.name ?? 'Someone';
+                  const friends = person?.friends ?? [];
+                  this.shadowRoot.innerHTML = `
+                    ${friends.map(friend => `${name} 💗 ${friend.name}`)}
+                  `
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              import './person-element';
+              import gql from 'graphql-tag';
+
+              const element = document.createElement('person-element');
+
+              element.setAttribute('person-id', 'bojojo');
+
+              element.query = gql`
+                query PersonQuery($id: ID!) {
+                  person(id: $id) {
+                    name
+                    picture
+                    friends {
+                      name
+                    }
+                  }
+                }
+              `;
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <!-- NB: uses a zero-width-joiner char in the closing script tag inside the fenced code block -->
+            <script type="text/markdown">
+              ```html
+              <person-element person-id="bojojo">
+                <script type="application/graphql">
+                  query PersonQuery($id: ID!) {
+                    person(id: $id) {
+                      name
+                      picture
+                      friends {
+                        name
+                      }
+                    }
+                  }
+                </‍script>
+              </person-element>
+
+
+              <blink>😎</blink>
+
+
+
+              ```
+            </script>
+          </zero-md>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="lit-apollo">
+        <h2 fit uppercase color="--primary">lit-apollo</h2>
+        <p>👩‍🚀 Apollo for Data Layer</p>
+        <p>🚒 <code>LitElement</code> for View Layer & Reactivity</p>
+        <p>✅ TypeScript typings</p>
+        <section reveal>
+          <p>🤝 Pairs well with...</p>
+          <ul>
+            <li><code>rollup-plugin-graphql</code></li>
+            <li><code>rollup-plugin-lit-css</code></li>
+            <li><code>graphql-codegen</code></li>
+          </ul>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="lit-apollo-query">
+        <h2><code>ApolloQuery</code> base class</h2>
+        <figure class="progressive">
+          <zero-md>
+            <script type="text/markdown">
+              ```typescript
+              import { ApolloQuery,                               } from '@apollo-elements/lit-apollo';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```typescript
+              import { ApolloQuery, customElement, property, html } from '@apollo-elements/lit-apollo';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```typescript
+              import { ApolloQuery, customElement, property, html } from '@apollo-elements/lit-apollo';
+              import PersonQuery from './Person.query.graphql';        // rollup-plugin-graphql
+              import styles from './person-query.css';                 // rollup-plugin-lit-css
+              import type { Person } from '../../generated/schema';    // graphql-codegen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              ```
+            </script>
+          </zero-md>
+
+          <img reveal
+               center
+               style="top:calc(6em)"
+               src="file-tree.png"
+               alt="file tree with three files: person-element.ts, person-element.css, and Person.query.graphql"/>
+
+          </zero-md>
+
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```typescript
+              interface Data { person: Person; }
+              interface Variables { id: string; }
+
+              @customElement('person-element')
+              class PersonElement extends ApolloQuery<Data, Variables> {
+                @property({ attribute: 'person-id' }) personId: string = null;
+
+                static styles = [styles];
+
+                get variables() {
+                  return { id: this.personId };
+                }
+              }
+
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```typescript
+
+
+
+              @customElement('person-element')
+              class PersonElement extends ApolloQuery<↔️> {
+
+                render() {
+                  const friends = this.data?.person?.friends ?? [];
+                  const name = this.data?.name ?? 'Someone';
+                  return html`${friends.map(friend => `${name} 💗 ${friend.name}`)}`;
+                }
+
+              }
+
+              ```
+            </script>
+          </zero-md>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="lit-apollo-mutation">
+        <h2>Mutations</h2>
+        <p>Say we had a list component</p>
+        <zero-md>
+          <script type="text/markdown">
+            ```js
+            class FriendsList extends ApolloQuery {
+              render() {
+                return html`
+                  ${this.data.friends.map(friend => html`
+                    <toggle-friend .friend="${friend}"></toggle-friend>`)}`;
+              }
+            }
+            ```
+          </script>
+        </zero-md>
+
+        <section reveal>
+          <p>Let's define <code>&lt;toggle-friend></code> as a mutation component!</p>
+          <zero-md>
+            <script type="text/markdown">
+              ```graphql
+              mutation ToggleBestFriendMutation($friendId: ID!) {
+                toggleBestFriend(friendId: $friendId) {
+                  id name picture
+                  isBestFriend
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="mutations-dom">
+        <h2>Mutations - DOM</h2>
+        <figure class="progressive">
+          <zero-md>
+            <script type="text/markdown">
+              ```js
+              import { ApolloMutation } from '@apollo-elements/lit-apollo';
+
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+
+
+
+
+
+
+
+
+
+
+
+
+              }
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              import { ApolloMutation, customElement, property, html } from '@apollo-elements/lit-apollo';
+
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+                @property({ type: Boolean, attribute: 'best-friend' }) isBestFriend = false;
+
+                render() {
+                  return html`
+                    <button @click="${() => this.mutate()}">
+                      ${this.isBestFriend ? '💔' : '💕'}
+                    </button>
+                  `;
+                }
+
+
+
+              }
+            </script>
+          </zero-md>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="mutations-optimistic">
+        <h2>Mutations - Optimistic UI</h2>
+        <figure class="progressive">
+
+          <zero-md>
+            <script type="text/markdown">
+              ```js
+
+              import ToggleBestFriendMutation from './ToggleBestFriend.mutation.graphql';
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+                mutation = ToggleBestFriendMutation;
+
+                get variables() { return this.dataset; }
+
+
+
+
+
+
+
+
+
+              }
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+
+              import ToggleBestFriendMutation from './ToggleBestFriend.mutation.graphql';
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+                mutation = ToggleBestFriendMutation;
+
+                get variables() { return this.dataset; }
+
+                get optimisticResponse() {
+                  return { __typename: "Mutation",
+                    toggleBestFriend: { __typename: "Person",
+                      id: this.variables.friendId,
+                      isBestFriend: !this.isBestFriend,
+                    }
+                  }
+                }
+              }
+            </script>
+          </zero-md>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="mutations-update">
+        <h2>Mutations - Updating the Cache</h2>
+        <figure class="progressive">
+          <zero-md>
+            <script type="text/markdown">
+              ```js
+
+
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+
+                onUpdate(cache, { data: { toggleBestFriend: friend } }) {
+
+
+
+
+
+
+
+
+
+                }
+              }
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+
+
+              import FriendsListQuery from '../friends-list/FriendsList.query.graphql';
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+
+                onUpdate(cache, { data: { toggleBestFriend: friend } }) {
+                  const query = FriendsListQuery;
+                  const existing = cache.readQuery({ query });
+
+
+
+
+
+
+
+                }
+              }
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+
+
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+
+                onUpdate(cache, { data: { toggleBestFriend: friend } }) {
+
+
+
+                  const friends =
+                        friend.isBestFriend ? [...existing.friends, friend]
+                      : existing.friends.filter(friend => friend.id !== friend.id);
+
+
+
+                }
+              }
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+
+
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+
+                onUpdate(cache, { data: { toggleBestFriend: friend } }) {
+
+
+
+
+
+
+
+                  const data = { ...existing, friends };
+                  cache.writeQuery({ query, data });
+                }
+              }
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+
+              import ToggleBestFriendMutation from './ToggleBestFriend.mutation.graphql';
+              import FriendsListQuery from '../friends-list/FriendsList.query.graphql';
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+
+                onUpdate(cache, { data: { toggleBestFriend: friend } }) {
+                  const query = FriendsListQuery;
+                  const existing = cache.readQuery({ query });
+
+                  const friends =
+                        friend.isBestFriend ? [...existing.friends, friend]
+                      : existing.friends.filter(friend => friend.id !== friend.id);
+
+                  const data = { ...existing, friends };
+                  cache.writeQuery({ query, data });
+                }
+              }
+            </script>
+          </zero-md>
+
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="cool-tricks"
+                    slide-in
+                    cover
+                    background="https://media.giphy.com/media/Utu9EoKlfEyVF082Ks/giphy.gif">
+        <h2 class="white-shadow"
+            fit
+            center
+            uppercase
+            color="black">
+          Cool Tricks
+        </h2>
+      </slidem-slide>
+
+      <slidem-slide name="lazy-resolvers">
+        <h2>Lazy-Loaded Resolvers</h2>
+        <p>Only load resolvers when components are needed.</p>
+        <p>Leverage the PRPL-pattern to keep the UX snappy.</p>
+        <figure class="progressive">
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```typescript
+              import type { Resolvers } from 'apollo-client';
+
+              export const ResolverMixin = superclass => class extends superclass {
+                resolvers: Resolvers;
+
+                connectedCallback() {
+                  super.connectedCallback();
+                  this.client.addResolvers(this.resolvers);
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```typescript
+              import * as GiantFeatureResolvers from './resolvers'
+
+              @customElement('giant-feature')
+              export class GiantFeature extends ApolloQuery {
+
+                query = GiantFeatureQuery;
+
+                resolvers = GiantFeatureResolvers;
+
+              }
+              ```
+            </script>
+          </zero-md>
+        </figure>
+
+      </slidem-slide>
+
+      <slidem-slide name="handling-errors">
+        <h2>GraphQL Error Handling</h2>
+        <figure class="progressive">
+          <section>
+            <p>Since they are nested and resolved by field, GraphQL queries can come back with…</p>
+            <ul>
+              <li>partial data, and/or</li>
+              <li>partial errors</li>
+            </ul>
+            <p>You have a lot of flexibility in how to handle them.</p>
+          </section>
+          <json-viewer reveal>
+            <script type="application/json">
+              {
+                "data": { "ingredients": ["salt", "sugar", "msg"] },
+                "error": {
+                  "networkError": null,
+                  "message": "GraphQL error: You must be logged in",
+                  "graphQLErrors": [
+                    {
+                      "message": "forbidden",
+                      "locations": [],
+                      "path": [ "secretIngredients" ],
+                      "extensions": { "code": "UNAUTHENTICATED" }
+                    }
+                  ]
+                }
+              }
+            </script>
+          </json-viewer>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="handling-errors">
+        <h2>Handle GraphQL Errors</h2>
+        <figure class="progressive">
+          <section>
+            <p>Bear in mind that errors in your client-side resolvers will be reported as <code>networkError</code>s.‍️</p>
+            <img block center width="50%" src="facepalm.jpg" alt="The classic Picard face-palm"/>
+            <p>Let's write a quick mixin to help us when debugging!</p>
+          </section>
+
+
+          <zero-md reveal>
+            <!-- NB: uses a zero-width-joiner char in the closing script tag inside the fenced code block -->
+            <script type="text/markdown">
+              ```js
+              const RenderQueryMixin = superclass => class extends superclass {
+                render() {
+                  return this.error ? this.renderError() : this.renderData();
+                }
+
+                renderError() {
+                  return html`
+                    <details>
+                      <summary><pre>${this.error.message.trim()}</pre></summary>
+                      <json-viewer id="render-query-error-detail">
+                        <script type="application/json">
+                          ${JSON.stringify(this.error)}
+                        </‍script>
+                      </json-viewer>
+                    </details>
+                  `;
+                }
+              };
+              ```
+            </script>
+          </zero-md>
+        </figure>
+
+      </slidem-slide>
+
+      <slidem-slide name="gotchas"
+                    slide-in
+                    cover
+                    background="https://media.giphy.com/media/JsJfghwzAP8St2JcfG/giphy.gif">
+        <h2 class="white-shadow"
+            fit
+            center
+            line-height="3"
+            color="black">
+          Gotchas
+        </h2>
+      </slidem-slide>
+
+      <slidem-slide name="gotchas-gql-limitation">
+        <h2>The Limitations of GraphQL</h2>
+        <figure class="progressive">
+          <section reveal>
+            <p>Some things just can't be expressed in GraphQL's Schema Definition Language, e.g. unions of scalar types.</p>
+            <p>For example, we couldn't represent a Highchart chart in GraphQL, because this <code>PointOptionsType</code> union contains both scalar and object types.</p>
+            <zero-md>
+              <script type="text/markdown">
+                ```ts
+                type PointOptionsType = number|string|(number|string)[]|PointOptionsObject|null;
+                ```
+              </script>
+            </zero-md>
+          </section>
+
+          <section reveal style="background-color:black;">
+            <p>The best we could hope for would be to wrap scalars in object types:</p>
+            <zero-md>
+              <script type="text/markdown">
+                ```graphql
+                type IntType { value: Int }
+                type FloatType { value: Int }
+                type StringType { value: String }
+                union PointOptionsType = IntType|FloatType|StringType|PointOptionsObject
+                ```
+              </script>
+            </zero-md>
+            <p>And we'd still have to parse the response on the client.</p>
+          </section>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="gotchas-null-checks">
+        <h2>Null-Checks Everywhere</h2>
+        <p>GraphQL type properties are optional by default. Non-nullability is opt-in.</p>
+        <section reveal>
+          <zero-md>
+            <script type="text/markdown">
+              ```graphql
+              type SomeNullable {
+                optionalField: String  # optional by default
+                requiredField: String! # Non-Nullable field
+              }
+              ```
+            </script>
+          </zero-md>
+          <p>This general programming gripe takes on acute significance when your app deals in deeply nested optionals.</p>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="gotchas-null-checks">
+        <h2>Null-Checks Everywhere</h2>
+        <p>Different languages have different constructs to help with this, e.g <code>Maybe</code>.</p>
+        <p>In JavaScript, get comfy with the Optional Chaining (<code>?.</code>) and Nullish Coalescing (<code>??</code>) operators.</p>
+        <figure class="progressive">
+          <zero-md>
+            <script type="text/markdown">
+              ```js
+              render() {
+                const {
+                  user: {
+                    address: {
+                      number = '',
+                      street = '',
+                    } = {}
+                  } = {}
+                } = this.data || {}
+
+                return html`{↔}️`;
+              }
+              ```
+            </script>
+          </zero-md>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              render() {
+                const number = this.data?.user?.address?.number ?? '';
+                const street = this.data?.user?.address?.street ?? '';
+                return html`{↔}️`;
+              }
+
+
+
+
+
+
+
+
+
+              ```
+            </script>
+          </zero-md>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="gotchas-typename">
+        <h2>Forgetting <code>__typename</code></h2>
+        <p>
+          GraphQL objects must come with a <code>__typename</code> property.
+          <span reveal>Omitting it when writing data to the Apollo cache throws an error.</span>
+        </p>
+        <section reveal class="bottom-fade">
+          <p>It may not be obvious from the stack trace where the error originates, so make sure to always include the <code>__typename</code>.</p>
+          <output class="error">
+            <pre>
+writeToStore.js:106 Missing field __typename in {
+  "amount": 100,
+  "currency": "gbp"
+},
+
+(anonymous) @ writeToStore.js:106
+writeSelectionSetToStore @ writeToStore.js:89
+writeFieldToStore @ writeToStore.js:200
+(anonymous) @ writeToStore.js:96
+writeSelectionSetToStore @ writeToStore.js:89
+writeResultToStore @ writeToStore.js:69
+replaceQueryResults @ replaceQueryResults.js:13
+data @ store.js:133
+apolloReducer @ store.js:46
+combination @ combineReducers.js:120
+dispatch @ createStore.js:165
+(anonymous) @ ApolloClient.js:174
+(anonymous) @ store.js:18
+ObservableQuery.updateQuery @ ObservableQuery.js:223
+(anonymous) @ ObservableQuery.js:142
+            </pre>
+          </output>
+        </section>
+      </slidem-slide>
+
+      <slidem-slide name="gotchas-object-id">
+        <h2>Forgetting to query for ID</h2>
+        <p>
+          The Apollo cache is normalized by object ID and<code>__typename</code>.
+          <span reveal>So if you already have an object in your cache, apollo won't fetch it twice unless you tell it to.</span>
+          <span reveal>This means that if you query for an object and its ID once, you have to always query for it by ID.</span>
+        </p>
+        <output reveal class="error">
+          <pre>
+Network error: Error writing result to store for query
+
+query PokemonQuery($id: ID) {
+  Pokemon(id: $id) {
+    name
+    url
+    createdAt
+  }
+}
+
+Store error: the application attempted to write an object with no provided
+id but the store already contains an id of Pokemon:ciwnmyvxn94uo0161477dicbm
+for this object.
+          </pre>
+        </output>
+      </slidem-slide>
+
+      <slidem-slide name="gotchas-deeply-updating">
+        <h2>Deeply Updating After Mutations</h2>
+        <figure class="progressive">
+          <section>
+            <p>If your graph has calculated fields that depend on deep properties as their inputs, they will need to update whenever the input changes.</p>
+            <p reveal>Apollo Client 3 will introduce "reactive variables" to help with this, but for now, you'll have to manually recalculate the dependent fields when you mutate ther inputs.</p>
+            <zero-md reveal>
+              <script type="text/markdown">
+                ```graphql
+                query UserProfile {
+                  localUser {
+                    id name picture
+                    friends { id name picture }
+                    bestFriends @client
+                  }
+                }
+                ```
+              </script>
+            </zero-md>
+          </section>
+
+          <zero-md reveal>
+            <script type="text/markdown">
+              ```js
+              import PersonResolvers from '../Person/resolvers';
+
+
+
+              @customElement('toggle-friend')
+              class ToggleBestFriend extends ApolloMutation {
+                onUpdate(cache, { data: { toggleBestFriend: friend } }) {
+                  // ...
+
+                  const data = {
+                    ...{ ...existing, friends },
+                    bestFriends: PersonResolvers.bestFriends({ ...existing, friends }),
+                  }
+
+                  cache.writeQuery({ query, data });
+                }
+              }
+              ```
+            </script>
+          </zero-md>
+        </figure>
+      </slidem-slide>
+
+      <slidem-slide name="the-lulz"
+                    slide-in
+                    cover
+                    center
+                    background="https://i.imgflip.com/41sc82.jpg"></slidem-slide>
+
+      <slidem-slide name="thanks"
+                    flex
+                    zoom-in
+                    column>
+        <section flex column bleed>
+          <h2 color="--secondary"
+              fit
+              center>
+            Thank You!
+          </h2>
+
+          <article class="author"
+                  grid
+                  itemprop="author"
+                  itemscope
+                  itemtype="http://schema.org/Person">
+            <a itemprop="name" href="https://bennypowers.dev">Benny Powers</a>
+            <a itemprop="email" href="mailto:web@bennypowers.com">web@bennypowers.com</a>
+            <div>
+              <span itemprop="jobTitle">Senior Software Engineer</span> @
+              <a itemprop="worksFor" href="https://aqovia.com">Aqovia</a>
+            </div>
+          </article>
+        </section>
+      </slidem-slide>
+
+    </slidem-deck>
+
+    <service-worker id="sw"
+        auto-reload
+        path="./sw.js"
+        scope="/using-lit-apollo/"
+    ></service-worker>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="https://unpkg.com/marked@1.1.0/lib/marked.js"></script>
+    <script src="https://unpkg.com/prismjs@1.20.0/prism.js"></script>
+    <script src="https://unpkg.com/prismjs@1.20.0/components/prism-graphql.min.js"></script>
+    <script src="https://unpkg.com/prismjs@1.20.0/components/prism-typescript.min.js"></script>
+
+    <!-- <script src="https://unpkg.com/zero-md/src/zero-md.js?module"></script> -->
+    <script src="./zero-md.js"></script>
+  </body>
+</html>
