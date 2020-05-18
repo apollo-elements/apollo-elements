@@ -512,12 +512,9 @@
 
                 set data(data) {
                   this._data = data;
-                  const person = data?.person;
-                  const name = person?.name ?? 'Someone';
-                  const friends = person?.friends ?? [];
-                  this.shadowRoot.innerHTML = `
-                    ${friends.map(friend => `${name} 💗 ${friend.name}`)}
-                  `
+                  const { name, friends } = data.person;
+                  this.shadowRoot.innerHTML =
+                    friends.map(friend => `${name || 'Someone'} 💗 ${friend.name}\n`)
                 }
               }
               ```
@@ -652,10 +649,10 @@
             <script type="text/markdown">
               ```typescript
               import { ApolloQuery, customElement, property, html } from '@apollo-elements/lit-apollo';
+
               import PersonQuery from './Person.query.graphql';        // rollup-plugin-graphql
               import styles from './person-query.css';                 // rollup-plugin-lit-css
               import type { Person } from '../../generated/schema';    // graphql-codegen
-
 
 
 
@@ -712,11 +709,11 @@
 
               @customElement('person-element')
               class PersonElement extends ApolloQuery<↔️> {
-
                 render() {
-                  const friends = this.data?.person?.friends ?? [];
-                  const name = this.data?.name ?? 'Someone';
-                  return html`${friends.map(friend => `${name} 💗 ${friend.name}`)}`;
+                  const { name, friends } = this.data.person;
+                  return html`
+                    ${friends.map(friend => `${ name|| 'Someone'} 💗 ${friend.name}`)}
+                  `;
                 }
 
               }
@@ -729,15 +726,20 @@
 
       <slidem-slide name="lit-apollo-mutation">
         <h2>Mutations</h2>
-        <p>Say we had a list component</p>
+        <p>Write UI components that update your graph</p>
+      </slidem-slide>
+
+      <slidem-slide name="lit-apollo-mutation">
+        <h2>Mutations</h2>
+        <p>Say we had a list component that should toggle an `isBestFriend` flag on any member of the list.</p>
         <zero-md>
           <script type="text/markdown">
             ```js
             class FriendsList extends ApolloQuery {
               render() {
-                return html`
-                  ${this.data.friends.map(friend => html`
-                    <toggle-friend .friend="${friend}"></toggle-friend>`)}`;
+                return html`${this.data.friends.map(friend => html`
+                  <toggle-friend .friend="${friend}"></toggle-friend>
+                `)}`;
               }
             }
             ```
@@ -771,7 +773,7 @@
 
 
 
-              @customElement('toggle-friend')
+
               class ToggleBestFriend extends ApolloMutation {
 
 
@@ -798,16 +800,16 @@
 
               @customElement('toggle-friend')
               class ToggleBestFriend extends ApolloMutation {
-                @property({ type: Boolean, attribute: 'best-friend' }) isBestFriend = false;
+                @property({ attribute: false }) friend: Person;
 
                 render() {
                   return html`
-                    <button @click="${() => this.mutate()}">
+                    <label for="button">${this.friend.name}</label>
+                    <button id="button" @click="${() => this.mutate()}">
                       ${this.isBestFriend ? '💔' : '💕'}
                     </button>
                   `;
                 }
-
 
 
               }
