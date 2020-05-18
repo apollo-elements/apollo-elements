@@ -83,6 +83,10 @@ ul {
   padding-inline-start: 1em;
 }
 
+ul li {
+  line-height: 1.5;
+}
+
 service-worker {
   display: none;
 }
@@ -131,17 +135,6 @@ img[middle][center] { margin: auto auto; }
 slidem-slide[flex]::part(content) { display: flex; }
 slidem-slide[column]::part(content) { flex-flow: column; }
 
-.avatar {
-  max-width: 36px;
-}
-
-.white-shadow {
-  text-shadow: 0px 0px 100px white;
-  --casl: .2;
-  --slnt: -12;
-  --wght: 600;
-}
-
 slidem-slide p {
   margin-block-start: 0.5em !important;
   margin-block-end: 0.5em !important;
@@ -173,6 +166,17 @@ zero-md:not(:last-child):not([bleed]) {
 json-viewer {
   padding: .6em 1em;
   font-size: 24px;
+}
+
+.avatar {
+  max-width: 36px;
+}
+
+.white-shadow {
+  text-shadow: 0px 0px 100px white;
+  --casl: .2;
+  --slnt: -12;
+  --wght: 600;
 }
 
 dl.analogy {
@@ -227,6 +231,15 @@ output.error pre {
   position: relative;
 }
 
+.author {
+  font-size: 36px;
+  margin-top: auto;
+  text-align: right;
+}
+
+.author a {
+  text-decoration: underline grey dashed;
+}
 [name="queries-and-mutations"] dt code { color: var(--secondary); }
 [name="queries-and-mutations"] dd code { color: var(--primary); }
 
@@ -268,13 +281,4 @@ output.error pre {
 [name="apollo-elements"] figcaption strong { --wght: 600; }
 
 [name="handling-errors"] json-viewer { font-size: 34px; }
-
-.author {
-  font-size: 36px;
-  margin-top: auto;
-  text-align: right;
-}
-
-.author a {
-  text-decoration: underline grey dashed;
-}
+[name="thanks"]:not([active]) { opacity: 0; }
