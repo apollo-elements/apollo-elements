@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@1.1.5...@apollo-elements/gluon@2.0.0) (2020-05-25)
+
+
+### Features
+
+* rewrite in typescript ([f69a648](https://github.com/apollo-elements/apollo-elements/commit/f69a6487b917a95af127547077c0d951f8df301b))
+
+
+### BREAKING CHANGES
+
+* - rename `update` => `updater` in Mutation components
+- remove `setVariables` from query-mixin
+- make parameters optional on:
+  - `ApolloQuery#subscribe`
+  - `ApolloSubscription#subscribe`
+  - `ApolloQuery#executeQuery`
+  - `ApolloQuery#fetchMore` and
+  - `ApolloQuery#watchQuery`
+- For Hybrids, setting variables now subscribes to the query
+
+affects: @apollo-elements/eslint-config, @apollo-elements/gluon, @apollo-elements/hybrids, @apollo-elements/lib, @apollo-elements/lit-apollo, @apollo-elements/mixins, @apollo-elements/polymer, @apollo-elements/test-helpers
+
+
+
+
+
 ## [1.1.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@1.1.4...@apollo-elements/gluon@1.1.5) (2020-01-09)
 
 **Note:** Version bump only for package @apollo-elements/gluon
