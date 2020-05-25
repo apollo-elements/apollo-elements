@@ -43,44 +43,38 @@ npm install --save @apollo-elements/lit-apollo
 
 ## 👩‍🚀 Usage
 You'll need to bundle the Apollo library with a tool like Rollup. See [instructions for bundling Apollo](https://github.com/apollo-elements/apollo-elements#-bundling) for advice on how to build a working Apollo client.
-After that, typical usage involves importing the base class and extending from it to define your component:
+
+We recommend assigning your `ApolloClient` instance to the `__APOLLO_CLIENT__` global variables. This not only automatically gives you [dev tools support](https://github.com/apollographql/apollo-client-devtools), but also lets all of your apollo elements connect to the client without needing to configure them.
+
+```js
+import ApolloClient from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+
+const cache =
+  new InMemoryCache();
+
+const link =
+  new HttpLink({ uri: '/graphql' });
+
+export const client =
+  new ApolloClient({ cache, link });
+
+window.__APOLLO_CLIENT__ = client;
+```
+
+Once that's been accomplished, import the base class and extend from it to define your component.
+
+We recommend using [rollup-plugin-graphql](https://npm.im/@kocal/rollup-plugin-graphql) during bundling, and [es-dev-server-import-graphql](https://npm.im/es-dev-server-import-graphql) during development to allow importing graphql documents.
 
 ```js
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
-
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
-import gql from 'graphql-tag'
-
-const protocol = host.includes('localhost') ? 'http' : 'https';
-const uri = `${protocol}://${host}/graphql`;
-const link = new HttpLink({ uri });
-const cache = new InMemoryCache();
-
-// Create the Apollo Client
-const client = new ApolloClient({ cache, link });
-
-// Compute graphql documents statically for performance
-const query = gql`
-  query {
-    helloWorld {
-      name
-      greeting
-    }
-  }
-`;
-
-const childQuery = gql`
-  query {
-    child {
-      foo
-      bar
-    }
-  }
-`;
+import ParentQuery from './Parent.query.graphql';
+import ChildQuery from './Child.query.graphql';
 
 class ConnectedElement extends ApolloQuery {
+  query = ParentQuery;
+
   render() {
     const { data, error, loading } = this;
     const { helloWorld = {} } = data || {}
@@ -92,21 +86,31 @@ class ConnectedElement extends ApolloQuery {
           <div>${error ? error.message : 'Unknown Error'}</div>`
       : html`
           <div>${helloWorld.greeting}, ${helloWorld.name}</div>
-          <connected-child id="child-component"
-              .client="${this.client}"
-              .query="${childQuery}"
-          ></connected-child>`
+          <connected-child id="child-component"></connected-child>
+        `
     );
-   }
-
-   constructor() {
-     super();
-     this.client = client;
-     this.query = query;
    }
 };
 
 customElements.define('connected-element', ConnectedElement)
+```
+
+```graphql
+query ParentQuery {
+  helloWorld {
+    name
+    greeting
+  }
+}
+```
+
+```graphql
+query ChildQuery {
+  child {
+    foo
+    bar
+  }
+}
 ```
 
 *NOTE*: By default, components will only render while loading or after receiving data or an error. Override the `shouldUpdate` method to control when the component renders.
@@ -128,13 +132,15 @@ You don't need to use `LitElement` base class for your components if you use the
 ## 📖 Subscriptions
 You can create components which use GraphQL subscriptions to update over websockets.
 
+In this example, `<chat-subscription>` has its `subscription` property passed in from the parent, rather than defined statically, as one normally would.
+This could be useful in cases where `<chat-subscription>` can render a variety of different queries.
+
 ```js
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
-import { client } from '../client';
 import { format } from 'date-fns/fp';
 import { errorTemplate } from './error-template.js';
-import gql from 'graphql-tag';
 import './chat-subscription.js';
+import MessageSentSubscription from './MessageSent.subscription.graphql';
 
 const messageTemplate = ({ message, user, date }) => html`
   <div>
@@ -143,26 +149,18 @@ const messageTemplate = ({ message, user, date }) => html`
   </div>
 `;
 
-const subscription = gql`
-  subscription {
-    messageSent {
-      date
-      message
-      user
-    }
-  }`
-
 /**
  * <chat-query>
  * @customElement
  * @extends LitElement
  */
 class ChatQuery extends ApolloQuery {
+  query = MessagesQuery;
+
   render() {
     return html`
     <chat-subscription
-        .client="${this.client}"
-        .subscription="${subscription}"
+        .subscription="${MessageSentSubscription}"
         .onSubscriptionData=${this.onSubscriptionData}>
     </chat-subscription>
     ${( this.loading ? html`Loading...`
@@ -173,16 +171,7 @@ class ChatQuery extends ApolloQuery {
 
   constructor() {
     super();
-    this.client = client;
     this.onSubscriptionData = this.onSubscriptionData.bind(this);
-    this.query = gql`
-    query {
-      messages {
-        date
-        message
-        user
-      }
-    }`;
   }
 
   onSubscriptionData({ client, subscriptionData: { data: { messageSent } } }) {
@@ -194,6 +183,26 @@ class ChatQuery extends ApolloQuery {
 }
 
 customElements.define('chat-query', ChatQuery);
+```
+
+```graphql
+query MessagesQuery {
+  messages {
+    date
+    message
+    user
+  }
+}
+```
+
+```graphql
+subscription MessageSentSubscription {
+  messageSent {
+    date
+    message
+    user
+  }
+}
 ```
 
 Alternatively, you can call `subscribeToMore` on a query component with a subscription `document` and an `updateQuery` function to have your component update it's data based on subscription results:
@@ -274,7 +283,6 @@ const updateFunc = (cache, response) => {
 
 const template = html`
   <mutating-element
-    .client="${client}"
     .mutation="${mutation}"
     .variables="${{id: 1}}"
     .updater="${updateFunc}"

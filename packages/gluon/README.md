@@ -28,36 +28,32 @@ npm install --save @apollo-elements/gluon
 
 ## 👩‍🚀 Usage
 You'll need to bundle the Apollo library with a tool like Rollup. See [instructions for bundling Apollo](https://github.com/apollo-elements/apollo-elements#-bundling) for advice on how to build a working Apollo client.
+
+We recommend assigning your `ApolloClient` instance to the `__APOLLO_CLIENT__` global variables. This not only automatically gives you [dev tools support](https://github.com/apollographql/apollo-client-devtools), but also lets all of your apollo elements connect to the client without needing to configure them.
+
+```js
+import ApolloClient from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+
+const cache =
+  new InMemoryCache();
+
+const link =
+  new HttpLink({ uri: '/graphql' });
+
+export const client =
+  new ApolloClient({ cache, link });
+
+window.__APOLLO_CLIENT__ = client;
+```
+
 After that, typical usage involves importing the base class and extending from it to define your component:
 
 ```js
 import gql from 'graphql-tag'
-import { ApolloClient } from 'apollo-client';
 import { ApolloQuery, html } from '@apollo-elements/gluon';
-import { cache } from './cache';
-import { link } from './link';
-
-// Create the Apollo Client
-const client = new ApolloClient({ cache, link });
-
-// Compute graphql documents statically for performance
-const query = gql`
-  query {
-    helloWorld {
-      name
-      greeting
-    }
-  }
-`;
-
-const childQuery = gql`
-  query {
-    child {
-      foo
-      bar
-    }
-  }
-`;
+import ParentQuery from './Parent.query.graphql';
 
 class ConnectedElement extends ApolloQuery {
   get template() {
@@ -71,16 +67,12 @@ class ConnectedElement extends ApolloQuery {
           <div>${error ? error.message : 'Unknown Error'}</div>`
       : html`
           <div>${helloWorld.greeting}, ${helloWorld.name}</div>
-          <connected-child id="child-component"
-              .client="${this.client}"
-              .query="${childQuery}"
-          ></connected-child>`
+          <connected-child id="child-component"></connected-child>`
     );
    }
 
    constructor() {
      super();
-     this.client = client;
      this.query = query;
    }
 };
@@ -88,11 +80,24 @@ class ConnectedElement extends ApolloQuery {
 customElements.define('connected-element', ConnectedElement)
 ```
 
+```graphql
+query ParentQuery {
+  helloWorld {
+    name
+    greeting
+  }
+}
+```
+
+
 ## 🍹 Mixins
 You don't need to use `GluonElement` base class for your components if you use the [mixins](https://github.com/apollo-elements/apollo-elements/packages/mixins). You just have to handle the rendering part on your own: e.g. for a query component, you'd implement yourself what happens after `data`, `error`, `loading`, or `networkStatus` change.
 
 ## 📖 Subscriptions
 You can create components which use GraphQL subscriptions to update over websockets.
+
+In this example, `<chat-subscription>` has its `subscription` property passed in from the parent, rather than defined statically, as one normally would.
+This could be useful in cases where `<chat-subscription>` can render a variety of different queries.
 
 ```js
 import { ApolloQuery, html } from '@apollo-elements/gluon';
@@ -132,7 +137,6 @@ class ChatQuery extends ApolloQuery {
 
     return html`
     <chat-subscription
-        .client="${this.client}"
         .subscription="${subscription}"
         .onSubscriptionData=${this.onSubscriptionData}>
     </chat-subscription>
@@ -141,7 +145,6 @@ class ChatQuery extends ApolloQuery {
 
   constructor() {
     super();
-    this.client = client;
     this.onSubscriptionData = this.onSubscriptionData.bind(this);
     this.query = gql`
     query {
@@ -241,7 +244,6 @@ const updateFunc = (cache, response) => {
 
 const template = html`
   <mutating-element
-    .client="${client}"
     .mutation="${mutation}"
     .variables="${{id: 1}}"
     .updater="${updateFunc}"
