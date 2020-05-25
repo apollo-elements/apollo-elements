@@ -33,7 +33,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: yarn t
+          coverageCommand: yarn test
 
       - name: Authenticate with Registry
         run: |
