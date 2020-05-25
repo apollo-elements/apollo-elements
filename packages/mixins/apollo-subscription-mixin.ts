@@ -35,7 +35,7 @@ function ApolloSubscriptionMixinImplementation<
     /**
      * Specifies the FetchPolicy to be used for this subscription.
      */
-    fetchPolicy: FetchPolicy = 'cache-first';
+    fetchPolicy: FetchPolicy;
 
     /**
      * Whether or not to fetch results.
@@ -80,8 +80,6 @@ function ApolloSubscriptionMixinImplementation<
 
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
-     *
-     * @return {TVariables}
      */
     get variables(): TVariables { return this.#variables; }
 
