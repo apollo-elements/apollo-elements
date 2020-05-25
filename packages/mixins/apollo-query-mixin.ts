@@ -73,7 +73,7 @@ function ApolloQueryMixinImplementation<
     /**
      * Specifies the FetchPolicy to be used for this query.
      */
-    fetchPolicy: FetchPolicy = 'cache-first';
+    fetchPolicy: FetchPolicy;
 
     /**
      * Whether or not to fetch results.

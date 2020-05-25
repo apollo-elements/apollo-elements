@@ -25,8 +25,6 @@ export const ApolloSubscription = {
 
   errorPolicy: 'none',
 
-  fetchPolicy: 'cache-first',
-
   subscription: subscriptionFactory(),
 
   variables: {

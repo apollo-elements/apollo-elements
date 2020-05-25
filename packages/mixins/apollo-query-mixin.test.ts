@@ -5,7 +5,7 @@ import { spreadProps } from '@open-wc/lit-helpers';
 import gql from 'graphql-tag';
 import 'sinon-chai';
 
-import ApolloClient, { ObservableQuery } from 'apollo-client';
+import ApolloClient, { ObservableQuery, FetchPolicy } from 'apollo-client';
 import { match, stub, spy } from 'sinon';
 
 import { client, setupClient, teardownClient } from '@apollo-elements/test-helpers/client';
@@ -26,6 +26,7 @@ type Spy = ReturnType<typeof spy>
 interface TemplateOpts {
   client?: ApolloClient<NormalizedCacheObject>;
   query?: DocumentNode;
+  fetchPolicy?: FetchPolicy;
   variables?: unknown;
   script?: string;
   onData?(): void;
@@ -59,7 +60,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   it('default properties', async function setsDefaultProperties() {
     const el = await getElement();
     expect(el.errorPolicy, 'errorPolicy').to.equal('none');
-    expect(el.fetchPolicy, 'fetchPolicy').to.equal('cache-first');
+    expect(el.fetchPolicy, 'fetchPolicy').to.be.undefined;
     expect(el.fetchResults, 'fetchResults').to.be.undefined;
     expect(el.pollInterval, 'pollInterval').to.be.undefined;
     expect(el.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
@@ -414,6 +415,34 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
 
       watchQueryStub.restore();
       client.defaultOptions = cache;
+    });
+  });
+
+  describe('fetchPolicy', function() {
+    let queryStub: Spy;
+    beforeEach(function() {
+      queryStub = spy(client.queryManager, 'watchQuery');
+    });
+
+    afterEach(function() {
+      queryStub.restore();
+    });
+
+    it('respects client default fetchPolicy', async function() {
+      const query = NoParamQuery;
+      const el = await getElement({ client, query });
+      expect(el.fetchPolicy).to.be.undefined;
+      expect(queryStub).to.have.been
+        .calledWithMatch({ fetchPolicy: 'network-only' });
+    });
+
+    it('respects instance-specific fetchPolicy', async function() {
+      const query = NoParamQuery;
+      const fetchPolicy = 'no-cache';
+      const el = await getElement({ client, query, fetchPolicy });
+      expect(el.fetchPolicy).to.equal(fetchPolicy);
+      expect(queryStub).to.have.been
+        .calledWithMatch({ fetchPolicy: 'no-cache' });
     });
   });
 

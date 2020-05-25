@@ -67,7 +67,7 @@ describe('[hybrids] ApolloSubscription', function describeApolloSubscription() {
 
   it('sets default properties', async function setsDefaultProperties() {
     const el = await getElement();
-    expect(el.fetchPolicy, 'fetchPolicy').to.equal('cache-first');
+    expect(el.fetchPolicy, 'fetchPolicy').to.be.undefined;
     expect(el.fetchResults, 'fetchResults').to.be.undefined;
     expect(el.pollInterval, 'pollInterval').to.be.undefined;
     expect(el.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;

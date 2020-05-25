@@ -39,8 +39,6 @@ export const ApolloQuery = {
 
   errorPolicy: 'none',
 
-  fetchPolicy: 'cache-first',
-
   options: {
     set<OperationVariables, TData, TVariables>(
       host: ApolloQueryElement<TData, TVariables>,
