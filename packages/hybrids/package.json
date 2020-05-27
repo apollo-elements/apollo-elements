@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/hybrids",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
@@ -34,7 +34,7 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@apollo-elements/mixins": "^2.0.0"
+    "@apollo-elements/mixins": "^2.0.1"
   },
   "peerDependencies": {
     "hybrids": ">= 2"

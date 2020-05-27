@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.0...@apollo-elements/mixins@2.0.1) (2020-05-27)
+
+
+### Bug Fixes
+
+* **lit-apollo:** manually fix declarations ([e98160c](https://github.com/apollo-elements/apollo-elements/commit/e98160ca0d59e70c527364ffa1ee1a54b012670d))
+
+
+
+
+
 # [2.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@1.2.1...@apollo-elements/mixins@2.0.0) (2020-05-25)
 
 

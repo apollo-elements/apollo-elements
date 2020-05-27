@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.1...@apollo-elements/lit-apollo@2.0.2) (2020-05-27)
+
+
+### Bug Fixes
+
+* **lit-apollo:** manually fix declarations ([e98160c](https://github.com/apollo-elements/apollo-elements/commit/e98160ca0d59e70c527364ffa1ee1a54b012670d))
+
+
+
+
+
 ## [2.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.0...@apollo-elements/lit-apollo@2.0.1) (2020-05-25)
 
 **Note:** Version bump only for package @apollo-elements/lit-apollo
