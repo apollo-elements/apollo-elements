@@ -38,5 +38,6 @@
   },
   "peerDependencies": {
     "hybrids": ">= 2"
-  }
+  },
+  "gitHead": "ac00bf8102c1a60458a34b3d8b0958c7f733344b"
 }
