@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v2-beta
         with:
           node-version: '12.17'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Configure CI Git User
         run: |
@@ -40,21 +41,18 @@ jobs:
         with:
           coverageCommand: yarn test
 
-      - name: Authenticate with Registry
-        run: |
-          yarn logout
-          echo "@apollo-elements:registry=http://registry.npmjs.org/" > .npmrc
-          echo "registry=http://registry.npmjs.org/" >> .npmrc
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm whoami
+      - name: Check Authentication with Registry
+        run: npm whoami
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish package
         run: yarn deploy:ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build Docs
         run: yarn docs
