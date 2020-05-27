@@ -41,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apollo-elements/apollo-elements.git"
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git"
   },
   "keywords": [
     "Apollo",
@@ -64,6 +64,5 @@
   "peerDependencies": {
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0"
-  },
-  "gitHead": "ac00bf8102c1a60458a34b3d8b0958c7f733344b"
+  }
 }
