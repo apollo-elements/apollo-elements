@@ -13,6 +13,18 @@ describe('[lit-apollo] ApolloMutation', function describeApolloMutation() {
   beforeEach(setupClient);
   afterEach(teardownClient);
 
+  it('is an instance of LitElement', async function() {
+    const tagName = defineCE(class Test extends ApolloMutation<unknown, unknown> {
+      set thing(v: any) {
+        // @ts-expect-error
+        this.requestUpdate('thing', v);
+      }
+    });
+    const tag = unsafeStatic(tagName);
+    const el = await fixture(fixtureHtml`<${tag}></${tag}>`);
+    expect(el).to.be.an.instanceOf(LitElement);
+  });
+
   it('renders when called is set', async function rendersOnCalled() {
     const tagName = defineCE(class Test extends ApolloMutation<{}, {}> {
       render(): TemplateResult {

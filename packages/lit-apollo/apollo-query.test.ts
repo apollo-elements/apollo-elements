@@ -1,9 +1,21 @@
 import { defineCE, fixture, unsafeStatic, expect, html as fixtureHtml } from '@open-wc/testing';
 
 import { ApolloQuery } from './apollo-query';
-import { TemplateResult, html } from 'lit-element';
+import { TemplateResult, html, LitElement } from 'lit-element';
 
 describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
+  it('is an instance of LitElement', async function() {
+    const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
+      set thing(v: any) {
+        // @ts-expect-error
+        this.requestUpdate('thing', v);
+      }
+    });
+    const tag = unsafeStatic(tagName);
+    const el = await fixture(fixtureHtml`<${tag}></${tag}>`);
+    expect(el).to.be.an.instanceOf(LitElement);
+  });
+
   it('renders when networkStatus is set', async function rendersOnNetworkStatus() {
     const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
       render(): TemplateResult {

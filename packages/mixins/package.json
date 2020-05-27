@@ -38,6 +38,7 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "@apollo-elements/lib": "^2.0.0",
+    "@open-wc/dedupe-mixin": "^1.2.17",
     "apollo-client": "^2.6.9",
     "bind-decorator": "^1.0.11",
     "crocks": "^0.12.4",

@@ -55,8 +55,6 @@ export class ApolloQuery<
    *   - The component has `data` or
    *   - The component has an `error` or
    *   - The component has a `loading` status.
-   *
-   * @protected
    */
   shouldUpdate(): boolean {
     return (

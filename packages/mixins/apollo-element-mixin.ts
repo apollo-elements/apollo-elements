@@ -16,15 +16,12 @@ function ApolloElementMixinImplementation<
   /**
    * Class mixin for apollo-element elements
    */
-  // This is probably a bug in typescript
-  // eslint-disable-next-line
-  // @ts-ignore
-  class ApolloElement<TData> extends superclass {
+  class ApolloElement extends superclass {
     /** Context to be passed to link execution chain. */
     context: object;
 
     /** Latest Data */
-    data: TData;
+    data: unknown;
 
     /** Latest Error */
     error: Error;

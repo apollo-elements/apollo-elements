@@ -10,21 +10,28 @@ import bound from 'bind-decorator';
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-type PickMutateOptionsFn =
-  <OperationVariables>(o: Partial<MutationOptions<OperationVariables>>) =>
-    MutationOptions<OperationVariables>;
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function ApolloMutationMixinImplementation<
   TBase extends Constructor<HTMLElement>
 >(superclass: TBase) {
+  class Inheritor extends ApolloElementMixin(superclass) {}
+
   /**
    * Class mixin for apollo-mutation elements
    */
-  class ApolloMutationElement<
-    TData,
-    TVariables,
-  > extends ApolloElementMixin(superclass)<TData> {
+  class ApolloMutationElement<TData, TVariables> extends Inheritor {
+    /**
+     * Whether the mutation has been called
+     */
+    called: boolean;
+
+    data: TData;
+
+    /**
+     * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
+     */
+    variables: TVariables;
+
     /** The mutation. */
     get mutation(): DocumentNode { return this.document; }
 
@@ -35,11 +42,6 @@ function ApolloMutationMixinImplementation<
         throw new TypeError('Mutation must be a gql-parsed DocumentNode');
       }
     }
-
-    /**
-     * Whether the mutation has been called
-     */
-    called: boolean;
 
     /**
      * Whether to ignore the results of the mutation.
@@ -78,11 +80,6 @@ function ApolloMutationMixinImplementation<
      */
     updater?(...params: Parameters<MutationUpdaterFn<TVariables>>):
       ReturnType<MutationUpdaterFn<TVariables>>;
-
-    /**
-     * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
-     */
-    variables: TVariables;
 
     /**
      * Increments and returns the most recent mutation id.

@@ -33,10 +33,8 @@ import type { FetchResult } from 'apollo-link';
  * customElements.define('mutation-element', MutationElement)
  * ```
  */
-export class ApolloMutation<
-  TData,
-  TVariables,
-> extends ApolloMutationMixin(ApolloElement)<TData, TVariables> {
+export class ApolloMutation<TData, TVariables> extends
+  ApolloMutationMixin(ApolloElement)<TData, TVariables> {
   /**
    * If the mutation has been called
    */
@@ -70,9 +68,7 @@ export class ApolloMutation<
    *
    */
   async mutate(params?: Partial<MutationOptions<TVariables>>): Promise<FetchResult<TData>> {
-    const update =
-        (params && 'update' in params) ? params.update
-      : this.updater;
+    const update = params?.update ?? this.updater;
     return super.mutate({ update, ...params });
   }
 }

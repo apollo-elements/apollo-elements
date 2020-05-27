@@ -64,7 +64,9 @@ function ApolloQueryMixinImplementation<
   /**
    * Class mixin for apollo-query elements
    */
-  class ApolloQuery<TData, TVariables> extends ApolloElementMixin(superclass)<TData> {
+  class ApolloQuery<TData, TVariables> extends ApolloElementMixin(superclass) {
+    data: TData;
+
     /**
      * Specifies the ErrorPolicy to be used for this query.
      */

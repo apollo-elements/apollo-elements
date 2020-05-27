@@ -31,7 +31,9 @@ function ApolloSubscriptionMixinImplementation<
   /**
    * Class mixin for apollo-subscription elements
    */
-  class ApolloSubscription<TData, TVariables> extends ApolloElementMixin<TBase>(superclass)<TData> {
+  class ApolloSubscription<TData, TVariables> extends ApolloElementMixin(superclass) {
+    data: TData;
+
     /**
      * Specifies the FetchPolicy to be used for this subscription.
      */

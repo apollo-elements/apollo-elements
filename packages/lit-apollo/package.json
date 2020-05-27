@@ -5,15 +5,36 @@
   "main": "index.js",
   "module": "index.js",
   "typings": "index.d.ts",
+  "type": "module",
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
+    "postbuild": "node ./fix-declarations.js",
     "start": "tsc -w",
     "docs": "run-s docs:*",
     "docs:polymer": "polymer analyze > docs/analysis.json",
     "docs:wca": "wca analyze './*.ts' --format json --outFile custom-elements.json",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
+  "files": [
+    "*.md",
+    "apollo-element.d.ts",
+    "apollo-element.js.map",
+    "apollo-element.js",
+    "apollo-mutation.d.ts",
+    "apollo-mutation.js.map",
+    "apollo-mutation.js",
+    "apollo-query.d.ts",
+    "apollo-query.js.map",
+    "apollo-query.js",
+    "apollo-subscription.d.ts",
+    "apollo-subscription.js.map",
+    "apollo-subscription.js",
+    "global.d.ts",
+    "index.d.ts",
+    "index.js.map",
+    "index.js"
+  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.com"
