@@ -32,9 +32,7 @@ You'll need to bundle the Apollo library with a tool like Rollup. See [instructi
 We recommend assigning your `ApolloClient` instance to the `__APOLLO_CLIENT__` global variables. This not only automatically gives you [dev tools support](https://github.com/apollographql/apollo-client-devtools), but also lets all of your apollo elements connect to the client without needing to configure them.
 
 ```js
-import ApolloClient from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
 const cache =
   new InMemoryCache();
@@ -259,7 +257,7 @@ In some cases, you may want to wait for your ApolloClient to do some initial asy
 
 ```js
 import formatDistance from 'date-fns/esm/formatDistance';
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient } from '@apollo/client/core';
 import { ApolloQuery, html } from '@apollo-elements/gluon';
 import { persistCache } from 'apollo-cache-persist'
 import { cache } from './cache';

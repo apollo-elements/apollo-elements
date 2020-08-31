@@ -1,40 +1,25 @@
-import { expect, html } from '@open-wc/testing';
-import gql from 'graphql-tag';
+import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
 
 import { ApolloMutation } from './apollo-mutation';
-import { getElementWithLitTemplate, graphQLScriptTemplate } from '@apollo-elements/test-helpers/helpers';
-import { TemplateResult } from 'lit-html';
 
-const getClass = (): typeof ApolloMutation =>
-  class extends ApolloMutation<any, any> {};
+import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
 
-interface TemplateOpts {
-  variables: unknown;
-  script: string;
-}
-
-function getTemplate(tag: string, opts: TemplateOpts): TemplateResult {
-  return html`
-  <${tag} .variables="${opts?.variables}">
-    ${graphQLScriptTemplate(opts?.script)}
-  </${tag}>`;
-}
-
-const getElement =
-  getElementWithLitTemplate<ApolloMutation<unknown, unknown>>({ getClass, getTemplate });
+import { html } from '@gluon/gluon';
 
 describe('[gluon] ApolloMutation', function describeApolloMutation() {
   it('caches observed properties', async function cachesObserveProperties() {
-    const el = await getElement();
+    class Test extends ApolloMutation<unknown, unknown> {
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
     const err = new Error('error');
+
     const client = null;
-    const mutation = gql`
-      mutation {
-        noParam {
-          noParam
-        }
-      }
-    `;
+
+    const mutation = NoParamMutation;
 
     el.called = true;
     expect(el.called, 'called').to.be.true;
@@ -53,5 +38,23 @@ describe('[gluon] ApolloMutation', function describeApolloMutation() {
 
     el.mutation = mutation;
     expect(el.mutation, 'mutation').to.equal(mutation);
+  });
+
+  it('renders on set "called"', async function() {
+    class Test extends ApolloMutation<unknown, unknown> {
+      get template() {
+        return html`${this.called}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.called = true;
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('true');
   });
 });
