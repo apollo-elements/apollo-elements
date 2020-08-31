@@ -1,9 +1,9 @@
-name: Release
+name: Canary Release
 
 on:
   push:
     branches:
-      - master
+      - next
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
         run: |
           git config --global user.name '@bennypowers'
           git config --global user.email 'bennypowers@users.noreply.github.com'
-          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_PAT@github.com/bennypowers/apollo-elements
+          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_PAT@github.com/apollo-elements/apollo-elements
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
@@ -32,12 +32,8 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Test & Publish Code Coverage
-        uses: paambaati/codeclimate-action@v2
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageCommand: yarn test
+      - name: Test
+        run: yarn test
 
       - name: Check Authentication with Registry
         run: npm whoami
@@ -47,21 +43,10 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Publish package
-        run: yarn deploy:ci
+      - name: Publish packages
+        run: yarn deploy:canary --yes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build Docs
-        run: yarn docs
-
-      - name: Deploy Docs
-        uses: peaceiris/actions-gh-pages@v3.7.0-8
-        with:
-          personal_token: ${{ secrets.GITHUB_PAT }}
-          publish_branch: gh-pages
-          publish_dir: ./docs
-          cname: apolloelements.dev

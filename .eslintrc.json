@@ -1,50 +1,18 @@
 {
   "extends": [ "@pwrs" ],
-  "env": {
-    "browser": true,
-    "es6": true
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": ["warn", {
+      "ts-expect-error": "allow-with-description",
+      "ts-ignore": "allow-with-description"
+    }]
   },
-  "overrides": [
-    {
-      "files": [
-        "**/*.test.ts",
-        "**/*.spec.ts",
-        "**/test.ts"
-      ],
-      "env": {
-        "node": true,
-        "mocha": true
-      },
-      "rules": {
-        "max-len": "off",
-        "no-console": "off",
-        "require-jsdoc": "off",
-        "@typescript-eslint/no-explicit-any": "off"
-      }
-    },
-    {
-      "files": [
-        "*.conf*.js",
-        ".*rc.js",
-        "packages/eslint-config/src/index.ts"
-      ],
-      "env": {
-        "node": true
-      },
-      "rules": {
-        "no-console": "off",
-        "require-jsdoc": "off"
-      }
-    },
-    {
-      "files": "packages/**/test/*.ts",
-      "env": {
-        "node": true
-      },
-      "rules": {
-        "max-len": "off",
-        "@typescript-eslint/no-explicit-any": "off"
-      }
+  "overrides": [{
+    "files": [
+      "husky.config.js",
+      "commitlint.config.js"
+    ],
+    "env": {
+      "node": true
     }
-  ]
+  }]
 }

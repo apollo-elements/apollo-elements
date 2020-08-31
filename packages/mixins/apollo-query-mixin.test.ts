@@ -1,3 +1,4 @@
+import type Sinon from 'sinon';
 import type {
   HelloQueryData,
   HelloQueryVariables,
@@ -25,9 +26,6 @@ import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
 import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
 
-type Stub = ReturnType<typeof stub>;
-type Spy = ReturnType<typeof spy>;
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 class AccessorTest extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
@@ -45,7 +43,7 @@ class XL extends HTMLElement {}
 class Test<D = unknown, V = unknown> extends ApolloQueryMixin(XL)<D, V> {}
 
 describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
-  let subscribeSpy: Spy;
+  let subscribeSpy: Sinon.SinonSpy;
 
   afterEach(function() {
     subscribeSpy?.restore?.();
@@ -285,7 +283,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   });
 
   describe('set variables', function describeSetVariables() {
-    describe('without observableQuery', function() {
+    describe('without query property', function() {
       it('does nothing', async function setVariablesNoQuery() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
 
@@ -296,13 +294,14 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
         element.variables = { errorPolicy: 'foo' };
 
         expect(element.variables).to.deep.equal({ errorPolicy: 'foo' });
+        expect(element.observableQuery).to.not.be.ok;
       });
     });
 
     describe('with query property', function() {
       let element: Test<NoParamQueryData, NoParamQueryVariables>;
 
-      let refetchSpy: Spy;
+      let refetchSpy: Sinon.SinonSpy;
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> {
@@ -327,7 +326,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     describe('with existing class field variables', function() {
       let element: Test<NullableParamQueryData, NullableParamQueryVariables>;
 
-      let refetchSpy: Spy;
+      let refetchSpy: Sinon.SinonSpy;
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test<NullableParamQueryData, NullableParamQueryVariables> {
@@ -360,7 +359,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     describe('when the query variables do not satisfy the query', function() {
       let element: Test<NonNullableParamQueryData, NonNullableParamQueryVariables>;
 
-      let watchQuerySpy: Spy;
+      let watchQuerySpy: Sinon.SinonSpy;
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test<NonNullableParamQueryData, NonNullableParamQueryVariables> {
@@ -396,7 +395,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     describe('when the query variables satisfy the query', function() {
       let element: Test<NonNullableParamQueryData, NonNullableParamQueryVariables>;
 
-      let watchQuerySpy: Spy;
+      let watchQuerySpy: Sinon.SinonSpy;
 
       let subscription: ZenObservable.Subscription;
 
@@ -534,7 +533,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
 
       let element: Test;
 
-      let queryStub: Stub;
+      let queryStub: Sinon.SinonStub;
 
       beforeEach(async function() {
         element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
@@ -711,7 +710,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   });
 
   describe('fetchPolicy', function() {
-    let queryStub: Spy;
+    let queryStub: Sinon.SinonSpy;
     beforeEach(function() {
       // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
       queryStub = spy(client.queryManager, 'watchQuery');
@@ -771,8 +770,8 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   describe('when query rejects', function() {
     class Test extends ApolloQueryMixin(HTMLElement)<NonNullableParamQueryData, NonNullableParamQueryVariables> { }
     let element: Test;
-    let onDataSpy: Spy;
-    let onErrorSpy: Spy;
+    let onDataSpy: Sinon.SinonSpy;
+    let onErrorSpy: Sinon.SinonSpy;
 
     beforeEach(async function setupElement() {
       const tag = unsafeStatic(defineCE(class extends Test {
@@ -822,8 +821,8 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     class Test extends ApolloQueryMixin(HTMLElement)<NullableParamQueryData, NullableParamQueryVariables> { }
 
     let element: Test;
-    let onDataSpy: Spy;
-    let onErrorSpy: Spy;
+    let onDataSpy: Sinon.SinonSpy;
+    let onErrorSpy: Sinon.SinonSpy;
 
     beforeEach(async function() {
       const tag = unsafeStatic(defineCE(class extends Test {

@@ -1,16 +1,5 @@
-import { aTimeout, defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
-import gql from 'graphql-tag';
-import 'sinon-chai';
-
-import { spy, stub } from 'sinon';
-import { Observable } from '@apollo/client/core';
-
-import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
-import { client, setupClient, teardownClient } from '../test-helpers/client';
-import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
-import NullableParamSubscription from '@apollo-elements/test-helpers/NullableParam.subscription.graphql';
-import NonNullableParamSubscription from '@apollo-elements/test-helpers/NonNullableParam.subscription.graphql';
-import {
+import type Sinon from 'sinon';
+import type {
   NonNullableParamSubscriptionData,
   NonNullableParamSubscriptionVariables,
   NoParamSubscriptionData,
@@ -19,8 +8,19 @@ import {
   NullableParamSubscriptionVariables,
 } from '@apollo-elements/test-helpers/schema';
 
-type Stub = ReturnType<typeof stub>;
-type Spy = ReturnType<typeof spy>;
+import { aTimeout, defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+import gql from 'graphql-tag';
+import 'sinon-chai';
+
+import { spy, stub } from 'sinon';
+import { Observable } from '@apollo/client/core';
+
+import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
+import { client, setupClient, teardownClient } from '@apollo-elements/test-helpers/client';
+
+import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
+import NullableParamSubscription from '@apollo-elements/test-helpers/NullableParam.subscription.graphql';
+import NonNullableParamSubscription from '@apollo-elements/test-helpers/NonNullableParam.subscription.graphql';
 
 describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
   beforeEach(setupClient);
@@ -197,7 +197,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
   });
 
   describe('subscribe', function describeSubscribe() {
-    let clientSubscribeSpy: Spy;
+    let clientSubscribeSpy: Sinon.SinonSpy;
 
     beforeEach(function() {
       clientSubscribeSpy = spy(client, 'subscribe');
@@ -363,9 +363,9 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
   describe('when subscription updates', function() {
     class Test extends ApolloSubscriptionMixin(HTMLElement)<NonNullableParamSubscriptionData, NonNullableParamSubscriptionVariables> { }
 
-    let onSubscriptionDataSpy: Spy;
+    let onSubscriptionDataSpy: Sinon.SinonSpy;
 
-    let onErrorSpy: Spy;
+    let onErrorSpy: Sinon.SinonSpy;
 
     let element: Test;
 

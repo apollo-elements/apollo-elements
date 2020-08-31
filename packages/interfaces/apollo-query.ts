@@ -30,7 +30,7 @@ export declare class ApolloQueryInterface<TData, TVariables> extends ApolloEleme
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
    */
-  variables: TVariables;
+  declare variables?: TVariables;
 
   /**
    * Specifies the FetchPolicy to be used for this query.
