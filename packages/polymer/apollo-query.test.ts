@@ -3,10 +3,9 @@ import gql from 'graphql-tag';
 import { stub } from 'sinon';
 
 import './apollo-query';
-import { client } from '@apollo-elements/test-helpers/client';
+import { client } from '../test-helpers/client';
 import type { PolymerApolloQuery } from './apollo-query';
-import type { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import type { ApolloClient } from 'apollo-client';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 
 
@@ -42,7 +41,7 @@ describe('[polymer] <apollo-query>', function() {
 
   it('notifies on data change', async function() {
     const queryStub = stub(client, 'query');
-    queryStub.resolves({ loading: false, stale: false, networkStatus: 7, data: { messages: ['hi'] } });
+    queryStub.resolves({ loading: false, partial: undefined, networkStatus: 7, data: { messages: ['hi'] } });
     const query = gql`query { messages }`;
     const el = await getElement({ client });
     setTimeout(() => el.executeQuery({ query }));
