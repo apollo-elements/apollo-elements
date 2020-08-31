@@ -8,7 +8,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
-    "start": "tsc -w",
+    "start": "tsc -w --noEmit",
     "docs": "run-s docs:*",
     "docs:polymer": "polymer analyze > docs/analysis.json",
     "docs:wca": "wca analyze './*.ts' --format json --outFile custom-elements.json",
@@ -38,9 +38,7 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "@apollo-elements/mixins": "^2.0.1",
-    "tslib": "^2.0.0"
-  },
-  "peerDependencies": {
-    "@gluon/gluon": ">= 2"
+    "@gluon/gluon": ">= 2",
+    "tslib": "^2.0.1"
   }
 }
