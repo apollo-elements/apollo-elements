@@ -1,26 +1,27 @@
-import { defineCE, fixture, unsafeStatic, expect, html as fixtureHtml } from '@open-wc/testing';
+import { defineCE, fixture, unsafeStatic, expect, html as fhtml } from '@open-wc/testing';
 
 import { ApolloQuery } from './apollo-query';
 import { TemplateResult, html, LitElement } from 'lit-element';
+import { NetworkStatus } from '@apollo/client/core';
 
 describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
   it('is an instance of LitElement', async function() {
-    const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
-      set thing(v: any) {
-        // @ts-expect-error
+    class Test extends ApolloQuery<unknown, unknown> {
+      set thing(v: unknown) {
         this.requestUpdate('thing', v);
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag}></${tag}>`);
+    const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     expect(el).to.be.an.instanceOf(LitElement);
   });
 
   it('renders when networkStatus is set', async function rendersOnNetworkStatus() {
-    const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
+    class Test extends ApolloQuery<unknown, unknown> {
       render(): TemplateResult {
-        const { networkStatus = 0 } = this;
-        return html`${networkStatus ? 'SUCCESS' : 'FAIL'}`;
+        return html`${this.networkStatus === NetworkStatus.error ? 'SUCCESS' : 'FAIL'}`;
       }
 
       shouldUpdate(): boolean {
@@ -28,53 +29,64 @@ describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
         // if data error or loading are set
         return true;
       }
-    });
+    }
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} networkStatus="1"></${tag}>`);
-    expect(el).shadowDom.to.equal('SUCCESS');
+    const element = await fixture<Test>(fhtml`<${tag} .networkStatus="${NetworkStatus.error}"></${tag}>`);
+
+    expect(element).shadowDom.to.equal('SUCCESS');
   });
 
   it('does not render by default', async function noRender() {
-    const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
+    class Test extends ApolloQuery<unknown, unknown> {
       render(): TemplateResult {
         return html`RENDERED`;
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag}></${tag}>`);
-    expect(el).shadowDom.to.equal('');
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    expect(element).shadowDom.to.equal('');
   });
 
   it('does render when data is set', async function dataRender() {
-    const tagName = defineCE(class Test extends ApolloQuery<{ test: string }, {}> {
+    class Test extends ApolloQuery<{ test: string }, unknown> {
       render(): TemplateResult {
         return html`${this.data.test}`;
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} .data="${{ test: 'RENDERED' }}"></${tag}>`);
+    const el = await fixture<Test>(fhtml`<${tag} .data="${{ test: 'RENDERED' }}"></${tag}>`);
     expect(el).shadowDom.to.equal('RENDERED');
   });
 
   it('does render when error is set', async function errorRender() {
-    const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
+    class Test extends ApolloQuery<unknown, unknown> {
       render(): TemplateResult {
         return html`${this.error}`;
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} .error="${'ERROR'}"></${tag}>`);
+    const el = await fixture<Test>(fhtml`<${tag} .error="${'ERROR'}"></${tag}>`);
     expect(el).shadowDom.to.equal('ERROR');
   });
 
   it('does render when loading is set', async function loadingRender() {
-    const tagName = defineCE(class Test extends ApolloQuery<{}, {}> {
+    class Test extends ApolloQuery<unknown, unknown> {
       render(): TemplateResult {
         return html`${this.loading ? 'SUCCESS' : 'FAIL'}`;
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} loading></${tag}>`);
+    const el = await fixture<Test>(fhtml`<${tag} loading></${tag}>`);
     expect(el).shadowDom.to.equal('SUCCESS');
   });
 });

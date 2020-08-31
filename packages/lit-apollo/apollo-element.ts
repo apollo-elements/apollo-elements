@@ -1,33 +1,38 @@
-import { LitElement, property } from 'lit-element';
+import type { NormalizedCacheObject, ApolloClient, ApolloError } from '@apollo/client/core';
+import type { GraphQLError } from 'graphql';
+
+import { LitElement, PropertyDeclarations } from 'lit-element';
+
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import ApolloClient from 'apollo-client';
+import { ApolloElementInterface } from '@apollo-elements/interfaces';
 
 /**
  * # ApolloElement
  *
  * Custom Element base class for apollo custom elements.
  */
-export class ApolloElement extends ApolloElementMixin(LitElement) {
-  /**
-   * The Apollo client.
-   */
-  @property({ type: Object }) client: ApolloClient<NormalizedCacheObject> =
-  window.__APOLLO_CLIENT__;
+export class ApolloElement
+  extends ApolloElementMixin(LitElement)
+  implements ApolloElementInterface<unknown> {
+  static get properties(): PropertyDeclarations {
+    return {
+      client: { attribute: false },
+      data: { attribute: false },
+      error: { attribute: false },
+      errors: { attribute: false },
+      loading: { type: Boolean, reflect: true },
+    };
+  }
 
-  /**
-   * The latest data for the query from the Apollo cache
-   */
-  // @property({ type: Object }) data: InstanceType<ReturnType<typeof ApolloElementMixin>>['data'];
-  @property({ type: Object }) data: unknown;
+  declare context?: Record<string, unknown>;
 
-  /**
-   * The latest error for the query from the Apollo cache
-   */
-  @property({ type: Object }) error: Error;
+  client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
 
-  /**
-   * If the query is currently in-flight.
-   */
-  @property({ type: Boolean }) loading: boolean;
+  data = null;
+
+  error: Error|ApolloError = null;
+
+  errors: readonly GraphQLError[] = null;
+
+  loading = false;
 }
