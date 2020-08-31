@@ -17,6 +17,13 @@ packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 
+packages/test-helpers/schema.ts
+
+docs/examples/**/*.js
+docs/examples/**/*.js.map
+docs/examples/**/*.d.ts
+docs/examples/**/*.d.ts.map
+
 !packages/*/global.d.ts
 !packages/gluon/gluon.d.ts
 packages/hybrids/factories/*.d.ts

@@ -11,7 +11,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
-    "start": "tsc -w"
+    "start": "tsc -w --noEmit"
   },
   "keywords": [
     "Apollo",
@@ -26,6 +26,6 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.1"
   }
 }

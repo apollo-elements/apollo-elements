@@ -1,0 +1,5 @@
+query NonNullableParamQuery($nonNull: String!) {
+  nonNullParam(nonNull: $nonNull) {
+    nonNull
+  }
+}

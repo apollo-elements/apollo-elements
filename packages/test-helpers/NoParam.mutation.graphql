@@ -1,4 +1,4 @@
-mutation ParamMutation($param: String!) {
+mutation NoParamMutation {
   noParam {
     noParam
   }
