@@ -1,5 +1,5 @@
-import { NetworkStatus } from 'apollo-client';
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+import { NetworkStatus } from '@apollo/client/core';
+import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
 import { NotifyingElementMixin } from './notifying-element-mixin';
 
@@ -35,14 +35,22 @@ export class PolymerApolloQuery<TData, TVariables> extends
   NotifyingElementMixin(ApolloQueryMixin(PolymerApolloElement))<TData, TVariables> {
   #networkStatus: NetworkStatus = NetworkStatus.ready;
 
-  /**
-   * Enum of network statuses. See https://bit.ly/2sfKLY0
-   */
-  get networkStatus(): NetworkStatus { return this.#networkStatus; }
+  declare networkStatus: NetworkStatus;
 
-  set networkStatus(value) {
-    this.#networkStatus = value;
-    this.notify('networkStatus', value);
+  constructor() {
+    super();
+    Object.defineProperties(this, {
+      networkStatus: {
+        get(this: PolymerApolloQuery<TData, TVariables>): NetworkStatus {
+          return this.#networkStatus;
+        },
+
+        set(this: PolymerApolloQuery<TData, TVariables>, value) {
+          this.#networkStatus = value;
+          this.notify('networkStatus', value);
+        },
+      },
+    });
   }
 }
 
