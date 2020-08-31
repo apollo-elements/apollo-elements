@@ -59,12 +59,12 @@ describe('[lib] gqlFromInnerText', function describeGqlFromInnerText() {
 
   describe('with invalid tag', function() {
     beforeEach(function() {
+      // @ts-expect-error: testing for error.
       s = document.createElement('div');
       s.textContent = query;
     });
 
     it('throws an error', function() {
-      // @ts-expect-error: testing for error.
       expect(() => gqlFromInnerText(s)).to.throw(ERROR_REGEXP, 'Throws expected error');
     });
   });

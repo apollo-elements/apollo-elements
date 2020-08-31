@@ -5,3 +5,9 @@ packages/**/*.js
 packages/*/*.js
 packages/**/*.d.ts
 packages/*/*.d.ts
+packages/test-helpers/schema.ts
+docs/**/*.d.ts
+
+examples/**/schema.ts
+packages/test-helpers/schema.ts
+coverage
