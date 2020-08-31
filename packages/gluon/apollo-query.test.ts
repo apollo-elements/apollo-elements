@@ -1,64 +1,131 @@
-import { expect, html } from '@open-wc/testing';
-import gql from 'graphql-tag';
+import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
 
-import { ifDefined } from 'lit-html/directives/if-defined';
 import { ApolloQuery } from './apollo-query';
-import { getElementWithLitTemplate } from '@apollo-elements/test-helpers/helpers';
-import { client } from '@apollo-elements/test-helpers';
-import { TemplateResult } from 'lit-html';
+import { client } from '../test-helpers';
 
-const scriptTemplate = (script: string): TemplateResult =>
-  script ? html`<script type="application/graphql">${script}</script>` : html``;
+import { html } from 'lit-html';
 
-const getClass = (): typeof ApolloQuery =>
-  class extends ApolloQuery<any, any> {};
-
-interface TemplateOpts {
-  variables: unknown;
-  script: string;
-}
-
-function getTemplate(tag: string, opts?: TemplateOpts): TemplateResult {
-  return html`
-    <${tag} .variables="${ifDefined(opts?.variables)}">
-      ${scriptTemplate(opts?.script)}
-    </${tag}>
-  `;
-}
-
-type FixtureGetter = () => Promise<ApolloQuery<unknown, unknown>>;
-
-const getElement: FixtureGetter =
-  getElementWithLitTemplate({ getClass, getTemplate });
+import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 
 describe('[gluon] ApolloQuery', function describeApolloQuery() {
   it('caches observed properties', async function cachesObservedProperties() {
-    const el = await getElement();
+    class Test extends ApolloQuery<unknown, unknown> {
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
     const err = new Error('error');
-    const query = gql`
-      query {
-        noParam {
-          noParam
-        }
+
+    const query = NoParamQuery;
+
+    element.client = client;
+    expect(element.client).to.equal(client);
+
+    element.data = 'data';
+    expect(element.data).to.equal('data');
+
+    element.error = err;
+    expect(element.error).to.equal(err);
+
+    element.loading = true;
+    expect(element.loading).to.equal(true);
+
+    element.networkStatus = 1;
+    expect(element.networkStatus).to.equal(1);
+
+    element.query = query;
+    expect(element.query).to.equal(query);
+  });
+
+  it('renders on set "data"', async function() {
+    class Test extends ApolloQuery<unknown, unknown> {
+      get template() {
+        return html`${this.data}`;
       }
-    `;
+    }
 
-    el.client = client;
-    expect(el.client).to.equal(client);
+    const tag = unsafeStatic(defineCE(Test));
 
-    el.data = 'data';
-    expect(el.data).to.equal('data');
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
-    el.error = err;
-    expect(el.error).to.equal(err);
+    element.data = 'hi';
 
-    el.loading = true;
-    expect(el.loading).to.equal(true);
+    await element.render();
 
-    el.networkStatus = 1;
-    expect(el.networkStatus).to.equal(1);
+    expect(element).shadowDom.to.equal('hi');
+  });
 
-    el.query = query;
-    expect(el.query).to.equal(query);
+  it('renders on set "error"', async function() {
+    class Test extends ApolloQuery<unknown, unknown> {
+      get template() {
+        return html`${this.error?.message}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.error = new Error('hi');
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('hi');
+  });
+
+  it('renders on set "loading"', async function() {
+    class Test extends ApolloQuery<unknown, unknown> {
+      get template() {
+        return html`${this.loading}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.loading = true;
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('true');
+  });
+
+  it('renders on set "query"', async function() {
+    class Test extends ApolloQuery<unknown, unknown> {
+      get template() {
+        return html`${this.query?.loc?.source?.body ?? ''}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.query = NoParamQuery;
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal(NoParamQuery.loc.source.body);
+  });
+
+  it('renders on set "networkStatus"', async function() {
+    class Test extends ApolloQuery<unknown, unknown> {
+      get template() {
+        return html`${this.networkStatus}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.networkStatus = 5;
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('5');
   });
 });

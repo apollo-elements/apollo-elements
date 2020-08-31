@@ -1,45 +1,79 @@
-import { expect, html } from '@open-wc/testing';
-import { ifDefined } from 'lit-html/directives/if-defined';
+import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
 import { ApolloElement } from './apollo-element';
-import { getElementWithLitTemplate } from '@apollo-elements/test-helpers/helpers';
-import { TemplateResult } from 'lit-html';
 
-const scriptTemplate = (script: string): TemplateResult =>
-  script ? html`<script type="application/graphql">${script}</script>` : html``;
-
-const getClass = (): typeof ApolloElement =>
-  class extends ApolloElement<any> {};
-
-interface TemplateOpts {
-  variables: unknown;
-  script: string;
-}
-
-function getTemplate(tag: string, opts?: TemplateOpts): TemplateResult {
-  return html`
-    <${tag} .variables="${ifDefined(opts?.variables)}">
-      ${scriptTemplate(opts?.script)}
-    </${tag}>
-  `;
-}
-
-type FixtureGetter = () => Promise<ApolloElement<unknown>>;
-
-const getElement: FixtureGetter =
-  getElementWithLitTemplate({ getClass, getTemplate });
+import { html } from 'lit-html';
 
 describe('[gluon] ApolloElement', function describeApolloElement() {
   it('caches observed properties', async function cachesObservedProperties() {
-    const el = await getElement();
+    class Test extends ApolloElement {}
+
+    const tagName = defineCE(Test);
+    const tag = unsafeStatic(tagName);
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
     const err = new Error('error');
 
-    el.data = 'data';
-    expect(el.data).to.equal('data');
+    element.data = 'data';
+    expect(element.data, 'data').to.equal('data');
 
-    el.error = err;
-    expect(el.error).to.equal(err);
+    element.error = err;
+    expect(element.error, 'error').to.equal(err);
 
-    el.loading = true;
-    expect(el.loading).to.equal(true);
+    element.loading = true;
+    expect(element.loading, 'loading').to.equal(true);
+  });
+
+  it('renders on set "data"', async function() {
+    class Test extends ApolloElement {
+      get template() {
+        return html`${this.data}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.data = 'hi';
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('hi');
+  });
+
+  it('renders on set "error"', async function() {
+    class Test extends ApolloElement {
+      get template() {
+        return html`${this.error?.message}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.error = new Error('hi');
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('hi');
+  });
+
+  it('renders on set "loading"', async function() {
+    class Test extends ApolloElement {
+      get template() {
+        return html`${this.loading}`;
+      }
+    }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    element.loading = true;
+
+    await element.render();
+
+    expect(element).shadowDom.to.equal('true');
   });
 });
