@@ -1,5 +1,0 @@
-mutation ParamMutation($param: String!) {
-  nonNullableParam(param: $param) {
-    nonNullable
-  }
-}

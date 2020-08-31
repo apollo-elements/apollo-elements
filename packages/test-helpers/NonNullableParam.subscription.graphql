@@ -1,0 +1,5 @@
+subscription NonNullableParamSubscription($nonNull: String!) {
+  nonNullParam(nonNull: $nonNull) {
+    nonNull
+  }
+}

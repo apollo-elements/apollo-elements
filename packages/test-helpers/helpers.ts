@@ -1,8 +1,16 @@
 import { defineCE, fixture, unsafeStatic } from '@open-wc/testing';
-import and from 'crocks/logic/and';
-import hasProp from 'crocks/predicates/hasProp';
-import type { Subscription } from 'apollo-client/util/Observable';
 import { TemplateResult, html } from 'lit-html';
+
+const and =
+  <T>(p: ((x: T) => boolean), q: ((x: T) => boolean)) =>
+    (x: T) =>
+      p(x) && q(x);
+
+const hasProp =
+  (prop: string) =>
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    (o: object) =>
+      o && prop in o;
 
 export const getElementWithLitTemplate = <T extends Element>({ getClass, getTemplate }) =>
   async function createElementWithLitTemplate(...args): Promise<T> {
@@ -13,14 +21,12 @@ export const getElementWithLitTemplate = <T extends Element>({ getClass, getTemp
     return element;
   };
 
-// I'm going to cry
-export const isSubscription = (x: any): x is Subscription => (
+// 🐤 quack quack 🦆
+export const isSubscription = (x: any): x is ZenObservable.Subscription => (
   x.constructor.toString().startsWith('function Subscription') &&
   typeof x.unsubscribe === 'function' &&
   '_state' in x &&
-  '_observer' in x &&
-  typeof x._observer.next === 'function' &&
-  typeof x._observer.error === 'function'
+  '_observer' in x
 );
 
 const hasGetAndSet = and(hasProp('get'), hasProp('set'));
