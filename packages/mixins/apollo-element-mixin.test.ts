@@ -1,112 +1,126 @@
 import gql from 'graphql-tag';
-import { expect, html as fixtureHtml } from '@open-wc/testing';
-import { nextFrame } from '@open-wc/testing-helpers';
-import { spy, stub } from 'sinon';
+import { expect, html as fhtml } from '@open-wc/testing';
+import { defineCE, fixture, nextFrame, unsafeStatic } from '@open-wc/testing-helpers';
 import 'sinon-chai';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { client } from '@apollo-elements/test-helpers/client';
-import { getElementWithLitTemplate } from '@apollo-elements/test-helpers/helpers';
-import { ApolloElement } from './apollo-element';
+import { client } from '../test-helpers/client';
 
-
-const getTemplate =
-  (tag: string): ReturnType<typeof fixtureHtml> =>
-    fixtureHtml`<${tag}></${tag}>`;
-
-const getClass = () =>
-  class extends ApolloElementMixin(HTMLElement) {};
-
-const getElement =
-  getElementWithLitTemplate<HTMLElement & ApolloElement<unknown>>({ getTemplate, getClass });
-
-type MixedElement = InstanceType<ReturnType<typeof ApolloElementMixin>>
 describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('returns an instance of the superclass', async function returnsClass() {
-    const element = await getElement();
-    expect(element).to.be.an.instanceOf(HTMLElement);
+    class XL extends HTMLElement {}
+    class Test extends ApolloElementMixin(XL) { }
+    const tag = unsafeStatic(defineCE(Test));
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    expect(element).to.be.an.instanceOf(XL);
   });
 
   it('calls superclass connectedCallback when it exists', async function callsSuperConnectedCallback() {
-    class SuperClass extends HTMLElement { connectedCallback(): void { '💩'; } }
-    const ccSpy = spy(SuperClass.prototype, 'connectedCallback');
-    const getClass = (): ReturnType<typeof ApolloElementMixin> => ApolloElementMixin(SuperClass);
-    await getElementWithLitTemplate({ getClass, getTemplate })();
-    expect(ccSpy).to.have.been.called;
-  });
+    let calls = 0;
 
-  it('does not call superclass connectedCallback when it does not exists', async function notCallsSuperConnectedCallback() {
-    class SuperClass extends HTMLElement {
-      get connectedCallback(): null { return null; }
-
-      set connectedCallback(_) { '💩'; }
+    class Connects extends HTMLElement {
+      connectedCallback(): void {
+        calls++;
+      }
     }
-    const ccStub = stub(SuperClass.prototype, 'connectedCallback');
-    const getClass = (): ReturnType<typeof ApolloElementMixin> => ApolloElementMixin(SuperClass);
-    await getElementWithLitTemplate({ getClass, getTemplate })();
-    // code finds function, calls it and throws
-    expect(ccStub).to.not.have.been.called;
+
+    class Test extends ApolloElementMixin(Connects) { }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    expect(element).to.be.an.instanceOf(HTMLElement);
+    expect(calls).to.be.greaterThan(0);
   });
 
   it('calls superclass disconnectedCallback when it exists', async function notCallsSuperDisconnectedCallback() {
-    class SuperClass extends HTMLElement { disconnectedCallback(): void { '💩'; } }
-    const dcSpy = spy(SuperClass.prototype, 'disconnectedCallback');
-    const getClass = (): ReturnType<typeof ApolloElementMixin> => ApolloElementMixin(SuperClass);
-    const getElement = getElementWithLitTemplate({ getClass, getTemplate });
-    const element = await getElement();
+    let calls = 0;
+
+    class Disconnects extends HTMLElement {
+      disconnectedCallback(): void {
+        calls++;
+      }
+    }
+
+    class Test extends ApolloElementMixin(Disconnects) { }
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
     element.remove();
-    expect(dcSpy).to.have.been.called;
+
+    expect(calls).to.be.greaterThan(0);
   });
 
-  it('does not call superclass disconnectedCallback when it does not exists', async function notCallsSuperDisconnectedCallback() {
-    class SuperClass extends HTMLElement {
-      get disconnectedCallback(): null { return null; }
+  it('does not throw if there is no connectedCallback or disconnectedCallback', async function notCallsSuperConnectedCallback() {
+    class Test extends ApolloElementMixin(HTMLElement) {}
 
-      set disconnectedCallback(_) { '💩'; }
-    }
-    const dsStub = stub(SuperClass.prototype, 'disconnectedCallback');
-    const getClass = (): ReturnType<typeof ApolloElementMixin> => ApolloElementMixin(SuperClass);
-    const getElement = getElementWithLitTemplate({ getClass, getTemplate });
-    const element = await getElement();
-    element.remove();
-    // code finds function, calls it and throws
-    expect(dsStub).to.not.have.been.called;
+    const tag = defineCE(Test);
+
+    const element = document.createElement(tag) as Test;
+
+    expect(() => document.body.appendChild(element)).to.not.throw;
+    expect(() => element.remove()).to.not.throw;
   });
 
   it('sets default properties', async function setsDefaultProperties() {
     window.__APOLLO_CLIENT__ = client;
-    const el = await getElement() as MixedElement;
-    expect(el.client, 'client').to.equal(client);
-    expect(el.context, 'context').to.be.undefined;
-    expect(el.data, 'data').to.be.undefined;
-    expect(el.error, 'error').to.be.undefined;
-    expect(el.loading, 'loading').to.be.undefined;
+
+    class Test extends ApolloElementMixin(HTMLElement) {}
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    expect(element.client, 'client').to.equal(client);
+    expect(element.context, 'context').to.be.undefined;
+    expect(element.document, 'document').to.be.null;
+    expect(element.data, 'data').to.be.null;
+    expect(element.error, 'error').to.be.null;
+    expect(element.errors, 'errors').to.be.null;
+    expect(element.loading, 'loading').to.be.false;
   });
 
   it('sets document based on graphql script child', async function() {
     const doc = 'query foo { bar }';
-    const getTemplate = (tag: string): ReturnType<typeof fixtureHtml> =>
-      fixtureHtml`<${tag}><script type="application/graphql">${doc}</script></${tag}>`;
-    const getScriptyEl = getElementWithLitTemplate({ getClass, getTemplate });
-    const el = await getScriptyEl() as MixedElement;
-    expect(el.document).to.deep.equal(gql(doc));
+    class Test extends ApolloElementMixin(HTMLElement) {}
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`
+      <${tag}><script type="application/graphql">${doc}</script></${tag}>
+    `);
+
+    expect(element.document).to.deep.equal(gql(doc));
   });
 
   it('observes children for addition of query script', async function() {
     const doc = `query newQuery { new }`;
-    const el = await getElement() as MixedElement;
-    expect(el.document).to.be.null;
-    el.innerHTML = `<script type="application/graphql">${doc}</script>`;
+    class Test extends ApolloElementMixin(HTMLElement) {}
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    expect(element.document).to.be.null;
+    element.innerHTML = `<script type="application/graphql">${doc}</script>`;
     await nextFrame();
-    expect(el.document).to.deep.equal(gql(doc));
+    expect(element.document).to.deep.equal(gql(doc));
   });
 
   it('does not change document for invalid children', async function() {
     const doc = `query newQuery { new }`;
-    const el = await getElement() as MixedElement;
-    expect(el.document).to.be.null;
-    el.innerHTML = `<script>${doc}</script>`;
+    class Test extends ApolloElementMixin(HTMLElement) {}
+
+    const tag = unsafeStatic(defineCE(Test));
+
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    expect(element.document).to.be.null;
+    element.innerHTML = `<script>${doc}</script>`;
     await nextFrame();
-    expect(el.document).to.be.null;
+    expect(element.document).to.be.null;
   });
 });

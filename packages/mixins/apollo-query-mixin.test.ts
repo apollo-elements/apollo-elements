@@ -1,319 +1,543 @@
-import type { ApolloQuery } from './apollo-query';
+import type {
+  NonNullableParamQueryData,
+  NonNullableParamQueryVariables,
+  NoParamQueryData,
+  NoParamQueryVariables,
+  NullableParamQueryData,
+  NullableParamQueryVariables,
+} from '@apollo-elements/test-helpers';
 
-import { expect, html, defineCE, unsafeStatic, fixture, nextFrame } from '@open-wc/testing';
-import { spreadProps } from '@open-wc/lit-helpers';
+import { expect, html as fhtml, defineCE, unsafeStatic, fixture, nextFrame } from '@open-wc/testing';
 import gql from 'graphql-tag';
 import 'sinon-chai';
 
-import ApolloClient, { ObservableQuery, FetchPolicy } from 'apollo-client';
+import { ObservableQuery, FetchPolicy } from '@apollo/client/core';
 import { match, stub, spy } from 'sinon';
 
 import { client, setupClient, teardownClient } from '@apollo-elements/test-helpers/client';
-import { isSubscription, graphQLScriptTemplate } from '@apollo-elements/test-helpers/helpers';
+import { isSubscription } from '@apollo-elements/test-helpers/helpers';
 import { ApolloQueryMixin } from './apollo-query-mixin';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { DocumentNode } from 'graphql';
 
-import {
-  NoParamQuery,
-  NullableParamQuery,
-  NoParamSubscription,
-} from '@apollo-elements/test-helpers';
+import NonNullableParamQuery from '@apollo-elements/test-helpers/NonNullableParam.query.graphql';
+import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
+import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
+import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
 
-type Stub = ReturnType<typeof stub>
-type Spy = ReturnType<typeof spy>
+type Stub = ReturnType<typeof stub>;
+type Spy = ReturnType<typeof spy>;
 
-interface TemplateOpts {
-  client?: ApolloClient<NormalizedCacheObject>;
-  query?: DocumentNode;
-  fetchPolicy?: FetchPolicy;
-  variables?: unknown;
-  script?: string;
-  onData?(): void;
-  onError?(): void;
+/* eslint-disable @typescript-eslint/no-unused-vars */
+class AccessorTest extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+  // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
+  get variables() {
+    return { hey: 'yo' as const };
+  }
 }
 
-async function getElement(opts?: TemplateOpts): Promise<HTMLElement & ApolloQuery<unknown, unknown>> {
-  const klass = ApolloQueryMixin(HTMLElement);
-  const tag = unsafeStatic(defineCE(klass));
-  const element = await fixture<HTMLElement & ApolloQuery<unknown, unknown>>(html`
-  <${tag} ...="${spreadProps(opts ?? {})}">${graphQLScriptTemplate(opts?.script)}</${tag}>`);
-  return element;
+class PropertyTest extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+  variables = { hey: 'yo' as const };
 }
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
+class XL extends HTMLElement {}
+class Test<D = unknown, V = unknown> extends ApolloQueryMixin(XL)<D, V> {}
 
 describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
+  let subscribeSpy: Spy;
+
+  afterEach(function() {
+    subscribeSpy?.restore?.();
+    subscribeSpy = undefined;
+  });
+
   beforeEach(setupClient);
   afterEach(teardownClient);
   afterEach(function() {
-    // @ts-expect-error
+    // @ts-expect-error: its a stub;
     client.queryManager?.watchQuery?.restore?.();
-    // @ts-expect-error
+    // @ts-expect-error: its a stub;
     client.watchQuery?.restore?.();
-    // @ts-expect-error
+    // @ts-expect-error: its a stub;
     client.query?.restore?.();
   });
 
-  it('returns an instance of the superclass', async function returnsClass() {
-    expect(await getElement()).to.be.an.instanceOf(HTMLElement);
+  describe('instantiating simple derived class', function() {
+    let element: Test;
+
+    async function setupElement() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    }
+
+    beforeEach(setupElement);
+
+    it('returns an instance of the superclass', async function returnsClass() {
+      expect(element).to.be.an.instanceOf(HTMLElement);
+    });
+
+    it('has default properties', async function setsDefaultProperties() {
+      expect(element.data, 'data').to.be.null;
+      expect(element.error, 'error').to.be.null;
+      expect(element.errors, 'errors').to.be.null;
+      expect(element.errorPolicy, 'errorPolicy').to.equal('none');
+      expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
+      expect(element.networkStatus, 'networkStatus').to.be.undefined;
+      expect(element.nextFetchPolicy, 'nextFetchPolicy').to.be.undefined;
+      expect(element.noAutoSubscribe, 'noAuthSubscribe').to.be.false;
+      expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
+      expect(element.observableQuery, 'observableQuery').to.be.undefined;
+      expect(element.onData, 'onData').to.be.undefined;
+      expect(element.onError, 'onError').to.be.undefined;
+      expect(element.options, 'options').to.be.undefined;
+      expect(element.partial, 'partial').to.be.undefined;
+      expect(element.partialRefetch, 'partialRefetch').to.be.undefined;
+      expect(element.pollInterval, 'pollInterval').to.be.undefined;
+      expect(element.query, 'query').to.be.null;
+      expect(element.returnPartialData, 'returnPartialData').to.be.undefined;
+      expect(element.variables, 'variables').to.be.undefined;
+    });
+
+    describe('when window.__APOLLO_CLIENT__ is set', function() {
+      let cached: typeof window.__APOLLO_CLIENT__;
+
+      beforeEach(function() {
+        cached = window.__APOLLO_CLIENT__;
+        window.__APOLLO_CLIENT__ = {} as typeof window.__APOLLO_CLIENT__;
+      });
+
+      beforeEach(setupElement);
+
+      afterEach(function() {
+        window.__APOLLO_CLIENT__ = cached;
+      });
+
+      it('uses global client', async function defaultsToGlobalClient() {
+        expect(element.client).to.equal(window.__APOLLO_CLIENT__);
+      });
+    });
   });
 
-  it('default properties', async function setsDefaultProperties() {
-    const el = await getElement();
-    expect(el.errorPolicy, 'errorPolicy').to.equal('none');
-    expect(el.fetchPolicy, 'fetchPolicy').to.be.undefined;
-    expect(el.fetchResults, 'fetchResults').to.be.undefined;
-    expect(el.pollInterval, 'pollInterval').to.be.undefined;
-    expect(el.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
-    expect(el.variables, 'variables').to.be.undefined;
-    expect(el.query, 'query').to.be.null;
-    expect(el.tryFetch, 'tryFetch').to.be.undefined;
-    expect(el.observableQuery, 'observableQuery').to.be.undefined;
+  describe('instantiating with graphql script child', function() {
+    const script = NoParamQuery.loc.source.body;
+
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> { }));
+
+      subscribeSpy = spy(Test.prototype, 'subscribe');
+
+      element = await fixture<Test>(fhtml`
+        <${tag}>
+          <script type="application/graphql">
+            ${script}
+          </script>
+        </${tag}>
+      `);
+    });
+
+    it('does not remove script', async function() {
+      expect(element.firstElementChild).to.be.an.instanceof(HTMLElement);
+    });
+
+    it('sets query property', async function() {
+      expect(element.query).to.deep.equal(gql(script));
+    });
+
+    it('calls subscribe', function() {
+      expect(subscribeSpy).to.have.been.called;
+    });
   });
 
   describe('query property', function() {
-    it('accepts a script child', async function scriptChild() {
-      class StubbedElement extends ApolloQueryMixin(HTMLElement)<unknown, unknown> { }
-      spy(StubbedElement.prototype, 'subscribe');
-      const script = 'subscription { foo }';
-      const tag = unsafeStatic(defineCE(StubbedElement));
-      const el = await fixture<HTMLElement & ApolloQuery<unknown, unknown>>(html`
-        <${tag}>${graphQLScriptTemplate(script)}</${tag}>
-      `);
-      expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-      expect(el.query).to.deep.equal(gql(script));
-      expect(el.subscribe).to.have.been.called;
+    describe('without setting as class field', function() {
+      let element: Test;
+
+      beforeEach(async function() {
+        subscribeSpy = spy(Test.prototype, 'subscribe');
+
+        const tag = unsafeStatic(defineCE(class extends Test { }));
+
+        element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      });
+
+      describe('setting a malformed query', function() {
+        it('throws an error', async function badQuery() {
+          // @ts-expect-error: testing the error handler
+          expect(() => element.query = 'query { foo }').to.throw('Query must be a gql-parsed DocumentNode');
+          expect(element.query, 'does not set query property').to.be.null;
+          expect(element.observableQuery, 'does not initialize an observableQuery').to.not.be.ok;
+        });
+      });
+
+      describe('setting a valid query', function() {
+        beforeEach(function() {
+          element.query = NoParamQuery;
+        });
+
+        it('calls subscribe', async function callsSubscribe() {
+          expect(subscribeSpy).to.have.been.called;
+        });
+      });
     });
 
-    it('accepts a parsed query', async function parsedQuery() {
-      const query = NoParamQuery;
-      const el = await getElement({ query });
-      expect(el.query).to.equal(query);
-      expect(el.observableQuery).to.be.ok;
+    describe('with noAutoSubscribe set as a class field', function() {
+      let element: Test;
+
+      beforeEach(async function() {
+        subscribeSpy = spy(Test.prototype, 'subscribe');
+
+        const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> {
+          noAutoSubscribe = true;
+        }));
+
+        element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      });
+
+      describe('setting a valid query', function() {
+        beforeEach(function() {
+          element.query = NoParamQuery;
+        });
+
+        it('does not call subscribe', async function noAutoSubscribe() {
+          expect(subscribeSpy).to.not.have.been.called;
+        });
+      });
     });
 
-    it('rejects a bad query', async function badQuery() {
-      const query = `query { foo }`;
-      const el = await getElement();
-      expect(() =>
-        // it's a bad query
-        // @ts-expect-error
-        el.query = query
-      ).to.throw('Query must be a gql-parsed DocumentNode');
-      expect(el.query).to.be.null;
-      expect(el.observableQuery).to.not.be.ok;
-    });
+    describe('with valid query set as a class field', function() {
+      let element: Test;
 
-    it('calls subscribe when set', async function callsSubscribe() {
-      const query = NoParamQuery;
-      const el = await getElement();
-      const subscribeStub = stub(el, 'subscribe');
-      el.query = query;
-      expect(subscribeStub).to.have.been.called;
-    });
+      beforeEach(async function() {
+        subscribeSpy = spy(Test.prototype, 'subscribe');
 
-    it('does not call subscribe when set if noAutoSubscribe is set', async function noAutoSubscribe() {
-      const query = NoParamQuery;
-      const el = await getElement();
-      const subscribeStub = stub(el, 'subscribe');
-      el.noAutoSubscribe = true;
-      el.query = query;
-      expect(subscribeStub).to.not.have.been.called;
+        const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> {
+          query = NoParamQuery;
+        }));
+
+        element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      });
+
+      it('sets the query property', async function() {
+        expect(element.query).to.equal(NoParamQuery);
+      });
+
+      it('initializes an observableQuery', async function() {
+        expect(element.observableQuery).to.be.ok;
+      });
+
+      it('initializes an observableQuery', async function() {
+        expect(element.observableQuery).to.be.ok;
+      });
     });
   });
 
   describe('set options', function describeSetOptions() {
     it('does nothing when there is no observableQuery', async function setOptionsNoQuery() {
-      const el = await getElement();
-      el.options = { errorPolicy: 'none', query: null };
-      expect(el.options).to.deep.equal({ errorPolicy: 'none', query: null });
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      element.options = { errorPolicy: 'none', query: null };
+      expect(element.options).to.deep.equal({ errorPolicy: 'none', query: null });
     });
 
     it('calls observableQuery.subscribe when there is a query', async function setOptionsCallsObservableQuerySetOptions() {
-      const query = NoParamQuery;
-      const el = await getElement({ query });
-      const setOptionsSpy = stub(el.observableQuery, 'setOptions');
-      el.options = { errorPolicy: 'none', query };
-      expect(setOptionsSpy).to.have.been.calledWith({ errorPolicy: 'none', query });
+      const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> {
+        query = NoParamQuery;
+      }));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const setOptionsSpy = stub(element.observableQuery, 'setOptions');
+
+      element.options = { errorPolicy: 'none', query: NoParamQuery };
+
+      expect(setOptionsSpy).to.have.been.calledWith({ errorPolicy: 'none', query: NoParamQuery });
     });
   });
 
   describe('refetch', function describeRefetch() {
     it('calls observableQuery.refetch', async function callsOQRefetch() {
-      const query = NullableParamQuery;
-      const el = await getElement({ query });
-      const refetchSpy = spy(el.observableQuery, 'refetch');
-      el.refetch({ foo: 'bar' });
+      const tag = unsafeStatic(defineCE(class extends Test<NullableParamQueryData, NullableParamQueryVariables> {
+        query = NullableParamQuery;
+      }));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const refetchSpy = spy(element.observableQuery, 'refetch');
+
+      element.refetch({ foo: 'bar' });
+
       expect(refetchSpy).to.have.been.calledWith({ foo: 'bar' });
       refetchSpy.restore();
     });
 
     it('performs no operation when there is no observable query', async function noopRefetch() {
-      const el = await getElement();
-      expect(el.refetch({ foo: 'bar' })).to.be.undefined;
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      expect(element.refetch({ foo: 'bar' })).to.be.undefined;
     });
   });
 
   describe('set variables', function describeSetVariables() {
     describe('without observableQuery', function() {
-      let el;
-
-      beforeEach(async function() {
-        el = await getElement();
-        el.variables = { errorPolicy: 'foo' };
-      });
-
       it('does nothing', async function setVariablesNoQuery() {
-        expect(el.variables).to.deep.equal({ errorPolicy: 'foo' });
+        const tag = unsafeStatic(defineCE(class extends Test {}));
+
+        const element = await fixture<Test>(fhtml`
+          <${tag}></${tag}>
+        `);
+
+        element.variables = { errorPolicy: 'foo' };
+
+        expect(element.variables).to.deep.equal({ errorPolicy: 'foo' });
       });
     });
 
-    describe('with an observableQuery', function() {
-      let el;
-      let setVariablesSpy;
-      const query = NoParamQuery;
+    describe('with query property', function() {
+      let element: Test<NoParamQueryData, NoParamQueryVariables>;
+
+      let refetchSpy: Spy;
 
       beforeEach(async function() {
-        el = await getElement({ query });
-        setVariablesSpy = spy(el.observableQuery, 'setVariables');
+        const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> {
+          query = NoParamQuery;
+        }));
+
+        element = await fixture<Test<NoParamQueryData, NoParamQueryVariables>>(fhtml`<${tag}></${tag}>`);
+        refetchSpy = spy(element, 'refetch');
       });
 
       afterEach(function() {
-        setVariablesSpy.restore();
+        refetchSpy.restore();
       });
 
-      it('calls observableQuery.subscribe', async function setVariablesCallsObservableQuerySetVariables() {
-        // shouldn't this be an instance of ObservableQuery?
-        el.variables = { errorPolicy: 'foo' };
-        expect(setVariablesSpy).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+      it('calls refetch', async function setVariablesCallsObservableQuerySetVariables() {
+        // @ts-expect-error: incorrectly setting variables
+        element.variables = { errorPolicy: 'foo' };
+        expect(refetchSpy).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+      });
+    });
+
+    describe('with existing class field variables', function() {
+      let element: Test<NullableParamQueryData, NullableParamQueryVariables>;
+
+      let refetchSpy: Spy;
+
+      beforeEach(async function() {
+        const tag = unsafeStatic(defineCE(class extends Test<NullableParamQueryData, NullableParamQueryVariables> {
+          query = NullableParamQuery;
+
+          variables = { nullable: 'nullable' };
+        }));
+
+        element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+        refetchSpy = spy(element, 'refetch');
+      });
+
+      afterEach(function() {
+        refetchSpy.restore();
+      });
+
+      describe('setting new variables', function() {
+        beforeEach(function() {
+          element.variables = { nullable: '🍟' };
+        });
+
+        it('calls refetch', async function setVariablesCallsObservableQuerySetVariables() {
+          expect(refetchSpy).to.have.been.calledOnceWith(match({ nullable: '🍟' }));
+        });
       });
     });
   });
 
   describe('subscribe', function describeSubscribe() {
-    const query = gql`
-      query NeedyQuery($nonNull: String!) {
-        nonNullParam(nonNull: $nonNull)
-      }`;
+    describe('when the query variables do not satisfy the query', function() {
+      let element: Test<NonNullableParamQueryData, NonNullableParamQueryVariables>;
 
-    it('does nothing when the query variables do not satisfy the query', async function subscribeNotEnoughVariables() {
-      const variables = {};
-      const el = await getElement({ client, query, variables });
-      const watchQuerySpy = spy(el, 'watchQuery');
-      expect(el.subscribe()).to.be.undefined;
-      expect(watchQuerySpy).to.not.have.been.called;
+      let watchQuerySpy: Spy;
+
+      beforeEach(async function() {
+        const tag = unsafeStatic(defineCE(class extends Test<NonNullableParamQueryData, NonNullableParamQueryVariables> {
+          client = client;
+
+          query = NonNullableParamQuery;
+        }));
+
+        element = await fixture(fhtml`<${tag}></${tag}>`);
+
+        watchQuerySpy = spy(element, 'watchQuery');
+      });
+
+      afterEach(function() {
+        watchQuerySpy.restore();
+        element = undefined;
+        watchQuerySpy = undefined;
+      });
+
+      beforeEach(function() {
+        element.subscribe();
+      });
+
+      it('calls watchQuery', async function() {
+        expect(watchQuerySpy).to.have.been.called;
+      });
+
+      it('creates an observableQuery', async function() {
+        expect(element.observableQuery).to.be.ok;
+      });
     });
 
-    it('calls watchQuery when there are enough variables', async function subscribeEnoughVariables() {
-      const variables = { nonNull: 'nonNull' };
-      const el = await getElement({ query, variables });
-      const watchQuerySpy = spy(el, 'watchQuery');
-      expect(el.subscribe()).to.be.ok;
-      expect(watchQuerySpy).to.have.been.called;
-    });
+    describe('when the query variables satisfy the query', function() {
+      let element: Test<NonNullableParamQueryData, NonNullableParamQueryVariables>;
 
-    it('creates an observableQuery', async function subscribeCreatesObservableQuery() {
-      const variables = { nonNull: 'nonNull' };
-      const el = await getElement({ query, variables });
-      const subscription = el.subscribe();
-      expect(subscription).to.be.ok;
-      expect(el.observableQuery).to.be.ok;
-    });
+      let watchQuerySpy: Spy;
 
-    it('returns a subscription', async function subscribeReturnsSubscription() {
-      const variables = { nonNull: 'nonNull' };
-      const el = await getElement({ query, variables });
-      const subscription = el.subscribe();
-      expect(isSubscription(subscription)).to.be.true;
-    });
+      let subscription: ZenObservable.Subscription;
 
-    it('binds nextData to the subscription\'s next', async function bindsNextToNext() {
-      const variables = { nonNull: 'nonNull' };
-      const el = await getElement({ query, variables });
-      const subscription = el.subscribe();
-      // @ts-expect-error
-      expect(subscription._observer.next).to.equal(el.nextData);
-    });
+      beforeEach(async function() {
+        const tag = unsafeStatic(defineCE(class extends Test<NonNullableParamQueryData, NonNullableParamQueryVariables> {
+          client = client;
 
-    it('binds nextError to the subscription\'s error', async function bindsErrorToError() {
-      const variables = { nonNull: 'nonNull' };
-      const el = await getElement({ query, variables });
-      const subscription = el.subscribe();
-      // @ts-expect-error
-      expect(subscription._observer.error).to.equal(el.nextError);
+          query = NonNullableParamQuery;
+
+          variables = { nonNull: 'nonNull' };
+        }));
+
+        element = await fixture(fhtml`<${tag}></${tag}>`);
+
+        watchQuerySpy = spy(element, 'watchQuery');
+      });
+
+      afterEach(function() {
+        watchQuerySpy.restore();
+        element = undefined;
+        subscription = undefined;
+        watchQuerySpy = undefined;
+      });
+
+      beforeEach(function() {
+        subscription = element.subscribe();
+      });
+
+      it('calls watchQuery', async function subscribeEnoughVariables() {
+        expect(watchQuerySpy).to.have.been.called;
+      });
+
+      it('creates an observableQuery', async function subscribeCreatesObservableQuery() {
+        expect(element.observableQuery).to.be.ok;
+      });
+
+      it('returns a subscription', async function subscribeReturnsSubscription() {
+        expect(isSubscription(subscription)).to.be.true;
+      });
     });
   });
 
   describe('subscribeToMore', function describeSubscribeToMore() {
     it('does nothing when there is no observableQuery', async function subscribeToMoreNoQuery() {
-      const el = await getElement();
-      expect(el.subscribeToMore(null)).to.be.undefined;
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      expect(element.subscribeToMore(null)).to.be.undefined;
     });
 
     it('calls observableQuery.subscribeToMore when there is a query', async function subscribeToMoreCallsObservableQuerySubscribeToMore() {
-      const query = NoParamQuery;
-      const el = await getElement({ query });
-      const subscribeToMoreSpy = stub(el.observableQuery, 'subscribeToMore');
-      // shouldn't this be an instance of ObservableQuery?
+      const tag = unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> {
+        query = NoParamQuery;
+      }));
+
+      const element = await fixture<Test<NoParamQueryData, NoParamQueryVariables>>(fhtml`<${tag}></${tag}>`);
+
+      const subscribeToMoreSpy = stub(element.observableQuery, 'subscribeToMore');
+
       const args = { document: NoParamSubscription, updateQuery: x => x };
-      expect(el.subscribeToMore(args)).to.be.undefined;
+      expect(element.subscribeToMore(args)).to.be.undefined;
       expect(subscribeToMoreSpy).to.have.been.calledWith(args);
     });
   });
 
   describe('executeQuery', function describeExecuteQuery() {
     it('calls client.query with element properties', async function callsClientQuery() {
-      const el = await getElement();
-      const queryStub = stub(el.client, 'query');
-      queryStub.resolves({ data: true, loading: false, networkStatus: 7, stale: false });
-      const { errorPolicy, fetchPolicy, query } = el;
-      el.executeQuery();
-      expect(queryStub).to.have.been.calledWith(match({
-        errorPolicy,
-        fetchPolicy,
-        query,
-      }));
+      const tag = unsafeStatic(defineCE(class extends Test { }));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const queryStub = stub(element.client, 'query');
+      queryStub.resolves({ data: true, loading: false, networkStatus: 7, partial: undefined });
+      const { errorPolicy, fetchPolicy, query } = element;
+      element.executeQuery();
+      expect(queryStub).to.have.been.calledWith(match({ errorPolicy, fetchPolicy, query }));
       queryStub.restore();
     });
 
     it('updates data with the response', async function updatesDataWithResponse() {
-      const el = await getElement();
-      const queryStub = stub(el.client, 'query');
+      const tag = unsafeStatic(defineCE(class extends Test { }));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const queryStub = stub(element.client, 'query');
       const data = { foo: 'bar' };
-      queryStub.resolves({ data, loading: false, networkStatus: 7, stale: false });
-      await el.executeQuery();
-      expect(el.data).to.equal(data);
+      queryStub.resolves({ data, loading: false, networkStatus: 7, partial: undefined });
+      await element.executeQuery();
+      expect(element.data).to.equal(data);
       queryStub.restore();
     });
 
     it('updates error with the error', async function updatesErrorWithError() {
-      const el = await getElement();
-      const queryStub = stub(el.client, 'query');
-      const error = new Error('whoops');
-      queryStub.rejects(error);
-      await el.executeQuery();
-      expect(el.error).to.equal(error);
-      queryStub.restore();
+      const tag = unsafeStatic(defineCE(class extends Test<NonNullableParamQueryData, NonNullableParamQueryVariables> {
+        query = NonNullableParamQuery;
+      }));
+
+      const element = await fixture<Test<NonNullableParamQueryData, NonNullableParamQueryVariables>>(fhtml`<${tag}></${tag}>`);
+
+      try {
+        const r = await element.executeQuery({ variables: { nonNull: 'error' } });
+        if (r)
+          expect.fail('did not reject query', r.data.nonNullParam.nonNull);
+      } catch (e) {
+        expect(element.error).to.equal(e);
+      }
     });
 
     it('accepts custom args', async function() {
       const query = NoParamQuery;
-      const el = await getElement();
-      const queryStub = stub(el.client, 'query');
-      queryStub.resolves({ data: true, loading: false, networkStatus: 7, stale: false });
-      el.executeQuery({ query });
-      expect(queryStub).to.have.been.calledWith(match({
-        query,
-      }));
+
+      class Test extends ApolloQueryMixin(HTMLElement)<NoParamQueryData, NoParamQueryData> {
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const queryStub = stub(element.client, 'query');
+
+      queryStub.resolves({ data: true, loading: false, networkStatus: 7, partial: undefined });
+
+      element.executeQuery({ query });
+
+      expect(queryStub).to.have.been.calledWith(match({ query }));
+
       queryStub.restore();
     });
 
     describe('with partial arguments', function() {
-      let el;
-      let queryStub;
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> { }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      let element: Test;
+
+      let queryStub: Stub;
+
       beforeEach(async function() {
-        el = await getElement();
-        queryStub = stub(el.client, 'query');
-        queryStub.resolves({ data: true, loading: false, networkStatus: 7, stale: false });
+        element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+        queryStub = stub(element.client, 'query');
+        queryStub.resolves({ data: true, loading: false, networkStatus: 7, partial: undefined });
       });
 
       afterEach(function() {
@@ -321,36 +545,50 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
       });
 
       it('defaults to element query', async function() {
-        el.query = NoParamQuery;
+        element.query = NoParamQuery;
         const variables = { foo: 'bar' };
-        const { query } = el;
-        el.executeQuery({ variables });
+        const { query } = element;
+        element.executeQuery({ variables });
         expect(queryStub).to.have.been.calledWithMatch({ query, variables });
       });
 
       it('defaults to element variables', async function() {
-        el.variables = { foo: 'bar' };
-        const { variables } = el;
+        element.variables = { foo: 'bar' };
+        const { variables } = element;
         const query = NoParamQuery;
-        el.executeQuery({ query });
-        expect(queryStub).to.have.been.calledWithMatch({ query, variables });
+        element.executeQuery({ query });
+        expect(queryStub).to.have.been.calledWithMatch(match({ variables }));
       });
     });
   });
 
   describe('fetchMore', function describeFetchMore() {
     it('does nothing when there is no observableQuery', async function fetchMoreNoQuery() {
-      const el = await getElement();
-      expect(el.fetchMore()).to.be.undefined;
-      expect(el.observableQuery).to.be.undefined;
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      expect(element.fetchMore()).to.be.undefined;
+      expect(element.observableQuery).to.be.undefined;
     });
 
     it('calls observableQuery.fetchMore when there is a query', async function fetchMoreCallsObservableQuerySubscribeToMore() {
       const query = NoParamQuery;
-      const el = await getElement({ query });
-      const fetchMoreSpy = stub(el.observableQuery, 'fetchMore');
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        query = query;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const fetchMoreSpy = stub(element.observableQuery, 'fetchMore');
       const args = { query, updateQuery: x => x };
-      expect(el.fetchMore(args)).to.be.undefined;
+      expect(element.fetchMore(args)).to.be.undefined;
       expect(fetchMoreSpy).to.have.been.calledWith(match(args));
       fetchMoreSpy.restore();
     });
@@ -360,25 +598,54 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     it('calls client watchQuery', async function callsClientWatchQuery() {
       const watchQueryStub = spy(client, 'watchQuery');
       const query = NoParamQuery;
-      const el = await getElement({ client, query });
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        client = client;
+
+        query = query;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
       const args = { query };
-      el.watchQuery(args);
+      element.watchQuery(args);
       expect(watchQueryStub).to.have.been.calledWith(match(args));
       watchQueryStub.restore();
     });
 
     it('returns an ObservableQuery', async function returnsObservableQuery() {
       const query = NoParamQuery;
-      const el = await getElement({ client, query });
-      const actual = el.watchQuery();
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        client = client;
+
+        query = query;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      const actual = element.watchQuery();
       expect(actual).to.be.an.instanceof(ObservableQuery);
     });
 
     it('accepts a specific query', async function() {
       const watchQueryStub = stub(client, 'watchQuery');
+
       const query = NoParamQuery;
-      const el = await getElement({ client });
-      el.watchQuery({ query });
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        client = client;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      element.watchQuery({ query });
       expect(watchQueryStub).to.have.been.calledWithMatch({ query });
       watchQueryStub.restore();
     });
@@ -386,8 +653,18 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     it('defaults to the element\'s query', async function() {
       const watchQueryStub = spy(client, 'watchQuery');
       const query = NoParamQuery;
-      const el = await getElement({ client, query });
-      el.watchQuery({ query: undefined });
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        client = client;
+
+        query = query;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      element.watchQuery({ query: undefined });
       expect(watchQueryStub).to.have.been.calledWith(match({ query }));
       watchQueryStub.restore();
     });
@@ -398,15 +675,28 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
       client.defaultOptions = {
         watchQuery: {
           notifyOnNetworkStatusChange: true,
-          // @ts-expect-error
+          // @ts-expect-error: just checking that it passes arbitrary value, don't care abt the interface
           SOMETHING_SILLY: true,
         },
       };
 
+      // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
       const watchQueryStub = spy(client.queryManager, 'watchQuery');
+
       const query = NoParamQuery;
-      const el = await getElement({ client, query });
-      el.watchQuery({ query: undefined });
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        client = client;
+
+        query = query;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      element.watchQuery({ query: undefined });
+
       expect(watchQueryStub).to.have.been.calledWith(match({
         query,
         notifyOnNetworkStatusChange: true,
@@ -421,6 +711,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   describe('fetchPolicy', function() {
     let queryStub: Spy;
     beforeEach(function() {
+      // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
       queryStub = spy(client.queryManager, 'watchQuery');
     });
 
@@ -428,92 +719,152 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
       queryStub.restore();
     });
 
-    it('respects client default fetchPolicy', async function() {
-      const query = NoParamQuery;
-      const el = await getElement({ client, query });
-      expect(el.fetchPolicy).to.be.undefined;
-      expect(queryStub).to.have.been
-        .calledWithMatch({ fetchPolicy: 'network-only' });
+    describe('with no specific fetchPolicy', function() {
+      class Test extends ApolloQueryMixin(HTMLElement)<NoParamQueryData, NoParamQueryVariables> {}
+      let element: Test;
+
+      beforeEach(async function() {
+        const tag = unsafeStatic(defineCE(class extends Test {
+          client = client;
+
+          query = NoParamQuery;
+        }));
+
+        element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      });
+
+      it('does not set an instance fetchPolicy', function() {
+        expect(element.fetchPolicy).to.be.undefined;
+      });
+
+      it('respects client default fetchPolicy', async function() {
+        expect(queryStub).to.have.been
+          .calledWithMatch({ fetchPolicy: 'network-only' });
+      });
     });
 
     it('respects instance-specific fetchPolicy', async function() {
       const query = NoParamQuery;
-      const fetchPolicy = 'no-cache';
-      const el = await getElement({ client, query, fetchPolicy });
-      expect(el.fetchPolicy).to.equal(fetchPolicy);
+
+      const fetchPolicy = 'no-cache' as FetchPolicy;
+
+      class Test extends ApolloQueryMixin(HTMLElement)<unknown, unknown> {
+        client = client;
+
+        query = query;
+
+        fetchPolicy = fetchPolicy;
+      }
+
+      const tag = unsafeStatic(defineCE(Test));
+
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      expect(element.fetchPolicy).to.equal(fetchPolicy);
       expect(queryStub).to.have.been
         .calledWithMatch({ fetchPolicy: 'no-cache' });
     });
   });
 
   describe('when query rejects', function() {
-    let el: ApolloQuery<unknown, unknown>;
-    let onData: Spy;
-    let onError: Spy;
+    class Test extends ApolloQueryMixin(HTMLElement)<NonNullableParamQueryData, NonNullableParamQueryVariables> { }
+    let element: Test;
+    let onDataSpy: Spy;
+    let onErrorSpy: Spy;
 
-    const query = gql`
-      query {
-        nonNullParam {
-          nonexistent
-        }
-      }
-    `;
+    beforeEach(async function setupElement() {
+      const tag = unsafeStatic(defineCE(class extends Test {
+        client = client;
 
-    beforeEach(async function() {
-      onData = spy();
-      onError = spy();
-      el = await getElement({ query, onData, onError });
-      await nextFrame();
+        query = NonNullableParamQuery;
+
+        variables = { nonNull: 'error' };
+
+        noAutoSubscribe = true;
+
+        onData(x) { x; }
+
+        onError(x) { x; }
+      }));
+
+      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     });
 
-    afterEach(function() {
-      onData.resetHistory?.();
-      onData = undefined;
-      onError.resetHistory?.();
-      onError = undefined;
-      el = undefined;
+    beforeEach(function spyMethods() {
+      onDataSpy = spy(element, 'onData');
+      onErrorSpy = spy(element, 'onError');
     });
 
-    it('calls onData', function() {
-      expect(onError).to.have.been.called;
-      expect(onData).to.not.have.been.called;
+    beforeEach(function subscribe() {
+      element.executeQuery();
+    });
+
+    beforeEach(nextFrame);
+
+    afterEach(function restoreSpies() {
+      onDataSpy.restore();
+      onErrorSpy.restore();
+      element = undefined;
+    });
+
+    it('does not call onData', function() {
+      expect(onDataSpy).to.not.have.been.called;
+    });
+
+    it('calls onError', function() {
+      expect(onErrorSpy).to.have.been.called;
     });
   });
 
   describe('when query resolves', function() {
-    let el: ApolloQuery<unknown, unknown>;
-    let onData: Spy;
-    let onError: Spy;
+    class Test extends ApolloQueryMixin(HTMLElement)<NullableParamQueryData, NullableParamQueryVariables> { }
 
-    const query = gql`
-      query {
-        nonNullParam(nonNull: "yup") {
-          nonNull
-        }
-      }
-    `;
+    let element: Test;
+    let onDataSpy: Spy;
+    let onErrorSpy: Spy;
 
     beforeEach(async function() {
-      onData = spy();
-      onError = spy();
-      el = await getElement({ query, onData, onError });
+      const tag = unsafeStatic(defineCE(class extends Test {
+        query = NullableParamQuery;
+
+        variables = { nullable: 'nullable' };
+
+        noAutoSubscribe = true;
+
+        onData(x) { x; }
+
+        onError(x) { x; }
+      }));
+      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     });
 
+    beforeEach(function spyMethods() {
+      onDataSpy = spy(element, 'onData');
+      onErrorSpy = spy(element, 'onError');
+    });
+
+    beforeEach(function() {
+      element.subscribe();
+    });
+
+    beforeEach(nextFrame);
+
     afterEach(function() {
-      onData.resetHistory?.();
-      onData = undefined;
-      onError.resetHistory?.();
-      onError = undefined;
-      el = undefined;
+      onDataSpy.restore();
+      onErrorSpy.restore();
+      element = undefined;
+    });
+
+    it('does not call onError', function() {
+      expect(onErrorSpy).to.not.have.been.called;
     });
 
     it('calls onData', async function() {
-      expect(onError).to.not.have.been.called;
-      expect(onData).to.have.been.calledWithMatch({
+      expect(onDataSpy).to.have.been.calledWithMatch({
         data: {
-          nonNullParam: {
-            __typename: 'NonNull',
-            nonNull: 'nonNull',
+          nullableParam: {
+            __typename: 'Nullable',
+            nullable: 'nullable',
           },
         },
       });

@@ -1,72 +1,71 @@
-import type { ApolloClient } from 'apollo-client';
+import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql/language/ast';
 import type { Constructor, CustomElement } from './constructor';
+import type { GraphQLError } from 'graphql';
+import type { ApolloElementInterface } from '@apollo-elements/interfaces';
 
-import getGraphQLScriptChildDocument from '@apollo-elements/lib/get-graphql-script-child-document';
-import isValidGql from '@apollo-elements/lib/is-valid-gql';
-import bound from 'bind-decorator';
-
+import { getGraphQLScriptChildDocument } from '@apollo-elements/lib/get-graphql-script-child-document';
+import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function ApolloElementMixinImplementation<
-  TBase extends Constructor<CustomElement>
->(superclass: TBase) {
+function ApolloElementMixinImplementation<B extends Constructor<CustomElement>>(superclass: B) {
   /**
    * Class mixin for apollo-element elements
    */
-  class ApolloElement extends superclass {
-    /** Context to be passed to link execution chain. */
-    context: object;
+  abstract class ApolloElement extends superclass implements ApolloElementInterface<unknown> {
+    declare context?: Record<string, unknown>;
 
-    /** Latest Data */
-    data: unknown;
+    data: unknown = null;
 
-    /** Latest Error */
-    error: Error;
+    error: Error|ApolloError = null;
 
-    /** Whether a request is in flight. */
-    loading: boolean;
+    errors: readonly GraphQLError[] = null;
 
-    /** The apollo client instance. */
+    loading = false;
+
     client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
 
-    #document: DocumentNode = null;
+    /** @private */
+    __document: DocumentNode = null;
 
-    #elementMutationObserver = new MutationObserver(this.onElementMutation);
+    /** @private */
+    __mo: MutationObserver;
 
     /** GraphQL Document */
-    get document(): DocumentNode { return this.#document || null; }
+    get document(): DocumentNode {
+      return this.__document;
+    }
 
     set document(doc) {
       if (!doc)
         return;
       else if (isValidGql(doc))
-        this.#document = doc;
+        this.__document = doc;
       else
         throw new TypeError('document must be a gql-parsed DocumentNode');
     }
 
     connectedCallback(): void {
       super.connectedCallback?.();
-      this.#elementMutationObserver.observe(this, {
+
+      this.__mo = new MutationObserver(() => {
+        const doc = getGraphQLScriptChildDocument(this);
+        if (doc && !this.document)
+          this.document = doc;
+      });
+
+      this.__mo.observe(this, {
         characterData: true,
         childList: true,
         subtree: true,
       });
-      this.document = getGraphQLScriptChildDocument(this) || null;
+
+      this.document = getGraphQLScriptChildDocument(this);
     }
 
     disconnectedCallback(): void {
+      this.__mo.disconnect();
       super.disconnectedCallback?.();
-      this.#elementMutationObserver.disconnect();
-    }
-
-    @bound onElementMutation(): void {
-      const doc = getGraphQLScriptChildDocument(this);
-      if (doc)
-        this.document = doc;
     }
   }
 
@@ -76,4 +75,5 @@ function ApolloElementMixinImplementation<
 /**
  * `ApolloElementMixin`: class mixin for apollo custom elements.
  */
-export const ApolloElementMixin = dedupeMixin(ApolloElementMixinImplementation);
+export const ApolloElementMixin =
+  dedupeMixin(ApolloElementMixinImplementation);
