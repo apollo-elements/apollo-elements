@@ -1,0 +1,38 @@
+type Message {
+  message: String
+  user: String
+  date: String
+}
+
+type NonNull {
+  nonNull: String!
+}
+
+type Nullable {
+  nullable: String
+}
+
+type NoParam {
+  noParam: String
+}
+
+type Query {
+  messages: [Message]
+  nonNullParam(nonNull: String!): NonNull
+  nullableParam(nullable: String): Nullable
+  noParam: NoParam
+}
+
+type Subscription {
+  messageSent: Message
+  nullableParam(nullable: String): Nullable
+  nonNullParam(nonNull: String!): NonNull
+}
+
+type Mutation {
+  sendMessage(user: String, message: String): Message
+  nonNullableParam(nonNull: String!): NonNull
+  nullableParam(nullable: String): Nullable
+  noParam: NoParam
+  reset: [Message]
+}
