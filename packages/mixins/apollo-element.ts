@@ -1,22 +1,22 @@
 import type { DocumentNode } from 'graphql';
 import type { ApolloClient } from 'apollo-client';
 
-export interface ApolloElement<TData> {
+export declare class ApolloElement<TData> {
   /** Context to be passed to link execution chain. */
-  context: object;
+  declare context?: Record<string, unknown>;
 
   /** Latest Data */
-  data: TData;
+  declare data: TData;
 
   /** Latest Error */
-  error: Error;
+  declare error: Error;
 
   /** Whether a request is in flight. */
-  loading: boolean;
+  declare loading: boolean;
 
   /** The apollo client instance. */
-  client: ApolloClient<unknown>;
+  declare client: ApolloClient<unknown>;
 
   /** GraphQL Document */
-  document: DocumentNode;
+  declare document: DocumentNode;
 }
