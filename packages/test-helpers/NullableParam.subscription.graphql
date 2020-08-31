@@ -1,5 +1,5 @@
-subscription NullableParamSubscription($param: String!) {
-  nullableParam(param: $param) {
+subscription NullableParamSubscription($nullable: String) {
+  nullableParam(nullable: $nullable) {
     nullable
   }
 }

@@ -1,13 +1,16 @@
-import ApolloClient, { DefaultOptions } from 'apollo-client';
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import type {
+  DefaultOptions,
+  InMemoryCacheConfig,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
 
-import { SchemaLink } from 'apollo-link-schema';
+import { ApolloClient, InMemoryCache } from '@apollo/client/core';
+
+import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { addMocksToSchema } from '@graphql-tools/mock';
 
-// import { HttpLink } from 'apollo-link-http';
-
-import type { InMemoryCacheConfig } from 'apollo-cache-inmemory';
+import TestSchema from './test.schema.graphql';
 
 declare global {
   interface Window {
@@ -16,55 +19,23 @@ declare global {
   }
 }
 
-const typeDefs = `
-  type Message {
-    message: String
-    user: String
-    date: String
-  }
-
-  type NonNull {
-    nonNull: String!
-  }
-
-  type Nullable {
-    nullable: String
-  }
-
-  type NoParam {
-    noParam: String
-  }
-
-  type Query {
-    messages: [Message]
-    nonNullParam(nonNull: String!): NonNull
-    nullableParam(nullable: String): Nullable
-    noParam: NoParam
-  }
-
-  type Subscription {
-    messageSent: Message
-    nullableParam(param: String): Nullable
-    nonNullParam(param: String!): NonNull
-  }
-
-  type Mutation {
-    sendMessage(user: String, message: String): Message
-    nonNullableParam(param: String!): NonNull
-    nullableParam(param: String): Nullable
-    noParam: NoParam
-    reset: [Message]
-  }
-`;
+const typeDefs = TestSchema.loc.source.body;
 
 const mocks = {
   /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-  NonNull: () => ({ nonNull: 'nonNull' }),
+  NonNull: (_, { nonNull }) => {
+    if (nonNull === 'error')
+      throw new Error(nonNull);
+    else
+      return { nonNull };
+  },
 
-  Nullable: (_, { param }) => {
-    if (param === 'error') throw new Error(param);
-    return { nullable: 'nullable' };
+  Nullable: (_, { nullable }) => {
+    if (nullable === 'error')
+      throw new Error(nullable);
+    else
+      return { nullable };
   },
 
   NoParam: () => ({ noParam: 'noParam' }),
