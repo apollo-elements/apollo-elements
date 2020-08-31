@@ -1,7 +1,8 @@
 {
   "useWorkspaces": true,
   "packages": [
-    "packages/*"
+    "packages/*",
+    "docs"
   ],
   "version": "independent",
   "command": {

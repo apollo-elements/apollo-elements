@@ -11,6 +11,7 @@ docs/webcomponentsjs
 docs/bundle.js
 analysis.json
 lerna-debug.log
+package-lock.json
 
 packages/*/*.js
 packages/*/*.js.map

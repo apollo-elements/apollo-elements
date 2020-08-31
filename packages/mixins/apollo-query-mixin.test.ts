@@ -283,7 +283,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   });
 
   describe('set variables', function describeSetVariables() {
-    describe('without observableQuery', function() {
+    describe('without query property', function() {
       it('does nothing', async function setVariablesNoQuery() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
 
@@ -294,6 +294,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
         element.variables = { errorPolicy: 'foo' };
 
         expect(element.variables).to.deep.equal({ errorPolicy: 'foo' });
+        expect(element.observableQuery).to.not.be.ok;
       });
     });
 
