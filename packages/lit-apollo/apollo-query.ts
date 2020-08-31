@@ -1,7 +1,9 @@
+import type { NetworkStatus } from '@apollo/client/core';
+import type { PropertyDeclarations } from 'lit-element';
+
 import { ApolloElement } from './apollo-element';
-import type { NetworkStatus } from 'apollo-client';
-import { property } from 'lit-element';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+import { Constructor } from '@apollo-elements/mixins/constructor';
 
 /**
  * # ApolloQuery
@@ -11,17 +13,15 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  * ## 👩‍🚀 Usage
  *
  * ```js
- * import { client } from './apollo-client';
  * import { ApolloQuery, html } from 'lit-apollo';
- * import query from './connected-element.graphql';
+ * import Query from './connected-element.graphql';
  *
  * const errorTemplate = ({message = 'Unknown Error'}) => html`
  *   <h1>😢 Such Sad, Very Error! 😰</h1>
  *   <div>${message}</div>`
  *
  * class ConnectedElement extends ApolloQuery {
- *   client = client;
- *   query = query;
+ *   query = Query;
  *
  *   render() {
  *     const { data, error, loading, networkStatus } = this;
@@ -36,31 +36,27 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  * customElements.define('connected-element', ConnectedElement)
  * ```
  */
-export class ApolloQuery<
-  TData,
-  TVariables,
-> extends ApolloQueryMixin(ApolloElement)<TData, TVariables> {
-  /**
-   * Enum of network statuses. See https://bit.ly/2sfKLY0
-   */
-  @property({ type: Number }) networkStatus: NetworkStatus;
+export abstract class ApolloQuery<TData, TVariables> extends
+  ApolloQueryMixin(ApolloElement as unknown as Constructor<ApolloElement>)<TData, TVariables> {
+  declare networkStatus: NetworkStatus;
 
-  /**
-   * If the query should not subscribe until `subscribe` is explicitly called.
-   */
-  @property({ type: Boolean, attribute: 'no-auto-subscribe' }) noAutoSubscribe: boolean;
+  declare noAutoSubscribe: boolean;
+
+  static get properties(): PropertyDeclarations {
+    return {
+      networkStatus: { type: Number },
+      noAutoSubscribe: { type: Boolean, attribute: 'no-auto-subscribe' },
+    };
+  }
 
   /**
    * By default, will only render if
    *   - The component has `data` or
    *   - The component has an `error` or
-   *   - The component has a `loading` status.
+   *   - The component is loading.
    */
   shouldUpdate(): boolean {
-    return (
-      !!this.data ||
-      !!this.error ||
-      this.loading != null
-    );
+    const { data, error, loading } = this;
+    return (!!data || !!error || loading);
   }
 }

@@ -1,5 +1,6 @@
 import { ApolloElement } from './apollo-element';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
+import { Constructor } from '@apollo-elements/mixins/constructor';
 
 /**
  * # ApolloSubscription
@@ -33,10 +34,10 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
  * customElements.define('connected-element', ConnectedElement)
  * ```
  */
-export class ApolloSubscription<
-  TData,
-  TVariables,
-> extends ApolloSubscriptionMixin(ApolloElement)<TData, TVariables> {
+export abstract class ApolloSubscription<TData, TVariables> extends
+  ApolloSubscriptionMixin(
+    ApolloElement as unknown as Constructor<ApolloElement>
+  )<TData, TVariables> {
   /**
    * By default, will only render if
    *   - The component has `data` or
@@ -44,10 +45,7 @@ export class ApolloSubscription<
    *   - The component is `loading`.
    */
   shouldUpdate(): boolean {
-    return (
-      this.loading != null ||
-      !!this.error ||
-      !!this.data
-    );
+    const { data, error, loading } = this;
+    return (!!data || !!error || loading);
   }
 }

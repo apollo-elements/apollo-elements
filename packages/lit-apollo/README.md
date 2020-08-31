@@ -47,9 +47,7 @@ You'll need to bundle the Apollo library with a tool like Rollup. See [instructi
 We recommend assigning your `ApolloClient` instance to the `__APOLLO_CLIENT__` global variables. This not only automatically gives you [dev tools support](https://github.com/apollographql/apollo-client-devtools), but also lets all of your apollo elements connect to the client without needing to configure them.
 
 ```js
-import ApolloClient from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
 const cache =
   new InMemoryCache();
@@ -297,12 +295,10 @@ In some cases, you may want to wait for your Apollo client to do some initial as
 
 ```js
 // client.js
-import { ApolloClient } from 'apollo-client';
-import { persistCache } from 'apollo-cache-persist'
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { link } from './link';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
 const cache = new InMemoryCache();
+const link = new HttpLink({ uri: 'https://graphql.is.cool/graphql' })
 
 export async function getClient() {
   // Wait for the cache to be restored
