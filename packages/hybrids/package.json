@@ -7,7 +7,11 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
-    "start": "tsc -w",
+    "clean": "run-s clean:*",
+    "clean:js": "rm -f ./*.js",
+    "clean:dts": "rm -f ./*.d.ts;",
+    "clean:map": "rm -f ./*.js.map",
+    "start": "tsc -w --noEmit",
     "docs": "echo \"no docs\"",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
@@ -30,13 +34,8 @@
   "license": "ISC",
   "dependencies": {
     "@apollo-elements/lib": "^2.0.0",
-    "crocks": "^0.12.4",
-    "tslib": "^2.0.0"
-  },
-  "devDependencies": {
-    "@apollo-elements/mixins": "^2.0.1"
-  },
-  "peerDependencies": {
-    "hybrids": ">= 2"
+    "@apollo-elements/mixins": "^2.0.1",
+    "hybrids": ">= 2",
+    "tslib": "^2.0.1"
   }
 }
