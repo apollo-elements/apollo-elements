@@ -1,11 +1,10 @@
 import { fixture, html, expect, oneEvent } from '@open-wc/testing';
 
 import './apollo-subscription';
-import { client } from '@apollo-elements/test-helpers/client';
+import { client } from '../test-helpers/client';
 
 import type { PolymerApolloSubscription } from './apollo-subscription';
-import type { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import type { ApolloClient } from 'apollo-client';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 
 interface TemplateOpts {

@@ -50,14 +50,22 @@ export class PolymerApolloMutation<TData, TVariables> extends
   NotifyingElementMixin(ApolloMutationMixin(PolymerApolloElement))<TData, TVariables> {
   #called = false;
 
-  /**
-   * Whether the mutation has been called
-   */
-  get called(): boolean { return this.#called; }
+  declare called: boolean;
 
-  set called(value) {
-    this.#called = value;
-    this.notify('called', value);
+  constructor() {
+    super();
+    Object.defineProperties(this, {
+      called: {
+        get(this: PolymerApolloMutation<TData, TVariables>): boolean {
+          return this.#called;
+        },
+
+        set(this: PolymerApolloMutation<TData, TVariables>, value) {
+          this.#called = value;
+          this.notify('called', value);
+        },
+      },
+    });
   }
 }
 
