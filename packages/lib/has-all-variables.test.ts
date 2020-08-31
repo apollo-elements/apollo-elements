@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 import gql from 'graphql-tag';
 
-import hasAllVariables from './has-all-variables';
+import { hasAllVariables } from './has-all-variables';
 
 const r1 = gql`
 query NeedsOne($one: ID!) {
@@ -79,18 +79,35 @@ describe('[lib] hasAllVariables', function() {
   });
 
   it('handles weird input', function() {
-    const query = r1;
-    expect(hasAllVariables(void 0 as any), 'no params').to.be.false;
-    expect(hasAllVariables({} as any), 'undefined params').to.be.false;
-    expect(hasAllVariables(null as any), 'null params').to.be.false;
-    expect(hasAllVariables(NaN as any), 'NaN params').to.be.false;
-    expect(hasAllVariables(1 as any), 'Number params').to.be.false;
-    expect(hasAllVariables(true as any), 'Boolean params').to.be.false;
-    expect(hasAllVariables('foo' as any), 'String params').to.be.false;
-    expect(hasAllVariables((() => 'hmm') as any), 'Function params').to.be.false;
-    expect(hasAllVariables(Promise.resolve() as any), 'Promise params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables(), 'no params').to.be.false;
+    expect(hasAllVariables(void 0), 'void params').to.be.false;
+    expect(hasAllVariables(null), 'null params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({}), 'empty object params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables([]), 'empty array params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables(NaN), 'NaN params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables(1), 'Number params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables(true), 'Boolean params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables('foo'), 'String params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables((() => 'hmm')), 'Function params').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables(Promise.resolve()), 'Promise params').to.be.false;
 
-    expect(hasAllVariables({ query } as any), 'undefined variables').to.be.false;
+    const query = r1;
+
+    expect(hasAllVariables({ query }), 'missing variables').to.be.false;
+    expect(hasAllVariables({ query, variables: void 0 }), 'void variables').to.be.false;
+    expect(hasAllVariables({ query, variables: undefined }), 'undefined variables').to.be.false;
+    expect(hasAllVariables({ query, variables: [] }), 'empty array variables').to.be.false;
+    expect(hasAllVariables({ query, variables: [1] }), 'array variables').to.be.false;
+    expect(hasAllVariables({ query, variables: [1] }), 'array of object variables').to.be.false;
     expect(hasAllVariables({ query, variables: null }), 'null variables').to.be.false;
     expect(hasAllVariables({ query, variables: NaN }), 'NaN variables').to.be.false;
     expect(hasAllVariables({ query, variables: '' }), 'Empty string variables').to.be.false;
@@ -98,12 +115,18 @@ describe('[lib] hasAllVariables', function() {
     expect(hasAllVariables({ query, variables: 0 }), 'Number 0 variables').to.be.false;
     expect(hasAllVariables({ query, variables: 1 }), 'Number 1 variables').to.be.false;
 
-    expect(hasAllVariables({ variables: {} } as any), 'undefined query').to.be.false;
-    expect(hasAllVariables({ query: null } as any), 'null query').to.be.false;
-    expect(hasAllVariables({ query: NaN } as any), 'NaN query').to.be.false;
-    expect(hasAllVariables({ query: '' } as any), 'Empty string query').to.be.false;
-    expect(hasAllVariables({ query: 'foo' } as any), 'String query').to.be.false;
-    expect(hasAllVariables({ query: 0 } as any), 'Number 0 query').to.be.false;
-    expect(hasAllVariables({ query: 1 } as any), 'Number 1 query').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({ variables: {} }), 'undefined query').to.be.false;
+    expect(hasAllVariables({ query: null }), 'null query').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({ query: NaN }), 'NaN query').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({ query: '' }), 'Empty string query').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({ query: 'foo' }), 'String query').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({ query: 0 }), 'Number 0 query').to.be.false;
+    // @ts-expect-error: testing weird input
+    expect(hasAllVariables({ query: 1 }), 'Number 1 query').to.be.false;
   });
 });

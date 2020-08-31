@@ -1,86 +1,56 @@
-import type { Operation } from 'apollo-link';
-import All from 'crocks/All';
-import chain from 'crocks/pointfree/chain';
-import compose from 'crocks/helpers/compose';
-import constant from 'crocks/combinators/constant';
-import ifElse from 'crocks/logic/ifElse';
-import isEmpty from 'crocks/predicates/isEmpty';
-import isSame from 'crocks/predicates/isSame';
-import mreduceMap from 'crocks/helpers/mreduceMap';
-import or from 'crocks/logic/or';
-import propOr from 'crocks/helpers/propOr';
-import propPathOr from 'crocks/helpers/propPathOr';
-import when from 'crocks/logic/when';
+import type { Operation } from '@apollo/client/core';
+import type {
+  DefinitionNode,
+  DirectiveNode,
+  OperationDefinitionNode,
+  FieldNode,
+} from 'graphql';
 
+import { hasDirectives } from '@apollo/client/utilities';
 
-/** getQuery :: Operation -> Query */
-const getQuery =
-  propOr(null, 'query');
+const FAIL_DIRECTIVE = Symbol('NO_DIRECTIVE') as unknown as DirectiveNode;
 
-/** getDefinitions :: Operation -> [Definition] */
-const getDefinitions =
-  propOr([], 'definitions');
+const hasSelections =
+  (x: FieldNode) =>
+    !!(x.selectionSet?.selections ?? []).length;
 
-/** getDirectives :: Definition -> [Directive] */
-const getDirectives = compose(
-  when(isEmpty, constant(['NO_DIRECTIVES'])),
-  propOr(null, 'directives')
-);
-
-/** getDirectiveName :: Directive -> String */
-const getDirectiveName =
-  propPathOr('NO_DIRECTIVE', ['name', 'value']);
-
-/** getSelections :: Definition -> [Selection] */
-const getSelections =
-  propPathOr([], ['selectionSet', 'selections']);
-
-/** getFlatDirectives :: [Selection] -> [Directive] */
-const getFlatDirectives =
-  chain(getDirectives);
-
-/** getFlatSelections :: [Definition] -> [Selection] */
-const getFlatSelections =
-  chain(getSelections);
-
-/** isClient :: n -> Bool */
-const isClient =
-  isSame('client');
-
-/** isClientDirective :: Directive -> Bool */
 const isClientDirective =
-  compose(isClient, getDirectiveName);
+  (x: DirectiveNode) =>
+    x?.name?.value === 'client';
 
-/** isAllClientDirectives :: [Definition] -> Bool */
-const allClientDirectives =
-  mreduceMap(All, isClientDirective);
+const isOperationDefinition =
+  (x: DefinitionNode): x is OperationDefinitionNode =>
+    x.kind !== 'DirectiveDefinition';
 
-/** isAllClientDirectives :: [Definition] -> Bool */
-const isAllClientDirectives =
-  ifElse(isEmpty, constant(false), allClientDirectives);
+const getDirectives =
+  <T extends FieldNode>(acc: DirectiveNode[], x: T): DirectiveNode[] => {
+    const directives = !x.directives.length ? [FAIL_DIRECTIVE] : x.directives;
+    if (!hasSelections(x))
+      return [...acc, ...directives];
+    else
+      return [...acc, ...x.selectionSet.selections.reduce(getDirectives, [])];
+  };
 
-/** isAllClientDefinition :: [Definition] -> Bool */
-const isAllClientDefinition =
-  compose(isAllClientDirectives, getFlatDirectives);
+export function isClientOperation(operation: Operation): boolean {
+  const query = operation?.query;
+  const definitions = (query?.definitions ?? []) as OperationDefinitionNode[];
 
-/** isAllClientSelections :: [Definition] -> Bool */
-const isAllClientSelections =
-  compose(isAllClientDefinition, getFlatSelections);
+  if (!hasDirectives(['client'], query))
+    return false;
 
-/** isClientDirective :: [Document] -> Bool */
-const isClientDocument =
-  compose(isAllClientDirectives, getDirectives);
+  return definitions.reduce((acc, definition) => {
+    const selections =
+      definition
+        ?.selectionSet
+        ?.selections ?? [];
 
-/** isClientOnly :: [Definition] -> Bool */
-const isClientOnly =
-  or(isAllClientDefinition, isAllClientSelections);
+    if (!isOperationDefinition(definition))
+      return acc && true;
 
-/** isClientQuery :: [Query] -> Bool */
-const isClientQuery =
-  compose(isClientOnly, getDefinitions);
+    else if (definition.directives.length && definition.directives.every(isClientDirective))
+      return acc && true;
 
-/** isClientOperation :: Operation -> Bool */
-const isClientOperation: (operation: Operation) => boolean =
-  or(isClientDocument, compose(isClientQuery, getQuery));
-
-export default isClientOperation;
+    else
+      return acc && selections.reduce(getDirectives, []).every(isClientDirective);
+  }, true);
+}
