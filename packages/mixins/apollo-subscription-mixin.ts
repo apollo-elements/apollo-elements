@@ -1,148 +1,186 @@
 import type { DocumentNode } from 'graphql/language/ast';
-import type { ApolloClient, SubscriptionOptions, ApolloError, FetchPolicy } from 'apollo-client';
-import type { FetchResult, Observable } from 'apollo-link';
 import type { Constructor } from './constructor';
 
-import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
-import hasAllVariables from '@apollo-elements/lib/has-all-variables';
+import type {
+  ApolloError,
+  FetchPolicy,
+  FetchResult,
+  Observable,
+  SubscriptionOptions,
+} from '@apollo/client/core';
+
+import type {
+  ApolloSubscriptionInterface,
+  OnSubscriptionDataParams,
+  SubscriptionDataOptions,
+} from '@apollo-elements/interfaces';
+
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import bound from 'bind-decorator';
-
-export interface SubscriptionResult<TData> {
-  /** whether the subscription is loading */
-  loading: boolean;
-  /** subscription data */
-  data: TData;
-  /** subscription error */
-  error: ApolloError;
-}
-
-export interface OnSubscriptionDataParams<TData> {
-  client: ApolloClient<unknown>;
-  subscriptionData: { data: TData };
-}
+import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function ApolloSubscriptionMixinImplementation<
-  TBase extends Constructor<HTMLElement>
->(superclass: TBase) {
+//
+function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(superclass: TBase) {
   /**
    * Class mixin for apollo-subscription elements
    */
-  class ApolloSubscription<TData, TVariables> extends ApolloElementMixin(superclass) {
-    data: TData;
+  abstract class ApolloSubscriptionElement<TData, TVariables>
+    extends ApolloElementMixin(superclass)
+    implements ApolloSubscriptionInterface<TData, TVariables> {
+    declare data: TData;
 
-    /**
-     * Specifies the FetchPolicy to be used for this subscription.
-     */
-    fetchPolicy: FetchPolicy;
+    declare fetchPolicy: FetchPolicy;
 
-    /**
-     * Whether or not to fetch results.
-     */
-    fetchResults: boolean;
+    declare fetchResults: boolean;
 
-    /**
-     * The time interval (in milliseconds) on which this subscription should be refetched from the server.
-     */
-    pollInterval: number;
+    declare pollInterval: number;
 
-    /**
-     * Whether or not updates to the network status should trigger next on the observer of this subscription.
-     */
-    notifyOnNetworkStatusChange: boolean;
+    declare observable: Observable<FetchResult<TData>>;
 
-    /**
-     * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-     */
-    tryFetch: boolean;
+    declare observableSubscription: ZenObservable.Subscription;
 
-    /**
-     * Observable watching this element's subscription.
-     */
-    observable: Observable<FetchResult<TData>>;
+    declare subscription: DocumentNode;
 
-    /**
-     * A GraphQL document containing a single subscription.
-     */
-    get subscription(): DocumentNode { return this.document; }
+    declare variables: TVariables;
 
-    set subscription(subscription) {
-      try {
-        this.document = subscription;
-      } catch (error) {
-        throw new TypeError('Subscription must be a gql-parsed DocumentNode');
-      }
-      if (subscription && !this.observable) this.subscribe();
-    }
+    declare skip: boolean;
 
-    #variables: TVariables
+    noAutoSubscribe = false;
 
-    /**
-     * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
-     */
-    get variables(): TVariables { return this.#variables; }
+    notifyOnNetworkStatusChange = false;
 
-    set variables(variables) {
-      this.#variables = variables;
-      if (!this.observable) this.subscribe();
+    onSubscriptionData?(_result: OnSubscriptionDataParams<TData>): void
+
+    onSubscriptionComplete?(): void
+
+    onError?(error: ApolloError): void
+
+    /** @private */
+    __variables: TVariables = null;
+
+    constructor() {
+      super();
+      type This = this;
+      Object.defineProperties(this, {
+        subscription: {
+          get(this: This): DocumentNode {
+            return this.document;
+          },
+
+          set(this: This, subscription) {
+            try {
+              this.document = subscription;
+            } catch (error) {
+              throw new TypeError('Subscription must be a gql-parsed DocumentNode');
+            }
+
+            this.cancel();
+            if (this.shouldSubscribe({ query: subscription }))
+              this.subscribe();
+          },
+        },
+
+        variables: {
+          get(this: This): TVariables {
+            return this.__variables;
+          },
+
+          set(this: This, variables: TVariables) {
+            this.__variables = variables;
+            this.cancel();
+            if (this.shouldSubscribe({ variables }))
+              this.subscribe();
+          },
+        },
+      });
     }
 
     /** @protected */
     connectedCallback(): void {
-      /* istanbul ignore next */
-      super.connectedCallback?.();
+      super.connectedCallback();
+      if (!this.shouldSubscribe()) return;
+      this.initObservable();
       this.subscribe();
     }
 
-    /**
-     * Resets the observable and subscribes.
-     */
-    subscribe(options?: Partial<SubscriptionOptions>): ZenObservable.Subscription {
-      const fetchPolicy = options?.fetchPolicy ?? this.fetchPolicy;
+    public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>) {
+      this.initObservable(params);
+
+      if (this.observableSubscription)
+        return;
+
+      this.observableSubscription =
+        this.observable.subscribe({
+          next: this.nextData.bind(this),
+          error: this.nextError.bind(this),
+          complete: this.onComplete.bind(this),
+        });
+    }
+
+    public cancel(): void {
+      this.endSubscription();
+      this.observableSubscription = undefined;
+      this.observable = undefined;
+    }
+
+    shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
       const query = options?.query ?? this.subscription;
       const variables = options?.variables ?? this.variables;
-      if (!hasAllVariables({ query, variables })) return;
-      const { nextData: next, nextError: error } = this;
-      const opts = stripUndefinedValues({ query, variables, fetchPolicy });
-      this.observable = this.client.subscribe(opts);
-      return this.observable.subscribe({ error, next });
+      return !this.noAutoSubscribe && hasAllVariables({ query, variables });
     }
 
-    /**
-     * Updates the element with the result of a subscription.
-     */
-    @bound nextData({ data }: SubscriptionResult<TData>): void {
+    /** @private */
+    initObservable(params?: Partial<SubscriptionDataOptions<TData, TVariables>>): void {
+      if (this.observable || (params?.skip ?? this.skip))
+        return;
+
+      this.observable =
+        this.client.subscribe({
+          query: params?.subscription ?? this.subscription,
+          variables: params?.variables ?? this.variables,
+          fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
+        });
+    }
+
+    nextData(result: FetchResult<TData>) {
+      const { data } = result;
       const { client } = this;
-      const subscriptionData = { data };
+      const loading = false;
+      const error = null;
+      const subscriptionData = { data, loading, error };
       this.onSubscriptionData?.({ client, subscriptionData });
       this.data = data;
-      this.loading = false;
-      this.error = undefined;
+      this.loading = loading;
+      this.error = error;
     }
 
-    /**
-     * Updates the element with the error when the subscription fails.
-     */
-    @bound nextError(error: ApolloError): void {
+    nextError(error: ApolloError) {
       this.error = error;
       this.loading = false;
-      // this is actually covered
-      /* istanbul ignore next */
       this.onError?.(error);
     }
 
-    onSubscriptionData?(_result: OnSubscriptionDataParams<TData>): void
+    onComplete(): void {
+      this.onSubscriptionComplete?.();
+      this.endSubscription();
+    }
 
-    onError?(error: ApolloError): void
+    /** @private */
+    endSubscription() {
+      if (this.observableSubscription) {
+        this.observableSubscription.unsubscribe();
+        this.observableSubscription = undefined;
+      }
+    }
   }
 
-  return ApolloSubscription;
+  return ApolloSubscriptionElement;
 }
 
 /**
  * `ApolloSubscriptionMixin`: class mixin for apollo-subscription elements.
  */
-export const ApolloSubscriptionMixin = dedupeMixin(ApolloSubscriptionMixinImplementation);
+export const ApolloSubscriptionMixin =
+  dedupeMixin(ApolloSubscriptionMixinImpl);

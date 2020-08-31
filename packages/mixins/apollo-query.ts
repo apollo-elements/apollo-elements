@@ -20,83 +20,90 @@ import type {
 
 import type { ApolloElement } from './apollo-element';
 
-export interface ApolloQuery<TData, TVariables> extends ApolloElement<TData> {
+export declare class ApolloQuery<TData, TVariables> extends ApolloElement<TData> {
+  /**
+   * A GraphQL document containing a single query.
+   */
+  declare query: DocumentNode;
+
+  /**
+   * An object map from variable name to variable value, where the variables are used within the GraphQL query.
+   */
+  declare variables: TVariables;
+
   /**
    * Specifies the ErrorPolicy to be used for this query.
    */
-  errorPolicy: ErrorPolicy;
+  declare errorPolicy: ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this query.
    */
-  fetchPolicy: FetchPolicy;
+  declare fetchPolicy: FetchPolicy;
 
   /**
    * Whether or not to fetch results.
    */
-  fetchResults: boolean;
-
-  networkStatus: NetworkStatus;
+  declare fetchResults: boolean;
 
   /**
-   * Whether or not updates to the network status should trigger next on the observer of this query.
+   * Enum of network statuses. See https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/core/networkStatus.ts#L4
    */
-  notifyOnNetworkStatusChange: boolean;
-
-  /**
-   * The time interval (in milliseconds) on which this query should be refetched from the server.
-   */
-  pollInterval: number;
-
-  stale: boolean;
-
-  /**
-   * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-   */
-  tryFetch: boolean;
-
-  /**
-   * The apollo ObservableQuery watching this element's query.
-   */
-  observableQuery: ObservableQuery;
+  declare networkStatus: NetworkStatus;
 
   /**
    * When true, the component will not automatically subscribe to new data.
    * Call the `subscribe()` method to do so.
    */
-  noAutoSubscribe: boolean;
+  declare noAutoSubscribe: boolean;
 
   /**
-   * A GraphQL document containing a single query.
+   * Whether or not updates to the network status should trigger next on the observer of this query.
    */
-  query: DocumentNode;
+  declare notifyOnNetworkStatusChange: boolean;
 
   /**
-   * An object map from variable name to variable value, where the variables are used within the GraphQL query.
+   * The apollo ObservableQuery watching this element's query.
    */
-  variables: TVariables;
+  declare observableQuery: ObservableQuery;
 
-  options: ModifiableWatchQueryOptions;
+  /**
+   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
+   *
+   * @return {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
+   */
+  declare options: ModifiableWatchQueryOptions;
+
+  /**
+   * The time interval (in milliseconds) on which this query should be refetched from the server.
+   */
+  declare pollInterval: number;
+
+  /**
+   * Whether or not the query data is stale.
+   */
+  declare stale: boolean;
+
+  /**
+   * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
+   */
+  declare tryFetch: boolean;
+
+  /**
+   * Callback for when a query is completed.
+   */
+  onData?(_result: ApolloQueryResult<TData>): void
+
+  /**
+   * Callback for when an error occurs in mutation.
+   */
+  onError?(_error: Error): void
 
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
   refetch(variables: TVariables): Promise<ApolloQueryResult<TData>>;
-
-  /**
-   * Exposes the [`ObservableQuery#setVariables`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setVariables) method.
-   *
-   * @deprecated: This method on ObservableQuery is meant to be private. It will be removed.
-   * @param variables      The new set of variables. If there are missing variables, the previous values of those variables will be used.
-   * @param tryFetch       Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-   * @param fetchResults   Option to ignore fetching results when updating variables.
-   */
-  setVariables(
-    variables: TVariables,
-    tryFetch: boolean,
-    fetchResults: boolean
-  ): Promise<void | ApolloQueryResult<TData>>;
 
   /**
    * Resets the observableQuery and subscribes.
@@ -149,14 +156,4 @@ export interface ApolloQuery<TData, TVariables> extends ApolloElement<TData> {
    * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
    */
   watchQuery(options?: Partial<WatchQueryOptions>): ObservableQuery;
-
-  /**
-   * Callback for when a query is completed.
-   */
-  onData?(_result: ApolloQueryResult<TData>): void;
-
-  /**
-   * Callback for when an error occurs in mutation.
-   */
-  onError?(_error: Error): void;
 }
