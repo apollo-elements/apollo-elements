@@ -1,118 +1,168 @@
-import { defineCE, unsafeStatic, fixture, expect, html as fixtureHtml } from '@open-wc/testing';
-import gql from 'graphql-tag';
+import type { MutationUpdaterFn } from '@apollo/client/core';
+
+import { defineCE, unsafeStatic, fixture, expect, html as fhtml } from '@open-wc/testing';
 import sinon from 'sinon';
 import 'sinon-chai';
-import { client, setupClient, teardownClient } from '@apollo-elements/test-helpers/client';
+import {
+  client,
+  setupClient,
+  teardownClient,
+  NoParamMutationData,
+  NonNullableParamMutationData,
+  NonNullableParamMutationVariables,
+  NoParamMutationVariables,
+} from '../test-helpers';
 
 import { ApolloMutation } from './apollo-mutation';
 import { LitElement, TemplateResult, html } from 'lit-element';
 
-import type { MutationUpdaterFn } from 'apollo-client';
+import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+class TypeTestAccessor extends ApolloMutation<NonNullableParamMutationData, NonNullableParamMutationVariables> {
+  // @ts-expect-error: meh
+  get variables() {
+    return { param: 'string' };
+  }
+
+  set variables(v) {
+    null;
+  }
+
+  render() {
+    this.data.noParam.noParam;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+class TypeTestProperty extends ApolloMutation<NonNullableParamMutationData, NonNullableParamMutationVariables> {
+  variables = { param: 'string' }
+
+  render() {
+    this.data.noParam.noParam;
+  }
+}
 
 describe('[lit-apollo] ApolloMutation', function describeApolloMutation() {
   beforeEach(setupClient);
   afterEach(teardownClient);
 
   it('is an instance of LitElement', async function() {
-    const tagName = defineCE(class Test extends ApolloMutation<unknown, unknown> {
-      set thing(v: any) {
-        // @ts-expect-error
+    class Test extends ApolloMutation<unknown, unknown> {
+      set thing(v: unknown) {
         this.requestUpdate('thing', v);
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag}></${tag}>`);
-    expect(el).to.be.an.instanceOf(LitElement);
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    expect(element).to.be.an.instanceOf(LitElement);
   });
 
   it('renders when called is set', async function rendersOnCalled() {
-    const tagName = defineCE(class Test extends ApolloMutation<{}, {}> {
+    class Test extends ApolloMutation<unknown, unknown> {
       render(): TemplateResult {
         return html`${this.called ? 'CALLED' : 'FAIL'}`;
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} .called="${true}"></${tag}>`);
-    expect(el).shadowDom.to.equal('CALLED');
+    const element = await fixture<Test>(fhtml`<${tag} .called="${true}"></${tag}>`);
+    expect(element).shadowDom.to.equal('CALLED');
   });
 
   it('uses element\'s updater method for mutation\'s `update` option by default', async function overridesMutateUpdate() {
-    const mutation = gql`
-      mutation {
-        noParam {
-          noParam
-        }
-      }
-    `;
+    const mutation = NoParamMutation;
 
-    const tagName = defineCE(class Test extends ApolloMutation<{}, {}> {
+    class Test extends ApolloMutation<NoParamMutationData, NoParamMutationVariables> {
+      client = client;
+
+      mutation = mutation;
+
       render(): TemplateResult {
         return html`${JSON.stringify(this.data || {}, null, 2)}`;
       }
 
       updater(): void { '💩'; }
-    });
+    }
+
+    const tagName = defineCE(Test);
+
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} .client="${client}" .mutation="${mutation}"></${tag}>`) as ApolloMutation<{}, {}>;
-    const clientSpy = sinon.spy(el.client, 'mutate');
-    await el.mutate();
-    expect(clientSpy).to.have.been.calledWith(sinon.match({ update: el.updater }));
+
+    const element =
+      await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    const clientSpy =
+      sinon.spy(element.client, 'mutate');
+
+    await element.mutate();
+    expect(clientSpy).to.have.been.calledWith(sinon.match({ update: element.updater }));
     clientSpy.restore();
   });
 
   it('allows passing custom update function', async function customUpdate() {
-    const mutation = gql`
-      mutation {
-        noParam {
-          noParam
-        }
-      }
-    `;
+    const mutation = NoParamMutation;
 
-    const tagName = defineCE(class Test extends ApolloMutation<{}, {}> {
+    class Test extends ApolloMutation<NoParamMutationData, unknown> {
+      client = client;
+
+      mutation = mutation;
+
       render(): TemplateResult {
         return html`${JSON.stringify(this.data || {}, null, 2)}`;
       }
 
       updater(): void { '💩'; }
-    });
+    }
+
+    const tagName = defineCE(Test);
     const update = sinon.stub() as MutationUpdaterFn;
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} .client="${client}" .mutation="${mutation}"></${tag}>`) as ApolloMutation<{}, {}>;
-    const clientSpy = sinon.spy(el.client, 'mutate');
-    await el.mutate({ update });
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    const clientSpy = sinon.spy(element.client, 'mutate');
+    await element.mutate({ update });
     expect(clientSpy).to.have.been.calledWith(sinon.match({ update }));
     clientSpy.restore();
   });
 
   it('does not use LitElement#update as mutation update', async function() {
-    const mutation = gql`
-      mutation {
-        noParam {
-          noParam
-        }
-      }
-    `;
+    const mutation = NoParamMutation;
 
-    const tagName = defineCE(class Test extends ApolloMutation<{}, {}> {
+    class Test extends ApolloMutation<NoParamMutationData, unknown> {
+      client = client;
+
+      mutation = mutation;
+
       render(): TemplateResult {
         const { data = {} } = this;
         return html`${JSON.stringify(data, null, 2)}`;
       }
 
       update(...a: Parameters<LitElement['update']>): ReturnType<LitElement['update']> {
-        // @ts-expect-error
         super.update(...a);
       }
-    });
+    }
+
+    const tagName = defineCE(Test);
+
     const tag = unsafeStatic(tagName);
-    const el = await fixture(fixtureHtml`<${tag} .client="${client}" .mutation="${mutation}"></${tag}>`) as ApolloMutation<{}, {}>;
-    const clientSpy = sinon.spy(el.client, 'mutate');
-    await el.mutate();
+
+    const element =
+      await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+    const clientSpy =
+      sinon.spy(element.client, 'mutate');
+
+    await element.mutate();
+
     expect(clientSpy).to.not.have.been.calledWithMatch({
-      // @ts-expect-error
-      update: el.update,
+      update: element.update,
     });
+
     clientSpy.restore();
   });
 });
