@@ -8,160 +8,157 @@ import type {
   ApolloQueryResult,
   FetchMoreOptions,
   NetworkStatus,
-} from 'apollo-client';
-
-import type {
-  ModifiableWatchQueryOptions,
   SubscriptionOptions,
   SubscribeToMoreOptions,
   QueryOptions,
   FetchMoreQueryOptions,
   WatchQueryOptions,
-} from 'apollo-client/core/watchQueryOptions';
+  ApolloError,
+} from '@apollo/client/core';
 
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
-import compose from 'crocks/helpers/compose';
-import hasAllVariables from '@apollo-elements/lib/has-all-variables';
-import pick from 'crocks/helpers/pick';
-import bound from 'bind-decorator';
-
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
+import { ApolloQueryInterface } from '@apollo-elements/interfaces';
 
-const pickExecuteQueryOpts = compose(
-  stripUndefinedValues,
-  pick([
-    'context',
-    'errorPolicy',
-    'fetchPolicy',
-    'fetchResults',
-    'metadata',
-    'query',
-    'variables',
-  ])
-) as <TVariables>(o: QueryOptions<TVariables>) =>
-  Pick<QueryOptions<TVariables>, keyof QueryOptions<TVariables>>;
+const pickExecuteQueryOpts =
+  <TVariables>(opts: QueryOptions<TVariables>): QueryOptions<TVariables> =>
+    stripUndefinedValues({
+      context: opts.context,
+      errorPolicy: opts.errorPolicy,
+      fetchPolicy: opts.fetchPolicy,
+      query: opts.query,
+      variables: opts.variables,
+    });
 
-const pickWatchQueryOpts = compose(
-  stripUndefinedValues,
-  pick([
-    'context',
-    'errorPolicy',
-    'fetchPolicy',
-    'fetchResults',
-    'metadata',
-    'notifyOnNetworkStatusChange',
-    'pollInterval',
-    'query',
-    'variables',
-  ])
-) as (o: WatchQueryOptions) => Pick<WatchQueryOptions, keyof WatchQueryOptions>;
+const pickWatchQueryOpts =
+  (opts: WatchQueryOptions): WatchQueryOptions =>
+    stripUndefinedValues({
+      context: opts.context,
+      errorPolicy: opts.errorPolicy,
+      fetchPolicy: opts.fetchPolicy,
+      nextFetchPolicy: opts.nextFetchPolicy,
+      notifyOnNetworkStatusChange: opts.notifyOnNetworkStatusChange,
+      partialRefetch: opts.partialRefetch,
+      pollInterval: opts.pollInterval,
+      query: opts.query,
+      returnPartialData: opts.returnPartialData,
+      variables: opts.variables,
+    });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function ApolloQueryMixinImplementation<
-  TBase extends Constructor<CustomElement>
->(superclass: TBase) {
+function ApolloQueryMixinImpl<TBase extends Constructor<CustomElement>>(superclass: TBase) {
   /**
    * Class mixin for apollo-query elements
    */
-  class ApolloQuery<TData, TVariables> extends ApolloElementMixin(superclass) {
-    data: TData;
+  abstract class ApolloQueryElement<TData, TVariables>
+    extends ApolloElementMixin(superclass)
+    implements ApolloQueryInterface<TData, TVariables> {
+    declare data: TData;
 
-    /**
-     * Specifies the ErrorPolicy to be used for this query.
-     */
+    declare query: DocumentNode;
+
+    declare variables: TVariables;
+
+    declare fetchPolicy: FetchPolicy;
+
+    declare partial: boolean;
+
+    declare partialRefetch: boolean;
+
+    declare returnPartialData: boolean;
+
+    declare nextFetchPolicy: FetchPolicy;
+
+    declare networkStatus: NetworkStatus;
+
+    declare observableQuery: ObservableQuery;
+
+    declare options: Partial<WatchQueryOptions>;
+
+    onData?(_result: ApolloQueryResult<TData>): void
+
+    onError?(_error: Error): void
+
+    declare notifyOnNetworkStatusChange: boolean;
+
+    declare pollInterval: number;
+
     errorPolicy: ErrorPolicy = 'none';
 
-    /**
-     * Specifies the FetchPolicy to be used for this query.
-     */
-    fetchPolicy: FetchPolicy;
+    noAutoSubscribe = false;
 
-    /**
-     * Whether or not to fetch results.
-     */
-    fetchResults: boolean = undefined;
+    /** @private */
+    __variables: TVariables;
 
-    networkStatus: NetworkStatus;
+    /** @private */
+    __options: Partial<WatchQueryOptions>;
 
-    /**
-     * Whether or not updates to the network status should trigger next on the observer of this query.
-     */
-    notifyOnNetworkStatusChange: boolean = undefined;
+    constructor() {
+      super();
+      type This = this;
+      Object.defineProperties(this, {
+        query: {
+          configurable: true,
+          enumerable: true,
 
-    /**
-     * The time interval (in milliseconds) on which this query should be refetched from the server.
-     */
-    pollInterval: number = undefined;
+          get(this: This) {
+            return this.document;
+          },
 
-    stale: boolean;
+          set(this: This, query) {
+            try {
+              this.document = query;
+            } catch (error) {
+              throw new TypeError('Query must be a gql-parsed DocumentNode');
+            }
 
-    /**
-     * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-     */
-    tryFetch: boolean = undefined;
+            if (this.shouldSubscribe.call(this, { query }))
+              this.subscribe({ query });
+          },
+        },
 
-    /**
-     * The apollo ObservableQuery watching this element's query.
-     */
-    observableQuery: ObservableQuery;
+        variables: {
+          configurable: true,
+          enumerable: true,
 
-    /**
-     * When true, the component will not automatically subscribe to new data.
-     * Call the `subscribe()` method to do so.
-     */
-    noAutoSubscribe: boolean;
+          get(this: This): TVariables {
+            return this.__variables;
+          },
 
-    /**
-     * A GraphQL document containing a single query.
-     */
-    get query(): DocumentNode { return this.document; }
+          set(this: This, variables) {
+            this.__variables = variables;
+            if (this.observableQuery)
+              this.refetch(variables);
+            else if (this.shouldSubscribe.call(this, { variables }))
+              this.subscribe({ variables });
+            else
+              return;
+          },
+        },
 
-    set query(query) {
-      try {
-        this.document = query;
-      } catch (error) {
-        throw new TypeError('Query must be a gql-parsed DocumentNode');
-      }
+        options: {
+          configurable: true,
+          enumerable: true,
 
-      if (!this.noAutoSubscribe && query)
-        this.subscribe({ query, variables: this.variables });
-    }
+          get(this: This): Partial<WatchQueryOptions> {
+            return this.__options;
+          },
 
-    #variables: TVariables;
+          set(this: This, options) {
+            this.__options = options;
+            this.observableQuery?.setOptions(options);
+          },
 
-    /**
-     * An object map from variable name to variable value, where the variables are used within the GraphQL query.
-     */
-    get variables(): TVariables { return this.#variables; }
-
-    set variables(variables) {
-      this.#variables = variables;
-      const { query } = this;
-      if (this.observableQuery)
-        this.observableQuery.setVariables(variables, this.tryFetch, this.fetchResults);
-      else
-        this.subscribe({ query, variables });
-    }
-
-    #options: ModifiableWatchQueryOptions;
-
-    /**
-     * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
-     *
-     * @return {ModifiableWatchQueryOptions} options [options](https://www.apollographql.com/docs/react/api/apollo-client.html#ModifiableWatchQueryOptions) object.
-     */
-    get options(): ModifiableWatchQueryOptions { return this.#options; }
-
-    set options(options) {
-      this.#options = options;
-      this.observableQuery?.setOptions(options);
+        },
+      });
     }
 
     connectedCallback(): void {
-      /* istanbul ignore next */
-      super.connectedCallback?.();
-      if (this.query) this.subscribe();
+      super.connectedCallback();
+      if (this.shouldSubscribe.call(this))
+        this.subscribe();
     }
 
     /**
@@ -174,16 +171,37 @@ function ApolloQueryMixinImplementation<
     }
 
     /**
-     * Resets the observableQuery and subscribes.
+     * Determines whether the element should attempt to subscribe i.e. begin querying
+     * Override to prevent subscribing unless your conditions are met
      */
-    subscribe(options?: Partial<SubscriptionOptions>): ZenObservable.Subscription {
+    shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
       const query = options?.query ?? this.query;
       const variables = options?.variables ?? this.variables;
-      if (!hasAllVariables({ query, variables })) return;
-      this.observableQuery = this.watchQuery({ query, variables });
+      return !this.noAutoSubscribe && hasAllVariables({ query, variables });
+    }
+
+    /**
+     * Resets the observableQuery and subscribes.
+     */
+    subscribe(params?: Partial<SubscriptionOptions>): ZenObservable.Subscription {
+      const options: SubscriptionOptions = {
+        context: params?.context ?? this.context,
+        fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
+        query: params?.query ?? this.query,
+        variables: params?.variables ?? this.variables,
+      };
+
+      if (this.observableQuery)
+        this.observableQuery.stopPolling();
+
+      this.observableQuery =
+        this.watchQuery(options);
+
+      this.loading = true;
+
       return this.observableQuery.subscribe({
-        next: this.nextData,
-        error: this.nextError,
+        next: this.nextData.bind(this),
+        error: this.nextError.bind(this),
       });
     }
 
@@ -202,19 +220,25 @@ function ApolloQueryMixinImplementation<
     /**
      * Executes a Query once and updates the component with the result
      */
-    executeQuery(options?: Partial<QueryOptions>): Promise<void | ApolloQueryResult<TData>> {
-      const query = options?.query ?? this.query;
-      const variables = options?.variables ?? this.variables;
-      const opts = pickExecuteQueryOpts({ ...this, ...options, query, variables });
+    executeQuery(
+      params?: Partial<QueryOptions<TVariables>>
+    ): Promise<void | ApolloQueryResult<TData>> {
+      const query = params?.query ?? this.query;
+      const variables = params?.variables ?? this.variables;
+      const options = { ...pickExecuteQueryOpts(this), ...params, query, variables };
 
-      const queryInFlight =
-        this.client
-          .query(opts)
-          .catch(this.nextError);
+      this.loading = true;
 
-      queryInFlight.then(this.nextData);
-
-      return queryInFlight;
+      return this.client
+        .query(options)
+        .then(result => {
+          this.nextData.call(this, result);
+          return result;
+        })
+        .catch(error => {
+          this.nextError.call(this, error);
+          throw error;
+        });
     }
 
     /**
@@ -227,14 +251,21 @@ function ApolloQueryMixinImplementation<
      *
      * The optional `variables` parameter is an optional new variables object.
      */
-    fetchMore(options?: Partial<(
-      FetchMoreQueryOptions<TVariables, keyof TVariables> &
-      FetchMoreOptions<TData, TVariables>
+    fetchMore(
+      params?: Partial<(
+        FetchMoreQueryOptions<TVariables, keyof TVariables> &
+        FetchMoreOptions<TData, TVariables>
     )>): Promise<ApolloQueryResult<TData>> {
-      const query = options?.query ?? this.query;
-      const updateQuery = options?.updateQuery;
-      const variables = options?.variables;
-      return this.observableQuery?.fetchMore({ query, updateQuery, variables });
+      const options = {
+        query: params?.query ?? this.query,
+        updateQuery: params?.updateQuery,
+        variables: params?.variables,
+        context: params?.context ?? this.context,
+      };
+
+      this.loading = true;
+
+      return this.observableQuery?.fetchMore(options);
     }
 
     /**
@@ -249,44 +280,38 @@ function ApolloQueryMixinImplementation<
      * - `query` A GraphQL document that consists of a single query to be sent down to the server.
      * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
      */
-    watchQuery(options?: Partial<WatchQueryOptions>): ObservableQuery {
-      const query = options?.query ?? this.query;
-      const variables = options?.variables ?? this.variables;
-      const opts = pickWatchQueryOpts({ ...this, ...options, query, variables });
-      return this.client.watchQuery(opts);
+    watchQuery(params?: Partial<WatchQueryOptions>): ObservableQuery {
+      const options: WatchQueryOptions = {
+        ...pickWatchQueryOpts(this),
+        ...params,
+        query: params?.query ?? this.query,
+        variables: params?.variables ?? this.variables,
+      };
+
+      return this.client.watchQuery(options);
     }
 
-    /**
-     * Updates the element with the result of a query.
-     */
-    @bound nextData({ data, loading, networkStatus, stale }: ApolloQueryResult<TData>): void {
-      this.data = data;
-      this.loading = loading;
-      this.networkStatus = networkStatus;
-      this.stale = stale;
-      this.onData?.({ data, loading, networkStatus, stale });
+    /** @private */
+    nextData(result?: ApolloQueryResult<TData>): void {
+      this.data = result?.data;
+      this.loading = result?.loading;
+      this.networkStatus = result?.networkStatus;
+      this.partial = result?.partial;
+      if (result.error !== undefined)
+        this.error = result?.error;
+      if (result.errors !== undefined)
+        this.errors = result?.errors ?? null;
+      this.onData?.(result);
     }
 
-    /**
-     * Updates the element with the error when the query fails.
-     */
-    @bound nextError(error: Error): void {
+    nextError(error: ApolloError): void {
       this.error = error;
       this.onError?.(error);
     }
-
-    /**
-     * Callback for when a query is completed.
-     */
-    onData?(_result: ApolloQueryResult<TData>): void
-
-    /**
-     * Callback for when an error occurs in mutation.
-     */
-    onError?(_error: Error): void
   }
 
-  return ApolloQuery;
+
+  return ApolloQueryElement;
 }
 
 
@@ -294,4 +319,4 @@ function ApolloQueryMixinImplementation<
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
  */
 export const ApolloQueryMixin =
-  dedupeMixin(ApolloQueryMixinImplementation);
+  dedupeMixin(ApolloQueryMixinImpl);

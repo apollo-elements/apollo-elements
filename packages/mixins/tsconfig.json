@@ -2,8 +2,4 @@
   "extends": "../../tsconfig.settings.json",
   "include": ["."],
   "exclude": ["node_modules"],
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "."
-  }
 }
