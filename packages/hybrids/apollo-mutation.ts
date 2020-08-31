@@ -1,101 +1,34 @@
-import { clientFactory } from './factories/client';
-import { mutationFactory } from './factories/mutation';
-import type { FetchResult } from 'apollo-link';
-import type { ApolloError, MutationOptions } from 'apollo-client';
-import type { ApolloMutation as IApolloMutation } from '@apollo-elements/mixins/apollo-mutation';
+import type { Hybrids } from 'hybrids';
+import type { CustomElement, Constructor } from '@apollo-elements/mixins/constructor';
 
-type MutationElement = HTMLElement & IApolloMutation<unknown, unknown>;
+import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
-const isMostRecentMutation = (
-  host: MutationElement,
-  mutationId: number
-): boolean =>
-  host.mostRecentMutationId === mutationId;
+import { property } from 'hybrids';
+import { classMethod } from './factories/classMethod';
+import { accessors } from './factories/accessors';
+import { ApolloElement } from './apollo-element';
 
-const onMutationCompleted = <TData>(
-  host: MutationElement,
-  response: FetchResult<TData>,
-  mutationId: number
-): void => {
-  if (!isMostRecentMutation(host, mutationId) || host.ignoreResults) return;
-  const { data } = response;
-  host.loading = false;
-  host.error = null;
-  host.data = data;
-  return host.onCompleted?.(data);
-};
+class Class<D, V> extends ApolloMutationMixin(class {} as Constructor<CustomElement>)<D, V> {}
 
-const onMutationError = (
-  host: MutationElement,
-  error: ApolloError,
-  mutationId: number
-): void => {
-  if (!isMostRecentMutation(host, mutationId)) return;
-  host.loading = false;
-  host.data = null;
-  host.error = error;
-  return host.onError?.(error);
-};
+const instance = new Class() as ApolloMutationElement;
 
-const mutate = {
-  get: (host: MutationElement) =>
-    async (opts?: Partial<MutationOptions<unknown, unknown>>): Promise<FetchResult<unknown>> => {
-      const {
-        errorPolicy,
-        fetchPolicy,
-        refetchQueries,
-        awaitRefetchQueries,
-        context = host.context,
-        mutation = host.mutation,
-        optimisticResponse = host.optimisticResponse,
-        update = host.updater,
-        variables = host.variables,
-      } = opts ?? {};
+export type ApolloMutationElement<D = unknown, V = unknown> =
+  HTMLElement & Class<D, V>;
 
-      host.mostRecentMutationId += 1;
-      const mutationId = host.mostRecentMutationId;
+export const ApolloMutation: Hybrids<ApolloMutationElement> = {
+  ...ApolloElement,
+  errorPolicy: property(undefined),
+  variables: null,
 
-      host.loading = true;
-      host.error = null;
-      host.data = null;
-      host.called = true;
-
-      try {
-        const response = await host.client.mutate({
-          context,
-          errorPolicy,
-          fetchPolicy,
-          mutation,
-          optimisticResponse,
-          refetchQueries,
-          update,
-          awaitRefetchQueries,
-          variables,
-        });
-
-        onMutationCompleted(host, response, mutationId);
-        return response;
-      } catch (error) {
-        onMutationError(host, error, mutationId);
-        return error;
-      }
-    },
-};
-
-export const ApolloMutation = {
-  client: clientFactory(),
-  data: null,
-  errorPolicy: 'none',
   ignoreResults: false,
+  called: false,
   mostRecentMutationId: 0,
-  mutate,
-  mutation: mutationFactory(),
-  onCompleted: {
-    get: (_, last): MutationElement['onCompleted'] => last,
-    set: (_, v): MutationElement['onCompleted'] => v,
-  },
-  onError: {
-    get: (_, last): MutationElement['onError'] => last,
-    set: (_, v): MutationElement['onError'] => v,
-  },
+
+  mutation: accessors(instance, 'mutation'),
+
+  mutate: classMethod(instance, 'mutate'),
+  generateMutationId: classMethod(instance, 'generateMutationId'),
+  isMostRecentMutation: classMethod(instance, 'isMostRecentMutation'),
+  onCompletedMutation: classMethod(instance, 'onCompletedMutation'),
+  onMutationError: classMethod(instance, 'onMutationError'),
 };
