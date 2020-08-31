@@ -1,6 +1,6 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import type { Constructor, CustomElement } from '@apollo-elements/mixins/constructor';
+import type { Constructor, CustomElement } from '../mixins/constructor';
 
 /**
  * `NotifyingElementMixin`: mixin which fires Polymer-style notification events.
