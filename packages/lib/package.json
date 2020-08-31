@@ -7,6 +7,12 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
+    "clean": "run-s clean:*",
+    "clean:js": "rm -f ./*.js",
+    "clean:dts": "rm -f ./*.d.ts;",
+    "clean:map": "rm -f ./*.js.map",
+    "lint": "run-s lint:*",
+    "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },

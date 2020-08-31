@@ -1,0 +1,27 @@
+schema: https://api.spacex.land/graphql
+
+extensions:
+  codegen:
+    config:
+      constEnums: true
+      declarationKind: interface
+      dedupeOperationSuffix: true
+      immutableTypes: true
+      namingConvention: keep
+      noSchemaStitching: true
+      operationResultSuffix: Data
+      optionalResolveType: true
+      useIndexSignature: true
+
+    generates:
+      packages/test-helpers/schema.ts:
+        schema: packages/test-helpers/test.schema.graphql
+        plugins:
+          - typescript
+          - typescript-operations
+
+        documents:
+          - packages/test-helpers/*.query.graphql
+          - packages/test-helpers/*.mutation.graphql
+          - packages/test-helpers/*.subscription.graphql
+          - packages/test-helpers/*.fragment.graphql
