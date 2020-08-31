@@ -1,5 +1,11 @@
 import type { DocumentNode } from 'graphql/language/ast';
-import type { ApolloClient, SubscriptionOptions, ApolloError, FetchPolicy } from 'apollo-client';
+import type {
+  ApolloClient,
+  SubscriptionOptions,
+  ApolloError,
+  FetchPolicy,
+  ObservableQuery,
+} from 'apollo-client';
 import type { FetchResult, Observable } from 'apollo-link';
 import type { ApolloElement } from './apollo-element';
 
@@ -17,52 +23,61 @@ export interface OnSubscriptionDataParams<TData> {
   subscriptionData: { data: TData };
 }
 
-export interface ApolloSubscription<TData, TVariables> extends ApolloElement<TData> {
-    /**
-     * Specifies the FetchPolicy to be used for this subscription.
-     */
-    fetchPolicy: FetchPolicy;
+export declare class ApolloSubscription<TData, TVariables> extends ApolloElement<TData> {
+  /**
+   * Specifies the FetchPolicy to be used for this subscription.
+   */
+  declare fetchPolicy?: FetchPolicy;
 
-    /**
-     * Whether or not to fetch results.
-     */
-    fetchResults: boolean;
+  /**
+   * Whether or not to fetch results.
+   */
+  declare fetchResults?: boolean;
 
-    /**
-     * The time interval (in milliseconds) on which this subscription should be refetched from the server.
-     */
-    pollInterval: number;
+  /**
+   * The time interval (in milliseconds) on which this subscription should be refetched from the server.
+   */
+  declare pollInterval?: number;
 
-    /**
-     * Whether or not updates to the network status should trigger next on the observer of this subscription.
-     */
-    notifyOnNetworkStatusChange: boolean;
+  /**
+   * Whether or not updates to the network status should trigger next on the observer of this subscription.
+   */
+  declare notifyOnNetworkStatusChange?: boolean;
 
-    /**
-     * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
-     */
-    tryFetch: boolean;
+  /**
+   * Try and fetch new results even if the variables haven't changed (we may still just hit the store, but if there's nothing in there will refetch).
+   */
+  declare tryFetch?: boolean;
 
-    /**
-     * Observable watching this element's subscription.
-     */
-    observable: Observable<FetchResult<TData>>;
+  /**
+   * Observable watching this element's subscription.
+   */
+  declare observable?: Observable<FetchResult<TData>>;
 
-    /**
-     * A GraphQL document containing a single subscription.
-     */
-    subscription: DocumentNode;
+  /**
+   * The apollo ObservableQuery watching this element's query.
+   */
+  declare observableQuery?: ObservableQuery<TData, TVariables>;
 
+  /**
+   * A GraphQL document containing a single subscription.
+   */
+  declare subscription: DocumentNode;
 
-    /**
-     * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
-     */
-    variables: TVariables;
+  /**
+   * If true, the element will not begin querying data until you manually call `subscribe`
+   */
+  declare noAutoSubscribe?: boolean;
 
-    /**
-     * Resets the observable and subscribes.
-     */
-    subscribe(options?: Partial<SubscriptionOptions>): ZenObservable.Subscription;
+  /**
+   * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
+   */
+  declare variables?: TVariables;
 
-    onSubscriptionData?(_result: OnSubscriptionDataParams<TData>): void;
-  }
+  /**
+   * Resets the observable and subscribes.
+   */
+  subscribe(options?: Partial<SubscriptionOptions>): ZenObservable.Subscription;
+
+  onSubscriptionData?(_result: OnSubscriptionDataParams<TData>): void;
+}
