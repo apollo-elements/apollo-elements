@@ -3,11 +3,10 @@ import gql from 'graphql-tag';
 import { stub } from 'sinon';
 
 import './apollo-mutation';
-import { client } from '@apollo-elements/test-helpers/client';
+import { client } from '../test-helpers/client';
 
 import type { PolymerApolloMutation } from './apollo-mutation';
-import type { ApolloClient } from 'apollo-client';
-import type { NormalizedCacheObject } from 'apollo-cache-inmemory';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 
 interface TemplateOpts {
