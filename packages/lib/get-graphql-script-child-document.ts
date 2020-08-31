@@ -1,10 +1,14 @@
-import compose from 'crocks/helpers/compose';
-
-import { getGraphQLScriptChild } from './helpers';
-import gqlFromInnerText from './gql-from-inner-text';
 import type { DocumentNode } from 'graphql';
 
-const getGraphQLScriptChildDocument: ((element: HTMLElement) => DocumentNode | null) =
-  compose(gqlFromInnerText, getGraphQLScriptChild);
+import { getGraphQLScriptChild } from './helpers';
 
-export default getGraphQLScriptChildDocument;
+import { gqlFromInnerText } from './gql-from-inner-text';
+
+export function getGraphQLScriptChildDocument(element: HTMLElement): DocumentNode | null {
+  const script = getGraphQLScriptChild(element);
+
+  if (script)
+    return gqlFromInnerText(getGraphQLScriptChild(element));
+  else
+    return null;
+}

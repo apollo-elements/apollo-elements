@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 import gql from 'graphql-tag';
 
-import isValidGql from './is-valid-gql';
+import { isValidGql } from './is-valid-gql';
 
 const simpleValid = gql`
   query {
