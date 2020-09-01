@@ -1,0 +1,39 @@
+{
+  "name": "@apollo-elements/interfaces",
+  "version": "1.0.0",
+  "description": "👩‍🚀🌛 Custom Element class interfaces for Apollo GraphQL 🚀👨‍🚀",
+  "main": "index.js",
+  "module": "index.js",
+  "scripts": {
+    "prepublishOnly": "tsc -b .",
+    "build": "tsc",
+    "clean": "run-s clean:*",
+    "clean:js": "rm -f ./*.js",
+    "clean:dts": "rm -f ./*.d.ts;",
+    "start": "tsc -w --noEmit",
+    "docs": "run-s docs:*",
+    "docs:polymer": "polymer analyze > docs/analysis.json",
+    "docs:wca": "wca analyze --outFile ./custom-elements.json",
+    "test": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git"
+  },
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements"
+  ],
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apollo-elements/apollo-elements/issues"
+  },
+  "homepage": "https://github.com/apollo-elements/apollo-elements#readme"
+}
