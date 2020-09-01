@@ -1,13 +1,13 @@
 node_modules
+coverage
 docs/webcomponentsjs
 docs/bundle.js
+docs/**/*.d.ts
+docs/examples/**/schema.ts
+
 packages/**/*.js
 packages/*/*.js
 packages/**/*.d.ts
 packages/*/*.d.ts
 packages/test-helpers/schema.ts
-docs/**/*.d.ts
-
 examples/**/schema.ts
-packages/test-helpers/schema.ts
-coverage

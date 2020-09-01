@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="font">
+  <id>com.datto.d-din-exp</id>
+  <project_license>OFL-1.1</project_license>
+  <metadata_license>CC-BY-SA-4.0</metadata_license>
+  <name>D-DIN Expanded</name>
+  <summary>Datto D-DIN Expanded font family</summary>
+  <description>
+    <p>D-DIN Expanded is a sans-serif typeface family derived from German DIN
+       (Deutsches Institut fuer Normung / German Institute for Standardization) font style.
+    </p>
+    <p>This font was commissioned by Datto, Inc. from Monotype and is used for the company's
+       primary corporate typography.
+    </p>
+  </description>
+  <update_contact>fonts@datto.com</update_contact>
+  <url type="homepage">https://datto.com/fonts/d-din</url>
+</component>
