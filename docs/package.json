@@ -1,0 +1,12 @@
+{
+  "name": "@apollo-elements/docs",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "start": "tsc -w"
+  },
+  "dependencies": {
+    "@apollo-elements/lit-apollo": "^2.0.2",
+    "@apollo/client": ">= 3"
+  }
+}
