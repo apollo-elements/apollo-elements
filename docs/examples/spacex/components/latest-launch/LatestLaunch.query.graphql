@@ -1,0 +1,17 @@
+query LatestLaunchQuery {
+  launchLatest {
+    id
+    rocket {
+      rocket_name
+      rocket_type
+    }
+    launch_year
+    launch_site {
+      site_name_long
+    }
+    launch_success
+    launch_date_local
+    details
+    mission_name
+  }
+}
