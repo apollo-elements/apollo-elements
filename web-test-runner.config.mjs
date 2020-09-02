@@ -7,7 +7,6 @@ import rollupCommonjs from '@rollup/plugin-commonjs';
 const commonjs = fromRollup(rollupCommonjs);
 
 const cjsIncludes = [
-  '**/crocks/**/*.js',
   '**/fast-json-stable-stringify/index.js',
   '**/graphql-tag/src/index.js',
   '**/zen-observable/**/*.js',
@@ -50,8 +49,8 @@ export default {
 
 
   plugins: [
-    esbuildPlugin({ ts: true }),
     graphql(),
     commonjs({ include: cjsIncludes }),
+    esbuildPlugin({ ts: true }),
   ],
 };

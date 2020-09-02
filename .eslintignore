@@ -5,6 +5,11 @@ packages/**/*.js
 packages/*/*.js
 packages/**/*.d.ts
 packages/*/*.d.ts
+docs/**/*.d.ts
 
+docs/using-lit-apollo/workbox-*.js
+docs/using-lit-apollo/sw.js
+!docs/using-lit-apollo/workbox-config.js
 docs/examples/**/schema.ts
 packages/test-helpers/schema.ts
+coverage
