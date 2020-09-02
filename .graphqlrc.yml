@@ -14,13 +14,13 @@ extensions:
       useIndexSignature: true
 
     generates:
-      docs/examples/spacex/schema.ts:
+      examples/spacex/schema.ts:
         plugins:
           - typescript
           - typescript-operations
 
         documents:
-          - docs/examples/**/*.graphql
+          - examples/**/*.graphql
 
       packages/test-helpers/schema.ts:
         schema: packages/test-helpers/test.schema.graphql

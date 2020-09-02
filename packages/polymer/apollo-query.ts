@@ -1,7 +1,7 @@
+import type { Constructor } from '@apollo-elements/interfaces';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
-import { NotifyingElementMixin } from './notifying-element-mixin';
 
 /**
  * `<apollo-query>` fires Polymer-style prop-changed events
@@ -31,26 +31,20 @@ import { NotifyingElementMixin } from './notifying-element-mixin';
  * }
  * ```
  */
-export class PolymerApolloQuery<TData, TVariables> extends
-  NotifyingElementMixin(ApolloQueryMixin(PolymerApolloElement))<TData, TVariables> {
+export class PolymerApolloQuery<TData, TVariables>
+  extends ApolloQueryMixin(
+    PolymerApolloElement as Constructor<HTMLElement & PolymerApolloElement>
+  )<TData, TVariables> {
   #networkStatus: NetworkStatus = NetworkStatus.ready;
 
-  declare networkStatus: NetworkStatus;
+  // @ts-expect-error: ambient property. see https://github.com/microsoft/TypeScript/issues/40220
+  get networkStatus(): NetworkStatus {
+    return this.#networkStatus;
+  }
 
-  constructor() {
-    super();
-    Object.defineProperties(this, {
-      networkStatus: {
-        get(this: PolymerApolloQuery<TData, TVariables>): NetworkStatus {
-          return this.#networkStatus;
-        },
-
-        set(this: PolymerApolloQuery<TData, TVariables>, value) {
-          this.#networkStatus = value;
-          this.notify('networkStatus', value);
-        },
-      },
-    });
+  set networkStatus(value: NetworkStatus) {
+    this.#networkStatus = value;
+    this.notify('networkStatus', value);
   }
 }
 

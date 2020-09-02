@@ -5,5 +5,24 @@
     "paths": {
        "@apollo-elements/*": ["packages/*/src"]
     }
+  },
+  "typedocOptions": {
+    "name": "Apollo Elements",
+    "mode": "library",
+    "out": "td",
+    "inputFiles": [
+      "packages"
+    ],
+    "readme": "README.md",
+    "excludeExternals": true,
+    "exclude": [
+      "packages/test-helpers",
+      "**/*+(index|.spec|.test|.e2e).ts",
+      "**/*+(.graphql|.css)",
+      "**/*.graphql",
+      "**/*.css",
+      "./test.schema.graphql",
+      "*/test.schema.graphql"
+    ]
   }
 }

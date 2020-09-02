@@ -1,5 +1,6 @@
 import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
 import { ApolloError } from '@apollo/client/core';
+import type Sinon from 'sinon';
 import 'sinon-chai';
 import gql from 'graphql-tag';
 
@@ -11,17 +12,18 @@ import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
 
 import { ApolloMutationMixin } from './apollo-mutation-mixin';
 
-type Stub = ReturnType<typeof stub>;
+class XL extends HTMLElement {}
+class Test<D = unknown, V = unknown> extends ApolloMutationMixin(XL)<D, V> {}
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-class AccessorTest extends ApolloMutationMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+class AccessorTest extends Test<unknown, { hey: 'yo' }> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables() {
     return { hey: 'yo' as const };
   }
 }
 
-class PropertyTest extends ApolloMutationMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+class PropertyTest extends Test<unknown, { hey: 'yo' }> {
   variables = { hey: 'yo' as const };
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */
@@ -30,9 +32,6 @@ afterEach(function() {
   // @ts-expect-error: it's a stub
   client.mutate?.restore?.();
 });
-
-class XL extends HTMLElement {}
-class Test extends ApolloMutationMixin(XL)<unknown, unknown> {}
 
 describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() {
   beforeEach(setupClient);
@@ -89,46 +88,55 @@ describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() 
     });
   });
 
-  it('accepts a script child as mutation', async function scriptChild() {
-    const script = `mutation { foo { bar } }`;
+  describe('with a valid graphql script child', function() {
+    let element: Test;
 
-    const tag = unsafeStatic(defineCE(class extends Test {}));
+    async function setupElement() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`
+        <${tag}>
+          <script type="application/graphql">${NoParamMutation.loc.source.body}</script>
+        </${tag}>
+      `);
+    }
 
-    const element = await fixture<Test>(fhtml`
-      <${tag}>
-        <script type="application/graphql">${script}</script>
-      </${tag}>
-    `);
+    beforeEach(setupElement);
 
-    expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-    expect(element.mutation).to.deep.equal(gql(script));
+    it('does not remove the script', async function scriptChild() {
+      expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
+    });
+
+    it('sets the mutation property', async function scriptChild() {
+      expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
+      expect(element.mutation).to.deep.equal(gql(NoParamMutation.loc.source.body));
+    });
   });
 
-  it('accepts a parsed mutation', async function parsedMutation() {
-    const mutation = gql`mutation { foo { bar } }`;
+  describe('with a valid mutation in class field', function() {
+    let element: Test<NoParamMutationData, NoParamMutationVariables>;
 
-    const tag = unsafeStatic(defineCE(class extends Test {
-      client = client;
+    async function setupElement() {
+      const tag = unsafeStatic(defineCE(class extends Test<NoParamMutationData, NoParamMutationVariables> {
+        mutation = NoParamMutation;
+      }));
 
-      mutation = mutation;
-    }));
+      element = await fixture<Test<NoParamMutationData, NoParamMutationVariables>>(fhtml`<${tag}></${tag}>`);
+    }
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    beforeEach(setupElement);
 
-    expect(element.mutation).to.equal(mutation);
+    it('sets the mutation property', async function parsedMutation() {
+      expect(element.mutation).to.equal(NoParamMutation);
+    });
   });
 
   it('accepts a parsed mutation in setter', async function parsedMutation() {
-    const mutation = gql`mutation { foo { bar } }`;
-
-    const tag = unsafeStatic(defineCE(class extends Test {
-      client = client
-    }));
+    const tag = unsafeStatic(defineCE(class extends Test<NoParamMutationData, NoParamMutationVariables> { }));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
-    element.mutation = mutation;
-    expect(element.mutation).to.equal(mutation);
+    element.mutation = NoParamMutation;
+    expect(element.mutation).to.equal(NoParamMutation);
   });
 
   it('rejects a bad mutation', async function badMutation() {
@@ -143,10 +151,7 @@ describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() 
 
   describe('generateMutationId', function generateMutationId() {
     it('increments mostRecentMutationId', async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {
-        client = client;
-      }));
-
+      const tag = unsafeStatic(defineCE(class extends Test { }));
       const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
       expect(element.generateMutationId()).to.equal(1);
@@ -167,9 +172,9 @@ describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() 
     }
 
     let element: _Test;
-    let mutateStub: Stub;
-    let onCompleted: Stub;
-    let onError: Stub;
+    let mutateStub: Sinon.SinonStub;
+    let onCompleted: Sinon.SinonStub;
+    let onError: Sinon.SinonStub;
 
     beforeEach(async function() {
       onError = stub();

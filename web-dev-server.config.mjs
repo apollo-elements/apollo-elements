@@ -11,11 +11,11 @@ const commonjs = fromRollup(rollupCommonjs);
 const litcss = fromRollup(rollupLitcss.default);
 
 const includeCSS = [
-  'docs/examples/spacex/components/**/*.css',
+  'examples/spacex/components/**/*.css',
 ];
 
 const excludeCSS = [
-  'docs/examples/spacex/style.css',
+  'examples/spacex/style.css',
 ];
 
 export default {
@@ -23,9 +23,9 @@ export default {
   watch: true,
   rootDir: '.',
   port: 8090,
-  appIndex: './docs/examples/spacex/index.html',
+  appIndex: 'examples/spacex/index.html',
   mimeTypes: {
-    'docs/examples/spacex/components/**/*.css': 'js',
+    'examples/spacex/components/**/*.css': 'js',
   },
   plugins: [
     litcss({ include: includeCSS, exclude: excludeCSS }),

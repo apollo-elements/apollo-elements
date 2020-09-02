@@ -1,7 +1,8 @@
+import type { GluonElement } from '@gluon/gluon';
+
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '../mixins/apollo-mutation-mixin';
-import { Constructor } from '../mixins/constructor';
-import { ApolloMutationInterface } from '@apollo-elements/interfaces';
+import { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
 
 /**
  * # ApolloMutation
@@ -16,7 +17,10 @@ import { ApolloMutationInterface } from '@apollo-elements/interfaces';
  *
  * class MutationElement extends ApolloMutation {
  *   mutation = InputMutation;
- *   template =  html`<input @keyup="${this.onInput}"/>`
+ *
+ *   get template() {
+ *     return html`<input @keyup="${this.onInput}"/>`;
+ *   }
  *
  *   onInput({ target: { value: input }, key }) {
  *     this.variables = { input };
@@ -24,22 +28,25 @@ import { ApolloMutationInterface } from '@apollo-elements/interfaces';
  *   }
  * };
  *
- * customElements.define('mutation-element', MutationElement)
+ * customElements.define('input-mutation', MutationElement)
  * ```
  */
 export class ApolloMutation<TData, TVariables>
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
+  extends ApolloMutationMixin(
+    ApolloElement as Constructor<GluonElement & ApolloElement>
+  )<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
   #called: boolean;
 
   constructor() {
     super();
+    type This = this;
     Object.defineProperty(this, 'called', {
-      get(this: ApolloMutation<TData, TVariables>): boolean {
+      get(this: This): boolean {
         return this.#called;
       },
 
-      set(this: ApolloMutation<TData, TVariables>, called: boolean) {
+      set(this: This, called: boolean) {
         this.#called = called;
         this.render();
       },

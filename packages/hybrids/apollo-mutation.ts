@@ -1,5 +1,5 @@
 import type { Hybrids } from 'hybrids';
-import type { CustomElement, Constructor } from '@apollo-elements/mixins/constructor';
+import type { CustomElement, Constructor } from '@apollo-elements/interfaces/constructor';
 
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
@@ -8,12 +8,10 @@ import { classMethod } from './factories/classMethod';
 import { accessors } from './factories/accessors';
 import { ApolloElement } from './apollo-element';
 
-class Class<D, V> extends ApolloMutationMixin(class {} as Constructor<CustomElement>)<D, V> {}
+class ApolloMutationElement<D = unknown, V = unknown> extends
+  ApolloMutationMixin(class { } as Constructor<CustomElement>)<D, V> { }
 
-const instance = new Class() as ApolloMutationElement;
-
-export type ApolloMutationElement<D = unknown, V = unknown> =
-  HTMLElement & Class<D, V>;
+const instance = new ApolloMutationElement();
 
 export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   ...ApolloElement,
@@ -32,3 +30,5 @@ export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   onCompletedMutation: classMethod(instance, 'onCompletedMutation'),
   onMutationError: classMethod(instance, 'onMutationError'),
 };
+
+export type { ApolloMutationElement };

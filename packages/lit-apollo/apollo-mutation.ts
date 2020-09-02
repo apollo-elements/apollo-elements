@@ -1,11 +1,10 @@
 import type { MutationOptions, MutationUpdaterFn, FetchResult } from '@apollo/client/core';
 
-import { PropertyDeclarations } from 'lit-element';
+import type { LitElement, PropertyDeclarations } from 'lit-element';
 
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { Constructor } from '@apollo-elements/mixins/constructor';
-import { ApolloMutationInterface } from '@apollo-elements/interfaces';
+import { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
 import type { DocumentNode } from 'graphql';
 
 /**
@@ -16,27 +15,34 @@ import type { DocumentNode } from 'graphql';
  * ## 👩‍🚀 Usage
  *
  * ```js
- * import { ApolloMutation, html } from 'lit-apollo';
- * import Mutation from './mutation-element.graphql';
+ * import { ApolloMutation, html, customElement } from '@apollo-elements/lit-apollo';
+ * import InputMutation from './Input.mutation.graphql';
  *
+ * @customElement('mutation-element')
  * class MutationElement extends ApolloMutation {
  *   mutation = Mutation;
  *
  *   render() {
- *     return html`<input @keyup="${this.onInput}"/>`
+ *     return html`
+ *       <label>
+ *          Enter Input
+ *          <input @keyup="${this.onInput}"/>
+ *       </label>
+ *     `;
  *   }
  *
  *   onInput({ target: { value: input }, key }) {
  *     this.variables = { input };
- *     if (key === 'Enter') return this.mutate();
+ *     if (key === 'Enter')
+ *       return this.mutate();
  *   }
  * };
- *
- * customElements.define('mutation-element', MutationElement)
  * ```
  */
-export abstract class ApolloMutation<TData, TVariables>
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
+export class ApolloMutation<TData, TVariables>
+  extends ApolloMutationMixin(
+    ApolloElement as Constructor<LitElement & ApolloElement>
+  )<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
   declare data: TData;
 
@@ -72,10 +78,17 @@ export abstract class ApolloMutation<TData, TVariables>
     this.called = false;
   }
 
-  async mutate(
+  public async mutate(
     params?: Partial<MutationOptions<TData, TVariables>>
   ): Promise<FetchResult<TData>> {
     const update = params?.update ?? this.updater;
     return super.mutate({ update, ...params });
+  }
+
+  /**
+   * Mutation components always update by default.
+   */
+  shouldUpdate(): boolean {
+    return true;
   }
 }

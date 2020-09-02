@@ -30,7 +30,7 @@ export declare class ApolloQueryInterface<TData, TVariables> extends ApolloEleme
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
    */
-  declare variables?: TVariables;
+  variables?: TVariables;
 
   /**
    * Specifies the FetchPolicy to be used for this query.
@@ -177,13 +177,11 @@ export declare class ApolloQueryInterface<TData, TVariables> extends ApolloEleme
    *
    * The optional `variables` parameter is an optional new variables object.
    */
-  fetchMore(options?: Partial<FetchMoreQueryOptions<
-    TVariables,
-    keyof TVariables
-  > & FetchMoreOptions<
-    TData,
-    TVariables
-  >>): Promise<ApolloQueryResult<TData>>;
+  fetchMore(
+    options?:
+      Partial<FetchMoreQueryOptions<TVariables, keyof TVariables> &
+      FetchMoreOptions<TData, TVariables>>
+  ): Promise<ApolloQueryResult<TData>>;
 
   /**
    * Creates an instance of ObservableQuery with the options provided by the element.

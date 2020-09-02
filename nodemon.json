@@ -1,4 +1,0 @@
-{
-  "ignore": ["packages/test-helpers/client.js", "packages/test-helpers/client.js.map"],
-  "ext": "js,graphql,html,md,ts"
-}

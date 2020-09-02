@@ -1,5 +1,4 @@
 import type { DocumentNode } from 'graphql/language/ast';
-import type { Constructor } from './constructor';
 
 import type {
   ApolloError,
@@ -10,6 +9,7 @@ import type {
 } from '@apollo/client/core';
 
 import type {
+  Constructor,
   ApolloSubscriptionInterface,
   OnSubscriptionDataParams,
   SubscriptionDataOptions,
@@ -20,13 +20,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-//
-function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(superclass: TBase) {
-  /**
-   * Class mixin for apollo-subscription elements
-   */
-  abstract class ApolloSubscriptionElement<TData, TVariables>
+function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
+  return class ApolloSubscriptionElement<TData, TVariables>
     extends ApolloElementMixin(superclass)
     implements ApolloSubscriptionInterface<TData, TVariables> {
     declare data: TData;
@@ -144,6 +139,10 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(sup
         });
     }
 
+    /**
+     * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
+     * @private
+     */
     nextData(result: FetchResult<TData>) {
       const { data } = result;
       const { client } = this;
@@ -156,12 +155,20 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(sup
       this.error = error;
     }
 
+    /**
+     * Sets `error` and `loading` on the instance when the subscription errors.
+     * @private
+     */
     nextError(error: ApolloError) {
       this.error = error;
       this.loading = false;
       this.onError?.(error);
     }
 
+    /**
+     * Shuts down the subscription
+     * @private
+     */
     onComplete(): void {
       this.onSubscriptionComplete?.();
       this.endSubscription();
@@ -174,9 +181,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(sup
         this.observableSubscription = undefined;
       }
     }
-  }
-
-  return ApolloSubscriptionElement;
+  };
 }
 
 /**
