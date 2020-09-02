@@ -56,7 +56,10 @@ export class PolymerApolloMutation<TData, TVariables> extends
     super();
     Object.defineProperties(this, {
       called: {
-        get(this: PolymerApolloMutation<TData, TVariables>): boolean {
+        configurable: true,
+        enumerable: true,
+
+        get(this: This): boolean {
           return this.#called;
         },
 

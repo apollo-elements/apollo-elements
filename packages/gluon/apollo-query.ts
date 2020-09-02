@@ -48,7 +48,10 @@ export class ApolloQuery<TData, TVariables>
     super();
     Object.defineProperties(this, {
       networkStatus: {
-        get(this: ApolloQuery<TData, TVariables>): NetworkStatus {
+        configurable: true,
+        enumerable: true,
+
+        get(this: This): NetworkStatus {
           return this.#networkStatus;
         },
 

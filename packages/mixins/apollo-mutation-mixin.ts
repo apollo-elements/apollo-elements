@@ -69,6 +69,9 @@ function ApolloMutationMixinImpl<B extends Constructor<CustomElement>>(superclas
       this.variables = null;
       Object.defineProperties(this, {
         mutation: {
+          configurable: true,
+          enumerable: true,
+
           get(this: This): DocumentNode {
             return this.document;
           },
