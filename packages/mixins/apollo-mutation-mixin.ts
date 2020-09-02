@@ -65,6 +65,9 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       type This = this;
       Object.defineProperties(this, {
         mutation: {
+          configurable: true,
+          enumerable: true,
+
           get(this: This): DocumentNode {
             return this.document;
           },

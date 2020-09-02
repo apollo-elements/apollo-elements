@@ -59,6 +59,9 @@ export class PolymerApolloMutation<TData, TVariables> extends
     type This = this;
     Object.defineProperties(this, {
       called: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This): boolean {
           return this.#called;
         },
