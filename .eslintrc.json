@@ -5,5 +5,14 @@
       "ts-expect-error": "allow-with-description",
       "ts-ignore": "allow-with-description"
     }]
-  }
+  },
+  "overrides": [{
+    "files": [
+      "husky.config.js",
+      "commitlint.config.js"
+    ],
+    "env": {
+      "node": true
+    }
+  }]
 }
