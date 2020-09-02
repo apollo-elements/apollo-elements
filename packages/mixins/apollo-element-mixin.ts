@@ -62,7 +62,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     }
 
     disconnectedCallback(): void {
-      this.__mo.disconnect();
+      this.__mo?.disconnect();
       super.disconnectedCallback?.();
     }
   };
