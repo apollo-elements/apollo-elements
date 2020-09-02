@@ -35,4 +35,14 @@ export class ApolloElement
   errors: readonly GraphQLError[] = null;
 
   loading = false;
+
+  /**
+   * Query and Subscription components will only render
+   * if the component has `data`, an `error` or `errors,
+   * or is `loading`. Mutation components will by default always render
+   */
+  shouldUpdate(): boolean {
+    const { data, error, loading } = this;
+    return (!!data || !!error || loading);
+  }
 }

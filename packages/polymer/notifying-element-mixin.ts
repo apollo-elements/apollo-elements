@@ -1,13 +1,13 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import type { Constructor, CustomElement } from '../mixins/constructor';
+import type { Constructor } from '@apollo-elements/interfaces/constructor';
 
 /**
  * `NotifyingElementMixin`: mixin which fires Polymer-style notification events.
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function NotifyingElementMixinImplementation<
-  TBase extends Constructor<CustomElement>
+  TBase extends Constructor
 >(superclass: TBase) {
   return class NotifyingElement extends superclass {
     /**

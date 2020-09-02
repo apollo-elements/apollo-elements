@@ -1,5 +1,5 @@
 import { Hybrids, property } from 'hybrids';
-import type { CustomElement, Constructor } from '@apollo-elements/mixins/constructor';
+import type { Constructor } from '@apollo-elements/interfaces';
 
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
@@ -7,12 +7,10 @@ import { classMethod } from './factories/classMethod';
 import { accessors } from './factories/accessors';
 import { ApolloElement } from './apollo-element';
 
-export type ApolloSubscriptionElement<D = unknown, V = unknown> =
-  HTMLElement & Class<D, V>;
+class ApolloSubscriptionElement<D = unknown, V = unknown>
+  extends ApolloSubscriptionMixin(class { } as Constructor)<D, V> { }
 
-class Class<D, V> extends ApolloSubscriptionMixin(class {} as Constructor<CustomElement>)<D, V> {}
-
-const instance = new Class();
+const instance = new ApolloSubscriptionElement();
 
 export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   ...ApolloElement,
@@ -37,3 +35,5 @@ export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   nextError: classMethod(instance, 'nextError'),
   onComplete: classMethod(instance, 'onComplete'),
 };
+
+export type { ApolloSubscriptionElement };

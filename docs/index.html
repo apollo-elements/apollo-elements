@@ -1,191 +1,413 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>👩‍🚀 Apollo Elements 🌛</title>
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="./webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/build/zero-md.min.js"></script>
-    <script type="module" src="./bundle.js"></script>
-    <style>
-      body {
-        background: #eee;
-        font-family: "ubuntu", sans-serif;
-        margin: 0;
-        padding: 0;
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Apollo Elements</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Apollo Elements</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>Apollo Elements</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<div align="center">
+					<img alt="Rocket Ship in Angle Brackets" width="256" src="https://raw.githubusercontent.com/apollo-elements/apollo-elements/master/logo.png" />
+					<h1>🚀 Apollo Elements 👩‍🚀</h1>
+					<p><strong>🚀 Custom elements meet Apollo GraphQL 🌜</strong></p>
+					<p><strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong></p>
+				</div>
+				<p><a href="https://lernajs.io/"><img src="https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg" alt="Maintained with Lerna"></a>
+					<a href="https://github.com/apollo-elements/apollo-elements/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="Contributions Welcome"></a>
+					<a href="https://github.com/apollo-elements/apollo-elements/actions"><img src="https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg" alt="Actions Status"></a>
+					<a href="https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage"><img src="https://api.codeclimate.com/v1/badges/ef02d5cc61cb95938aad/test_coverage" alt="Test Coverage"></a>
+				<a href="https://lit-apollo-subscriptions.herokuapp.com"><img src="https://img.shields.io/badge/demo-online-brightgreen.svg" alt="Demo Online"></a></p>
+				<a href="#📓-contents" id="📓-contents" style="color: inherit; text-decoration: none;">
+					<h2>📓 Contents</h2>
+				</a>
+				<ul>
+					<li><a href="#-api-docs">📑 API Docs</a></li>
+					<li><a href="#-demo">🤖 Demo</a></li>
+					<li><a href="#-packages">📦 Packages</a><ul>
+							<li><a href="#-lit-apollo">🔥 <code>lit-apollo</code></a></li>
+							<li><a href="#-gluon">👩‍🔬 <code>gluon</code></a></li>
+							<li><a href="#-hybrids">‍🦄 <code>hybrids</code></a></li>
+							<li><a href="#-polymer">🧱 <code>polymer</code></a></li>
+							<li><a href="#-mixins">🍸 <code>mixins</code></a></li>
+						</ul>
+					</li>
+					<li><a href="#-bundling">🗞 Bundling</a></li>
+					<li><a href="#-cool-tricks">😎 Cool Tricks</a><ul>
+							<li><a href="#-inline-query-scripts">📜 Inline Query Scripts</a></li>
+						</ul>
+					</li>
+					<li><a href="#-maintainers">👷‍♂️ Maintainers</a></li>
+				</ul>
+				<a href="#📑-api-docs" id="📑-api-docs" style="color: inherit; text-decoration: none;">
+					<h2>📑 API Docs</h2>
+				</a>
+				<p>If you just want to see the API Docs, check them out for all our packages at <a href="https://apolloelements.dev">apolloelements.dev</a></p>
+				<a href="#🤖-demo" id="🤖-demo" style="color: inherit; text-decoration: none;">
+					<h2>🤖 Demo</h2>
+				</a>
+				<p><a href="https://lit-apollo-subscriptions.herokuapp.com"><code>#leeway</code></a> is a progressive web app that uses <code>lit-apollo</code> to make it easier for you to avoid doing actual work. Check out the <a href="https://gitlab.com/bennyp/demo-lit-apollo-subscriptions">source repo</a> for an example of how to build apps with Apollo Elements. The demo includes:</p>
+				<ul>
+					<li><abbr title="server side rendering">SSR</abbr></li>
+					<li>Code Splitting</li>
+					<li>Aggressive minification, including <code>lit-html</code> template literals</li>
+					<li>CSS-in-CSS ( e.g. <code>import shared from &#39;../shared-styles.css&#39;;</code>)</li>
+					<li>GQL-in-GQL ( e.g. <code>import query from &#39;./my-component-query.graphql&#39;;</code>)</li>
+					<li>GraphQL Subscriptions over websocket</li>
+				</ul>
+				<p><a href="https://github.com/apollo-elements/apollo-elements/files/2825459/lit-apollo-subscriptions.herokuapp.com-20190203T132249.zip"><img src="https://user-images.githubusercontent.com/1466420/52176144-5c25f280-27b7-11e9-8e14-290651f98e36.png" alt="Lighthouse Scores: 98 (performance), 100 (accessibility), 93 (best practises), 100 (SEO), 12/12 (PWA)"></a></p>
+				<a href="#📦-packages" id="📦-packages" style="color: inherit; text-decoration: none;">
+					<h2>📦 Packages</h2>
+				</a>
+				<p>Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.</p>
+				<a href="#🔥-lit-apollo" id="🔥-lit-apollo" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://github.com/apollo-elements/apollo-elements/tree/master/packages/lit-apollo">🔥 <code>lit-apollo</code></a></h3>
+				</a>
+				<p>These base classes extend from <a href="https://lit-element.polymer-project.org"><code>LitElement</code></a>, so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.</p>
+				<pre><code class="language-bash">npm i -S @apollo-elements/lit-apollo</code></pre>
+				<pre><code class="language-html"><span class="hljs-comment">&lt;!-- index.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"module"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"app.bundle.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">nomodule</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"app.bundle.system.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">apollo-app</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"application/graphql"</span>&gt;</span>
+    query {
+      helloWorld {
+        greeting
+        name
       }
+    }
+  <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">apollo-app</span>&gt;</span></code></pre>
+				<pre><code class="language-js"><span class="hljs-comment">// app.js</span>
+<span class="hljs-keyword">import</span> gql <span class="hljs-keyword">from</span> <span class="hljs-string">'graphql-tag'</span>
+<span class="hljs-keyword">import</span> { ApolloQuery, html } <span class="hljs-keyword">from</span> <span class="hljs-string">'@apollo-elements/lit-apollo'</span>;
+<span class="hljs-keyword">import</span> { client } <span class="hljs-keyword">from</span> <span class="hljs-string">'./apollo-client'</span>;
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">''</span>
 
-      header {
-        display: flex;
-        align-items: center;
-        background: #222;
-        color: white;
-        justify-content: space-between;
+customElements.define(<span class="hljs-string">'apollo-app'</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ApolloApp</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ApolloQuery</span> </span>{
+  render() {
+    <span class="hljs-keyword">const</span> { data, error, loading } = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> (
+        loading ? html`<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">what-spin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">what-spin</span>&gt;</span>`</span>
+      : error ? html`<span class="xml"> <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>😢 Such Sad, Very Error! 😰<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><span class="hljs-subst">${error.message}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`</span>
+      : html`<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><span class="hljs-subst">${data.helloWorld.greeting}</span><span class="xml">, </span><span class="hljs-subst">${helloWorld.name}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`</span>
+    );
+   }
+});</code></pre>
+				<a href="#👩🔬-gluon" id="👩🔬-gluon" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://github.com/apollo-elements/apollo-elements/tree/master/packages/gluon">👩‍🔬 <code>gluon</code></a></h3>
+				</a>
+				<p>These base classes extend from <a href="https://github.com/ruphin/gluonjs"><code>GluonElement</code></a>, a simplified <abbr title="web components">wc</abbr> library that uses <code>lit-html</code> for templating while keeping component state and lifecycle concerns &#39;close to the metal&#39;.</p>
+				<pre><code class="language-bash">npm i -S @apollo-elements/gluon</code></pre>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> gql <span class="hljs-keyword">from</span> <span class="hljs-string">'graphql-tag'</span>
+<span class="hljs-keyword">import</span> { ApolloQuery, html } <span class="hljs-keyword">from</span> <span class="hljs-string">'@apollo-elements/gluon'</span>;
+<span class="hljs-keyword">import</span> { client } <span class="hljs-keyword">from</span> <span class="hljs-string">'./apollo-client'</span>;
+
+customElements.define(<span class="hljs-string">'apollo-app'</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ApolloApp</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ApolloQuery</span> </span>{
+  <span class="hljs-keyword">get</span> template() {
+    <span class="hljs-keyword">const</span> { data, error, loading } = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> (
+        loading ? html`<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">what-spin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">what-spin</span>&gt;</span>`</span>
+      : error ? html`<span class="xml"> <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>😢 Such Sad, Very Error! 😰<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><span class="hljs-subst">${error.message}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`</span>
+      : html`<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><span class="hljs-subst">${data.helloWorld.greeting}</span><span class="xml">, </span><span class="hljs-subst">${helloWorld.name}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`</span>
+    );
+   }
+});</code></pre>
+				<a href="#🦄-hybrids" id="🦄-hybrids" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://github.com/apollo-elements/apollo-elements/tree/master/packages/hybrids">🦄 <code>hybrids</code></a></h3>
+				</a>
+				<p>A set of objects you can roll into your <a href="https://hybrids.js.org">hybrids</a> to make it easier to connect to your Apollo cache.</p>
+				<pre><code class="language-bash">npm i -S @apollo-elements/hybrids</code></pre>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { ApolloQuery, queryFactory, define, html } <span class="hljs-keyword">from</span> <span class="hljs-string">'@apollo-elements/hybrids'</span>;
+<span class="hljs-keyword">import</span> gql <span class="hljs-keyword">from</span> <span class="hljs-string">'graphql-tag'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> ConnectedElement = {
+  ...ApolloQuery,
+  <span class="hljs-attr">query</span>: queryFactory(gql<span class="hljs-string">`query { hello }`</span>),
+  <span class="hljs-attr">render</span>: <span class="hljs-function">(<span class="hljs-params">{data}</span>) =&gt;</span> html`<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><span class="hljs-subst">${data.hello}</span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>`</span>
+};
+
+define(<span class="hljs-string">'connected-element'</span>, ConnectedElement);</code></pre>
+				<a href="#🧱-polymer" id="🧱-polymer" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://github.com/apollo-elements/apollo-elements/tree/master/packages/polymer">🧱 <code>polymer</code></a></h3>
+				</a>
+				<p>These custom elements fire <a href="https://polymer-library.polymer-project.org">polymer</a>-style <code>*-changed</code> events when the Apollo cache updates their state. They extend directly from <code>HTMLElement</code> so they&#39;re small in size, and their notifying properties make them perfect for use in Polymer templates.</p>
+				<pre><code class="language-bash">npm i -S @apollo-elements/polymer</code></pre>
+				<pre><code class="language-js"><span class="hljs-comment">// app.js</span>
+<span class="hljs-keyword">import</span> { client } <span class="hljs-keyword">from</span> <span class="hljs-string">'./apollo-client.js'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'@apollo-elements/polymer/apollo-query.js'</span>;
+<span class="hljs-built_in">window</span>.__APOLLO_CLIENT__ = client</code></pre>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { PolymerElement, html } <span class="hljs-keyword">from</span> <span class="hljs-string">'@polymer/polymer'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'@apollo-elements/polymer/apollo-query.js'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'@polymer/paper-card/paper-card.js'</span>;
+
+customElements.define(<span class="hljs-string">'my-app'</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyTemplate</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">PolymerElement</span> </span>{
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> template() {
+    <span class="hljs-keyword">return</span> html`<span class="xml">
+    <span class="hljs-tag">&lt;<span class="hljs-name">apollo-query</span> <span class="hljs-attr">data</span>=<span class="hljs-string">"{{data}}"</span> <span class="hljs-attr">variables</span>=<span class="hljs-string">"&lt;a href="</span><span class="hljs-attr">classes</span>/<span class="hljs-attr">_apollo_elements_gluon.apollomutation.html</span>#<span class="hljs-attr">variables</span>"&gt;</span>variables<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>"&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"application/graphql"</span>&gt;</span>
+        query User($id: ID!)
+          user(id: $id) {
+            name
+            picture
+          }
+        }
+      <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">apollo-query</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">paper-card</span> <span class="hljs-attr">heading</span>=<span class="hljs-string">"[[data.name]]"</span> <span class="hljs-attr">image</span>=<span class="hljs-string">"[[data.picture]]"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">paper-card</span>&gt;</span>
+    `</span>;
+  }
+
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> properties() {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">variables</span>: {
+        <span class="hljs-attr">type</span>: <span class="hljs-built_in">Object</span>,
+        <span class="hljs-attr">value</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({<span class="hljs-attr">id</span>: <span class="hljs-string">''</span>});
       }
+    }
+  }
 
-      header svg {
-        fill: white;
+  <span class="hljs-keyword">async</span> connectedCallback() {
+    <span class="hljs-keyword">super</span>.connectedCallback();
+    <span class="hljs-keyword">const</span> { id = <span class="hljs-string">''</span> } = <span class="hljs-keyword">await</span> getToken();
+    <span class="hljs-keyword">this</span>.variables = { id };
+  }
+}</code></pre>
+				<a href="#🍸-mixins" id="🍸-mixins" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://github.com/apollo-elements/apollo-elements/tree/master/packages/mixins">🍸 <code>mixins</code></a></h3>
+				</a>
+				<p>These custom element <a href="http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/">class mixins</a> give you all the features you need to connect your components to your Apollo cache without imposing a specific component library.</p>
+				<pre><code class="language-bash">npm i -S @apollo-elements/mixins</code></pre>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { ApolloQueryMixin } <span class="hljs-keyword">from</span> <span class="hljs-string">'@apollo-elements/mixins/apollo-query-mixin.js'</span>;
+
+customElements.define(<span class="hljs-string">'vanilla-query'</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VanillaQuery</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ApolloQueryMixin</span>(<span class="hljs-title">HTMLElement</span>) </span>{
+  <span class="hljs-keyword">get</span> data() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.__data;
+  }
+
+  <span class="hljs-keyword">set</span> data(data) {
+    <span class="hljs-keyword">this</span>.__data = data;
+    <span class="hljs-keyword">this</span>.shadowRoot.innerText = <span class="hljs-string">`<span class="hljs-subst">${data.helloWorld.greeting}</span>, <span class="hljs-subst">${data.helloWorld.name}</span>`</span>;
+  }
+});</code></pre>
+				<a href="#🗞-bundling" id="🗞-bundling" style="color: inherit; text-decoration: none;">
+					<h2>🗞 Bundling</h2>
+				</a>
+				<p>Apollo Elements uses <code>Object.fromEntries</code> and object spread syntax, so you may need to transpile and polyfill those features in these packages.</p>
+				<p>Since Apollo client <a href="https://github.com/apollographql/apollo-client/issues/3047">cannot be imported directly into the browser</a>, you must transpile and bundle apollo-client in order to use it in your app. We recommend using <a href="https://rollupjs.com">Rollup</a> for this. Your <code>rollup.config.js</code> might look something like this:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// necessary for apollo</span>
+<span class="hljs-keyword">import</span> resolve <span class="hljs-keyword">from</span> <span class="hljs-string">'@rollup/plugin-node-resolve'</span>;
+<span class="hljs-keyword">import</span> commonjs <span class="hljs-keyword">from</span> <span class="hljs-string">'@rollup/plugin-commonjs'</span>;
+<span class="hljs-comment">// optional, but nice</span>
+<span class="hljs-keyword">import</span> litcss <span class="hljs-keyword">from</span> <span class="hljs-string">'rollup-plugin-lit-css'</span>;
+<span class="hljs-keyword">import</span> graphql <span class="hljs-keyword">from</span> <span class="hljs-string">'@kocal/rollup-plugin-graphql'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">input</span>: [
+    <span class="hljs-string">'src/components/app-shell/app-shell.js'</span>,
+    <span class="hljs-string">'src/components/app-view1/app-view1.js'</span>,
+    <span class="hljs-string">'src/components/app-view2/app-view2.js'</span>,
+    <span class="hljs-string">'src/components/app-view404/app-view404.js'</span>,
+  ],
+
+  <span class="hljs-attr">output</span>: [{
+    <span class="hljs-attr">dir</span>: <span class="hljs-string">'build'</span>,
+    <span class="hljs-attr">format</span>: <span class="hljs-string">'es'</span>,
+    <span class="hljs-attr">sourcemap</span>: <span class="hljs-literal">true</span>,
+  }, {
+    <span class="hljs-attr">dir</span>: <span class="hljs-string">'build/nomodule'</span>,
+    <span class="hljs-attr">format</span>: <span class="hljs-string">'system'</span>,
+    <span class="hljs-attr">sourcemap</span>: <span class="hljs-literal">true</span>,
+  }],
+
+  <span class="hljs-attr">plugins</span>: [
+    resolve(),
+    commonjs(),
+  ]
+}</code></pre>
+				<p>Alternatively, you might bundle and export your Apollo client separately, then import it into your browser-friendly component modules.</p>
+				<a href="#😎-cool-tricks" id="😎-cool-tricks" style="color: inherit; text-decoration: none;">
+					<h2>😎 Cool Tricks</h2>
+				</a>
+				<a href="#📜-inline-query-scripts" id="📜-inline-query-scripts" style="color: inherit; text-decoration: none;">
+					<h3>📜 Inline Query Scripts</h3>
+				</a>
+				<p>You can provide a GraphQL query string in your markup by appending a
+				GraphQL script element to your connected element, like so:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">apollo-app</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"application/graphql"</span>&gt;</span>
+    query {
+      helloWorld {
+        name
+        greeting
       }
-
-      header, main {
-        width: calc(100% - 24px);
-        padding: 12px;
-      }
-
-      header img {
-        height: 128px;
-      }
-
-      nav {
-        color: white
-      }
-
-      nav a {
-        color: inherit;
-      }
-
-      dl {
-        display: grid;
-        align-items: start;
-        grid-template-columns: auto auto;
-        max-width: 80vw;
-      }
-
-      dt a {
-        font-size: 24px;
-        display: flex;
-        flex: 1;
-        align-items: center;
-        text-decoration: none;
-        margin-bottom: 4px;
-      }
-
-      mwc-button {
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <div>
-        <h1>👩‍🚀 Apollo Elements 🚀</h1>
-        <p>Custom elements meet Apollo GraphQL. It's one small step for a dev, one giant leap for the web platform!</p>
-
-        <nav>
-          <a href="#lit-apollo"><code>lit-apollo</code></a>
-          <a href="#gluon"><code>gluon</code></a>
-          <a href="#mixins"><code>mixins</code></a>
-          <a href="#hybrids"><code>hybrids</code></a>
-          <a href="#polymer"><code>polymer</code></a>
-
-          <a href="https://github.com/apollo-elements/apollo-elements" title="Github repo">
-            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-            <svg width="26px" height="20px" viewBox="0 0 256 250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid">
-              <title>Github logo</title>
-                <g>
-                    <path d="M128.00106,0 C57.3172926,0 0,57.3066942 0,128.00106 C0,184.555281 36.6761997,232.535542 87.534937,249.460899 C93.9320223,250.645779 96.280588,246.684165 96.280588,243.303333 C96.280588,240.251045 96.1618878,230.167899 96.106777,219.472176 C60.4967585,227.215235 52.9826207,204.369712 52.9826207,204.369712 C47.1599584,189.574598 38.770408,185.640538 38.770408,185.640538 C27.1568785,177.696113 39.6458206,177.859325 39.6458206,177.859325 C52.4993419,178.762293 59.267365,191.04987 59.267365,191.04987 C70.6837675,210.618423 89.2115753,204.961093 96.5158685,201.690482 C97.6647155,193.417512 100.981959,187.77078 104.642583,184.574357 C76.211799,181.33766 46.324819,170.362144 46.324819,121.315702 C46.324819,107.340889 51.3250588,95.9223682 59.5132437,86.9583937 C58.1842268,83.7344152 53.8029229,70.715562 60.7532354,53.0843636 C60.7532354,53.0843636 71.5019501,49.6441813 95.9626412,66.2049595 C106.172967,63.368876 117.123047,61.9465949 128.00106,61.8978432 C138.879073,61.9465949 149.837632,63.368876 160.067033,66.2049595 C184.49805,49.6441813 195.231926,53.0843636 195.231926,53.0843636 C202.199197,70.715562 197.815773,83.7344152 196.486756,86.9583937 C204.694018,95.9223682 209.660343,107.340889 209.660343,121.315702 C209.660343,170.478725 179.716133,181.303747 151.213281,184.472614 C155.80443,188.444828 159.895342,196.234518 159.895342,208.176593 C159.895342,225.303317 159.746968,239.087361 159.746968,243.303333 C159.746968,246.709601 162.05102,250.70089 168.53925,249.443941 C219.370432,232.499507 256,184.536204 256,128.00106 C256,57.3066942 198.691187,0 128.00106,0 Z M47.9405593,182.340212 C47.6586465,182.976105 46.6581745,183.166873 45.7467277,182.730227 C44.8183235,182.312656 44.2968914,181.445722 44.5978808,180.80771 C44.8734344,180.152739 45.876026,179.97045 46.8023103,180.409216 C47.7328342,180.826786 48.2627451,181.702199 47.9405593,182.340212 Z M54.2367892,187.958254 C53.6263318,188.524199 52.4329723,188.261363 51.6232682,187.366874 C50.7860088,186.474504 50.6291553,185.281144 51.2480912,184.70672 C51.8776254,184.140775 53.0349512,184.405731 53.8743302,185.298101 C54.7115892,186.201069 54.8748019,187.38595 54.2367892,187.958254 Z M58.5562413,195.146347 C57.7719732,195.691096 56.4895886,195.180261 55.6968417,194.042013 C54.9125733,192.903764 54.9125733,191.538713 55.713799,190.991845 C56.5086651,190.444977 57.7719732,190.936735 58.5753181,192.066505 C59.3574669,193.22383 59.3574669,194.58888 58.5562413,195.146347 Z M65.8613592,203.471174 C65.1597571,204.244846 63.6654083,204.03712 62.5716717,202.981538 C61.4524999,201.94927 61.1409122,200.484596 61.8446341,199.710926 C62.5547146,198.935137 64.0575422,199.15346 65.1597571,200.200564 C66.2704506,201.230712 66.6095936,202.705984 65.8613592,203.471174 Z M75.3025151,206.281542 C74.9930474,207.284134 73.553809,207.739857 72.1039724,207.313809 C70.6562556,206.875043 69.7087748,205.700761 70.0012857,204.687571 C70.302275,203.678621 71.7478721,203.20382 73.2083069,203.659543 C74.6539041,204.09619 75.6035048,205.261994 75.3025151,206.281542 Z M86.046947,207.473627 C86.0829806,208.529209 84.8535871,209.404622 83.3316829,209.4237 C81.8013,209.457614 80.563428,208.603398 80.5464708,207.564772 C80.5464708,206.498591 81.7483088,205.631657 83.2786917,205.606221 C84.8005962,205.576546 86.046947,206.424403 86.046947,207.473627 Z M96.6021471,207.069023 C96.7844366,208.099171 95.7267341,209.156872 94.215428,209.438785 C92.7295577,209.710099 91.3539086,209.074206 91.1652603,208.052538 C90.9808515,206.996955 92.0576306,205.939253 93.5413813,205.66582 C95.054807,205.402984 96.4092596,206.021919 96.6021471,207.069023 Z"></path>
-                </g>
-            </svg>
-          </a>
-        </nav>
-      </div>
-
-      <img alt="Rocket Ship in Angle Brackets" src="https://raw.githubusercontent.com/apollo-elements/apollo-elements/master/logo.png" />
-
-    </header>
-    <main>
-      <h2>📦 Packages</h2>
-      <p>Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.</p>
-
-      <dl>
-
-        <dt id="lit-apollo">
-          <h3>🔥 lit-apollo</h3>
-          <a href="lit-apollo/" tabindex="-1">
-            <mwc-button raised>API Docs</mwc-button>
-          </a>
-          <a href="using-lit-apollo/">
-            <mwc-button raised>Slide Deck</mwc-button>
-          </a>
-        </dt>
-        <dd>
-          <article>
-            <p>
-              These base classes extend from <code><a href="https://lit-element.polymer-project.org">LitElement</a></code>
-              so you can quickly get up and running creating declarative front-ends with
-              Apollo GraphQL.
-             </p>
-             <zero-md src="./lit-apollo.md"></zero-md>
-           </article>
-         </dd>
-
-        <dt id="gluon">
-          <h3>⚗️ Gluon</h3>
-          <a href="gluon/" tabindex="-1">
-            <mwc-button raised>API Docs</mwc-button>
-          </a>
-        </dt>
-        <dd>
-          <article>
-            <p>These base classes extend from <code><a href="https://github.com/ruphin/gluonjs">GluonElement</a></code>,
-              a simplified <abbr title="web components">WC</abbr> library that uses
-              <code>lit-html</code> for templating while keeping component
-              state and lifecycle concerns 'close to the metal'.</p>
-            <zero-md src="./gluon.md"></zero-md>
-          </article>
-        </dd>
-
-        <dt id="mixins">
-          <h3>🍹 Mixins</h3>
-          <a href="mixins/" tabindex="-1">
-            <mwc-button raised>API Docs</mwc-button>
-          </a>
-        </dt>
-        <dd>
-          <article>
-            <p>
-              These custom element <a href="http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/">class mixins</a>
-              give you all the features you need to connect your components to your
-              Apollo cache without imposing a specific component library.
-            </p>
-            <zero-md src="./mixins.md"></zero-md>
-          </article>
-        </dd>
-
-        <dt id="hybrids">
-          <h3>🦄 Hybrids</h3>
-          <a href="hybrids/" tabindex="-1">
-            <mwc-button raised>API Docs</mwc-button>
-          </a>
-        </dt>
-        <dd>
-          <article>
-            <p>
-              Element and property descriptors for <a href="https://hybrids.js.org">hybrids</a> components.
-            </p>
-            <zero-md src="./hybrids.md"></zero-md>
-          </article>
-        </dd>
-
-        <dt id="polymer">
-          <h3>🧱 Polymer</h3>
-          <a href="polymer/" tabindex="-1">
-            <mwc-button raised>API Docs</mwc-button>
-          </a>
-        </dt>
-        <dd>
-          <article>
-            <p>
-              These custom elements fire <a href="https://polymer-library.polymer-project.org">Polymer-library</a>-style
-              <code>*-changed</code> events when the Apollo cache updates their state.
-              They extend directly from <code>HTMLElement</code> so they're small in size,
-              and their notifying properties make them perfect for use in Polymer templates.
-            </p>
-            <zero-md src="./polymer.md"></zero-md>
-          </article>
-        </dd>
-
-      </dl>
-    </main>
-  </body>
+    }
+  <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">apollo-app</span>&gt;</span></code></pre>
+				<a href="#👷♂️-maintainers" id="👷♂️-maintainers" style="color: inherit; text-decoration: none;">
+					<h2>👷‍♂️ Maintainers</h2>
+				</a>
+				<p><code>apollo-elements</code> is a community project maintained by Benny Powers.</p>
+				<p><a href="https://www.codementor.io/bennyp?utm_source=github&amp;utm_medium=button&amp;utm_term=bennyp&amp;utm_campaign=github"><img src="https://cdn.codementor.io/badges/contact_me_github.svg" alt="Contact me on Codementor"></a></p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_gluon.html">@apollo-<wbr>elements/gluon</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_hybrids.html">@apollo-<wbr>elements/hybrids</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_interfaces.html">@apollo-<wbr>elements/interfaces</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_lib.html">@apollo-<wbr>elements/lib</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_lit_apollo.html">@apollo-<wbr>elements/lit-<wbr>apollo</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_mixins.html">@apollo-<wbr>elements/mixins</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_apollo_elements_polymer.html">@apollo-<wbr>elements/polymer</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
 </html>

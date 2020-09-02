@@ -14,5 +14,5 @@ packages/*/*.js
 packages/**/*.d.ts
 packages/*/*.d.ts
 packages/test-helpers/schema.ts
-packages/test-helpers/schema.ts
+
 examples/**/schema.ts

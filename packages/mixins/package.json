@@ -14,9 +14,7 @@
     "clean:js": "rm -f ./*.js",
     "clean:dts": "rm -f ./*.d.ts;",
     "clean:map": "rm -f ./*.js.map",
-    "docs": "run-s docs:*",
-    "docs:polymer": "polymer analyze > docs/analysis.json",
-    "docs:wca": "wca analyze --outFile ./custom-elements.json",
+    "analyze": "wca analyze --format json --outFile custom-elements.json",
     "test": "wtr --coverage --root-dir ../.."
   },
   "publishConfig": {

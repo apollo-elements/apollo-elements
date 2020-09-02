@@ -1,6 +1,6 @@
+import type { Constructor } from '@apollo-elements/interfaces';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './apollo-element';
-import { NotifyingElementMixin } from './notifying-element-mixin';
 
 /**
  * `<apollo-mutation>` fires Polymer-style prop-changed events
@@ -47,20 +47,23 @@ import { NotifyingElementMixin } from './notifying-element-mixin';
  * ```
  */
 export class PolymerApolloMutation<TData, TVariables> extends
-  NotifyingElementMixin(ApolloMutationMixin(PolymerApolloElement))<TData, TVariables> {
+  ApolloMutationMixin(
+    PolymerApolloElement as Constructor<HTMLElement & PolymerApolloElement>
+  )<TData, TVariables> {
   #called = false;
 
   declare called: boolean;
 
   constructor() {
     super();
+    type This = this;
     Object.defineProperties(this, {
       called: {
-        get(this: PolymerApolloMutation<TData, TVariables>): boolean {
+        get(this: This): boolean {
           return this.#called;
         },
 
-        set(this: PolymerApolloMutation<TData, TVariables>, value) {
+        set(this: This, value) {
           this.#called = value;
           this.notify('called', value);
         },
