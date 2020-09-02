@@ -6,7 +6,7 @@
   "module": "index.js",
   "scripts": {
     "prepublishOnly": "tsc -b .",
-    "build": "tsc",
+    "build": "tsc --noEmit",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",

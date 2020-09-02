@@ -1,4 +1,4 @@
-import { expect, defineCE, fixture, unsafeStatic, aTimeout, html as fixtureHtml } from '@open-wc/testing';
+import { expect, defineCE, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';
 import { TemplateResult, html, LitElement } from 'lit-element';
@@ -13,22 +13,27 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fixtureHtml`<${tag}></${tag}>`);
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     expect(element).to.be.an.instanceOf(LitElement);
   });
 
   it('renders when client is set', async function rendersOnClient() {
     class Test extends ApolloElement {
       render(): TemplateResult {
-        const { test = 'FAIL' } = (this.client || { }) as { test: string };
-        return html`${test}`;
+        // @ts-expect-error: just testing assignment and rendering
+        return html`${this.client?.test ?? 'FAIL'}`;
+      }
+
+      shouldUpdate() {
+        return true;
       }
     }
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fixtureHtml`<${tag} .client="${{ test: 'CLIENT' }}"></${tag}>`);
-    await aTimeout(1500);
-    expect(element).shadowDom.to.equal('CLIENT');
+    const tag = unsafeStatic(defineCE(Test));
+    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    // @ts-expect-error: just testing assignment and rendering
+    element.client = { test: 'CLIENT' };
+    await element.updateComplete;
+    expect(element.shadowRoot.textContent).to.equal('CLIENT');
   });
 
   it('renders when data is set', async function rendersOnData() {
@@ -40,8 +45,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fixtureHtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
-    await aTimeout(1500);
+    const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
     expect(element).shadowDom.to.equal('bar');
   });
 
@@ -52,7 +56,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fixtureHtml`<${tag} .error="${'error'}"></${tag}>`);
+    const element = await fixture<Test>(fhtml`<${tag} .error="${'error'}"></${tag}>`);
     expect(element).shadowDom.to.equal('error');
   });
 
@@ -63,7 +67,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fixtureHtml`<${tag} .loading="${true}"></${tag}>`);
+    const element = await fixture<Test>(fhtml`<${tag} .loading="${true}"></${tag}>`);
     expect(element).shadowDom.to.equal('LOADING');
   });
 });

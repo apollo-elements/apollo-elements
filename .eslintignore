@@ -1,19 +1,12 @@
 node_modules
 coverage
+docs
 
-docs/webcomponentsjs
-docs/bundle.js
-docs/**/*.d.ts
-docs/examples/**/schema.ts
-docs/using-lit-apollo/workbox-*.js
-docs/using-lit-apollo/sw.js
-!docs/using-lit-apollo/workbox-config.js
+examples/**/schema.ts
+examples/**/*.d.ts
 
 packages/**/*.js
 packages/*/*.js
 packages/**/*.d.ts
 packages/*/*.d.ts
 packages/test-helpers/schema.ts
-
-examples/**/schema.ts
-coverage

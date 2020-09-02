@@ -1,26 +1,23 @@
 import type { DocumentNode } from 'graphql/language/ast';
-import type { Constructor, CustomElement } from './constructor';
+import type { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-import type {
+import {
   ErrorPolicy,
   MutationOptions,
   MutationUpdaterFn,
   FetchResult,
   ApolloError,
   FetchPolicy,
+  ApolloClient,
+  NormalizedCacheObject,
 } from '@apollo/client/core';
-
-import bound from 'bind-decorator';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { ApolloMutationInterface } from '@apollo-elements/interfaces';
+import { GraphQLError } from 'graphql';
 
-function ApolloMutationMixinImpl<B extends Constructor<CustomElement>>(superclass: B) {
-  /**
-   * Class mixin for apollo-mutation elements
-   */
-  abstract class ApolloMutationElement<TData, TVariables>
+function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
+  return class ApolloMutationElement<TData, TVariables>
     extends ApolloElementMixin(superclass)
     implements ApolloMutationInterface<TData, TVariables> {
     declare data: TData;
@@ -91,7 +88,7 @@ function ApolloMutationMixinImpl<B extends Constructor<CustomElement>>(superclas
     /**
      * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
      */
-    @bound public async mutate(
+    public async mutate(
       params?: Partial<MutationOptions<TData, TVariables>>
     ): Promise<FetchResult<TData>> {
       const options: MutationOptions<TData, TVariables> = {
@@ -139,10 +136,7 @@ function ApolloMutationMixinImpl<B extends Constructor<CustomElement>>(superclas
      * Callback for when a mutation is completed.
      * @private
      */
-    onCompletedMutation(
-      response: FetchResult<TData>,
-      mutationId: number,
-    ): FetchResult<TData> {
+    onCompletedMutation(response: FetchResult<TData>, mutationId: number): FetchResult<TData> {
       const { data } = response;
       if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
         this.loading = false;
@@ -166,9 +160,7 @@ function ApolloMutationMixinImpl<B extends Constructor<CustomElement>>(superclas
       this.onError?.(error);
       throw error;
     }
-  }
-
-  return ApolloMutationElement;
+  };
 }
 
 /**
