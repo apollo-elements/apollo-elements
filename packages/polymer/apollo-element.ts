@@ -31,6 +31,9 @@ export class PolymerApolloElement<TData = unknown>
     type This = this;
     Object.defineProperties(this, {
       data: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This): TData {
           return this.#data;
         },
@@ -42,6 +45,9 @@ export class PolymerApolloElement<TData = unknown>
       },
 
       error: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This): Error {
           return this.#error;
         },
@@ -53,6 +59,9 @@ export class PolymerApolloElement<TData = unknown>
       },
 
       loading: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This): boolean {
           return this.#loading;
         },

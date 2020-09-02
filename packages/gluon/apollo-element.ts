@@ -49,6 +49,9 @@ export class ApolloElement<TData = unknown>
 
     Object.defineProperties(this, {
       data: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This) {
           return this.__data;
         },
@@ -60,6 +63,9 @@ export class ApolloElement<TData = unknown>
       },
 
       error: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This) {
           return this.__error;
         },
@@ -71,6 +77,9 @@ export class ApolloElement<TData = unknown>
       },
 
       loading: {
+        configurable: true,
+        enumerable: true,
+
         get(this: This) {
           return this.__loading;
         },
