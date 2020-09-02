@@ -1,3 +1,4 @@
+import { Constructor } from '@apollo-elements/interfaces';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './apollo-element';
 
@@ -28,7 +29,9 @@ import { PolymerApolloElement } from './apollo-element';
  * ```
  */
 export class PolymerApolloSubscription<TData, TVariables> extends
-  ApolloSubscriptionMixin(PolymerApolloElement)<TData, TVariables> { }
+  ApolloSubscriptionMixin(
+    PolymerApolloElement as Constructor<HTMLElement & PolymerApolloElement>
+  )<TData, TVariables> { }
 
 customElements.define('apollo-subscription', PolymerApolloSubscription);
 

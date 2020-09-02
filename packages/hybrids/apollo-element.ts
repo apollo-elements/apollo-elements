@@ -1,11 +1,19 @@
 import type { Hybrids } from 'hybrids';
-import type { Constructor, CustomElement } from '@apollo-elements/mixins/constructor';
+import type { Constructor } from '@apollo-elements/interfaces';
 
 import { property } from 'hybrids';
 import { accessors } from './factories/accessors';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
-class Class extends ApolloElementMixin(class { } as Constructor<CustomElement>) { }
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+
+declare global {
+  interface Window {
+    __APOLLO_CLIENT__?: ApolloClient<NormalizedCacheObject>
+  }
+}
+
+class Class extends ApolloElementMixin(class { } as Constructor) { }
 
 export type ApolloElementElement =
   HTMLElement & Class;
@@ -24,8 +32,10 @@ export const ApolloElement: Hybrids<ApolloElementElement> = {
   data: null,
   error: null,
   errors: null,
+  /** @private */
   __document: null,
-  // @ts-expect-error: shortcut for query and subscription
+  /** @private */
+  // @ts-expect-error: shortcut
   __variables: null,
 
   document: accessors(instance, 'document'),

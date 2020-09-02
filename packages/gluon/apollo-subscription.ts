@@ -1,6 +1,8 @@
+import type { Constructor } from '@apollo-elements/interfaces';
+import type { GluonElement } from '@gluon/gluon';
+
 import { ApolloElement } from './apollo-element';
-import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
-import { Constructor } from '../mixins/constructor';
+import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 export { html } from './apollo-element';
 
 /**
@@ -36,5 +38,5 @@ export { html } from './apollo-element';
  */
 export class ApolloSubscription<TData, TVariables> extends
   ApolloSubscriptionMixin(
-    ApolloElement as Constructor<ApolloElement & HTMLElement>
+    ApolloElement as unknown as Constructor<ApolloElement & GluonElement>
   )<TData, TVariables> { }

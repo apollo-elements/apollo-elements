@@ -28,35 +28,36 @@ export class PolymerApolloElement<TData = unknown>
 
   constructor() {
     super();
+    type This = this;
     Object.defineProperties(this, {
       data: {
-        get(this: PolymerApolloElement<TData>): TData {
+        get(this: This): TData {
           return this.#data;
         },
 
-        set(this: PolymerApolloElement<TData>, value) {
+        set(this: This, value) {
           this.#data = value;
           this.notify('data', value);
         },
       },
 
       error: {
-        get(this: PolymerApolloElement<TData>): Error {
+        get(this: This): Error {
           return this.#error;
         },
 
-        set(this: PolymerApolloElement<TData>, value) {
+        set(this: This, value) {
           this.#error = value;
           this.notify('error', value);
         },
       },
 
       loading: {
-        get(this: PolymerApolloElement<TData>): boolean {
+        get(this: This): boolean {
           return this.#loading;
         },
 
-        set(this: PolymerApolloElement<TData>, value) {
+        set(this: This, value) {
           this.#loading = value;
           this.notify('loading', value);
         },

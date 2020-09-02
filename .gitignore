@@ -3,12 +3,7 @@ coverage
 .nyc_output
 .npmrc
 forever*.log
-docs/gluon
-docs/lit-apollo
-docs/mixins
-docs/polymer
-docs/webcomponentsjs
-docs/bundle.js
+docs
 analysis.json
 lerna-debug.log
 package-lock.json
@@ -20,12 +15,11 @@ packages/*/*.d.ts.map
 
 packages/test-helpers/schema.ts
 
-docs/examples/**/*.js
-docs/examples/**/*.js.map
-docs/examples/**/*.d.ts
-docs/examples/**/*.d.ts.map
-
-docs/examples/**/schema.ts
+examples/**/*.js
+examples/**/*.js.map
+examples/**/*.d.ts
+examples/**/*.d.ts.map
+examples/**/schema.ts
 
 !packages/*/global.d.ts
 !packages/gluon/gluon.d.ts

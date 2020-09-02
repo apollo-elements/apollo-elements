@@ -49,22 +49,19 @@ window.__APOLLO_CLIENT__ = client;
 After that, typical usage involves importing the base class and extending from it to define your component:
 
 ```js
-import gql from 'graphql-tag'
 import { ApolloQuery, html } from '@apollo-elements/gluon';
 import ParentQuery from './Parent.query.graphql';
 
 class ConnectedElement extends ApolloQuery {
   get template() {
-    const { data, error, loading } = this;
-    const { helloWorld = {} } = data || {}
     return (
-        loading ? html`
+        this.loading ? html`
           <what-spin></what-spin>`
-      : error ? html`
+      : this.error ? html`
           <h1>😢 Such Sad, Very Error! 😰</h1>
-          <div>${error ? error.message : 'Unknown Error'}</div>`
+          <div>${this.error?.message ?? 'Unknown Error'}</div>`
       : html`
-          <div>${helloWorld.greeting}, ${helloWorld.name}</div>
+          <div>${this.data?.helloWorld?.greeting}, ${this.data?.helloWorld?.name}</div>
           <connected-child id="child-component"></connected-child>`
     );
    }
@@ -99,18 +96,9 @@ This could be useful in cases where `<chat-subscription>` can render a variety o
 
 ```js
 import { ApolloQuery, html } from '@apollo-elements/gluon';
-import { client } from '../client';
 import { format } from 'date-fns/fp';
-import { errorTemplate } from './error-template.js';
 import gql from 'graphql-tag';
 import './chat-subscription.js';
-
-const messageTemplate = ({ message, user, date }) => html`
-  <div>
-    <dt><time>${format('HH:mm', date)}</time> ${user}:</dt>
-    <dd>${message}</dd>
-  </div>
-`;
 
 const subscription = gql`
   subscription {
@@ -127,31 +115,41 @@ const subscription = gql`
  */
 class ChatQuery extends ApolloQuery {
   render() {
-    const viewTemplate = (
-        this.loading ? html`Loading...`
-      : this.error ? errorTemplate(this.error)
-      : html`<dl>${this.data.messages.map(messageTemplate)}</dl>`
-    );
-
     return html`
     <chat-subscription
         .subscription="${subscription}"
         .onSubscriptionData=${this.onSubscriptionData}>
     </chat-subscription>
-    ${viewTemplate}`;
+    ${(
+        this.loading ? html`
+          Loading...`
+      : this.error ? html`
+          <h1>😢 Such Sad, Very Error! 😰</h1>
+          <div>${this.error?.message ?? 'Unknown Error'}</div>`
+      : html`
+          <dl>
+            ${this.data.messages.map(x => html`
+            <div>
+              <dt><time>${format('HH:mm', date)}</time> ${user}:</dt>
+              <dd>${message}</dd>
+            </div>`
+            )}
+          </dl>`
+    )}`;
   }
 
   constructor() {
     super();
     this.onSubscriptionData = this.onSubscriptionData.bind(this);
     this.query = gql`
-    query {
-      messages {
-        date
-        message
-        user
+      query {
+        messages {
+          date
+          message
+          user
+        }
       }
-    }`;
+    `;
   }
 
   onSubscriptionData({ client, subscriptionData: { data: { messageSent } } }) {
@@ -210,7 +208,7 @@ class MutatingElement extends ApolloMutation {
     return html`
       <loading-overlay ?active="${this.loading}"></loading-overlay>
       <button ?hidden="${this.data}" @click="${this.mutate}"></button>
-      <div ?hidden="${!this.data}">${this.data.myResponse}</div>
+      <div ?hidden="${!this.data}">${this.data?.myResponse}</div>
     `;
   }
 }

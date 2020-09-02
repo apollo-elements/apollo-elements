@@ -1,18 +1,16 @@
 import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql/language/ast';
-import type { Constructor, CustomElement } from './constructor';
 import type { GraphQLError } from 'graphql';
-import type { ApolloElementInterface } from '@apollo-elements/interfaces';
+import type { Constructor, ApolloElementInterface } from '@apollo-elements/interfaces';
 
 import { getGraphQLScriptChildDocument } from '@apollo-elements/lib/get-graphql-script-child-document';
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-function ApolloElementMixinImplementation<B extends Constructor<CustomElement>>(superclass: B) {
-  /**
-   * Class mixin for apollo-element elements
-   */
-  abstract class ApolloElement extends superclass implements ApolloElementInterface<unknown> {
+function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) {
+  return class ApolloElement
+    extends superclass
+    implements ApolloElementInterface {
     declare context?: Record<string, unknown>;
 
     data: unknown = null;
@@ -67,9 +65,7 @@ function ApolloElementMixinImplementation<B extends Constructor<CustomElement>>(
       this.__mo.disconnect();
       super.disconnectedCallback?.();
     }
-  }
-
-  return ApolloElement;
+  };
 }
 
 /**

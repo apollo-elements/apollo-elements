@@ -6,11 +6,12 @@ import 'sinon-chai';
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { client } from '../test-helpers/client';
 
+class XL extends HTMLElement {}
+class Test extends ApolloElementMixin(XL) { }
+
 describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('returns an instance of the superclass', async function returnsClass() {
-    class XL extends HTMLElement {}
-    class Test extends ApolloElementMixin(XL) { }
-    const tag = unsafeStatic(defineCE(Test));
+    const tag = unsafeStatic(defineCE(class extends Test {}));
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     expect(element).to.be.an.instanceOf(XL);
   });
@@ -18,15 +19,11 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('calls superclass connectedCallback when it exists', async function callsSuperConnectedCallback() {
     let calls = 0;
 
-    class Connects extends HTMLElement {
+    const tag = unsafeStatic(defineCE(class extends Test {
       connectedCallback(): void {
         calls++;
       }
-    }
-
-    class Test extends ApolloElementMixin(Connects) { }
-
-    const tag = unsafeStatic(defineCE(Test));
+    }));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
@@ -37,15 +34,11 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('calls superclass disconnectedCallback when it exists', async function notCallsSuperDisconnectedCallback() {
     let calls = 0;
 
-    class Disconnects extends HTMLElement {
+    const tag = unsafeStatic(defineCE(class extends Test {
       disconnectedCallback(): void {
         calls++;
       }
-    }
-
-    class Test extends ApolloElementMixin(Disconnects) { }
-
-    const tag = unsafeStatic(defineCE(Test));
+    }));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
@@ -55,9 +48,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   });
 
   it('does not throw if there is no connectedCallback or disconnectedCallback', async function notCallsSuperConnectedCallback() {
-    class Test extends ApolloElementMixin(HTMLElement) {}
-
-    const tag = defineCE(Test);
+    const tag = defineCE(class extends Test {});
 
     const element = document.createElement(tag) as Test;
 
@@ -68,9 +59,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('sets default properties', async function setsDefaultProperties() {
     window.__APOLLO_CLIENT__ = client;
 
-    class Test extends ApolloElementMixin(HTMLElement) {}
-
-    const tag = unsafeStatic(defineCE(Test));
+    const tag = unsafeStatic(defineCE(class extends Test {}));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
@@ -85,9 +74,8 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 
   it('sets document based on graphql script child', async function() {
     const doc = 'query foo { bar }';
-    class Test extends ApolloElementMixin(HTMLElement) {}
 
-    const tag = unsafeStatic(defineCE(Test));
+    const tag = unsafeStatic(defineCE(class extends Test {}));
 
     const element = await fixture<Test>(fhtml`
       <${tag}><script type="application/graphql">${doc}</script></${tag}>
@@ -98,9 +86,8 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 
   it('observes children for addition of query script', async function() {
     const doc = `query newQuery { new }`;
-    class Test extends ApolloElementMixin(HTMLElement) {}
 
-    const tag = unsafeStatic(defineCE(Test));
+    const tag = unsafeStatic(defineCE(class extends Test {}));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
@@ -112,9 +99,8 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 
   it('does not change document for invalid children', async function() {
     const doc = `query newQuery { new }`;
-    class Test extends ApolloElementMixin(HTMLElement) {}
 
-    const tag = unsafeStatic(defineCE(Test));
+    const tag = unsafeStatic(defineCE(class extends Test {}));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
