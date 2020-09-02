@@ -42,7 +42,10 @@ export class ApolloElement
 
     Object.defineProperties(this, {
       data: {
-        get(this: ApolloElement) {
+        configurable: true,
+        enumerable: true,
+
+        get(this: This) {
           return this.__data;
         },
 
@@ -53,7 +56,10 @@ export class ApolloElement
       },
 
       error: {
-        get(this: ApolloElement) {
+        configurable: true,
+        enumerable: true,
+
+        get(this: This) {
           return this.__error;
         },
 
@@ -64,7 +70,10 @@ export class ApolloElement
       },
 
       loading: {
-        get(this: ApolloElement) {
+        configurable: true,
+        enumerable: true,
+
+        get(this: This) {
           return this.__loading;
         },
 

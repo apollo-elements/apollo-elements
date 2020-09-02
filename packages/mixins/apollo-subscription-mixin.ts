@@ -65,6 +65,9 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(sup
       type This = this;
       Object.defineProperties(this, {
         subscription: {
+          configurable: true,
+          enumerable: true,
+
           get(this: This): DocumentNode {
             return this.document;
           },
@@ -83,6 +86,9 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(sup
         },
 
         variables: {
+          configurable: true,
+          enumerable: true,
+
           get(this: This): TVariables {
             return this.__variables;
           },
@@ -103,6 +109,12 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor<HTMLElement>>(sup
       if (!this.shouldSubscribe()) return;
       this.initObservable();
       this.subscribe();
+    }
+
+    /** @protected */
+    disconnectedCallback(): void {
+      super.disconnectedCallback();
+      this.cancel();
     }
 
     public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>) {
