@@ -9,13 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v1
-
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
-        with:
-          node-version: '12.17'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Configure CI Git User
         run: |
@@ -31,8 +26,11 @@ jobs:
       - name: Install Packages
         run: yarn install
 
-      - name: Build
-        run: yarn build
+      - name: Codegen
+        run: yarn build:codegen
+
+      - name: Lint
+        run: yarn lint
 
       - name: Test & Publish Code Coverage
         uses: paambaati/codeclimate-action@v2.4.0
@@ -45,6 +43,9 @@ jobs:
         run: npm whoami
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build
+        run: yarn build
 
       - name: Publish package
         run: yarn deploy:ci
