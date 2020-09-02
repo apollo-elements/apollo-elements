@@ -41,7 +41,8 @@ describe('[lib] replace', function() {
   });
 
   it('is identity otherwise', function() {
-    expect(replace('foo', '')(1 as any)).to.equal(1);
+    // @ts-expect-error: testing bad input
+    expect(replace('foo', '')(1)).to.equal(1);
   });
 });
 

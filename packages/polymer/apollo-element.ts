@@ -28,6 +28,7 @@ export class PolymerApolloElement<TData = unknown>
 
   constructor() {
     super();
+    type This = this;
     Object.defineProperties(this, {
       data: {
         configurable: true,
@@ -37,7 +38,7 @@ export class PolymerApolloElement<TData = unknown>
           return this.#data;
         },
 
-        set(this: PolymerApolloElement<TData>, value) {
+        set(this: This, value) {
           this.#data = value;
           this.notify('data', value);
         },
@@ -51,7 +52,7 @@ export class PolymerApolloElement<TData = unknown>
           return this.#error;
         },
 
-        set(this: PolymerApolloElement<TData>, value) {
+        set(this: This, value) {
           this.#error = value;
           this.notify('error', value);
         },
@@ -65,7 +66,7 @@ export class PolymerApolloElement<TData = unknown>
           return this.#loading;
         },
 
-        set(this: PolymerApolloElement<TData>, value) {
+        set(this: This, value) {
           this.#loading = value;
           this.notify('loading', value);
         },

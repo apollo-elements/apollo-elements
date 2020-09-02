@@ -67,7 +67,6 @@ export declare class ApolloMutationInterface<TData, TVariables>
   refetchQueries?:
     RefetchQueryDescription | ((result: FetchResult<TData>) => RefetchQueryDescription);
 
-
   /**
    * Queries refetched as part of refetchQueries are handled asynchronously,
    * and are not waited on before the mutation is completed (resolved).
@@ -103,7 +102,9 @@ export declare class ApolloMutationInterface<TData, TVariables>
   updater?(...params: Parameters<MutationUpdaterFn<TData>>):
     ReturnType<MutationUpdaterFn<TData>>;
 
-  public mutate(
-    params?: Partial<MutationOptions<TData, TVariables>>
-  ): Promise<FetchResult<TData>>;
+  /**
+   * This resolves a single mutation according to the options specified and returns a
+   * Promise which is either resolved with the resulting data or rejected with an error.
+   */
+  public mutate(params?: Partial<MutationOptions<TData, TVariables>>): Promise<FetchResult<TData>>;
 }

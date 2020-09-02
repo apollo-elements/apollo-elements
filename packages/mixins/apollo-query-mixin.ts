@@ -1,4 +1,4 @@
-import type { Constructor, CustomElement } from './constructor';
+import type { Constructor, ApolloQueryInterface } from '@apollo-elements/interfaces';
 import type { DocumentNode } from 'graphql/language/ast';
 
 import type {
@@ -16,11 +16,11 @@ import type {
   ApolloError,
 } from '@apollo/client/core';
 
-import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
-import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
 import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
-import { ApolloQueryInterface } from '@apollo-elements/interfaces';
+
+import { ApolloElementMixin } from './apollo-element-mixin';
 
 const pickExecuteQueryOpts =
   <TVariables>(opts: QueryOptions<TVariables>): QueryOptions<TVariables> =>
@@ -47,12 +47,8 @@ const pickWatchQueryOpts =
       variables: opts.variables,
     });
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function ApolloQueryMixinImpl<TBase extends Constructor<CustomElement>>(superclass: TBase) {
-  /**
-   * Class mixin for apollo-query elements
-   */
-  abstract class ApolloQueryElement<TData, TVariables>
+function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
+  return class ApolloQueryElement<TData, TVariables>
     extends ApolloElementMixin(superclass)
     implements ApolloQueryInterface<TData, TVariables> {
     declare data: TData;
@@ -77,13 +73,13 @@ function ApolloQueryMixinImpl<TBase extends Constructor<CustomElement>>(supercla
 
     declare options: Partial<WatchQueryOptions>;
 
-    onData?(_result: ApolloQueryResult<TData>): void
-
-    onError?(_error: Error): void
-
     declare notifyOnNetworkStatusChange: boolean;
 
     declare pollInterval: number;
+
+    onData?(_result: ApolloQueryResult<TData>): void
+
+    onError?(_error: Error): void
 
     errorPolicy: ErrorPolicy = 'none';
 
@@ -155,6 +151,7 @@ function ApolloQueryMixinImpl<TBase extends Constructor<CustomElement>>(supercla
       });
     }
 
+    /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
       if (this.shouldSubscribe.call(this))
@@ -291,7 +288,10 @@ function ApolloQueryMixinImpl<TBase extends Constructor<CustomElement>>(supercla
       return this.client.watchQuery(options);
     }
 
-    /** @private */
+    /**
+     * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
+     * @private
+     */
     nextData(result?: ApolloQueryResult<TData>): void {
       this.data = result?.data;
       this.loading = result?.loading;
@@ -304,14 +304,15 @@ function ApolloQueryMixinImpl<TBase extends Constructor<CustomElement>>(supercla
       this.onData?.(result);
     }
 
+    /**
+     * Sets `error` and `loading` on the instance when the subscription errors.
+     * @private
+     */
     nextError(error: ApolloError): void {
       this.error = error;
       this.onError?.(error);
     }
-  }
-
-
-  return ApolloQueryElement;
+  };
 }
 
 

@@ -1,8 +1,4 @@
-import type {
-  DefaultOptions,
-  InMemoryCacheConfig,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+import type { InMemoryCacheConfig, NormalizedCacheObject } from '@apollo/client/core';
 
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 
@@ -11,6 +7,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { addMocksToSchema } from '@graphql-tools/mock';
 
 import TestSchema from './test.schema.graphql';
+import { HelloWorld, NonNull, NoParam, Nullable } from './schema';
 
 declare global {
   interface Window {
@@ -22,43 +19,47 @@ declare global {
 const typeDefs = TestSchema.loc.source.body;
 
 const mocks = {
-  /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
-  NonNull: (_, { nonNull }) => {
+  NonNull(_, { nonNull }): NonNull {
     if (nonNull === 'error')
       throw new Error(nonNull);
     else
       return { nonNull };
   },
 
-  Nullable: (_, { nullable }) => {
+  Nullable(_, { nullable }): Nullable {
     if (nullable === 'error')
       throw new Error(nullable);
     else
       return { nullable };
   },
 
-  NoParam: () => ({ noParam: 'noParam' }),
+  NoParam(): NoParam {
+    return { noParam: 'noParam' };
+  },
 
-  /* eslint-enable @typescript-eslint/explicit-function-return-type */
+  HelloWorld(_, { name }): HelloWorld {
+    return {
+      name: name ?? 'Chaver',
+      greeting: 'Shalom',
+    };
+  },
 };
-
-const cache = new InMemoryCache();
 
 const unmocked = makeExecutableSchema({ typeDefs });
 
 const schema = addMocksToSchema({ schema: unmocked, mocks });
 
-const link = new SchemaLink({ schema });
-
-const defaultOptions: DefaultOptions = {
-  watchQuery: {
-    fetchPolicy: 'network-only',
-  },
-};
-
 // Create the Apollo Client
-export const client = new ApolloClient({ cache, link, defaultOptions });
+export const client =
+  new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new SchemaLink({ schema }),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'network-only',
+      },
+    },
+  });
 
 export function setupClient(): void {
   window.__APOLLO_CLIENT__ = client;

@@ -16,11 +16,17 @@ type NoParam {
   noParam: String
 }
 
+type HelloWorld {
+  name: String
+  greeting: String
+}
+
 type Query {
   messages: [Message]
   nonNullParam(nonNull: String!): NonNull
   nullableParam(nullable: String): Nullable
   noParam: NoParam
+  helloWorld(name: String): HelloWorld
 }
 
 type Subscription {

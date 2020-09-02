@@ -1,4 +1,4 @@
-schema: https://api.spacex.land/graphql
+schema: null
 
 extensions:
   codegen:
