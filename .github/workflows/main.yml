@@ -16,7 +16,7 @@ jobs:
         run: |
           git config --global user.name '@bennypowers'
           git config --global user.email 'bennypowers@users.noreply.github.com'
-          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_PAT@github.com/bennypowers/apollo-elements
+          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_PAT@github.com/apollo-elements/apollo-elements
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
@@ -33,7 +33,7 @@ jobs:
         run: yarn lint
 
       - name: Test & Publish Code Coverage
-        uses: paambaati/codeclimate-action@v2.4.0
+        uses: paambaati/codeclimate-action@v2
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
@@ -47,7 +47,7 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Publish package
+      - name: Publish packages
         run: yarn deploy:ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
@@ -57,10 +57,11 @@ jobs:
 
       - name: Build Docs
         run: yarn docs
-      - run: echo "apolloelements.dev" > docs/CNAME
+
       - name: Deploy Docs
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: peaceiris/actions-gh-pages@v3.7.0-8
         with:
-          ACCESS_TOKEN: ${{ secrets.GITHUB_PAT }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: docs # The folder the action should deploy.
+          personal_token: ${{ secrets.GITHUB_PAT }}
+          publish_branch: gh-pages
+          publish_dir: ./docs
+          cname: apolloelements.dev
