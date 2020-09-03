@@ -10,9 +10,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "docs": "run-s docs:*",
-    "docs:polymer": "polymer analyze > docs/analysis.json",
-    "docs:wca": "wca analyze --outFile ./custom-elements.json",
+    "analyze": "wca analyze --format json --outFile custom-elements.json",
     "test": "tsc --noEmit"
   },
   "publishConfig": {
