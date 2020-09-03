@@ -6,7 +6,7 @@
   "module": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "prepublishOnly": "tsc -b .",
+    "prepublishOnly": "rimraf declaration.d.ts && tsc -b .",
     "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
