@@ -1,4 +1,5 @@
 # @apollo-elements/mixins
+
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/mixins.svg)](https://www.npmjs.com/package/@apollo-elements/mixins)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/mixins)
 [![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
@@ -11,8 +12,6 @@ A set of [class mixin functions](https://alligator.io/js/class-composition/#comp
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
-- [😎 Cool Tricks](#-cool-tricks)
-  - [📜 Inline Query Scripts](#-inline-query-scripts)
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 🔧 Installation
@@ -23,45 +22,66 @@ Apollo element mixins are distributed through `npm`, the node package manager. T
 npm install --save @apollo-elements/mixins
 ```
 
+## 👩‍🚀 Usage
+
 Here's an example that uses `HTMLElement`
 
 ```js
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 
-class VanillaQuery extends ApolloQueryMixin(HTMLElement) {
+class HelloQuery extends ApolloQueryMixin(HTMLElement) {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>/* ... */</style>
+      <p hidden>
+        <span id="greeting"></span>
+        <span id="name"></span>
+      </p>
+    `;
+  }
+
   get data() {
     return this.__data;
   }
 
   set data(data) {
     this.__data = data;
-    this.shadowRoot.innerText = `${data.helloWorld.greeting}, ${data.helloWorld.name}`;
-  }  
+    this.render();
+  }
+
+  render() {
+    if (!this.data) return;
+    this.shadowRoot.getElementById('greeting').textContent =
+      this.data?.helloWorld.greeting ?? 'Hello';
+
+    this.shadowRoot.getElementById('name').textContent =
+      this.data?.helloWorld.name ?? 'Friend';
+
+    this.shadowRoot.querySelector('p').hidden = false;
+  }
 }
+
+customElements.define('hello-query', HelloQuery);
 ```
 
-## Aren't Mixins Considered Harmful?
-
-Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
-
-## 😎 Cool Tricks
-
-### 📜 Inline Query Scripts
-You can also provide a graphql query string in your markup by appending a
-graphql script element to your connected element, like so:
-
 ```html
-<connected-element>
+<hello-query>
   <script type="application/graphql">
-    query {
+    query HelloQuery {
       helloWorld {
         name
         greeting
       }
     }
   </script>
-</connected-element>
+</hello-query>
 ```
+
+## Aren't Mixins Considered Harmful?
+
+Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

@@ -43,8 +43,8 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
         throw new TypeError('document must be a gql-parsed DocumentNode');
     }
 
-    constructor(...args: any[]) {
-      super();
+    constructor(..._: any[]) {
+      super(..._);
       this.data = null;
       this.error = null;
       this.errors = null;

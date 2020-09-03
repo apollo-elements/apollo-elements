@@ -8,35 +8,9 @@ import { ApolloElement } from './apollo-element';
 export { html } from './apollo-element';
 
 /**
- * # ApolloQuery
+ * 🚀 `ApolloQuery`
  *
- * 🚀 A custom element base class that connects to your Apollo cache.
- *
- * ## Usage
- *
- * ```js
- * import { ApolloQuery, html } from '@apollo-elements/gluon';
- * import HelloQuery from './HelloWorld.query.graphql';
- *
- * const errorTemplate = ({message = 'Unknown Error'}) => html`
- *   <h1>😢 Such Sad, Very Error! 😰</h1>
- *   <div>${message}</div>`
- *
- * class ConnectedElement extends ApolloQuery {
- *   query = HelloQuery;
- *
- *   get template() {
- *     const { data, error, loading, networkStatus } = this;
- *     return (
- *         loading ? html`<such-overlay-very-spin></such-overlay-very-spin>`
- *       : error ? errorTemplate(error)
- *       : html`<p>${data.helloWorld.greeting}, ${data.helloWorld.name}</p>`
- *     );
- *   }
- * };
- *
- * customElements.define('connected-element', ConnectedElement)
- * ```
+ * Custom element base class that connects to your Apollo cache.
  */
 export class ApolloQuery<TData, TVariables>
   extends ApolloQueryMixin(

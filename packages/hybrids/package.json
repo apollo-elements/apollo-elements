@@ -10,10 +10,6 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "clean": "run-s clean:*",
-    "clean:js": "rm -f ./*.js",
-    "clean:dts": "rm -f ./*.d.ts;",
-    "clean:map": "rm -f ./*.js.map",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {

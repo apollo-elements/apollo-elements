@@ -20,18 +20,24 @@ npm install --save @apollo-elements/polymer
 ```
 
 ## 👩‍🚀 Usage
-You'll need to bundle the Apollo library with a tool like Rollup. See [instructions for bundling Apollo](https://github.com/apollo-elements/apollo-elements#-bundling) for advice on how to build a working Apollo client. By default, these elements will use the client assigned to `window.__APOLLO_CLIENT__`, but you could alternatively assign to each element's `client` property directly.
+By default, these elements will use the client assigned to `window.__APOLLO_CLIENT__`, but you could alternatively assign to each element's `client` property directly.
 
 ```js
-import { client } from './bundled-apollo-client.js';
-window.__APOLLO_CLIENT__ = client;
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
+
+window.__APOLLO_CLIENT__ = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: new HttpLink({
+    uri: 'https://api.spacex.land/graphql',
+  })
+});
 ```
 
 After that, import the elements.
 
 ```js
-import '@apollo-elements/polymer/apollo-query-element.js';
-import '@apollo-elements/polymer/apollo-mutation-element.js';
+import '@apollo-elements/polymer/apollo-query-element';
+import '@apollo-elements/polymer/apollo-mutation-element';
 ```
 
 You can now use them in your polymer template:
@@ -52,8 +58,6 @@ You can now use them in your polymer template:
   [[data.user.name]]
 </paper-icon-item>
 ```
-
-Always make sure that any required variables (e.g. `id` here) are defined in `variables` before adding your query element, or else an error will be thrown.
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

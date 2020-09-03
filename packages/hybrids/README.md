@@ -15,9 +15,6 @@ Apollo Elements hybrids make it easy to take existing hybrids component descript
   - [❓ Queries](#-queries)
   - [👾 Mutations](#-mutations)
   - [🗞 Subscriptions](#-subscriptions)
-  - [🏭 Factories](#-factories)
-- [😎 Cool Tricks](#-cool-tricks)
-  - [📜 Inline Query Scripts](#-inline-query-scripts)
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 🔧 Installation
@@ -36,23 +33,22 @@ This package provides `ApolloQuery`, `ApolloMutation`, and `ApolloSubscription` 
 Spread in the ApolloQuery hybrid property descriptors to define a querying element.
 
 ```js
-import { ApolloQuery, define, html } from '@apollo-elements/hybrids';
+import { ApolloQuery, queryFactory, define, html } from '@apollo-elements/hybrids';
+import gql from 'graphql-tag';
 
-const render = ({ data }) =>
-  html`<div>${data.hello}</div>`;
+const render = ({ data }) => html`
+  <p>${data?.hello ?? 'Hello'}</p>
+`
 
-define('connected-element', { ...ApolloQuery, render });
+define('hello-element', { ...ApolloQuery, render });
 ```
 
-Which you can consume elsewhere like so:
+Use them by assigning your graphql nodes to the `query` property.
+
 ```js
-import gql from 'graphql-tag';
-const query = gql`query { hello }`;
-const template = html`
-  <connected-element
-      client="${client}"
-      query="${query}"
-  ></connected-element>
+import HelloQuery from './Hello.query.graphql';
+const render = ({ data }) => html`
+  <hello-element query="${HelloQuery}" variables="${{ name: 'Mr. Magoo' }}></hello-element>
 `;
 ```
 
@@ -94,15 +90,13 @@ const template = html`
 `;
 ```
 
-*NOTE*: If you set `window.__APOLLO_CLIENT__`, you don't need to specify the `client` property when instantiating your elements, the way we do above.
-
 ### 🗞 Subscriptions
 Spread in the `ApolloSubscription` Hybrid prototype to define your subscription element.
 
 ```js
 import { ApolloSubscription, define, html } from '@apollo-elements/hybrids';
 
-const render = ({ data, error }) => error ? html`Error! ${error}` : html`  
+const render = ({ data, error }) => error ? html`Error! ${error}` : html`
   Latest News: ${data.news}
 `;
 
@@ -150,54 +144,11 @@ const render = ({messages}) =>
   html`<ul>${messages.map(message)}</ul>`;
 
 const messageList = document.createElement('message-list');
+messagesList.query = query;
 messagesList.subscribeToMore({ document: subscription, updateQuery });
 document.body.append(messageList);
 
-define('messages-list', {
-  ...ApolloQuery,
-  render,
-  query: queryFactory(query)
-}
-```
-
-*NOTE*: If you set `window.__APOLLO_CLIENT__`, you don't need to specify the `client` property when instantiating your elements, the way we do above.
-
-### 🏭 Factories
-Use the provided `clientFactory`, `queryFactory`, `mutationFactory` or `subscriptionFactory` to set your element's graphql document at definition time:
-
-```js
-import { ApolloQuery, clientFactory, queryFactory, define, html } from '@apollo-elements/hybrids';
-import gql from 'graphql-tag';
-import client from './apollo-client';
-
-const render = ({ data }) =>
-  html`<div>${data.hello}</div>`;
-
-define('connected-element', {
-  ...ApolloQuery,
-  client: clientFactory(client),
-  query: queryFactory(gql`query { hello }`),
-  render,
-});
-```
-
-## 😎 Cool Tricks
-
-### 📜 Inline Query Scripts
-You can also provide a graphql query string in your markup by appending a
-graphql script element to your connected element, like so:
-
-```html
-<connected-element>
-  <script type="application/graphql">
-    query {
-      helloWorld {
-        name
-        greeting
-      }
-    }
-  </script>
-</connected-element>
+define('messages-list', { ...ApolloQuery, render }
 ```
 
 ## 👷‍♂️ Maintainers
