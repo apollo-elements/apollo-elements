@@ -1,5 +1,7 @@
 import type Sinon from 'sinon';
 import type {
+  HelloQueryData,
+  HelloQueryVariables,
   NonNullableParamQueryData,
   NonNullableParamQueryVariables,
   NoParamQueryData,
@@ -866,6 +868,78 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
             nullable: 'nullable',
           },
         },
+      });
+    });
+  });
+
+  describe('integrated render', function() {
+    let element: HelloQuery;
+
+    type Data = HelloQueryData;
+    type Variables = HelloQueryVariables;
+
+    class HelloQuery extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
+      declare _data: Data;
+
+      constructor() {
+        super();
+        this._data = null;
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.innerHTML = `
+          <p hidden>
+            <span id="greeting"></span>, <span id="name"></span>
+          </p>
+        `;
+      }
+
+      // @ts-expect-error: ambient property. see https://github.com/microsoft/TypeScript/issues/40220
+      get data() {
+        return this._data;
+      }
+
+      set data(data) {
+        this._data = data;
+        this.render();
+      }
+
+      render() {
+        if (!this.data) return;
+        this.shadowRoot.getElementById('greeting').textContent =
+          this.data?.helloWorld.greeting ?? 'Hello';
+
+        this.shadowRoot.getElementById('name').textContent =
+          this.data?.helloWorld.name ?? 'Friend';
+
+        this.shadowRoot.querySelector('p').hidden = false;
+      }
+    }
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends HelloQuery { }));
+
+      element = await fixture<HelloQuery>(fhtml`
+        <${tag}>
+          <script type="application/graphql">
+            query HelloQuery($name: String) {
+              helloWorld(name: $name) {
+                name
+                greeting
+              }
+            }
+          </script>
+        </${tag}>
+      `);
+    });
+
+    it('renders', function() {
+      expect(element.shadowRoot.textContent.trim()).to.equal('Shalom, Chaver');
+    });
+
+    describe('querying again', function() {
+      beforeEach(function() { element.variables = { name: 'Aleichem' }; });
+      beforeEach(nextFrame);
+      it('rerenders', function() {
+        expect(element.shadowRoot.textContent.trim()).to.equal('Shalom, Aleichem');
       });
     });
   });

@@ -13,13 +13,13 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     implements ApolloElementInterface {
     declare context?: Record<string, unknown>;
 
-    data: unknown = null;
+    declare data: unknown;
 
-    error: Error|ApolloError = null;
+    declare error: Error|ApolloError;
 
-    errors: readonly GraphQLError[] = null;
+    declare errors: readonly GraphQLError[];
 
-    loading = false;
+    declare loading: boolean;
 
     client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
 
@@ -41,6 +41,14 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
         this.__document = doc;
       else
         throw new TypeError('document must be a gql-parsed DocumentNode');
+    }
+
+    constructor(...args: any[]) {
+      super();
+      this.data = null;
+      this.error = null;
+      this.errors = null;
+      this.loading = false;
     }
 
     connectedCallback(): void {
