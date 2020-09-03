@@ -21,6 +21,7 @@
     "build:packages": "lerna run build",
     "deploy": "lerna publish --message 'chore: release new versions'",
     "deploy:ci": "lerna publish --yes --message 'chore: release new versions'",
+    "deploy:canary": "lerna publish --canary --message 'chore: release canary versions'",
     "test": "wtr --coverage",
     "test:watch": "wtr --watch",
     "prebuild": "yarn clean",
