@@ -14,15 +14,6 @@ extensions:
       useIndexSignature: true
 
     generates:
-      examples/spacex/schema.ts:
-        schema: https://api.spacex.land/graphql
-        plugins:
-          - typescript
-          - typescript-operations
-
-        documents:
-          - examples/**/*.graphql
-
       packages/test-helpers/schema.ts:
         schema: packages/test-helpers/test.schema.graphql
         plugins:
