@@ -20,7 +20,7 @@ export interface SubscriptionResult<TData> {
   error: ApolloError;
 }
 
-export interface SubscriptionDataOptions<TData = any, TVariables = OperationVariables> {
+export interface SubscriptionDataOptions<TData = unknown, TVariables = OperationVariables> {
   subscription: DocumentNode;
   variables?: TVariables;
   fetchPolicy?: FetchPolicy;
@@ -31,7 +31,7 @@ export interface SubscriptionDataOptions<TData = any, TVariables = OperationVari
   skip?: boolean;
 }
 
-export interface OnSubscriptionDataParams<TData = any> {
+export interface OnSubscriptionDataParams<TData = unknown> {
   client: ApolloClient<NormalizedCacheObject>;
   subscriptionData: SubscriptionResult<TData>;
 }

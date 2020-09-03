@@ -4,76 +4,299 @@
     {
       "name": "apollo-mutation",
       "path": "./apollo-mutation.ts",
-      "description": "`<apollo-mutation>` fires Polymer-style prop-changed events\nwhen its `called`, `data`, `error`, `loading` or `networkStatus`\nproperties change.\n\n## 👩‍🚀 Usage\n\n```js\nclass MutationElement extends PolymerElement {\n   static template = html`\n     <apollo-mutation id=\"userMutation\" data=\"{{data}}\">\n       <script type=\"application/graphql\">\n         mutation User($id: ID!, $name: String, $picture: String) {\n           user(id: $id, name: $name, picture: $picture) {\n             name\n             picture\n           }\n         }\n       </script>\n     </apollo-mutation>\n\n     <paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n     <paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n     <paper-button on-click=\"mutate\">Submit</paper-button>\n   `;\n\n   static properties = {\n     variables: {\n       type: Object,\n       computed: 'computeVariables(name, picture)',\n     },\n   };\n\n   computeVariables(name, picture) {\n     return { name, picture }\n   }\n\n   mutate() {\n     const { variables } = this;\n     return this.$.userMutation.mutate({ variables })\n   }\n}\n```",
       "properties": [
         {
+          "name": "mutation",
+          "description": "The mutation.",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "optimisticResponse",
+          "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.",
+          "type": "TData | ((vars: TVariables) => TData) | undefined"
+        },
+        {
+          "name": "errorPolicy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
+        },
+        {
+          "name": "refetchQueries",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | undefined"
+        },
+        {
+          "name": "awaitRefetchQueries",
+          "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+          "type": "boolean | undefined"
+        },
+        {
           "name": "called",
-          "description": "Whether the mutation has been called",
-          "type": "boolean"
+          "description": "Whether the mutation has been fired",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "ignoreResults",
+          "description": "If true, the returned data property will not update with the mutation result.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+          "type": "TVariables"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode"
         },
         {
           "name": "data",
-          "description": "Latest data.",
+          "description": "Latest mutation data.",
           "type": "TData"
         },
         {
           "name": "error",
-          "description": "Latest error.",
+          "description": "Latest error",
           "type": "Error"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
         },
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": "false"
         }
       ]
     },
     {
       "name": "apollo-query",
       "path": "./apollo-query.ts",
-      "description": "`<apollo-query>` fires Polymer-style prop-changed events\nwhen its `data`, `error`, `loading` or `networkStatus`\nproperties change.\n\n## 👩‍🚀 Usage\n```js\nclass QueryElement extends PolymerElement {\n   static template = html`\n     <apollo-query data=\"{{data}}\" variables=\"[[variables]]\">\n       <script type=\"application/graphql\">\n         query User($id: ID!) {\n           user(id: $id) {\n             name\n             picture\n           }\n         }\n       </script>\n     </apollo-query>\n\n     <paper-icon-item>\n       <iron-image slot=\"item-icon\">[[data.user.picture]]</iron-image>\n       [[data.user.name]]\n     </paper-icon-item>\n   `;\n}\n```",
       "properties": [
         {
+          "name": "query",
+          "description": "A GraphQL document containing a single query.",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.",
+          "type": "TVariables | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "description": "Specifies the FetchPolicy to be used for this query.",
+          "type": "FetchPolicy"
+        },
+        {
+          "name": "partial",
+          "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy",
+          "type": "boolean"
+        },
+        {
+          "name": "partialRefetch",
+          "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
+          "type": "boolean"
+        },
+        {
+          "name": "returnPartialData",
+          "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
+          "type": "boolean"
+        },
+        {
+          "name": "nextFetchPolicy",
+          "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides an easy way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+          "type": "FetchPolicy"
+        },
+        {
           "name": "networkStatus",
-          "description": "Enum of network statuses. See https://bit.ly/2sfKLY0",
+          "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however.",
           "type": "NetworkStatus"
         },
         {
+          "name": "observableQuery",
+          "description": "The apollo ObservableQuery watching this element's query.",
+          "type": "ObservableQuery<any, Record<string, any>>"
+        },
+        {
+          "name": "options",
+          "description": "Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.",
+          "type": "Partial<WatchQueryOptions<Record<string, any>>>"
+        },
+        {
+          "name": "notifyOnNetworkStatusChange",
+          "description": "Whether or not updates to the network status should trigger next on the observer of this query.",
+          "type": "boolean"
+        },
+        {
+          "name": "pollInterval",
+          "description": "The time interval (in milliseconds) on which this query should be refetched from the server.",
+          "type": "number"
+        },
+        {
+          "name": "errorPolicy",
+          "description": "Specifies the ErrorPolicy to be used for this query.",
+          "type": "ErrorPolicy",
+          "default": "\"none\""
+        },
+        {
+          "name": "noAutoSubscribe",
+          "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode"
+        },
+        {
           "name": "data",
-          "description": "Latest data.",
+          "description": "Latest query data.",
           "type": "TData"
         },
         {
           "name": "error",
-          "description": "Latest error.",
+          "description": "Latest error",
           "type": "Error"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
         },
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": "false"
         }
       ]
     },
     {
       "name": "apollo-subscription",
       "path": "./apollo-subscription.ts",
-      "description": "`<apollo-subscription>` fires Polymer-style prop-changed events\nwhen its `data`, `error`, or `loading` properties change.\n\n## 👩‍🚀 Usage\n```js\nclass QueryElement extends PolymerElement {\n   static template = html`\n     <apollo-subscription data=\"{{data}}\" variables=\"[[variables]]\" on-data-changed=\"toast\">\n       <script type=\"application/graphql\">\n         subscription UserJoined($id: ID!) {\n           userJoined(id: $id) {\n             name\n             picture\n           }\n         }\n       </script>\n     </apollo-subscription>\n\n     <paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n       <iron-image>[[data.userJoined.picture]]</iron-image>\n     </paper-toast>\n   `;\n}\n```",
       "properties": [
         {
+          "name": "fetchPolicy",
+          "description": "Specifies the FetchPolicy to be used for this subscription.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        },
+        {
+          "name": "fetchResults",
+          "type": "boolean"
+        },
+        {
+          "name": "pollInterval",
+          "description": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
+          "type": "number | undefined"
+        },
+        {
+          "name": "observable",
+          "description": "Observable watching this element's subscription.",
+          "type": "Observable<FetchResult<TData, Record<string, any>, Record<string, any>>>"
+        },
+        {
+          "name": "observableSubscription",
+          "description": "Subscription to the observable",
+          "type": "Subscription"
+        },
+        {
+          "name": "subscription",
+          "description": "A GraphQL document containing a single subscription.",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
+          "type": "TVariables | undefined"
+        },
+        {
+          "name": "skip",
+          "description": "If skip is true, the query will be skipped entirely",
+          "type": "boolean"
+        },
+        {
+          "name": "noAutoSubscribe",
+          "description": "If true, the element will not begin querying data until you manually call `subscribe`",
+          "type": "boolean | undefined",
+          "default": "false"
+        },
+        {
+          "name": "notifyOnNetworkStatusChange",
+          "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+          "type": "boolean | undefined",
+          "default": "false"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode"
+        },
+        {
           "name": "data",
-          "description": "Latest data.",
+          "description": "Latest data",
           "type": "TData"
         },
         {
           "name": "error",
-          "description": "Latest error.",
+          "description": "Latest error",
           "type": "Error"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
         },
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": "false"
         }
       ]
     }

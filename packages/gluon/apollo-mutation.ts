@@ -5,31 +5,9 @@ import { ApolloMutationMixin } from '../mixins/apollo-mutation-mixin';
 import { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
 
 /**
- * # ApolloMutation
+ * `ApolloMutation`
  *
- * 👩‍🚀 A custom element base class to issue mutations via your Apollo cache.
- *
- * ## Usage
- *
- * ```js
- * import { ApolloMutation, html } from '@apollo-elements/gluon';
- * import InputMutation from './Input.mutation.graphql';
- *
- * class MutationElement extends ApolloMutation {
- *   mutation = InputMutation;
- *
- *   get template() {
- *     return html`<input @keyup="${this.onInput}"/>`;
- *   }
- *
- *   onInput({ target: { value: input }, key }) {
- *     this.variables = { input };
- *     if (key === 'Enter') return this.mutate();
- *   }
- * };
- *
- * customElements.define('input-mutation', MutationElement)
- * ```
+ * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  */
 export class ApolloMutation<TData, TVariables>
   extends ApolloMutationMixin(

@@ -13,10 +13,6 @@
     "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
-    "clean": "run-s clean:*",
-    "clean:js": "rm -f ./*.js",
-    "clean:dts": "rm -f ./*.d.ts;",
-    "clean:map": "rm -f ./*.js.map",
     "start": "tsc -w --noEmit"
   },
   "keywords": [

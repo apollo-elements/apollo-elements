@@ -1,10 +1,12 @@
 #!/usr/bin/env ts-node-script
 
-import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { readdir, readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { JSDOM } from 'jsdom';
 
-const DOCS_DIR = 'td';
+import { typedocOptions } from '../tsconfig.json';
+
+const DOCS_DIR = typedocOptions.out;
 
 const CLASSES_DIR = resolve(__dirname, '..', DOCS_DIR, 'classes');
 
@@ -12,7 +14,8 @@ const TEST = 'node_modules';
 
 async function stripMembersByTextContent(filename: string): Promise<void> {
   const path = resolve(CLASSES_DIR, filename);
-  const dom = new JSDOM(readFileSync(path, 'utf-8'));
+
+  const dom = new JSDOM(await readFile(path, 'utf-8'));
   const { window: { document } } = dom;
   const LINKS = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'));
 
@@ -30,11 +33,18 @@ async function stripMembersByTextContent(filename: string): Promise<void> {
         .forEach(x => x.closest('li')?.remove());
     });
 
-  writeFileSync(path, dom.serialize());
+  await writeFile(path, dom.serialize());
+
+  console.log(`  ${filename} Done!`);
 }
 
-const classes = readdirSync(CLASSES_DIR);
+async function main() {
+  console.log(`Fixing API Docs in ${DOCS_DIR}...`);
 
-// eslint-disable-next-line no-loops/no-loops
-for (const path of classes)
-  stripMembersByTextContent(path);
+  const classes = await readdir(CLASSES_DIR);
+  await Promise.all(classes.map(stripMembersByTextContent));
+
+  console.log('Done!');
+}
+
+main();

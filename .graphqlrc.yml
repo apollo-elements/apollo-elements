@@ -1,4 +1,4 @@
-schema: https://api.spacex.land/graphql
+schema: null
 
 extensions:
   codegen:
@@ -15,6 +15,7 @@ extensions:
 
     generates:
       examples/spacex/schema.ts:
+        schema: https://api.spacex.land/graphql
         plugins:
           - typescript
           - typescript-operations

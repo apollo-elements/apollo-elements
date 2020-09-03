@@ -7,9 +7,9 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
 import { ApolloElementInterface } from '@apollo-elements/interfaces';
 
 /**
- * # ApolloElement
+ * `ApolloElement`
  *
- * Custom Element base class for apollo custom elements.
+ * 🚀 Custom element base class for apollo custom elements.
  */
 export class ApolloElement
   extends ApolloElementMixin(LitElement)
