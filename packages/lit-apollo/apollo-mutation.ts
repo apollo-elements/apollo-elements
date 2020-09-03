@@ -8,36 +8,9 @@ import { ApolloMutationInterface, Constructor } from '@apollo-elements/interface
 import type { DocumentNode } from 'graphql';
 
 /**
- * # ApolloMutation
+ * `ApolloMutation`
  *
- * 👩‍🚀 A custom element base class to issue mutations via your Apollo cache.
- *
- * ## 👩‍🚀 Usage
- *
- * ```js
- * import { ApolloMutation, html, customElement } from '@apollo-elements/lit-apollo';
- * import InputMutation from './Input.mutation.graphql';
- *
- * @customElement('mutation-element')
- * class MutationElement extends ApolloMutation {
- *   mutation = Mutation;
- *
- *   render() {
- *     return html`
- *       <label>
- *          Enter Input
- *          <input @keyup="${this.onInput}"/>
- *       </label>
- *     `;
- *   }
- *
- *   onInput({ target: { value: input }, key }) {
- *     this.variables = { input };
- *     if (key === 'Enter')
- *       return this.mutate();
- *   }
- * };
- * ```
+ * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  */
 export class ApolloMutation<TData, TVariables>
   extends ApolloMutationMixin(

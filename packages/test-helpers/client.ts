@@ -40,6 +40,11 @@ const mocks = {
 
   NoParam: () => ({ noParam: 'noParam' }),
 
+  HelloWorld: (_, { name }) => ({
+    name: name ?? 'Chaver',
+    greeting: 'Shalom',
+  }),
+
   /* eslint-enable @typescript-eslint/explicit-function-return-type */
 };
 

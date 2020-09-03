@@ -1,0 +1,6 @@
+query HelloQuery($name: String) {
+  helloWorld(name: $name) {
+    name
+    greeting
+  }
+}
