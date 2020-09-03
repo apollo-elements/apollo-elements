@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.0) (2020-09-03)
+
+
+### Bug Fixes
+
+* make properties configurable and enumerable ([a3247e9](https://github.com/apollo-elements/apollo-elements/commit/a3247e9d41d4c31ebf8477c1402129a0824adf50))
+* null check ([874cbee](https://github.com/apollo-elements/apollo-elements/commit/874cbeeb24e859c01e609008521e6486a37643f3))
+
+
+### Features
+
+* **interfaces:** publish interfaces separate pkg ([5c36f4f](https://github.com/apollo-elements/apollo-elements/commit/5c36f4f62c42790044db1bd1847c60f736557b01))
+* **mixins:** apollo client 3 ([d353c67](https://github.com/apollo-elements/apollo-elements/commit/d353c67f8b18f26c7314f1ca8a76d2fb1278491e))
+
+
+### BREAKING CHANGES
+
+* **interfaces:** Removes interfaces from mixins package
+
+
+
+
+
 ## [2.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.0...@apollo-elements/mixins@2.0.1) (2020-05-27)
 
 

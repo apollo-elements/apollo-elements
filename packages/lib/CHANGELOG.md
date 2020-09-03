@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@2.0.0...@apollo-elements/lib@3.0.0-alpha.0) (2020-09-03)
+
+
+### Features
+
+* **lib:** apollo client 3 ([2b3faf5](https://github.com/apollo-elements/apollo-elements/commit/2b3faf526ee403ec1634fbb0428359b5b2ae7742))
+
+
+
+
+
 # [2.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@1.1.3...@apollo-elements/lib@2.0.0) (2020-05-25)
 
 
