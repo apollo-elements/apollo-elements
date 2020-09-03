@@ -11,10 +11,6 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "preclean:dts": "mv gluon.d.ts bak",
-    "postclean:dts": "mv bak gluon.d.ts",
-    "clean:dts": "rimraf './*.d.ts'",
-    "clean:map": "rimraf './*.js.map'",
     "analyze": "wca analyze --format json --outFile custom-elements.json",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
