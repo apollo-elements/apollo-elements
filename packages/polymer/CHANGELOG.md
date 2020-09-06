@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@2.0.1...@apollo-elements/polymer@3.0.0-alpha.3) (2020-09-06)
+
+
+### Bug Fixes
+
+* **mixins:** remove old export ([d8a0153](https://github.com/apollo-elements/apollo-elements/commit/d8a015342d6deeab5775ca1ee2f5d2dba8ee4f42))
+* make properties configurable and enumerable ([a8bfaab](https://github.com/apollo-elements/apollo-elements/commit/a8bfaab51f04e4d80d7ecac0d465e570b2c9b217))
+
+
+* feat(polymer)!: apollo client 3 ([ce22bef](https://github.com/apollo-elements/apollo-elements/commit/ce22bef2dfc5f09f144b3737189fc7c6ccfd4a75))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+removes class fields, preferring declarations
+
+affects: @apollo-elements/polymer
+
+
+
+
+
 # [3.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@2.0.1...@apollo-elements/polymer@3.0.0-alpha.2) (2020-09-06)
 
 

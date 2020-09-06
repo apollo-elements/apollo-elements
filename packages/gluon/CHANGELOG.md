@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@2.0.2...@apollo-elements/gluon@3.0.0-alpha.3) (2020-09-06)
+
+
+### Bug Fixes
+
+* make properties configurable and enumerable ([a8bfaab](https://github.com/apollo-elements/apollo-elements/commit/a8bfaab51f04e4d80d7ecac0d465e570b2c9b217))
+
+
+* feat(gluon)!: apollo client 3 ([1cfb14c](https://github.com/apollo-elements/apollo-elements/commit/1cfb14c0739179b1641bede6fdb3f4addfa9dabb))
+
+
+### BREAKING CHANGES
+
+* bumps to `@apollo/client`
+defines variables, mutation, query, subscription with define semantics
+
+affects: @apollo-elements/gluon
+
+
+
+
+
 # [3.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@2.0.2...@apollo-elements/gluon@3.0.0-alpha.2) (2020-09-06)
 
 

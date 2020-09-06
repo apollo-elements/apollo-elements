@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0-alpha.3 (2020-09-06)
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([70625a1](https://github.com/apollo-elements/apollo-elements/commit/70625a18dfe761ca02bee34bdcb4b0d643b41f9e))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+
+
+
+
+
 # 1.0.0-alpha.2 (2020-09-06)
 
 
