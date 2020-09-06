@@ -1,6 +1,7 @@
 import type { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './apollo-element';
+import { notify } from './notify-decorator';
 
 type Base = Constructor<HTMLElement & PolymerApolloElement>;
 
@@ -33,29 +34,9 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
 export class PolymerApolloMutation<TData, TVariables>
   extends ApolloMutationMixin(PolymerApolloElement as Base)<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
-  #called = false;
+  @notify called = false;
 
-  declare called: boolean;
-
-  constructor() {
-    super();
-    type This = this;
-    Object.defineProperties(this, {
-      called: {
-        configurable: true,
-        enumerable: true,
-
-        get(this: This): boolean {
-          return this.#called;
-        },
-
-        set(this: This, value) {
-          this.#called = value;
-          this.notify('called', value);
-        },
-      },
-    });
-  }
+  @notify loading: boolean = null;
 }
 
 customElements.define('apollo-mutation', PolymerApolloMutation);
