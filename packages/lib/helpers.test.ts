@@ -2,7 +2,6 @@ import { expect } from '@open-wc/testing';
 import {
   isGraphQLScript,
   getGraphQLScriptChild,
-  replace,
   stripUndefinedValues,
 } from './helpers';
 
@@ -32,17 +31,6 @@ describe('[lib] getGraphQLScriptChild', function() {
     const element = document.createElement('div');
     element.innerHTML = `<script></script>`;
     expect(getGraphQLScriptChild(element)).to.be.null;
-  });
-});
-
-describe('[lib] replace', function() {
-  it('replaces a string', function() {
-    expect(replace('foo', '')('foobar')).to.equal('bar');
-  });
-
-  it('is identity otherwise', function() {
-    // @ts-expect-error: testing bad input
-    expect(replace('foo', '')(1)).to.equal(1);
   });
 });
 
