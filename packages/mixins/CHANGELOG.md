@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.2) (2020-09-06)
+
+
+### Bug Fixes
+
+* **mixins:** fix interfaces version ([1c4aac3](https://github.com/apollo-elements/apollo-elements/commit/1c4aac3a532ef211276debbd6ed26c404fd65288))
+* make properties configurable and enumerable ([a8bfaab](https://github.com/apollo-elements/apollo-elements/commit/a8bfaab51f04e4d80d7ecac0d465e570b2c9b217))
+* null check ([c86338f](https://github.com/apollo-elements/apollo-elements/commit/c86338fdc005cdf9da77526ee79640a7d8d853d1))
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([70625a1](https://github.com/apollo-elements/apollo-elements/commit/70625a18dfe761ca02bee34bdcb4b0d643b41f9e))
+* feat(mixins)!: apollo client 3 ([61f0048](https://github.com/apollo-elements/apollo-elements/commit/61f00485580f3b24fad5461cc53c7f70cad22d39))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+* bump to `@apollo/client`
+defines fields (query, mutation, subscription, document, variables) using define semantics
+removes class fields in favour of declarations
+
+affects: @apollo-elements/gluon, @apollo-elements/lit-apollo, @apollo-elements/mixins,
+@apollo-elements/polymer
+
+
+
+
+
 # [3.0.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.0...@apollo-elements/mixins@3.0.0-alpha.1) (2020-09-03)
 
 

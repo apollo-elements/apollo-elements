@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.2...@apollo-elements/lit-apollo@3.0.0-alpha.2) (2020-09-06)
+
+
+* feat(lit-apollo)!: apollo client 3 ([c841733](https://github.com/apollo-elements/apollo-elements/commit/c841733f8e25514fffd53a18efd8428a79ab759e))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+removes class fields, preferring declarations
+changes shouldUpdate predicate
+
+affects: @apollo-elements/lit-apollo
+
+
+
+
+
 # [3.0.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.0...@apollo-elements/lit-apollo@3.0.0-alpha.1) (2020-09-03)
 
 **Note:** Version bump only for package @apollo-elements/lit-apollo
