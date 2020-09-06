@@ -18,7 +18,7 @@ describe('[lib] gqlFromInnerText', function describeGqlFromInnerText() {
     s = undefined;
   });
 
-  describe('with valid element', function() {
+  describe('with valid script', function() {
     beforeEach(function() {
       s = document.createElement('script');
       s.setAttribute('type', 'application/graphql');
