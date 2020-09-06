@@ -7,7 +7,7 @@ import { client } from '../test-helpers/client';
 
 import type { PolymerApolloMutation } from './apollo-mutation';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
-import type { DocumentNode } from 'graphql';
+import { DocumentNode, GraphQLError } from 'graphql';
 
 interface TemplateOpts {
   client?: ApolloClient<NormalizedCacheObject>;
@@ -56,6 +56,14 @@ describe('[polymer] <apollo-mutation>', function() {
     setTimeout(() => el.error = err);
     const { detail: { value } } = await oneEvent(el, 'error-changed');
     expect(value).to.equal(err);
+  });
+
+  it('notifies on errors change', async function() {
+    const el = await getElement({ client });
+    const errs = [new GraphQLError('error')];
+    setTimeout(() => el.errors = errs);
+    const { detail: { value } } = await oneEvent(el, 'errors-changed');
+    expect(value).to.equal(errs);
   });
 
   it('notifies on loading change', async function() {

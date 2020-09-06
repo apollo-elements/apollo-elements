@@ -2,6 +2,7 @@ import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfa
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
+import { notify } from './notify-decorator';
 
 type Base = Constructor<HTMLElement & PolymerApolloElement>;
 
@@ -34,17 +35,7 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
 export class PolymerApolloQuery<TData, TVariables>
   extends ApolloQueryMixin(PolymerApolloElement as Base)<TData, TVariables>
   implements ApolloQueryInterface<TData, TVariables> {
-  #networkStatus: NetworkStatus = NetworkStatus.ready;
-
-  // @ts-expect-error: ambient property. see https://github.com/microsoft/TypeScript/issues/40220
-  get networkStatus(): NetworkStatus {
-    return this.#networkStatus;
-  }
-
-  set networkStatus(value: NetworkStatus) {
-    this.#networkStatus = value;
-    this.notify('networkStatus', value);
-  }
+  @notify networkStatus: NetworkStatus = NetworkStatus.ready;
 }
 
 customElements.define('apollo-query', PolymerApolloQuery);
