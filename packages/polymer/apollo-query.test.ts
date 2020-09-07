@@ -95,7 +95,12 @@ describe('[polymer] <apollo-query>', function() {
   it('notifies on data change', async function() {
     const queryStub = stub(client, 'query');
 
-    queryStub.resolves({ loading: false, partial: undefined, networkStatus: 7, data: { messages: ['hi'] } });
+    queryStub.resolves({
+      loading: false,
+      partial: undefined,
+      networkStatus: 7,
+      data: { messages: ['hi'] },
+    });
 
     const query = gql`query { messages }`;
 

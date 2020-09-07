@@ -1,0 +1,28 @@
+{
+  "name": "Apollo Elements",
+  "out": "docs",
+  "readme": "README.md",
+  "excludeExternals": true,
+  "includeDeclarations": false,
+  "theme": "pages-plugin",
+
+  "favicon": "./logo.svg",
+
+  "gitRemote": "https://github.com/apollo-elements/apollo-elements.git",
+
+  "inputFiles": [ "packages" ],
+
+  "includes": [
+    "./pages"
+  ],
+
+  "exclude": [
+    "./packages/test-helpers",
+    "./declaration.d.ts",
+    "**/*+(index|.spec|.test|.e2e).ts",
+    "**/*+(.graphql|.css)",
+    "**/*.graphql",
+    "**/*.css",
+    "*/test.schema.graphql"
+  ]
+}

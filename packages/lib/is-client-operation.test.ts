@@ -113,18 +113,28 @@ describe('[lib] isClientOperation', function() {
   it('accepts All-Client Operations', function() {
     expect(isClientOperation(queryClientDirective), 'query @client {}').to.be.true;
     expect(isClientOperation(singleTopLevelClient), 'Single top-level client directive').to.be.true;
-    expect(isClientOperation(singleTopLevelWithChildClient), 'Single top-level item with child level client directive').to.be.true;
+    expect(
+      isClientOperation(singleTopLevelWithChildClient),
+      'Single top-level item with child level client directive').to.be.true;
     expect(isClientOperation(deepButClient), 'Deeply nested all-client query').to.be.true;
   });
 
   it('rejects All-Network Operations', function() {
-    expect(isClientOperation(singleTopLevelNetwork), 'Single top-level network directive').to.be.false;
-    expect(isClientOperation(singleTopLevelNonClient), 'Single top-level non-client directive').to.be.false;
+    expect(
+      isClientOperation(singleTopLevelNetwork),
+      'Single top-level network directive').to.be.false;
+    expect(
+      isClientOperation(singleTopLevelNonClient),
+      'Single top-level non-client directive').to.be.false;
   });
 
   it('rejects Mixed Operations', function() {
-    expect(isClientOperation(mixedOp1), 'Rejects mixed operation with top-level members').to.be.false;
+    expect(
+      isClientOperation(mixedOp1),
+      'Rejects mixed operation with top-level members').to.be.false;
     expect(isClientOperation(mixedOp2), 'Rejects mixed operation with directives').to.be.false;
-    expect(isClientOperation(deepButMixed), 'Rejects deeply mixed operation with directives').to.be.false;
+    expect(
+      isClientOperation(deepButMixed),
+      'Rejects deeply mixed operation with directives').to.be.false;
   });
 });

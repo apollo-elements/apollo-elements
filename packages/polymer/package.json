@@ -11,7 +11,9 @@
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
     "analyze": "wca analyze './*.ts' --format json --outFile custom-elements.json",
-    "test": "echo \"Please run tests from the repository root\" && exit 1"
+    "test": "run-s test:*",
+    "test:types": "tsc --noEmit",
+    "test:runtime": "wtr --coverage --config ../../web-test-runner.config.mjs './*.test.ts'"
   },
   "publishConfig": {
     "access": "public",
