@@ -67,11 +67,22 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       });
 
       this.document = getGraphQLScriptChildDocument(this);
+
+      this.dispatchEvent(new CustomEvent('apollo-element-connected', {
+        bubbles: true,
+        composed: true,
+        detail: this,
+      }));
     }
 
     disconnectedCallback(): void {
       this.__mo?.disconnect();
       super.disconnectedCallback?.();
+      this.dispatchEvent(new CustomEvent('apollo-element-disconnected', {
+        bubbles: true,
+        composed: true,
+        detail: this,
+      }));
     }
   };
 }
