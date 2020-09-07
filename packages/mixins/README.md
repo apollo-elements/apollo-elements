@@ -11,6 +11,7 @@ A set of [class mixin functions](https://alligator.io/js/class-composition/#comp
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)
+- [🍸 Mixins](#-mixins)
 - [👩‍🚀 Usage](#-usage)
 - [👷‍♂️ Maintainers](#-maintainers)
 
@@ -20,6 +21,31 @@ Apollo element mixins are distributed through `npm`, the node package manager. T
 
 ```bash
 npm install --save @apollo-elements/mixins
+```
+
+## 🍸 Mixins
+
+### ApolloElementMixin
+This is the basic class which all others inherit from. You usually shouldn't need to use this directly.
+
+### ApolloQueryMixin
+Connects a web component to apollo client and associates it with a specific GraphQL query. When the query's data updates, so will the element's `data` property.
+
+### ApolloMutationMixin
+Connects a web component to apollo client and associates it with a specific GraphQL mutation. When the mutation resolves, so will the element's `data` property.
+
+### ApolloSubscriptionMixin
+Connects a web component to apollo client and associates it with a specific GraphQL subscription. When the subscription gets new data, the element's `data` property will update.
+
+### ApolloClientMixin
+Optional mixin which connects an element to a specific `ApolloClient` instance.
+
+```ts
+import { client } from './specific-apollo-client';
+
+class SpecificClientElement extends ApolloClientMixin(client, ApolloQueryMixin(HTMLElement)) {
+  // ...
+}
 ```
 
 ## 👩‍🚀 Usage
