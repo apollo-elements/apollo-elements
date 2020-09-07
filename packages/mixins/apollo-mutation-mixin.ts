@@ -45,6 +45,8 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     declare loading: boolean;
 
+    declare variables: TVariables;
+
     onCompleted?(_data: FetchResult<TData>): void;
 
     onError?(_error: Error): void;
@@ -58,11 +60,10 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     mostRecentMutationId = 0;
 
-    variables: TVariables = null;
-
     constructor() {
       super();
       type This = this;
+      this.variables = null;
       Object.defineProperties(this, {
         mutation: {
           configurable: true,
