@@ -86,12 +86,6 @@ describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
       render(): TemplateResult {
         return html`${this.networkStatus === NetworkStatus.error ? 'SUCCESS' : 'FAIL'}`;
       }
-
-      shouldUpdate(): boolean {
-        // by default, ApolloQuery only updates
-        // if data error or loading are set
-        return true;
-      }
     }
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
@@ -100,7 +94,7 @@ describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
     expect(element).shadowDom.to.equal('SUCCESS');
   });
 
-  it('does not render by default', async function noRender() {
+  it('renders by default', async function noRender() {
     class Test extends ApolloQuery<unknown, unknown> {
       render(): TemplateResult {
         return html`RENDERED`;
@@ -111,7 +105,7 @@ describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
     const tag = unsafeStatic(tagName);
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
-    expect(element).shadowDom.to.equal('');
+    expect(element).shadowDom.to.equal('RENDERED');
   });
 
   it('does render when data is set', async function dataRender() {

@@ -87,19 +87,6 @@ export class HelloQueryElement extends ApolloQuery<Data, Variables> {
 }
 ```
 
-*NOTE*: By default, components will only render while loading or after receiving data or an error. Override the `shouldUpdate` method to control when the component renders.
-
-```js
-shouldUpdate(changedProps) {
-  return (
-    changedProps.has('someProp') ||
-    this.loading != null ||
-    this.data ||
-    this.error
-  );
-}
-```
-
 ## 🍹 Mixins
 You don't need to use `LitElement` base class for your components if you use the [mixins](https://github.com/apollo-elements/apollo-elements/packages/mixins). You just have to handle the rendering part on your own: e.g. for a query component, you'd implement yourself what happens after `data`, `error`, `loading`, or `networkStatus` change.
 

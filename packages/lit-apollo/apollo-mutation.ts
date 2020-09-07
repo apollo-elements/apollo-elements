@@ -1,6 +1,6 @@
 import type { MutationOptions, MutationUpdaterFn, FetchResult } from '@apollo/client/core';
 
-import type { LitElement, PropertyDeclarations } from 'lit-element';
+import { LitElement, property, PropertyDeclarations } from 'lit-element';
 
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
@@ -27,8 +27,6 @@ export class ApolloMutation<TData, TVariables>
 
   declare loading: boolean;
 
-  declare called: boolean;
-
   declare ignoreResults: boolean;
 
   declare mostRecentMutationId: number;
@@ -40,28 +38,12 @@ export class ApolloMutation<TData, TVariables>
   updater?(...params: Parameters<MutationUpdaterFn<TData>>):
     ReturnType<MutationUpdaterFn<TData>>;
 
-  static get properties(): PropertyDeclarations {
-    return {
-      called: { type: Boolean },
-    };
-  }
-
-  constructor() {
-    super();
-    this.called = false;
-  }
+  @property({ type: Boolean }) called = false;
 
   public async mutate(
     params?: Partial<MutationOptions<TData, TVariables>>
   ): Promise<FetchResult<TData>> {
     const update = params?.update ?? this.updater;
     return super.mutate({ update, ...params });
-  }
-
-  /**
-   * Mutation components always update by default.
-   */
-  shouldUpdate(): boolean {
-    return true;
   }
 }

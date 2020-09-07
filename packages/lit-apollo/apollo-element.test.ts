@@ -52,10 +52,6 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
         // @ts-expect-error: just testing assignment and rendering
         return html`${this.client?.test ?? 'FAIL'}`;
       }
-
-      shouldUpdate() {
-        return true;
-      }
     }
     const tag = unsafeStatic(defineCE(Test));
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);

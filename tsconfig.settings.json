@@ -4,6 +4,7 @@
     "target": "ES2019",
     "module": "ESNext",
     "declaration": true,
+    "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "noEmitOnError": false,
