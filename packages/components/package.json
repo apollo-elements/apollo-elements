@@ -5,7 +5,7 @@
   "main": "index.js",
   "module": "index.js",
   "scripts": {
-    "prepublishOnly": "run-s prepublishOnly:*",
+    "prepublishOnly": "yarn run-s prepublishOnly:*",
     "prepublishOnly:analyze": "npm run analyze",
     "prepublishOnly:build": "tsc -b .",
     "build": "tsc",
