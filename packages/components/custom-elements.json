@@ -1,0 +1,281 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "shallow-element",
+      "path": "./apollo-client.test.ts",
+      "properties": [
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL Document",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "data",
+          "description": "Latest data",
+          "type": "unknown"
+        },
+        {
+          "name": "error",
+          "description": "Latest error",
+          "type": "Error | ApolloError"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in flight.",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "events": [
+        {
+          "name": "apollo-element-connected"
+        },
+        {
+          "name": "apollo-element-disconnected"
+        }
+      ]
+    },
+    {
+      "name": "deep-element",
+      "path": "./apollo-client.test.ts",
+      "properties": [
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL Document",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "data",
+          "description": "Latest data",
+          "type": "unknown"
+        },
+        {
+          "name": "error",
+          "description": "Latest error",
+          "type": "Error | ApolloError"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in flight.",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "events": [
+        {
+          "name": "apollo-element-connected"
+        },
+        {
+          "name": "apollo-element-disconnected"
+        }
+      ]
+    },
+    {
+      "name": "apollo-client",
+      "path": "./apollo-client.ts",
+      "properties": [
+        {
+          "name": "client",
+          "type": "ApolloClient<NormalizedCacheObject>"
+        }
+      ]
+    },
+    {
+      "name": "apollo-mutation",
+      "path": "./apollo-mutation.ts",
+      "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes",
+      "attributes": [
+        {
+          "name": "input-key",
+          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+          "type": "string",
+          "default": "\"\""
+        },
+        {
+          "name": "refetch-queries",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "string[]"
+        },
+        {
+          "name": "called",
+          "description": "Whether the mutation has been fired",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "properties": [
+        {
+          "name": "inputKey",
+          "attribute": "input-key",
+          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+          "type": "string",
+          "default": "\"\""
+        },
+        {
+          "name": "routeGetter",
+          "description": "For Mutations that should trigger navigations,\na function of `data` to determine the href.",
+          "type": "(data: unknown) => string"
+        },
+        {
+          "name": "mutation",
+          "description": "The mutation.",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "optimisticResponse",
+          "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.",
+          "type": "TData | ((vars: TVariables) => TData) | undefined"
+        },
+        {
+          "name": "errorPolicy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
+        },
+        {
+          "name": "refetchQueries",
+          "attribute": "refetch-queries",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "string[]"
+        },
+        {
+          "name": "awaitRefetchQueries",
+          "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+          "type": "boolean | undefined"
+        },
+        {
+          "name": "called",
+          "attribute": "called",
+          "description": "Whether the mutation has been fired",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "ignoreResults",
+          "description": "If true, the returned data property will not update with the mutation result.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "mostRecentMutationId",
+          "description": "The ID number of the most recent mutation since the element was instantiated.",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+          "type": "Variables"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "data",
+          "description": "Latest mutation data.",
+          "type": "TData"
+        },
+        {
+          "name": "error",
+          "description": "Latest error",
+          "type": "Error"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in flight.",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "events": [
+        {
+          "name": "will-mutate",
+          "description": "When the element is about to mutate. Usefull for setting variables. Prevent default to prevent mutation"
+        },
+        {
+          "name": "mutation-completed",
+          "description": "When the mutation resolves. `detail` is `{ data: TData }`"
+        },
+        {
+          "name": "mutation-navigation",
+          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: TData }`"
+        },
+        {
+          "name": "mutation-error",
+          "description": "When the mutation is rejected. `detail` is `{ error: ApolloError }`"
+        },
+        {
+          "name": "apollo-element-connected"
+        },
+        {
+          "name": "apollo-element-disconnected"
+        }
+      ],
+      "slots": [
+        {
+          "name": "trigger",
+          "description": "the triggering element (e.g. button or anchor)"
+        },
+        {
+          "name": "variable",
+          "description": "an input-like element with a `data-variable` attribute. it's `value` property will be queried to get the value for the corresponding variable"
+        }
+      ]
+    }
+  ]
+}
