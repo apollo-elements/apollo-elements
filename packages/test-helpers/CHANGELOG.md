@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@1.0.0-alpha.2...@apollo-elements/test-helpers@1.0.0-alpha.3) (2020-09-07)
+
+**Note:** Version bump only for package @apollo-elements/test-helpers
+
+
+
+
+
 # [1.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@0.1.0...@apollo-elements/test-helpers@1.0.0-alpha.2) (2020-09-06)
 
 

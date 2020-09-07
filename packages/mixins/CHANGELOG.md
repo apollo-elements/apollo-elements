@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.3...@apollo-elements/mixins@3.0.0-alpha.4) (2020-09-07)
+
+**Note:** Version bump only for package @apollo-elements/mixins
+
+
+
+
+
 # [3.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.3) (2020-09-06)
 
 
