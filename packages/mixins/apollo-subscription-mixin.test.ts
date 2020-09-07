@@ -1,4 +1,12 @@
-import type Sinon from 'sinon';
+import type {
+  ApolloClient,
+  FetchPolicy,
+  FetchResult,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
+
+import type { DocumentNode, GraphQLError } from 'graphql';
+
 import type {
   NonNullableParamSubscriptionData,
   NonNullableParamSubscriptionVariables,
@@ -8,41 +16,81 @@ import type {
   NullableParamSubscriptionVariables,
 } from '@apollo-elements/test-helpers/schema';
 
-import { aTimeout, defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+import type Sinon from 'sinon';
+
 import gql from 'graphql-tag';
+
+import { aTimeout, defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+
 import 'sinon-chai';
 
 import { spy, stub } from 'sinon';
+
 import { Observable } from '@apollo/client/core';
 
+import { client, setupClient, teardownClient, isApolloError, assertType } from '@apollo-elements/test-helpers';
+
 import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
-import { client, setupClient, teardownClient } from '@apollo-elements/test-helpers/client';
 
 import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
 import NullableParamSubscription from '@apollo-elements/test-helpers/NullableParam.subscription.graphql';
 import NonNullableParamSubscription from '@apollo-elements/test-helpers/NonNullableParam.subscription.graphql';
+
+class Test<D = unknown, V = unknown> extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
+  render() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    // ApolloSubscriptionInterface
+    assertType<DocumentNode>                          (this.subscription);
+    assertType<TypeCheckVars>                         (this.variables);
+    assertType<FetchPolicy>                           (this.fetchPolicy);
+    assertType<string>                                (this.fetchPolicy);
+    assertType<boolean>                               (this.notifyOnNetworkStatusChange);
+    assertType<number>                                (this.pollInterval);
+    assertType<boolean>                               (this.skip);
+    assertType<boolean>                               (this.noAutoSubscribe);
+    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable);
+    assertType<ZenObservable.Subscription>            (this.observableSubscription);
+
+    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
 
 describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
   beforeEach(setupClient);
   afterEach(teardownClient);
 
   it('returns an instance of the superclass', async function returnsClass() {
-    class Test extends ApolloSubscriptionMixin(HTMLElement)<unknown, unknown> { }
-
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
+    const tag = unsafeStatic(defineCE(class extends Test {}));
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
     expect(element).to.be.an.instanceOf(HTMLElement);
   });
 
   it('sets default properties', async function setsDefaultProperties() {
-    class Test extends ApolloSubscriptionMixin(HTMLElement)<unknown, unknown> {
+    const tag = unsafeStatic(defineCE(class extends Test {
       client = client;
-    }
+    }));
 
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
     expect(element.data, 'data').to.be.null;
@@ -59,7 +107,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
   describe('subscription property', function describeSubscription() {
     it('accepts a script child', async function scriptChild() {
-      class StubbedClass extends ApolloSubscriptionMixin(HTMLElement)<unknown, unknown> { }
+      class StubbedClass extends Test {}
 
       spy(StubbedClass.prototype, 'subscribe');
 
@@ -71,8 +119,8 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
         }
       `;
 
-      const tagName = defineCE(StubbedClass);
-      const tag = unsafeStatic(tagName);
+      const tag = unsafeStatic(defineCE(StubbedClass));
+
       const el = await fixture<StubbedClass>(fhtml`
         <${tag}>
           <script type="application/graphql">${script}</script>
@@ -84,22 +132,18 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('accepts a DocumentNode', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NoParamSubscriptionData, NoParamSubscriptionVariables> { }
-
+      type D = NoParamSubscriptionData;
+      type V = NoParamSubscriptionVariables;
       const subscription = NoParamSubscription;
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {}));
+      const el = await fixture<Test<D, V>>(fhtml`<${tag}></${tag}>`);
 
       el.subscription = subscription;
       expect(el.subscription).to.equal(subscription);
     });
 
     it('rejects a non-DocumentNode', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<unknown, unknown> { }
-
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
+      const tag = unsafeStatic(defineCE(class extends Test {}));
 
       const subscription = `subscription { foo }`;
       const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
@@ -109,14 +153,14 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('calls subscribe if subscription not yet initialized', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<unknown, unknown> {
+      const tag = unsafeStatic(defineCE(class extends Test {
         client = client;
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       const subscribeStub = stub(el, 'subscribe');
       const subscription = gql`subscription { foo }`;
@@ -125,35 +169,42 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('does not call subscribe if subscription already initialized', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         client = client;
 
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'qux' };
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       const subscribeStub = stub(el, 'subscribe');
+
       el.variables = { nullable: 'quux' };
+
       expect(subscribeStub).to.not.have.been.calledTwice;
     });
 
     it('does not call subscribe if subscription is falsy', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<unknown, unknown> {
+      const tag = unsafeStatic(defineCE(class extends Test {
         client = client;
 
         subscription = null;
 
         variables = { bar: 'qux' };
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       const subscribeStub = stub(el, 'subscribe');
       el.variables = { bar: 'quux' };
@@ -163,32 +214,43 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
   describe('variables property', function describeVariables() {
     it('calls subscribe when element has not yet initialized the subscription', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         client = client;
 
         subscription = NullableParamSubscription;
-      }
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+        variables = { nullable: 'qux' };
+      }));
+
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
+
       const subscribeStub = stub(el, 'subscribe');
       el.variables = { nullable: 'qux' };
       expect(subscribeStub).to.have.been.called;
     });
 
     it('does not call subscribe when element already initialized the subscription', async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         client = client;
 
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'qux' };
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       const subscribeStub = stub(el, 'subscribe');
       el.variables = { nullable: 'quux' };
@@ -209,15 +271,19 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('creates an observable', async function createsObservable() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         client = client;
 
         subscription = NullableParamSubscription;
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       el.variables = { nullable: 'quux' };
       el.subscribe();
@@ -225,25 +291,35 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('does nothing when there are not enough variables', async function notEnoughVariables() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NonNullableParamSubscriptionData, NonNullableParamSubscriptionVariables> {
+      type D = NonNullableParamSubscriptionData;
+      type V = NonNullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         client = client;
 
         subscription = NonNullableParamSubscription;
-      }
+      }));
 
-      const tag = unsafeStatic(defineCE(Test));
-
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       // @ts-expect-error: testing the case without enough variables
       el.variables = {};
+
       el.subscribe();
+
       await aTimeout(100);
+
       expect(el.data).to.be.null;
     });
 
     it('can take a specific fetchPolicy', async function specificFetchPolicy() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
 
         client = client;
@@ -251,10 +327,12 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'quux' };
-      }
+      }));
 
-      const tag = unsafeStatic(defineCE(Test));
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       const fetchPolicy = 'cache-only';
 
@@ -264,7 +342,10 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('uses fetchPolicy set on the element', async function specificFetchPolicy() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
 
         client = client;
@@ -274,18 +355,23 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
         fetchPolicy = 'cache-only' as const;
 
         variables = { nullable: 'quux' }
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       el.subscribe();
+
       expect(clientSubscribeSpy).to.have.been.calledWithMatch({ fetchPolicy: 'cache-only' });
     });
 
     it('defaults to fetchPolicy set on the element', async function specificFetchPolicy() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
 
         client = client;
@@ -294,11 +380,13 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
         fetchPolicy = 'cache-only' as const;
 
-        variables = { nullable: 'quux' }
-      }
+        variables = { nullable: 'quux' };
+      }));
 
-      const tag = unsafeStatic(defineCE(Test));
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
 
       el.subscribe({ fetchPolicy: undefined });
 
@@ -306,16 +394,20 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     describe('with partial params', function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NullableParamSubscriptionData, NullableParamSubscriptionVariables> {
+      type D = NullableParamSubscriptionData;
+      type V = NullableParamSubscriptionVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
-      }
+      }));
 
-      const tag = unsafeStatic(defineCE(Test));
-
-      let el: Test;
+      let el: Test<D, V>;
 
       beforeEach(async function() {
-        el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+        el =
+          await fixture<Test<D, V>>(fhtml`
+            <${tag}></${tag}>
+          `);
       });
 
       it('defaults to element subscription', async function() {
@@ -361,27 +453,28 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
   });
 
   describe('when subscription updates', function() {
-    class Test extends ApolloSubscriptionMixin(HTMLElement)<NonNullableParamSubscriptionData, NonNullableParamSubscriptionVariables> { }
+    type D = NonNullableParamSubscriptionData;
+    type V = NonNullableParamSubscriptionVariables;
 
     let onSubscriptionDataSpy: Sinon.SinonSpy;
 
     let onErrorSpy: Sinon.SinonSpy;
 
-    let element: Test;
+    let element: Test<D, V>;
 
     beforeEach(async function() {
-      class Test extends ApolloSubscriptionMixin(HTMLElement)<NonNullableParamSubscriptionData, NonNullableParamSubscriptionVariables> {
+      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         client = client;
 
         onSubscriptionData(x) { x; }
 
         onError(x) { x; }
-      }
+      }));
 
-      const tagName = defineCE(Test);
-      const tag = unsafeStatic(tagName);
-
-      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      element =
+        await fixture<Test<D, V>>(fhtml`
+          <${tag}></${tag}>
+        `);
     });
 
     beforeEach(function() {

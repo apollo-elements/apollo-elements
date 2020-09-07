@@ -1,13 +1,42 @@
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type { DocumentNode, GraphQLError } from 'graphql';
+
 import gql from 'graphql-tag';
+
 import { expect, html as fhtml } from '@open-wc/testing';
 import { defineCE, fixture, nextFrame, unsafeStatic } from '@open-wc/testing-helpers';
 import 'sinon-chai';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { client } from '../test-helpers/client';
+import { client, assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 class XL extends HTMLElement {}
 class Test extends ApolloElementMixin(XL) { }
+
+type TypeCheckData = { a: 'a', b: number };
+class TypeCheck extends Test {
+  render() {
+    /* eslint-disable func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<unknown>                             (this.data);
+    assertType<string>                              (this.error.message);
+    // @ts-expect-error: unfortunately, I'm still not sure why the base mixin can't be generic
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}
 
 describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('returns an instance of the superclass', async function returnsClass() {

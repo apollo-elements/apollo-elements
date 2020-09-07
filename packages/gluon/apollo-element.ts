@@ -21,7 +21,7 @@ export class ApolloElement<TData = unknown>
 
   declare data: TData;
 
-  declare error: Error;
+  declare error: Error | ApolloError;
 
   declare errors: readonly GraphQLError[];
 
