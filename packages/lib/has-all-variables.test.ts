@@ -50,9 +50,12 @@ describe('[lib] hasAllVariables', function() {
 
   it('validates two required variables', function() {
     const query = r2;
-    expect(hasAllVariables({ query, variables: { one: '1', two: '2' } }), 'With all variables').to.be.true;
-    expect(hasAllVariables({ query, variables: { one: '1' } }), 'With first variable only').to.be.false;
-    expect(hasAllVariables({ query, variables: { two: '2' } }), 'With second variable only').to.be.false;
+    expect(hasAllVariables({ query, variables: { one: '1', two: '2' } }), 'With all variables')
+      .to.be.true;
+    expect(hasAllVariables({ query, variables: { one: '1' } }), 'With first variable only')
+      .to.be.false;
+    expect(hasAllVariables({ query, variables: { two: '2' } }), 'With second variable only')
+      .to.be.false;
     expect(hasAllVariables({ query, variables: {} }), 'With no variables').to.be.false;
   });
 
@@ -64,17 +67,22 @@ describe('[lib] hasAllVariables', function() {
 
   it('validates two optional variables', function() {
     const query = o2;
-    expect(hasAllVariables({ query, variables: { one: 'one', two: 'two' } }), 'With all variables').to.be.true;
+    expect(hasAllVariables({ query, variables: { one: 'one', two: 'two' } }), 'With all variables')
+      .to.be.true;
     expect(hasAllVariables({ query, variables: { one: 'one' } }), 'With one variable').to.be.true;
-    expect(hasAllVariables({ query, variables: { two: 'two' } }), 'With another variable').to.be.true;
+    expect(hasAllVariables({ query, variables: { two: 'two' } }), 'With another variable')
+      .to.be.true;
     expect(hasAllVariables({ query, variables: {} }), 'With no variables').to.be.true;
   });
 
   it('validates one required and one optional variable', function() {
     const query = r1o1;
-    expect(hasAllVariables({ query, variables: { one: 'one', two: 'two' } }), 'With all variables').to.be.true;
-    expect(hasAllVariables({ query, variables: { one: 'one' } }), 'With only the required variable').to.be.true;
-    expect(hasAllVariables({ query, variables: { two: 'two' } }), 'With only the options variable').to.be.false;
+    expect(hasAllVariables({ query, variables: { one: 'one', two: 'two' } }), 'With all variables')
+      .to.be.true;
+    expect(hasAllVariables({ query, variables: { one: 'one' } }), 'With only the required variable')
+      .to.be.true;
+    expect(hasAllVariables({ query, variables: { two: 'two' } }), 'With only the options variable')
+      .to.be.false;
     expect(hasAllVariables({ query, variables: {} }), 'With no variables').to.be.false;
   });
 

@@ -11,6 +11,8 @@ class TypeCheck extends ApolloElement<TypeCheckData> {
   render() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
+    assertType<HTMLElement>                         (this);
+
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
     assertType<Record<string, unknown>>             (this.context);

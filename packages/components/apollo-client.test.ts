@@ -17,25 +17,7 @@ class ShallowElement extends ApolloElementMixin(HTMLElement) {
 }
 
 /** @ignore */
-class DeepElement extends ApolloElementMixin(HTMLElement) {
-
-}
-
-/** @ignore */
-class Host extends HTMLElement {
-  declare client: ApolloClientElement;
-
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = `
-      <apollo-client>
-        <shallow-element></shallow-element>
-      </apollo-client>
-    `;
-    this.client = this.shadowRoot.querySelector('apollo-client');
-  }
-}
+class DeepElement extends ApolloElementMixin(HTMLElement) { }
 
 customElements.define('shallow-element', ShallowElement);
 customElements.define('deep-element', DeepElement);

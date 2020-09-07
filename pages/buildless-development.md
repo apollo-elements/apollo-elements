@@ -1,29 +1,21 @@
 You can run your apollo-elements app without using a build step with the [web dev server](https://modern-web.dev/docs/dev-server/overview/).
 
-This sample config lets you also import css and graphql into your lit-apollo components:
+This sample config lets you also import css and graphql into your lit-apollo components written in TypeScript:
 
 ```js
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
+
 import rollupCommonjs from '@rollup/plugin-commonjs';
-
 import rollupLitcss from 'rollup-plugin-lit-css';
-import rollupLitcss from 'rollup-plugin-graphql';
+import rollupGraphql from 'rollup-plugin-graphql';
 
+const litcss = fromRollup(rollupLitcss);
+const graphql = fromRollup(rollupGraphQL);
 const commonjs = fromRollup(rollupCommonjs);
-
-const litcss = fromRollup(rollupLitcss.default);
-
-const graphql = fromRollup(graphql.default);
 
 /**
  * These files are imported directly into components
- *
- * @example
- * ```js
- * import style from './component-style.css';
- * ```
- *
  * Transform these files into LitElement `CSSResult` modules
  */
 const componentCSS =
@@ -53,4 +45,20 @@ export default {
     esbuildPlugin({ ts: true }),
   ],
 };
+```
+
+If you're using TypeScript and importing CSS and GraphQL files with the rollup plugins, make sure to add this declaration somewhere in a `.d.ts` file in your project:
+
+```ts
+declare module '*.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export default defaultDocument;
+}
+
+declare module '*.css' {
+  import { CSSResult } from 'lit-element';
+  const css: CSSResult;
+  export default css;
+}
 ```

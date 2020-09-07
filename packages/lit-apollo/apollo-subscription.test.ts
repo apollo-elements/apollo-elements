@@ -20,6 +20,8 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
   render() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
+    assertType<HTMLElement>                         (this);
+
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
     assertType<Record<string, unknown>>             (this.context);

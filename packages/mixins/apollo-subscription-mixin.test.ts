@@ -28,7 +28,13 @@ import { spy, stub } from 'sinon';
 
 import { Observable } from '@apollo/client/core';
 
-import { client, setupClient, teardownClient, isApolloError, assertType } from '@apollo-elements/test-helpers';
+import {
+  client,
+  setupClient,
+  teardownClient,
+  isApolloError,
+  assertType,
+} from '@apollo-elements/test-helpers';
 
 import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
 
@@ -43,6 +49,8 @@ type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
   render() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -148,7 +156,8 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       const subscription = `subscription { foo }`;
       const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
       // @ts-expect-error: we're testing the error
-      expect(() => el.subscription = subscription).to.throw('Subscription must be a gql-parsed DocumentNode');
+      expect(() => el.subscription = subscription)
+        .to.throw('Subscription must be a gql-parsed DocumentNode');
       expect(el.subscription).to.not.be.ok;
     });
 
@@ -235,7 +244,9 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       expect(subscribeStub).to.have.been.called;
     });
 
-    it('does not call subscribe when element already initialized the subscription', async function() {
+    it(
+      'does not call subscribe when element already initialized the subscription',
+      async function() {
       type D = NullableParamSubscriptionData;
       type V = NullableParamSubscriptionVariables;
 
@@ -255,7 +266,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       const subscribeStub = stub(el, 'subscribe');
       el.variables = { nullable: 'quux' };
       expect(subscribeStub).to.not.have.been.calledTwice;
-    });
+      });
   });
 
   describe('subscribe', function describeSubscribe() {

@@ -14,7 +14,9 @@
     "start": "tsc -w --noEmit",
     "postbuild": "node ./fix-declarations.js",
     "analyze": "wca analyze --format json --outFile custom-elements.json",
-    "test": "echo \"Please run tests from the repository root\" && exit 1"
+    "test": "run-s test:*",
+    "test:types": "tsc --noEmit",
+    "test:runtime": "wtr --coverage --config ../../web-test-runner.config.mjs  --root-dir '../..' './*.test.ts'"
   },
   "publishConfig": {
     "access": "public",

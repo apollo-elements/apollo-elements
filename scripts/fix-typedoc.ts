@@ -4,13 +4,15 @@ import { readdir, readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { JSDOM } from 'jsdom';
 
-import { typedocOptions } from '../tsconfig.json';
-
-const DOCS_DIR = typedocOptions.out;
+import { out as DOCS_DIR } from '../typedoc.json';
 
 const CLASSES_DIR = resolve(__dirname, '..', DOCS_DIR, 'classes');
 
 const TEST = 'node_modules';
+
+function isSectionFromANodeModule(x: HTMLElement): boolean {
+  return x.textContent.includes(TEST);
+}
 
 async function stripMembersByTextContent(filename: string): Promise<void> {
   const path = resolve(CLASSES_DIR, filename);
@@ -20,7 +22,7 @@ async function stripMembersByTextContent(filename: string): Promise<void> {
   const LINKS = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'));
 
   Array.from(document.querySelectorAll('section'))
-    .filter(x => x.textContent.includes(TEST))
+    .filter(isSectionFromANodeModule)
     .map(x => x.querySelector('a').getAttribute('name'))
     .filter(Boolean)
     .forEach(name => {

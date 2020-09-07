@@ -37,6 +37,8 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
   render() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
+    assertType<HTMLElement>                         (this);
+
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
     assertType<Record<string, unknown>>             (this.context);
@@ -81,7 +83,10 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class TypeTestAccessor extends ApolloMutation<NonNullableParamMutationData, NonNullableParamMutationVariables> {
+class TypeTestAccessor extends ApolloMutation<
+  NonNullableParamMutationData,
+  NonNullableParamMutationVariables
+> {
   // @ts-expect-error: meh
   get variables() {
     return { param: 'string' };
@@ -93,7 +98,10 @@ class TypeTestAccessor extends ApolloMutation<NonNullableParamMutationData, NonN
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class TypeTestProperty extends ApolloMutation<NonNullableParamMutationData, NonNullableParamMutationVariables> {
+class TypeTestProperty extends ApolloMutation<
+  NonNullableParamMutationData,
+  NonNullableParamMutationVariables
+> {
   variables = { param: 'string' }
 }
 
@@ -127,7 +135,7 @@ describe('[lit-apollo] ApolloMutation', function describeApolloMutation() {
     expect(element).shadowDom.to.equal('CALLED');
   });
 
-  it('uses element\'s updater method for mutation\'s `update` option by default', async function overridesMutateUpdate() {
+  it('uses element\'s updater method for mutation\'s `update` option by default', async function() {
     const mutation = NoParamMutation;
 
     class Test extends ApolloMutation<NoParamMutationData, NoParamMutationVariables> {

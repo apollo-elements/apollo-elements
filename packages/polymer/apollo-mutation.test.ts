@@ -1,4 +1,10 @@
-import type { ApolloClient, ErrorPolicy, FetchPolicy, FetchResult, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  ErrorPolicy,
+  FetchPolicy,
+  FetchResult,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 

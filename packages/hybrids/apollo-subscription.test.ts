@@ -121,7 +121,8 @@ describe('[hybrids] ApolloSubscription', function describeApolloSubscription() {
     it('rejects a non-DocumentNode', async function() {
       const subscription = `subscription { foo }`;
       // @ts-expect-error: testing the error
-      expect(() => element.subscription = subscription).to.throw('Subscription must be a gql-parsed DocumentNode');
+      expect(() => element.subscription = subscription)
+        .to.throw('Subscription must be a gql-parsed DocumentNode');
       expect(element.subscription).to.not.be.ok;
     });
   });
