@@ -57,11 +57,4 @@ export class ApolloMutation<TData, TVariables>
     const update = params?.update ?? this.updater;
     return super.mutate({ update, ...params });
   }
-
-  /**
-   * Mutation components always update by default.
-   */
-  shouldUpdate(): boolean {
-    return true;
-  }
 }
