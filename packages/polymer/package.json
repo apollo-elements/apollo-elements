@@ -19,7 +19,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git"
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
+    "directory": "packages/polymer"
   },
   "keywords": [
     "Apollo",
