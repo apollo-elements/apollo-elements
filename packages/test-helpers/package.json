@@ -6,7 +6,8 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git"
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
+    "directory": "packages/test-helpers"
   },
   "scripts": {
     "prepublishOnly": "tsc -b .",
