@@ -18,6 +18,8 @@ class TypeCheck extends Test {
   render() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
+    assertType<HTMLElement>                         (this);
+
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
     assertType<Record<string, unknown>>             (this.context);
@@ -45,7 +47,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     expect(element).to.be.an.instanceOf(XL);
   });
 
-  it('calls superclass connectedCallback when it exists', async function callsSuperConnectedCallback() {
+  it('calls superclass connectedCallback when it exists', async function() {
     let calls = 0;
 
     const tag = unsafeStatic(defineCE(class extends Test {
@@ -60,7 +62,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     expect(calls).to.be.greaterThan(0);
   });
 
-  it('calls superclass disconnectedCallback when it exists', async function notCallsSuperDisconnectedCallback() {
+  it('calls superclass disconnectedCallback when it exists', async function() {
     let calls = 0;
 
     const tag = unsafeStatic(defineCE(class extends Test {
@@ -76,7 +78,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     expect(calls).to.be.greaterThan(0);
   });
 
-  it('does not throw if there is no connectedCallback or disconnectedCallback', async function notCallsSuperConnectedCallback() {
+  it('does not throw if there is no connectedCallback or disconnectedCallback', async function() {
     const tag = defineCE(class extends Test {});
 
     const element = document.createElement(tag) as Test;

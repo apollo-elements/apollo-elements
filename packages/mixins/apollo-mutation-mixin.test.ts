@@ -1,4 +1,11 @@
-import type { ApolloClient, DocumentNode, ErrorPolicy, FetchPolicy, FetchResult, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  DocumentNode,
+  ErrorPolicy,
+  FetchPolicy,
+  FetchResult,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
 
 import type { GraphQLError } from 'graphql';
 
@@ -35,6 +42,8 @@ type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
   render() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -180,11 +189,14 @@ describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() 
     let element: Test<NoParamMutationData, NoParamMutationVariables>;
 
     async function setupElement() {
-      const tag = unsafeStatic(defineCE(class extends Test<NoParamMutationData, NoParamMutationVariables> {
+      type Data = NoParamMutationData;
+      type Variables = NoParamMutationVariables;
+
+      const tag = unsafeStatic(defineCE(class extends Test<Data, Variables> {
         mutation = NoParamMutation;
       }));
 
-      element = await fixture<Test<NoParamMutationData, NoParamMutationVariables>>(fhtml`<${tag}></${tag}>`);
+      element = await fixture<Test<Data, Variables>>(fhtml`<${tag}></${tag}>`);
     }
 
     beforeEach(setupElement);
@@ -195,9 +207,12 @@ describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() 
   });
 
   it('accepts a parsed mutation in setter', async function parsedMutation() {
-    const tag = unsafeStatic(defineCE(class extends Test<NoParamMutationData, NoParamMutationVariables> { }));
+    type Data = NoParamMutationData;
+    type Variables = NoParamMutationVariables;
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const tag = unsafeStatic(defineCE(class extends Test<Data, Variables> { }));
+
+    const element = await fixture<Test<Data, Variables>>(fhtml`<${tag}></${tag}>`);
 
     element.mutation = NoParamMutation;
     expect(element.mutation).to.equal(NoParamMutation);
@@ -289,7 +304,10 @@ describe('[mixins] ApolloMutationMixin', function describeApolloMutationMixin() 
     });
 
     describe('with partial params', function() {
-      class Test extends ApolloMutationMixin(HTMLElement)<NoParamMutationData, NoParamMutationVariables> {
+      type Data = NoParamMutationData;
+      type Variables = NoParamMutationVariables;
+
+      class Test extends ApolloMutationMixin(HTMLElement)<Data, Variables> {
       }
 
       const tag = unsafeStatic(defineCE(Test));

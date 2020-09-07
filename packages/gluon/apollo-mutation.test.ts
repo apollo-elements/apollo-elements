@@ -18,7 +18,12 @@ import { ApolloMutation } from './apollo-mutation';
 import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
 
 import { html } from '@gluon/gluon';
-import { assertType, client, isApolloError, NoParamMutationData } from '@apollo-elements/test-helpers';
+import {
+  assertType,
+  client,
+  isApolloError,
+  NoParamMutationData,
+} from '@apollo-elements/test-helpers';
 import { TemplateResult } from 'lit-html';
 import sinon from 'sinon';
 

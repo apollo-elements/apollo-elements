@@ -7,7 +7,7 @@
     }]
   },
   "overrides": [{
-    "files": ["*.test.ts"],
+    "files": ["packages/**/*.test.ts"],
     "rules": {
       "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "TypeCheck"} ]
     }

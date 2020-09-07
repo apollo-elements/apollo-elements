@@ -1,13 +1,10 @@
 Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle the in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. This is also a good opportunity to implement performance enhancements like minification and code splitting.
 
-Your `rollup.config.js` might look something like this:
+A basic `rollup.config.js` that you can work from looks like this:
 
 ```js
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-
-import litcss from 'rollup-plugin-lit-css';
-import graphql from '@kocal/rollup-plugin-graphql';
 
 export default {
   // main entry point which loads the client and the app-shell components
@@ -26,9 +23,38 @@ export default {
   plugins: [
     resolve(),
     commonjs(),
+  ]
+}
+```
+
+You can use `rollup-plugin-lit-css` and `rollup-plugin-graphql` to enhance the <abbr title="developer experience">DX</abbr>:
+```js
+import litcss from 'rollup-plugin-lit-css';
+import graphql from '@kocal/rollup-plugin-graphql';
+// ...
+
+export default {
+  //...
+  plugins: [
+    // ...,
     graphql(),
     litcss(),
   ]
+}
+```
+
+These plugins let you import CSS and GraphQL files as JavaScript objects. With them, you can do fun tricks in your source modules:
+
+```js
+import { ApolloQuery, customElements } from '@apollo-elements/lit-apollo';
+import HelloQuery from './Hello.query.graphql';
+import style from './hello-query.css';
+
+@customElement('hello-world')
+class HelloWorld extends ApolloQuery {
+  query = HelloQuery;
+
+  static styles = style;
 }
 ```
 

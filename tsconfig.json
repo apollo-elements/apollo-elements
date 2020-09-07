@@ -20,6 +20,9 @@
       "groups": [{
         "title": "Guides",
         "pages": [{
+            "title": "🚀 Setting up Apollo Client",
+            "source": "./pages/apollo-client.md"
+          }, {
             "title": "🏎 Buildless Local Development",
             "source": "./pages/buildless-development.md"
           }, {
@@ -40,6 +43,9 @@
           }, {
             "title": "📖 Subscriptions",
             "source": "./pages/subscriptions.md"
+          }, {
+            "title": "🏦 Managing the Cache",
+            "source": "./pages/cache-management.md"
         }]
       }, {
         "title": "Cool Tricks",

@@ -9,7 +9,14 @@ import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
 import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
 
-import { client, setupClient, teardownClient, isSubscription, NonNullableParamQueryData, NonNullableParamQueryVariables } from '@apollo-elements/test-helpers';
+import {
+  client,
+  setupClient,
+  teardownClient,
+  isSubscription,
+  NonNullableParamQueryData,
+  NonNullableParamQueryVariables,
+} from '@apollo-elements/test-helpers';
 
 import { match, stub, spy } from 'sinon';
 
@@ -280,9 +287,10 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
       beforeEach(spyObservableQuerySetOptions);
       afterEach(restoreObservableQuerySetOptions);
 
-      it('calls observableQuery.subscribe', async function setOptionsCallsObservableQuerySetOptions() {
+      it('calls observableQuery.subscribe', async function() {
         element.options = { query: null, errorPolicy: 'none' };
-        expect(observableQuerySetOptionsSpy).to.have.been.calledWithMatch({ query: null, errorPolicy: 'none' });
+        expect(observableQuerySetOptionsSpy)
+          .to.have.been.calledWithMatch({ query: null, errorPolicy: 'none' });
       });
     });
   });
@@ -325,7 +333,8 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
         await nextFrame();
 
         expect(element.data, 'error').to.be.null;
-        expect(element.error.message).to.equal('Variable "$nonNull" of required type "String!" was not provided.');
+        expect(element.error.message)
+          .to.equal('Variable "$nonNull" of required type "String!" was not provided.');
       });
     });
 
@@ -335,7 +344,8 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
       beforeEach(nextFrame);
 
       it('queries', async function subscribeEnoughVariables() {
-        expect(element.data).to.deep.equal({ nonNullParam: { __typename: 'NonNull', nonNull: 'nonNull' } });
+        expect(element.data)
+          .to.deep.equal({ nonNullParam: { __typename: 'NonNull', nonNull: 'nonNull' } });
         expect(element.error).to.be.null;
       });
 
@@ -373,7 +383,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
       beforeEach(spyObservableQuerySubscribeToMore);
       beforeEach(nextFrame);
       afterEach(restoreObservableQuerySubscribeToMore);
-      it('calls observableQuery.subscribeToMore when there is a query', async function subscribeToMoreCallsObservableQuerySubscribeToMore() {
+      it('calls observableQuery.subscribeToMore when there is a query', async function() {
         const opts = {
           document: NoParamSubscription,
           updateQuery: <T>(x: T): T => x,
@@ -395,7 +405,10 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
 
       describe('when calling with variables', function() {
         beforeEach(async function() {
-          await (element as ApolloQueryInterface<NonNullableParamQueryData, NonNullableParamQueryVariables>)
+          type D = NonNullableParamQueryData;
+          type V = NonNullableParamQueryVariables;
+
+          await (element as ApolloQueryInterface<D, V>)
             .executeQuery({ variables: { nonNull: 'nonNull' } });
         });
 
@@ -448,7 +461,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
       beforeEach(setNoParamQuery);
       beforeEach(spyObservableQueryFetchMore);
       afterEach(restoreObservableQueryFetchMore);
-      it('calls observableQuery.fetchMore', async function fetchMoreCallsObservableQuerySubscribeToMore() {
+      it('calls observableQuery.fetchMore', async function() {
         const args = { query: NoParamQuery, updateQuery: <T>(x: T): T => x };
 
         expect(element.fetchMore(args)).to.be.undefined;
