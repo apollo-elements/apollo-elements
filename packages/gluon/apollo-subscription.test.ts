@@ -1,8 +1,61 @@
-import { NoParamSubscriptionData as Data, NoParamMutationVariables as Variables, setupClient } from '@apollo-elements/test-helpers';
+import type {
+  ApolloClient,
+  FetchPolicy,
+  FetchResult,
+  Observable,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
+
+import type {
+  NoParamSubscriptionData as Data,
+  NoParamMutationVariables as Variables,
+} from '@apollo-elements/test-helpers/schema';
+
+import type { DocumentNode, GraphQLError } from 'graphql';
+
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 import { ApolloSubscription } from './apollo-subscription';
+import { setupClient, assertType, isApolloError } from '@apollo-elements/test-helpers';
+
 import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
+  async render() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    // ApolloSubscriptionInterface
+    assertType<DocumentNode>                          (this.subscription);
+    assertType<TypeCheckVars>                         (this.variables);
+    assertType<FetchPolicy>                           (this.fetchPolicy);
+    assertType<string>                                (this.fetchPolicy);
+    assertType<boolean>                               (this.notifyOnNetworkStatusChange);
+    assertType<number>                                (this.pollInterval);
+    assertType<boolean>                               (this.skip);
+    assertType<boolean>                               (this.noAutoSubscribe);
+    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable);
+    assertType<ZenObservable.Subscription>            (this.observableSubscription);
+
+    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
 
 class Test extends ApolloSubscription<Data, Variables> { }
 

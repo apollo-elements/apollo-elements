@@ -11,9 +11,9 @@ import { ApolloElementInterface } from '@apollo-elements/interfaces';
  *
  * 🚀 Custom element base class for apollo custom elements.
  */
-export class ApolloElement
+export class ApolloElement<TData = unknown>
   extends ApolloElementMixin(LitElement)
-  implements ApolloElementInterface<unknown> {
+  implements ApolloElementInterface<TData> {
   static get properties(): PropertyDeclarations {
     return {
       client: { attribute: false },
@@ -28,7 +28,7 @@ export class ApolloElement
 
   client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
 
-  data = null;
+  data: TData = null;
 
   error: Error|ApolloError = null;
 

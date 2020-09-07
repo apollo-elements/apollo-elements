@@ -1,4 +1,18 @@
-import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+import type {
+  ApolloClient,
+  ErrorPolicy,
+  NetworkStatus,
+  FetchPolicy,
+  WatchQueryOptions,
+  ObservableQuery,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
+
+import type { DocumentNode, GraphQLError } from 'graphql';
+
+import { defineCE, fixture, unsafeStatic, expect, html as fhtml } from '@open-wc/testing';
+
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 import { ApolloQuery } from './apollo-query';
 import { client } from '../test-helpers';
@@ -6,6 +20,55 @@ import { client } from '../test-helpers';
 import { html } from 'lit-html';
 
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
+  async render() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    // ApolloQueryInterface
+    assertType<DocumentNode>                        (this.query);
+    assertType<TypeCheckVars>                       (this.variables);
+    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<string>                              (this.errorPolicy);
+    // @ts-expect-error: ErrorPolicy is not a number
+    assertType<number>                              (this.errorPolicy);
+    assertType<FetchPolicy>                         (this.fetchPolicy);
+    assertType<string>                              (this.fetchPolicy);
+    assertType<FetchPolicy>                         (this.nextFetchPolicy);
+    assertType<string>                              (this.nextFetchPolicy);
+    assertType<NetworkStatus>                       (this.networkStatus);
+    assertType<number>                              (this.networkStatus);
+    // @ts-expect-error: NetworkStatus is not a string
+    assertType<string>                              (this.networkStatus);
+    assertType<boolean>                             (this.notifyOnNetworkStatusChange);
+    assertType<number>                              (this.pollInterval);
+    assertType<boolean>                             (this.partial);
+    assertType<boolean>                             (this.partialRefetch);
+    assertType<boolean>                             (this.returnPartialData);
+    assertType<boolean>                             (this.noAutoSubscribe);
+    assertType<ObservableQuery>                     (this.observableQuery);
+    assertType<Partial<WatchQueryOptions>>          (this.options);
+
+    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
 
 describe('[gluon] ApolloQuery', function describeApolloQuery() {
   it('caches observed properties', async function cachesObservedProperties() {
