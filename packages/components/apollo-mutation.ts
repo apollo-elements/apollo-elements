@@ -168,10 +168,6 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     this.onSlotchange();
   }
 
-  shouldUpdate(): boolean {
-    return true;
-  }
-
   render(): TemplateResult {
     return html`
       <slot name="trigger" @slotchange="${this.onSlotchange}"></slot>
