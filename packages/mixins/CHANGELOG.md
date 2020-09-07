@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.4...@apollo-elements/mixins@3.0.0-alpha.5) (2020-09-07)
+
+
+### Bug Fixes
+
+* **mixins:** set variables in constructor ([737394c](https://github.com/apollo-elements/apollo-elements/commit/737394c387a9f841fb764e9ac5ae42bebc0498f5))
+
+
+### Features
+
+* **components:** publish components ([d242781](https://github.com/apollo-elements/apollo-elements/commit/d2427819bed5729fa879933b2fbf0d1353f50b9a))
+* **mixins:** add ApolloClientMixin ([299863c](https://github.com/apollo-elements/apollo-elements/commit/299863c99813ecbe2665421be1228264c3c1ddb2))
+
+
+
+
+
 # [3.0.0-alpha.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.3...@apollo-elements/mixins@3.0.0-alpha.4) (2020-09-07)
 
 **Note:** Version bump only for package @apollo-elements/mixins

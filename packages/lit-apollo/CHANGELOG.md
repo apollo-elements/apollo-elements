@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.4...@apollo-elements/lit-apollo@3.0.0-alpha.5) (2020-09-07)
+
+
+### Features
+
+* **lit-apollo:** remove shouldUpdate guard ([f5f880a](https://github.com/apollo-elements/apollo-elements/commit/f5f880a5fc307705345361a997b04395bae59bcf))
+
+
+### BREAKING CHANGES
+
+* **lit-apollo:** components always render by default, no matter the state of the query
+
+
+
+
+
 # [3.0.0-alpha.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.3...@apollo-elements/lit-apollo@3.0.0-alpha.4) (2020-09-07)
 
 **Note:** Version bump only for package @apollo-elements/lit-apollo
