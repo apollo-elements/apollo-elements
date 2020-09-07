@@ -1,19 +1,83 @@
-import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
-import { ApolloError } from '@apollo/client/core';
+import type { ApolloClient, DocumentNode, ErrorPolicy, FetchPolicy, FetchResult, NormalizedCacheObject } from '@apollo/client/core';
+
+import type { GraphQLError } from 'graphql';
+
+import type {
+  NoParamMutationData,
+  NoParamMutationVariables,
+} from '@apollo-elements/test-helpers/schema';
+
+import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
+
 import type Sinon from 'sinon';
+
+import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+
 import 'sinon-chai';
+
 import gql from 'graphql-tag';
 
 import { match, stub } from 'sinon';
 
-import { client, setupClient } from '../test-helpers/client';
-import { NoParamMutationData, NoParamMutationVariables } from '../test-helpers';
-import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
+import { client, setupClient, assertType } from '@apollo-elements/test-helpers';
 
 import { ApolloMutationMixin } from './apollo-mutation-mixin';
 
+import { isApolloError, ApolloError } from '@apollo/client/core';
+
+import NoParamMutation from '@apollo-elements/test-helpers/NoParam.mutation.graphql';
+
 class XL extends HTMLElement {}
 class Test<D = unknown, V = unknown> extends ApolloMutationMixin(XL)<D, V> {}
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
+  render() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    // ApolloMutationInterface
+    assertType<DocumentNode>                        (this.mutation);
+    assertType<TypeCheckVars>                       (this.variables);
+    assertType<boolean>                             (this.called);
+    assertType<boolean>                             (this.ignoreResults);
+    assertType<boolean>                             (this.awaitRefetchQueries);
+    assertType<number>                              (this.mostRecentMutationId);
+    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<string>                              (this.errorPolicy);
+    // @ts-expect-error: ErrorPolicy is not a number
+    assertType<number>                              (this.errorPolicy);
+    assertType<string>                              (this.fetchPolicy);
+    assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
+
+    if (typeof this.refetchQueries === 'function')
+      assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+    else
+      assertType<RefetchQueryDescription>(this.refetchQueries);
+
+    if (typeof this.optimisticResponse !== 'function')
+      assertType<TypeCheckData>(this.optimisticResponse);
+    else
+      assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
+
+    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 class AccessorTest extends Test<unknown, { hey: 'yo' }> {

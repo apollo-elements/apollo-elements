@@ -86,10 +86,10 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     noAutoSubscribe = false;
 
     /** @private */
-    __variables: TVariables;
+    __variables: TVariables = null;
 
     /** @private */
-    __options: Partial<WatchQueryOptions>;
+    __options: Partial<WatchQueryOptions> = null;
 
     constructor() {
       super();

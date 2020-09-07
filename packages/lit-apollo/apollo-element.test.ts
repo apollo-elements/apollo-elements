@@ -1,7 +1,34 @@
+import type { DocumentNode, GraphQLError } from 'graphql';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import { expect, defineCE, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';
 import { TemplateResult, html, LitElement } from 'lit-element';
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+type TypeCheckData = { a: 'a', b: number };
+class TypeCheck extends ApolloElement<TypeCheckData> {
+  render() {
+    /* eslint-disable func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}
 
 describe('[lit-apollo] ApolloElement', function describeApolloElement() {
   it('is an instance of LitElement', async function() {
@@ -37,7 +64,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
   });
 
   it('renders when data is set', async function rendersOnData() {
-    class Test extends ApolloElement {
+    class Test extends ApolloElement<{ foo: string }> {
       render(): TemplateResult {
         return html`${this.data?.foo ?? 'FAIL'}`;
       }

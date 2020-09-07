@@ -1,4 +1,3 @@
-import type Sinon from 'sinon';
 import type {
   HelloQueryData,
   HelloQueryVariables,
@@ -10,14 +9,29 @@ import type {
   NullableParamQueryVariables,
 } from '@apollo-elements/test-helpers';
 
+import type {
+  ApolloClient,
+  NormalizedCacheObject,
+  ErrorPolicy,
+  NetworkStatus,
+  WatchQueryOptions,
+} from '@apollo/client/core';
+
+import type { DocumentNode, GraphQLError } from 'graphql';
+
+import type Sinon from 'sinon';
+
 import { expect, html as fhtml, defineCE, unsafeStatic, fixture, nextFrame } from '@open-wc/testing';
-import gql from 'graphql-tag';
+
 import 'sinon-chai';
 
+import gql from 'graphql-tag';
+
 import { ObservableQuery, FetchPolicy } from '@apollo/client/core';
+
 import { match, stub, spy } from 'sinon';
 
-import { client, setupClient, teardownClient } from '@apollo-elements/test-helpers/client';
+import { client, setupClient, teardownClient, assertType, isApolloError } from '@apollo-elements/test-helpers';
 import { isSubscription } from '@apollo-elements/test-helpers/helpers';
 import { ApolloQueryMixin } from './apollo-query-mixin';
 
@@ -26,21 +40,68 @@ import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
 import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-class AccessorTest extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+class XL extends HTMLElement {}
+class Test<D = unknown, V = unknown> extends ApolloQueryMixin(XL)<D, V> {}
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
+  render() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    // ApolloQueryInterface
+    assertType<DocumentNode>                        (this.query);
+    assertType<TypeCheckVars>                       (this.variables);
+    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<string>                              (this.errorPolicy);
+    // @ts-expect-error: ErrorPolicy is not a number
+    assertType<number>                              (this.errorPolicy);
+    assertType<FetchPolicy>                         (this.fetchPolicy);
+    assertType<string>                              (this.fetchPolicy);
+    assertType<FetchPolicy>                         (this.nextFetchPolicy);
+    assertType<string>                              (this.nextFetchPolicy);
+    assertType<NetworkStatus>                       (this.networkStatus);
+    assertType<number>                              (this.networkStatus);
+    // @ts-expect-error: NetworkStatus is not a string
+    assertType<string>                              (this.networkStatus);
+    assertType<boolean>                             (this.notifyOnNetworkStatusChange);
+    assertType<number>                              (this.pollInterval);
+    assertType<boolean>                             (this.partial);
+    assertType<boolean>                             (this.partialRefetch);
+    assertType<boolean>                             (this.returnPartialData);
+    assertType<boolean>                             (this.noAutoSubscribe);
+    assertType<ObservableQuery>                     (this.observableQuery);
+    assertType<Partial<WatchQueryOptions>>          (this.options);
+
+    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables() {
     return { hey: 'yo' as const };
   }
 }
 
-class PropertyTest extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+class TypeCheckProperty extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
   variables = { hey: 'yo' as const };
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
-
-class XL extends HTMLElement {}
-class Test<D = unknown, V = unknown> extends ApolloQueryMixin(XL)<D, V> {}
 
 describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   let subscribeSpy: Sinon.SinonSpy;
@@ -88,13 +149,13 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(element.observableQuery, 'observableQuery').to.be.undefined;
       expect(element.onData, 'onData').to.be.undefined;
       expect(element.onError, 'onError').to.be.undefined;
-      expect(element.options, 'options').to.be.undefined;
+      expect(element.options, 'options').to.be.null;
       expect(element.partial, 'partial').to.be.undefined;
       expect(element.partialRefetch, 'partialRefetch').to.be.undefined;
       expect(element.pollInterval, 'pollInterval').to.be.undefined;
       expect(element.query, 'query').to.be.null;
       expect(element.returnPartialData, 'returnPartialData').to.be.undefined;
-      expect(element.variables, 'variables').to.be.undefined;
+      expect(element.variables, 'variables').to.be.null;
     });
 
     describe('when window.__APOLLO_CLIENT__ is set', function() {

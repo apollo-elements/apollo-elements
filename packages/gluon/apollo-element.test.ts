@@ -1,7 +1,35 @@
+import type { DocumentNode, GraphQLError } from 'graphql';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+
 import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
 import { ApolloElement } from './apollo-element';
 
 import { html } from 'lit-html';
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+type TypeCheckData = { a: 'a', b: number };
+class TypeCheck extends ApolloElement<TypeCheckData> {
+  async render() {
+    /* eslint-disable func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}
 
 describe('[gluon] ApolloElement', function describeApolloElement() {
   it('caches observed properties', async function cachesObservedProperties() {

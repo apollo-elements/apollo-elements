@@ -1,4 +1,15 @@
-import type { MutationUpdaterFn } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  ErrorPolicy,
+  FetchPolicy,
+  FetchResult,
+  MutationUpdaterFn,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
+
+import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
+
+import type { DocumentNode, GraphQLError } from 'graphql';
 
 import { defineCE, unsafeStatic, fixture, expect, html as fhtml } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -11,12 +22,63 @@ import {
   NonNullableParamMutationData,
   NonNullableParamMutationVariables,
   NoParamMutationVariables,
-} from '../test-helpers';
+  isApolloError,
+  assertType,
+} from '@apollo-elements/test-helpers';
 
 import { ApolloMutation } from './apollo-mutation';
 import { LitElement, TemplateResult, html } from 'lit-element';
 
 import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
+  render() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    // ApolloMutationInterface
+    assertType<DocumentNode>                        (this.mutation);
+    assertType<TypeCheckVars>                       (this.variables);
+    assertType<boolean>                             (this.called);
+    assertType<boolean>                             (this.ignoreResults);
+    assertType<boolean>                             (this.awaitRefetchQueries);
+    assertType<number>                              (this.mostRecentMutationId);
+    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<string>                              (this.errorPolicy);
+    // @ts-expect-error: ErrorPolicy is not a number
+    assertType<number>                              (this.errorPolicy);
+    assertType<string>                              (this.fetchPolicy);
+    assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
+
+    if (typeof this.refetchQueries === 'function')
+      assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+    else
+      assertType<RefetchQueryDescription>(this.refetchQueries);
+
+    if (typeof this.optimisticResponse !== 'function')
+      assertType<TypeCheckData>(this.optimisticResponse);
+    else
+      assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
+
+    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class TypeTestAccessor extends ApolloMutation<NonNullableParamMutationData, NonNullableParamMutationVariables> {
@@ -28,19 +90,11 @@ class TypeTestAccessor extends ApolloMutation<NonNullableParamMutationData, NonN
   set variables(v) {
     null;
   }
-
-  render() {
-    this.data.noParam.noParam;
-  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class TypeTestProperty extends ApolloMutation<NonNullableParamMutationData, NonNullableParamMutationVariables> {
   variables = { param: 'string' }
-
-  render() {
-    this.data.noParam.noParam;
-  }
 }
 
 describe('[lit-apollo] ApolloMutation', function describeApolloMutation() {
