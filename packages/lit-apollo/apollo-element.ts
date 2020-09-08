@@ -1,7 +1,7 @@
 import type { NormalizedCacheObject, ApolloClient, ApolloError } from '@apollo/client/core';
 import type { GraphQLError } from 'graphql';
 
-import { LitElement, PropertyDeclarations } from 'lit-element';
+import { LitElement, property } from 'lit-element';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 import { ApolloElementInterface } from '@apollo-elements/interfaces';
@@ -14,25 +14,16 @@ import { ApolloElementInterface } from '@apollo-elements/interfaces';
 export class ApolloElement<TData = unknown>
   extends ApolloElementMixin(LitElement)
   implements ApolloElementInterface<TData> {
-  static get properties(): PropertyDeclarations {
-    return {
-      client: { attribute: false },
-      data: { attribute: false },
-      error: { attribute: false },
-      errors: { attribute: false },
-      loading: { type: Boolean, reflect: true },
-    };
-  }
-
   declare context?: Record<string, unknown>;
 
-  client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
+  @property({ attribute: false }) client: ApolloClient<NormalizedCacheObject> =
+    window.__APOLLO_CLIENT__;
 
-  data: TData = null;
+  @property({ attribute: false }) data: TData = null;
 
-  error: Error|ApolloError = null;
+  @property({ attribute: false }) error: Error|ApolloError = null;
 
-  errors: readonly GraphQLError[] = null;
+  @property({ attribute: false }) errors: readonly GraphQLError[] = null;
 
-  loading = false;
+  @property({ type: Boolean, reflect: true }) loading = false;
 }

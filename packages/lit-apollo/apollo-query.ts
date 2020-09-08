@@ -1,5 +1,5 @@
 import type { NetworkStatus } from '@apollo/client/core';
-import type { PropertyDeclarations } from 'lit-element';
+import { property } from 'lit-element';
 
 import { ApolloElement } from './apollo-element';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -13,14 +13,7 @@ import { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
 export class ApolloQuery<TData, TVariables>
   extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloQueryInterface<TData, TVariables> {
-  declare networkStatus: NetworkStatus;
+  @property({ type: Number }) networkStatus: NetworkStatus;
 
-  declare noAutoSubscribe: boolean;
-
-  static get properties(): PropertyDeclarations {
-    return {
-      networkStatus: { type: Number },
-      noAutoSubscribe: { type: Boolean, attribute: 'no-auto-subscribe' },
-    };
-  }
+  @property({ type: Boolean, attribute: 'no-auto-subscribe' }) noAutoSubscribe = false;
 }
