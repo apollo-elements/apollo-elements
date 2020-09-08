@@ -6,7 +6,6 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "useDefineForClassFields": true,
     "noEmitOnError": false,
     "sourceMap": true,
     "moduleResolution": "Node",
