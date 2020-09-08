@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.5...@apollo-elements/lit-apollo@3.0.0-alpha.6) (2020-09-08)
+
+
+### Bug Fixes
+
+* **lit-apollo:** use decorators internally ([31a3222](https://github.com/apollo-elements/apollo-elements/commit/31a3222163f0a85c30af401bb4ea2046ce19f91c))
+
+
+
+
+
 # [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.4...@apollo-elements/lit-apollo@3.0.0-alpha.5) (2020-09-07)
 
 
