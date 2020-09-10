@@ -46,6 +46,9 @@
           }, {
             "title": "🏦 Managing the Cache",
             "source": "./pages/cache-management.md"
+          }, {
+            "title": "📍 Local State",
+            "source": "./pages/local-state.md"
         }]
       }, {
         "title": "Cool Tricks",
