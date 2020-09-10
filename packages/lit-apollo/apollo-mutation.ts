@@ -1,6 +1,6 @@
 import type { MutationOptions, MutationUpdaterFn, FetchResult } from '@apollo/client/core';
 
-import { LitElement, property, PropertyDeclarations } from 'lit-element';
+import { LitElement, property } from 'lit-element';
 
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
