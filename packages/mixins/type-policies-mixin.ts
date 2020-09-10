@@ -5,7 +5,7 @@ import type { Policies } from '@apollo/client/cache/inmemory/policies';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 declare module '@apollo/client/cache' {
-  export abstract class ApolloCache<TSerialized> {
+  export interface ApolloCache<TSerialized> {
     policies: Policies;
   }
 }
