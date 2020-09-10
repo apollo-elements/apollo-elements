@@ -42,6 +42,9 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
+      - name: Build docs
+        run: yarn docs
+
       - name: Publish packages
         run: |
           npm whoami
@@ -51,14 +54,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build docs
-        run: yarn docs
-
-      - name: Deploy Docs
-        uses: peaceiris/actions-gh-pages@v3.7.0-8
-        with:
-          personal_token: ${{ secrets.GITHUB_PAT }}
-          publish_branch: gh-pages
-          publish_dir: ./docs
-          cname: apolloelements.dev
