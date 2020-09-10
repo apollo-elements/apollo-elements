@@ -291,6 +291,7 @@
     "@babel/types" "^7.10.4"
 
 "@babel/helper-skip-transparent-expression-wrappers@^7.11.0", "@babel/helper-split-export-declaration@^7.10.4", "@babel/helper-split-export-declaration@^7.11.0":
+  name "@babel/helper-split-export-declaration"
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-skip-transparent-expression-wrappers/-/helper-skip-transparent-expression-wrappers-7.11.0.tgz#eec162f112c2f58d3af0af125e3bb57665146729"
   integrity sha512-0XIdiQln4Elglgjbwo9wuJpL/K7AGCY26kmEt0+pRP0TAj4jjyNq1MjoRvikrTVqKcx4Gysxt4cXvVFXP/JO2Q==
@@ -8001,6 +8002,11 @@ highlight.js@^10.0.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.1.2.tgz#c20db951ba1c22c055010648dfffd7b2a968e00c"
   integrity sha512-Q39v/Mn5mfBlMff9r+zzA+gWxRsCRKwEMvYTiisLr/XUiFI/4puWt0Ojdko3R3JCNWGdOWaA5g/Yxqa23kC5AA==
 
+highlightjs-graphql@^1.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/highlightjs-graphql/-/highlightjs-graphql-1.0.1.tgz#e6e3a69585348a14492386260bb2c0c54c6a2e7b"
+  integrity sha512-g5kt/orsUJTjIt5pgs/uvi78kXndpCtYwzE7H3D0d07r3ETs9oHSZHD0EGaRPndiQ/4EYXt12rnsDkljn3ilAA==
+
 hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -13008,6 +13014,13 @@ typedoc-plugin-extras@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/typedoc-plugin-extras/-/typedoc-plugin-extras-1.1.6.tgz#bc1cb385f10c77ff96f00ba84d4fbc6be1920789"
   integrity sha512-kQ9mJh6FUdnRzZ0ssoY2v3DTrXKa0l3hpDk3VdwRV7EFcvZzbQTd8LjgD2QZGpEGv7ihrWTyu5ebisf+yhcYug==
+
+typedoc-plugin-graphql@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-graphql/-/typedoc-plugin-graphql-1.0.1.tgz#f9d78bb123747649de162c6f2bf9b8c01ac460f1"
+  integrity sha512-M/hjUzfDyiXROSgVARZpGSjTuX1oa5D5AQlMFOkz7fchYC2mdDTInhjRqq2dXb0VR0KyuubcyItWiE+/IN5jNw==
+  dependencies:
+    highlightjs-graphql "^1.0"
 
 typedoc-plugin-lerna-packages@^0.3.1:
   version "0.3.1"

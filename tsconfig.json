@@ -58,6 +58,9 @@
           }, {
             "title": "⌚️ Asynchronous Client",
             "source": "./pages/async-client.md"
+          }, {
+            "title": "✂️ Code Splitting",
+            "source": "./pages/code-splitting.md"
         }]
       }]
     },

@@ -106,6 +106,7 @@
     "ts-sinon": "^2.0.1",
     "typedoc": "^0.19.1",
     "typedoc-plugin-extras": "^1.1.6",
+    "typedoc-plugin-graphql": "^1.0.1",
     "typedoc-plugin-lerna-packages": "^0.3.1",
     "typedoc-plugin-no-inherit": "^1.1.10",
     "typedoc-plugin-pages": "^1.0.1",
