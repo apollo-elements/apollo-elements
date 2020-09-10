@@ -13,7 +13,7 @@ schema: 'https://api.app.dev/graphql' # replace with url to your graphql server
 
 extensions:
   codegen:
-    config:
+    config: # season to taste
       constEnums: true
       declarationKind: interface
       dedupeOperationSuffix: true
