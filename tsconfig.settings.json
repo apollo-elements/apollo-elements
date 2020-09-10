@@ -5,6 +5,7 @@
     "module": "ESNext",
     "declaration": true,
     "useDefineForClassFields": false,
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "noEmitOnError": false,
