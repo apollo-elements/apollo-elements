@@ -82,12 +82,11 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class TypeTestAccessor extends ApolloMutation<
+class TypeCheckAccessor extends ApolloMutation<
   NonNullableParamMutationData,
   NonNullableParamMutationVariables
 > {
-  // @ts-expect-error: meh
+  // @ts-expect-error: current typescript versions don't allow this type of override
   get variables() {
     return { param: 'string' };
   }
@@ -97,8 +96,7 @@ class TypeTestAccessor extends ApolloMutation<
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class TypeTestProperty extends ApolloMutation<
+class TypeCheckProperty extends ApolloMutation<
   NonNullableParamMutationData,
   NonNullableParamMutationVariables
 > {
@@ -209,9 +207,7 @@ describe('[lit-apollo] ApolloMutation', function describeApolloMutation() {
       }
     }
 
-    const tagName = defineCE(Test);
-
-    const tag = unsafeStatic(tagName);
+    const tag = unsafeStatic(defineCE(Test));
 
     const element =
       await fixture<Test>(fhtml`<${tag}></${tag}>`);
@@ -226,5 +222,55 @@ describe('[lit-apollo] ApolloMutation', function describeApolloMutation() {
     });
 
     clientSpy.restore();
+  });
+
+  describe('refetchQueries', function() {
+    class Test extends ApolloMutation<unknown, unknown> { }
+    let element: Test;
+
+    describe(
+      'when refetch-queries attribute set with comma-separated, badly-formatted query names',
+      function() {
+        beforeEach(async function() {
+          const tag =
+            unsafeStatic(defineCE(class extends Test { }));
+
+          element =
+            await fixture<Test>(fhtml`
+              <${tag}
+                  refetch-queries="QueryA, QueryB,QueryC,    QueryD"
+              ></${tag}>
+            `);
+        });
+
+        it('sets the property as an array of query names', function() {
+          expect(element.refetchQueries).to.deep.equal(['QueryA', 'QueryB', 'QueryC', 'QueryD']);
+        });
+      }
+    );
+
+    describe(
+      'when refetchQueries property set as array of query names',
+      function() {
+        beforeEach(async function() {
+          const tag =
+            unsafeStatic(defineCE(class extends Test { }));
+
+          element =
+            await fixture<Test>(fhtml`
+              <${tag}
+                  .refetchQueries="${['QueryA', 'QueryB', 'QueryC', 'QueryD']}"
+              ></${tag}>
+            `);
+        });
+
+        it('sets the property as an array of query names', function() {
+          expect(element.refetchQueries).to.deep.equal(['QueryA', 'QueryB', 'QueryC', 'QueryD']);
+        });
+
+        it('does not reflect', function() {
+          expect(element.getAttribute('refetch-queries')).to.be.null;
+        });
+      });
   });
 });
