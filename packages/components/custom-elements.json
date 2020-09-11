@@ -109,6 +109,7 @@
       "properties": [
         {
           "name": "client",
+          "description": "Reference to the `ApolloClient` instance.\nDefaults to `window.__APOLLO_CLIENT` if not set.",
           "type": "ApolloClient<NormalizedCacheObject>"
         }
       ]
@@ -120,7 +121,7 @@
       "attributes": [
         {
           "name": "input-key",
-          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n##### Example\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n   console.log(a.variables) // { variable: 'var' }\n   console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```",
           "type": "string",
           "default": "\"\""
         },
@@ -140,7 +141,7 @@
         {
           "name": "inputKey",
           "attribute": "input-key",
-          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n##### Example\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n   console.log(a.variables) // { variable: 'var' }\n   console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```",
           "type": "string",
           "default": "\"\""
         },
@@ -245,19 +246,19 @@
       "events": [
         {
           "name": "will-mutate",
-          "description": "When the element is about to mutate. Usefull for setting variables. Prevent default to prevent mutation"
+          "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`"
         },
         {
           "name": "mutation-completed",
-          "description": "When the mutation resolves. `detail` is `{ data: TData }`"
+          "description": "When the mutation resolves. `detail` is `{ data: TData, element: this }`"
         },
         {
           "name": "mutation-navigation",
-          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: TData }`"
+          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: TData, element: this }`"
         },
         {
           "name": "mutation-error",
-          "description": "When the mutation is rejected. `detail` is `{ error: ApolloError }`"
+          "description": "When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`\n\n### Example: Using data attributes\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n<mwc-button slot=\"trigger\">OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n```\n\n### Example: Using data attributes and variables\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n<mwc-button slot=\"trigger\">OK</mwc-button>\n<mwc-textfield slot=\"variable\"\ndata-variable=\"name\"\nvalue=\"Neil\"></mwc-textfield>\n<textarea slot=\"variable\"\ndata-variable=\"comment\"\nvalue=\"That's one small step...\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"name\": \"Neil\",\n\"comment\": \"That's one small step...\",\n\"type\": \"Quote\",\n\"action\": \"FLUB\"\n}\n```\n\n### Example: Using data attributes and variables with input property\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n<mwc-button slot=\"trigger\">OK</mwc-button>\n<mwc-textfield slot=\"variable\"\ndata-variable=\"comment\"\nvalue=\"Hey!\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"actionInput\": {\n\"comment\": \"Hey!\",\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n}\n```\n\n### Example: Using DOM properties\n```js\nhtml`\n<apollo-mutation\n.mutation=\"${SomeMutation}\"\n.variables=\"${{ type: \"Type\", action: \"ACTION\" }}\">\n<mwc-button slot=\"trigger\">OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n```"
         },
         {
           "name": "apollo-element-connected"
