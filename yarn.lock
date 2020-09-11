@@ -7998,9 +7998,9 @@ he@1.2.0, he@^1.1.0, he@^1.2.0:
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 highlight.js@^10.0.0:
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.1.2.tgz#c20db951ba1c22c055010648dfffd7b2a968e00c"
-  integrity sha512-Q39v/Mn5mfBlMff9r+zzA+gWxRsCRKwEMvYTiisLr/XUiFI/4puWt0Ojdko3R3JCNWGdOWaA5g/Yxqa23kC5AA==
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.2.0.tgz#367151bcf813adebc54822f1cb51d2e1e599619f"
+  integrity sha512-OryzPiqqNCfO/wtFo619W+nPYALM6u7iCQkum4bqRmmlcTikOkmlL06i009QelynBPAlNByTQU6cBB2cOBQtCw==
 
 highlightjs-graphql@^1.0:
   version "1.0.1"
@@ -10995,6 +10995,11 @@ please-upgrade-node@^3.2.0:
   dependencies:
     semver-compare "^1.0.0"
 
+pluralize@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
+  integrity sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==
+
 polyfills-loader@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/polyfills-loader/-/polyfills-loader-1.7.1.tgz#d7a8442a450acda1ab81b1f68968e68835df0856"
@@ -11121,6 +11126,13 @@ protoduck@^5.0.1:
   integrity sha512-WxoCeDCoCBY55BMvj4cAEjdVUFGRWed9ZxPlqTKYyw1nDDTQ4pqmnIMAGfJlg7Dx35uB/M+PHJPTmGOvaCaPTg==
   dependencies:
     genfun "^5.0.0"
+
+prototyped.js@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/prototyped.js/-/prototyped.js-0.10.1.tgz#b4b4301fa6a248e4872666c67290be4eeb542c9c"
+  integrity sha512-T1vL7I5/4g/emktxMOShwEc5sha4J9CV9TwwyUZnq9wZ03jdmzZTwV2OVA72CZ3cnVucqhlaneK2lbL8VNoC6Q==
+  dependencies:
+    pluralize "^7.0.0"
 
 proxy-addr@~2.0.5:
   version "2.0.6"
@@ -13009,6 +13021,13 @@ typedoc-default-themes@^0.11.1:
   integrity sha512-1yl8pbhjrLywqGJx9TfT+wzP+ntudPYjgJdpCj+s5ed2etBkqZPOCBMKwpaN9o6pdoFQF195PggqWTLVEkaRQQ==
   dependencies:
     lunr "^2.3.9"
+
+typedoc-plugin-example-tag@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-example-tag/-/typedoc-plugin-example-tag-1.0.2.tgz#164e1ddff1af3b0805c0b72449a5e319c5ddbe07"
+  integrity sha512-LbI6gnba+23toF0yAUWN2i/hblR1KHU+B/ujqNRu4LSvaYy78f7oTLxmfJqlBbooUHTQZtJOGhKchMOSL5rhOg==
+  dependencies:
+    prototyped.js "^0.10.1"
 
 typedoc-plugin-extras@^1.1.6:
   version "1.1.6"
