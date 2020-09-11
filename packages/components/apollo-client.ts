@@ -44,34 +44,40 @@ function claimApolloElement(event: ApolloElementEvent): ApolloElement {
  * Provides an ApolloClient instance to all nested ApolloElement children,
  * even across (open) shadow boundaries.
  *
- * @example <caption>Providing a client to a tree of Nodes</caption>
-```html
-<apollo-client id="client-a">
-  <apollo-mutation>
-    <!--...-->
-  </apollo-mutation>
-</apollo-client>
-```
+ * ### Example: Providing a client to a tree of Nodes
+ * ```html
+ * <apollo-client id="client-a">
+ *   <apollo-mutation>
+ *     <!--...-->
+ *   </apollo-mutation>
+ * </apollo-client>
+ * ```
  *
- * @example <caption>Nesting separate clients</caption>
-```html
-<apollo-client id="client-a">
-  <query-element>
-    <!-- This element queries from client-a's endpoint -->
-  </query-element>
-  <apollo-client id="client-b">
-    <query-element>
-      <!-- This element queries from client-b's endpoint -->
-    </query-element>
-  </apollo-client>
-</apollo-client>
-```
+ * ### Example: Nesting separate clients
+ * ```html
+ * <apollo-client id="client-a">
+ *   <query-element>
+ *     <!-- This element queries from client-a's endpoint -->
+ *   </query-element>
+ *   <apollo-client id="client-b">
+ *     <query-element>
+ *       <!-- This element queries from client-b's endpoint -->
+ *     </query-element>
+ *   </apollo-client>
+ * </apollo-client>
+ * ```
  */
 export class ApolloClientElement extends HTMLElement {
+  /** Private reference to the `ApolloClient` instance */
   #client: ApolloClient<NormalizedCacheObject>;
 
+  /** Private cache of child `ApolloElement`s */
   #instances: Set<ApolloElement> = new Set();
 
+  /**
+   * Reference to the `ApolloClient` instance.
+   * Defaults to `window.__APOLLO_CLIENT` if not set.
+   */
   get client(): ApolloClient<NormalizedCacheObject> {
     return this.#client;
   }
@@ -91,6 +97,10 @@ export class ApolloClientElement extends HTMLElement {
     this.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
   }
 
+  /**
+   * Assigns the element's client instance to the child,
+   * and registers the child to receive the element's new client when its set.
+   */
   private onElementConnected(event: ApolloElementEvent): void {
     const target = claimApolloElement(event);
     if (!target) return;
@@ -98,6 +108,9 @@ export class ApolloClientElement extends HTMLElement {
     target.client = this.client;
   }
 
+  /**
+   * Performs clean up when the child disconnects
+   */
   private onElementDisconnected(event: ApolloElementEvent): void {
     const target = claimApolloElement(event);
     if (!target) return;
