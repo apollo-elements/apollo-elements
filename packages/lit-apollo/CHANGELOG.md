@@ -3,6 +3,128 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.6...@apollo-elements/lit-apollo@3.0.0-alpha.8) (2020-09-13)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([4d52602](https://github.com/apollo-elements/apollo-elements/commit/4d5260229518aea4a9172e111a6f09dfaba048d9))
+
+
+### Features
+
+* **lit-apollo:** refetch-queries attribute converter ([83d29eb](https://github.com/apollo-elements/apollo-elements/commit/83d29ebef7b666b11ac130efb748426934388f19))
+
+
+
+
+
+# [3.0.0-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.6...@apollo-elements/lit-apollo@3.0.0-alpha.7) (2020-09-13)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([4d52602](https://github.com/apollo-elements/apollo-elements/commit/4d5260229518aea4a9172e111a6f09dfaba048d9))
+
+
+### Features
+
+* **lit-apollo:** refetch-queries attribute converter ([83d29eb](https://github.com/apollo-elements/apollo-elements/commit/83d29ebef7b666b11ac130efb748426934388f19))
+
+
+
+
+
+# [3.0.0-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.5...@apollo-elements/lit-apollo@3.0.0-alpha.6) (2020-09-08)
+
+
+### Bug Fixes
+
+* **lit-apollo:** use decorators internally ([31a3222](https://github.com/apollo-elements/apollo-elements/commit/31a3222163f0a85c30af401bb4ea2046ce19f91c))
+
+
+
+
+
+# [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.4...@apollo-elements/lit-apollo@3.0.0-alpha.5) (2020-09-07)
+
+
+### Features
+
+* **lit-apollo:** remove shouldUpdate guard ([f5f880a](https://github.com/apollo-elements/apollo-elements/commit/f5f880a5fc307705345361a997b04395bae59bcf))
+
+
+### BREAKING CHANGES
+
+* **lit-apollo:** components always render by default, no matter the state of the query
+
+
+
+
+
+# [3.0.0-alpha.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.3...@apollo-elements/lit-apollo@3.0.0-alpha.4) (2020-09-07)
+
+**Note:** Version bump only for package @apollo-elements/lit-apollo
+
+
+
+
+
+# [3.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.2...@apollo-elements/lit-apollo@3.0.0-alpha.3) (2020-09-06)
+
+
+* feat(lit-apollo)!: apollo client 3 ([c841733](https://github.com/apollo-elements/apollo-elements/commit/c841733f8e25514fffd53a18efd8428a79ab759e))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+removes class fields, preferring declarations
+changes shouldUpdate predicate
+
+affects: @apollo-elements/lit-apollo
+
+
+
+
+
+# [3.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.2...@apollo-elements/lit-apollo@3.0.0-alpha.2) (2020-09-06)
+
+
+* feat(lit-apollo)!: apollo client 3 ([c841733](https://github.com/apollo-elements/apollo-elements/commit/c841733f8e25514fffd53a18efd8428a79ab759e))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+removes class fields, preferring declarations
+changes shouldUpdate predicate
+
+affects: @apollo-elements/lit-apollo
+
+
+
+
+
+# [3.0.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.0...@apollo-elements/lit-apollo@3.0.0-alpha.1) (2020-09-03)
+
+**Note:** Version bump only for package @apollo-elements/lit-apollo
+
+
+
+
+
+# [3.0.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.2...@apollo-elements/lit-apollo@3.0.0-alpha.0) (2020-09-03)
+
+
+### Features
+
+* **lit-apollo:** apollo client 3 ([d36a01e](https://github.com/apollo-elements/apollo-elements/commit/d36a01e03722e955bfe2cb3200975db025fab14f))
+
+
+
+
+
 ## [2.0.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.1...@apollo-elements/lit-apollo@2.0.2) (2020-05-27)
 
 
