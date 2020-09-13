@@ -1,11 +1,12 @@
 {
   "name": "@apollo-elements/gluon",
-  "version": "2.0.2",
+  "version": "3.0.0-alpha.7",
   "description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "scripts": {
+    "preprepublishOnly": "rimraf declaration.d.ts",
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
     "lint": "run-s lint:*",
@@ -36,9 +37,9 @@
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
-  "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
+  "homepage": "https://apolloelements.dev/modules/_apollo_elements_gluon.html",
   "dependencies": {
-    "@apollo-elements/mixins": "^2.0.1",
+    "@apollo-elements/mixins": "^3.0.0-alpha.7",
     "@gluon/gluon": ">= 2",
     "tslib": "^2.0.1"
   }

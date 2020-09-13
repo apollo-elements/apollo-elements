@@ -127,8 +127,8 @@
         },
         {
           "name": "refetch-queries",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "string[]"
+          "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<{ [key: string]: any; }, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | undefined"
         },
         {
           "name": "called",
@@ -144,11 +144,6 @@
           "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n##### Example\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n   console.log(a.variables) // { variable: 'var' }\n   console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```",
           "type": "string",
           "default": "\"\""
-        },
-        {
-          "name": "routeGetter",
-          "description": "For Mutations that should trigger navigations,\na function of `data` to determine the href.",
-          "type": "(data: unknown) => string"
         },
         {
           "name": "mutation",
@@ -173,8 +168,8 @@
         {
           "name": "refetchQueries",
           "attribute": "refetch-queries",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "string[]"
+          "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<{ [key: string]: any; }, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | undefined"
         },
         {
           "name": "awaitRefetchQueries",
@@ -249,12 +244,12 @@
           "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`"
         },
         {
-          "name": "mutation-completed",
-          "description": "When the mutation resolves. `detail` is `{ data: TData, element: this }`"
+          "name": "will-navigate",
+          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`"
         },
         {
-          "name": "mutation-navigation",
-          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: TData, element: this }`"
+          "name": "mutation-completed",
+          "description": "When the mutation resolves. `detail` is `{ data: Data, element: this }`"
         },
         {
           "name": "mutation-error",

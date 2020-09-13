@@ -3,6 +3,157 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.5...@apollo-elements/mixins@3.0.0-alpha.7) (2020-09-13)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([4d52602](https://github.com/apollo-elements/apollo-elements/commit/4d5260229518aea4a9172e111a6f09dfaba048d9))
+
+
+### Features
+
+* **mixins:** add TypePoliciesMixin ([f275b82](https://github.com/apollo-elements/apollo-elements/commit/f275b823a7f5f480c63416355d69f5269fd7e082))
+
+
+
+
+
+# [3.0.0-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.5...@apollo-elements/mixins@3.0.0-alpha.6) (2020-09-13)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([4d52602](https://github.com/apollo-elements/apollo-elements/commit/4d5260229518aea4a9172e111a6f09dfaba048d9))
+
+
+### Features
+
+* **mixins:** add TypePoliciesMixin ([f275b82](https://github.com/apollo-elements/apollo-elements/commit/f275b823a7f5f480c63416355d69f5269fd7e082))
+
+
+
+
+
+# [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.4...@apollo-elements/mixins@3.0.0-alpha.5) (2020-09-07)
+
+
+### Bug Fixes
+
+* **mixins:** set variables in constructor ([737394c](https://github.com/apollo-elements/apollo-elements/commit/737394c387a9f841fb764e9ac5ae42bebc0498f5))
+
+
+### Features
+
+* **components:** publish components ([d242781](https://github.com/apollo-elements/apollo-elements/commit/d2427819bed5729fa879933b2fbf0d1353f50b9a))
+* **mixins:** add ApolloClientMixin ([299863c](https://github.com/apollo-elements/apollo-elements/commit/299863c99813ecbe2665421be1228264c3c1ddb2))
+
+
+
+
+
+# [3.0.0-alpha.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.3...@apollo-elements/mixins@3.0.0-alpha.4) (2020-09-07)
+
+**Note:** Version bump only for package @apollo-elements/mixins
+
+
+
+
+
+# [3.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.3) (2020-09-06)
+
+
+### Bug Fixes
+
+* **mixins:** fix interfaces version ([1c4aac3](https://github.com/apollo-elements/apollo-elements/commit/1c4aac3a532ef211276debbd6ed26c404fd65288))
+* make properties configurable and enumerable ([a8bfaab](https://github.com/apollo-elements/apollo-elements/commit/a8bfaab51f04e4d80d7ecac0d465e570b2c9b217))
+* null check ([c86338f](https://github.com/apollo-elements/apollo-elements/commit/c86338fdc005cdf9da77526ee79640a7d8d853d1))
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([70625a1](https://github.com/apollo-elements/apollo-elements/commit/70625a18dfe761ca02bee34bdcb4b0d643b41f9e))
+* feat(mixins)!: apollo client 3 ([61f0048](https://github.com/apollo-elements/apollo-elements/commit/61f00485580f3b24fad5461cc53c7f70cad22d39))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+* bump to `@apollo/client`
+defines fields (query, mutation, subscription, document, variables) using define semantics
+removes class fields in favour of declarations
+
+affects: @apollo-elements/gluon, @apollo-elements/lit-apollo, @apollo-elements/mixins,
+@apollo-elements/polymer
+
+
+
+
+
+# [3.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.2) (2020-09-06)
+
+
+### Bug Fixes
+
+* **mixins:** fix interfaces version ([1c4aac3](https://github.com/apollo-elements/apollo-elements/commit/1c4aac3a532ef211276debbd6ed26c404fd65288))
+* make properties configurable and enumerable ([a8bfaab](https://github.com/apollo-elements/apollo-elements/commit/a8bfaab51f04e4d80d7ecac0d465e570b2c9b217))
+* null check ([c86338f](https://github.com/apollo-elements/apollo-elements/commit/c86338fdc005cdf9da77526ee79640a7d8d853d1))
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([70625a1](https://github.com/apollo-elements/apollo-elements/commit/70625a18dfe761ca02bee34bdcb4b0d643b41f9e))
+* feat(mixins)!: apollo client 3 ([61f0048](https://github.com/apollo-elements/apollo-elements/commit/61f00485580f3b24fad5461cc53c7f70cad22d39))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+* bump to `@apollo/client`
+defines fields (query, mutation, subscription, document, variables) using define semantics
+removes class fields in favour of declarations
+
+affects: @apollo-elements/gluon, @apollo-elements/lit-apollo, @apollo-elements/mixins,
+@apollo-elements/polymer
+
+
+
+
+
+# [3.0.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.0...@apollo-elements/mixins@3.0.0-alpha.1) (2020-09-03)
+
+
+### Bug Fixes
+
+* **mixins:** fix interfaces version ([961ddce](https://github.com/apollo-elements/apollo-elements/commit/961ddce74ceeee9c3c23f0ba8e353671854022b3))
+
+
+
+
+
+# [3.0.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.0) (2020-09-03)
+
+
+### Bug Fixes
+
+* make properties configurable and enumerable ([a3247e9](https://github.com/apollo-elements/apollo-elements/commit/a3247e9d41d4c31ebf8477c1402129a0824adf50))
+* null check ([874cbee](https://github.com/apollo-elements/apollo-elements/commit/874cbeeb24e859c01e609008521e6486a37643f3))
+
+
+### Features
+
+* **interfaces:** publish interfaces separate pkg ([5c36f4f](https://github.com/apollo-elements/apollo-elements/commit/5c36f4f62c42790044db1bd1847c60f736557b01))
+* **mixins:** apollo client 3 ([d353c67](https://github.com/apollo-elements/apollo-elements/commit/d353c67f8b18f26c7314f1ca8a76d2fb1278491e))
+
+
+### BREAKING CHANGES
+
+* **interfaces:** Removes interfaces from mixins package
+
+
+
+
+
 ## [2.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.0...@apollo-elements/mixins@2.0.1) (2020-05-27)
 
 
