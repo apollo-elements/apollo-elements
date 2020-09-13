@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.6...@apollo-elements/lit-apollo@3.0.0-alpha.7) (2020-09-13)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([4d52602](https://github.com/apollo-elements/apollo-elements/commit/4d5260229518aea4a9172e111a6f09dfaba048d9))
+
+
+### Features
+
+* **lit-apollo:** refetch-queries attribute converter ([83d29eb](https://github.com/apollo-elements/apollo-elements/commit/83d29ebef7b666b11ac130efb748426934388f19))
+
+
+
+
+
 # [3.0.0-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.5...@apollo-elements/lit-apollo@3.0.0-alpha.6) (2020-09-08)
 
 
