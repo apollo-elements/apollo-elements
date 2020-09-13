@@ -1,4 +1,4 @@
-import type { ApolloError } from '@apollo/client/core';
+import type { ApolloError, DocumentNode } from '@apollo/client/core';
 
 import {
   ApolloMutation,
@@ -9,32 +9,12 @@ import {
   queryAssignedNodes,
 } from '@apollo-elements/lit-apollo';
 
-interface MutationEventDetail<Data, Variables> {
-  element: ApolloMutationElement<Data, Variables>
-}
-
-interface MutationCompletedEventDetail<Data, Variables>
-extends MutationEventDetail<Data, Variables> {
- data: Data
-}
-
-interface MutationErrorEventDetail<Data, Variables>
-extends MutationEventDetail<Data, Variables> {
-  error: ApolloError;
-}
-
 declare global {
   interface HTMLElementEventMap {
     'will-mutate': WillMutateEvent;
     'will-navigate': WillNavigateEvent;
     'mutation-completed': MutationCompletedEvent;
     'mutation-error': MutationErrorEvent;
-  }
-}
-
-class MutationEvent<Data, Variables> extends CustomEvent<MutationEventDetail<Data, Variables>> {
-  constructor(type: string, init: CustomEventInit<MutationEventDetail<Data, Variables>>) {
-    super(type, { ...init, bubbles: true, composed: true });
   }
 }
 
@@ -49,6 +29,26 @@ interface InputLikeElement extends HTMLElement {
   disabled: boolean;
 }
 
+interface MutationEventDetail<Data, Variables> {
+  element: ApolloMutationElement<Data, Variables>;
+  mutation: DocumentNode;
+  variables: Variables;
+}
+
+class MutationEvent<
+  Detail extends MutationEventDetail<Data, Variables>,
+  Data = unknown,
+  Variables = unknown,
+> extends CustomEvent<Detail> {
+  constructor(type: string, init: CustomEventInit<Detail>) {
+    super(type, {
+      ...init,
+      bubbles: true,
+      composed: true,
+    });
+  }
+}
+
 /**
  * Fired when the element is about to mutate.
  * Useful for setting variables or cancelling the mutation by calling `preventDefault`
@@ -59,14 +59,27 @@ interface InputLikeElement extends HTMLElement {
 export class WillMutateEvent<
   Data = unknown,
   Variables = unknown
-> extends MutationEvent<Data, Variables> {
+> extends MutationEvent<MutationEventDetail<Data, Variables>> {
   static type: 'will-mutate' = 'will-mutate';
 
   declare detail: MutationEventDetail<Data, Variables>;
 
-  constructor(init: CustomEventInit<MutationEventDetail<Data, Variables>>) {
-    super(WillMutateEvent.type, { ...init, cancelable: true });
+  constructor(element: ApolloMutationElement<Data, Variables>) {
+    const { mutation, variables } = element;
+    super(WillMutateEvent.type, {
+      cancelable: true,
+      detail: {
+        element,
+        mutation,
+        variables,
+      },
+    });
   }
+}
+
+export interface MutationCompletedEventDetail<Data, Variables>
+extends MutationEventDetail<Data, Variables> {
+ data: Data
 }
 
 /**
@@ -78,14 +91,27 @@ export class WillMutateEvent<
 export class MutationCompletedEvent<
   Data = unknown,
   Variables = unknown
-> extends MutationEvent<Data, Variables> {
+> extends MutationEvent<MutationCompletedEventDetail<Data, Variables>> {
   static type: 'mutation-completed' = 'mutation-completed';
 
   declare detail: MutationCompletedEventDetail<Data, Variables>;
 
-  constructor(init: CustomEventInit<MutationCompletedEventDetail<Data, Variables>>) {
-    super(MutationCompletedEvent.type, init);
+  constructor(element: ApolloMutationElement<Data, Variables>, data: Data) {
+    const { mutation, variables } = element;
+    super(MutationCompletedEvent.type, {
+      detail: {
+        data,
+        element,
+        mutation,
+        variables,
+      },
+    });
   }
+}
+
+export interface MutationErrorEventDetail<Data, Variables>
+extends MutationEventDetail<Data, Variables> {
+  error: ApolloError;
 }
 
 /**
@@ -97,13 +123,22 @@ export class MutationCompletedEvent<
 export class WillNavigateEvent<
   Data = unknown,
   Variables = unknown,
-> extends MutationEvent<Data, Variables> {
+> extends MutationEvent<MutationCompletedEventDetail<Data, Variables>> {
   static type: 'will-navigate' = 'will-navigate'
 
   declare detail: MutationCompletedEventDetail<Data, Variables>;
 
-  constructor(init: CustomEventInit<MutationCompletedEventDetail<Data, Variables>>) {
-    super(WillNavigateEvent.type, { ...init, cancelable: true });
+  constructor(element: ApolloMutationElement<Data, Variables>, data: Data) {
+    const { mutation, variables } = element;
+    super(WillNavigateEvent.type, {
+      cancelable: true,
+      detail: {
+        data,
+        element,
+        mutation,
+        variables,
+      },
+    });
   }
 }
 
@@ -115,13 +150,21 @@ export class WillNavigateEvent<
 export class MutationErrorEvent<
   Data = unknown,
   Variables = unknown
-> extends MutationEvent<Data, Variables> {
+> extends MutationEvent<MutationErrorEventDetail<Data, Variables>> {
   static type: 'mutation-error' = 'mutation-error';
 
   declare detail: MutationErrorEventDetail<Data, Variables>;
 
-  constructor(init: CustomEventInit<MutationErrorEventDetail<Data, Variables>>) {
-    super(MutationErrorEvent.type, init);
+  constructor(element: ApolloMutationElement<Data, Variables>, error: ApolloError) {
+    const { mutation, variables } = element;
+    super(MutationErrorEvent.type, {
+      detail: {
+        element,
+        error,
+        mutation,
+        variables,
+      },
+    });
   }
 }
 
@@ -246,15 +289,36 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    */
   @property({ attribute: 'input-key' }) inputKey = '';
 
-  /**
-   * For Mutations that should trigger navigations,
-   * a function of `data` to determine the href.
-   */
-  @property({ attribute: false }) routeGetter: (data: unknown) => string;
-
   @queryAssignedNodes('trigger') private triggerNodes: NodeListOf<HTMLElement>;
 
   @queryAssignedNodes('variable') private variableNodes: NodeListOf<InputLikeElement>;
+
+  /**
+   * Define this function to determine the URL to navigate to after a mutation.
+   * Function can be synchronous or async.
+   * If this function is not defined, will navigate to the `href` property of the link trigger.
+   * ##### Example: Navigate to a post's page after creating it
+   * ```graphql
+   * mutation CreatePostMutation($title: String, $content: String) {
+   *   createPost(title: $title, content: $content) {
+   *     slug
+   *   }
+   * }
+   * ```
+   * ```ts
+   * const mutationTemplate = html`
+   * <apollo-mutation
+   *     .mutation="${CreatePostMutation}"
+   *     .resolveURL="${(data: Data) => `/posts/${data.createPost.slug}/`}">
+   *   <mwc-textfield label="Post title" slot="variable" data-variable="title"></mwc-textfield>
+   *   <mwc-textarea label="Post Content" slot="variable" data-variable="content"></mwc-textarea>
+   * </apollo-mutation>
+   * `
+   * ```
+   * @param data mutation data
+   * @returns url to navigate to
+   */
+  resolveURL?(data: Data): string | Promise<string>;
 
   private inFlight = false;
 
@@ -324,14 +388,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   }
 
   private willMutate(): void {
-    const eventInit: CustomEventInit = {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: { element: this },
-    };
-
-    if (!this.dispatchEvent(new WillMutateEvent<Data, Variables>(eventInit)))
+    if (!this.dispatchEvent(new WillMutateEvent<Data, Variables>(this)))
       throw new WillMutateError('mutation was canceled');
 
     this.inFlight = true;
@@ -341,6 +398,17 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
 
     for (const input of this.inputs)
       input.disabled = true;
+  }
+
+  private async willNavigate(data: Data): Promise<void> {
+    if (!this.dispatchEvent(new WillNavigateEvent<Data, Variables>(this, data)))
+      return;
+
+    const url =
+        typeof this.resolveURL !== 'function' ? this.href
+      : await this.resolveURL(this.data);
+
+    history.replaceState(data, WillNavigateEvent.type, url);
   }
 
   private didMutate(): void {
@@ -372,37 +440,15 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   onCompleted(data: Data): void {
     this.didMutate();
 
-    const eventInit: CustomEventInit = {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: {
-        data,
-        element: this,
-      },
-    };
+    this.dispatchEvent(new MutationCompletedEvent<Data, Variables>(this, data));
 
-    this.dispatchEvent(new MutationCompletedEvent<Data, Variables>(eventInit));
-
-    if (
-      isLink(this.trigger) &&
-      this.dispatchEvent(new WillNavigateEvent<Data, Variables>(eventInit))
-    )
-      history.replaceState(data, WillNavigateEvent.type, this.href);
+    if (isLink(this.trigger))
+      this.willNavigate(data);
   }
 
   onError(error: ApolloError): void {
     this.didMutate();
 
-    const eventInit: CustomEventInit = {
-      bubbles: true,
-      composed: true,
-      detail: {
-        error,
-        element: this,
-      },
-    };
-
-    this.dispatchEvent(new MutationErrorEvent<Data, Variables>(eventInit));
+    this.dispatchEvent(new MutationErrorEvent<Data, Variables>(this, error));
   }
 }
