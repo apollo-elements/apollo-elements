@@ -411,13 +411,13 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with a link trigger that wraps a button', function() {
-    let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
     let replaceStateStub: Sinon.SinonStub;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NoParamMutation}">
+        <apollo-mutation .mutation="${NullableParamMutation}">
           <a slot="trigger" href="#foo">
             <button>do it</button>
           </a>
@@ -429,6 +429,27 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     afterEach(function() {
       replaceStateStub.restore();
+    });
+
+    describe('when element has `resolveURL` property', function() {
+      beforeEach(function() {
+        element.resolveURL =
+          ({ nullableParam }: NullableParamMutationData): string => `/nullable/${nullableParam.nullable}/`;
+        element.setAttribute('data-nullable', 'special');
+      });
+
+      describe('clicking the button', function() {
+        beforeEach(async function() {
+          const button = element.querySelector('button');
+          button.click();
+          await aTimeout(100);
+        });
+
+        it('navigates to the resolved URL', function() {
+          expect(replaceStateStub)
+            .to.have.been.calledWith(element.data, 'will-navigate', '/nullable/special/');
+        });
+      });
     });
 
     describe('clicking the link', function() {

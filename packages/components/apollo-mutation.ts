@@ -289,15 +289,36 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    */
   @property({ attribute: 'input-key' }) inputKey = '';
 
-  /**
-   * For Mutations that should trigger navigations,
-   * a function of `data` to determine the href.
-   */
-  @property({ attribute: false }) routeGetter: (data: unknown) => string;
-
   @queryAssignedNodes('trigger') private triggerNodes: NodeListOf<HTMLElement>;
 
   @queryAssignedNodes('variable') private variableNodes: NodeListOf<InputLikeElement>;
+
+  /**
+   * Define this function to determine the URL to navigate to after a mutation.
+   * Function can be synchronous or async.
+   * If this function is not defined, will navigate to the `href` property of the link trigger.
+   * ##### Example: Navigate to a post's page after creating it
+   * ```graphql
+   * mutation CreatePostMutation($title: String, $content: String) {
+   *   createPost(title: $title, content: $content) {
+   *     slug
+   *   }
+   * }
+   * ```
+   * ```ts
+   * const mutationTemplate = html`
+   * <apollo-mutation
+   *     .mutation="${CreatePostMutation}"
+   *     .resolveURL="${(data: Data) => `/posts/${data.createPost.slug}/`}">
+   *   <mwc-textfield label="Post title" slot="variable" data-variable="title"></mwc-textfield>
+   *   <mwc-textarea label="Post Content" slot="variable" data-variable="content"></mwc-textarea>
+   * </apollo-mutation>
+   * `
+   * ```
+   * @param data mutation data
+   * @returns url to navigate to
+   */
+  resolveURL?(data: Data): string | Promise<string>;
 
   private inFlight = false;
 
@@ -379,6 +400,17 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
       input.disabled = true;
   }
 
+  private async willNavigate(data: Data): Promise<void> {
+    if (!this.dispatchEvent(new WillNavigateEvent<Data, Variables>(this, data)))
+      return;
+
+    const url =
+        typeof this.resolveURL !== 'function' ? this.href
+      : await this.resolveURL(this.data);
+
+    history.replaceState(data, WillNavigateEvent.type, url);
+  }
+
   private didMutate(): void {
     this.inFlight = false;
     if (this.button)
@@ -410,11 +442,8 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
 
     this.dispatchEvent(new MutationCompletedEvent<Data, Variables>(this, data));
 
-    if (
-      isLink(this.trigger) &&
-      this.dispatchEvent(new WillNavigateEvent<Data, Variables>(this, data))
-    )
-      history.replaceState(data, WillNavigateEvent.type, this.href);
+    if (isLink(this.trigger))
+      this.willNavigate(data);
   }
 
   onError(error: ApolloError): void {
