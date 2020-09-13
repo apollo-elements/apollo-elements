@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.5...@apollo-elements/mixins@3.0.0-alpha.6) (2020-09-13)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([4d52602](https://github.com/apollo-elements/apollo-elements/commit/4d5260229518aea4a9172e111a6f09dfaba048d9))
+
+
+### Features
+
+* **mixins:** add TypePoliciesMixin ([f275b82](https://github.com/apollo-elements/apollo-elements/commit/f275b823a7f5f480c63416355d69f5269fd7e082))
+
+
+
+
+
 # [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.4...@apollo-elements/mixins@3.0.0-alpha.5) (2020-09-07)
 
 
