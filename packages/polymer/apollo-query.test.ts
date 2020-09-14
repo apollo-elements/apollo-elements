@@ -8,7 +8,7 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import { fixture, expect, oneEvent, defineCE, nextFrame, aTimeout } from '@open-wc/testing';
+import { fixture, expect, oneEvent, defineCE } from '@open-wc/testing';
 import gql from 'graphql-tag';
 import { stub } from 'sinon';
 
