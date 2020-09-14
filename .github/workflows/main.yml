@@ -16,7 +16,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install packages
-        run: yarn install
+        run: yarn
 
       - name: Codegen
         run: yarn build:codegen
