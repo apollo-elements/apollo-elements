@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@2.0.0...@apollo-elements/lib@2.0.1-alpha.0) (2020-09-14)
+
+
+### Performance Improvements
+
+* **lib:** remove inline Object.fromEntries polyfill ([c17dd52](https://github.com/apollo-elements/apollo-elements/commit/c17dd524125466dc50a37ac01d240330930e7d0f))
+
+
+* feat(lib)!: apollo client 3 ([588d0f1](https://github.com/apollo-elements/apollo-elements/commit/588d0f198e72e9410508b5c1f1f70ea583e83dcf))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+remove default exports
+
+affects: @apollo-elements/mixins, @apollo-elements/hybrids,
+@apollo-elements/gluon, @apollo-elements/lit-apollo,
+@apollo-elements/polymer
+
+
+
+
+
 # [2.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@1.1.3...@apollo-elements/lib@2.0.0) (2020-05-25)
 
 

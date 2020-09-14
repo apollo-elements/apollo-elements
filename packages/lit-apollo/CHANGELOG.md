@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.9](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.2...@apollo-elements/lit-apollo@3.0.0-alpha.9) (2020-09-14)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([a1eda63](https://github.com/apollo-elements/apollo-elements/commit/a1eda635217fc41c63e5519e93e7add9bfc88e11))
+
+
+### Features
+
+* **lit-apollo:** refetch-queries attribute converter ([3793822](https://github.com/apollo-elements/apollo-elements/commit/379382239a7e242607f37675bfc685dc1377ee84))
+* **lit-apollo:** remove shouldUpdate guard ([b76e373](https://github.com/apollo-elements/apollo-elements/commit/b76e3735f972080f91c5e71d0f8540d84906a30a))
+
+
+* feat(lit-apollo)!: apollo client 3 ([9c7acc7](https://github.com/apollo-elements/apollo-elements/commit/9c7acc77c87e95ada9a8ff8af1784380aacc3ed3))
+
+
+### BREAKING CHANGES
+
+* **lit-apollo:** components always render by default, no matter the state of the query
+* bump to `@apollo/client`
+removes class fields, preferring declarations
+changes shouldUpdate predicate
+
+affects: @apollo-elements/lit-apollo
+
+
+
+
+
 # [3.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.6...@apollo-elements/lit-apollo@3.0.0-alpha.8) (2020-09-13)
 
 

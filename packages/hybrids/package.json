@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/hybrids",
-  "version": "3.0.0-alpha.7",
+  "version": "3.0.0-alpha.8",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
@@ -33,7 +33,7 @@
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_hybrids.html",
   "dependencies": {
     "@apollo-elements/lib": "^3.0.0-alpha.3",
-    "@apollo-elements/mixins": "^3.0.0-alpha.7",
+    "@apollo-elements/mixins": "^3.0.0-alpha.8",
     "hybrids": ">= 2",
     "tslib": "^2.0.1"
   }

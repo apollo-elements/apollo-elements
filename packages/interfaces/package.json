@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/interfaces",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "👩‍🚀🌛 Custom Element class interfaces for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
