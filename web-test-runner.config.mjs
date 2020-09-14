@@ -1,9 +1,12 @@
 // @ts-check
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
-import graphql from 'es-dev-server-import-graphql';
-import rollupCommonjs from '@rollup/plugin-commonjs';
 
+import rollupCommonjs from '@rollup/plugin-commonjs';
+import rollupGraphql from '@kocal/rollup-plugin-graphql';
+
+// @ts-ignore: graphql plugin doesn't supply sourcemaps
+const graphql = fromRollup(rollupGraphql);
 const commonjs = fromRollup(rollupCommonjs);
 
 const cjsIncludes = [
@@ -21,6 +24,10 @@ export default {
   files: [
     'packages/**/*.test.ts',
   ],
+
+  mimeTypes: {
+    '**/*.graphql': 'js',
+  },
 
   coverageConfig: {
     exclude: [

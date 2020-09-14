@@ -16,18 +16,9 @@ packages/*/*.d.ts.map
 packages/test-helpers/schema.ts
 packages/components/README.md
 
-examples/**/*.js
-examples/**/*.js.map
-examples/**/*.d.ts
-examples/**/*.d.ts.map
-examples/**/schema.ts
-
-docs/examples/**/schema.ts
-
-!packages/*/global.d.ts
-!packages/gluon/gluon.d.ts
 packages/hybrids/factories/*.d.ts
 packages/hybrids/factories/*.js
 packages/hybrids/factories/*.js.map
-packages/@types/crocks/predicates/isArray.js
-packages/@types/crocks/predicates/isArray.js.map
+
+!packages/*/global.d.ts
+!packages/gluon/gluon.d.ts
