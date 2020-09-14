@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0-alpha.4 (2020-09-14)
+
+
+### Features
+
+* **components:** add <apollo-mutation> features ([603f500](https://github.com/apollo-elements/apollo-elements/commit/603f5001198aa9f8a030cb3c66fadedfb5735552))
+* **components:** create components package ([3d44d20](https://github.com/apollo-elements/apollo-elements/commit/3d44d200f8ca00b8b413456db0a84c4379367143))
+* **lit-apollo:** remove shouldUpdate guard ([b76e373](https://github.com/apollo-elements/apollo-elements/commit/b76e3735f972080f91c5e71d0f8540d84906a30a))
+
+
+### BREAKING CHANGES
+
+* **lit-apollo:** components always render by default, no matter the state of the query
+
+
+
+
+
 # [1.0.0-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.0-alpha.1...@apollo-elements/components@1.0.0-alpha.3) (2020-09-13)
 
 

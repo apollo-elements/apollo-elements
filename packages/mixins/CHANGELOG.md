@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0-alpha.8) (2020-09-14)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([a1eda63](https://github.com/apollo-elements/apollo-elements/commit/a1eda635217fc41c63e5519e93e7add9bfc88e11))
+* make properties configurable and enumerable ([3ee6f66](https://github.com/apollo-elements/apollo-elements/commit/3ee6f66d460fdc3012bd62f16427bf681cb9ec26))
+* null check ([f6d5bcc](https://github.com/apollo-elements/apollo-elements/commit/f6d5bccd0504c30b8124b3a45ed39857dd327cc1))
+
+
+### Features
+
+* **components:** create components package ([3d44d20](https://github.com/apollo-elements/apollo-elements/commit/3d44d200f8ca00b8b413456db0a84c4379367143))
+* **mixins:** add ApolloClientMixin ([f7a36d5](https://github.com/apollo-elements/apollo-elements/commit/f7a36d5f0ca298495460e7c6228299e927ce46ce))
+* **mixins:** add TypePoliciesMixin ([7c62032](https://github.com/apollo-elements/apollo-elements/commit/7c62032c5b0cbaaeed7958cfec1409de32bcb94b))
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([e2b1d8d](https://github.com/apollo-elements/apollo-elements/commit/e2b1d8d14ba7157d0f618d98b6fdde87c8e8ee46))
+* feat(mixins)!: apollo client 3 ([9642c7a](https://github.com/apollo-elements/apollo-elements/commit/9642c7a3a44acd231a5e9e11ed47cdc0ad5db58e))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+* bump to `@apollo/client`
+use define semantics in some fields (query, mutation, subscription, document) for better TypeScript 4 support
+use 'ambient' class field declarations
+
+affects:
+@apollo-elements/gluon,
+@apollo-elements/hybrids,
+@apollo-elements/interfaces,
+@apollo-elements/lib,
+@apollo-elements/lit-apollo,
+@apollo-elements/mixins,
+@apollo-elements/polymer,
+@apollo-elements/test-helpers
+
+
+
+
+
 # [3.0.0-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.5...@apollo-elements/mixins@3.0.0-alpha.7) (2020-09-13)
 
 

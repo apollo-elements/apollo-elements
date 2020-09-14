@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@2.0.1...@apollo-elements/hybrids@3.0.0-alpha.8) (2020-09-14)
+
+
+* feat(hybrids)!: apollo client 3 ([6d51631](https://github.com/apollo-elements/apollo-elements/commit/6d51631b6a616a86a0bba59fe896efe2df1e9ad5))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+completely rewritten to leverage existing mixins
+document, mutation, query, subscription factories removed
+
+affects: @apollo-elements/hybrids
+
+
+
+
+
 # [3.0.0-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.0.0-alpha.5...@apollo-elements/hybrids@3.0.0-alpha.7) (2020-09-13)
 
 **Note:** Version bump only for package @apollo-elements/hybrids
