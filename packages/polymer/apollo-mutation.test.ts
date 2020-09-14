@@ -8,19 +8,29 @@ import type {
 import type { DocumentNode } from 'graphql';
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import { fixture, html, expect, oneEvent } from '@open-wc/testing';
+import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 
 import gql from 'graphql-tag';
 
 import { stub } from 'sinon';
 
-import { assertType, client, isApolloError } from '@apollo-elements/test-helpers';
+import {
+  assertType,
+  client,
+  isApolloError,
+  setupClient,
+  teardownClient,
+} from '@apollo-elements/test-helpers';
 
 import { GraphQLError } from 'graphql';
 
 import './apollo-mutation';
 
 import { PolymerApolloMutation } from './apollo-mutation';
+
+import { PolymerElement, html } from '@polymer/polymer';
+
+import NullableParamMutation from '@apollo-elements/test-helpers/NullableParam.mutation.graphql';
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
@@ -72,23 +82,27 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
 }
 
 describe('[polymer] <apollo-mutation>', function() {
+  let element: PolymerApolloMutation<unknown, unknown>;
+  beforeEach(setupClient);
+  afterEach(teardownClient);
+
+  beforeEach(async function() {
+    element = await fixture(`<apollo-mutation></apollo-mutation>`);
+  });
+
   it('caches observed properties', async function() {
     const err = new Error('error');
-    const el = await fixture<PolymerApolloMutation<unknown, unknown>>(html`
-      <apollo-mutation></apollo-mutation>
-    `);
+    element.called = true;
+    expect(element.called, 'called').to.equal(true);
 
-    el.called = true;
-    expect(el.called, 'called').to.equal(true);
+    element.data = 'data';
+    expect(element.data, 'data').to.equal('data');
 
-    el.data = 'data';
-    expect(el.data, 'data').to.equal('data');
+    element.error = err;
+    expect(element.error, 'error').to.equal(err);
 
-    el.error = err;
-    expect(el.error, 'error').to.equal(err);
-
-    el.loading = true;
-    expect(el.loading, 'loading').to.equal(true);
+    element.loading = true;
+    expect(element.loading, 'loading').to.equal(true);
   });
 
   it('notifies on data change', async function() {
@@ -98,68 +112,83 @@ describe('[polymer] <apollo-mutation>', function() {
 
     const mutation = gql`mutation { messages }`;
 
-    const el = await fixture<PolymerApolloMutation<{ messages: string[] }, unknown>>(html`
-      <apollo-mutation
-          .client="${client}"
-          .mutation="${mutation}"
-      ></apollo-mutation>
-    `);
+    element.mutate({ mutation });
 
-    el.mutate();
-
-    const { detail: { value } } = await oneEvent(el, 'data-changed');
+    const { detail: { value } } = await oneEvent(element, 'data-changed');
 
     expect(value).to.deep.equal({ messages: ['hi'] });
     mutationStub.restore();
   });
 
   it('notifies on error change', async function() {
-    const el = await fixture<PolymerApolloMutation<unknown, unknown>>(html`
-      <apollo-mutation
-          .client="${client}"
-      ></apollo-mutation>
-    `);
-
     const err = new Error('error');
-    setTimeout(() => el.error = err);
-    const { detail: { value } } = await oneEvent(el, 'error-changed');
+    setTimeout(() => element.error = err);
+    const { detail: { value } } = await oneEvent(element, 'error-changed');
     expect(value).to.equal(err);
   });
 
   it('notifies on errors change', async function() {
-    const el = await fixture<PolymerApolloMutation<unknown, unknown>>(html`
-      <apollo-mutation
-          .client="${client}"
-      ></apollo-mutation>
-    `);
-
     const errs = [new GraphQLError('error')];
-    setTimeout(() => el.errors = errs);
-    const { detail: { value } } = await oneEvent(el, 'errors-changed');
+    setTimeout(() => element.errors = errs);
+    const { detail: { value } } = await oneEvent(element, 'errors-changed');
     expect(value).to.equal(errs);
   });
 
   it('notifies on loading change', async function() {
-    const el = await fixture<PolymerApolloMutation<unknown, unknown>>(html`
-      <apollo-mutation
-          .client="${client}"
-      ></apollo-mutation>
-    `);
-
-    setTimeout(() => el.loading = true);
-    const { detail: { value } } = await oneEvent(el, 'loading-changed');
+    setTimeout(() => element.loading = true);
+    const { detail: { value } } = await oneEvent(element, 'loading-changed');
     expect(value).to.be.true;
   });
 
   it('notifies on called change', async function() {
-    const el = await fixture<PolymerApolloMutation<unknown, unknown>>(html`
-      <apollo-mutation
-          .client="${client}"
-      ></apollo-mutation>
-    `);
-
-    setTimeout(() => el.called = true);
-    const { detail: { value } } = await oneEvent(el, 'called-changed');
+    setTimeout(() => element.called = true);
+    const { detail: { value } } = await oneEvent(element, 'called-changed');
     expect(value).to.be.true;
+  });
+
+  describe('when used in a Polymer template', function() {
+    let wrapper: PolymerElement;
+    class WrapperElement extends PolymerElement {
+      static get properties() {
+        return {
+          mutation: {
+            type: Object,
+            value: () => NullableParamMutation,
+          },
+          variables: {
+            type: Object,
+            value: () => ({ nullable: '🤡' }),
+          },
+        };
+      }
+
+      static get template() {
+        return html`
+          <apollo-mutation id="mutation"
+              mutation="[[mutation]]"
+              variables="[[variables]]"
+              data="{{data}}"
+          ></apollo-mutation>
+
+          <button id="button" on-click="onClick"></button>
+          <output>[[data.nullableParam.nullable]]</output>
+        `;
+      }
+
+      onClick() {
+        (this.$.mutation as PolymerApolloMutation<unknown, unknown>).mutate();
+      }
+    }
+
+    beforeEach(async function() {
+      const tag = defineCE(WrapperElement);
+      wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
+      (wrapper.$.button as HTMLButtonElement).click();
+      await nextFrame();
+    });
+
+    it('binds data up into parent component', async function() {
+      expect(wrapper.shadowRoot.textContent).to.contain('🤡');
+    });
   });
 });
