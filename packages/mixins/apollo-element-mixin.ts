@@ -7,6 +7,22 @@ import { getGraphQLScriptChildDocument } from '@apollo-elements/lib/get-graphql-
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
+/**
+ * Fired when an element connects to or disconnects from the DOM
+ */
+export class ApolloElementEvent<T = HTMLElement & ApolloElementInterface>
+  extends CustomEvent<T> {
+  declare type: 'apollo-element-connected'|'apollo-element-disconnected';
+
+  constructor(type: 'apollo-element-connected'|'apollo-element-disconnected', detail: T) {
+    super(type, {
+      bubbles: true,
+      composed: true,
+      detail,
+    });
+  }
+}
+
 function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) {
   return class ApolloElement
     extends superclass
@@ -68,21 +84,13 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
       this.document = getGraphQLScriptChildDocument(this);
 
-      this.dispatchEvent(new CustomEvent('apollo-element-connected', {
-        bubbles: true,
-        composed: true,
-        detail: this,
-      }));
+      this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
     }
 
     disconnectedCallback(): void {
       this.__mo?.disconnect();
       super.disconnectedCallback?.();
-      this.dispatchEvent(new CustomEvent('apollo-element-disconnected', {
-        bubbles: true,
-        composed: true,
-        detail: this,
-      }));
+      this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
     }
   };
 }
