@@ -22,7 +22,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn
 
       - name: Codegen
         run: yarn build:codegen
