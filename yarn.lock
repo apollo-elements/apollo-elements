@@ -7994,9 +7994,9 @@ husky@^4.3.0:
     which-pm-runs "^1.0.0"
 
 "hybrids@>= 2", hybrids@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-4.3.0.tgz#28e1ed2f5a8669bfac8229d4a53504f445ca6fc2"
-  integrity sha512-DEyfFdE7bM4AVb0WxAAzneQgcZqqmNyrt7yks4Lx4LYFHj+bMOFKoxXGcHxk9GVYEABI95krh+/mZq0SzmCe9w==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-4.3.1.tgz#c899148a301ac84fee488767708e6660cd75c658"
+  integrity sha512-aFjUuOfYMhqbK7OilIy2yrzCq7UFL6xpZVtJPy+45lkOf7fi6+R3Lf7ckKkA590fHeN/L45mqdi3S+JGjDfQOQ==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.24:
   version "0.4.24"

@@ -32,7 +32,12 @@ jobs:
           coverageCommand: yarn test
 
       - name: Build
-        run: yarn build
+        run: |
+          lerna run prepublishOnly
+          yarn clean
+
+      - name: Build docs
+        run: yarn docs
 
       - name: Configure CI Git User
         run: |
@@ -41,9 +46,6 @@ jobs:
           git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_PAT@github.com/apollo-elements/apollo-elements
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
-
-      - name: Build docs
-        run: yarn docs
 
       - name: Publish packages
         run: |
