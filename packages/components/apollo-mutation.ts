@@ -199,7 +199,8 @@ class WillMutateError extends Error {}
  * @fires mutation-completed When the mutation resolves. `detail` is `{ data: Data, element: this }`
  * @fires mutation-error When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`
  *
- * ### Example: Using data attributes
+ * @example
+ * Using data attributes
  * ```html
  * <apollo-mutation data-type="Type" data-action="ACTION">
  *   <mwc-button slot="trigger">OK</mwc-button>
@@ -213,7 +214,8 @@ class WillMutateError extends Error {}
  * }
  * ```
  *
- * ### Example: Using data attributes and variables
+ * @example
+ * Using data attributes and variables
  * ```html
  * <apollo-mutation data-type="Quote" data-action="FLUB">
  *   <mwc-button slot="trigger">OK</mwc-button>
@@ -235,7 +237,8 @@ class WillMutateError extends Error {}
  * }
  * ```
  *
- * ### Example: Using data attributes and variables with input property
+ * @example
+ * Using data attributes and variables with input property
  * ```html
  * <apollo-mutation data-type="Type" data-action="ACTION" input-key="actionInput">
  *   <mwc-button slot="trigger">OK</mwc-button>
@@ -255,7 +258,8 @@ class WillMutateError extends Error {}
  * }
  * ```
  *
- * ### Example: Using DOM properties
+ * @example
+ * Using DOM properties
  * ```js
  * html`
  * <apollo-mutation
@@ -277,7 +281,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   /**
    * When set, variable data attributes will be packed into an
    * object property with the name of this property
-   * ##### Example
+   * @example
    * ```html
    * <apollo-mutation id="a" data-variable="var"></apollo-mutation>
    * <apollo-mutation id="b" input-key="input" data-variable="var"></apollo-mutation>
@@ -297,7 +301,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * Define this function to determine the URL to navigate to after a mutation.
    * Function can be synchronous or async.
    * If this function is not defined, will navigate to the `href` property of the link trigger.
-   * ##### Example: Navigate to a post's page after creating it
+   * @example Navigate to a post's page after creating it
    * ```graphql
    * mutation CreatePostMutation($title: String, $content: String) {
    *   createPost(title: $title, content: $content) {
