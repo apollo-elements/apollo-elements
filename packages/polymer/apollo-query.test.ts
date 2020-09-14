@@ -8,17 +8,22 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import { fixture, html, expect, oneEvent } from '@open-wc/testing';
+import { fixture, expect, oneEvent, defineCE, nextFrame, aTimeout } from '@open-wc/testing';
 import gql from 'graphql-tag';
 import { stub } from 'sinon';
 
 import './apollo-query';
-import { client } from '../test-helpers/client';
+import { client, setupClient, teardownClient } from '../test-helpers/client';
 import { DocumentNode, GraphQLError } from 'graphql';
 
 import { PolymerApolloQuery } from './apollo-query';
+import './apollo-query';
 
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+import { PolymerElement, html } from '@polymer/polymer';
+
+import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
@@ -71,25 +76,30 @@ class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
 
 
 describe('[polymer] <apollo-query>', function() {
-  it('caches observed properties', async function() {
-    const el = await fixture<PolymerApolloQuery<unknown, unknown>>(html`
-      <apollo-query
-      ></apollo-query>
-    `);
+  beforeEach(setupClient);
+  afterEach(teardownClient);
 
+  let element: PolymerApolloQuery<unknown, unknown>;
+
+  beforeEach(async function() {
+    element =
+      await fixture<PolymerApolloQuery<unknown, unknown>>(`<apollo-query></apollo-query>`);
+  });
+
+  it('caches observed properties', async function() {
     const err = new Error('error');
 
-    el.data = 'data';
-    expect(el.data, 'data').to.equal('data');
+    element.data = 'data';
+    expect(element.data, 'data').to.equal('data');
 
-    el.error = err;
-    expect(el.error, 'error').to.equal(err);
+    element.error = err;
+    expect(element.error, 'error').to.equal(err);
 
-    el.loading = true;
-    expect(el.loading, 'loading').to.equal(true);
+    element.loading = true;
+    expect(element.loading, 'loading').to.equal(true);
 
-    el.networkStatus = 1;
-    expect(el.networkStatus, 'networkStatus').to.equal(1);
+    element.networkStatus = 1;
+    expect(element.networkStatus, 'networkStatus').to.equal(1);
   });
 
   it('notifies on data change', async function() {
@@ -104,54 +114,68 @@ describe('[polymer] <apollo-query>', function() {
 
     const query = gql`query { messages }`;
 
-    const el = await fixture<PolymerApolloQuery<{ messages: string[] }, unknown>>(html`
-      <apollo-query
-        .client="${client}"
-      ></apollo-query>
-    `);
-
-
-    setTimeout(() => el.executeQuery({ query }));
-    const { detail: { value } } = await oneEvent(el, 'data-changed');
+    setTimeout(() => element.executeQuery({ query }));
+    const { detail: { value } } = await oneEvent(element, 'data-changed');
     expect(value).to.deep.equal({ messages: ['hi'] });
     queryStub.restore();
   });
 
   it('notifies on error change', async function() {
-    const el = await fixture<PolymerApolloQuery<unknown, unknown>>(html`
-      <apollo-query
-        .client="${client}"
-      ></apollo-query>
-    `);
-
     const err = new Error('error');
-    setTimeout(() => el.error = err);
-    const { detail: { value } } = await oneEvent(el, 'error-changed');
+    setTimeout(() => element.error = err);
+    const { detail: { value } } = await oneEvent(element, 'error-changed');
     expect(value).to.equal(err);
   });
 
   it('notifies on errors change', async function() {
-    const el = await fixture<PolymerApolloQuery<unknown, unknown>>(html`
-      <apollo-query
-        .client="${client}"
-      ></apollo-query>
-    `);
-
     const errs = [new GraphQLError('error')];
-    setTimeout(() => el.errors = errs);
-    const { detail: { value } } = await oneEvent(el, 'errors-changed');
+    setTimeout(() => element.errors = errs);
+    const { detail: { value } } = await oneEvent(element, 'errors-changed');
     expect(value).to.equal(errs);
   });
 
   it('notifies on loading change', async function() {
-    const el = await fixture<PolymerApolloQuery<unknown, unknown>>(html`
-      <apollo-query
-        .client="${client}"
-      ></apollo-query>
-    `);
-
-    setTimeout(() => el.loading = true);
-    const { detail: { value } } = await oneEvent(el, 'loading-changed');
+    setTimeout(() => element.loading = true);
+    const { detail: { value } } = await oneEvent(element, 'loading-changed');
     expect(value).to.be.true;
+  });
+
+  describe('when used in a Polymer template', function() {
+    let wrapper: PolymerElement;
+    class WrapperElement extends PolymerElement {
+      static get properties() {
+        return {
+          query: {
+            type: Object,
+            value: () => NullableParamQuery,
+          },
+          variables: {
+            type: Object,
+            value: () => ({ nullable: '🤡' }),
+          },
+        };
+      }
+
+      static get template() {
+        return html`
+          <apollo-query
+              query="[[query]]"
+              variables="[[variables]]"
+              data="{{data}}"
+          ></apollo-query>
+
+          <output>[[data.nullableParam.nullable]]</output>
+        `;
+      }
+    }
+
+    beforeEach(async function() {
+      const tag = defineCE(WrapperElement);
+      wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
+    });
+
+    it('binds data up into parent component', async function() {
+      expect(wrapper.shadowRoot.textContent).to.contain('🤡');
+    });
   });
 });
