@@ -44,7 +44,7 @@ function claimApolloElement(event: ApolloElementEvent): ApolloElement {
  * Provides an ApolloClient instance to all nested ApolloElement children,
  * even across (open) shadow boundaries.
  *
- * ### Example: Providing a client to a tree of Nodes
+ * @example Providing a client to a tree of Nodes
  * ```html
  * <apollo-client id="client-a">
  *   <apollo-mutation>
@@ -53,7 +53,7 @@ function claimApolloElement(event: ApolloElementEvent): ApolloElement {
  * </apollo-client>
  * ```
  *
- * ### Example: Nesting separate clients
+ * @example Nesting separate clients
  * ```html
  * <apollo-client id="client-a">
  *   <query-element>
