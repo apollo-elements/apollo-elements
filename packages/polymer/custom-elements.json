@@ -91,10 +91,27 @@
       ],
       "events": [
         {
-          "name": "apollo-element-connected"
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         },
         {
-          "name": "apollo-element-disconnected"
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "data-changed"
+        },
+        {
+          "name": "error-changed"
+        },
+        {
+          "name": "errors-changed"
+        },
+        {
+          "name": "loading-changed"
+        },
+        {
+          "name": "called-changed"
         }
       ]
     },
@@ -215,10 +232,27 @@
       ],
       "events": [
         {
-          "name": "apollo-element-connected"
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         },
         {
-          "name": "apollo-element-disconnected"
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "data-changed"
+        },
+        {
+          "name": "error-changed"
+        },
+        {
+          "name": "errors-changed"
+        },
+        {
+          "name": "loading-changed"
+        },
+        {
+          "name": "network-status-changed"
         }
       ]
     },
@@ -317,10 +351,24 @@
       ],
       "events": [
         {
-          "name": "apollo-element-connected"
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         },
         {
-          "name": "apollo-element-disconnected"
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "data-changed"
+        },
+        {
+          "name": "error-changed"
+        },
+        {
+          "name": "errors-changed"
+        },
+        {
+          "name": "loading-changed"
         }
       ]
     }

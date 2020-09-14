@@ -14,7 +14,7 @@
     "start": "tsc -w --noEmit",
     "analyze": "run-p analyze:*",
     "analyze:md": "cp README.head.md README.md && wca './!(*test).{js,ts}' --silent --markdown.headerLevel 2 >> README.md",
-    "analyze:json": "wca analyze --format json --outFile custom-elements.json",
+    "analyze:json": "wca analyze './!(*test).{js,ts}' --format json --outFile custom-elements.json",
     "test": "wtr --coverage --root-dir ../.."
   },
   "publishConfig": {

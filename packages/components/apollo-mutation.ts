@@ -198,6 +198,8 @@ class WillMutateError extends Error {}
  * @fires will-navigate When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`
  * @fires mutation-completed When the mutation resolves. `detail` is `{ data: Data, element: this }`
  * @fires mutation-error When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`
+ * @fires 'apollo-element-disconnected' when the element disconnects from the dom
+ * @fires 'apollo-element-connected' when the element connects to the dom
  *
  * @example
  * Using data attributes

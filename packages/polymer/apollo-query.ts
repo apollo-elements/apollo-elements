@@ -13,7 +13,7 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
  * when its `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
- * ## 👩‍🚀 Usage
+ * @example
  * ```html
  * <apollo-query data="{{data}}" variables="[[variables]]">
  *   <script type="application/graphql">
@@ -31,6 +31,14 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
  *   [[data.user.name]]
  * </paper-icon-item>
  * ```
+ *
+ * @fires 'apollo-element-disconnected' when the element disconnects from the dom
+ * @fires 'apollo-element-connected' when the element connects to the dom
+ * @fires 'data-changed'
+ * @fires 'error-changed'
+ * @fires 'errors-changed'
+ * @fires 'loading-changed'
+ * @fires 'network-status-changed'
  */
 export class PolymerApolloQuery<TData, TVariables>
   extends ApolloQueryMixin(PolymerApolloElement as Base)<TData, TVariables>

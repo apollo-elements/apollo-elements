@@ -2,108 +2,6 @@
   "version": "experimental",
   "tags": [
     {
-      "name": "shallow-element",
-      "path": "./apollo-client.test.ts",
-      "properties": [
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
-          "default": "\"__APOLLO_CLIENT__\""
-        },
-        {
-          "name": "document",
-          "description": "GraphQL Document",
-          "type": "DocumentNode"
-        },
-        {
-          "name": "context",
-          "description": "Context to be passed to link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "Latest data",
-          "type": "unknown"
-        },
-        {
-          "name": "error",
-          "description": "Latest error",
-          "type": "Error | ApolloError"
-        },
-        {
-          "name": "errors",
-          "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
-        },
-        {
-          "name": "loading",
-          "description": "Whether a request is in flight.",
-          "type": "boolean",
-          "default": "false"
-        }
-      ],
-      "events": [
-        {
-          "name": "apollo-element-connected"
-        },
-        {
-          "name": "apollo-element-disconnected"
-        }
-      ]
-    },
-    {
-      "name": "deep-element",
-      "path": "./apollo-client.test.ts",
-      "properties": [
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
-          "default": "\"__APOLLO_CLIENT__\""
-        },
-        {
-          "name": "document",
-          "description": "GraphQL Document",
-          "type": "DocumentNode"
-        },
-        {
-          "name": "context",
-          "description": "Context to be passed to link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "Latest data",
-          "type": "unknown"
-        },
-        {
-          "name": "error",
-          "description": "Latest error",
-          "type": "Error | ApolloError"
-        },
-        {
-          "name": "errors",
-          "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
-        },
-        {
-          "name": "loading",
-          "description": "Whether a request is in flight.",
-          "type": "boolean",
-          "default": "false"
-        }
-      ],
-      "events": [
-        {
-          "name": "apollo-element-connected"
-        },
-        {
-          "name": "apollo-element-disconnected"
-        }
-      ]
-    },
-    {
       "name": "apollo-client",
       "path": "./apollo-client.ts",
       "properties": [
@@ -201,6 +99,11 @@
           "type": "Variables"
         },
         {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject>",
@@ -210,11 +113,6 @@
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode"
-        },
-        {
-          "name": "context",
-          "description": "Context to be passed to link execution chain.",
-          "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "data",
@@ -256,10 +154,12 @@
           "description": "When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`"
         },
         {
-          "name": "apollo-element-connected"
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         },
         {
-          "name": "apollo-element-disconnected"
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
         }
       ],
       "slots": [
