@@ -10,7 +10,7 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
  * `<apollo-subscription>` fires Polymer-style prop-changed events
  * when its `data`, `error`, or `loading` properties change.
  *
- * ## 👩‍🚀 Usage
+ * @example
  * ```html
  * <apollo-subscription data="{{data}}" variables="[[variables]]" on-data-changed="toast">
  *   <script type="application/graphql">
@@ -27,6 +27,13 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
  *   <iron-image>[[data.userJoined.picture]]</iron-image>
  * </paper-toast>
  * ```
+ *
+ * @fires 'apollo-element-disconnected' when the element disconnects from the dom
+ * @fires 'apollo-element-connected' when the element connects to the dom
+ * @fires 'data-changed'
+ * @fires 'error-changed'
+ * @fires 'errors-changed'
+ * @fires 'loading-changed'
  */
 export class PolymerApolloSubscription<TData, TVariables>
   extends ApolloSubscriptionMixin(PolymerApolloElement as Base)<TData, TVariables>

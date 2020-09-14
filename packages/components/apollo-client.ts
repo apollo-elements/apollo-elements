@@ -1,18 +1,10 @@
 import type { ApolloElementInterface } from '@apollo-elements/interfaces';
+import type { ApolloElementEvent } from '@apollo-elements/mixins/apollo-element-mixin';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
-
-type ApolloElementEvent = CustomEvent & {
-  detail: ApolloElementInterface
-}
 
 declare global {
   interface HTMLElementTagNameMap {
     'apollo-client': ApolloClientElement;
-  }
-
-  interface HTMLElementEventMap {
-    'apollo-element-connected': ApolloElementEvent
-    'apollo-element-disconnected': ApolloElementEvent
   }
 }
 

@@ -12,7 +12,7 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
  * when its `called`, `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
- * ## 👩‍🚀 Usage
+ * @example
  *
  * ```html
  * <apollo-mutation id="userMutation" data="{{data}}">
@@ -30,6 +30,14 @@ type Base = Constructor<HTMLElement & PolymerApolloElement>;
  * <paper-input label="Picture URL" value="{{picture}}"></paper-input>
  * <paper-button on-click="mutate">Submit</paper-button>
  * ```
+ *
+ * @fires 'apollo-element-disconnected' when the element disconnects from the dom
+ * @fires 'apollo-element-connected' when the element connects to the dom
+ * @fires 'data-changed'
+ * @fires 'error-changed'
+ * @fires 'errors-changed'
+ * @fires 'loading-changed'
+ * @fires 'called-changed'
  */
 export class PolymerApolloMutation<TData, TVariables>
   extends ApolloMutationMixin(PolymerApolloElement as Base)<TData, TVariables>

@@ -7,6 +7,13 @@ import { getGraphQLScriptChildDocument } from '@apollo-elements/lib/get-graphql-
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
+declare global {
+  interface HTMLElementEventMap {
+    'apollo-element-connected': ApolloElementEvent;
+    'apollo-element-disconnected': ApolloElementEvent;
+  }
+}
+
 /**
  * Fired when an element connects to or disconnects from the DOM
  */
@@ -24,6 +31,9 @@ export class ApolloElementEvent<T = HTMLElement & ApolloElementInterface>
 }
 
 function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) {
+  /**
+   * @element
+   */
   return class ApolloElement
     extends superclass
     implements ApolloElementInterface {
@@ -67,6 +77,9 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       this.loading = false;
     }
 
+    /**
+     * @fires 'apollo-element-connected' when the element connects to the dom
+     */
     connectedCallback(): void {
       super.connectedCallback?.();
 
@@ -87,6 +100,9 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
     }
 
+    /**
+     * @fires 'apollo-element-disconnected' when the element disconnects from the dom
+     */
     disconnectedCallback(): void {
       this.__mo?.disconnect();
       super.disconnectedCallback?.();
