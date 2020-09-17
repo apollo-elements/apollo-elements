@@ -1,4 +1,4 @@
-import type { ApolloElementInterface } from '@apollo-elements/interfaces';
+import type { ApolloElementInterface, ApolloQueryInterface } from '@apollo-elements/interfaces';
 import type { ApolloElementEvent } from '@apollo-elements/mixins/apollo-element-mixin';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 
@@ -23,6 +23,11 @@ function isApolloElement(e: EventTarget): e is ApolloElement {
     'errors' in e &&
     'loading' in e
   );
+}
+
+function isApolloQuery(e: EventTarget): e is ApolloQueryInterface<unknown, unknown> {
+  // @ts-expect-error: disambiguating
+  return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
 }
 
 function claimApolloElement(event: ApolloElementEvent): ApolloElement {
@@ -68,7 +73,6 @@ export class ApolloClientElement extends HTMLElement {
 
   /**
    * Reference to the `ApolloClient` instance.
-   * Defaults to `window.__APOLLO_CLIENT` if not set.
    */
   get client(): ApolloClient<NormalizedCacheObject> {
     return this.#client;
@@ -80,11 +84,17 @@ export class ApolloClientElement extends HTMLElement {
       .forEach(x => x.client = value);
   }
 
+  /**
+   * Set of elements subscribed to changes on this element's client
+   */
+  get instances(): Set<ApolloElement> {
+    return this.#instances;
+  }
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.append(template.content.cloneNode(true));
-    this.client = this.client ?? window.__APOLLO_CLIENT__;
     this.addEventListener('apollo-element-connected', this.onElementConnected.bind(this));
     this.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
   }
@@ -98,6 +108,8 @@ export class ApolloClientElement extends HTMLElement {
     if (!target) return;
     this.#instances.add(target);
     target.client = this.client;
+    if (isApolloQuery(target) && !target.noAutoSubscribe && target.shouldSubscribe())
+      target.subscribe();
   }
 
   /**

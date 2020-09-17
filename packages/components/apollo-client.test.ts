@@ -1,11 +1,14 @@
-import { ApolloElementInterface } from '@apollo-elements/interfaces';
-import { ApolloElementMixin } from '@apollo-elements/mixins';
+import { ApolloElementInterface, ApolloQueryInterface } from '@apollo-elements/interfaces';
+import { ApolloElementMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
 
-import { html, fixtureSync, expect } from '@open-wc/testing';
+import { html, fixtureSync, expect, nextFrame, aTimeout } from '@open-wc/testing';
 import { ApolloClientElement } from './apollo-client';
 
 import './apollo-client';
+import { makeClient, NoParamQueryData, NoParamQueryVariables } from '@apollo-elements/test-helpers';
+
+import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 
 /** @ignore */
 class ShallowElement extends ApolloElementMixin(HTMLElement) {
@@ -17,23 +20,19 @@ class ShallowElement extends ApolloElementMixin(HTMLElement) {
 }
 
 /** @ignore */
-class DeepElement extends ApolloElementMixin(HTMLElement) { }
+class DeepElement extends ApolloQueryMixin(HTMLElement) {
+  query = NoParamQuery;
+}
 
 customElements.define('shallow-element', ShallowElement);
 customElements.define('deep-element', DeepElement);
-
-function makeClient(): ApolloClient<NormalizedCacheObject> {
-  const cache = new InMemoryCache();
-  const link = new HttpLink({ uri: '/graphql' });
-  return new ApolloClient({ cache, link, connectToDevTools: false });
-}
 
 describe('<apollo-client>', function() {
   let client: ApolloClient<NormalizedCacheObject>;
   let cached: ApolloClient<NormalizedCacheObject>;
   let element: ApolloClientElement;
   let shallow: ApolloElementInterface & HTMLElement;
-  let deep: ApolloElementInterface & HTMLElement;
+  let deep: ApolloQueryInterface<NoParamQueryData, NoParamQueryVariables> & HTMLElement;
 
   describe('with client', function() {
     beforeEach(async function() {
@@ -79,6 +78,13 @@ describe('<apollo-client>', function() {
 
       it('reassigns client to deep elements', function() {
         expect(deep.client, 'deep').to.equal(next);
+      });
+
+      describe('when element is a query element', function() {
+        beforeEach(nextFrame);
+        it('subscribes', function() {
+          expect(deep.data).to.be.ok;
+        });
       });
     });
   });
