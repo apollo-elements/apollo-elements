@@ -106,7 +106,7 @@ describe('[polymer] <apollo-mutation>', function() {
   });
 
   it('notifies on data change', async function() {
-    const mutationStub = stub(client, 'mutate');
+    const mutationStub = stub(element.client, 'mutate');
 
     mutationStub.resolves({ data: { messages: ['hi'] } });
 

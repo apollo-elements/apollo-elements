@@ -2,7 +2,7 @@ import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
 import type { Hybrids } from 'hybrids';
 import type Sinon from 'sinon';
 
-import { expect, nextFrame } from '@open-wc/testing';
+import { aTimeout, expect, nextFrame } from '@open-wc/testing';
 
 import NonNullableParamQuery from '@apollo-elements/test-helpers/NonNullableParam.query.graphql';
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
@@ -148,6 +148,10 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
 
   async function setNoParamQuery() {
     element.query = NoParamQuery;
+  }
+
+  function setNoAutoSubscribe() {
+    element.noAutoSubscribe = true;
   }
 
   beforeEach(setupClient);
@@ -318,6 +322,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
 
   describe('subscribe', function describeSubscribe() {
     beforeEach(setMockedClient);
+    beforeEach(setNoAutoSubscribe);
     beforeEach(setNonNullableParamQuery);
 
     describe('with insufficient variables', function() {
@@ -359,7 +364,9 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
     });
 
     describe('with a GraphQL error', function() {
+      beforeEach(setNoAutoSubscribe);
       beforeEach(setErrorNonNullableQueryVariables);
+      beforeEach(() => element.subscribe());
       beforeEach(nextFrame);
 
       it('sets element error', async function bindsErrorToError() {
@@ -399,6 +406,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   describe('executeQuery', function describeExecuteQuery() {
     beforeEach(setMockedClient);
     describe('with insufficient variables on element', function() {
+      beforeEach(setNoAutoSubscribe);
       beforeEach(async function() {
         element.query = NonNullableParamQuery;
       });

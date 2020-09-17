@@ -18,7 +18,6 @@ import type {
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
-import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 
@@ -110,7 +109,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
               throw new TypeError('Query must be a gql-parsed DocumentNode');
             }
 
-            if (this.shouldSubscribe.call(this, { query }))
+            if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ query }))
               this.subscribe({ query });
           },
         },
@@ -127,7 +126,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
             this.__variables = variables;
             if (this.observableQuery)
               this.refetch(variables);
-            else if (this.shouldSubscribe.call(this, { variables }))
+            else if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ variables }))
               this.subscribe({ variables });
             else
               return;
@@ -169,7 +168,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
-      if (this.shouldSubscribe.call(this))
+      if (this.client && !this.noAutoSubscribe && this.shouldSubscribe())
         this.subscribe();
     }
 
@@ -183,13 +182,17 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     }
 
     /**
-     * Determines whether the element should attempt to subscribe i.e. begin querying
-     * Override to prevent subscribing unless your conditions are met
+     * Determines whether the element should attempt to automatically subscribe i.e. begin querying
+     *
+     * Override to prevent subscribing unless your conditions are met.
+     *
+     * @default
+     * ```ts
+     * !!(options?.query ?? this.document);
+     * ```
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      const query = options?.query ?? this.query;
-      const variables = options?.variables ?? this.variables;
-      return !this.noAutoSubscribe && hasAllVariables({ query, variables });
+      return !!(options?.query ?? this.document);
     }
 
     /**
@@ -308,7 +311,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * @private
      */
     nextData(result?: ApolloQueryResult<TData>): void {
-      this.data = result?.data;
+      this.data = result?.data ?? null;
       this.loading = result?.loading;
       this.networkStatus = result?.networkStatus;
       this.partial = result?.partial;
