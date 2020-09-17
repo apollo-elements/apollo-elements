@@ -32,6 +32,9 @@
       }, {
         "title": "📍 Local State",
         "source": "./pages/local-state.md"
+      }, {
+        "title": "👩‍🔬 Advanced Local State",
+        "source": "./pages/advanced-local-state.md"
     }]
   }, {
     "title": "Cool Tricks",
