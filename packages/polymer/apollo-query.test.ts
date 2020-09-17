@@ -103,7 +103,7 @@ describe('[polymer] <apollo-query>', function() {
   });
 
   it('notifies on data change', async function() {
-    const queryStub = stub(client, 'query');
+    const queryStub = stub(element.client, 'query');
 
     queryStub.resolves({
       loading: false,

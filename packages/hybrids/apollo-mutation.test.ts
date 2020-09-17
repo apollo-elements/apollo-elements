@@ -71,7 +71,7 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
   it('has default properties', async function setsDefaultProperties() {
     expect(element.awaitRefetchQueries, 'awaitRefetchQueries').to.be.undefined;
     expect(element.called, 'called').to.be.false;
-    expect(element.client, 'client').to.equal(client);
+    expect(element.client, 'client').to.equal(window.__APOLLO_CLIENT__);
     expect(element.data, 'data').to.be.null;
     expect(element.errorPolicy, 'errorPolicy').to.be.undefined;
     expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;

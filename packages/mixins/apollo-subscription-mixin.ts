@@ -18,7 +18,6 @@ import type {
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
 
 function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
   return class ApolloSubscriptionElement<TData, TVariables>
@@ -75,7 +74,10 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
             }
 
             this.cancel();
-            if (this.shouldSubscribe({ query: subscription }))
+
+            const query = subscription;
+
+            if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ query }))
               this.subscribe();
           },
         },
@@ -91,7 +93,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
           set(this: This, variables: TVariables) {
             this.__variables = variables;
             this.cancel();
-            if (this.shouldSubscribe({ variables }))
+            if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ variables }))
               this.subscribe();
           },
         },
@@ -117,7 +119,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
-      if (!this.shouldSubscribe()) return;
+      if (this.noAutoSubscribe || !this.shouldSubscribe()) return;
       this.initObservable();
       this.subscribe();
     }
@@ -148,10 +150,18 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       this.observable = undefined;
     }
 
+    /**
+     * Determines whether the element should attempt to automatically subscribe i.e. begin querying
+     *
+     * Override to prevent subscribing unless your conditions are met.
+     *
+     * @default
+     * ```ts
+     * !!(options?.query ?? this.document);
+     * ```
+     */
     shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      const query = options?.query ?? this.subscription;
-      const variables = options?.variables ?? this.variables;
-      return !this.noAutoSubscribe && hasAllVariables({ query, variables });
+      return !!(options?.query ?? this.document);
     }
 
     /** @private */

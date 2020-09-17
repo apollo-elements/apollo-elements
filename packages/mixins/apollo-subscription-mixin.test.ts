@@ -95,9 +95,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
   });
 
   it('sets default properties', async function setsDefaultProperties() {
-    const tag = unsafeStatic(defineCE(class extends Test {
-      client = client;
-    }));
+    const tag = unsafeStatic(defineCE(class extends Test { }));
 
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
@@ -162,9 +160,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     });
 
     it('calls subscribe if subscription not yet initialized', async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {
-        client = client;
-      }));
+      const tag = unsafeStatic(defineCE(class extends Test { }));
 
       const el =
         await fixture<Test>(fhtml`
@@ -182,8 +178,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       type V = NullableParamSubscriptionVariables;
 
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        client = client;
-
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'qux' };
@@ -203,8 +197,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
     it('does not call subscribe if subscription is falsy', async function() {
       const tag = unsafeStatic(defineCE(class extends Test {
-        client = client;
-
         subscription = null;
 
         variables = { bar: 'qux' };
@@ -227,8 +219,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       type V = NullableParamSubscriptionVariables;
 
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        client = client;
-
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'qux' };
@@ -251,8 +241,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       type V = NullableParamSubscriptionVariables;
 
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        client = client;
-
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'qux' };
@@ -273,7 +261,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
     let clientSubscribeSpy: Sinon.SinonSpy;
 
     beforeEach(function() {
-      clientSubscribeSpy = spy(client, 'subscribe');
+      clientSubscribeSpy = spy(window.__APOLLO_CLIENT__, 'subscribe');
     });
 
     afterEach(function() {
@@ -286,8 +274,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       type V = NullableParamSubscriptionVariables;
 
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        client = client;
-
         subscription = NullableParamSubscription;
       }));
 
@@ -306,8 +292,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       type V = NonNullableParamSubscriptionVariables;
 
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        client = client;
-
         subscription = NonNullableParamSubscription;
       }));
 
@@ -333,8 +317,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
 
-        client = client;
-
         subscription = NullableParamSubscription;
 
         variables = { nullable: 'quux' };
@@ -359,8 +341,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
 
-        client = client;
-
         subscription = NullableParamSubscription;
 
         fetchPolicy = 'cache-only' as const;
@@ -384,8 +364,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
         noAutoSubscribe = true;
-
-        client = client;
 
         subscription = NullableParamSubscription;
 
@@ -475,8 +453,6 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
     beforeEach(async function() {
       const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        client = client;
-
         onSubscriptionData(x) { x; }
 
         onError(x) { x; }
@@ -484,7 +460,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
       element =
         await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
+          <${tag} .noAutoSubscribe="${true}"></${tag}>
         `);
     });
 

@@ -49,9 +49,18 @@ const unmocked = makeExecutableSchema({ typeDefs });
 
 const schema = addMocksToSchema({ schema: unmocked, mocks });
 
-// Create the Apollo Client
-export const client =
-  new ApolloClient({
+export function setupClient(): void {
+  window.__APOLLO_CLIENT__ = makeClient();
+}
+
+export function teardownClient(): void {
+  window.__APOLLO_CLIENT__ = undefined;
+}
+
+export function makeClient(): ApolloClient<NormalizedCacheObject> {
+  // Create the Apollo Client
+  return new ApolloClient({
+    connectToDevTools: false,
     cache: new InMemoryCache(),
     link: new SchemaLink({ schema }),
     defaultOptions: {
@@ -60,11 +69,6 @@ export const client =
       },
     },
   });
-
-export function setupClient(): void {
-  window.__APOLLO_CLIENT__ = client;
 }
 
-export function teardownClient(): void {
-  window.__APOLLO_CLIENT__ = undefined;
-}
+export const client = makeClient();
