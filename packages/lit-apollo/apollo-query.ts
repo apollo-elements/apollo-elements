@@ -14,6 +14,4 @@ export class ApolloQuery<TData, TVariables>
   extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloQueryInterface<TData, TVariables> {
   @property({ type: Number }) networkStatus: NetworkStatus;
-
-  @property({ type: Boolean, attribute: 'no-auto-subscribe' }) noAutoSubscribe = false;
 }

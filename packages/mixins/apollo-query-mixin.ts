@@ -73,6 +73,8 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
     declare options: Partial<WatchQueryOptions>;
 
+    declare noAutoSubscribe: boolean;
+
     declare notifyOnNetworkStatusChange: boolean;
 
     declare pollInterval: number;
@@ -82,8 +84,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     onError?(_error: Error): void
 
     errorPolicy: ErrorPolicy = 'none';
-
-    noAutoSubscribe = false;
 
     /** @private */
     __variables: TVariables = null;
@@ -146,7 +146,22 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
             this.__options = options;
             this.observableQuery?.setOptions(options);
           },
+        },
 
+        noAutoSubscribe: {
+          configurable: true,
+          enumerable: true,
+
+          get(this: This): boolean {
+            return this.hasAttribute('no-auto-subscribe');
+          },
+
+          set(v: boolean) {
+            if (v)
+              this.setAttribute('no-auto-subscribe', '');
+            else
+              this.removeAttribute('no-auto-subscribe');
+          },
         },
       });
     }
