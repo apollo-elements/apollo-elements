@@ -32,6 +32,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     declare pollInterval: number;
 
+    declare noAutoSubscribe: boolean;
+
     declare observable: Observable<FetchResult<TData>>;
 
     declare observableSubscription: ZenObservable.Subscription;
@@ -41,8 +43,6 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     declare variables: TVariables;
 
     declare skip: boolean;
-
-    noAutoSubscribe = false;
 
     notifyOnNetworkStatusChange = false;
 
@@ -93,6 +93,22 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
             this.cancel();
             if (this.shouldSubscribe({ variables }))
               this.subscribe();
+          },
+        },
+
+        noAutoSubscribe: {
+          configurable: true,
+          enumerable: true,
+
+          get(this: This): boolean {
+            return this.hasAttribute('no-auto-subscribe');
+          },
+
+          set(v: boolean) {
+            if (v)
+              this.setAttribute('no-auto-subscribe', '');
+            else
+              this.removeAttribute('no-auto-subscribe');
           },
         },
       });
