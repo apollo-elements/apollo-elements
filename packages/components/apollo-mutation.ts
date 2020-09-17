@@ -181,7 +181,7 @@ function isLink(node: Element): node is HTMLAnchorElement {
 }
 
 /** @ignore */
-class WillMutateError extends Error {}
+export class WillMutateError extends Error {}
 
 /**
  * Simple Mutation component that takes a button or link-wrapped button as it's trigger.
