@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.0-alpha.7...@apollo-elements/components@1.0.0-alpha.8) (2020-09-18)
+
+
+### Bug Fixes
+
+* **components:** make mutation trigger and button protected ([0f12872](https://github.com/apollo-elements/apollo-elements/commit/0f1287269e686dd1296b33326d43cd37abfc66eb))
+
+
+
+
+
 # [1.0.0-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.0-alpha.6...@apollo-elements/components@1.0.0-alpha.7) (2020-09-18)
 
 
