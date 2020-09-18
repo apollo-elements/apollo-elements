@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.10](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.0-alpha.9...@apollo-elements/lit-apollo@3.0.0-alpha.10) (2020-09-18)
+
+
+### Features
+
+* **mixins:** reflect no-auto-subscribe attribute ([b2c58b6](https://github.com/apollo-elements/apollo-elements/commit/b2c58b6e67274668ba85582cf78e14a31ec7fe60))
+
+
+
+
+
 # [3.0.0-alpha.9](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@2.0.2...@apollo-elements/lit-apollo@3.0.0-alpha.9) (2020-09-14)
 
 
