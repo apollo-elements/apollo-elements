@@ -14,6 +14,9 @@
       }, {
         "title": "🤖 Code Generated TypeScript Types",
         "source": "./pages/codegen.md"
+      }, {
+        "title": "🚚 Migrating from 2.0",
+        "source": "./pages/migration.md"
       }]
   }, {
     "title": "Using Apollo",
