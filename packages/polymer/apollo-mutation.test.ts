@@ -16,7 +16,6 @@ import { stub } from 'sinon';
 
 import {
   assertType,
-  client,
   isApolloError,
   setupClient,
   teardownClient,

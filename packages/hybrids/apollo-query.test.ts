@@ -2,7 +2,7 @@ import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
 import type { Hybrids } from 'hybrids';
 import type Sinon from 'sinon';
 
-import { aTimeout, expect, nextFrame } from '@open-wc/testing';
+import { expect, nextFrame } from '@open-wc/testing';
 
 import NonNullableParamQuery from '@apollo-elements/test-helpers/NonNullableParam.query.graphql';
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';

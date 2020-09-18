@@ -8,18 +8,22 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
+import { DocumentNode, GraphQLError } from 'graphql';
+
 import { fixture, expect, oneEvent, defineCE } from '@open-wc/testing';
 import gql from 'graphql-tag';
 import { stub } from 'sinon';
 
+import {
+  setupClient,
+  teardownClient,
+  assertType,
+  isApolloError,
+} from '@apollo-elements/test-helpers';
+
 import './apollo-query';
-import { client, setupClient, teardownClient } from '../test-helpers/client';
-import { DocumentNode, GraphQLError } from 'graphql';
 
 import { PolymerApolloQuery } from './apollo-query';
-import './apollo-query';
-
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 import { PolymerElement, html } from '@polymer/polymer';
 

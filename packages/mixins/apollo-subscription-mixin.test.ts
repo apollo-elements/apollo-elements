@@ -29,7 +29,6 @@ import { spy, stub } from 'sinon';
 import { Observable } from '@apollo/client/core';
 
 import {
-  client,
   setupClient,
   teardownClient,
   isApolloError,

@@ -9,7 +9,7 @@ import NoParamMutation from '@apollo-elements/test-helpers/NoParam.mutation.grap
 import NullableParamMutation from '@apollo-elements/test-helpers/NullableParam.mutation.graphql';
 
 import { ApolloMutation, ApolloMutationElement } from './apollo-mutation';
-import { client, setupClient } from '@apollo-elements/test-helpers/client';
+import { setupClient } from '@apollo-elements/test-helpers/client';
 
 let counter = 0;
 
