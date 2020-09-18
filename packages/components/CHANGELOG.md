@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.0-alpha.4...@apollo-elements/components@1.0.0-alpha.5) (2020-09-18)
+
+
+### Bug Fixes
+
+* **components:** export WillMutateError ([a887946](https://github.com/apollo-elements/apollo-elements/commit/a887946a9f7870ae56e1e4ea9f36ae240c640a56))
+* **components:** subscribes query components when setting client ([fa3c01d](https://github.com/apollo-elements/apollo-elements/commit/fa3c01d1215c1b5cbdbafebed260745412546474))
+
+
+
+
+
 # 1.0.0-alpha.4 (2020-09-14)
 
 
