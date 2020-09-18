@@ -35,6 +35,15 @@ function claimApolloElement(event: ApolloElementEvent): ApolloElement {
   return isApolloElement(event.detail) ? event.detail : null;
 }
 
+function isSubscribable(element: ApolloElement): element is ApolloQueryInterface<unknown, unknown> {
+  return (
+    isApolloQuery(element) &&
+    element.client &&
+    !element.noAutoSubscribe &&
+    element.shouldSubscribe()
+  );
+}
+
 /**
  * @element apollo-client
  *
@@ -146,7 +155,7 @@ export class ApolloClientElement extends HTMLElement {
    */
   private initialize(element: ApolloElement): void {
     element.client = this.client;
-    if (isApolloQuery(element) && !element.noAutoSubscribe && element.shouldSubscribe())
+    if (isSubscribable(element))
       element.subscribe();
   }
 }
