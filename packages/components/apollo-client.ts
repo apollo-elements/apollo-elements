@@ -50,7 +50,8 @@ function isSubscribable(element: ApolloElement): element is ApolloQueryInterface
  * Provides an ApolloClient instance to all nested ApolloElement children,
  * even across (open) shadow boundaries.
  *
- * @example Providing a client to a tree of Nodes
+ * @example
+ * Providing a client to a tree of Nodes
  * ```html
  * <apollo-client id="client-a">
  *   <apollo-mutation>
@@ -59,7 +60,8 @@ function isSubscribable(element: ApolloElement): element is ApolloQueryInterface
  * </apollo-client>
  * ```
  *
- * @example Nesting separate clients
+ * @example
+ * Nesting separate clients
  * ```html
  * <apollo-client id="client-a">
  *   <query-element>
