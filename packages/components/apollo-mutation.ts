@@ -349,12 +349,19 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     this.__variables = v;
   }
 
-  private get trigger(): HTMLElement {
+  /**
+   * Slotted trigger node
+   */
+  protected get trigger(): HTMLElement {
     const [node = null] = this.triggerNodes ?? [];
     return node;
   }
 
-  private get button(): ButtonLikeElement {
+  /**
+   * If the slotted trigger node is a button, the trigger
+   * If the slotted trigger node is a link with a button as it's first child, the button
+   */
+  protected get button(): ButtonLikeElement {
     if (!this.trigger)
       return null;
     else if (isButton(this.trigger))
@@ -365,11 +372,17 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
       return null;
   }
 
-  private get inputs(): InputLikeElement[] {
+  /**
+   * Variable input nodes
+   */
+  protected get inputs(): InputLikeElement[] {
     return [...this.variableNodes];
   }
 
-  private get href(): string {
+  /**
+   * The `href` attribute of the link trigger
+   */
+  protected get href(): string {
     const link = isLink(this.trigger) ? this.trigger : null;
     return link?.href;
   }
