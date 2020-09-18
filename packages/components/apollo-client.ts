@@ -80,8 +80,8 @@ export class ApolloClientElement extends HTMLElement {
 
   set client(value: ApolloClient<NormalizedCacheObject>) {
     this.#client = value;
-    this.#instances
-      .forEach(x => x.client = value);
+    for (const instance of this.#instances)
+      this.initialize(instance);
   }
 
   /**
@@ -99,6 +99,27 @@ export class ApolloClientElement extends HTMLElement {
     this.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
   }
 
+  connectedCallback(): void {
+    this.findDeepInstances();
+    if (!this.client) return;
+    for (const instance of this.#instances)
+      this.initialize(instance);
+  }
+
+  private findDeepInstances(): void {
+    for (const child of this.children)
+      this.addDeepInstances(child);
+  }
+
+  private addDeepInstances(child: Node): void {
+    if (!(child instanceof HTMLElement)) return;
+    if (isApolloElement(child))
+      this.#instances.add(child);
+    if (!child.shadowRoot) return;
+    for (const grandchild of child.shadowRoot.children)
+      this.addDeepInstances(grandchild);
+  }
+
   /**
    * Assigns the element's client instance to the child,
    * and registers the child to receive the element's new client when its set.
@@ -107,9 +128,7 @@ export class ApolloClientElement extends HTMLElement {
     const target = claimApolloElement(event);
     if (!target) return;
     this.#instances.add(target);
-    target.client = this.client;
-    if (isApolloQuery(target) && !target.noAutoSubscribe && target.shouldSubscribe())
-      target.subscribe();
+    this.initialize(target);
   }
 
   /**
@@ -120,6 +139,15 @@ export class ApolloClientElement extends HTMLElement {
     if (!target) return;
     this.#instances.delete(target);
     delete target.client;
+  }
+
+  /**
+   * Set the client on the element, and if it's a query or subscription element, attemp to subscribe
+   */
+  private initialize(element: ApolloElement): void {
+    element.client = this.client;
+    if (isApolloQuery(element) && !element.noAutoSubscribe && element.shouldSubscribe())
+      element.subscribe();
   }
 }
 
