@@ -6,12 +6,14 @@ import type {
   WatchQueryOptions,
   ObservableQuery,
   NormalizedCacheObject,
+  DocumentNode,
 } from '@apollo/client/core';
 
-import { DocumentNode, GraphQLError } from 'graphql';
+import { gql } from '@apollo/client/core';
+
+import { GraphQLError } from 'graphql/error/GraphQLError';
 
 import { fixture, expect, oneEvent, defineCE } from '@open-wc/testing';
-import gql from 'graphql-tag';
 import { stub } from 'sinon';
 
 import {
