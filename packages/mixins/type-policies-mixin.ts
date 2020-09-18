@@ -17,8 +17,8 @@ function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(su
      */
     declare typePolicies?: TypePolicies;
 
-    constructor(...a: any[]) {
-      super(...a);
+    connectedCallback() {
+      super.connectedCallback();
       if (this.typePolicies)
         this.client.cache.policies.addTypePolicies(this.typePolicies);
     }
