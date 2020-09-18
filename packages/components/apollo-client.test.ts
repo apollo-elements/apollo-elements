@@ -66,18 +66,19 @@ describe('<apollo-client>', function() {
     });
 
     describe('when setting client', function() {
-      const next = {};
+      const next = makeClient();
       beforeEach(function() {
-        // @ts-expect-error: just testing the assignment;
         element.client = next;
       });
 
       it('reassigns client to shallow elements', function() {
         expect(shallow.client, 'shallow').to.equal(next);
+        expect(shallow.client, 'shallow').to.not.equal(client);
       });
 
       it('reassigns client to deep elements', function() {
         expect(deep.client, 'deep').to.equal(next);
+        expect(deep.client, 'deep').to.not.equal(client);
       });
 
       describe('when element is a query element', function() {
