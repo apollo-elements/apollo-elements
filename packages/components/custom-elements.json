@@ -7,8 +7,13 @@
       "properties": [
         {
           "name": "client",
-          "description": "Reference to the `ApolloClient` instance.\nDefaults to `window.__APOLLO_CLIENT` if not set.",
+          "description": "Reference to the `ApolloClient` instance.",
           "type": "ApolloClient<NormalizedCacheObject>"
+        },
+        {
+          "name": "instances",
+          "description": "Set of elements subscribed to changes on this element's client",
+          "type": "Set<ApolloElement>"
         }
       ]
     },

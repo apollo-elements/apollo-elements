@@ -7,9 +7,24 @@ export function isSubscription(x: unknown): x is ZenObservable.Subscription {
   );
 }
 
-export function assertType<T>(x: T, msg = 'Wrong type'): asserts x is T {
-  if (!x)
-    throw new Error(msg);
+/**
+ * Asserts that a value has a given type. This 'function' is only defined for the
+ * benefit of the type checker - it has no runtime significance at all.
+ * @param x value to check
+ * @template T type to check against
+ *
+ * @example
+ * ```ts
+ * class Checked {
+ *   field = 2;
+ * }
+ *
+ * const checked = new Checked();
+ * assertType<number>(checked.field)
+ * ```
+ */
+export function assertType<T>(x: T): asserts x is T {
+  return;
 }
 
 export { isApolloError } from '@apollo/client/core';

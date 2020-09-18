@@ -1,8 +1,8 @@
 import { ApolloElementInterface, ApolloQueryInterface } from '@apollo-elements/interfaces';
 import { ApolloElementMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
-import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 
-import { html, fixtureSync, expect, nextFrame, aTimeout } from '@open-wc/testing';
+import { html, fixtureSync, expect, nextFrame } from '@open-wc/testing';
 import { ApolloClientElement } from './apollo-client';
 
 import './apollo-client';
