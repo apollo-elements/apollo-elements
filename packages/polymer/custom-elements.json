@@ -171,6 +171,11 @@
           "type": "Partial<WatchQueryOptions<Record<string, any>>>"
         },
         {
+          "name": "noAutoSubscribe",
+          "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+          "type": "boolean"
+        },
+        {
           "name": "notifyOnNetworkStatusChange",
           "description": "Whether or not updates to the network status should trigger next on the observer of this query.",
           "type": "boolean"
@@ -185,12 +190,6 @@
           "description": "Specifies the ErrorPolicy to be used for this query.",
           "type": "ErrorPolicy",
           "default": "\"none\""
-        },
-        {
-          "name": "noAutoSubscribe",
-          "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
-          "type": "boolean",
-          "default": "false"
         },
         {
           "name": "context",
@@ -275,6 +274,11 @@
           "type": "number | undefined"
         },
         {
+          "name": "noAutoSubscribe",
+          "description": "If true, the element will not begin querying data until you manually call `subscribe`",
+          "type": "boolean | undefined"
+        },
+        {
           "name": "observable",
           "description": "Observable watching this element's subscription.",
           "type": "Observable<FetchResult<TData, Record<string, any>, Record<string, any>>>"
@@ -298,12 +302,6 @@
           "name": "skip",
           "description": "If skip is true, the query will be skipped entirely",
           "type": "boolean"
-        },
-        {
-          "name": "noAutoSubscribe",
-          "description": "If true, the element will not begin querying data until you manually call `subscribe`",
-          "type": "boolean | undefined",
-          "default": "false"
         },
         {
           "name": "notifyOnNetworkStatusChange",
