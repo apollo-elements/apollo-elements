@@ -27,6 +27,7 @@ export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   subscribe: classMethod(instance, 'subscribe'),
   cancel: classMethod(instance, 'cancel'),
 
+  canSubscribe: classMethod(instance, 'canSubscribe'),
   shouldSubscribe: classMethod(instance, 'shouldSubscribe'),
   endSubscription: classMethod(instance, 'endSubscription'),
 

@@ -109,7 +109,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
               throw new TypeError('Query must be a gql-parsed DocumentNode');
             }
 
-            if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ query }))
+            if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
               this.subscribe({ query });
           },
         },
@@ -126,7 +126,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
             this.__variables = variables;
             if (this.observableQuery)
               this.refetch(variables);
-            else if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ variables }))
+            else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
               this.subscribe({ variables });
             else
               return;
@@ -168,7 +168,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
-      if (this.client && !this.noAutoSubscribe && this.shouldSubscribe())
+      if (this.canSubscribe() && this.shouldSubscribe())
         this.subscribe();
     }
 
@@ -182,17 +182,24 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     }
 
     /**
+     * Determines whether the element is able to automatically subscribe
+     * @protected
+     */
+    canSubscribe(options?: Partial<SubscriptionOptions>): boolean {
+      return (
+        !this.noAutoSubscribe &&
+        !!this.client &&
+        !!(options?.query ?? this.document)
+      );
+    }
+
+    /**
      * Determines whether the element should attempt to automatically subscribe i.e. begin querying
      *
      * Override to prevent subscribing unless your conditions are met.
-     *
-     * @default
-     * ```ts
-     * !!(options?.query ?? this.document);
-     * ```
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      return !!(options?.query ?? this.document);
+      return true;
     }
 
     /**

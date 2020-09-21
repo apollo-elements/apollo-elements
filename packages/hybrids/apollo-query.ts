@@ -24,6 +24,7 @@ export const ApolloQuery: Hybrids<ApolloQueryElement> = {
 
   watchQuery: classMethod(instance, 'watchQuery'),
   refetch: classMethod(instance, 'refetch'),
+  canSubscribe: classMethod(instance, 'canSubscribe'),
   shouldSubscribe: classMethod(instance, 'shouldSubscribe'),
   subscribeToMore: classMethod(instance, 'subscribeToMore'),
   executeQuery: classMethod(instance, 'executeQuery'),
