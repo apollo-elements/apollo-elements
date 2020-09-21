@@ -4,6 +4,9 @@ Apollo Client 3 and Apollo Elements 3 both bring with them significant breaking 
 `apollo-client`, `apollo-cache-inmemory`, `apollo-link-*` and others are now supplied by `@apollo/client/core`, so replace your import statements to match.
 *NB:* you should always import from `@apollo/client/core`, not from `@apollo/client`, as the latter includes dependencies on `react` which you probably don't need or want. A single import statement from `@apollo/client` in your app can cause the TypeScript compiler to fail if `react` is not installed as a dependency. To avoid this, always import from `@apollo/client/core`.
 
+## Remove calls to `writeData`
+If your app used `client.writeData` (e.g. to set default values when loading the cache), you must replace it with calls to either `writeQuery`, `writeFragment` or `cache.modify`. You can also set default values in [field policies](#replace-resolvers-with-type-policies)
+
 ## Check Non-Nullable Variables
 Query and Subscription elements in `@apollo-elements` 2 tried to check if any non-nullable variables were defined before subscribing. Version 3 simplifies that check, now elements will only check that a client and a query exist before subscribing. To avoid errors, always make sure your variables are set before your query.
 
@@ -50,6 +53,7 @@ const client = new ApolloClient({
   })
 });
 ```
+
 If a component subscribes to this query automatically when the query property is set (i.e. the default behaviour), the graphql server may respond with an error
 
 > Variable ”$postId“ of required type ”ID!“ was not provided.
