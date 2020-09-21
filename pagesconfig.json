@@ -16,7 +16,7 @@
         "source": "./pages/codegen.md"
       }, {
         "title": "🚚 Migrating from 2.0",
-        "source": "./pages/migration.md"
+        "source": "./pages/migrating.md"
       }]
   }, {
     "title": "Using Apollo",
@@ -25,20 +25,22 @@
         "source": "./pages/queries.md"
       }, {
         "title": "👾 Mutations",
-        "source": "./pages/mutations.md"
+        "source": "./pages/mutations.md",
+        "children": [{
+          "title": "🏦 Managing the Cache",
+          "source": "./pages/cache-management.md"
+        }]
       }, {
         "title": "📖 Subscriptions",
         "source": "./pages/subscriptions.md"
       }, {
-        "title": "🏦 Managing the Cache",
-        "source": "./pages/cache-management.md"
-      }, {
         "title": "📍 Local State",
-        "source": "./pages/local-state.md"
-      }, {
-        "title": "👩‍🔬 Advanced Local State",
-        "source": "./pages/advanced-local-state.md"
-    }]
+        "source": "./pages/local-state.md",
+        "children": [{
+          "title": "👩‍🔬 Advanced Local State",
+          "source": "./pages/advanced-local-state.md"
+        }]
+      }]
   }, {
     "title": "Cool Tricks",
     "pages": [{

@@ -1,6 +1,8 @@
+GraphQL queries are how you read data from the graph. You can think of them as roughly analogous to HTTP `GET` requests or SQL `READ` statements.
+
 Query components read data from the GraphQL and expose them on the component's `data` property. Each query component takes a `query` property which is a GraphQL `DocumentNode`. You can create that object using the `gql` template literal tag, or via `rollup-plugin-graphql`, etc.
 
-Apollo client ensures that the component always has the latest data by _subscribing_ to the query.
+Apollo client ensures that the component always has the latest data by _subscribing_ to the query. Query components will automatically subscribe to their queries whenever the `query` property is set, like in this example which sets the `query` class field.
 
 ```ts
 import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
@@ -26,7 +28,14 @@ export class HelloQuery extends ApolloElement<Data, Variables> {
 }
 ```
 
-Query components will automatically subscribe to their queries whenever the `query` property is set. You can opt out of that behaviour by setting the `noAutoSubscribe` property.
+You can also use the DOM to set the query property
+
+```js
+document.querySelector('hello-query').query = gql`...`;
+```
+
+## Preventing Automatic Subscription
+If you want your component to not subscribe at all until you call the `subscribe()` method, you can opt out of the default behaviour by setting the `noAutoSubscribe` property.
 
 ```ts
 class LazyGreeting extends HelloQuery {
@@ -41,28 +50,37 @@ const element = document.querySelector('hello-query')
 element.subscribe();
 ```
 
-Alternatively, you can set the add a `no-auto-subscribe` attribute to the element instance.
+Alternatively, you can set the boolean `no-auto-subscribe` attribute to the element instance. Bear in mind that `no-auto-subscribe` is a boolean attribute, so it's presence indicates truthiness, and its absence indicates falsiness
 
 ```html
 <!-- This one eagerly subscribes -->
 <hello-query></hello-query>
 <!-- This one will not subscribe until called -->
 <hello-query no-auto-subscribe></hello-query>
+<!-- This one eagerly subscribes -->
+<hello-query no-auto-subscribe="false"></hello-query>
 ```
 
 In addition to `data`, elements can also access `loading`, `error` and `errors` properties.
+
 ```ts
 render() {
   return html`
-    <p>
-      ${(
-          this.error ? error.message
-        : this.loading ? '...'
-        : `${this.data?.greeting ?? 'Hello'}, ${this.data?.name ?? 'Friend'}`
-      )}
-    </p>
+    <article class="${classMap({ skeleton: this.loading })}">
+      <p class="error" ?hidden="${!this.error}">${this.error?.message}</p>
+      <p>
+        ${this.data?.greeting ?? 'Hello'},
+        ${this.data?.name ?? 'Friend'}
+      </p>
+    </article>
   `;
 }
 ```
 
-Queries that have non-nullable variables (i.e. required variables)
+Queries that have non-nullable variables (i.e. required variables) will still attempt to subscribe even if their required variables are not set. To prevent this (and the resulting GraphQL error from the server), override the `shouldSubscribe` method of your query component, returning `true` if your variables' dependencies are defined.
+
+```ts
+shouldSubscribe() {
+  return !!(new URL(window.location).searchParams.get('userId'))
+}
+```
