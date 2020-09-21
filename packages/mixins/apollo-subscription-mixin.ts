@@ -77,7 +77,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
             const query = subscription;
 
-            if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ query }))
+            if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
               this.subscribe();
           },
         },
@@ -93,7 +93,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
           set(this: This, variables: TVariables) {
             this.__variables = variables;
             this.cancel();
-            if (this.client && !this.noAutoSubscribe && this.shouldSubscribe({ variables }))
+            if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
               this.subscribe();
           },
         },
@@ -119,7 +119,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
-      if (this.noAutoSubscribe || !this.shouldSubscribe()) return;
+      if (!this.canSubscribe() || !this.shouldSubscribe()) return;
       this.initObservable();
       this.subscribe();
     }
@@ -151,17 +151,24 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     }
 
     /**
+     * Determines whether the element is able to automatically subscribe
+     * @protected
+     */
+    canSubscribe(options?: Partial<SubscriptionOptions>): boolean {
+      return (
+        !this.noAutoSubscribe &&
+        !!this.client &&
+        !!(options?.query ?? this.document)
+      );
+    }
+
+    /**
      * Determines whether the element should attempt to automatically subscribe i.e. begin querying
      *
      * Override to prevent subscribing unless your conditions are met.
-     *
-     * @default
-     * ```ts
-     * !!(options?.query ?? this.document);
-     * ```
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      return !!(options?.query ?? this.document);
+      return true;
     }
 
     /** @private */

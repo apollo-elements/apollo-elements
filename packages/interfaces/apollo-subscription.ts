@@ -94,6 +94,12 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   public cancel(): void
 
   /**
+   * Determines whether the element is able to automatically subscribe
+   * @protected
+   */
+  canSubscribe(options?: Partial<SubscriptionOptions>): boolean
+
+  /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
