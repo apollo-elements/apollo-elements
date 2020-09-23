@@ -1,0 +1,38 @@
+{
+  "name": "@apollo-elements/create-app",
+  "version": "0.0.1",
+  "description": "Scaffold a web app project with GraphQL and LitElement",
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "bin": {
+    "create-app": "./index.js"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc -b .",
+    "build": "tsc",
+    "lint": "run-s lint:*",
+    "lint:types": "tsc --noEmit",
+    "start": "tsc -w --noEmit",
+    "test": "echo 'No tests for create-app yet'"
+  },
+  "bugs": {
+    "url": "https://github.com/apollo-elements/apollo-elements/issues"
+  },
+  "homepage": "https://apolloelements.dev/modules/_apollo_elements_create.html",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
+    "directory": "packages/create"
+  },
+  "dependencies": {
+    "execa": "^4.0.3",
+    "ncp": "^2.0.0",
+    "pkg-install": "^1.0.0",
+    "prompts": "^2.3.2",
+    "semver": "^7.3.2"
+  }
+}
