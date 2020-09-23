@@ -42,7 +42,7 @@ window.__APOLLO_CLIENT__ = client;
 
 Once that's been accomplished, import the base class and extend from it to define your component.
 
-We recommend using [rollup-plugin-graphql](https://npm.im/@kocal/rollup-plugin-graphql) during bundling, and [es-dev-server-import-graphql](https://npm.im/es-dev-server-import-graphql) during development to allow importing graphql documents.
+Use [@apollo-elements/rollup-plugin-graphql](https://npm.im/@apollo-elements/rollup-plugin-graphql) during bundling, and [@web/dev-server-rollup](https://npm.im/@web/dev-server-rollup) during development to allow importing graphql documents.
 
 ```graphql
 query HelloQuery {

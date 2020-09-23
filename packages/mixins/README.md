@@ -48,6 +48,12 @@ class SpecificClientElement extends ApolloClientMixin(client, ApolloQueryMixin(H
 }
 ```
 
+### ValidateVariablesMixin
+Optional mixin which prevents queries from automatically subscribing until their non-nullable variables are defined.
+
+### TypePoliciesMixin
+Optional mixin which lets you declare type policies for a component's query.
+
 ## 👩‍🚀 Usage
 
 Here's an example that uses `HTMLElement`

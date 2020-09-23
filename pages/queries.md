@@ -1,6 +1,6 @@
 GraphQL queries are how you read data from the graph. You can think of them as roughly analogous to HTTP `GET` requests or SQL `READ` statements.
 
-Query components read data from the GraphQL and expose them on the component's `data` property. Each query component takes a `query` property which is a GraphQL `DocumentNode`. You can create that object using the `gql` template literal tag, or via `rollup-plugin-graphql`, etc.
+Query components read data from the GraphQL and expose them on the component's `data` property. Each query component takes a `query` property which is a GraphQL `DocumentNode`. You can create that object using the `gql` template literal tag, or via `@apollo-elements/rollup-plugin-graphql`, etc.
 
 Apollo client ensures that the component always has the latest data by _subscribing_ to the query. Query components will automatically subscribe to their queries whenever the `query` property is set, like in this example which sets the `query` class field.
 
