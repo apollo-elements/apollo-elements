@@ -21,6 +21,17 @@ Apollo Elements offers packages based on a variety of underlying web component a
 ## 📦 Packages
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
+### 🧱 Components
+
+Utility components that help you factor your graphql-based app.
+
+- `<apollo-client>` provides all it's children (even across open shadow roots) with a client instance.
+- `<apollo-mutation>` lets you write declarative mutation components without subclassing.
+
+```
+npm i -S @apollo-elements/components
+```
+
 ### 🍸 Mixins
 
 These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/) give you all the features you need to connect your components to your Apollo cache without imposing a specific component library.
@@ -59,7 +70,7 @@ npm i -S @apollo-elements/hybrids
 
 [Read More](./packages/hybrids)
 
-### 🧱 Polymer
+### 🧬 Polymer
 
 These custom elements fire [polymer](https://polymer-library.polymer-project.org)-style `*-changed` events when the Apollo cache updates their state. They extend directly from `HTMLElement` so they're small in size, and their notifying properties make them perfect for use in Polymer templates.
 

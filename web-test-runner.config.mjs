@@ -2,12 +2,12 @@
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
 
-import rollupCommonjs from '@rollup/plugin-commonjs';
-import rollupGraphql from '@kocal/rollup-plugin-graphql';
+import _commonjs from '@rollup/plugin-commonjs';
+import _graphql from '@apollo-elements/rollup-plugin-graphql';
 
 // @ts-ignore: graphql plugin doesn't supply sourcemaps
-const graphql = fromRollup(rollupGraphql);
-const commonjs = fromRollup(rollupCommonjs);
+const graphql = fromRollup(_graphql);
+const commonjs = fromRollup(_commonjs);
 
 const cjsIncludes = [
   '**/fast-json-stable-stringify/index.js',
