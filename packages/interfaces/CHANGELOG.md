@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.0.0-alpha.7...@apollo-elements/interfaces@1.0.0-alpha.8) (2020-09-23)
+
+
+### Features
+
+* simplify `shouldSubscribe` predicate ([7c9565a](https://github.com/apollo-elements/apollo-elements/commit/7c9565a38d2f0f812abd3a63085356d4cac02daf))
+
+
+
+
+
 # 1.0.0-alpha.7 (2020-09-14)
 
 

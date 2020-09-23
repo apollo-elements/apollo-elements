@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.0.0-alpha.4...@apollo-elements/lib@3.0.0-alpha.5) (2020-09-23)
+
+
+### Features
+
+* **create-app:** add create-app generator ([cbcc223](https://github.com/apollo-elements/apollo-elements/commit/cbcc223f1df6d22656386dd0ead07e8a71e763f0))
+
+
+
+
+
 # [3.0.0-alpha.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@2.0.1-alpha.0...@apollo-elements/lib@3.0.0-alpha.4) (2020-09-18)
 
 **Note:** Version bump only for package @apollo-elements/lib
