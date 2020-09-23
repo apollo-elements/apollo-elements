@@ -1,0 +1,34 @@
+diff --git a/node_modules/pkg-install/lib/install.d.ts b/node_modules/pkg-install/lib/install.d.ts
+index 50ccbb3..52a49d3 100644
+--- a/node_modules/pkg-install/lib/install.d.ts
++++ b/node_modules/pkg-install/lib/install.d.ts
+@@ -2,7 +2,7 @@
+ import execa from 'execa';
+ import { InstallConfig, PackageManagerFlag } from './config';
+ import { PackageList, Packages } from './types';
+-export declare type InstallResult = execa.ExecaReturns & {
++export declare type InstallResult = execa.ExecaReturnValue & {
+     ignoredFlags: PackageManagerFlag[];
+ };
+ /**
+@@ -41,9 +41,9 @@ export declare function installSync(packages: PackageList, options?: Partial<Ins
+  *
+  * @export
+  * @param {Partial<InstallConfig>} [options={}] Options to modify behavior
+- * @returns {Promise<execa.ExecaReturns>}
++ * @returns {Promise<execa.ExecaReturnValue>}
+  */
+-export declare function projectInstall(options?: Partial<InstallConfig>): Promise<execa.ExecaReturns>;
++export declare function projectInstall(options?: Partial<InstallConfig>): Promise<execa.ExecaReturnValue>;
+ /**
+  * SYNC VERSION. Runs `npm install` or `yarn install` for the project. Depending on:
+  *
+@@ -54,6 +54,6 @@ export declare function projectInstall(options?: Partial<InstallConfig>): Promis
+  *
+  * @export
+  * @param {Partial<InstallConfig>} [options={}] Options to modify behavior
+- * @returns {execa.ExecaReturns}
++ * @returns {execa.ExecaReturnValue}
+  */
+-export declare function projectInstallSync(options?: Partial<InstallConfig>): execa.ExecaReturns;
++export declare function projectInstallSync(options?: Partial<InstallConfig>): execa.ExecaReturnValue;

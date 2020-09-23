@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* eslint-env node */
 /* eslint-disable no-console */
 import { install, SupportedPackageManagers } from 'pkg-install';
