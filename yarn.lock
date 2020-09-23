@@ -4756,21 +4756,21 @@ domexception@^2.0.1:
   dependencies:
     webidl-conversions "^5.0.0"
 
-domhandler@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-3.0.0.tgz#51cd13efca31da95bbb0c5bee3a48300e333b3e9"
-  integrity sha512-eKLdI5v9m67kbXQbJSNn1zjh0SDzvzWVWtX+qEI3eMjZw8daH9k8rlj1FZY9memPwjiskQFbe7vHVVJIAqoEhw==
+domhandler@^3.0.0, domhandler@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-3.1.0.tgz#d931d698a36079ff3612841b7e99eec15c678e42"
+  integrity sha512-kZFobjdGafS1wknD9t0Ft+NazYYDxXNbcjqQ5z43xTq2FC1NT0U2QjgAmfc0C1urfeGDOAN2xzcKjifSbBpywg==
   dependencies:
     domelementtype "^2.0.1"
 
 domutils@^2.0.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/domutils/-/domutils-2.3.0.tgz#6469c63a3da2de0c3016f3a59e6a969e10705bce"
-  integrity sha512-xWC75PM3QF6MjE5e58OzwTX0B/rPQnlqH0YyXB/c056RtVJA+eu60da2I/bdnEHzEYC00g8QaZUlAbqOZVbOsw==
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/domutils/-/domutils-2.4.0.tgz#60b85585a0e96113dff3d04d735196bb2bba49e2"
+  integrity sha512-rP+tl0A3YekdmSpYOEtm4C/aSzwtEOU5XrkdoGwb+Hn/941f5S5kZwHr37AEIcBbPug3uxD8z9PKQZd1R/R/tg==
   dependencies:
     dom-serializer "^1.0.1"
     domelementtype "^2.0.1"
-    domhandler "^3.0.0"
+    domhandler "^3.1.0"
 
 dot-case@^3.0.3:
   version "3.0.3"

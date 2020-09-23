@@ -12,6 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v2-beta
         with:
           node-version: '14'
@@ -22,7 +23,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Dependencies
-        run: yarn
+        run: sudo yarn --frozen-lockfile
 
       - name: Codegen
         run: yarn build:codegen

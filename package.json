@@ -76,6 +76,7 @@
     "commitizen": "^4.2.1",
     "cz-lerna-changelog": "^2.0.3",
     "eslint": "^7.9.0",
+    "execa": "^4.0.3",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "graphql-tools": "^6.2.3",
