@@ -47,6 +47,7 @@
     "docs"
   ],
   "devDependencies": {
+    "@apollo-elements/rollup-plugin-graphql": "^1.0.3",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@commitlint/config-lerna-scopes": "^11.0.0",
