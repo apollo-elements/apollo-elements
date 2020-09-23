@@ -71,7 +71,7 @@ async function addScripts() {
     ...pkgJSON.scripts,
     'start': 'run-p start:*',
     'start:codegen': 'graphql-codegen --watch',
-    'start:serve': 'wds --watch',
+    'start:serve': 'wds --watch --open',
     'lint': 'eslint',
     'build': 'rollup -c',
     'test': 'echo "Error: no test specified" && exit 1',
