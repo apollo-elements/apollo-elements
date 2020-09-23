@@ -17,6 +17,7 @@
   ],
 
   "exclude": [
+    "./packages/create-app",
     "./packages/test-helpers",
     "./declaration.d.ts",
     "**/*+(index|.spec|.test|.e2e).ts",

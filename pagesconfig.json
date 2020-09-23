@@ -3,17 +3,21 @@
   "groups": [{
     "title": "Guides",
     "pages": [{
-        "title": "🚀 Setting up Apollo Client",
-        "source": "./pages/apollo-client.md"
-      }, {
-        "title": "🏎 Buildless Local Development",
-        "source": "./pages/buildless-development.md"
-      }, {
-        "title": "🗞 Building for Production",
-        "source": "./pages/building-for-production.md"
-      }, {
-        "title": "🤖 Code Generated TypeScript Types",
-        "source": "./pages/codegen.md"
+        "title": "🏁 Getting Started",
+        "source": "./pages/getting-started.md",
+        "children": [{
+          "title": "🚀 Setting up Apollo Client",
+          "source": "./pages/apollo-client.md"
+        }, {
+          "title": "🏎 Buildless Local Development",
+          "source": "./pages/buildless-development.md"
+        }, {
+          "title": "🗞 Building for Production",
+          "source": "./pages/building-for-production.md"
+        }, {
+          "title": "🤖 Code Generated TypeScript Types",
+          "source": "./pages/codegen.md"
+        }]
       }, {
         "title": "🚚 Migrating from 2.0",
         "source": "./pages/migrating.md"
