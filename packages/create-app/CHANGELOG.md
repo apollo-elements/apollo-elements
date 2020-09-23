@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create-app@0.0.2-alpha.2...@apollo-elements/create-app@0.0.2-alpha.3) (2020-09-23)
+
+
+### Bug Fixes
+
+* **create-app:** open server on launch ([88b3823](https://github.com/apollo-elements/apollo-elements/commit/88b3823783de52f242184e450c005687ea4b0b80))
+
+
+
+
+
 ## [0.0.2-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create-app@0.0.2-alpha.1...@apollo-elements/create-app@0.0.2-alpha.2) (2020-09-23)
 
 
