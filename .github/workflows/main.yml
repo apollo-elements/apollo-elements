@@ -37,7 +37,7 @@ jobs:
           sudo yarn clean
 
       - name: Build docs
-        run: yarn docs
+        run: sudo yarn docs
 
       - name: Configure CI Git User
         run: |
@@ -50,7 +50,7 @@ jobs:
       - name: Publish packages
         run: |
           npm whoami
-          yarn deploy --yes
+          sudo yarn deploy --yes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
