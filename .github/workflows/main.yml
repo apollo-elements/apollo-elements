@@ -33,7 +33,7 @@ jobs:
 
       - name: Build
         run: |
-          lerna run prepublishOnly
+          yarn workspaces run prepublishOnly
           yarn clean
 
       - name: Build docs
