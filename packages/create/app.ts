@@ -37,8 +37,13 @@ async function initPackage(options: AppOptions) {
 }
 
 async function execInstall(options: AppOptions) {
+  if (!options.install) return;
   console.log('Installing dependencies...\n');
-  await execa(options.pkgManager, ['install'], { stdio: 'inherit' });
+  await execa(
+    options.pkgManager,
+    ['install'],
+    { stdio: 'inherit' }
+  );
 }
 
 /**
@@ -49,7 +54,11 @@ async function execStart(options: AppOptions) {
     console.log('Launch aborted\n');
   else {
     console.log('🚀 Prepare for Takeoff...\n');
-    return execa(options.pkgManager, ['start'], { stdio: 'inherit' });
+    return execa(
+      options.pkgManager,
+      ['start'],
+      { stdio: 'inherit' }
+    );
   }
 }
 
@@ -59,11 +68,8 @@ async function execStart(options: AppOptions) {
 export async function app(options: AppOptions): Promise<void> {
   await initFiles();
   await initPackage(options);
-
-  if (!options.install)
-    return;
-
   await execInstall(options);
-  await codegen(options);
+  if (options.install)
+    await codegen(options);
   await execStart(options);
 }

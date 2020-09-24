@@ -22,9 +22,9 @@ Generate an Apollo Elements Skeleton App
 | `--help`        | Show help | boolean | |
 | `--version`     | Show version number | boolean | |
 | `--pkgManager`  | Preferred package manager | `npm` or `yarn` | `npm` |
-| `--yes, -y`     | Use default package.json fields (e.g. author, license) | boolean | false |
-| `--install`     | Automatically install dependencies | boolean | true |
-| `--start`       | Launch the dev server after scaffolding | boolean | false |
+| `--yes, -y`     | Use default package.json fields (e.g. author, license) | boolean |
+| `--install`     | Automatically install dependencies | boolean |
+| `--start`       | Launch the dev server after scaffolding | boolean |
 
 ### 🔋 Batteries Included
 
