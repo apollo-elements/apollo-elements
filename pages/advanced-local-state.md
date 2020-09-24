@@ -30,11 +30,11 @@ query CreateNetworkPageQuery {
 render() {
   return html`
     <select-list>
-      ${this.data.sites.map(({ id, name, selected }) => html`
+      ${this.data.sites.map(site => html`
       <select-item
-          item-id="${id}"
-          item-name="${name}"
-          ?selected="${selected}"
+          item-id="${site.id}"
+          item-name="${site.name}"
+          ?selected="${site.selected}"
           @select="${this.onSelectItem}"
       ></select-item>
       `)}
@@ -84,14 +84,18 @@ render() {
 
     <apollo-mutation
         .mutation="${CreateNetworkMutation}"
-        @will-mutate="${event => event.target.variables = {
-          sites: this.data.sites
-            .filter(x => x.selected)
-            .map(x => x.id); // string[]
-        }}">
+        @will-mutate="${this.onWillMutate}">
       <button slot="trigger">Create</button>
     </apollo-mutation>
   `;
+}
+
+onWillMutate(event) {
+  event.target.variables = {
+    sites: this.data.sites
+      .filter(x => x.selected)
+      .map(x => x.id); // string[]
+  }
 }
 ```
 

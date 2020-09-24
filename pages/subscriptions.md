@@ -64,13 +64,15 @@ export class ChatQuery extends ApolloQuery {
         </pre>`
     : html`
       <dl>
-        ${this.data.messages.map(({ message, user, date }) => html`
+        ${this.data.messages.map(message => html`
           <div>
-            <dt><time>${format('HH:mm', date)}</time> ${user}:</dt>
-            <dd>${message}</dd>
+            <dt>
+              <time>${format('HH:mm', message.date)}</time>
+              ${message.user}
+            </dt>
+            <dd>${message.message}</dd>
           </div>
-        `;
-        )}
+        `)}
       </dl>`
       )}
     `;
