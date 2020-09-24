@@ -10,7 +10,7 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue> {
   console.log('\nGenerating TypeScript Schema...\n');
   return await execa(
     options.pkgManager,
-    [...options.pkgManager === 'npm' && ['run'], 'build:codegen'],
+    [...(options.pkgManager === 'npm' ? ['run'] : []), 'build:codegen'],
     { cwd, stdio: 'inherit' }
   );
 }

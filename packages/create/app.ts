@@ -29,7 +29,11 @@ async function initFiles() {
  * Run the `init` command, passing flags
  */
 async function initPackage(options: AppOptions) {
-  await execa(options.pkgManager, ['init', ...options.yes && ['--yes']], { stdio: 'inherit' });
+  await execa(
+    options.pkgManager,
+    ['init', ...(options.yes ? ['--yes'] : [])],
+    { stdio: 'inherit' }
+  );
 }
 
 async function execInstall(options: AppOptions) {
