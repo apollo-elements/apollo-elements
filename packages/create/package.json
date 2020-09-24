@@ -1,7 +1,7 @@
 {
-  "name": "@apollo-elements/create-app",
+  "name": "@apollo-elements/create",
   "version": "0.0.2-alpha.3",
-  "description": "Scaffold a web app project with GraphQL and LitElement",
+  "description": "Scaffold apps and components with GraphQL and LitElement",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bin": {
@@ -12,8 +12,8 @@
     "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
-    "start": "tsc -w --noEmit",
-    "test": "echo 'No tests for create-app yet'"
+    "start": "tsc -w",
+    "test": "echo 'No tests for create yet'"
   },
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
@@ -29,9 +29,9 @@
     "directory": "packages/create"
   },
   "dependencies": {
+    "case": "^1.6.3",
     "execa": "^4.0.3",
     "ncp": "^2.0.0",
-    "pkg-install": "^1.0.0",
     "prompts": "^2.3.2",
     "tslib": "^2.0.1"
   }

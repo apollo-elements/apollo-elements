@@ -1,9 +1,9 @@
 ## Apollo Elements App Generator
 
-To quickly get started with apollo-elements, generate a skeleton app with this command
+To quickly get started with apollo-elements, run this command
 
 ```
-npm init @apollo-elements/app
+npm init @apollo-elements app
 ```
 
 ## 🔋 Batteries Included
@@ -44,3 +44,5 @@ Lint your app with an opinionated set of rules for JavaScript and TypeScript
 
 ### test
 The generator currently doesn't offer strong opinions on testing your UI components, so `npm test` currently exist with an error code. For unit testing business logic (i.e. typePolicies), we recommend [@web/test-runner](https://modern-web.dev/guides/test-runner/getting-started/)
+
+Check out the [`@apollo-elements/create` README](../../modules/_apollo_elements_create.html) for more info.

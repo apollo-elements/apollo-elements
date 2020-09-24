@@ -1,0 +1,9 @@
+{
+  "overrides": [{
+    "files": "./*.ts",
+    "env": { "node": true },
+    "rules": {
+      "no-console": "off"
+    }
+  }]
+}
