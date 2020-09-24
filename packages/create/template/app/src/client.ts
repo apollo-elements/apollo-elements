@@ -1,9 +1,8 @@
 
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
-// Replace this with your live graphql endpoint
 const uri =
-  'https://api.spacex.land/graphql';
+  '<%= GRAPHQL_URI %>';
 
 export const link = new HttpLink({ uri });
 
