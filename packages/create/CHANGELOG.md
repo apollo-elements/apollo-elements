@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.0.0-alpha.1...@apollo-elements/create@1.0.0-alpha.2) (2020-09-24)
+
+
+### Features
+
+* **create:** add uri option to app command ([e5aeb35](https://github.com/apollo-elements/apollo-elements/commit/e5aeb3548e94d375cfa2b5e186de5e876182c77d))
+
+
+
+
+
 # [1.0.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.7...@apollo-elements/create@1.0.0-alpha.1) (2020-09-24)
 
 **Note:** Version bump only for package @apollo-elements/create
