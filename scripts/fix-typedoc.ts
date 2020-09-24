@@ -1,13 +1,8 @@
 #!/usr/bin/env ts-node-script
 
-import fs from 'fs';
-import { promisify } from 'util';
+import { readdir, readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { JSDOM } from 'jsdom';
-
-const readdir = promisify(fs.readdir);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 
 import { out as DOCS_DIR } from '../typedoc.json';
 

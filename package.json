@@ -24,7 +24,7 @@
     "docs:typedoc:almost": "rimraf docs",
     "docs:typedoc:copy": "cp declaration.d.ts packages/gluon/",
     "docs:typedoc:create": "typedoc",
-    "docs:typedoc:fix": "ts-node-script -O '{\"module\": \"commonjs\", \"resolveJsonModule\": true}' scripts/fix-typedoc.ts",
+    "docs:typedoc:fix": "ts-node -O '{\"module\": \"commonjs\", \"resolveJsonModule\": true}' scripts/fix-typedoc.ts",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint .",
     "lint:types": "lerna run lint:types",
