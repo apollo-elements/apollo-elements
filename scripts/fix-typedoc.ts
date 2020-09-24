@@ -58,6 +58,9 @@ async function fixIndex() {
     <meta property="twitter:image" content="/logo.svg">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👩‍🚀</text></svg>">
   `;
+  Array.from(dom.window.document.querySelectorAll('a')).filter(x => x.href.includes('./packages/'))
+    .forEach(link => link.href = `${link.href.replace('./packages/', './modules/_apollo_elements_')}.html`);
+  await writeFile(path, dom.serialize());
 }
 
 async function main() {
