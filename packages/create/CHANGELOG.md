@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.2-alpha.4 (2020-09-24)
+
+
+### Features
+
+* **create:** add component generator ([7a044f9](https://github.com/apollo-elements/apollo-elements/commit/7a044f92fb8fcd16cc46b04da0d0ac1d1274df7e))
+
+
+
+
+
 ## [0.0.2-alpha.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create-app@0.0.2-alpha.2...@apollo-elements/create-app@0.0.2-alpha.3) (2020-09-23)
 
 
