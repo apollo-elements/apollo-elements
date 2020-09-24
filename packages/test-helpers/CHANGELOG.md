@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@0.1.0...@apollo-elements/test-helpers@1.0.0) (2020-09-24)
+
+
+* feat(test-helpers)!: apollo client 3 ([60ee5ac](https://github.com/apollo-elements/apollo-elements/commit/60ee5ac939802ef209ac1b3f8e5ad68c0b1f40db))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+
+
+
+
+
 ## [0.1.1-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@0.1.1-alpha.0...@apollo-elements/test-helpers@0.1.1-alpha.1) (2020-09-18)
 
 **Note:** Version bump only for package @apollo-elements/test-helpers

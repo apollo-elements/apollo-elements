@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2020-09-24)
+
+
+### Features
+
+* simplify `shouldSubscribe` predicate ([da171a3](https://github.com/apollo-elements/apollo-elements/commit/da171a3b2ea03401001020d1666af87c1e1e2ace))
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([9833993](https://github.com/apollo-elements/apollo-elements/commit/98339934a846b4a2330113c5d26d254d667fa637))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+
+
+
+
+
 # [1.0.0-alpha.8](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.0.0-alpha.7...@apollo-elements/interfaces@1.0.0-alpha.8) (2020-09-23)
 
 

@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@2.0.1...@apollo-elements/polymer@3.0.0) (2020-09-24)
+
+
+### Bug Fixes
+
+* make properties configurable and enumerable ([750e0e2](https://github.com/apollo-elements/apollo-elements/commit/750e0e28ce1326fb5f2ab499548fee3f4a97bef0))
+
+
+### Features
+
+* **create:** add component generator ([c9e89ae](https://github.com/apollo-elements/apollo-elements/commit/c9e89ae5512be52d04d6980a687f25c83b264cd4))
+
+
+* feat(polymer)!: apollo client 3 ([cfa6f6a](https://github.com/apollo-elements/apollo-elements/commit/cfa6f6a0eea6b3ddda867251f24a1b33161527bd))
+* feat(mixins)!: apollo client 3 ([0e345c5](https://github.com/apollo-elements/apollo-elements/commit/0e345c5f09964461aafc0dc1f2b8671135d3443f))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+removes class fields, preferring declarations
+
+affects: @apollo-elements/polymer
+* bump to `@apollo/client`
+use define semantics in some fields (query, mutation, subscription, document) for better TypeScript 4 support
+use 'ambient' class field declarations
+
+affects:
+@apollo-elements/gluon,
+@apollo-elements/hybrids,
+@apollo-elements/interfaces,
+@apollo-elements/lib,
+@apollo-elements/lit-apollo,
+@apollo-elements/mixins,
+@apollo-elements/polymer,
+@apollo-elements/test-helpers
+
+
+
+
+
 # [3.0.0-alpha.11](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.0.0-alpha.10...@apollo-elements/polymer@3.0.0-alpha.11) (2020-09-24)
 
 

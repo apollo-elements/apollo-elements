@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2020-09-24)
+
+
+### Bug Fixes
+
+* **components:** check if element has client before subscribing ([a78fe50](https://github.com/apollo-elements/apollo-elements/commit/a78fe50782979e96428bbc405e5b55702a317631))
+* **components:** export WillMutateError ([3fd9e18](https://github.com/apollo-elements/apollo-elements/commit/3fd9e18466eb01284972857a6511e754e750497f))
+* **components:** make mutation trigger and button protected ([2c1397e](https://github.com/apollo-elements/apollo-elements/commit/2c1397e45c2476b7a97522db1e2b1a8d60cfb9af))
+* **components:** subscribes query components when setting client ([7b2ea8c](https://github.com/apollo-elements/apollo-elements/commit/7b2ea8c22fe175d21518404f94128fbcc13fc48b))
+
+
+### Features
+
+* **components:** <apollo-client> improvement ([d439b0b](https://github.com/apollo-elements/apollo-elements/commit/d439b0bfbccabcb18d3be817523fd98ae3d2cab7))
+* **components:** add <apollo-mutation> features ([ac4b58a](https://github.com/apollo-elements/apollo-elements/commit/ac4b58aed1364b4e87b4477004748e882fe0da29))
+* **components:** create components package ([1d6309d](https://github.com/apollo-elements/apollo-elements/commit/1d6309dd20549dc7a03d072fbef95096fb964765))
+* **lit-apollo:** remove shouldUpdate guard ([c68e7d4](https://github.com/apollo-elements/apollo-elements/commit/c68e7d4d2de4496db3315339f9c01687f20e42d3))
+
+
+### BREAKING CHANGES
+
+* **lit-apollo:** components always render by default, no matter the state of the query
+
+
+
+
+
 # [1.0.0-alpha.9](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.0-alpha.8...@apollo-elements/components@1.0.0-alpha.9) (2020-09-23)
 
 **Note:** Version bump only for package @apollo-elements/components

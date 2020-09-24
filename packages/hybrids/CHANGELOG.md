@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@2.0.1...@apollo-elements/hybrids@3.0.0) (2020-09-24)
+
+
+### Features
+
+* simplify `shouldSubscribe` predicate ([da171a3](https://github.com/apollo-elements/apollo-elements/commit/da171a3b2ea03401001020d1666af87c1e1e2ace))
+
+
+* feat(hybrids)!: apollo client 3 ([dc17cb4](https://github.com/apollo-elements/apollo-elements/commit/dc17cb4ee91380133d26df928889d3d60289a180))
+
+
+### BREAKING CHANGES
+
+* bump to `@apollo/client`
+completely rewritten to leverage existing mixins
+document, mutation, query, subscription factories removed
+
+affects: @apollo-elements/hybrids
+
+
+
+
+
 # [3.0.0-alpha.10](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.0.0-alpha.9...@apollo-elements/hybrids@3.0.0-alpha.10) (2020-09-23)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2020-09-24)
+
+
+### Bug Fixes
+
+* **create:** fix app command defaults ([fbe53d7](https://github.com/apollo-elements/apollo-elements/commit/fbe53d719b49a42ace9d516b95352e2df403281f))
+* **create:** juggle syntax ([cc6dd78](https://github.com/apollo-elements/apollo-elements/commit/cc6dd786d6974ea5acafb3f4f97b7239e2f837d6))
+* **create:** missing dependency ([16d3fd8](https://github.com/apollo-elements/apollo-elements/commit/16d3fd8866bfcacb937b23c5f936fb7ec8caf1bc))
+
+
+### Features
+
+* **create:** add component generator ([c9e89ae](https://github.com/apollo-elements/apollo-elements/commit/c9e89ae5512be52d04d6980a687f25c83b264cd4))
+* **create:** add uri option to app command ([2120783](https://github.com/apollo-elements/apollo-elements/commit/2120783863aa9c55bb142aa87224e1babf9c5cd3))
+
+
+
+
+
 # [1.0.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.0.0-alpha.1...@apollo-elements/create@1.0.0-alpha.2) (2020-09-24)
 
 

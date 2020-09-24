@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0) (2020-09-24)
+
+
+### Bug Fixes
+
+* **mixins:** lint types ([a2f2464](https://github.com/apollo-elements/apollo-elements/commit/a2f2464f2df61af095394e92efe4a1e938b4157b))
+* make properties configurable and enumerable ([750e0e2](https://github.com/apollo-elements/apollo-elements/commit/750e0e28ce1326fb5f2ab499548fee3f4a97bef0))
+* null check ([2e89e06](https://github.com/apollo-elements/apollo-elements/commit/2e89e06762226f5f1df2daa0bd3a060c0e6e8850))
+
+
+### Features
+
+* simplify `shouldSubscribe` predicate ([da171a3](https://github.com/apollo-elements/apollo-elements/commit/da171a3b2ea03401001020d1666af87c1e1e2ace))
+* **components:** create components package ([1d6309d](https://github.com/apollo-elements/apollo-elements/commit/1d6309dd20549dc7a03d072fbef95096fb964765))
+* **mixins:** add ApolloClientMixin ([00297bc](https://github.com/apollo-elements/apollo-elements/commit/00297bc5727954ffd38c27e37b3c6da8f7cc5124))
+* **mixins:** add TypePoliciesMixin ([4072b69](https://github.com/apollo-elements/apollo-elements/commit/4072b691be948199f72839c61c5edab1a1dae378))
+* **mixins:** reflect no-auto-subscribe attribute ([941043d](https://github.com/apollo-elements/apollo-elements/commit/941043d9d185a578f3f1be6f0c3cef923aaca3a0))
+
+
+* feat(interfaces)!: publish interfaces separate pkg ([9833993](https://github.com/apollo-elements/apollo-elements/commit/98339934a846b4a2330113c5d26d254d667fa637))
+* feat(mixins)!: apollo client 3 ([0e345c5](https://github.com/apollo-elements/apollo-elements/commit/0e345c5f09964461aafc0dc1f2b8671135d3443f))
+
+
+### BREAKING CHANGES
+
+* removes interfaces from mixins package
+
+affects: @apollo-elements/interfaces, @apollo-elements/mixins,
+* bump to `@apollo/client`
+use define semantics in some fields (query, mutation, subscription, document) for better TypeScript 4 support
+use 'ambient' class field declarations
+
+affects:
+@apollo-elements/gluon,
+@apollo-elements/hybrids,
+@apollo-elements/interfaces,
+@apollo-elements/lib,
+@apollo-elements/lit-apollo,
+@apollo-elements/mixins,
+@apollo-elements/polymer,
+@apollo-elements/test-helpers
+
+
+
+
+
 # [3.0.0-alpha.10](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0-alpha.9...@apollo-elements/mixins@3.0.0-alpha.10) (2020-09-23)
 
 

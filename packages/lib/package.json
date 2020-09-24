@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/lib",
-  "version": "3.0.0-alpha.5",
+  "version": "3.0.0",
   "description": "Library functions for apollo-elements",
   "main": "index.js",
   "module": "index.js",
