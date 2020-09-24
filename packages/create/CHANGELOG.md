@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.6...@apollo-elements/create@0.0.2-alpha.7) (2020-09-24)
+
+
+### Bug Fixes
+
+* **create:** fix app command defaults ([01abe3d](https://github.com/apollo-elements/apollo-elements/commit/01abe3dce6a7c3cb2a6fc1caaa7d63010a9d161b))
+
+
+
+
+
 ## [0.0.2-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.5...@apollo-elements/create@0.0.2-alpha.6) (2020-09-24)
 
 
