@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.4...@apollo-elements/create@0.0.2-alpha.5) (2020-09-24)
+
+
+### Bug Fixes
+
+* **create:** missing dependency ([bec1286](https://github.com/apollo-elements/apollo-elements/commit/bec1286f16090fa7ff1f598cf081640a6669671d))
+
+
+
+
+
 ## 0.0.2-alpha.4 (2020-09-24)
 
 
