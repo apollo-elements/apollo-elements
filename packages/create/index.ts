@@ -19,6 +19,7 @@ export interface AppOptions extends BaseOptions {
   yes: boolean;
   install: boolean;
   start: boolean;
+  uri: string;
 }
 
 export interface ComponentOptions extends BaseOptions {
@@ -33,6 +34,11 @@ async function promptApp(options: PromptOptions<AppOptions>): Promise<AppOptions
   return {
     ...options,
     ...await prompts([{
+      type: () => options?.uri == null ? 'text' : null,
+      name: 'uri',
+      message: 'What is the URI to your GraphQL endpoint?',
+      initial: options?.uri ?? 'https://api.spacex.land/graphql',
+    }, {
       type: () => options?.yes == null ? 'confirm' : null,
       name: 'yes',
       message: 'Use default package.json fields (e.g. author, license, etc)',
@@ -87,6 +93,10 @@ async function argPrompt() {
       description: 'Preferred package manager',
     })
     .command<AppOptions>('app', 'Generate an Apollo Elements Skeleton App', yargs => void yargs
+      .option('uri', {
+        type: 'string',
+        description: 'URI to your GraphQL endpoint',
+      })
       .option('yes', {
         alias: 'y',
         type: 'boolean',

@@ -22,6 +22,7 @@ Generate an Apollo Elements Skeleton App
 | `--help`        | Show help | boolean | |
 | `--version`     | Show version number | boolean | |
 | `--pkgManager`  | Preferred package manager | `npm` or `yarn` | `npm` |
+| `--uri`         | URI to your GraphQL endpoint |
 | `--yes, -y`     | Use default package.json fields (e.g. author, license) | boolean |
 | `--install`     | Automatically install dependencies | boolean |
 | `--start`       | Launch the dev server after scaffolding | boolean |

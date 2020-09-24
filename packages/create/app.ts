@@ -8,6 +8,7 @@ import execa from 'execa';
 
 import { codegen } from './codegen';
 import type { AppOptions } from '.';
+import { readFile, processTemplate, writeFile } from './files';
 
 const cwd = process.cwd();
 
@@ -18,11 +19,32 @@ const rename = promisify(fs.rename);
 /**
  * Copy the file structure from `template`, and rename the `__gitignore` file
  */
-async function initFiles() {
+async function initFiles(options: AppOptions) {
   console.log('\nScaffolding App Files...\n');
   const templatePath = path.resolve(__dirname, 'template/app');
   await ncp(templatePath, cwd);
   await rename(path.join(cwd, '__gitignore'), path.join(cwd, '.gitignore'));
+
+  const interpolations = {
+    GRAPHQL_URI: options.uri,
+  };
+
+  const FILE_NAMES = {
+    rc: '.graphqlrc.yml',
+    client: 'src/client.ts',
+  };
+
+  async function write(key: keyof typeof FILE_NAMES) {
+    const filePath = path.join(cwd, FILE_NAMES[key]);
+    const template = await readFile(filePath, 'utf8');
+    const output = processTemplate(template, interpolations);
+    await writeFile(filePath, output, 'utf8');
+  }
+
+  for (const key of Object.keys(FILE_NAMES))
+    await write(key as keyof typeof FILE_NAMES);
+
+  console.log('\nDone!');
 }
 
 /**
@@ -66,7 +88,7 @@ async function execStart(options: AppOptions) {
  * Generate an Apollo Elements App
  */
 export async function app(options: AppOptions): Promise<void> {
-  await initFiles();
+  await initFiles(options);
   await initPackage(options);
   await execInstall(options);
   if (options.install)

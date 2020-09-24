@@ -3,22 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
 
-import { promisify } from 'util';
 import { codegen } from './codegen';
 import type { ComponentOptions } from '.';
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
+import { processTemplate, readFile, writeFile } from './files';
 
 const cwd = process.cwd();
-
-function processTemplate(template: string, interpolations: Record<string, string>): string {
-  let partial = template;
-  Object.entries(interpolations).forEach(([key, value]) => {
-    partial = partial.replace(new RegExp(`<%= ${key} %>`, 'g'), value || '');
-  });
-  return partial;
-}
 
 async function writeComponent(options: ComponentOptions) {
   const { name, subdir = '' } = options;

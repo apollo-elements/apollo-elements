@@ -1,5 +1,4 @@
-# Replace this with your live graphql endpoint
-schema: https://api.spacex.land/graphql
+schema: <%= GRAPHQL_URI %>
 
 extensions:
   codegen:
