@@ -35,8 +35,8 @@ async function promptApp(options: PromptOptions<AppOptions>): Promise<AppOptions
     ...await prompts([{
       type: () => options?.yes == null ? 'confirm' : null,
       name: 'yes',
-      message: 'Customize package.json fields (e.g. author, license, etc)',
-      initial: options?.yes ?? false,
+      message: 'Use default package.json fields (e.g. author, license, etc)',
+      initial: options?.yes ?? true,
     }, {
       type: () => options?.install == null ? 'confirm' : null,
       name: 'install',
@@ -90,17 +90,14 @@ async function argPrompt() {
       .option('yes', {
         alias: 'y',
         type: 'boolean',
-        default: false,
         description: 'Use default package.json fields (e.g. author, license)',
       })
       .option('install', {
         type: 'boolean',
-        default: true,
         description: 'Automatically install dependencies',
       })
       .option('start', {
         type: 'boolean',
-        default: false,
         description: 'Launch the dev server after scaffolding',
       }))
     .command<ComponentOptions>('component', 'Generate an Apollo Element', yargs => void yargs
