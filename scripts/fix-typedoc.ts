@@ -1,8 +1,13 @@
 #!/usr/bin/env ts-node-script
 
-import { readdir, readFile, writeFile } from 'fs/promises';
+import fs from 'fs';
+import { promisify } from 'util';
 import { resolve } from 'path';
 import { JSDOM } from 'jsdom';
+
+const readdir = promisify(fs.readdir);
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 import { out as DOCS_DIR } from '../typedoc.json';
 
@@ -27,8 +32,8 @@ async function stripMembersByTextContent(filename: string): Promise<void> {
     .filter(Boolean)
     .forEach(name => {
       document.querySelector(`[name="${name}"]`)
-        ?.closest('section')
-        ?.remove();
+      ?.closest('section')
+      ?.remove();
 
       LINKS
         .filter(x => x.href.endsWith(`#${name}`))
