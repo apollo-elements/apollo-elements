@@ -25,7 +25,7 @@ jobs:
         run: yarn lint
 
       - name: Test & Publish Code Coverage
-        uses: paambaati/codeclimate-action@v2
+        uses: paambaati/codeclimate-action@v2.7.1
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
