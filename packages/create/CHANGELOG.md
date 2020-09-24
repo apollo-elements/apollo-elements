@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.6](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.5...@apollo-elements/create@0.0.2-alpha.6) (2020-09-24)
+
+
+### Bug Fixes
+
+* **create:** juggle syntax ([ba1a898](https://github.com/apollo-elements/apollo-elements/commit/ba1a898400f1b748e46f76feb50eb780e6029715))
+
+
+
+
+
 ## [0.0.2-alpha.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.4...@apollo-elements/create@0.0.2-alpha.5) (2020-09-24)
 
 
