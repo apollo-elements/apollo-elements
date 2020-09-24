@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.7...@apollo-elements/create@1.0.0-alpha.1) (2020-09-24)
+
+**Note:** Version bump only for package @apollo-elements/create
+
+
+
+
+
 ## [0.0.2-alpha.7](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@0.0.2-alpha.6...@apollo-elements/create@0.0.2-alpha.7) (2020-09-24)
 
 
