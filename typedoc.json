@@ -3,6 +3,7 @@
   "out": "docs",
   "readme": "README.md",
   "excludeExternals": true,
+  "excludeNotExported": true,
   "includeDeclarations": false,
   "theme": "pages-plugin",
 
@@ -17,7 +18,7 @@
   ],
 
   "exclude": [
-    "./packages/create-app",
+    "./packages/create/template",
     "./packages/test-helpers",
     "./declaration.d.ts",
     "**/*+(index|.spec|.test|.e2e).ts",

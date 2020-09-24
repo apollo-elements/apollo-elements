@@ -1,0 +1,43 @@
+{
+  "main": "index.html",
+  "private": true,
+  "name": "apollo-elements-app",
+  "version": "1.0.0",
+  "author": "",
+  "license": "ISC",
+  "description": "Apollo Elements App",
+  "scripts": {
+    "start": "run-p start:*",
+    "start:codegen": "graphql-codegen --watch",
+    "start:serve": "wds --watch --open",
+    "lint": "eslint",
+    "build": "run-s build:*",
+    "build:codegen": "graphql-codegen",
+    "build:rollup": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@apollo-elements/lit-apollo": "^3.x || ^3.0.0-alpha.0",
+    "@apollo-elements/mixins": "^3.x || ^3.0.0-alpha.0",
+    "@apollo/client": "^3.x || ^3.0.0-alpha.0",
+    "pwa-helpers": "^0.9"
+  },
+  "devDependencies": {
+    "@apollo-elements/rollup-plugin-graphql": "^1.x",
+    "@graphql-codegen/cli": "^1.x",
+    "@graphql-codegen/typescript": "^1.x",
+    "@graphql-codegen/typescript-operations": "^1.x",
+    "@open-wc/rollup-plugin-html": "^1.x",
+    "@pwrs/eslint-config": "^0.x",
+    "@rollup/plugin-commonjs": "^15.x",
+    "@rollup/plugin-node-resolve": "^9.x",
+    "@web/dev-server": "^0.0.x",
+    "@web/dev-server-esbuild": "^0.2.x",
+    "@web/dev-server-rollup": "^0.2.x",
+    "npm-run-all": "^4.x",
+    "rollup": "^2.x",
+    "rollup-plugin-esbuild": "^2.x",
+    "rollup-plugin-lit-css": "^2.x",
+    "typescript": "^4.x"
+  }
+}

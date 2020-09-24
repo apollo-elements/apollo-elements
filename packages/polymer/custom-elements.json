@@ -168,7 +168,7 @@
         {
           "name": "options",
           "description": "Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.",
-          "type": "Partial<WatchQueryOptions<Record<string, any>>>"
+          "type": "Partial<WatchQueryOptions<Record<string, any>, any>>"
         },
         {
           "name": "noAutoSubscribe",
