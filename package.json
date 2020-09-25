@@ -67,6 +67,8 @@
     "@types/chai": "^4.2.12",
     "@types/graphql": "^14.5.0",
     "@types/jsdom": "^16.2.4",
+    "@types/mkdirp": "^1.0.1",
+    "@types/ncp": "^2.0.4",
     "@types/prompts": "^2.0.9",
     "@typescript-eslint/parser": "^4.1.1",
     "@web/dev-server": "^0.0.10",

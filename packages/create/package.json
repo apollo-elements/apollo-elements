@@ -31,6 +31,7 @@
   "dependencies": {
     "case": "^1.6.3",
     "execa": "^4.0.3",
+    "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
     "prompts": "^2.3.2",
     "tslib": "^2.0.1",
