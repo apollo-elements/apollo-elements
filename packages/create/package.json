@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/create",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Scaffold apps and components with GraphQL and LitElement",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
