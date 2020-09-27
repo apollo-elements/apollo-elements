@@ -23,8 +23,6 @@ export function isSubscription(x: unknown): x is ZenObservable.Subscription {
  * assertType<number>(checked.field)
  * ```
  */
-export function assertType<T>(x: T): asserts x is T {
-  return;
-}
+export function assertType<T>(x: T): asserts x is T { x; }
 
 export { isApolloError } from '@apollo/client/core';
