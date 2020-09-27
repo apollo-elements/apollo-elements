@@ -199,7 +199,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * Override to prevent subscribing unless your conditions are met.
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      return true;
+      return (void options, true);
     }
 
     /**

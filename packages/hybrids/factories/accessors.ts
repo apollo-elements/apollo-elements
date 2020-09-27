@@ -6,14 +6,17 @@ export function accessors<TInstance extends HTMLElement>(
 ): Descriptor<TInstance> {
   let descriptor: PropertyDescriptor;
 
-  while (instance) { // eslint-disable-line no-loops/no-loops
-    descriptor = Object.getOwnPropertyDescriptor(instance, key);
+  function walkPrototypeChain(_instance: TInstance) {
+    descriptor = Object.getOwnPropertyDescriptor(_instance, key);
     if (!descriptor)
       // @ts-expect-error: nasty prototype hacking. Why not?
-      instance = instance.__proto__;
+      _instance = _instance.__proto__;
     else
-      instance = null;
+      _instance = null;
   }
+
+  while (instance)
+    walkPrototypeChain(instance);
 
   if (!descriptor)
     return property(null);

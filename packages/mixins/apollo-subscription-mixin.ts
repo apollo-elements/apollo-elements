@@ -168,7 +168,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      * Override to prevent subscribing unless your conditions are met.
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      return true;
+      return (void options, true);
     }
 
     /** @private */

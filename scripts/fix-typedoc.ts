@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node-script
 
-import { readdir, readFile, writeFile, copyFile } from 'fs/promises';
-import { resolve, join } from 'path';
+import { readFile, writeFile, copyFile } from 'fs/promises';
+import { resolve } from 'path';
 import { JSDOM } from 'jsdom';
 import * as globby from 'globby';
 
