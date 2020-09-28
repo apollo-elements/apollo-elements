@@ -2,7 +2,7 @@ import { aTimeout, expect, nextFrame } from '@open-wc/testing';
 import 'sinon-chai';
 import gql from 'graphql-tag';
 
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 
 import { setupClient, teardownClient } from '../test-helpers/client';
 
@@ -30,17 +30,15 @@ const basicRender =
 describe('[hybrids] ApolloSubscription', function describeApolloSubscription() {
   let element: ApolloSubscriptionElement;
   let render = basicRender;
-  let hybrid: Hybrids<ApolloSubscriptionElement> = { ...ApolloSubscription, render };
 
   function setupElement(properties = {}, innerHTML = '') {
     const container = document.createElement('div');
     const tag = getTagName();
-    define(tag, hybrid);
+    define(tag, { ...ApolloSubscription, render });
     container.innerHTML = `<${tag}>${innerHTML}</${tag}>`;
     const [element] = container.children as HTMLCollectionOf<ApolloSubscriptionElement>;
     document.body.appendChild(element);
-    // @ts-expect-error: ??
-    const update = render({ ...element, ...properties });
+    const update = render(Object.assign(element, properties));
     update({ ...element, ...properties }, container);
     return element;
   }
@@ -54,7 +52,6 @@ describe('[hybrids] ApolloSubscription', function describeApolloSubscription() {
     element?.remove?.();
     element = undefined;
     render = basicRender;
-    hybrid = { ...ApolloSubscription, render };
   }
 
   function setNoParamSubscription() {
