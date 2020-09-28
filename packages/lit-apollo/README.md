@@ -88,7 +88,7 @@ export class HelloQueryElement extends ApolloQuery<Data, Variables> {
 ```
 
 ## 🍹 Mixins
-You don't need to use `LitElement` base class for your components if you use the [mixins](https://github.com/apollo-elements/apollo-elements/packages/mixins). You just have to handle the rendering part on your own: e.g. for a query component, you'd implement yourself what happens after `data`, `error`, `loading`, or `networkStatus` change.
+You don't need to use `LitElement` base class for your components if you use the [mixins](https://apolloelements.dev/modules/_apollo_elements_mixins.html). You just have to handle the rendering part on your own: e.g. for a query component, you'd implement yourself what happens after `data`, `error`, `loading`, or `networkStatus` change.
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

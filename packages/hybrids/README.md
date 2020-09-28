@@ -33,8 +33,8 @@ This package provides `ApolloQuery`, `ApolloMutation`, and `ApolloSubscription` 
 Spread in the ApolloQuery hybrid property descriptors to define a querying element.
 
 ```js
-import { ApolloQuery, queryFactory, define, html } from '@apollo-elements/hybrids';
-import gql from 'graphql-tag';
+import { ApolloQuery, define, html } from '@apollo-elements/hybrids';
+import { gql } from '@apollo/client/core';
 
 const render = ({ data }) => html`
   <p>${data?.hello ?? 'Hello'}</p>
@@ -72,7 +72,7 @@ define('name-input', { ...ApolloMutation, render });
 
 Which you add to your templates thus:
 ```js
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 
 const mutation = gql`
   mutation Name($name: String!) {
@@ -106,7 +106,7 @@ define('subscribing-element', { ...ApolloSubscription, render });
 And instantiate it like so:
 
 ```js
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 
 const subscription = gql`subscription { news }`;
 
@@ -121,7 +121,7 @@ const template = html`
 If you'd like to set up a subscription with an initial value from a query, then update that query's cached value each time the subscription reports new data, pass a subscription `document` and an `updateQuery` function with signature `(prev: CachedValue, { subscriptionData }): next: CachedValue` to the `subscribeToMore` method on a query element:
 
 ```js
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 
 const query = gql`
   query {
