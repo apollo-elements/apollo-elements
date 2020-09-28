@@ -13,6 +13,7 @@ import type {
   ApolloClient,
   NormalizedCacheObject,
   ErrorPolicy,
+  FetchPolicy,
   NetworkStatus,
   WatchQueryOptions,
 } from '@apollo/client/core';
@@ -31,9 +32,7 @@ import {
 
 import 'sinon-chai';
 
-import gql from 'graphql-tag';
-
-import { ObservableQuery, FetchPolicy } from '@apollo/client/core';
+import { ObservableQuery, gql } from '@apollo/client/core';
 
 import { match, stub, spy } from 'sinon';
 
