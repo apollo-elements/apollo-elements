@@ -2,10 +2,9 @@ import { aTimeout, expect, nextFrame } from '@open-wc/testing';
 import 'sinon-chai';
 import gql from 'graphql-tag';
 
-import { spy } from 'sinon';
 import { define, html, Hybrids } from 'hybrids';
 
-import { client, setupClient, teardownClient } from '../test-helpers/client';
+import { setupClient, teardownClient } from '../test-helpers/client';
 
 import { Observable } from '@apollo/client/core';
 
@@ -197,54 +196,6 @@ describe('[hybrids] ApolloSubscription', function describeApolloSubscription() {
         expect(element.data).to.be.null;
         expect(element.error).to.be.null;
       });
-    });
-
-    // Not quite sure how to test this without spies, as apollo client seems to be preventing spies
-    it.skip('can take a specific fetchPolicy', async function specificFetchPolicy() {
-      const variables = { param: 'param' };
-      const fetchPolicy = 'cache-only';
-      const clientSubscribeSpy = spy(element.client, 'subscribe');
-      element.subscription = NonNullableParamSubscription;
-      element.variables = variables;
-      element.subscribe({ fetchPolicy });
-      expect(clientSubscribeSpy).to.have.been.calledWith({
-        query: NullableParamSubscription,
-        variables,
-        fetchPolicy,
-      });
-      clientSubscribeSpy.restore();
-    });
-
-    it.skip('uses fetchPolicy set on the element', async function specificFetchPolicy() {
-      const variables = { param: 'param' };
-      const fetchPolicy = 'cache-only';
-      element.subscription = NonNullableParamSubscription;
-      const clientSubscribeSpy = spy(client, 'subscribe');
-      element.fetchPolicy = fetchPolicy;
-      element.variables = variables;
-      element.subscribe();
-      expect(clientSubscribeSpy).to.have.been.calledWith({
-        query: NullableParamSubscription,
-        variables,
-        fetchPolicy,
-      });
-      clientSubscribeSpy.restore();
-    });
-
-    it.skip('defaults to fetchPolicy set on the element', async function specificFetchPolicy() {
-      const variables = { param: 'quux' };
-      const fetchPolicy = 'cache-only';
-      element.subscription = NonNullableParamSubscription;
-      const clientSubscribeSpy = spy(client, 'subscribe');
-      element.fetchPolicy = fetchPolicy;
-      element.variables = variables;
-      element.subscribe({ fetchPolicy: undefined });
-      expect(clientSubscribeSpy).to.have.been.calledWith({
-        query: NullableParamSubscription,
-        variables,
-        fetchPolicy,
-      });
-      clientSubscribeSpy.restore();
     });
   });
 });
