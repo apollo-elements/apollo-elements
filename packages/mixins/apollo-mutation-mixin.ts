@@ -106,8 +106,8 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       const mutationId = this.generateMutationId();
 
       this.loading = true;
-      this.error = undefined;
-      this.data = undefined;
+      this.error = null;
+      this.data = null;
       this.called = true;
 
       return this.client.mutate(options)
@@ -141,7 +141,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
         this.loading = false;
         this.error = null;
-        this.data = data;
+        this.data = data ?? null;
       }
       this.onCompleted?.(data);
       return response;
@@ -155,7 +155,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       if (this.isMostRecentMutation(mutationId)) {
         this.loading = false;
         this.data = null;
-        this.error = error;
+        this.error = error ?? null;
       }
       this.onError?.(error);
       throw error;
