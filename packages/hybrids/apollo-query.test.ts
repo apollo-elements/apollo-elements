@@ -89,7 +89,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   let observableQuerySetOptionsSpy: Sinon.SinonSpy;
 
   function spyRefetch() {
-    refetchSpy = spy(element, 'refetch');
+    refetchSpy = spy(element.observableQuery, 'refetch');
   }
 
   function restoreRefetch() {
@@ -309,7 +309,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
     });
 
     // classMethod factory is breaking sinon spies
-    describe.skip('with an observableQuery', function() {
+    describe('with an observableQuery', function() {
       beforeEach(setNullableParamQuery);
       beforeEach(spyRefetch);
       beforeEach(setNullableParamVariables);

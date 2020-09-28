@@ -5,7 +5,6 @@ import { fromRollup } from '@web/dev-server-rollup';
 import _commonjs from '@rollup/plugin-commonjs';
 import _graphql from '@apollo-elements/rollup-plugin-graphql';
 
-// @ts-ignore: graphql plugin doesn't supply sourcemaps
 const graphql = fromRollup(_graphql);
 const commonjs = fromRollup(_commonjs);
 
@@ -16,7 +15,8 @@ const cjsIncludes = [
   '**/bind-decorator/index.js',
 ];
 
-export default {
+/** @type {import('@web/test-runner').TestRunnerConfig} */
+const config = {
   nodeResolve: true,
 
   rootDir: '../..',
@@ -29,6 +29,7 @@ export default {
     '**/*.graphql': 'js',
   },
 
+  // @ts-expect-error: this seems like an error in wtr
   coverageConfig: {
     exclude: [
       'packages/**/*.test.ts',
@@ -61,3 +62,5 @@ export default {
     esbuildPlugin({ ts: true }),
   ],
 };
+
+export default config;

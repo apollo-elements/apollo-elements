@@ -10,6 +10,7 @@ import NullableParamMutation from '@apollo-elements/test-helpers/NullableParam.m
 
 import { ApolloMutation, ApolloMutationElement } from './apollo-mutation';
 import { setupClient } from '@apollo-elements/test-helpers/client';
+import { ApolloError } from '@apollo/client/core';
 
 let counter = 0;
 
@@ -148,8 +149,7 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
     });
   });
 
-  // TODO: Fix these tests
-  describe.skip('setting a valid mutation', function() {
+  describe('setting a valid mutation', function() {
     beforeEach(function() {
       element.mutation = NoParamMutation;
     });
@@ -160,7 +160,9 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
 
     describe('with a mutation that has nullable params', function mutate() {
       async function mutate() {
-        await element.mutate();
+        try {
+          await element.mutate();
+        } catch { null; }
       }
 
       beforeEach(function() {
@@ -177,13 +179,20 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
         });
 
         it('calls onCompleted with data when mutation resolves', async function callsOnCompleted() {
-          expect(element.onCompleted).to.have.been.calledWithMatch({ noParam: 'noParam' });
+          expect(element.onCompleted)
+            .to.have.been.calledWithMatch({ nullableParam: { nullable: 'Hello World' } });
         });
 
         it('sets data, loading', async function setsDataLoading() {
-          expect(element.data, 'data').to.deep.equal({ foo: 'bar' });
           expect(element.error, 'error').to.be.null;
           expect(element.loading, 'loading').to.be.false;
+          expect(element.data, 'data')
+            .to.deep.equal({
+              nullableParam: {
+                __typename: 'Nullable',
+                nullable: 'Hello World',
+              },
+            });
         });
 
         describe('then calling mutate again', function() {
@@ -202,12 +211,16 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
         beforeEach(mutate);
 
         it('calls onError', async function callsOnError() {
-          expect(element.onError).to.have.been.calledWith('foo', 1);
+          // @ts-expect-error: spy
+          const [error] = element.onError.firstCall.args;
+          expect(error).to.be.an.instanceOf(ApolloError);
+          expect(error.message).to.equal('error');
         });
 
         it('sets data, error, loading', async function setsErrorLoading() {
           expect(element.data).to.be.null;
-          expect(element.error).to.equal('foo');
+          expect(element.error).to.be.an.instanceOf(ApolloError);
+          expect(element.error.message).to.equal('error');
           expect(element.loading).to.be.false;
         });
       });
