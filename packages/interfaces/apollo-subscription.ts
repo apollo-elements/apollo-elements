@@ -113,5 +113,29 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * Callback for when subscription completes.
    */
-  onSubscriptionComplete?(): void
+  onSubscriptionComplete?(): void;
+
+  /** @private */
+  initObservable(params?: Partial<SubscriptionDataOptions<TData, TVariables>>): void;
+
+  /**
+   * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
+   * @private
+   */
+  nextData(result: FetchResult<TData>): void;
+
+  /**
+   * Sets `error` and `loading` on the instance when the subscription errors.
+   * @private
+   */
+  nextError(error: ApolloError): void;
+
+  /**
+   * Shuts down the subscription
+   * @private
+   */
+  onComplete(): void;
+
+  /** @private */
+  endSubscription(): void;
 }
