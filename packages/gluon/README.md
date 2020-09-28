@@ -7,7 +7,7 @@
 
 <strong>👩‍🚀 We choose to Use the Platform not because it is easy, but because it is awesome 👨‍🚀</strong>
 
-Gluon is a simple, unopinionated UI library which uses `lit-html` for templating without piling on property observation or lifecycle cruft. Check out the [gluon repository](https://github.com/ruphin/gluon) or this [introductory blog post](https://dev.to/bennypowers/lets-build-web-components-part-6-gluon-27ll)
+Gluon is a simple, unopinionated UI library which uses `lit-html` for templating without piling on property observation or lifecycle cruft. Check out the [gluon repository](https://github.com/ruphin/gluonjs) or this [introductory blog post](https://dev.to/bennypowers/lets-build-web-components-part-6-gluon-27ll)
 
 ## 📓 Contents
 - [🔧 Installation](#-installation)

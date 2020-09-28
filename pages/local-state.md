@@ -89,7 +89,7 @@ const client = new ApolloClient({
 })
 ```
 
-or we can use [`TypePoliciesMixin`](../Cool%20Tricks/code-splitting.html#TypePoliciesMixin) to lazy-load the type policies when the component connects:
+or we can use [`TypePoliciesMixin`](../Cool%20Tricks/code-splitting.html#typepoliciesmixin) to lazy-load the type policies when the component connects:
 
 ```ts
 import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
