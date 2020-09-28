@@ -76,7 +76,7 @@
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error"
+          "type": "Error | ApolloError"
         },
         {
           "name": "errors",
@@ -215,7 +215,7 @@
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error"
+          "type": "Error | ApolloError"
         },
         {
           "name": "errors",
@@ -333,7 +333,7 @@
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error"
+          "type": "Error | ApolloError"
         },
         {
           "name": "errors",

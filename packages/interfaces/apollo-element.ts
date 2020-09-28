@@ -1,5 +1,5 @@
 import type { DocumentNode, GraphQLError } from 'graphql';
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
 import type { CustomElement } from './constructor';
 
 /** @noInheritDoc */
@@ -22,7 +22,7 @@ export declare class ApolloElementInterface<TData = unknown> extends CustomEleme
   data: TData;
 
   /** Latest error */
-  error: Error;
+  error: Error|ApolloError;
 
   /** Latest errors */
   errors: readonly GraphQLError[];
