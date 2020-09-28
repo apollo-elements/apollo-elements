@@ -1,5 +1,4 @@
 import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
-import type { Hybrids } from 'hybrids';
 import type Sinon from 'sinon';
 
 import { expect, nextFrame } from '@open-wc/testing';
@@ -47,17 +46,15 @@ const basicRender =
 describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   let element: QueryEl;
   let render = basicRender;
-  let hybrid: Hybrids<QueryEl> = { ...ApolloQuery, render };
 
   function setupElement(properties = {}, innerHTML = '') {
     const container = document.createElement('div');
     const tag = getTagName();
-    define(tag, hybrid);
+    define(tag, { ...ApolloQuery, render });
     container.innerHTML = `<${tag}>${innerHTML}</${tag}>`;
     const [element] = container.children as HTMLCollectionOf<QueryEl>;
     document.body.appendChild(element);
-    // @ts-expect-error: ??
-    const update = render({ ...element, ...properties });
+    const update = render(Object.assign(element, properties));
     update({ ...element, ...properties }, container);
 
     return element;
@@ -75,7 +72,6 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
     element?.remove?.();
     element = undefined;
     render = basicRender;
-    hybrid = { ...ApolloQuery, render };
   }
 
   /* Spies */

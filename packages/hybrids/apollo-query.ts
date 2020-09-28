@@ -1,5 +1,5 @@
 import type { Hybrids } from 'hybrids';
-import type { Constructor, CustomElement } from '@apollo-elements/interfaces/constructor';
+import type { Constructor } from '@apollo-elements/interfaces/constructor';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
@@ -8,7 +8,7 @@ import { accessors } from './factories/accessors';
 import { ApolloElement } from './apollo-element';
 
 class ApolloQueryElement<D = unknown, V = unknown>
-  extends ApolloQueryMixin(class { } as Constructor<CustomElement>)<D, V> { }
+  extends ApolloQueryMixin(class { } as Constructor)<D, V> { }
 
 const instance = new ApolloQueryElement();
 

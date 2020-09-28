@@ -46,8 +46,7 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
 
     document.body.appendChild(element);
 
-    // @ts-expect-error: ??
-    const update = render({ ...element, ...properties });
+    const update = render(Object.assign(element, properties));
 
     update({ ...element, ...properties }, container);
 
