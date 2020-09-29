@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.0.0...@apollo-elements/interfaces@1.0.1) (2020-09-29)
+
+
+### Bug Fixes
+
+* **interfaces:** update subscription interface ([fc78a72](https://github.com/apollo-elements/apollo-elements/commit/fc78a7287390a61e55513f4ff5a51591e9911dd7))
+
+
+
+
+
 # 1.0.0 (2020-09-24)
 
 

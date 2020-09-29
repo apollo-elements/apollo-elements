@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.0...@apollo-elements/mixins@3.0.1) (2020-09-29)
+
+
+### Bug Fixes
+
+* **mixins:** never assign undefined to data ([8e90a0a](https://github.com/apollo-elements/apollo-elements/commit/8e90a0a499b4931f7d7a7f191e365c1010ae9bb2))
+
+
+
+
+
 # [3.0.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@2.0.1...@apollo-elements/mixins@3.0.0) (2020-09-24)
 
 
