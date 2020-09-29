@@ -35,5 +35,6 @@ jobs:
 
       - name: Build
         run: |
-          sudo yarn workspaces run prepublishOnly
+          sudo yarn clean
+          sudo yarn deploy:prepublish
           sudo yarn clean
