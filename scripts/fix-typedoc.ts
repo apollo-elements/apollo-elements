@@ -30,14 +30,36 @@ async function fixHTML(path: string) {
 
   document.head.innerHTML += `
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://apolloelements.dev">
+    <meta property="og:url" content="${path.replace(process.cwd(), 'https://apolloelements.dev')}">
     <meta property="og:image" content="/logo.svg">
-    <meta property="twitter:card" content="summary_large_image"/>
-    <meta property="twitter:url" content="https://apolloelements.dev"/>
-    <meta property="twitter:image" content="/logo.svg">
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="PowersBenny">
+    <meta name="twitter:creator" content="PowersBenny">
+    <meta property="og:title" content="${document.head.querySelector('title').textContent}">
+    <meta property="og:description" content="🌑 Custom elements meet Apollo GraphQL 🌜">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👩‍🚀</text></svg>">
     <link rel="stylesheet" href="/assets/css/theme.css">
   `;
+
+  function graphTag(property: string, content: string): void {
+    document.head.querySelector(`meta[property="og:${property}"]`)?.remove();
+    document.head.innerHTML += `<meta property="${property}" content="${content}">`;
+  }
+
+  document.body.querySelectorAll('meta').forEach(meta => {
+    const name = meta.getAttribute('property') ?? meta.name;
+    const { content } = meta;
+    document.head.querySelector(`meta[name="${name}"]`)?.remove();
+    document.head.appendChild(meta);
+    switch (name) {
+      case 'title':
+      case 'og:title':
+      case 'twitter:title': graphTag('title', content); break;
+      case 'og:description':
+      case 'twitter:description':
+      case 'description': graphTag('description', content); break;
+    }
+  });
 
   const LINKS =
     Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'));

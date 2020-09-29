@@ -1,3 +1,5 @@
+<meta name="description" content="How to use Apollo Elements with web-dev-server to develop your GraphQL-based app without a build step"/>
+
 You can run your apollo-elements app without using a build step with the [web dev server](https://modern-web.dev/docs/dev-server/overview/).
 
 This sample config lets you also import css and graphql into your lit-apollo components written in TypeScript:
@@ -62,3 +64,10 @@ declare module '*.css' {
   export default css;
 }
 ```
+
+## Recommended Optimizations
+Apply these plugins to further reduce your bundle sizes.
+
+- [rollup-plugin-terser](https://npm.im/rollup-plugin-terser)
+- [rollup-plugin-minify-html-literals](https://npm.im/rollup-plugin-minify-html-literals)
+- [@open-wc/rollup-plugin-html](https://npm.im/@open-wc/rollup-plugin-html)

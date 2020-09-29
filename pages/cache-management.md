@@ -1,3 +1,5 @@
+<meta name="description" content="How to use Apollo Elements to manage the Apollo client cache after mutations"/>
+
 When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `updater` property on elements that extend from `ApolloMutation`
 
 Say we had this mutation in `components/blog-post/BlogPost.mutation.graphql`:

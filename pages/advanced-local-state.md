@@ -1,3 +1,5 @@
+<meta name="description" content="Some advanced recipes for Apollo Elements to manage local state"/>
+
 Say your app has Networks and Sites. A network has a list of Sites which belong to it, so you implement a field `isInNetwork` on Site which takes a network ID. You want to implement <dfn><abbr title="Create, Read, Update, Delete">CRUD</abbr></dfn> operations for Networks.
 
 ```graphql

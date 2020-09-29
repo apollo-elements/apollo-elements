@@ -1,3 +1,5 @@
+<meta name="description" content="How to implement code-splitting (a.k.a. lazy loading) with Apollo Elements to decrease page loading times and improve user experience"/>
+
 Code splitting or lazy-loading is the process of writing an app such that the user only loads the code they need when they need it, instead of loading the entire app in one huge bundle up front.
 
 Imagine your single-page app has two kinds of users: regular users and admins. The admins have access to different pages than the regular users, and those pages have whole complicated state trees which are irrelevant to regular users.

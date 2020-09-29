@@ -1,3 +1,5 @@
+<meta name="description" content="How to get started using Apollo Elements to scaffold and run a GraphQL-based app with web components"/>
+
 ## Apollo Elements App Generator
 
 To quickly get started with apollo-elements, run this command
