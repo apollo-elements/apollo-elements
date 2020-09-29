@@ -3,6 +3,7 @@ body {
   color: white;
 }
 
+html.default .col-menu,
 .tsd-page-toolbar,
 .tsd-page-title {
   background: #151515;
