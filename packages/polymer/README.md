@@ -3,7 +3,7 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/polymer)
 [![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
-<strong>🚀 Custom Elements that support two-way binding from your Apollo cache 🌜</strong>
+<strong>🚀 Custom Elements with Polymer-style two-way binding from your Apollo cache 🌜</strong>
 
 <strong>👩‍🚀 For developing with space-age Polymers 👨‍🚀</strong>
 
@@ -18,6 +18,8 @@
 ```bash
 npm install --save @apollo-elements/polymer
 ```
+
+`@apollo-elements/polymer` does not depend on `@polymer/polymer`. The components extend directly from HTMLElement, so they're suitable for use in any project, not just [Polymer library](https://polymer-library.polymer-project.org/) apps.
 
 ## 👩‍🚀 Usage
 By default, these elements will use the client assigned to `window.__APOLLO_CLIENT__`, but you could alternatively assign to each element's `client` property directly.
@@ -36,8 +38,8 @@ window.__APOLLO_CLIENT__ = new ApolloClient({
 After that, import the elements.
 
 ```js
-import '@apollo-elements/polymer/apollo-query-element';
-import '@apollo-elements/polymer/apollo-mutation-element';
+import '@apollo-elements/polymer/apollo-query';
+import '@apollo-elements/polymer/apollo-mutation';
 ```
 
 You can now use them in your polymer template:
