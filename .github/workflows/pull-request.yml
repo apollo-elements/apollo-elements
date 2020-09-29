@@ -42,3 +42,14 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name: Build Docs
+        run: yarn Docs
+
+      - name: My Broken Link Checker
+        uses: ruzickap/action-my-broken-link-checker@v1.0.3
+        with:
+          url: https://apolloelements.dev
+          pages_path: './docs'
+          cmd_params: --buffer-size=8192 --max-connections=10 --skip-tls-verification --limit-redirections=5 --timeout=20  # muffet parameters
+          run_timeout: 600  # maximum amount of time to run muffet (default is set to 300 seconds)
