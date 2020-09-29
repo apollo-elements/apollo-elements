@@ -122,7 +122,7 @@ async function fixHTML(path: string) {
       .replace(/<span class="tsd-signature-type">Error<\/span>/g,
         link({ textContent: 'Error', href: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error' }))
       // Link *Element params to MDN
-      .replace(/<span class="tsd-signature-type">((?!(InputLike))(\w+))?Element<\/span>/g,
+      .replace(/<span class="tsd-signature-type">(((HTML)|(SVG))(\w+)?)?Element<\/span>/g,
         link({ textContent: '$1Element', href: 'https://developer.mozilla.org/en-US/docs/Web/API/$1Element' }))
       // Link *Observer params to MDN
       .replace(/<span class="tsd-signature-type">(Mutation|Intersection|Resize)Observer<\/span>/g,

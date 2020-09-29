@@ -6,22 +6,25 @@ on:
       - master
 
 jobs:
-  build:
-
+  lint:
+    name: 'Lint'
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: '14'
-
       - uses: hallee/eslint-action@1.0.3
         if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
+  test:
+    name: 'Unit Tests'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+      - uses: c-hive/gha-yarn-cache@v1
       - name: Install Dependencies
         run: sudo yarn --frozen-lockfile
 
@@ -35,21 +38,32 @@ jobs:
         # HACK: temporarily disable testing of hybrids files - they pass locally but timeout in CI.
         run: yarn test --files 'packages/!(hybrids)/*.test.ts'
 
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
+  build:
+    name: 'Build Dry-Run'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '14'
+      - uses: c-hive/gha-yarn-cache@v1
+      - name: Install Dependencies
+        run: sudo yarn --frozen-lockfile
 
       - name: Build
         run: yarn build
 
-      - name: Build Docs
-        run: yarn Docs
-
-      - name: My Broken Link Checker
-        uses: ruzickap/action-my-broken-link-checker@v1.0.3
+  docs:
+    name: 'Build and Check Docs'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
         with:
-          url: https://apolloelements.dev
-          pages_path: './docs'
-          cmd_params: --buffer-size=8192 --max-connections=10 --skip-tls-verification --limit-redirections=5 --timeout=20  # muffet parameters
-          run_timeout: 600  # maximum amount of time to run muffet (default is set to 300 seconds)
+          node-version: '14'
+      - uses: c-hive/gha-yarn-cache@v1
+      - name: Install Dependencies
+        run: sudo yarn --frozen-lockfile
+
+      - name: Build Docs
+        run: yarn docs
