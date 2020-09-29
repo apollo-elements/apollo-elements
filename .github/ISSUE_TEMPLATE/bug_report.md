@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: 'Apollo Elements Bug'
 labels: bug
 assignees: ''
 
@@ -19,13 +19,13 @@ assignees: ''
 <!-- A clear and concise description of what the bug is. -->
 
 ## Steps To Reproduce
-<!-- Steps to reproduce the behavior:
+<!-- clone this reproduction repo https://github.com/apollo-elements/apollo-elements-repro  -->
+<!-- then edit it until it reproduces your bug -->
+<!-- then copy the steps to reproduce here -->
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
--->
-<!-- Please include a code snippet, or even better, a reproduction using stackblitz or glitch -->
 
 ## Expected Behavior
 <!-- A clear and concise description of what you expected to happen. -->
