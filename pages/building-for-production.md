@@ -1,3 +1,5 @@
+<meta name="description" content="How to use Apollo Elements with Rollup to build your GraphQL-based app for production"/>
+
 Since Apollo client [cannot be imported directly into the browser](https://github.com/apollographql/apollo-client/issues/3047), you must transpile and bundle the in order to use it in your app. We recommend using [Rollup](https://rollupjs.com) for this. This is also a good opportunity to implement performance enhancements like minification and code splitting.
 
 A basic `rollup.config.js` that you can work from looks like this:

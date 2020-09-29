@@ -1,3 +1,5 @@
+<meta name="description" content="How to set up Apollo Client for use with Apollo Elements"/>
+
 Before your components can interact with your graph, you need to pass them an `ApolloClient` instance. Construct an instance by importing from `@apollo/client/core` (*note*: `@apollo/client` exports a bunch of react code, so if you leave off the `/core`, you might have TypeScript compilation errors, or larger bundle sizes)
 
 ```ts

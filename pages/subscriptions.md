@@ -1,3 +1,5 @@
+<meta name="description" content="How to use Apollo Elements to write declarative web components that subscribe to real-time updates over GraphQL"/>
+
 You can create components which use GraphQL subscriptions to update over websockets.
 
 In this example, `<chat-subscription>` has its `subscription` property passed in from the parent, rather than defined statically, as one normally would.

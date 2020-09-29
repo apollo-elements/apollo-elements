@@ -1,3 +1,5 @@
+<meta name="description" content="How to update your Apollo Elements 2 app to Apollo Elements 3"/>
+
 Apollo Client 3 and Apollo Elements 3 both bring with them significant breaking changes. When upgrading your app to `@apollo-elements` 3, follow these steps to ease the transition:
 
 ## Replace imports with `@apollo/client/core`

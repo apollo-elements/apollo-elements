@@ -1,3 +1,5 @@
+<meta name="description" content="How to use Apollo Elements to write declarative GraphQL mutation web components"/>
+
 Mutations are how you change data in your graphql. If you think of queries as analogous to HTTP `GET` requests or SQL `READ` statements, then mutations are kind of like HTTP `POST` requests or SQL `WRITE` statements.
 
 Unlike query and subscription components, mutation components don't automatically send a request to the graphql server. You have to call their `mutate()` method in order to issue the mutation. This is usually in response to some user input.

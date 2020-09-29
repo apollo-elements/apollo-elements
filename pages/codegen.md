@@ -1,7 +1,16 @@
+<meta name="description" content="How to use Apollo Elements and GraphQL Code Generator to improve the experience of developing with GraphQL and web components"/>
+
 Using the `@graphql-codegen/cli` package and its plugins, you can automatically generate TypeScript typings from your schema and query documents.
 
 ```bash
 npm i -D \
+  @graphql-codegen/cli \
+  @graphql-codegen/typescript \
+  @graphql-codegen/typescript-operations
+```
+
+```bash
+yarn add -D \
   @graphql-codegen/cli \
   @graphql-codegen/typescript \
   @graphql-codegen/typescript-operations

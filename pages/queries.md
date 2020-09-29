@@ -1,3 +1,5 @@
+<meta name="description" content="How to use Apollo Elements to write declarative web components that query their data from you Apollo Client cache."/>
+
 GraphQL queries are how you read data from the graph. You can think of them as roughly analogous to HTTP `GET` requests or SQL `READ` statements.
 
 Query components read data from the GraphQL and expose them on the component's `data` property. Each query component takes a `query` property which is a GraphQL `DocumentNode`. You can create that object using the `gql` template literal tag, or via `@apollo-elements/rollup-plugin-graphql`, etc.
@@ -57,7 +59,7 @@ Alternatively, you can set the boolean `no-auto-subscribe` attribute to the elem
 <hello-query></hello-query>
 <!-- This one will not subscribe until called -->
 <hello-query no-auto-subscribe></hello-query>
-<!-- This one eagerly subscribes -->
+<!-- Neither will this one -->
 <hello-query no-auto-subscribe="false"></hello-query>
 ```
 

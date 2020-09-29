@@ -1,3 +1,5 @@
+<meta name="description" content="Some introductory recipes for managing local state with Apollo Elements"/>
+
 Apollo Client 3 provides a number of ways to manage local state in your app.
 
 ## Reading Local State
