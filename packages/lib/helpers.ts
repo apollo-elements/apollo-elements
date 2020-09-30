@@ -1,7 +1,7 @@
 const scriptSelector = 'script[type="application/graphql"]';
 
 /**
- * Is it a <script type="application/graphql">
+ * Is it a `<script type="application/graphql">`
  */
 export function isGraphQLScript(el: Element): boolean {
   return (

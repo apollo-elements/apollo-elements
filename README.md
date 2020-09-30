@@ -7,9 +7,10 @@
 
 [![Made with open-wc](https://img.shields.io/badge/made%20with-open--wc-blue)](https://open-wc.org)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/apollo-elements/apollo-elements/issues)
-[![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
+[![ISC License](https://img.shields.io/npm/l/@apollo-elements/polymer)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9766ab3cacfe5bfeab25/maintainability)](https://codeclimate.com/github/apollo-elements/apollo-elements/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9766ab3cacfe5bfeab25/test_coverage)](https://codeclimate.com/github/apollo-elements/apollo-elements/test_coverage)
+[![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
@@ -86,7 +87,7 @@ npm i -S @apollo-elements/polymer
 ## 🗺 Guides and Docs
 If you just want to see the API Docs, check them out for all our packages at [apolloelements.dev](https://apolloelements.dev)
 
-## 👷‍♂️ Maintainers
-`apollo-elements` is a community project maintained by Benny Powers.
+## ‍🙏️ Acknowledgements
+`apollo-elements` is a community project maintained by Benny Powers. We proudly use [Open Web Components](https://open-wc.org) and [Modern Web](https://modern-web.dev) tools. Thanks to [Netlify](https://netlify.com) and [Heroku](https://heroku.com) for hosting our documentation and demos.
 
 [![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/bennyp?utm_source=github&utm_medium=button&utm_term=bennyp&utm_campaign=github)
