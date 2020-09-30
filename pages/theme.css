@@ -18,6 +18,25 @@ html.default .col-menu,
   box-shadow: 0 0 5px hsla(0 0% 100% / 0.35);
 }
 
+header .social-link {
+  display: table-cell;
+  min-width: 20px;
+  padding-left: 8px;
+  vertical-align: middle;
+}
+
+header .social-link svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+header a.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 footer,
 .tsd-select .tsd-select-list li,
 #tsd-search .results li,
@@ -32,6 +51,31 @@ footer,
 footer,
 footer.with-border-bottom {
   border-color: #444;
+}
+
+footer.with-border-bottom {
+  border-bottom: none;
+}
+
+footer.with-border-bottom .tsd-generator {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+}
+
+footer.with-border-bottom .tsd-generator p {
+  margin-right: auto;
+}
+
+/* footer badges */
+footer.with-border-bottom .tsd-generator :not(:first-child) {
+  margin-left: 8px;
+}
+
+footer > .container:last-of-type {
+  border-top: 1px solid #444;
+  min-width: calc(100% - 80px);
+  background: black;
 }
 
 .tsd-select .tsd-select-list li:nth-child(2n),

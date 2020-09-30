@@ -1,7 +1,9 @@
 # @apollo-elements/polymer
+
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/polymer.svg)](https://www.npmjs.com/package/@apollo-elements/polymer)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/polymer)
-[![Actions Status](https://github.com/apollo-elements/apollo-elements/workflows/CD/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
+[![ISC License](https://img.shields.io/npm/l/@apollo-elements/polymer)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
+[![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
 <strong>🚀 Custom Elements with Polymer-style two-way binding from your Apollo cache 🌜</strong>
 

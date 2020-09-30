@@ -1,4 +1,9 @@
 # @apollo-elements/lib
+
+[![Published on npm](https://img.shields.io/npm/v/@apollo-elements/lib.svg)](https://www.npmjs.com/package/@apollo-elements/lib)
+[![ISC License](https://img.shields.io/npm/l/@apollo-elements/lib)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
+[![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
+
 Helper functions for Apollo Elements
 
 ## getGraphQLScriptChildDocument
