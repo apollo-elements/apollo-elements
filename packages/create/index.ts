@@ -109,7 +109,8 @@ async function argPrompt() {
       .option('start', {
         type: 'boolean',
         description: 'Launch the dev server after scaffolding',
-      }))
+      })
+      .help())
     .command<ComponentOptions>('component', 'Generate an Apollo Element', yargs => void yargs
       .option('name', {
         alias: 'n',
@@ -120,7 +121,8 @@ async function argPrompt() {
         alias: 'd',
         type: 'string',
         description: 'Optional subdir under src/components',
-      }))
+      })
+      .help())
     .option('type', {
       alias: 't',
       type: 'string',
@@ -128,6 +130,7 @@ async function argPrompt() {
       description: 'Element Type',
       default: 'query',
     })
+    .help()
     .check(({ name }) => {
       if (typeof name === 'string' && !name.includes('-'))
         throw new Error(ERR_BAD_CE_TAG_NAME);
