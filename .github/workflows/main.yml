@@ -25,10 +25,9 @@ jobs:
         run: yarn lint
 
       - name: Test
-        # HACK: temporarily disable testing of hybrids files - they pass locally but timeout in CI.
-        run: yarn test --files 'packages/!(hybrids)/*.test.ts'
+        run: yarn test
 
-      - name: Test & Publish Code Coverage
+      - name: Publish Code Coverage
         uses: paambaati/codeclimate-action@v2.7.3
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
