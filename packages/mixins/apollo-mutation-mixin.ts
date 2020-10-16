@@ -47,7 +47,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     declare variables: TVariables;
 
-    onCompleted?(_data: FetchResult<TData>): void;
+    onCompleted?(_data: TData): void;
 
     onError?(_error: Error): void;
 
