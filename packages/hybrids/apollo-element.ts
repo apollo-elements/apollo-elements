@@ -1,30 +1,20 @@
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import type { Hybrids } from 'hybrids';
-import type { Constructor } from '@apollo-elements/interfaces';
+import type { Constructor } from '@apollo-elements/interfaces/constructor';
 
 import { property } from 'hybrids';
-import { accessors } from './factories/accessors';
+import { classAccessors } from './factories/classAccessors';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+class ApolloElementElement extends ApolloElementMixin(class { } as Constructor) { }
 
-declare global {
-  interface Window {
-    __APOLLO_CLIENT__?: ApolloClient<NormalizedCacheObject>
-  }
-}
+export type { ApolloElementElement };
 
-class Class extends ApolloElementMixin(class { } as Constructor) { }
-
-export type ApolloElementElement =
-  HTMLElement & Class;
-
-const instance = new Class();
-
-function connect<T extends Class>(host: T, key: keyof T): void {
+function connect<T extends ApolloElementElement>(host: T, key: keyof T): void {
   if (key === 'client')
     host.client = host.client ?? window.__APOLLO_CLIENT__;
-  instance.connectedCallback.call(host);
-  return instance.disconnectedCallback.bind(host);
+  ApolloElementElement.prototype.connectedCallback.call(host);
+  return ApolloElementElement.prototype.disconnectedCallback.bind(host);
 }
 
 export const ApolloElement: Hybrids<ApolloElementElement> = {
@@ -38,5 +28,11 @@ export const ApolloElement: Hybrids<ApolloElementElement> = {
   // @ts-expect-error: shortcut
   __variables: null,
 
-  document: accessors(instance, 'document'),
+  document: classAccessors(ApolloElementElement, 'document'),
 };
+
+declare global {
+  interface Window {
+    __APOLLO_CLIENT__?: ApolloClient<NormalizedCacheObject>
+  }
+}

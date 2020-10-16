@@ -1,16 +1,16 @@
-import { Hybrids, property } from 'hybrids';
-import type { Constructor } from '@apollo-elements/interfaces';
+import type { Hybrids } from 'hybrids';
+import type { Constructor } from '@apollo-elements/interfaces/constructor';
+
+import { property } from 'hybrids';
 
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
 import { classMethod } from './factories/classMethod';
-import { accessors } from './factories/accessors';
+import { classAccessors } from './factories/classAccessors';
 import { ApolloElement } from './apollo-element';
 
 class ApolloSubscriptionElement<D = unknown, V = unknown>
   extends ApolloSubscriptionMixin(class { } as Constructor)<D, V> { }
-
-const instance = new ApolloSubscriptionElement();
 
 export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   ...ApolloElement,
@@ -21,20 +21,20 @@ export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   noAutoSubscribe: false,
   skip: property(undefined),
 
-  subscription: accessors(instance, 'subscription'),
-  variables: accessors(instance, 'variables'),
+  subscription: classAccessors(ApolloSubscriptionElement, 'subscription'),
+  variables: classAccessors(ApolloSubscriptionElement, 'variables'),
 
-  subscribe: classMethod(instance, 'subscribe'),
-  cancel: classMethod(instance, 'cancel'),
+  subscribe: classMethod(ApolloSubscriptionElement, 'subscribe'),
+  cancel: classMethod(ApolloSubscriptionElement, 'cancel'),
 
-  canSubscribe: classMethod(instance, 'canSubscribe'),
-  shouldSubscribe: classMethod(instance, 'shouldSubscribe'),
-  endSubscription: classMethod(instance, 'endSubscription'),
+  canSubscribe: classMethod(ApolloSubscriptionElement, 'canSubscribe'),
+  shouldSubscribe: classMethod(ApolloSubscriptionElement, 'shouldSubscribe'),
+  endSubscription: classMethod(ApolloSubscriptionElement, 'endSubscription'),
 
-  initObservable: classMethod(instance, 'initObservable'),
-  nextData: classMethod(instance, 'nextData'),
-  nextError: classMethod(instance, 'nextError'),
-  onComplete: classMethod(instance, 'onComplete'),
+  initObservable: classMethod(ApolloSubscriptionElement, 'initObservable'),
+  nextData: classMethod(ApolloSubscriptionElement, 'nextData'),
+  nextError: classMethod(ApolloSubscriptionElement, 'nextError'),
+  onComplete: classMethod(ApolloSubscriptionElement, 'onComplete'),
 };
 
 export type { ApolloSubscriptionElement };

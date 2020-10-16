@@ -1,17 +1,15 @@
 import type { Hybrids } from 'hybrids';
-import type { CustomElement, Constructor } from '@apollo-elements/interfaces/constructor';
+import type { Constructor } from '@apollo-elements/interfaces/constructor';
 
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
 import { property } from 'hybrids';
 import { classMethod } from './factories/classMethod';
-import { accessors } from './factories/accessors';
+import { classAccessors } from './factories/classAccessors';
 import { ApolloElement } from './apollo-element';
 
 class ApolloMutationElement<D = unknown, V = unknown> extends
-  ApolloMutationMixin(class { } as Constructor<CustomElement>)<D, V> { }
-
-const instance = new ApolloMutationElement();
+  ApolloMutationMixin(class {} as Constructor)<D, V> { }
 
 export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   ...ApolloElement,
@@ -22,13 +20,13 @@ export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   called: false,
   mostRecentMutationId: 0,
 
-  mutation: accessors(instance, 'mutation'),
+  mutation: classAccessors(ApolloMutationElement, 'mutation'),
 
-  mutate: classMethod(instance, 'mutate'),
-  generateMutationId: classMethod(instance, 'generateMutationId'),
-  isMostRecentMutation: classMethod(instance, 'isMostRecentMutation'),
-  onCompletedMutation: classMethod(instance, 'onCompletedMutation'),
-  onMutationError: classMethod(instance, 'onMutationError'),
+  mutate: classMethod(ApolloMutationElement, 'mutate'),
+  generateMutationId: classMethod(ApolloMutationElement, 'generateMutationId'),
+  isMostRecentMutation: classMethod(ApolloMutationElement, 'isMostRecentMutation'),
+  onCompletedMutation: classMethod(ApolloMutationElement, 'onCompletedMutation'),
+  onMutationError: classMethod(ApolloMutationElement, 'onMutationError'),
 };
 
 export type { ApolloMutationElement };
