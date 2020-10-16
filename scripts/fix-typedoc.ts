@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node-script
 
 import { readFile, writeFile, copyFile } from 'fs/promises';
-import { resolve, relative } from 'path';
+import { resolve } from 'path';
 import { JSDOM } from 'jsdom';
 import * as globby from 'globby';
 
@@ -179,8 +179,8 @@ async function fixHTML(path: string) {
       .filter(Boolean)
       .forEach(name => {
         document.querySelector(`[name="${name}"]`)
-        ?.closest('section')
-        ?.remove();
+          ?.closest('section')
+          ?.remove();
 
         LINKS
           .filter(x => x.href && x.href.endsWith(`#${name}`))
