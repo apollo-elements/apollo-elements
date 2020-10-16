@@ -78,7 +78,7 @@ export declare class ApolloMutationInterface<TData, TVariables>
   /**
    * Callback for when a mutation is completed.
    */
-  onCompleted?(_data: FetchResult<TData>): void
+  onCompleted?(_data: TData): void
 
   /**
    * Callback for when an error occurs in mutation.
