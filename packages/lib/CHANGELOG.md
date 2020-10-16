@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.0.1...@apollo-elements/lib@3.1.0) (2020-10-16)
+
+
+### Features
+
+* **lib:** add getPrototypicalPropertyDescriptor ([b27065e](https://github.com/apollo-elements/apollo-elements/commit/b27065eae2eb063059c13f316daa03d235c77757))
+
+
+
+
+
 ## [3.0.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.0.0...@apollo-elements/lib@3.0.1) (2020-10-01)
 
 **Note:** Version bump only for package @apollo-elements/lib
