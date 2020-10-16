@@ -4,13 +4,11 @@ import type { Constructor } from '@apollo-elements/interfaces/constructor';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
 import { classMethod } from './factories/classMethod';
-import { accessors } from './factories/accessors';
+import { classAccessors } from './factories/classAccessors';
 import { ApolloElement } from './apollo-element';
 
 class ApolloQueryElement<D = unknown, V = unknown>
   extends ApolloQueryMixin(class { } as Constructor)<D, V> { }
-
-const instance = new ApolloQueryElement();
 
 export const ApolloQuery: Hybrids<ApolloQueryElement> = {
   ...ApolloElement,
@@ -18,18 +16,18 @@ export const ApolloQuery: Hybrids<ApolloQueryElement> = {
   errorPolicy: 'none',
   noAutoSubscribe: false,
 
-  query: accessors(instance, 'query'),
-  options: accessors(instance, 'options'),
-  variables: accessors(instance, 'variables'),
+  query: classAccessors(ApolloQueryElement, 'query'),
+  options: classAccessors(ApolloQueryElement, 'options'),
+  variables: classAccessors(ApolloQueryElement, 'variables'),
 
-  watchQuery: classMethod(instance, 'watchQuery'),
-  refetch: classMethod(instance, 'refetch'),
-  canSubscribe: classMethod(instance, 'canSubscribe'),
-  shouldSubscribe: classMethod(instance, 'shouldSubscribe'),
-  subscribeToMore: classMethod(instance, 'subscribeToMore'),
-  executeQuery: classMethod(instance, 'executeQuery'),
-  fetchMore: classMethod(instance, 'fetchMore'),
-  subscribe: classMethod(instance, 'subscribe'),
-  nextData: classMethod(instance, 'nextData'),
-  nextError: classMethod(instance, 'nextError'),
+  watchQuery: classMethod(ApolloQueryElement, 'watchQuery'),
+  refetch: classMethod(ApolloQueryElement, 'refetch'),
+  canSubscribe: classMethod(ApolloQueryElement, 'canSubscribe'),
+  shouldSubscribe: classMethod(ApolloQueryElement, 'shouldSubscribe'),
+  subscribeToMore: classMethod(ApolloQueryElement, 'subscribeToMore'),
+  executeQuery: classMethod(ApolloQueryElement, 'executeQuery'),
+  fetchMore: classMethod(ApolloQueryElement, 'fetchMore'),
+  subscribe: classMethod(ApolloQueryElement, 'subscribe'),
+  nextData: classMethod(ApolloQueryElement, 'nextData'),
+  nextError: classMethod(ApolloQueryElement, 'nextError'),
 };

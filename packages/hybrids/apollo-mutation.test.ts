@@ -8,7 +8,8 @@ import { define, html, Hybrids } from 'hybrids';
 import NoParamMutation from '@apollo-elements/test-helpers/NoParam.mutation.graphql';
 import NullableParamMutation from '@apollo-elements/test-helpers/NullableParam.mutation.graphql';
 
-import { ApolloMutation, ApolloMutationElement } from './apollo-mutation';
+import type { ApolloMutationElement } from './apollo-mutation';
+import { ApolloMutation } from './apollo-mutation';
 import { setupClient } from '@apollo-elements/test-helpers/client';
 import { ApolloError } from '@apollo/client/core';
 
@@ -127,6 +128,12 @@ describe('[hybrids] ApolloMutation', function describeApolloMutationMixin() {
 
       document.body.append(element);
     });
+
+    beforeEach(nextFrame);
+
+    beforeEach(nextFrame);
+
+    beforeEach(nextFrame);
 
     beforeEach(nextFrame);
 
