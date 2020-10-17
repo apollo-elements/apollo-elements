@@ -57,7 +57,9 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
   }
 }
 
-class Test extends ApolloSubscription<Data, Variables> { }
+class Test extends ApolloSubscription<Data, Variables> {
+  static get is() { return 'gluon-test-subscription-element'; }
+}
 
 const err = new Error('error');
 
