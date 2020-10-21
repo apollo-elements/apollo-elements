@@ -1,36 +1,51 @@
-import type { DocumentNode, OperationDefinitionNode } from 'graphql';
+import type { DefinitionNode, OperationDefinitionNode, VariableDefinitionNode } from 'graphql';
+import type { Operation } from '@apollo/client/core';
 
-interface HasAllVariablesParams<TVariables = Record<string, unknown>> {
-  query: DocumentNode;
-  variables?: TVariables;
+/** isOperationDefinition :: DefinitionNode -> Boolean */
+function isOperationDefinition(definition: DefinitionNode): definition is OperationDefinitionNode {
+  return definition.kind === 'OperationDefinition';
 }
 
-/** isInObj :: Object -> String -> Boolean */
-const isInObj =
-  <T = Record<string, unknown>>(x: T) =>
-    (prop: string): boolean =>
-      x?.[prop] !== undefined;
-
 /** isNonNullType :: a -> Boolean */
-const isNonNullType =
-  <T extends { type: { kind: string } }>(x: T) =>
-    x?.type?.kind === 'NonNullType';
+function isNonNullType<T extends { type: { kind: string } }>(x: T) {
+  return x?.type?.kind === 'NonNullType';
+}
+
+/** hasNonNullValue :: keyof TVariables VariableName => TVariables -> VariableName -> Boolean */
+function hasNonNullValue<T = Record<string, unknown>>(x: T) {
+  return (prop: keyof T): boolean =>
+    x?.[prop] != null;
+}
+
+function isTrue(x: boolean): x is true {
+  return x;
+}
+
+/** getVariableDefinitions :: OperationDefinitionNode -> [VariableDefinitionNode] */
+function getVariableDefinitions(x: OperationDefinitionNode): readonly VariableDefinitionNode[] {
+  return x.variableDefinitions;
+}
+
+/** getVariableValue :: VariableDefinitionNode -> a */
+function getVariableValue(x: VariableDefinitionNode) {
+  return x.variable.name.value;
+}
 
 /**
- * hasAllVariables :: ({query, variables}) -> Bool
+ * Checks whether an operation includes all its non-nullable variables
+ *
+ * hasAllVariables :: Operation -> Bool
  */
-export function hasAllVariables<TVariables = Record<string, unknown>>(
-  params: HasAllVariablesParams<TVariables>
-): boolean {
-  const definitions = params?.query?.definitions as OperationDefinitionNode[];
-
-  if (!Array.isArray(definitions))
+export function hasAllVariables(operation: Partial<Operation>): boolean {
+  try {
+    return operation.query.definitions
+      .filter(isOperationDefinition)
+      .flatMap(getVariableDefinitions)
+      .filter(isNonNullType)
+      .map(getVariableValue)
+      .map(hasNonNullValue(operation.variables))
+      .every(isTrue);
+  } catch {
     return false;
-
-  return definitions
-    .flatMap(x => x.variableDefinitions)
-    .map(x => isNonNullType(x) ? x.variable.name.value : undefined)
-    .filter(Boolean)
-    .map(isInObj(params?.variables))
-    .every(Boolean);
+  }
 }
