@@ -1,11 +1,18 @@
+import type { DocumentNode } from 'graphql';
 import type { MutationOptions, MutationUpdaterFn, FetchResult } from '@apollo/client/core';
 
-import { LitElement, property } from 'lit-element';
+import { ComplexAttributeConverter, LitElement, property } from 'lit-element';
 
+import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
-import type { DocumentNode } from 'graphql';
+
+const refetchQueriesConverter: ComplexAttributeConverter = {
+  fromAttribute(value: string): string[] {
+    return typeof value !== 'string' ? undefined : splitCommasAndTrim(value);
+  },
+};
 
 /**
  * `ApolloMutation`
@@ -47,22 +54,6 @@ export class ApolloMutation<TData, TVariables>
    * ```
    * As a property, you can pass any legal `refetchQueries` value.
    */
-  @property({ attribute: 'refetch-queries', converter: {
-    fromAttribute(string: string): string[] {
-      return (
-        typeof string !== 'string' ? undefined
-      : string
-        .split(',')
-        .map(x => x.trim())
-        .filter(Boolean)
-      );
-    },
-  } }) refetchQueries: MutationOptions['refetchQueries'] = null;
-
-  public async mutate(
-    params?: Partial<MutationOptions<TData, TVariables>>
-  ): Promise<FetchResult<TData>> {
-    const update = params?.update ?? this.updater;
-    return super.mutate({ update, ...params });
-  }
+  @property({ attribute: 'refetch-queries', converter: refetchQueriesConverter })
+  refetchQueries: MutationOptions['refetchQueries'] = null;
 }
