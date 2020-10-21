@@ -55,6 +55,15 @@ npm i -S @apollo-elements/lit-apollo
 
 [Read More](./packages/lit-apollo)
 
+### 🏁 FAST
+These base classes extend from [`FASTElement`](https://fast.design), with all it's ergonomics and reactivity.
+
+```bash
+npm i -S @apollo-elements/fast
+```
+
+[Read More](./packages/lit-apollo)
+
 ### 👩‍🔬 Gluon
 These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonjs), a simplified <abbr title="web components">wc</abbr> library that uses `lit-html` for templating while keeping component state and lifecycle concerns 'close to the metal'.
 
