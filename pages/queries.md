@@ -86,3 +86,23 @@ shouldSubscribe() {
   return !!(new URL(window.location).searchParams.get('userId'))
 }
 ```
+
+Alternatively, you can implement an [`ApolloLink`](https://www.apollographql.com/docs/react/api/link/introduction/)
+which prevents operations from continuing when required variables are missing:
+
+```ts
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client/core';
+import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
+
+const uri =
+  'GRAPHQL_HOST/graphql';
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: from([
+    new ApolloLink((operation, forward) =>
+      hasAllVariables(operation) && forward(operation)),
+    new HttpLink({ uri }),
+  ])
+});
+```
