@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.1.1...@apollo-elements/lib@3.2.0) (2020-10-21)
+
+
+### Features
+
+* **lib:** add splitCommasAndTrim string helper ([e3a8116](https://github.com/apollo-elements/apollo-elements/commit/e3a81168e26a0048261ad22cb27b3c5cd1168271))
+
+
+
+
+
 ## [3.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.1.0...@apollo-elements/lib@3.1.1) (2020-10-21)
 
 

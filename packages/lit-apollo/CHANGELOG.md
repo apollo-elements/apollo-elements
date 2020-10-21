@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.4...@apollo-elements/lit-apollo@3.0.5) (2020-10-21)
+
+
+### Bug Fixes
+
+* **lit-apollo:** remove unneeded mutate override ([c86329a](https://github.com/apollo-elements/apollo-elements/commit/c86329a773bf03276dc6c35d4fab28a4a8ebbb08))
+
+
+
+
+
 ## [3.0.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.3...@apollo-elements/lit-apollo@3.0.4) (2020-10-21)
 
 **Note:** Version bump only for package @apollo-elements/lit-apollo
