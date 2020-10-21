@@ -5,6 +5,7 @@ import type { Policies } from '@apollo/client/cache/inmemory/policies';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 declare module '@apollo/client/cache' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface ApolloCache<TSerialized> {
     policies: Policies;
   }
