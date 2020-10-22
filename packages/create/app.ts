@@ -1,3 +1,5 @@
+import type { AppOptions } from './options';
+
 import * as NCP from 'ncp';
 
 import { promisify } from 'util';
@@ -7,7 +9,6 @@ import path from 'path';
 import execa from 'execa';
 
 import { codegen } from './codegen';
-import type { AppOptions } from '.';
 import { readFile, processTemplate, writeFile } from './files';
 
 const cwd = process.cwd();
@@ -88,6 +89,7 @@ async function execStart(options: AppOptions) {
  * Generate an Apollo Elements App
  */
 export async function app(options: AppOptions): Promise<void> {
+  if (!options) return; // ctrl-c
   await initFiles(options);
   await initPackage(options);
   await execInstall(options);

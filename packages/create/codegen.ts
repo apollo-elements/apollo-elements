@@ -1,5 +1,5 @@
 import execa, { ExecaReturnValue } from 'execa';
-import { BaseOptions } from '.';
+import { BaseOptions } from './options';
 
 const cwd = process.cwd();
 
@@ -7,6 +7,7 @@ const cwd = process.cwd();
  * Run GraphQL codegen to develop an initial TypeScript schema
  */
 export async function codegen(options: BaseOptions): Promise<ExecaReturnValue> {
+  if (options.skipCodegen) return;
   console.log('\nGenerating TypeScript Schema...\n');
   return await execa(
     options.pkgManager,

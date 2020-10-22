@@ -15,6 +15,7 @@
     "deploy": "run-s clean deploy:prepublish clean deploy:lerna",
     "deploy:prepublish": "yarn workspaces run prepublishOnly",
     "deploy:lerna": "lerna publish --message 'chore: release new versions'",
+    "deploy:clean": "yarn clean",
     "prerelease": "run-s prerelease:*",
     "prerelease:lint": "yarn lint",
     "prerelease:build": "lerna run prepublishOnly",
