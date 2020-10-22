@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.0.3...@apollo-elements/create@1.1.0) (2020-10-22)
+
+
+### Features
+
+* **create:** intelligently populate graphql files ([d0fe7f5](https://github.com/apollo-elements/apollo-elements/commit/d0fe7f5ad3583a7f68284b528f30f7fae7234dcf))
+
+
+
+
+
 ## [1.0.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.0.2...@apollo-elements/create@1.0.3) (2020-10-01)
 
 
