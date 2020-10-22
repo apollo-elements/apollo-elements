@@ -1,12 +1,11 @@
 import { <%= BASE_CLASS %>, html, customElement, TemplateResult } from '@apollo-elements/lit-apollo';
 
 import type {
-  <%= OPERATION_NAME %>Data as Data,
-  <%= OPERATION_NAME %>Variables as Variables,
+  <%= OPERATION_DATA_TYPE %>Data as Data,
+  <%= OPERATION_DATA_TYPE %>Variables as Variables,
 } from '<%= SCHEMA_PATH %>';
 
-import shared from '<%= SHARED_CSS_PATH %>';
-import style from './<%= UNPREFIXED %>.css';
+import style from './<%= UNPREFIXED %>.css';<%= CSS_IMPORT %>
 
 import <%= OPERATION_NAME %> from './<%= OPERATION_FILE_NAME %>';
 
@@ -14,7 +13,7 @@ import <%= OPERATION_NAME %> from './<%= OPERATION_FILE_NAME %>';
 export class <%= CLASS_NAME %> extends <%= BASE_CLASS %><Data, Variables> {
   static readonly is = '<%= TAG_NAME %>';
 
-  static readonly styles = [shared, style];
+  static readonly styles = <%= CSS_ARRAY %>;
 
   <%= OPERATION_TYPE %> = <%= OPERATION_NAME %>;
 
