@@ -4,9 +4,21 @@
   "description": "Scaffold apps and components with GraphQL and LitElement",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
+  "type": "commonjs",
+  "typings": ".index.d.ts",
   "bin": {
     "create-app": "./index.js"
   },
+  "exports": ["./index.js"],
+  "keywords": [
+    "generator",
+    "custom elements",
+    "custom-elements",
+    "web components",
+    "web-components",
+    "graphql",
+    "apollo"
+  ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",

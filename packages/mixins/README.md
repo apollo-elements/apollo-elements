@@ -5,7 +5,6 @@
 [![ISC License](https://img.shields.io/npm/l/@apollo-elements/mixins)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
 [![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
-
 <strong>🍹 Moon mixins for cosmic components 👩‍🚀</strong>
 
 A set of [class mixin functions](https://alligator.io/js/class-composition/#composition-with-javascript-classes) that add Apollo GraphQL goodness to your web component classes.
@@ -26,26 +25,134 @@ npm install --save @apollo-elements/mixins
 
 ## 🍸 Mixins
 
-### ApolloElementMixin
+### 🧱 ApolloElementMixin
 This is the basic class which all others inherit from. You usually shouldn't need to use this directly.
 
-### ApolloQueryMixin
+### ❓ ApolloQueryMixin
 Connects a web component to apollo client and associates it with a specific GraphQL query. When the query's data updates, so will the element's `data` property.
 
-### ApolloMutationMixin
+With it, you can create vanilla custom elements that render query data, for example:
+
+Create a template
+```js
+const template = document.createElement('template');
+      template.innerHTML = `
+        <style>
+          :host([loading]) span {
+            opacity: 0;
+          }
+
+          span {
+            opacity: 1;
+            will-change: opacity;
+            transition: opacity 0.2s ease-in-out;
+          }
+        </style>
+
+        <article id="error">
+          <pre><code></code></pre>
+        </article>
+
+        <p>
+          <span id="greeting"></span>
+          <span id="name"></span>
+        </p>
+      `;
+```
+
+Define the custom element
+
+```js
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
+
+class HelloQuery extends ApolloQueryMixin(HTMLElement) {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(template.content.cloneNode(true));
+  }
+}
+
+customElements.define('hello-query', HelloQuery);
+```
+
+Add reactivity
+
+```js
+#data = null;
+get data() { return this.#data; }
+set data(data) { this.#data = data; this.render(); }
+
+#loading = false;
+get loading() { return this.#loading; }
+set loading(loading) { this.#loading = loading; this.render(); }
+
+#error = null;
+get error() { return this.#error; }
+set error(error) { this.#error = error; this.render(); }
+```
+
+Render the data
+```js
+
+$(id) { return this.shadowRoot.getElementById(id); }
+
+render() {
+  if (this.loading)
+    this.setAttribute('loading', '');
+  else
+    this.removeAttribute('loading');
+
+  this.$('error').hidden =
+    !this.error;
+
+  this.$('error').querySelector("code").textContent =
+    this.error?.message ?? '';
+
+  this.$('greeting').textContent =
+    this.data?.helloWorld?.greeting ?? 'Hello';
+
+  this.$('name').textContent =
+    this.data?.helloWorld?.name ?? 'Friend';
+}
+```
+
+And use it in HTML
+
+```html
+<hello-query>
+  <script type="application/graphql">
+    query HelloQuery($user: ID, $greeting: String) {
+      helloWorld(user: $user) {
+        name
+        greeting
+      }
+    }
+  </script>
+  <script type="application/json">
+    {
+      "greeting": "shalom",
+      "user": "haver"
+    }
+  </script>
+</hello-query>
+```
+
+### 👾 ApolloMutationMixin
 Connects a web component to apollo client and associates it with a specific GraphQL mutation. When the mutation resolves, so will the element's `data` property.
 
-### ApolloSubscriptionMixin
+### 🗞 ApolloSubscriptionMixin
 Connects a web component to apollo client and associates it with a specific GraphQL subscription. When the subscription gets new data, the element's `data` property will update.
 
-### ApolloClientMixin
+### 💼 ApolloClientMixin
 Optional mixin which connects an element to a specific `ApolloClient` instance.
 
 ```ts
 import { client } from './specific-apollo-client';
 
-class SpecificClientElement extends ApolloClientMixin(client, ApolloQueryMixin(HTMLElement)) {
-  // ...
+class SpecificClientElement
+extends ApolloClientMixin(client, ApolloQueryMixin(HTMLElement)) {
+  // ... do stuff with your client
 }
 ```
 
@@ -55,66 +162,12 @@ Optional mixin which prevents queries from automatically subscribing until their
 ### TypePoliciesMixin
 Optional mixin which lets you declare type policies for a component's query.
 
-## 👩‍🚀 Usage
-
-Here's an example that uses `HTMLElement`
-
-```js
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
-
-class HelloQuery extends ApolloQueryMixin(HTMLElement) {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = `
-      <style>/* ... */</style>
-      <p hidden>
-        <span id="greeting"></span>
-        <span id="name"></span>
-      </p>
-    `;
-  }
-
-  get data() {
-    return this.__data;
-  }
-
-  set data(data) {
-    this.__data = data;
-    this.render();
-  }
-
-  render() {
-    if (!this.data) return;
-    this.shadowRoot.getElementById('greeting').textContent =
-      this.data?.helloWorld.greeting ?? 'Hello';
-
-    this.shadowRoot.getElementById('name').textContent =
-      this.data?.helloWorld.name ?? 'Friend';
-
-    this.shadowRoot.querySelector('p').hidden = false;
-  }
-}
-
-customElements.define('hello-query', HelloQuery);
-```
-
-```html
-<hello-query>
-  <script type="application/graphql">
-    query HelloQuery {
-      helloWorld {
-        name
-        greeting
-      }
-    }
-  </script>
-</hello-query>
-```
-
 ## Aren't Mixins Considered Harmful?
 
-Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
+Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/), which are essentially function composition.
+
+## 📚 Other Libraries
+Looking for other libraries? Want to use Apollo with your favourite custom-elements library? Check out our [docs site](https://apolloelement.dev)
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

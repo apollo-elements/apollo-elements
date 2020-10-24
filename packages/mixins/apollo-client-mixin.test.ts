@@ -3,7 +3,7 @@ import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { ApolloClientMixin } from './apollo-client-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
 
-class ApolloElement extends ApolloElementMixin(HTMLElement) {}
+class ApolloElement<D = unknown, V = unknown> extends ApolloElementMixin(HTMLElement)<D, V> {}
 
 describe('ApolloClientMixin', function() {
   let element: ApolloElement;

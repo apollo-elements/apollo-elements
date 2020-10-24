@@ -16,26 +16,27 @@ import type {
 
 import type { ApolloElementInterface } from './apollo-element';
 
-export declare class ApolloQueryInterface<TData, TVariables> extends ApolloElementInterface<TData> {
+export declare class ApolloQueryInterface<TData, TVariables>
+  extends ApolloElementInterface<TData, TVariables> {
   /**
    * Latest query data.
    */
-  data: TData;
+  declare data: TData;
 
   /**
    * A GraphQL document containing a single query.
    */
-  query: DocumentNode;
+  declare query: DocumentNode;
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
    */
-  variables?: TVariables;
+  declare variables: TVariables;
 
   /**
    * Specifies the FetchPolicy to be used for this query.
    */
-  fetchPolicy: FetchPolicy;
+  declare fetchPolicy: FetchPolicy;
 
   /**
    * When someone chooses cache-and-network or network-only as their
@@ -49,13 +50,13 @@ export declare class ApolloQueryInterface<TData, TVariables> extends ApolloEleme
    * options.fetchPolicy after the intial network request, without
    * having to set options.
    */
-  nextFetchPolicy: FetchPolicy;
+  declare nextFetchPolicy: FetchPolicy;
 
   /**
    * If data was read from the cache with missing fields,
    * partial will be true. Otherwise, partial will be falsy
    */
-  partial: boolean;
+  declare partial: boolean;
 
   /**
    * If true, perform a query refetch if the query result is marked as being partial,
@@ -65,13 +66,13 @@ export declare class ApolloQueryInterface<TData, TVariables> extends ApolloEleme
    * The default value is false for backwards-compatibility's sake,
    * but should be changed to true for most use-cases.
    */
-  partialRefetch: boolean;
+  declare partialRefetch: boolean;
 
   /**
    * Opt into receiving partial results from the cache for queries
    * that are not fully satisfied by the cache.
    */
-  returnPartialData: boolean;
+  declare returnPartialData: boolean;
 
   /**
    * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)
@@ -92,38 +93,38 @@ export declare class ApolloQueryInterface<TData, TVariables> extends ApolloEleme
    * replace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.
    * It is recommended that you use `loading`, however.
    */
-  networkStatus: NetworkStatus;
+  declare networkStatus: NetworkStatus;
 
   /**
    * The apollo ObservableQuery watching this element's query.
    */
-  observableQuery: ObservableQuery;
+  declare observableQuery: ObservableQuery;
 
   /**
    * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
    */
-  options: Partial<WatchQueryOptions>;
+  declare options: Partial<WatchQueryOptions>;
 
   /**
    * Whether or not updates to the network status should trigger next on the observer of this query.
    */
-  notifyOnNetworkStatusChange: boolean;
+  declare notifyOnNetworkStatusChange: boolean;
 
   /**
    * The time interval (in milliseconds) on which this query should be refetched from the server.
    */
-  pollInterval: number;
+  declare pollInterval: number;
 
   /**
    * Specifies the ErrorPolicy to be used for this query.
    */
-  errorPolicy: ErrorPolicy;
+  declare errorPolicy: ErrorPolicy;
 
   /**
    * When true, the component will not automatically subscribe to new data.
    * Call the `subscribe()` method to do so.
    */
-  noAutoSubscribe: boolean;
+  declare noAutoSubscribe: boolean;
 
   /**
    * Callback for when a query is completed.

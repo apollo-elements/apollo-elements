@@ -11,7 +11,7 @@ import type { DocumentNode, GraphQLError } from 'graphql';
 import { unsafeStatic, fixture, expect, html as fhtml } from '@open-wc/testing';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { FASTElement, customElement, html } from '@microsoft/fast-element';
+import { FASTElement, customElement } from '@microsoft/fast-element';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 type TypeCheckData = { a: 'a', b: number };

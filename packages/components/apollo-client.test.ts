@@ -11,7 +11,7 @@ import { makeClient, NoParamQueryData, NoParamQueryVariables } from '@apollo-ele
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 
 /** @ignore */
-class ShallowElement extends ApolloElementMixin(HTMLElement) {
+class ShallowElement<D = unknown, V = unknown> extends ApolloElementMixin(HTMLElement)<D, V> {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });

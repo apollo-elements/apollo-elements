@@ -1,4 +1,4 @@
-import type { Hybrids } from 'hybrids';
+import { Hybrids, property } from 'hybrids';
 import type { Constructor } from '@apollo-elements/interfaces/constructor';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -10,16 +10,22 @@ import { ApolloElement } from './apollo-element';
 class ApolloQueryElement<D = unknown, V = unknown>
   extends ApolloQueryMixin(class { } as Constructor)<D, V> { }
 
+function connect<T extends ApolloQueryElement>(host: T): void {
+  // @ts-expect-error: hack to assign a static property
+  host.constructor.documentType = 'query';
+}
+
 export const ApolloQuery: Hybrids<ApolloQueryElement> = {
   ...ApolloElement,
 
-  errorPolicy: 'none',
+  errorPolicy: property('none', connect),
   noAutoSubscribe: false,
 
   query: classAccessors(ApolloQueryElement, 'query'),
   options: classAccessors(ApolloQueryElement, 'options'),
-  variables: classAccessors(ApolloQueryElement, 'variables'),
 
+  documentChanged: classMethod(ApolloQueryElement, 'documentChanged'),
+  variablesChanged: classMethod(ApolloQueryElement, 'variablesChanged'),
   watchQuery: classMethod(ApolloQueryElement, 'watchQuery'),
   refetch: classMethod(ApolloQueryElement, 'refetch'),
   canSubscribe: classMethod(ApolloQueryElement, 'canSubscribe'),

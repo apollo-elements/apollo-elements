@@ -1,5 +1,5 @@
 import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
-import type { ApolloElementInterface } from '@apollo-elements/interfaces';
+import type { ApolloElementInterface, Constructor } from '@apollo-elements/interfaces';
 import { DocumentNode, GraphQLError } from 'graphql';
 
 export { html } from '@gluon/gluon';
@@ -11,8 +11,9 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  *
  * Gluon base class for apollo custom elements.
  */
-export class ApolloElement<TData = unknown>
-  extends ApolloElementMixin(GluonElement)
+export class ApolloElement<TData = unknown, TVariables = unknown>
+  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
+  extends ApolloElementMixin(GluonElement as Constructor<GluonElement>)<TData, TVariables>
   implements ApolloElementInterface<TData> {
   /** The apollo client instance. */
   declare client: ApolloClient<NormalizedCacheObject>;

@@ -7,7 +7,7 @@ const dash =
 /**
  * Fired when an element property changes
  */
-class PolymerChangeEvent<T> extends CustomEvent<{ value: T }> {
+export class PolymerChangeEvent<T> extends CustomEvent<{ value: T }> {
   constructor(key: string, value: T) {
     super(`${dash(key)}-changed`, { detail: { value } });
   }
@@ -16,12 +16,15 @@ class PolymerChangeEvent<T> extends CustomEvent<{ value: T }> {
 /**
  * Decorator to fire a Polymer-Library-style `*-changed` event;
  */
-export function notify<Class extends HTMLElement>(target: Class, key: string): void {
+export function notify<Class extends HTMLElement>(
+  target: Class,
+  key: keyof Class extends string ? keyof Class : never
+): void {
   Object.defineProperty(target, key, {
     enumerable: true,
     configurable: true,
 
-    set<T>(init: T) {
+    set<T>(this: Class, init: T) {
       if (!INSTANCES.get(this))
         INSTANCES.set(this, {});
 
@@ -29,17 +32,18 @@ export function notify<Class extends HTMLElement>(target: Class, key: string): v
         enumerable: true,
         configurable: true,
 
-        get() {
+        get(this: Class) {
           return INSTANCES.get(this)[key];
         },
 
-        set<T>(value: T) {
+        set<T>(this: Class, value: T) {
           INSTANCES.get(this)[key] = value;
-          this.dispatchEvent(new PolymerChangeEvent(key, value ));
+          this.dispatchEvent(new PolymerChangeEvent(key, value));
         },
       });
 
-      this[key] = init;
+      this[key as string] = init;
+
       this.dispatchEvent(new PolymerChangeEvent(key, init));
     },
   });

@@ -9,9 +9,10 @@ import 'sinon-chai';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { client, assertType, isApolloError } from '@apollo-elements/test-helpers';
+import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 
 class XL extends HTMLElement {}
-class Test extends ApolloElementMixin(XL) { }
+class Test<D = unknown, V = unknown> extends ApolloElementMixin(XL)<D, V> { }
 
 type TypeCheckData = { a: 'a', b: number };
 class TypeCheck extends Test {
@@ -47,44 +48,69 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     expect(element).to.be.an.instanceOf(XL);
   });
 
-  it('calls superclass connectedCallback when it exists', async function() {
+  describe('when super has a connectedCallback', function() {
     let calls = 0;
+    let element: Test;
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {
+        connectedCallback(): void {
+          calls++;
+        }
+      }));
 
-    const tag = unsafeStatic(defineCE(class extends Test {
-      connectedCallback(): void {
-        calls++;
-      }
-    }));
+      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    });
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    expect(element).to.be.an.instanceOf(HTMLElement);
-    expect(calls).to.be.greaterThan(0);
+    it('calls super.connectedCallback', async function() {
+      expect(element).to.be.an.instanceOf(HTMLElement);
+      expect(calls).to.be.greaterThan(0);
+    });
   });
 
-  it('calls superclass disconnectedCallback when it exists', async function() {
+  describe('when super has a connectedCallback', function() {
     let calls = 0;
+    let element: Test;
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {
+        disconnectedCallback(): void {
+          calls++;
+        }
+      }));
 
-    const tag = unsafeStatic(defineCE(class extends Test {
-      disconnectedCallback(): void {
-        calls++;
-      }
-    }));
+      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      element.remove();
+    });
 
-    element.remove();
-
-    expect(calls).to.be.greaterThan(0);
+    it('calls super.disconnectedCallback', async function() {
+      expect(element).to.be.an.instanceOf(HTMLElement);
+      expect(calls).to.be.greaterThan(0);
+    });
   });
 
-  it('does not throw if there is no connectedCallback or disconnectedCallback', async function() {
-    const tag = defineCE(class extends Test {});
+  describe('when super has no connectedCallback', function() {
+    let element: Test;
+    beforeEach(function() {
+      const tag = defineCE(class extends Test { });
+      element = document.createElement(tag) as Test;
+    });
 
-    const element = document.createElement(tag) as Test;
+    it('does not throw when connected', function() {
+      expect(() => document.body.appendChild(element)).to.not.throw;
+      expect(() => element.remove()).to.not.throw;
+    });
+  });
 
-    expect(() => document.body.appendChild(element)).to.not.throw;
-    expect(() => element.remove()).to.not.throw;
+  describe('when super has no disconnectedCallback', function() {
+    let element: Test;
+    beforeEach(function() {
+      const tag = defineCE(class extends Test { });
+      element = document.createElement(tag) as Test;
+    });
+
+    it('does not throw when disconnected', function() {
+      expect(() => element.remove()).to.not.throw;
+    });
   });
 
   it('sets default properties', async function setsDefaultProperties() {
@@ -103,41 +129,148 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     expect(element.loading, 'loading').to.be.false;
   });
 
-  it('sets document based on graphql script child', async function() {
-    const doc = 'query foo { bar }';
+  describe('with document property set', function() {
+    let element: Test;
 
-    const tag = unsafeStatic(defineCE(class extends Test {}));
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test { }));
 
-    const element = await fixture<Test>(fhtml`
-      <${tag}><script type="application/graphql">${doc}</script></${tag}>
-    `);
+      element = await fixture<Test>(fhtml`
+        <${tag} .document="${NoParamQuery}"></${tag}>
+      `);
+    });
 
-    expect(element.document).to.deep.equal(gql(doc));
+    it('sets the document property', function() {
+      expect(element.document).to.deep.equal(NoParamQuery);
+    });
+
+    describe('adding a script child', function() {
+      beforeEach(function() {
+        element.innerHTML = `
+          <script type="application/graphql">
+            query foo {
+              bar
+            }
+          </script>
+        `;
+      });
+
+      it('has no effect', function() {
+        expect(element.document).to.deep.equal(NoParamQuery);
+      });
+    });
+
+    describe('if document is then nullified', function() {
+      beforeEach(function() {
+        element.document = null;
+      });
+      describe('adding a script child', function() {
+        beforeEach(function() {
+          element.innerHTML = `
+          <script type="application/graphql">
+            query foo {
+              bar
+            }
+          </script>
+        `;
+        });
+
+        it('sets the document from DOM', function() {
+          expect(element.document).to.deep.equal(gql`query foo { bar }`);
+        });
+      });
+    });
   });
 
-  it('observes children for addition of query script', async function() {
-    const doc = `query newQuery { new }`;
+  describe('with query script child', function() {
+    let element: Test;
 
-    const tag = unsafeStatic(defineCE(class extends Test {}));
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      element = await fixture<Test>(fhtml`
+        <${tag}>
+          <script type="application/graphql">
+            query foo {
+              bar
+            }
+          </script>
+        </${tag}>
+      `);
+    });
 
-    expect(element.document).to.be.null;
-    element.innerHTML = `<script type="application/graphql">${doc}</script>`;
-    await nextFrame();
-    expect(element.document).to.deep.equal(gql(doc));
+    it('sets document based on DOM', async function() {
+      expect(element.document).to.deep.equal(gql` query foo { bar } `);
+    });
+
+    describe('changing script text content', function() {
+      beforeEach(function() {
+        element.querySelector('script').innerText = 'query bar { foo }';
+      });
+
+      beforeEach(nextFrame);
+
+      it('gets document based on DOM', function() {
+        expect(element.document).to.deep.equal(gql` query bar { foo } `);
+      });
+    });
   });
 
-  it('does not change document for invalid children', async function() {
-    const doc = `query newQuery { new }`;
+  describe('with empty query script child', function() {
+    let element: Test;
 
-    const tag = unsafeStatic(defineCE(class extends Test {}));
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test { }));
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      element = await fixture<Test>(fhtml`
+        <${tag}>
+          <script type="application/graphql"></script>
+        </${tag}>
+      `);
+    });
 
-    expect(element.document).to.be.null;
-    element.innerHTML = `<script>${doc}</script>`;
-    await nextFrame();
-    expect(element.document).to.be.null;
+    it('has null document', function() {
+      expect(element.document).to.be.null;
+    });
+  });
+
+
+  describe('without query script child', function() {
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    });
+
+    it('has no document', function() {
+      expect(element.document).to.be.null;
+    });
+
+    describe('then appending script child', function() {
+      describe('when script is valid query', function() {
+        beforeEach(function() {
+          element.innerHTML = `<script type="application/graphql">query newQuery { new }</script>`;
+        });
+
+        beforeEach(nextFrame);
+
+        it('sets document', function() {
+          expect(element.document).to.deep.equal(gql`query newQuery { new }`);
+        });
+      });
+
+      describe('when script is invalid', function() {
+        beforeEach(function() {
+          element.innerHTML = `<script>query newQuery { new }</script>`;
+        });
+
+        beforeEach(nextFrame);
+
+        it('does not set document', async function() {
+          expect(element.document).to.be.null;
+        });
+      });
+    });
   });
 });

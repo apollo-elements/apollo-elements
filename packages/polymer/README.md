@@ -24,20 +24,9 @@ npm install --save @apollo-elements/polymer
 `@apollo-elements/polymer` does not depend on `@polymer/polymer`. The components extend directly from HTMLElement, so they're suitable for use in any project, not just [Polymer library](https://polymer-library.polymer-project.org/) apps.
 
 ## 👩‍🚀 Usage
-By default, these elements will use the client assigned to `window.__APOLLO_CLIENT__`, but you could alternatively assign to each element's `client` property directly.
+> See our [docs on setting up Apollo client](https://apolloelements.dev/pages/guides/getting-started/apollo-client.html) so your components can fetch their data.
 
-```js
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
-
-window.__APOLLO_CLIENT__ = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: 'https://api.spacex.land/graphql',
-  })
-});
-```
-
-After that, import the elements.
+Just import the elements.
 
 ```js
 import '@apollo-elements/polymer/apollo-query';
@@ -62,6 +51,9 @@ You can now use them in your polymer template:
   [[data.user.name]]
 </paper-icon-item>
 ```
+
+## 📚 Other Libraries
+Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

@@ -26,28 +26,22 @@ npm install --save @apollo-elements/gluon
 ```
 
 ## 👩‍🚀 Usage
-You'll need to bundle the Apollo library with a tool like Rollup. See [instructions for bundling Apollo](https://github.com/apollo-elements/apollo-elements#-bundling) for advice on how to build a working Apollo client.
+> See our [docs on setting up Apollo client](https://apolloelements.dev/pages/guides/getting-started/apollo-client.html) so your components can fetch their data.
 
-We recommend assigning your `ApolloClient` instance to the `__APOLLO_CLIENT__` global variables. This not only automatically gives you [dev tools support](https://github.com/apollographql/apollo-client-devtools), but also lets all of your apollo elements connect to the client without needing to configure them.
+> Read our [docs on working with GraphQL files during development](https://apolloelements.dev/pages/guides/getting-started/buildless-development.html) and [in production](https://apolloelements.dev/pages/guides/getting-started/building-for-production.html) for more info, and be sure to read about [generating TypeScript types from GraphQL](https://apolloelements.dev/pages/guides/getting-started/codegen.html) to enhance your developer experience and reduce bugs.
 
-```js
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
-
-const cache =
-  new InMemoryCache();
-
-const link =
-  new HttpLink({ uri: '/graphql' });
-
-export const client =
-  new ApolloClient({ cache, link });
-
-window.__APOLLO_CLIENT__ = client;
-```
-
-After that, typical usage involves importing the base class and extending from it to define your component:
+Typical usage involves importing the base class and extending from it to define your component:
 
 ### Queries
+
+```graphql
+query ParentQuery {
+  helloWorld {
+    name
+    greeting
+  }
+}
+```
 
 ```js
 import { ApolloQuery, html } from '@apollo-elements/gluon';
@@ -76,15 +70,6 @@ class ConnectedElement extends ApolloQuery {
 customElements.define('connected-element', ConnectedElement)
 ```
 
-```graphql
-query ParentQuery {
-  helloWorld {
-    name
-    greeting
-  }
-}
-```
-
 ### Mutations
 
 ```js
@@ -107,8 +92,8 @@ class MutationElement extends ApolloMutation {
 customElements.define('input-mutation', MutationElement)
 ```
 
-## 🍹 Mixins
-You don't need to use `GluonElement` base class for your components if you use the [mixins](https://github.com/apollo-elements/apollo-elements/packages/mixins). You just have to handle the rendering part on your own: e.g. for a query component, you'd implement yourself what happens after `data`, `error`, `loading`, or `networkStatus` change.
+## 📚 Other Libraries
+Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

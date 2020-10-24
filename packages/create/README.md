@@ -1,5 +1,9 @@
 ## @apollo-elements/create
 
+<div align="center">
+  <img src="./create-screenshot.png" alt="command output in terminal"/>
+</div>
+
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/create.svg)](https://www.npmjs.com/package/@apollo-elements/create)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/create)
 [![ISC License](https://img.shields.io/npm/l/@apollo-elements/create)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
@@ -40,7 +44,7 @@ npm init @apollo-elements -- \
 | `--help`         | Show help | boolean | |
 | `--version`       | Show version number | boolean | |
 | `--pkg-manager`   | Preferred package manager | `npm` or `yarn` | `npm` |
-| `--uri`, `-u`     | URI to your GraphQL endpoint |
+| `--uri`, `-u`     | URI to your GraphQL endpoint | string |
 | `--yes`, `-y`     | Use default package.json fields (e.g. author, license) | boolean |
 | `--skip-codegen`  | Skip the codegen phase | string | false |
 | `--install`, `-i` | Automatically install dependencies | boolean |
@@ -124,9 +128,9 @@ npm init @apollo-elements -- \
 | `--type`, `-t`       | Element type | `query`, `mutation`, or `subscription` | `query` |
 | `--name`, `-n`       | Custom element tag name | string |
 | `--subdir`, `-d`     | Optional subdir under src/components | string |
-| `--yes`, `-y`        | Optional subdir under src/components | string |
-| `--skip-codegen`     | Skip the codegen phase | string | false |
-| `--schema-path`      | Optional custom path to schema types file | string | null |
-| `--shared-css-path`  | Optional custom path to shared component styles file | string | null |
-| `--variables`        | Optional custom variables e.g. `input: $UpdateUserInput` | string | null |
-| `--fields`           | Optional custom fields e.g. `id name picture { alt url }` | string | null |
+| `--yes`, `-y`        | Optional subdir under src/components | boolean | false |
+| `--skip-codegen`     | Skip the codegen phase | boolean | false |
+| `--schema-path`      | Optional custom path to schema types file | string |
+| `--shared-css-path`  | Optional custom path to shared component styles file | string |
+| `--variables`        | Optional custom variables e.g. `input: $UpdateUserInput` | string |
+| `--fields`           | Optional custom fields e.g. `id name picture { alt url }` | string |

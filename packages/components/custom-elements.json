@@ -99,9 +99,9 @@
           "default": "0"
         },
         {
-          "name": "variables",
-          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "Variables"
+          "name": "documentType",
+          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "default": "\"mutation\""
         },
         {
           "name": "context",
@@ -123,6 +123,11 @@
           "name": "data",
           "description": "Latest mutation data.",
           "type": "TData"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+          "type": "TVariables"
         },
         {
           "name": "error",

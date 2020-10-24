@@ -23,6 +23,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
   return class ApolloSubscriptionElement<TData, TVariables>
     extends ApolloElementMixin(superclass)
     implements ApolloSubscriptionInterface<TData, TVariables> {
+    static documentType = 'subscription';
+
     declare data: TData;
 
     declare fetchPolicy: FetchPolicy;
@@ -51,9 +53,6 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     onError?(error: ApolloError): void
 
-    /** @private */
-    __variables: TVariables = null;
-
     constructor() {
       super();
       type This = this;
@@ -67,34 +66,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
           },
 
           set(this: This, subscription) {
-            try {
-              this.document = subscription;
-            } catch (error) {
-              throw new TypeError('Subscription must be a gql-parsed DocumentNode');
-            }
-
-            this.cancel();
-
-            const query = subscription;
-
-            if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
-              this.subscribe();
-          },
-        },
-
-        variables: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): TVariables {
-            return this.__variables;
-          },
-
-          set(this: This, variables: TVariables) {
-            this.__variables = variables;
-            this.cancel();
-            if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
-              this.subscribe();
+            this.document = subscription;
           },
         },
 
@@ -128,6 +100,21 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     disconnectedCallback(): void {
       super.disconnectedCallback();
       this.cancel();
+    }
+
+    documentChanged(document: DocumentNode): void {
+      this.cancel();
+
+      const query = document;
+
+      if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
+        this.subscribe();
+    }
+
+    variablesChanged(variables: TVariables): void {
+      this.cancel();
+      if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
+        this.subscribe();
     }
 
     public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>) {

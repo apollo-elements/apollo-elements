@@ -36,11 +36,14 @@ import './apollo-mutation';
 
 import {
   ApolloMutationElement,
+} from './apollo-mutation';
+
+import {
   MutationCompletedEvent,
   WillNavigateEvent,
   WillMutateEvent,
   MutationErrorEvent,
-} from './apollo-mutation';
+} from './events';
 
 import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
 import NullableParamMutation from '../test-helpers/NullableParam.mutation.graphql';

@@ -1,4 +1,4 @@
-import type { ApolloError, DocumentNode } from '@apollo/client/core';
+import type { ApolloError } from '@apollo/client/core';
 
 import {
   ApolloMutation,
@@ -9,14 +9,12 @@ import {
   queryAssignedNodes,
 } from '@apollo-elements/lit-apollo';
 
-declare global {
-  interface HTMLElementEventMap {
-    'will-mutate': WillMutateEvent;
-    'will-navigate': WillNavigateEvent;
-    'mutation-completed': MutationCompletedEvent;
-    'mutation-error': MutationErrorEvent;
-  }
-}
+import {
+  MutationCompletedEvent,
+  MutationErrorEvent,
+  WillMutateEvent,
+  WillNavigateEvent,
+} from './events';
 
 /** @noInheritDoc */
 interface ButtonLikeElement extends HTMLElement {
@@ -29,145 +27,6 @@ interface InputLikeElement extends HTMLElement {
   disabled: boolean;
 }
 
-interface MutationEventDetail<Data, Variables> {
-  element: ApolloMutationElement<Data, Variables>;
-  mutation: DocumentNode;
-  variables: Variables;
-}
-
-class MutationEvent<
-  Detail extends MutationEventDetail<Data, Variables>,
-  Data = unknown,
-  Variables = unknown,
-> extends CustomEvent<Detail> {
-  constructor(type: string, init: CustomEventInit<Detail>) {
-    super(type, {
-      ...init,
-      bubbles: true,
-      composed: true,
-    });
-  }
-}
-
-/**
- * Fired when the element is about to mutate.
- * Useful for setting variables or cancelling the mutation by calling `preventDefault`
- * Prevent default to prevent mutation. Detail is `{ element: this }`
- * @typeParam Data Element's Data type
- * @typeParam Variables Element's Variables type
- */
-export class WillMutateEvent<
-  Data = unknown,
-  Variables = unknown
-> extends MutationEvent<MutationEventDetail<Data, Variables>> {
-  static type: 'will-mutate' = 'will-mutate';
-
-  declare detail: MutationEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>) {
-    const { mutation, variables } = element;
-    super(WillMutateEvent.type, {
-      cancelable: true,
-      detail: {
-        element,
-        mutation,
-        variables,
-      },
-    });
-  }
-}
-
-export interface MutationCompletedEventDetail<Data, Variables>
-extends MutationEventDetail<Data, Variables> {
- data: Data
-}
-
-/**
- * Fired when a mutation completes.
- * `detail` is the mutation data.
- * @typeParam Data Element's Data type
- * @typeParam Variables Element's Variables type
- */
-export class MutationCompletedEvent<
-  Data = unknown,
-  Variables = unknown
-> extends MutationEvent<MutationCompletedEventDetail<Data, Variables>> {
-  static type: 'mutation-completed' = 'mutation-completed';
-
-  declare detail: MutationCompletedEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>, data: Data) {
-    const { mutation, variables } = element;
-    super(MutationCompletedEvent.type, {
-      detail: {
-        data,
-        element,
-        mutation,
-        variables,
-      },
-    });
-  }
-}
-
-export interface MutationErrorEventDetail<Data, Variables>
-extends MutationEventDetail<Data, Variables> {
-  error: ApolloError;
-}
-
-/**
- * Fired before an <apollo-element> with a link trigger mutates.
- * Cancel the event with `event.preventDefault()` to prevent navigation.
- * @typeParam Data Element's Data type
- * @typeParam Variables Element's Variables type
- */
-export class WillNavigateEvent<
-  Data = unknown,
-  Variables = unknown,
-> extends MutationEvent<MutationCompletedEventDetail<Data, Variables>> {
-  static type: 'will-navigate' = 'will-navigate'
-
-  declare detail: MutationCompletedEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>, data: Data) {
-    const { mutation, variables } = element;
-    super(WillNavigateEvent.type, {
-      cancelable: true,
-      detail: {
-        data,
-        element,
-        mutation,
-        variables,
-      },
-    });
-  }
-}
-
-/**
- * Fired when the mutation rejects.
- * @typeParam Data Element's Data type
- * @typeParam Variables Element's Variables type
- */
-export class MutationErrorEvent<
-  Data = unknown,
-  Variables = unknown
-> extends MutationEvent<MutationErrorEventDetail<Data, Variables>> {
-  static type: 'mutation-error' = 'mutation-error';
-
-  declare detail: MutationErrorEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>, error: ApolloError) {
-    const { mutation, variables } = element;
-    super(MutationErrorEvent.type, {
-      detail: {
-        element,
-        error,
-        mutation,
-        variables,
-      },
-    });
-  }
-}
-
 /**
  * False when the element is a link.
  * @param node
@@ -178,6 +37,10 @@ function isButton(node: Element): node is ButtonLikeElement {
 
 function isLink(node: Element): node is HTMLAnchorElement {
   return node instanceof HTMLAnchorElement;
+}
+
+function toVariables<T>(acc: T, element: InputLikeElement): T {
+  return !element.dataset?.variable ? acc : { ...acc, [element.dataset.variable]: element.value };
 }
 
 /** @ignore */
@@ -220,13 +83,15 @@ export class WillMutateError extends Error {}
  * Using data attributes and variables
  * ```html
  * <apollo-mutation data-type="Quote" data-action="FLUB">
- *   <mwc-button slot="trigger">OK</mwc-button>
+ *   <mwc-button slot="trigger" label="OK"></mwc-button>
  *   <mwc-textfield slot="variable"
  *       data-variable="name"
- *       value="Neil"></mwc-textfield>
- *   <textarea slot="variable"
+ *       value="Neil"
+ *       label="Name"></mwc-textfield>
+ *   <mwc-textarea slot="variable"
  *       data-variable="comment"
- *       value="That's one small step..."></mwc-textfield>
+ *       value="That's one small step..."
+ *       label="comment"></mwc-textarea>
  * </apollo-mutation>
  * ```
  * Will mutate with the following as `variables`:
@@ -243,10 +108,11 @@ export class WillMutateError extends Error {}
  * Using data attributes and variables with input property
  * ```html
  * <apollo-mutation data-type="Type" data-action="ACTION" input-key="actionInput">
- *   <mwc-button slot="trigger">OK</mwc-button>
+ *   <mwc-button slot="trigger" label="OK"></mwc-button>
  *   <mwc-textfield slot="variable"
  *       data-variable="comment"
- *       value="Hey!"></mwc-textfield>
+ *       value="Hey!"
+ *       label="comment"></mwc-textfield>
  * </apollo-mutation>
  * ```
  * Will mutate with the following as `variables`:
@@ -267,7 +133,7 @@ export class WillMutateError extends Error {}
  * <apollo-mutation
  *     .mutation="${SomeMutation}"
  *     .variables="${{ type: "Type", action: "ACTION" }}">
- *   <mwc-button slot="trigger">OK</mwc-button>
+ *   <mwc-button slot="trigger" label="OK"></mwc-button>
  * </apollo-mutation>
  * ```
  * Will mutate with the following as `variables`:
@@ -294,10 +160,6 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * ```
    */
   @property({ attribute: 'input-key' }) inputKey = '';
-
-  @queryAssignedNodes('trigger') private triggerNodes: NodeListOf<HTMLElement>;
-
-  @queryAssignedNodes('variable') private variableNodes: NodeListOf<InputLikeElement>;
 
   /**
    * Define this function to determine the URL to navigate to after a mutation.
@@ -326,28 +188,13 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    */
   resolveURL?(data: Data): string | Promise<string>;
 
+  @queryAssignedNodes('trigger') private triggerNodes: NodeListOf<HTMLElement>;
+
+  @queryAssignedNodes('variable') private variableNodes: NodeListOf<InputLikeElement>;
+
   private inFlight = false;
 
   private __variables: Variables = null;
-
-  // @ts-expect-error: ambient property. see https://github.com/microsoft/TypeScript/issues/40220
-  get variables(): Variables {
-    const input = this.__variables ?? {
-      ...this.dataset,
-      ...this.inputs.reduce((acc, element) => {
-        if (!element.dataset?.variable)
-          return acc;
-        else
-          return { ...acc, [element.dataset.variable]: element.value };
-      }, {}),
-    };
-
-    return (this.inputKey ? { [this.inputKey]: input } : input) as Variables;
-  }
-
-  set variables(v: Variables) {
-    this.__variables = v;
-  }
 
   /**
    * Slotted trigger node
@@ -387,6 +234,31 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     return link?.href;
   }
 
+  constructor() {
+    super();
+    type This = this;
+    Object.defineProperties(this, {
+      variables: {
+        configurable: true,
+        enumerable: true,
+
+        get(this: This): Variables {
+          if (this.__variables)
+            return this.__variables;
+          else
+            return this.getVariablesFromInputs() ?? this.getDOMVariables();
+        },
+
+        set(this: This, v: Variables) {
+          this.__variables = v;
+          if (this.mo) // element is connected
+            this.variablesChanged?.(v);
+        },
+
+      },
+    });
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     this.onSlotchange();
@@ -397,6 +269,18 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
       <slot name="trigger" @slotchange="${this.onSlotchange}"></slot>
       <slot name="variable"></slot>
     `;
+  }
+
+  private getVariablesFromInputs(): Variables {
+    const input = {
+      ...this.dataset,
+      ...this.inputs.reduce(toVariables, {}),
+    };
+
+    if (this.inputKey)
+      return { [this.inputKey]: input } as unknown as Variables;
+    else
+      return input as Variables;
   }
 
   private onSlotchange(): void {
@@ -456,18 +340,18 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     await this.mutate();
   }
 
+  /** @private */
   onCompleted(data: Data): void {
     this.didMutate();
-
     this.dispatchEvent(new MutationCompletedEvent<Data, Variables>(this, data));
 
     if (isLink(this.trigger))
       this.willNavigate(data);
   }
 
+  /** @private */
   onError(error: ApolloError): void {
     this.didMutate();
-
     this.dispatchEvent(new MutationErrorEvent<Data, Variables>(this, error));
   }
 }

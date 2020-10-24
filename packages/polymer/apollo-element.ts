@@ -2,7 +2,7 @@ import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/c
 import type { ApolloElementInterface } from '@apollo-elements/interfaces';
 import type { GraphQLError } from 'graphql';
 
-import { notify } from './notify-decorator';
+import { notify, PolymerChangeEvent } from './notify-decorator';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
 /**
@@ -13,8 +13,8 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * @fires 'errors-changed'
  * @fires 'loading-changed'
  */
-export class PolymerApolloElement<TData = unknown>
-  extends ApolloElementMixin(HTMLElement)
+export class PolymerApolloElement<TData = unknown, TVariables = unknown>
+  extends ApolloElementMixin(HTMLElement)<TData, TVariables>
   implements ApolloElementInterface<TData> {
   declare client: ApolloClient<NormalizedCacheObject>;
 
@@ -27,4 +27,8 @@ export class PolymerApolloElement<TData = unknown>
   @notify errors: readonly GraphQLError[] = null;
 
   @notify loading: boolean = null;
+
+  variablesChanged(variables: TVariables): void {
+    this.dispatchEvent(new PolymerChangeEvent('variables', variables));
+  }
 }
