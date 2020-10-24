@@ -2,11 +2,13 @@ import { ApolloElementInterface, ApolloQueryInterface } from '@apollo-elements/i
 import { ApolloElementMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 
-import { html, fixtureSync, expect, nextFrame } from '@open-wc/testing';
+import { fixtureSync, expect, nextFrame, oneEvent, defineCE, aTimeout } from '@open-wc/testing';
 import { ApolloClientElement } from './apollo-client';
 
 import './apollo-client';
 import { makeClient, NoParamQueryData, NoParamQueryVariables } from '@apollo-elements/test-helpers';
+
+import { stub, SinonStub } from 'sinon';
 
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 
@@ -24,6 +26,14 @@ class DeepElement extends ApolloQueryMixin(HTMLElement) {
   query = NoParamQuery;
 }
 
+function mockFetch() {
+  stub(window, 'fetch');
+}
+
+function restoreFetch() {
+  (window.fetch as SinonStub).restore?.();
+}
+
 customElements.define('shallow-element', ShallowElement);
 customElements.define('deep-element', DeepElement);
 
@@ -39,11 +49,12 @@ describe('<apollo-client>', function() {
       cached = window.__APOLLO_CLIENT__;
       delete window.__APOLLO_CLIENT__;
       client = makeClient();
-      element = fixtureSync<ApolloClientElement>(html`
-        <apollo-client .client="${client}">
+      element = fixtureSync<ApolloClientElement>(/* html */`
+        <apollo-client>
           <shallow-element></shallow-element>
         </apollo-client>
       `);
+      element.client = client;
       shallow = element.querySelector('shallow-element');
       deep = shallow.shadowRoot.querySelector('deep-element');
       expect(window.__APOLLO_CLIENT__, 'no global client').to.be.undefined;
@@ -87,6 +98,57 @@ describe('<apollo-client>', function() {
           expect(deep.data).to.be.ok;
         });
       });
+    });
+  });
+
+  describe('with uri', function() {
+    beforeEach(mockFetch);
+    afterEach(restoreFetch);
+    it('creates a new client', async function() {
+      element = fixtureSync<ApolloClientElement>(/* html */`
+        <apollo-client uri="/graphql"></apollo-client>
+      `);
+      const { detail } = await oneEvent(element, 'client-changed');
+      expect(detail.value).to.be.an.instanceOf(ApolloClient);
+      expect(detail.value).to.eq(element.client);
+    });
+  });
+
+  describe('with uri and validate-variables', function() {
+    beforeEach(mockFetch);
+    afterEach(restoreFetch);
+    class ApolloQueryEl extends ApolloQueryMixin(HTMLElement)<unknown, unknown> { }
+    const tag = defineCE(ApolloQueryEl);
+    it('creates a new client', async function() {
+      element = fixtureSync<ApolloClientElement>(/* html */`
+        <apollo-client uri="/graphql" validate-variables>
+          <${tag}>
+            <script type="application/graphql">
+              query NonNull($nonNull: Boolean!, $nullable: Boolean) {
+                nonNull(nonNull: $nonNull, nullable: $nullable) {
+                  nonNull
+                  nullable
+                }
+              }
+            </script>
+            <script type="application/json">
+              {
+                "nullable": true
+              }
+            </script>
+          </${tag}>
+        </apollo-client>
+      `);
+
+      await aTimeout(100);
+
+      expect(element.querySelector<ApolloQueryEl>(tag).query).to.be.ok;
+      expect(element.querySelector<ApolloQueryEl>(tag).variables).to.be.ok;
+      expect(element.querySelector<ApolloQueryEl>(tag).observableQuery).to.be.ok;
+
+      // first call is to introspect, and occurs regardless of operations
+
+      expect(window.fetch).to.not.have.been.calledTwice;
     });
   });
 });
