@@ -6,20 +6,6 @@
 
 Helper functions for Apollo Elements
 
-## getGraphQLScriptChildDocument
-Gets the gql-parsed DocumentNode from a direct `<script type="application/graphql">` child of an element.
-
-```ts
-function getGraphQLScriptChildDocument(element: HTMLElement): DocumentNode | null;
-```
-
-## gqlFromInnerText
-Gets an element's `innerText` and parses it as GraphQL.
-
-```ts
-function gqlFromInnerText(element: HTMLScriptElement): DocumentNode | null
-```
-
 ## hasAllVariables
 Predicate that validates a GraphQL request (a `DocumentNode` and a variables object) as having all of its required (i.e. non-nullable) variables defined.
 
