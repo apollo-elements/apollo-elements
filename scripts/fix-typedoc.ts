@@ -233,8 +233,18 @@ async function main() {
   console.log('Copying CSS...');
 
   await copyFile(
+    resolve(DOCS_DIR, '../packages/components/components-snippet.png'),
+    resolve(DOCS_DIR, 'modules/components-snippet.png')
+  );
+
+  await copyFile(
+    resolve(DOCS_DIR, '../packages/create/create-screenshot.png'),
+    resolve(DOCS_DIR, 'modules/create-screenshot.png')
+  );
+
+  await copyFile(
     resolve(DOCS_DIR, '../pages/theme.css'),
-    resolve(DOCS_DIR, 'assets', 'css', 'theme.css')
+    resolve(DOCS_DIR, 'assets/css/theme.css')
   );
 
   console.log(`Fixing HTML in ${DOCS_DIR}...`);

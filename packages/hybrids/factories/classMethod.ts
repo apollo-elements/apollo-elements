@@ -16,7 +16,7 @@ import type { Descriptor } from 'hybrids';
  */
 export function classMethod<TInstance extends HTMLElement, Key extends keyof TInstance>(
   prototype: Constructor<TInstance> & { is?: string },
-  key: Key
+  key: Key,
 ): Descriptor<TInstance> {
   return {
     get(host): TInstance[Key] {

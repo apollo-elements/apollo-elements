@@ -9,6 +9,7 @@ import { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/inter
  *
  */
 export class ApolloSubscription<TData, TVariables>
+  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
   extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloSubscriptionInterface<TData, TVariables> {
 }

@@ -21,6 +21,7 @@ const refetchQueriesConverter: ValueConverter = {
  * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  */
 export class ApolloMutation<TData, TVariables>
+  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
   extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
   declare data: TData;

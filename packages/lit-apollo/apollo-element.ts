@@ -4,15 +4,16 @@ import type { GraphQLError } from 'graphql';
 import { LitElement, property } from 'lit-element';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
-import { ApolloElementInterface } from '@apollo-elements/interfaces';
+import { ApolloElementInterface, Constructor } from '@apollo-elements/interfaces';
 
 /**
  * `ApolloElement`
  *
  * 🚀 Custom element base class for apollo custom elements.
  */
-export class ApolloElement<TData = unknown>
-  extends ApolloElementMixin(LitElement)
+export class ApolloElement<TData = unknown, TVariables = unknown>
+  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
+  extends ApolloElementMixin(LitElement as Constructor<LitElement>)<TData, TVariables>
   implements ApolloElementInterface<TData> {
   declare context?: Record<string, unknown>;
 

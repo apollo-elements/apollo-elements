@@ -48,8 +48,10 @@ const pickWatchQueryOpts =
 
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
   return class ApolloQueryElement<TData, TVariables>
-    extends ApolloElementMixin(superclass)
+    extends ApolloElementMixin(superclass)<TData, TVariables>
     implements ApolloQueryInterface<TData, TVariables> {
+    static documentType = 'query';
+
     declare data: TData;
 
     declare query: DocumentNode;
@@ -85,9 +87,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     errorPolicy: ErrorPolicy = 'none';
 
     /** @private */
-    __variables: TVariables = null;
-
-    /** @private */
     __options: Partial<WatchQueryOptions> = null;
 
     constructor() {
@@ -103,33 +102,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
           },
 
           set(this: This, query) {
-            try {
-              this.document = query;
-            } catch (error) {
-              throw new TypeError('Query must be a gql-parsed DocumentNode');
-            }
-
-            if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
-              this.subscribe({ query });
-          },
-        },
-
-        variables: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): TVariables {
-            return this.__variables;
-          },
-
-          set(this: This, variables) {
-            this.__variables = variables;
-            if (this.observableQuery)
-              this.refetch(variables);
-            else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
-              this.subscribe({ variables });
-            else
-              return;
+            this.document = query;
           },
         },
 
@@ -168,8 +141,21 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
-      if (this.canSubscribe() && this.shouldSubscribe())
-        this.subscribe();
+      this.documentChanged(this.query);
+    }
+
+    documentChanged(query: DocumentNode): void {
+      if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
+        this.subscribe({ query });
+    }
+
+    variablesChanged(variables: TVariables): void {
+      if (this.observableQuery)
+        this.refetch(variables);
+      else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
+        this.subscribe({ variables });
+      else
+        return;
     }
 
     /**
@@ -242,7 +228,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     /**
      * Executes a Query once and updates the component with the result
      */
-    executeQuery(
+    async executeQuery(
       params?: Partial<QueryOptions<TVariables>>
     ): Promise<void | ApolloQueryResult<TData>> {
       const query = params?.query ?? this.query;
@@ -251,16 +237,14 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
       this.loading = true;
 
-      return this.client
-        .query(options)
-        .then(result => {
-          this.nextData.call(this, result);
-          return result;
-        })
-        .catch(error => {
-          this.nextError.call(this, error);
-          throw error;
-        });
+      try {
+        const result = await this.client.query(options);
+        this.nextData(result);
+        return result;
+      } catch (error) {
+        this.nextError(error);
+        throw error;
+      }
     }
 
     /**

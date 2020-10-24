@@ -3,7 +3,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
 
-type Base = Constructor<HTMLElement & PolymerApolloElement>;
+type Base = Constructor<PolymerApolloElement>;
 
 /**
  * @element apollo-mutation
@@ -44,7 +44,7 @@ export class PolymerApolloMutation<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
   @notify called = false;
 
-  @notify loading: boolean = null;
+  @notify loading = false;
 }
 
 customElements.define('apollo-mutation', PolymerApolloMutation);

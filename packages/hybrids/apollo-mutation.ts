@@ -11,9 +11,14 @@ import { ApolloElement } from './apollo-element';
 class ApolloMutationElement<D = unknown, V = unknown> extends
   ApolloMutationMixin(class {} as Constructor)<D, V> { }
 
+function connect<T extends ApolloMutationElement>(host: T): void {
+  // @ts-expect-error: hack to assign a static property
+  host.constructor.documentType = 'mutation';
+}
+
 export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   ...ApolloElement,
-  errorPolicy: property(undefined),
+  errorPolicy: property(undefined, connect),
   variables: null,
 
   ignoreResults: false,
@@ -22,9 +27,12 @@ export const ApolloMutation: Hybrids<ApolloMutationElement> = {
 
   mutation: classAccessors(ApolloMutationElement, 'mutation'),
 
+  variablesChanged: classMethod(ApolloMutationElement, 'variablesChanged'),
+
   mutate: classMethod(ApolloMutationElement, 'mutate'),
   generateMutationId: classMethod(ApolloMutationElement, 'generateMutationId'),
   isMostRecentMutation: classMethod(ApolloMutationElement, 'isMostRecentMutation'),
+
   onCompletedMutation: classMethod(ApolloMutationElement, 'onCompletedMutation'),
   onMutationError: classMethod(ApolloMutationElement, 'onMutationError'),
 };

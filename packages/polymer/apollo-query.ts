@@ -4,7 +4,7 @@ import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
 
-type Base = Constructor<HTMLElement & PolymerApolloElement>;
+type Base = Constructor<PolymerApolloElement>;
 
 /**
  * @element apollo-query

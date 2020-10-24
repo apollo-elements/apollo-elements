@@ -18,8 +18,10 @@ import { GraphQLError } from 'graphql';
 
 function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
   return class ApolloMutationElement<TData, TVariables>
-    extends ApolloElementMixin(superclass)
+    extends ApolloElementMixin(superclass)<TData, TVariables>
     implements ApolloMutationInterface<TData, TVariables> {
+    static documentType = 'mutation';
+
     declare data: TData;
 
     declare mutation: DocumentNode;
@@ -74,11 +76,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
           },
 
           set(this: This, mutation) {
-            try {
-              this.document = mutation;
-            } catch (error) {
-              throw new TypeError('Mutation must be a gql-parsed DocumentNode');
-            }
+            this.document = mutation;
           },
 
         },

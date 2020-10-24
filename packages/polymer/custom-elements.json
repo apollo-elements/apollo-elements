@@ -48,9 +48,9 @@
           "default": "false"
         },
         {
-          "name": "variables",
-          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables"
+          "name": "documentType",
+          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "default": "\"mutation\""
         },
         {
           "name": "context",
@@ -74,6 +74,11 @@
           "type": "TData"
         },
         {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+          "type": "TVariables"
+        },
+        {
           "name": "error",
           "description": "Latest error",
           "type": "Error | ApolloError"
@@ -86,7 +91,8 @@
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": "false"
         }
       ],
       "events": [
@@ -123,11 +129,6 @@
           "name": "query",
           "description": "A GraphQL document containing a single query.",
           "type": "DocumentNode"
-        },
-        {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.",
-          "type": "TVariables | undefined"
         },
         {
           "name": "fetchPolicy",
@@ -192,6 +193,11 @@
           "default": "\"none\""
         },
         {
+          "name": "documentType",
+          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "default": "\"query\""
+        },
+        {
           "name": "context",
           "description": "Context to be passed to link execution chain.",
           "type": "Record<string, unknown> | undefined"
@@ -211,6 +217,11 @@
           "name": "data",
           "description": "Latest query data.",
           "type": "TData"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.",
+          "type": "TVariables"
         },
         {
           "name": "error",
@@ -262,7 +273,7 @@
         {
           "name": "fetchPolicy",
           "description": "Specifies the FetchPolicy to be used for this subscription.",
-          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+          "type": "FetchPolicy"
         },
         {
           "name": "fetchResults",
@@ -271,12 +282,12 @@
         {
           "name": "pollInterval",
           "description": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
-          "type": "number | undefined"
+          "type": "number"
         },
         {
           "name": "noAutoSubscribe",
           "description": "If true, the element will not begin querying data until you manually call `subscribe`",
-          "type": "boolean | undefined"
+          "type": "boolean"
         },
         {
           "name": "observable",
@@ -294,11 +305,6 @@
           "type": "DocumentNode"
         },
         {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "TVariables | undefined"
-        },
-        {
           "name": "skip",
           "description": "If skip is true, the query will be skipped entirely",
           "type": "boolean"
@@ -306,8 +312,13 @@
         {
           "name": "notifyOnNetworkStatusChange",
           "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
-          "type": "boolean | undefined",
+          "type": "boolean",
           "default": "false"
+        },
+        {
+          "name": "documentType",
+          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "default": "\"subscription\""
         },
         {
           "name": "context",
@@ -329,6 +340,11 @@
           "name": "data",
           "description": "Latest data",
           "type": "TData"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
+          "type": "TVariables"
         },
         {
           "name": "error",

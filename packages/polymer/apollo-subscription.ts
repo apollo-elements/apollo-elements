@@ -2,7 +2,7 @@ import { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/inter
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './apollo-element';
 
-type Base = Constructor<HTMLElement & PolymerApolloElement>;
+type Base = Constructor<PolymerApolloElement>;
 
 /**
  * @element apollo-subscription

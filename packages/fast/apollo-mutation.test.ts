@@ -187,6 +187,8 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
           const name = `refetch-queries-attribute-${Date.now()}`;
           @customElement({ name }) class Klass extends Test { }
 
+          Klass;
+
           const tag = unsafeStatic(name);
 
           const attrVal = 'QueryA, QueryB,QueryC,    QueryD';
@@ -210,6 +212,8 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
           const name = `refetch-queries-property-${Math.floor(Math.random() * Date.now())}`;
 
           @customElement({ name }) class Klass extends Test { }
+
+          Klass;
 
           const tag = unsafeStatic(name);
 

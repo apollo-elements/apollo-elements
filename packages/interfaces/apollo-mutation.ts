@@ -10,19 +10,19 @@ import type {
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 export declare class ApolloMutationInterface<TData, TVariables>
-  extends ApolloElementInterface<TData> {
+  extends ApolloElementInterface<TData, TVariables> {
   /**
    * Latest mutation data.
    */
-  data: TData;
+  declare data: TData;
 
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
    */
-  variables: TVariables;
+  declare variables: TVariables;
 
   /** The mutation. */
-  mutation: DocumentNode;
+  declare mutation: DocumentNode;
 
   /**
    * An object that represents the result of this mutation that
@@ -33,38 +33,38 @@ export declare class ApolloMutationInterface<TData, TVariables>
    * the result of a mutation immediately, and update the UI later if any errors
    * appear.
    */
-  optimisticResponse?: TData | ((vars: TVariables) => TData);
+  declare optimisticResponse?: TData | ((vars: TVariables) => TData);
 
   /**
    * Whether the mutation has been fired
    */
-  called: boolean;
+  declare called: boolean;
 
   /**
    * If true, the returned data property will not update with the mutation result.
    */
-  ignoreResults: boolean;
+  declare ignoreResults: boolean;
 
   /**
    * The ID number of the most recent mutation since the element was instantiated.
    * @private
    */
-  mostRecentMutationId: number;
+  declare mostRecentMutationId: number;
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.
    */
-  errorPolicy?: ErrorPolicy;
+  declare errorPolicy?: ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
    */
-  fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
+  declare fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
    */
-  refetchQueries?:
+  declare refetchQueries?:
     RefetchQueryDescription | ((result: FetchResult<TData>) => RefetchQueryDescription);
 
   /**
@@ -73,7 +73,7 @@ export declare class ApolloMutationInterface<TData, TVariables>
    * Setting this to true will make sure refetched queries are completed
    * before the mutation is considered done. false by default.
    */
-  awaitRefetchQueries?: boolean;
+  declare awaitRefetchQueries?: boolean;
 
   /**
    * Callback for when a mutation is completed.

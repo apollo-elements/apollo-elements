@@ -4,6 +4,15 @@
   "description": "Library functions for apollo-elements",
   "main": "index.js",
   "module": "index.js",
+  "type": "module",
+  "typings": "index.d.ts",
+  "exports": [
+    "./index.js",
+    "./helpers.js",
+    "./has-all-variables.js",
+    "./is-client-operation.js",
+    "./is-valid-gql.js"
+  ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",

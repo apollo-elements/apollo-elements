@@ -37,51 +37,51 @@ export interface OnSubscriptionDataParams<TData = unknown> {
 }
 
 export declare class ApolloSubscriptionInterface<TData, TVariables>
-  extends ApolloElementInterface<TData> {
+  extends ApolloElementInterface<TData, TVariables> {
   /**
    * Specifies the FetchPolicy to be used for this subscription.
    */
-  fetchPolicy?: FetchPolicy;
+  declare fetchPolicy: FetchPolicy;
 
   /**
    * The time interval (in milliseconds) on which this subscription should be refetched from the server.
    */
-  pollInterval?: number;
+  declare pollInterval: number;
 
   /**
    * Whether or not updates to the network status should trigger next on the observer of this subscription.
    */
-  notifyOnNetworkStatusChange?: boolean;
+  declare notifyOnNetworkStatusChange: boolean;
 
   /**
    * Observable watching this element's subscription.
    */
-  observable: Observable<FetchResult<TData>>;
+  declare observable: Observable<FetchResult<TData>>;
 
   /**
    * Subscription to the observable
    */
-  observableSubscription: ZenObservable.Subscription;
+  declare observableSubscription: ZenObservable.Subscription;
 
   /**
    * A GraphQL document containing a single subscription.
    */
-  subscription: DocumentNode;
+  declare subscription: DocumentNode;
 
   /**
    * If true, the element will not begin querying data until you manually call `subscribe`
    */
-  noAutoSubscribe?: boolean;
+  declare noAutoSubscribe: boolean;
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
    */
-  variables?: TVariables;
+  declare variables: TVariables;
 
   /**
    * If skip is true, the query will be skipped entirely
    */
-  skip: boolean;
+  declare skip: boolean;
 
   /**
    * Resets the observable and subscribes.

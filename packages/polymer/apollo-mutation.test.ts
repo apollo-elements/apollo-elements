@@ -17,6 +17,8 @@ import { stub } from 'sinon';
 import {
   assertType,
   isApolloError,
+  NullableParamMutationData,
+  NullableParamMutationVariables,
   setupClient,
   teardownClient,
 } from '@apollo-elements/test-helpers';
@@ -146,18 +148,21 @@ describe('[polymer] <apollo-mutation>', function() {
   });
 
   describe('when used in a Polymer template', function() {
-    let wrapper: PolymerElement;
+    let wrapper: WrapperElement;
     class WrapperElement extends PolymerElement {
+      declare mutation: DocumentNode;
+
+      declare variables: NullableParamMutationVariables;
+
+      declare $: {
+        button: HTMLButtonElement;
+        mutation: PolymerApolloMutation<NullableParamMutationData, NullableParamMutationVariables>
+      };
+
       static get properties() {
         return {
-          mutation: {
-            type: Object,
-            value: () => NullableParamMutation,
-          },
-          variables: {
-            type: Object,
-            value: () => ({ nullable: '🤡' }),
-          },
+          mutation: { type: Object, value: () => NullableParamMutation },
+          variables: { type: Object, value: () => ({ nullable: '🤡' }) },
         };
       }
 
@@ -166,25 +171,30 @@ describe('[polymer] <apollo-mutation>', function() {
           <apollo-mutation id="mutation"
               mutation="[[mutation]]"
               variables="[[variables]]"
-              data="{{data}}"
-          ></apollo-mutation>
+              data="{{data}}">
+          </apollo-mutation>
 
           <button id="button" on-click="onClick"></button>
+
           <output>[[data.nullableParam.nullable]]</output>
         `;
       }
 
       onClick() {
-        (this.$.mutation as PolymerApolloMutation<unknown, unknown>).mutate();
+        this.$.mutation.mutate();
       }
     }
 
     beforeEach(async function() {
       const tag = defineCE(WrapperElement);
       wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
-      (wrapper.$.button as HTMLButtonElement).click();
-      await nextFrame();
     });
+
+    beforeEach(function() {
+      wrapper.$.button.click();
+    });
+
+    beforeEach(nextFrame);
 
     it('binds data up into parent component', async function() {
       expect(wrapper.shadowRoot.textContent).to.contain('🤡');

@@ -6,7 +6,9 @@ import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
 import { gql } from '@apollo/client/core';
 
 describe('TypePoliciesMixin', function() {
-  class Base extends TypePoliciesMixin(ApolloElementMixin(HTMLElement)) {}
+  class Base<D = unknown, V = unknown>
+    extends TypePoliciesMixin(ApolloElementMixin(HTMLElement))<D, V> { }
+
   let element: Base;
 
   const query = gql`{

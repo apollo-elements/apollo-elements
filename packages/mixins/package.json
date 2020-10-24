@@ -4,6 +4,18 @@
   "description": "👩‍🚀🌛 Custom Element class mixins for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
+  "type": "module",
+  "typings": "index.d.ts",
+  "exports": [
+    "./index.js",
+    "./apollo-client-mixin.js",
+    "./apollo-element-mixin.js",
+    "./apollo-mutation-mixin.js",
+    "./apollo-query-mixin.js",
+    "./apollo-subscription-mixin.js",
+    "./type-policies-mixin.js",
+    "./validate-variables-mixin.js"
+  ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",

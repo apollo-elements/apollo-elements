@@ -4,6 +4,8 @@
   "description": "👩‍🚀🌛 Custom Element class interfaces for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
+  "type": "module",
+  "typings": "index.d.ts",
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc --noEmit",

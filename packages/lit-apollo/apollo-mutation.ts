@@ -1,7 +1,7 @@
 import type { DocumentNode } from 'graphql';
 import type { MutationOptions, MutationUpdaterFn, FetchResult } from '@apollo/client/core';
 
-import { ComplexAttributeConverter, LitElement, property } from 'lit-element';
+import { ComplexAttributeConverter, property } from 'lit-element';
 
 import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
 import { ApolloElement } from './apollo-element';
@@ -20,9 +20,8 @@ const refetchQueriesConverter: ComplexAttributeConverter = {
  * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  */
 export class ApolloMutation<TData, TVariables>
-  extends ApolloMutationMixin(
-    ApolloElement as Constructor<LitElement & ApolloElement>
-  )<TData, TVariables>
+  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
   declare data: TData;
 

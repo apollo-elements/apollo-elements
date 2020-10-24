@@ -3,7 +3,8 @@ import type { DocumentNode } from 'graphql/language/ast';
 import type { GraphQLError } from 'graphql';
 import type { Constructor, ApolloElementInterface } from '@apollo-elements/interfaces';
 
-import { getGraphQLScriptChildDocument } from '@apollo-elements/lib/get-graphql-script-child-document';
+import { gql } from '@apollo/client/core';
+
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
@@ -12,6 +13,10 @@ declare global {
     'apollo-element-connected': ApolloElementEvent;
     'apollo-element-disconnected': ApolloElementEvent;
   }
+}
+
+function capital(string: string): string {
+  return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
 
 /**
@@ -34,12 +39,18 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
   /**
    * @element
    */
-  return class ApolloElement
-    extends superclass
-    implements ApolloElementInterface {
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
+  return class ApolloElement<
+    TData = unknown,
+    TVariables = unknown
+  > extends superclass implements ApolloElementInterface<TData, TVariables> {
+    static documentType = 'document';
+
     declare context?: Record<string, unknown>;
 
-    declare data: unknown;
+    declare data: TData;
+
+    declare variables: TVariables;
 
     declare error: Error|ApolloError;
 
@@ -50,28 +61,63 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
 
     /** @private */
-    __document: DocumentNode = null;
+    _document: DocumentNode = null;
 
     /** @private */
-    __mo: MutationObserver;
+    _documentSetByJS = false;
+
+    /** @private */
+    _variables: TVariables = null;
+
+    /** @private */
+    _variablesSetByJS = false;
+
+    /** @private */
+    mo: MutationObserver;
 
     /** GraphQL Document */
     get document(): DocumentNode {
-      return this.__document;
+      return this._document ?? this.getDOMGraphQLDocument();
     }
 
-    set document(doc) {
-      if (!doc)
-        return;
-      else if (isValidGql(doc))
-        this.__document = doc;
-      else
-        throw new TypeError('document must be a gql-parsed DocumentNode');
+    set document(document) {
+      this._documentSetByJS = false;
+      if (!document)
+        this._document = null;
+      else if (!isValidGql(document))
+        throw new TypeError(`${capital((this.constructor as typeof ApolloElementInterface).documentType ?? 'document')} must be a gql-parsed DocumentNode`);
+      else {
+        this._document = document;
+        this._documentSetByJS = true;
+        if (this.mo) // element is connected
+          this.documentChanged?.(document);
+      }
     }
 
-    constructor(..._: any[]) {
-      super(..._);
+    constructor() {
+      super();
+
+      type This = this;
+      Object.defineProperties(this, {
+        variables: {
+          configurable: true,
+          enumerable: true,
+
+          get(this: This): TVariables {
+            return this._variables;
+          },
+
+          set(this: This, variables) {
+            this._variables = variables;
+            if (this.mo) // element is connected
+              this.variablesChanged?.(variables);
+          },
+
+        },
+      });
+
       this.data = null;
+      this.variables = null;
       this.error = null;
       this.errors = null;
       this.loading = false;
@@ -83,19 +129,12 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     connectedCallback(): void {
       super.connectedCallback?.();
 
-      this.__mo = new MutationObserver(() => {
-        const doc = getGraphQLScriptChildDocument(this);
-        if (doc && !this.document)
-          this.document = doc;
-      });
+      this.mo = new MutationObserver(this.onMutation.bind(this));
 
-      this.__mo.observe(this, {
-        characterData: true,
-        childList: true,
-        subtree: true,
-      });
+      this.mo.observe(this, { characterData: true, childList: true, subtree: true });
 
-      this.document = getGraphQLScriptChildDocument(this);
+      this._document = this._document ?? this.getDOMGraphQLDocument();
+      this._variables = this._variables ?? this.getDOMVariables();
 
       this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
     }
@@ -104,9 +143,55 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * @fires 'apollo-element-disconnected' when the element disconnects from the dom
      */
     disconnectedCallback(): void {
-      this.__mo?.disconnect();
+      this.mo?.disconnect();
       super.disconnectedCallback?.();
       this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
+    }
+
+    /**
+     * Lifecycle callback that reacts to changes in the GraphQL document
+     * @protected
+     */
+    documentChanged?(document: DocumentNode): void
+
+    /**
+     * Lifecycle callback that reacts to changes in the operation variables
+     * @protected
+     */
+    variablesChanged?(variables: TVariables): void
+
+    /** @private */
+    onMutation(): void {
+      if (!this._documentSetByJS)
+        this._document = this.getDOMGraphQLDocument();
+      if (!this._variablesSetByJS)
+        this._variables = this.getDOMVariables();
+    }
+
+    /**
+     * Get a GraphQL DocumentNode from the element's GraphQL script child
+     * @private
+     */
+    getDOMGraphQLDocument(): DocumentNode | null {
+      const script = this.querySelector<HTMLScriptElement>('script[type="application/graphql"]');
+      const text = script?.innerText;
+      if (!text)
+        return null;
+      else
+        return gql(text.replace?.(/<!---->/g, ''));
+    }
+
+    /**
+     * Gets operation variables from the element's JSON script child
+     * @private
+     */
+    getDOMVariables(): TVariables {
+      const script = this.querySelector<HTMLScriptElement>('script[type="application/json"]');
+      try {
+        return JSON.parse(script.innerText);
+      } catch {
+        return null;
+      }
     }
   };
 }

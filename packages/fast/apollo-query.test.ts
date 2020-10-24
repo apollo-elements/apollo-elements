@@ -9,7 +9,7 @@ import type {
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { fixture, unsafeStatic, expect, html as fhtml, nextFrame } from '@open-wc/testing';
+import { fixture, unsafeStatic, expect, html as fhtml } from '@open-wc/testing';
 
 import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html } from '@microsoft/fast-element';
@@ -87,7 +87,7 @@ describe('[fast] ApolloQuery', function describeApolloQuery() {
 
   it('renders by default', async function noRender() {
     const name = 'renders-by-default';
-    const template = html<Test>`${x => 'RENDERED'}`;
+    const template = html<Test>`${() => 'RENDERED'}`;
     @customElement({ name, template }) class Test extends ApolloQuery<unknown, unknown> { }
     const tag = unsafeStatic(name);
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);

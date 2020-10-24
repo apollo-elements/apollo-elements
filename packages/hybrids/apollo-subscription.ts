@@ -12,10 +12,16 @@ import { ApolloElement } from './apollo-element';
 class ApolloSubscriptionElement<D = unknown, V = unknown>
   extends ApolloSubscriptionMixin(class { } as Constructor)<D, V> { }
 
+
+function connect<T extends ApolloSubscriptionElement>(host: T): void {
+  // @ts-expect-error: hack to assign a static property
+  host.constructor.documentType = 'subscription';
+}
+
 export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   ...ApolloElement,
 
-  fetchPolicy: property(undefined),
+  fetchPolicy: property(undefined, connect),
   pollInterval: property(undefined),
   notifyOnNetworkStatusChange: false,
   noAutoSubscribe: false,
@@ -26,6 +32,9 @@ export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
 
   subscribe: classMethod(ApolloSubscriptionElement, 'subscribe'),
   cancel: classMethod(ApolloSubscriptionElement, 'cancel'),
+
+  documentChanged: classMethod(ApolloSubscriptionElement, 'documentChanged'),
+  variablesChanged: classMethod(ApolloSubscriptionElement, 'variablesChanged'),
 
   canSubscribe: classMethod(ApolloSubscriptionElement, 'canSubscribe'),
   shouldSubscribe: classMethod(ApolloSubscriptionElement, 'shouldSubscribe'),

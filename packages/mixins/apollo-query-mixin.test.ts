@@ -120,13 +120,10 @@ class TypeCheckProperty extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'y
 describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
   let subscribeSpy: Sinon.SinonSpy;
 
-  afterEach(function() {
-    subscribeSpy?.restore?.();
-    subscribeSpy = undefined;
-  });
-
   beforeEach(setupClient);
+
   afterEach(teardownClient);
+
   afterEach(function() {
     // @ts-expect-error: its a stub;
     client.queryManager?.watchQuery?.restore?.();
@@ -134,6 +131,11 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
     client.watchQuery?.restore?.();
     // @ts-expect-error: its a stub;
     client.query?.restore?.();
+  });
+
+  afterEach(function() {
+    subscribeSpy?.restore?.();
+    subscribeSpy = undefined;
   });
 
   describe('instantiating simple derived class', function() {
@@ -272,6 +274,19 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
         element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
       });
 
+      it('has no-auto-subscribe attribute', function() {
+        expect(element.hasAttribute('no-auto-subscribe')).to.be.true;
+      });
+
+      describe('unsetting noAutoSubscribe', function() {
+        beforeEach(function() {
+          element.noAutoSubscribe = false;
+        });
+        it('removes the no-auto-subscribe attribute', function() {
+          expect(element.hasAttribute('no-auto-subscribe')).to.be.false;
+        });
+      });
+
       describe('setting a valid query', function() {
         beforeEach(function() {
           element.query = NoParamQuery;
@@ -279,6 +294,42 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
 
         it('does not call subscribe', async function noAutoSubscribe() {
           expect(subscribeSpy).to.not.have.been.called;
+        });
+      });
+    });
+
+    describe('with no-auto-subscribe attribute set', function() {
+      let element: Test;
+
+      beforeEach(async function() {
+        subscribeSpy = spy(Test.prototype, 'subscribe');
+
+        const tag =
+          unsafeStatic(defineCE(class extends Test<NoParamQueryData, NoParamQueryVariables> { }));
+        element = await fixture<Test>(fhtml`<${tag} no-auto-subscribe></${tag}>`);
+      });
+
+      it('has noAutoSubscribe property set', function() {
+        expect(element.noAutoSubscribe).to.be.true;
+      });
+
+      describe('setting a valid query', function() {
+        beforeEach(function() {
+          element.query = NoParamQuery;
+        });
+
+        it('does not call subscribe', async function noAutoSubscribe() {
+          expect(subscribeSpy).to.not.have.been.called;
+        });
+      });
+
+      describe('removing no-auto-subscribe', function() {
+        beforeEach(function() {
+          element.removeAttribute('no-auto-subscribe');
+        });
+
+        it('unsets noAutoSubscribe property', function() {
+          expect(element.noAutoSubscribe).to.be.false;
         });
       });
     });
@@ -943,6 +994,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
 
         onError(x) { x; }
       }));
+
       element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     });
 
@@ -950,6 +1002,8 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
       onDataSpy = spy(element, 'onData');
       onErrorSpy = spy(element, 'onError');
     });
+
+    beforeEach(nextFrame);
 
     beforeEach(function() {
       element.subscribe();
@@ -967,7 +1021,7 @@ describe('[mixins] ApolloQueryMixin', function describeApolloQueryMixin() {
       expect(onErrorSpy).to.not.have.been.called;
     });
 
-    it('calls onData', async function() {
+    it('calls onData', function() {
       expect(onDataSpy).to.have.been.calledWithMatch({
         data: {
           nullableParam: {
