@@ -1,5 +1,5 @@
 {
   "extends": "../../tsconfig.settings.json",
-  "include": ["."],
+  "include": [".", "../lib/create-apollo-client.ts"],
   "exclude": ["node_modules"]
 }

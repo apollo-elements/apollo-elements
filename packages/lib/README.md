@@ -6,6 +6,24 @@
 
 Helper functions for Apollo Elements
 
+## createApolloClient
+Creates a simple ApolloClient instance given a URI and some params.
+
+```ts
+createApolloClient({
+  uri: '/graphql',
+  typePolicies: {
+    User: {
+      fields: {
+        fullName(_, { readField }) {
+          return `${readField('firstName')} ${readField('lastName')}`;
+        }
+      }
+    }
+  }
+});
+```
+
 ## hasAllVariables
 Predicate that validates a GraphQL request (a `DocumentNode` and a variables object) as having all of its required (i.e. non-nullable) variables defined.
 

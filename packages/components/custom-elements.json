@@ -4,7 +4,41 @@
     {
       "name": "apollo-client",
       "path": "./apollo-client.ts",
+      "attributes": [
+        {
+          "name": "uri",
+          "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "type": "string"
+        },
+        {
+          "name": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set",
+          "type": "boolean"
+        }
+      ],
       "properties": [
+        {
+          "name": "observedAttributes",
+          "type": "string[]",
+          "default": "[\"uri\"]"
+        },
+        {
+          "name": "typePolicies",
+          "description": "TypePolicies for the client",
+          "type": "TypePolicies"
+        },
+        {
+          "name": "uri",
+          "attribute": "uri",
+          "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "type": "string"
+        },
+        {
+          "name": "validateVariables",
+          "attribute": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set",
+          "type": "boolean"
+        },
         {
           "name": "client",
           "description": "Reference to the `ApolloClient` instance.",
@@ -14,6 +48,11 @@
           "name": "instances",
           "description": "Set of elements subscribed to changes on this element's client",
           "type": "Set<ApolloElement>"
+        }
+      ],
+      "events": [
+        {
+          "name": "client-changed"
         }
       ]
     },
