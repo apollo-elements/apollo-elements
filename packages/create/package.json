@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/create",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Scaffold apps and components with GraphQL and LitElement",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
@@ -9,7 +9,9 @@
   "bin": {
     "create-app": "./index.js"
   },
-  "exports": ["./index.js"],
+  "exports": [
+    "./index.js"
+  ],
   "keywords": [
     "generator",
     "custom elements",

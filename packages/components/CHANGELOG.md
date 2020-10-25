@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.5...@apollo-elements/components@1.1.0) (2020-10-25)
+
+
+### Features
+
+* **components:** generate simple client ([dacdefc](https://github.com/apollo-elements/apollo-elements/commit/dacdefc77b7d86ecea3f59e0fb8143870ea38573))
+* **mixins:** query the DOM for variables ([2df637e](https://github.com/apollo-elements/apollo-elements/commit/2df637e1babd35b5e0dc3af9d2de11f03e920938))
+
+
+
+
+
 ## [1.0.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.4...@apollo-elements/components@1.0.5) (2020-10-21)
 
 **Note:** Version bump only for package @apollo-elements/components

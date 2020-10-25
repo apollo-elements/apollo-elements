@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.5...@apollo-elements/lit-apollo@3.1.0) (2020-10-25)
+
+
+### Features
+
+* **mixins:** query the DOM for variables ([2df637e](https://github.com/apollo-elements/apollo-elements/commit/2df637e1babd35b5e0dc3af9d2de11f03e920938))
+
+
+
+
+
 ## [3.0.5](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lit-apollo@3.0.4...@apollo-elements/lit-apollo@3.0.5) (2020-10-21)
 
 
