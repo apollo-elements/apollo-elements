@@ -1,7 +1,7 @@
 import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
 import type Sinon from 'sinon';
 
-import { expect, nextFrame } from '@open-wc/testing';
+import { aTimeout, expect, nextFrame } from '@open-wc/testing';
 
 import NonNullableParamQuery from '@apollo-elements/test-helpers/NonNullableParam.query.graphql';
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
@@ -9,7 +9,6 @@ import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscript
 import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
 
 import {
-  client,
   setupClient,
   teardownClient,
   isSubscription,
@@ -26,10 +25,7 @@ import { ApolloQuery } from './apollo-query';
 import 'sinon-chai';
 
 import gql from 'graphql-tag';
-
-type QueryEl<D = unknown, V = unknown> =
-  HTMLElement &
-  ApolloQueryInterface<D, V>;
+import { ApolloQueryElement } from './factories/query';
 
 let counter = 0;
 
@@ -40,11 +36,11 @@ function getTagName(): string {
 }
 
 const basicRender =
-  <D = unknown, V = unknown>(host: QueryEl<D, V>): ReturnType<typeof html> =>
+  <D = unknown, V = unknown>(host: ApolloQueryElement<D, V>): ReturnType<typeof html> =>
     html`${JSON.stringify(host.data, null, 2)}`;
 
 describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
-  let element: QueryEl;
+  let element: ApolloQueryElement;
   let render = basicRender;
 
   function setupElement(properties = {}, innerHTML = '') {
@@ -52,8 +48,9 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
     const tag = getTagName();
     define(tag, { ...ApolloQuery, render });
     container.innerHTML = `<${tag}>${innerHTML}</${tag}>`;
-    const [element] = container.children as HTMLCollectionOf<QueryEl>;
+    const [element] = container.children as HTMLCollectionOf<ApolloQueryElement>;
     document.body.appendChild(element);
+    // console.log(element.client);
     const update = render(Object.assign(element, properties));
     update({ ...element, ...properties }, container);
 
@@ -64,11 +61,8 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
     element = setupElement();
   }
 
-  function setMockedClient() {
-    element.client = client;
-  }
-
   function teardownFixture() {
+    window.__APOLLO_CLIENT__ = undefined;
     element?.remove?.();
     element = undefined;
     render = basicRender;
@@ -168,7 +162,7 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
     expect(element.observableQuery, 'observableQuery').to.be.undefined;
     expect(element.onData, 'onData').to.be.undefined;
     expect(element.onError, 'onError').to.be.undefined;
-    expect(element.options, 'options').to.be.undefined;
+    expect(element.options, 'options').to.be.null;
     expect(element.partial, 'partial').to.be.undefined;
     expect(element.partialRefetch, 'partialRefetch').to.be.undefined;
     expect(element.pollInterval, 'pollInterval').to.be.undefined;
@@ -179,27 +173,20 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   });
 
   describe('when window.__APOLLO_CLIENT__ is set', function() {
-    let cached: typeof window.__APOLLO_CLIENT__;
-
-    beforeEach(function() {
-      cached = window.__APOLLO_CLIENT__;
-      window.__APOLLO_CLIENT__ = {} as typeof window.__APOLLO_CLIENT__;
-      element = setupElement();
+    beforeEach(teardownFixture);
+    beforeEach(teardownClient);
+    beforeEach(() => {
+      // @ts-expect-error: just checking the assignment;
+      window.__APOLLO_CLIENT__ = {};
     });
-
-    afterEach(function() {
-      window.__APOLLO_CLIENT__ = cached;
-    });
-
+    beforeEach(setupFixture);
     it('uses global client', async function defaultsToGlobalClient() {
       expect(element.client).to.equal(window.__APOLLO_CLIENT__);
     });
   });
 
   describe('query property', function() {
-    beforeEach(setMockedClient);
-
-    it('subscribes on set', async function subscribeeOnSetQuery() {
+    it('subscribes on set', async function subscribeOnSetQuery() {
       expect(element.observableQuery).to.not.be.ok;
 
       element.query = NoParamQuery;
@@ -250,9 +237,11 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
 
       element.innerHTML = `<script type="application/graphql">${doc}</script>`;
 
-      await nextFrame();
+      await aTimeout(100);
 
-      expect(element.query).to.deep.equal(gql(doc));
+      const { query } = element;
+
+      expect(query).to.deep.equal(gql(doc));
     });
 
     it('does not change document for invalid children', async function() {
@@ -263,8 +252,6 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
       element.innerHTML = `<script>${doc}</script>`;
 
       await nextFrame();
-
-      expect(element.query).to.be.null;
     });
   });
 
@@ -296,7 +283,6 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   });
 
   describe('setting variables', function describeSetVariables() {
-    beforeEach(setMockedClient);
     describe('without observableQuery', function() {
       beforeEach(setNullableParamVariables);
       it('does nothing', async function setVariablesNoQuery() {
@@ -317,7 +303,6 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   });
 
   describe('subscribe', function describeSubscribe() {
-    beforeEach(setMockedClient);
     beforeEach(setNoAutoSubscribe);
     beforeEach(setNonNullableParamQuery);
 
@@ -372,8 +357,6 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   });
 
   describe('subscribeToMore', function describeSubscribeToMore() {
-    beforeEach(setMockedClient);
-
     describe('without a query', function() {
       it('does nothing', async function subscribeToMoreNoQuery() {
         expect(element.subscribeToMore(null)).to.be.undefined;
@@ -400,7 +383,6 @@ describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
   });
 
   describe('executeQuery', function describeExecuteQuery() {
-    beforeEach(setMockedClient);
     describe('with insufficient variables on element', function() {
       beforeEach(setNoAutoSubscribe);
       beforeEach(async function() {
