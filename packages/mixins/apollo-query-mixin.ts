@@ -47,7 +47,7 @@ const pickWatchQueryOpts =
     });
 
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
-  return class ApolloQueryElement<TData, TVariables>
+  class ApolloQueryElement<TData, TVariables>
     extends ApolloElementMixin(superclass)<TData, TVariables>
     implements ApolloQueryInterface<TData, TVariables> {
     static documentType = 'query';
@@ -88,55 +88,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
     /** @private */
     __options: Partial<WatchQueryOptions> = null;
-
-    constructor() {
-      super();
-      type This = this;
-      Object.defineProperties(this, {
-        query: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This) {
-            return this.document;
-          },
-
-          set(this: This, query) {
-            this.document = query;
-          },
-        },
-
-        options: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): Partial<WatchQueryOptions> {
-            return this.__options;
-          },
-
-          set(this: This, options) {
-            this.__options = options;
-            this.observableQuery?.setOptions(options);
-          },
-        },
-
-        noAutoSubscribe: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): boolean {
-            return this.hasAttribute('no-auto-subscribe');
-          },
-
-          set(v: boolean) {
-            if (v)
-              this.setAttribute('no-auto-subscribe', '');
-            else
-              this.removeAttribute('no-auto-subscribe');
-          },
-        },
-      });
-    }
 
     /** @protected */
     connectedCallback(): void {
@@ -321,7 +272,54 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
       this.error = error;
       this.onError?.(error);
     }
-  };
+  }
+
+
+  Object.defineProperties(ApolloQueryElement.prototype, {
+    query: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloQueryElement<unknown, unknown>) {
+        return this.document;
+      },
+
+      set(this: ApolloQueryElement<unknown, unknown>, query) {
+        this.document = query;
+      },
+    },
+
+    options: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloQueryElement<unknown, unknown>): Partial<WatchQueryOptions> {
+        return this.__options;
+      },
+
+      set(this: ApolloQueryElement<unknown, unknown>, options) {
+        this.__options = options;
+        this.observableQuery?.setOptions(options);
+      },
+    },
+
+    noAutoSubscribe: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloQueryElement<unknown, unknown>): boolean {
+        return this.hasAttribute('no-auto-subscribe');
+      },
+
+      set(v: boolean) {
+        if (v)
+          this.setAttribute('no-auto-subscribe', '');
+        else
+          this.removeAttribute('no-auto-subscribe');
+      },
+    },
+  });
+  return ApolloQueryElement;
 }
 
 

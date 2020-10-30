@@ -17,7 +17,7 @@ import { ApolloElementMixin } from './apollo-element-mixin';
 import { GraphQLError } from 'graphql';
 
 function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
-  return class ApolloMutationElement<TData, TVariables>
+  class ApolloMutationElement<TData, TVariables>
     extends ApolloElementMixin(superclass)<TData, TVariables>
     implements ApolloMutationInterface<TData, TVariables> {
     static documentType = 'mutation';
@@ -64,23 +64,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     constructor() {
       super();
-      type This = this;
       this.variables = null;
-      Object.defineProperties(this, {
-        mutation: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): DocumentNode {
-            return this.document;
-          },
-
-          set(this: This, mutation) {
-            this.document = mutation;
-          },
-
-        },
-      });
     }
 
     /**
@@ -158,7 +142,25 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       this.onError?.(error);
       throw error;
     }
-  };
+  }
+
+  Object.defineProperties(ApolloMutationElement.prototype, {
+    mutation: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloMutationElement<unknown, unknown>): DocumentNode {
+        return this.document;
+      },
+
+      set(this: ApolloMutationElement<unknown, unknown>, mutation) {
+        this.document = mutation;
+      },
+
+    },
+  });
+
+  return ApolloMutationElement;
 }
 
 /**

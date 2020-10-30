@@ -40,7 +40,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
    * @element
    */
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
-  return class ApolloElement<
+  class ApolloElement<
     TData = unknown,
     TVariables = unknown
   > extends superclass implements ApolloElementInterface<TData, TVariables> {
@@ -96,25 +96,6 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     constructor() {
       super();
-
-      type This = this;
-      Object.defineProperties(this, {
-        variables: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): TVariables {
-            return this._variables;
-          },
-
-          set(this: This, variables) {
-            this._variables = variables;
-            if (this.mo) // element is connected
-              this.variablesChanged?.(variables);
-          },
-
-        },
-      });
 
       this.data = null;
       this.variables = null;
@@ -193,7 +174,27 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
         return null;
       }
     }
-  };
+  }
+
+  Object.defineProperties(ApolloElement.prototype, {
+    variables: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloElement) {
+        return this._variables;
+      },
+
+      set(this: ApolloElement, variables) {
+        this._variables = variables;
+        if (this.mo) // element is connected
+          this.variablesChanged?.(variables);
+      },
+
+    },
+  });
+
+  return ApolloElement;
 }
 
 /**
