@@ -51,6 +51,7 @@ import NonNullableParamQuery from '@apollo-elements/test-helpers/NonNullablePara
 import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
 import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
 import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
+import { Constructor } from '@apollo-elements/interfaces';
 
 class XL extends HTMLElement {}
 class Test<D = unknown, V = unknown> extends ApolloQueryMixin(XL)<D, V> {}
@@ -104,6 +105,33 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
+}
+
+function RuntimeMixin<Base extends Constructor>(superclass: Base) {
+  return class extends superclass {
+    declare mixinProp: boolean;
+  };
+}
+
+class MixedClass<D, V> extends RuntimeMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
+
+function ChildMixin<Base extends Constructor>(superclass: Base) {
+  return class extends superclass {
+    declare childProp: number;
+  };
+}
+
+class Inheritor<D, V> extends ChildMixin(MixedClass)<D, V> { }
+
+const runChecks = false;
+if (runChecks) {
+  const instance = new MixedClass<{ foo: number }, unknown>();
+  const inheritor = new Inheritor<{ foo: string }, unknown>();
+  assertType<number>(instance.data.foo);
+  assertType<boolean>(instance.mixinProp);
+  assertType<string>(inheritor.data.foo);
+  assertType<boolean>(inheritor.mixinProp);
+  assertType<number>(inheritor.childProp);
 }
 
 class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
