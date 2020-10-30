@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.1.0...@apollo-elements/mixins@3.1.1) (2020-10-30)
+
+
+### Bug Fixes
+
+* **mixins:** define properties at class level ([91522a6](https://github.com/apollo-elements/apollo-elements/commit/91522a62e3a2c11826cd21b76b409b6c4cb905db))
+
+
+
+
+
 # [3.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.0.5...@apollo-elements/mixins@3.1.0) (2020-10-25)
 
 

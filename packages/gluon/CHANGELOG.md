@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@3.1.0...@apollo-elements/gluon@3.1.1) (2020-10-30)
+
+**Note:** Version bump only for package @apollo-elements/gluon
+
+
+
+
+
 # [3.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@3.0.5...@apollo-elements/gluon@3.1.0) (2020-10-25)
 
 

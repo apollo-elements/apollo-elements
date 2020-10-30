@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.1.0...@apollo-elements/hybrids@3.2.0) (2020-10-30)
+
+
+### Features
+
+* **hybrids:** add factories ([88f8fb7](https://github.com/apollo-elements/apollo-elements/commit/88f8fb7a104433fe11ffb61d36fc927f2e106f95))
+
+
+
+
+
 # [3.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.0.5...@apollo-elements/hybrids@3.1.0) (2020-10-25)
 
 

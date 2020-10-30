@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.1.0...@apollo-elements/components@1.1.1) (2020-10-30)
+
+
+### Bug Fixes
+
+* **components:** reexport types from events ([ba045fc](https://github.com/apollo-elements/apollo-elements/commit/ba045fca39443a7e8aab1e0a3a55ec4554b6f38c))
+
+
+
+
+
 # [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.0.5...@apollo-elements/components@1.1.0) (2020-10-25)
 
 
