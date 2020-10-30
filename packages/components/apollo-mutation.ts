@@ -16,6 +16,8 @@ import {
   WillNavigateEvent,
 } from './events';
 
+export * from './events';
+
 /** @noInheritDoc */
 interface ButtonLikeElement extends HTMLElement {
   disabled: boolean;
