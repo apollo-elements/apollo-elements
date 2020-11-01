@@ -1,0 +1,16 @@
+#tabs {
+  display: flex;
+  background: hsla(0 0% 100% / 0.1);
+  overflow-x: scroll;
+}
+
+#tabs button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+img {
+  height: 24px;
+  width: auto;
+}

@@ -1,0 +1,35 @@
+:host {
+  display: block;
+  position: relative;
+  border-radius: 6px;
+  background: #111;
+  overflow: hidden;
+}
+
+button {
+  color: inherit;
+  position: relative;
+  background: none;
+  padding: 9px 16px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  font-size: 16px;
+  background: hsla(0 0% 100% / 0.1);
+}
+
+button:focus,
+button:hover {
+  background: hsla(0 0% 100% / 0.15);
+}
+
+button[selected] {
+  background: #111;
+}
+
+button:focus,
+button:hover,
+button:active,
+button[selected] {
+  text-shadow: -0.06ex 0 currentColor, 0.06ex 0 currentColor;
+}

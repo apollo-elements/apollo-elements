@@ -2,6 +2,8 @@
 
 In some cases, you may want to wait for your Apollo client to do some initial asynchronous setup (for example reloading a persistent cache or getting a user token) before you can make your client available to your app.
 
+<code-copy>
+
 ```js
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
@@ -19,33 +21,138 @@ export async function getClient() {
 
   // Wait for the cache to be restored
   await persistCache({ cache, storage: localStorage });
-  // Create the Apollo Client
 
-  client = new ApolloClient({ cache, link });
+  // Create the Apollo Client
+  client =
+    new ApolloClient({ cache, link });
 
   return client;
 };
 ```
 
-In that case, you can import a promise of a client and wait for it in `connectedCallback`:
+</code-copy>
 
-```js
-import { formatDistance } from 'date-fns/esm';
-import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
+The most straightforward way to do this is first instantiate your client, and only afterwards load your components using dynamic `import()`:
+
+<code-copy>
+
+```ts
 import { getClient } from './client';
+(async function init() {
+  window.__APOLLO_CLIENT__ = await getClient();
+  await Promise.all([
+    import('./components/connected-element.js'),
+    import('./components/connected-input.js'),
+  ]);
+})();
+```
 
-class AsyncElement extends ApolloQuery {
+</code-copy>
+
+If for whatever reason you'd like to load your component files eagerly, set the `noAutoSubscribe` property on your components, then you can import a promise of a client and wait for it in `connectedCallback`, calling `subscribe` when ready.
+
+<code-tabs>
+<code-tab library="mixins">
+
+```ts
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
+import UserSessionQuery from './UserSession.query.graphql';
+
+import type {
+  UserSessionQueryData as Data,
+  UserSessionQueryVariables as Variables,
+} from '../schema';
+
+import { getClient } from './client';
+import { formatDistance } from 'date-fns/esm';
+
+const template = document.createElement('template');
+template.innerHTML = `
+  <h1>👋 </h1>
+  <p>
+    <span>Your last activity was</span>
+    <time></time>
+  </p>
+`;
+
+template.content.querySelector('h1').append(new Text(''));
+template.content.querySelector('h1').append(new Text('!'));
+template.content.querySelector('time').append(new Text(''));
+
+class AsyncElement extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
+  noAutoSubscribe = true;
+
+  query = UserSessionQuery;
+
+  get data() {
+    return this.#data;
+  }
+
+  set data(value: Data) {
+    this.#data = value;
+    this.render();
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(template.content.cloneNode(true));
+  }
+
   async connectedCallback() {
     super.connectedCallback();
-    // first instantiate the client locally
-    this.client = await clientPromise;
-    // afterwards, set the query to trigger fetch-then-render
-    this.query = gql`query {
-      userSession {
-        name
-        lastActive
-      }
-    }`;
+    // asynchronously get a reference to the client
+    this.client = await getClient();
+    // only then start fetching data
+    this.subscribe();
+  }
+
+  render() {
+    const lastActive = this.data?.userSession.lastActive;
+
+    const [waveNode, nameNode] =
+      this.shadowRoot.querySelector('h1').childNodes;
+    const [timeNode] =
+      this.shadowRoot.querySelector('time').childNodes;
+
+    nameNode.data = this.data?.userSession.name ?? '';
+    timeNode.data =
+      !lastActive ? '' : formatDistance(lastActive, Date.now(), { addSuffix: true });
+  }
+};
+
+customElements.define('async-element', AsyncElement);
+```
+
+</code-tab>
+<code-tab library="lit-apollo">
+
+```ts
+import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+
+import UserSessionQuery from './UserSession.query.graphql';
+
+import type {
+  UserSessionQueryData as Data,
+  UserSessionQueryVariables as Variables,
+} from '../schema';
+
+import { getClient } from './client';
+import { formatDistance } from 'date-fns/esm';
+
+@customElement('async-element')
+class AsyncElement extends ApolloQuery<Data, Variables> {
+  noAutoSubscribe = true;
+
+  query = UserSessionQuery;
+
+  async connectedCallback() {
+    super.connectedCallback();
+    // asynchronously get a reference to the client
+    this.client = await getClient();
+    // only then start fetching data
+    this.subscribe();
   }
 
   render() {
@@ -64,19 +171,106 @@ class AsyncElement extends ApolloQuery {
     `;
    }
 };
-
-customElements.define('async-element', AsyncElement)
 ```
 
-Alternatively, you can use the dynamic `import()` feature to wait on your client before loading element modules:
+</code-tab>
+
+<code-tab library="fast">
 
 ```ts
+import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+
+import UserSessionQuery from './UserSession.query.graphql';
+
+import type {
+  UserSessionQueryData as Data,
+  UserSessionQueryVariables as Variables,
+} from '../schema';
+
 import { getClient } from './client';
-(async function init() {
-  window.__APOLLO_CLIENT__ = await getClient();
-  await Promise.all([
-    import('./components/connected-element.js'),
-    import('./components/connected-input.js'),
-  ]);
-})();
+import { formatDistance } from 'date-fns/esm';
+
+function getTime(userSession): string {
+  const lastActive = userSession?.lastActive;
+  return (
+      !lastActive ? ''
+    : formatDistance(new Date(lastActive), Date.now(), { addSuffix: true })
+  );
+}
+
+@customElement({
+  name: 'async-element',
+  template: html<AsyncElement>`
+    <h1>👋 ${x => x.data?.userSession.name}!</h1>
+    <p>
+      <span>Your last activity was</span>
+      <time>${x => getTime(x.data?.userSession)}</time>
+    </p>
+  `
+})
+class AsyncElement extends ApolloQuery<Data, Variables> {
+  noAutoSubscribe = true;
+
+  query = UserSessionQuery;
+
+  async connectedCallback() {
+    super.connectedCallback();
+    // asynchronously get a reference to the client
+    this.client = await getClient();
+    // only then start fetching data
+    this.subscribe();
+  }
+};
 ```
+
+</code-tab>
+
+<code-tab library="hybrids">
+
+```ts
+import { client, query, define, property, html } from '@apollo-elements/hybrids';
+
+import { getClient } from './client';
+import { formatDistance } from 'date-fns/esm';
+
+import UserSessionQuery from './UserSession.query.graphql';
+
+import type {
+  UserSessionQueryData as Data,
+  UserSessionQueryVariables as Variables,
+} from '../schema';
+
+function getTime(userSession): string {
+  const lastActive = userSession?.lastActive;
+  return (
+      !lastActive ? ''
+    : formatDistance(new Date(lastActive), Date.now(), { addSuffix: true })
+  );
+}
+
+async function connect(host) {
+  // asynchronously get a reference to the client
+  host.client = await getClient();
+  // only then start fetching data
+  host.subscribe();
+}
+
+define('async-element', {
+  // use 'connect' to gain access to connectedCallback
+  // because of how Hybrids queues connectedCallbacks,
+  // set this before you set `query`
+  noAutoSubscribe: property(true, connect),
+  client: client(null),
+  query: query<Data, Variables>(UserSessionQuery),
+  render: ({ data }) => html`
+    <h1>👋 ${data?.userSession.name}!</h1>
+    <p>
+      <span>Your last activity was</span>
+      <time>${getTime(data?.userSession)}</time>
+    </p>
+  `
+})
+```
+
+</code-tab>
+</code-tabs>

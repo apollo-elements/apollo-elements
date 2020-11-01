@@ -4,6 +4,8 @@ You can run your apollo-elements app without using a build step with the [web de
 
 This sample config lets you also import css and graphql into your lit-apollo components written in TypeScript:
 
+<code-copy>
+
 ```js
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
@@ -49,7 +51,11 @@ export default {
 };
 ```
 
+</code-copy>
+
 If you're using TypeScript and importing CSS and GraphQL files with the rollup plugins, make sure to add this declaration somewhere in a `.d.ts` file in your project:
+
+<code-copy>
 
 ```ts
 declare module '*.graphql' {
@@ -64,6 +70,8 @@ declare module '*.css' {
   export default css;
 }
 ```
+
+</code-copy>
 
 ## Recommended Optimizations
 Apply these plugins to further reduce your bundle sizes.

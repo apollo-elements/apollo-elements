@@ -1,0 +1,13 @@
+{
+  "include": [".", "../../declaration.d.ts", "./node_modules", "../node_modules"],
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "ESNext",
+    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "moduleResolution": "Node"
+  }
+}
