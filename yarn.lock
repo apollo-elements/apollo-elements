@@ -7254,6 +7254,11 @@ html-escaper@^2.0.0:
   resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-2.0.2.tgz#dfd60027da36a36dfcbe236262c00a5822681453"
   integrity sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==
 
+html-escaper@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-3.0.0.tgz#e4c85c7b599ea2f56436ca492ba5bab3ed76b3bf"
+  integrity sha512-69CofXDozHqdHDl1BZ3YiFp5rYN1qTwSXIVcBhVcZNkzj1vzx6Sko1nT58mzKip19DbKo8lHR9hf6/XeZ9+s3w==
+
 htmlparser2@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-4.1.0.tgz#9a4ef161f2e4625ebf7dfbe6c0a2f52d18a59e78"
@@ -12473,6 +12478,13 @@ typedoc-plugin-lerna-packages@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/typedoc-plugin-lerna-packages/-/typedoc-plugin-lerna-packages-0.3.1.tgz#3e65068e6c6ef987fc4c4553416af3fb22c8a5e6"
   integrity sha512-azeP5DVv4Me+C32RoGbMAzXo7JeYmeEstMAx4mdtVGHLtrXjitlaf0pS562vogofwyIcyVnjL6BlZWvbPQ3hmw==
+
+typedoc-plugin-mermaid@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-mermaid/-/typedoc-plugin-mermaid-1.3.0.tgz#910d49a3d03beeab7ff65bac7d0d215ca38fd4b6"
+  integrity sha512-ZzBZz0vskVdBEL6ZZEzYl3CLEwFX3e7eaYMaBQk0qFRprKUF94irCAHHVTcgUfyaAuH9i9N1TCQhF4R+mgfAeg==
+  dependencies:
+    html-escaper "^3.0.0"
 
 typedoc-plugin-no-inherit@^1.2.0:
   version "1.2.0"

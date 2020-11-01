@@ -47,9 +47,62 @@ query ThemeToggle {
 Let's define a custom element that displays a button to toggle the theme.
 
 <code-tabs>
+<code-tab library="mixins">
+
+```ts
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
+type Theme = 'dark'|'light';
+type Data = { theme: Theme };
+
+const template = document.createElement('template');
+template.innerHTML = '<button @click="${this.toggleTheme}"></button>';
+template.content.append(new Text('Change to '));
+template.content.append(new Text(''));
+template.content.append(new Text(' theme'));
+
+export class ThemeToggle extends ApolloQueryMixin(HTMLElement)<Data, null> {
+  query = ThemeToggleQuery;
+
+  #data: Data = null;
+  get data() { return this.#data; }
+  set data(value: Data) {
+    this.#data = data;
+    this.render();
+  }
+
+  get nextTheme(): Theme {
+    return this.data?.theme === 'dark' ? 'light' : 'dark';
+  }
+
+  $(selector) { return this.shadowRoot.querySelector(selector); }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(template.content.cloneNode(true));
+    this.$('button').addEventListener('click', this.toggleTheme.bind(this));
+  }
+
+  render() {
+    const [, nextTheme] = this.$('button').childNodes;
+    nextTheme.data = this.nextTheme;
+  }
+
+  toggleTheme() {
+    // TBD
+  }
+}
+
+customElements.define('theme-toggle', ThemeToggle);
+```
+
+</code-tab>
 <code-tab library="lit-apollo">
 
 ```ts
+import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+
 type Theme = 'dark'|'light';
 type Data = { theme: Theme };
 
@@ -79,6 +132,8 @@ class ThemeToggle extends ApolloQuery<Data, null> {
 <code-tab library="fast">
 
 ```ts
+import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+
 type Theme = 'dark'|'light';
 type Data = { theme: Theme };
 
@@ -106,6 +161,8 @@ class ThemeToggle extends ApolloQuery<Data, null> {
 <code-tab library="hybrids">
 
 ```ts
+import { client, query, define, html } from '@apollo-elements/hybrids';
+
 type Theme = 'dark'|'light';
 type Data = { theme: Theme };
 
@@ -174,6 +231,22 @@ const client = new ApolloClient({
 or we can use [`TypePoliciesMixin`](../Cool%20Tricks/code-splitting.html#typepoliciesmixin) to lazy-load the type policies when the component connects:
 
 <code-tabs>
+<code-tab library="mixins">
+
+```ts
+import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
+import { typePolicies } from './typePolicies';
+
+@customElement('theme-toggle')
+class ThemeToggle extends
+TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<Data, null> {
+  typePolicies = typePolicies;
+
+  // ...
+}
+```
+
+</code-tab>
 <code-tab library="lit-apollo">
 
 ```ts
@@ -232,6 +305,20 @@ All that's left is to define the `toggleTheme` function to actually update the c
 
 <code-tabs>
 
+<code-tab library="mixins">
+
+```ts
+toggleTheme() {
+  const theme = this.nextTheme;
+  this.client.writeQuery({
+    query: this.query,
+    data: { theme },
+  });
+}
+```
+
+</code-tab>
+
 <code-tab library="lit-apollo">
 
 ```ts
@@ -279,13 +366,19 @@ function toggleTheme(host) {
 
 We can acheive the same effect using the new `makeVar` function from Apollo Client. First we'll define our theme variable, initializing it with the user preference:
 
+<code-copy>
+
 ```ts
 import { makeVar } from '@apollo/client/core';
 
 export const themeVar = makeVar<Theme>(getUAPreferredTheme());
 ```
 
+</code-copy>
+
 Then we'll modify our type policy to read the value from that variable:
+
+<code-copy>
 
 ```ts
 import { themeVar } from './variables';
@@ -301,9 +394,21 @@ export const typePolicies: TypePolicy = {
 }
 ```
 
+</code-copy>
+
 Last, we'll refactor the `toggleTheme` method to directly update the value of `themeVar`. We do that by calling `themeVar` with a value. Apollo Client will ensure that all queries that depend on `theme` will get the new value every time we call.
 
 <code-tabs>
+<code-tab library="mixins">
+
+```ts
+toggleTheme() {
+  themeVar(this.nextTheme);
+}
+```
+
+</code-tab>
+
 <code-tab library="lit-apollo">
 
 ```ts
@@ -360,6 +465,16 @@ Now in order to update the theme, we need to perform two steps:
 2. Invalidate the Apollo cache's value for theme on the root query using the `evict` method on `InMemoryCache`.
 
 <code-tabs>
+<code-tab library="mixins">
+
+```ts
+toggleTheme() {
+  localStorage.setItem('theme', this.nextTheme);
+  this.client.cache.evict({ fieldName: 'theme' });
+}
+```
+
+</code-tab>
 <code-tab library="lit-apollo">
 
 ```ts

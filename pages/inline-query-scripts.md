@@ -123,6 +123,8 @@ define('greet-me', {
 
 You can add it to your page like so, and it will start querying.
 
+<code-copy>
+
 ```html
 <greet-me>
   <script type="application/graphql">
@@ -135,6 +137,8 @@ You can add it to your page like so, and it will start querying.
   </script>
 </greet-me>
 ```
+
+</code-copy>
 
 ## No Base Class
 

@@ -34,6 +34,8 @@ export const router = new Router({
 
 And let's say you want to apply different type policies depending on the type of user:
 
+<code-copy>
+
 ```ts
 // src/components/user/typePolicies.ts
 export const UserTypePolicies = {
@@ -56,6 +58,8 @@ export const AdminTypePolicies = {
   }
 };
 ```
+
+</code-copy>
 
 import `TypePoliciesMixin` from the mixins package to easily register type policies on a component. For example, in `src/components/profile/profile.ts` you can use `UserTypePolicies`
 
@@ -159,8 +163,8 @@ import type {
   UserQueryVariables as Variables,
 } from '../schema';
 
-@customElement('profile-page')
-export class ProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+@customElement('admin-profile-page')
+export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
   query = UserQuery;
 
   typePolicies = { ...UserTypePolicies, ...AdminTypePolicies };
@@ -183,8 +187,8 @@ import type {
   UserQueryVariables as Variables,
 } from '../schema';
 
-@customElement({ name: 'profile-page' })
-export class ProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+@customElement({ name: 'admin-profile-page' })
+export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
   query = UserQuery;
 
   typePolicies = { ...UserTypePolicies, ...AdminTypePolicies };
@@ -214,7 +218,7 @@ function connnect(host) {
   host.client.cache.policies.addTypePolicies(host.typePolicies);
 }
 
-define('profile-page', {
+define('admin-profile-page', {
   client: client(window.__APOLLO_QUERY__),
   query: query(UserQuery),
   typePolicies: property({
