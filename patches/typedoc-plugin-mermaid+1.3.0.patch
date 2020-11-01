@@ -1,0 +1,21 @@
+diff --git a/node_modules/typedoc-plugin-mermaid/dist/plugin.js b/node_modules/typedoc-plugin-mermaid/dist/plugin.js
+index bb1176d..16a29e6 100644
+--- a/node_modules/typedoc-plugin-mermaid/dist/plugin.js
++++ b/node_modules/typedoc-plugin-mermaid/dist/plugin.js
+@@ -89,6 +89,16 @@ MermaidPlugin.customScriptsAndBodyClosingTag = `
+     <script>
+     mermaid.initialize({
+       startOnLoad: true,
++      sequence: {
++        actorFontFamily: '"Segoe UI", sans-serif;',
++        showSequenceNumbers: true,
++      },
++      theme: 'dark',
++      themeVariables: {
++        darkMode: 'true',
++        primaryColor: '#222',
++        fontFamily: '"Segoe UI", sans-serif;'
++      }
+     });
+     </script>
+     </body>

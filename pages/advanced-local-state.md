@@ -2,6 +2,8 @@
 
 Say your app has Networks and Sites. A network has a list of Sites which belong to it, so you implement a field `isInNetwork` on Site which takes a network ID. You want to implement <dfn><abbr title="Create, Read, Update, Delete">CRUD</abbr></dfn> operations for Networks.
 
+## The Setup - A list of Sites
+
 <code-copy>
 
 ```graphql
@@ -20,7 +22,7 @@ type Network {
 
 </code-copy>
 
-The first mutation you implement is `createNetwork`. The page which fires that mutation is at `/create-network`, and it displays a selection list of all the sites in your app.
+Let's start by querying for all existing sites
 
 <code-copy>
 
@@ -35,6 +37,8 @@ query CreateNetworkPageQuery {
 ```
 
 </code-copy>
+
+Then we'll define a component `all-sites` which fetches and displays the list of sites.
 
 <code-tabs>
 <code-tab library="mixins">
@@ -247,12 +251,12 @@ define('all-sites', {
 </code-tab>
 </code-tabs>
 
-In order to create the Network, the user selects some Sites and then clicks a button which issues the `createNetwork` mutation.
+In order to create the Network, the user selects some Sites and then clicks a button which issues the `createNetwork` mutation, so let's implement that mutation now.
 
 <code-copy>
 
 ```graphql
-mutation CreateNetwork($sites: string[]!) {
+mutation CreateNetwork($sites: ID[]!) {
   createNetwork(sites: $sites) {
     id
     name
@@ -265,7 +269,18 @@ mutation CreateNetwork($sites: string[]!) {
 
 </code-copy>
 
-The `selected` field determines whether a site's corresponding `<select-item>` component will be marked selected. Whenever the user clicks on an item in the list, `onSelectItem` writes the new selected state to the cache for that Site.
+This mutation requires an input which is a list of site IDs. In order to provide that list, our user will click on the checkboxes in the list of `<select-item>`s. This in turn will write to that `Site`'s client-side `selected @client` field on `Site`, which in turn will be read to determine whether a site's corresponding `<select-item>` component will be marked selected: Whenever the user clicks on an item in the list, `onSelectItem` writes the new selected state to the cache for that Site.
+
+```mermaid
+sequenceDiagram
+    participant CA as Apollo Cache
+    participant UI as <all-sites>
+    participant OL as <select-item>
+    CA->>UI: AllSitesQuery
+    UI-->>OL: Property Assignment
+    OL->>UI: MouseEvent
+    UI-->>CA: writeFragment
+```
 
 Then, when the user is ready to create the Network, she clicks the `Create` button, and the component issues the mutation over the network with variables based on the currently selected sites.
 
