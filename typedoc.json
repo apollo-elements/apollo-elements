@@ -20,6 +20,7 @@
   "exclude": [
     "./packages/create/template",
     "./packages/test-helpers",
+    "./packages/docs",
     "./declaration.d.ts",
     "**/*+(index|.spec|.test|.e2e).ts",
     "**/*+(.graphql|.css)",

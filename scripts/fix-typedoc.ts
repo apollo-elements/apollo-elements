@@ -19,14 +19,17 @@ function isSectionFromANodeModule(x: HTMLElement): boolean {
   return x.textContent.includes(TEST);
 }
 
-async function fixHTML(path: string) {
-  const dom = new JSDOM(await readFile(path, 'utf-8'));
-
-  const { window: { document } } = dom;
-
+function fixA11Y(document: Document, path: string) {
   // a11y fixes
   document.documentElement.lang = 'en';
+}
 
+function graphTag(document: Document, property: string, content: string): void {
+  document.head.querySelector(`meta[property="og:${property}"]`)?.remove();
+  document.head.innerHTML += /* html */`<meta property="${property}" content="${content}">`;
+}
+
+function appendMeta(document: Document, path: string) {
   document.head.querySelector<HTMLMetaElement>('meta[name="description"]').content =
     '🌑 Custom elements meet Apollo GraphQL 🌜';
 
@@ -43,6 +46,29 @@ async function fixHTML(path: string) {
     <link rel="stylesheet" href="/assets/css/theme.css">
   `;
 
+  if (document.body.querySelector('code-tabs') || document.body.querySelector('code-copy')) {
+    document.head.innerHTML += /* html */`
+      <script type="module" src="/components.js"></script>
+    `;
+  }
+
+  document.body.querySelectorAll('meta').forEach(meta => {
+    const name = meta.getAttribute('property') ?? meta.name;
+    const { content } = meta;
+    document.head.querySelector(`meta[name="${name}"]`)?.remove();
+    document.head.appendChild(meta);
+    switch (name) {
+      case 'title':
+      case 'og:title':
+      case 'twitter:title': graphTag(document, 'title', content); break;
+      case 'og:description':
+      case 'twitter:description':
+      case 'description': graphTag(document, 'description', content); break;
+    }
+  });
+}
+
+function fixContent(document: Document, path: string) {
   const homeLink = document.querySelector('header a.title');
 
   const footer = document.querySelector('footer.with-border-bottom');
@@ -117,26 +143,6 @@ async function fixHTML(path: string) {
     </a>
   `;
 
-  function graphTag(property: string, content: string): void {
-    document.head.querySelector(`meta[property="og:${property}"]`)?.remove();
-    document.head.innerHTML += /* html */`<meta property="${property}" content="${content}">`;
-  }
-
-  document.body.querySelectorAll('meta').forEach(meta => {
-    const name = meta.getAttribute('property') ?? meta.name;
-    const { content } = meta;
-    document.head.querySelector(`meta[name="${name}"]`)?.remove();
-    document.head.appendChild(meta);
-    switch (name) {
-      case 'title':
-      case 'og:title':
-      case 'twitter:title': graphTag('title', content); break;
-      case 'og:description':
-      case 'twitter:description':
-      case 'description': graphTag('description', content); break;
-    }
-  });
-
   const LINKS =
     Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'));
 
@@ -187,6 +193,16 @@ async function fixHTML(path: string) {
           .forEach(x => x.closest('li')?.remove());
       });
   }
+}
+
+async function fixHTML(path: string) {
+  const dom = new JSDOM(await readFile(path, 'utf-8'));
+
+  const { window: { document } } = dom;
+
+  fixA11Y(document, path);
+  appendMeta(document, path);
+  fixContent(document, path);
 
   const link = ({ href, textContent }) =>
     /* html */`<a target="_blank" rel="noreferrer noopener" href="${href}" class="tsd-signature-type">${textContent}</a>`;

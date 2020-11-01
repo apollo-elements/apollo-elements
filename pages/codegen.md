@@ -2,12 +2,20 @@
 
 Using the `@graphql-codegen/cli` package and its plugins, you can automatically generate TypeScript typings from your schema and query documents.
 
+<code-copy>
+
 ```bash
 npm i -D \
   @graphql-codegen/cli \
   @graphql-codegen/typescript \
   @graphql-codegen/typescript-operations
 ```
+
+</code-copy>
+
+Or if you use `yarn`:
+
+<code-copy>
 
 ```bash
 yarn add -D \
@@ -16,7 +24,12 @@ yarn add -D \
   @graphql-codegen/typescript-operations
 ```
 
-Create a file called `.graphqlrc.yml` in your project root and paste in:
+</code-copy>
+
+Create a file called `.graphqlrc.yml` in your project root and paste in these contents:
+
+<code-copy>
+
 ```yml
 schema: 'https://api.app.dev/graphql' # replace with url to your graphql server
 
@@ -48,11 +61,17 @@ extensions:
 
 ```
 
+</code-copy>
+
 Now, to automatically generate typings, run
+
+<code-copy>
 
 ```
 npx graphql-codegen --watch
 ```
+
+</code-copy>
 
 This has the added benefit of linting your graphql files for errors.
 

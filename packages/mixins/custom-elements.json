@@ -1,0 +1,58 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "",
+      "path": "./apollo-element-mixin.ts",
+      "properties": [
+        {
+          "name": "documentType",
+          "type": "string",
+          "default": "\"document\""
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject>",
+          "default": "\"__APOLLO_CLIENT__\""
+        },
+        {
+          "name": "document",
+          "description": "GraphQL Document",
+          "type": "DocumentNode"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "data",
+          "description": "Latest data",
+          "type": "TData"
+        },
+        {
+          "name": "variables",
+          "description": "Operation variables",
+          "type": "TVariables"
+        },
+        {
+          "name": "error",
+          "description": "Latest error",
+          "type": "Error | ApolloError"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[]"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in flight.",
+          "type": "boolean",
+          "default": "false"
+        }
+      ]
+    }
+  ]
+}

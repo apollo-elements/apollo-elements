@@ -4,6 +4,8 @@ Since Apollo client [cannot be imported directly into the browser](https://githu
 
 A basic `rollup.config.js` that you can work from looks like this:
 
+<code-copy>
+
 ```js
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -29,7 +31,12 @@ export default {
 }
 ```
 
+</code-copy>
+
 You can use `rollup-plugin-lit-css` and `@apollo-elements/rollup-plugin-graphql` to enhance the <abbr title="developer experience">DX</abbr>:
+
+<code-copy>
+
 ```js
 import litcss from 'rollup-plugin-lit-css';
 import graphql from '@apollo-elements/rollup-plugin-graphql';
@@ -45,10 +52,35 @@ export default {
 }
 ```
 
-These plugins let you import CSS and GraphQL files as JavaScript objects. With them, you can do fun tricks in your source modules:
+</code-copy>
 
-```js
-import { ApolloQuery, customElements } from '@apollo-elements/lit-apollo';
+These plugins let you import CSS (lit-apollo only) and GraphQL files as JavaScript objects. With them, you can do fun tricks in your source modules:
+
+<code-tabs>
+
+<code-tab library="mixins">
+
+```ts
+import HelloQuery from './Hello.query.graphql';
+import style from './hello-query.css';
+
+class HelloWorld extends ApolloQuery {
+  query = HelloQuery;
+
+  static get styles() {
+    return style;
+  }
+}
+
+customElements.define('hello-world', HelloWorld);
+```
+
+</code-tab>
+
+<code-tab library="lit-apollo">
+
+```ts
+import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
 import HelloQuery from './Hello.query.graphql';
 import style from './hello-query.css';
 
@@ -59,6 +91,38 @@ class HelloWorld extends ApolloQuery {
   static styles = style;
 }
 ```
+
+</code-tab>
+
+<code-tab library="fast">
+
+```ts
+import { ApolloQuery, customElement } from '@apollo-elements/fast';
+import HelloQuery from './Hello.query.graphql';
+
+@customElement({ name: 'hello-world' })
+class HelloWorld extends ApolloQuery {
+  query = HelloQuery;
+}
+```
+
+</code-tab>
+
+<code-tab library="hybrids">
+
+```ts
+import { client, query } from '@apollo-elements/hybrids';
+import HelloQuery from './Hello.query.graphql';
+
+define('hello-world', {
+  client: client(window.__APOLLO_CLIENT__),
+  query: query(HelloQuery),
+});
+```
+
+</code-tab>
+
+</code-tabs>
 
 Alternatively, you might bundle and export your Apollo client separately, then import it into your browser-friendly component modules, perhaps using a tool like [snowpack](https://snowpack.dev)
 

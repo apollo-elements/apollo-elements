@@ -27,21 +27,38 @@ The generated app comes with plenty of bells-and-whistles:
 These npm scripts help you get your work done in style:
 
 ### start
+
+<code-copy>
+
 ```
 npm start
 ```
+
+</code-copy>
+
 runs the code generator and the development server in watch mode
 
 ### build
+
+<code-copy>
+
 ```
 npm run build
 ```
+
+</code-copy>
+
 bundles the app into `/build`. The build will bundle and minify your javascript, and minify your HTML. Just upload to your static file host and you're good.
 
 ### lint
+<code-copy>
+
 ```
 npm run lint
 ```
+
+</code-copy>
+
 Lint your app with an opinionated set of rules for JavaScript and TypeScript
 
 ### test
