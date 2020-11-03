@@ -53,11 +53,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     implements ApolloQueryInterface<TData, TVariables> {
     static documentType = 'query';
 
-    declare data: TData;
-
     declare query: DocumentNode;
-
-    declare variables: TVariables;
 
     declare fetchPolicy: FetchPolicy;
 

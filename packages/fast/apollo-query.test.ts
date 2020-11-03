@@ -9,20 +9,100 @@ import type {
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { fixture, unsafeStatic, expect, html as fhtml } from '@open-wc/testing';
+import {
+  fixture,
+  unsafeStatic,
+  expect,
+  html as fhtml,
+  nextFrame,
+  aTimeout,
+} from '@open-wc/testing';
 
 import { ApolloQuery } from './apollo-query';
-import { FASTElement, customElement, html } from '@microsoft/fast-element';
+import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client/core';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+
+import { SetupOptions, assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
+
+const template = html<TestableApolloQuery>`
+  <output id="data">${x => x.stringify(x.data)}</output>
+  <output id="error">${x => x.stringify(x.error)}</output>
+  <output id="errors">${x => x.stringify(x.errors)}</output>
+  <output id="loading">${x => x.stringify(x.loading)}</output>
+  <output id="networkStatus">${x => x.stringify(x.networkStatus)}</output>
+`;
+
+@customElement({ name: 'fast-testable-apollo-query-class', template })
+class TestableApolloQuery<D = unknown, V = unknown>
+  extends ApolloQuery<D, V>
+  implements QueryElement<D, V> {
+  async hasRendered() {
+    await nextFrame();
+    await DOM.nextUpdate();
+    await nextFrame();
+    await aTimeout(50);
+    return this;
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+}
+
+let counter = -1;
+
+describe('[fast] ApolloQuery', function() {
+  describeQuery({
+    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>) {
+      const name = `fast-setup-function-element-${counter++}`;
+
+      @customElement({ name, template })
+      class Test extends TestableApolloQuery { }
+
+      const attrs = opts?.attributes ? ` ${opts.attributes}` : '';
+      const innerHTML = opts?.innerHTML ?? '';
+
+      const spies = Object.fromEntries((opts?.spy ?? []).map(key =>
+        [key, spy(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonSpy>;
+
+      const stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
+        [key, stub(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonStub>;
+
+      const element = await fixture<T>(
+        `<${name}${attrs}>${innerHTML}</${name}>`);
+
+      for (const [key, val] of Object.entries(opts?.properties ?? {}))
+        element[key] = val;
+
+      await DOM.nextUpdate();
+
+      return { element, spies, stubs };
+    },
+  });
+
+  describe('subclassing', function() {
+    it('is an instance of FASTElement', async function() {
+      const name = 'is-an-instance-of-f-a-s-t-element';
+      @customElement({ name })
+      class Test extends ApolloQuery<unknown, unknown> { }
+      const tag = unsafeStatic(name);
+      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      expect(el).to.be.an.instanceOf(FASTElement);
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
+    assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -34,8 +114,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<TypeCheckData>                       (this.data);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
+    assertType<number>                              (this.data.b);
     if (isApolloError(this.error))
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
@@ -66,59 +145,3 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-describe('[fast] ApolloQuery', function describeApolloQuery() {
-  it('is an instance of FASTElement', async function() {
-    const name = 'is-an-instance-of-f-a-s-t-element';
-    @customElement({ name }) class Test extends ApolloQuery<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-    expect(el).to.be.an.instanceOf(FASTElement);
-  });
-
-  it('renders when networkStatus is set', async function rendersOnNetworkStatus() {
-    const name = 'renders-when-network-status-is-set';
-    const template = html<Test>`${x => x.networkStatus === NetworkStatus.error ? 'SUCCESS' : 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloQuery<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .networkStatus="${NetworkStatus.error}"></${tag}>`);
-    expect(element).shadowDom.to.equal('SUCCESS');
-  });
-
-  it('renders by default', async function noRender() {
-    const name = 'renders-by-default';
-    const template = html<Test>`${() => 'RENDERED'}`;
-    @customElement({ name, template }) class Test extends ApolloQuery<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    expect(element).shadowDom.to.equal('RENDERED');
-  });
-
-  it('does render when data is set', async function dataRender() {
-    const name = 'does-renders-when-data-is-set';
-    const template = html<Test>`${x => x.data.test}`;
-    @customElement({ name, template }) class Test extends ApolloQuery<{ test: string }, unknown> { }
-    const tag = unsafeStatic(name);
-    const el = await fixture<Test>(fhtml`<${tag} .data="${{ test: 'RENDERED' }}"></${tag}>`);
-    expect(el).shadowDom.to.equal('RENDERED');
-  });
-
-  it('does render when error is set', async function errorRender() {
-    const name = 'does-renders-when-error-is-set';
-    const template = html<Test>`${x => x.error}`;
-    @customElement({ name, template }) class Test extends ApolloQuery<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const el = await fixture<Test>(fhtml`<${tag} .error="${'ERROR'}"></${tag}>`);
-    expect(el).shadowDom.to.equal('ERROR');
-  });
-
-  it('does render when loading is set', async function loadingRender() {
-    const name = 'renders-when-loading-is-set';
-    const template = html`${x => x.loading ?? false ? 'LOADING' : 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloQuery<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .loading="${true}"></${tag}>`);
-    expect(element).shadowDom.to.equal('LOADING');
-  });
-});

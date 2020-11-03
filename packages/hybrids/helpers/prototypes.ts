@@ -32,7 +32,7 @@ function getPrototypeDescriptor<S extends HTMLElement>(
   source: Constructor<S>,
 ): PropertyDescriptorMap {
   /** Properties to not redefine */
-  const exclude = ['client', 'data', 'error', 'errors', 'loading'];
+  const exclude = ['client', 'data', 'error', 'errors', 'loading', 'networkStatus'];
 
   // class fields need a real instance in order to get their descriptors.
   if (!INSTANCES.get(source)) {

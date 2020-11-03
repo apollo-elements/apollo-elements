@@ -23,6 +23,9 @@ import {
   teardownClient,
 } from '@apollo-elements/test-helpers';
 
+import { setupMutationClass, describeMutation } from '@apollo-elements/test-helpers/mutation.test';
+import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
+
 import { GraphQLError } from 'graphql';
 
 import './apollo-mutation';
@@ -31,12 +34,175 @@ import { PolymerApolloMutation } from './apollo-mutation';
 
 import { PolymerElement, html } from '@polymer/polymer';
 
-import NullableParamMutation from '@apollo-elements/test-helpers/NullableParam.mutation.graphql';
+import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
+
+class TestableApolloMutation<D, V>
+  extends PolymerApolloMutation<D, V>
+  implements MutationElement<D, V> {
+  static get template() {
+    const template = document.createElement('template');
+    template.innerHTML = /* html */`
+      <output id="called"></output>
+      <output id="data"></output>
+      <output id="error"></output>
+      <output id="errors"></output>
+      <output id="loading"></output>
+    `;
+    return template;
+  }
+
+  $(id: keyof TestableApolloMutation<D, V>) { return this.shadowRoot.getElementById(id); }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(TestableApolloMutation.template.content.cloneNode(true));
+    this.addEventListener('called-changed', this.render);
+    this.addEventListener('data-changed', this.render);
+    this.addEventListener('error-changed', this.render);
+    this.addEventListener('errors-changed', this.render);
+    this.addEventListener('loading-changed', this.render);
+  }
+
+  render() {
+    this.$('called').textContent = this.stringify(this.called);
+    this.$('data').textContent = this.stringify(this.data);
+    this.$('error').textContent = this.stringify(this.error);
+    this.$('errors').textContent = this.stringify(this.errors);
+    this.$('loading').textContent = this.stringify(this.loading);
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+
+  async hasRendered() {
+    await nextFrame();
+    return this;
+  }
+}
+
+class WrapperElement extends PolymerElement {
+  declare mutation: DocumentNode;
+
+  declare variables: NullableParamMutationVariables;
+
+  declare $: {
+    button: HTMLButtonElement;
+    mutation: PolymerApolloMutation<NullableParamMutationData, NullableParamMutationVariables>
+  };
+
+  static get properties() {
+    return {
+      mutation: { type: Object, value: () => NullableParamMutation },
+      variables: { type: Object, value: () => ({ nullable: '🤡' }) },
+    };
+  }
+
+  static get template() {
+    return html`
+      <apollo-mutation id="mutation"
+          mutation="[[mutation]]"
+          variables="[[variables]]"
+          data="{{data}}">
+      </apollo-mutation>
+
+      <button id="button" on-click="onClick"></button>
+
+      <output>[[data.nullableParam.nullable]]</output>
+    `;
+  }
+
+  onClick() {
+    this.$.mutation.mutate();
+  }
+}
+
+describe('[polymer] <apollo-mutation>', function() {
+  describeMutation({
+    class: TestableApolloMutation,
+    setupFunction: setupMutationClass(TestableApolloMutation),
+  });
+
+  describe('notify events', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
+
+    let element: PolymerApolloMutation<unknown, unknown>;
+
+    beforeEach(async function setupElement() {
+      element = await fixture(`<apollo-mutation></apollo-mutation>`);
+    });
+
+    it('notifies on data change', async function() {
+      const mutationStub = stub(element.client, 'mutate');
+
+      mutationStub.resolves({ data: { messages: ['hi'] } });
+
+      const mutation = gql`mutation { messages }`;
+
+      element.mutate({ mutation });
+
+      const { detail: { value } } = await oneEvent(element, 'data-changed');
+
+      expect(value).to.deep.equal({ messages: ['hi'] });
+      mutationStub.restore();
+    });
+
+    it('notifies on error change', async function() {
+      const err = new Error('error');
+      setTimeout(() => element.error = err);
+      const { detail: { value } } = await oneEvent(element, 'error-changed');
+      expect(value).to.equal(err);
+    });
+
+    it('notifies on errors change', async function() {
+      const errs = [new GraphQLError('error')];
+      setTimeout(() => element.errors = errs);
+      const { detail: { value } } = await oneEvent(element, 'errors-changed');
+      expect(value).to.equal(errs);
+    });
+
+    it('notifies on loading change', async function() {
+      setTimeout(() => element.loading = true);
+      const { detail: { value } } = await oneEvent(element, 'loading-changed');
+      expect(value).to.be.true;
+    });
+
+    it('notifies on called change', async function() {
+      setTimeout(() => element.called = true);
+      const { detail: { value } } = await oneEvent(element, 'called-changed');
+      expect(value).to.be.true;
+    });
+  });
+
+  describe('when used in a Polymer template', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
+
+    let wrapper: WrapperElement;
+
+    beforeEach(async function setupWrapper() {
+      const tag = defineCE(WrapperElement);
+      wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
+    });
+
+    beforeEach(function() {
+      wrapper.$.button.click();
+    });
+
+    beforeEach(nextFrame);
+
+    it('binds data up into parent component', async function() {
+      expect(wrapper.shadowRoot.textContent).to.contain('🤡');
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     // ApolloElementInterface
@@ -81,123 +247,3 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-describe('[polymer] <apollo-mutation>', function() {
-  let element: PolymerApolloMutation<unknown, unknown>;
-  beforeEach(setupClient);
-  afterEach(teardownClient);
-
-  beforeEach(async function() {
-    element = await fixture(`<apollo-mutation></apollo-mutation>`);
-  });
-
-  it('caches observed properties', async function() {
-    const err = new Error('error');
-    element.called = true;
-    expect(element.called, 'called').to.equal(true);
-
-    element.data = 'data';
-    expect(element.data, 'data').to.equal('data');
-
-    element.error = err;
-    expect(element.error, 'error').to.equal(err);
-
-    element.loading = true;
-    expect(element.loading, 'loading').to.equal(true);
-  });
-
-  it('notifies on data change', async function() {
-    const mutationStub = stub(element.client, 'mutate');
-
-    mutationStub.resolves({ data: { messages: ['hi'] } });
-
-    const mutation = gql`mutation { messages }`;
-
-    element.mutate({ mutation });
-
-    const { detail: { value } } = await oneEvent(element, 'data-changed');
-
-    expect(value).to.deep.equal({ messages: ['hi'] });
-    mutationStub.restore();
-  });
-
-  it('notifies on error change', async function() {
-    const err = new Error('error');
-    setTimeout(() => element.error = err);
-    const { detail: { value } } = await oneEvent(element, 'error-changed');
-    expect(value).to.equal(err);
-  });
-
-  it('notifies on errors change', async function() {
-    const errs = [new GraphQLError('error')];
-    setTimeout(() => element.errors = errs);
-    const { detail: { value } } = await oneEvent(element, 'errors-changed');
-    expect(value).to.equal(errs);
-  });
-
-  it('notifies on loading change', async function() {
-    setTimeout(() => element.loading = true);
-    const { detail: { value } } = await oneEvent(element, 'loading-changed');
-    expect(value).to.be.true;
-  });
-
-  it('notifies on called change', async function() {
-    setTimeout(() => element.called = true);
-    const { detail: { value } } = await oneEvent(element, 'called-changed');
-    expect(value).to.be.true;
-  });
-
-  describe('when used in a Polymer template', function() {
-    let wrapper: WrapperElement;
-    class WrapperElement extends PolymerElement {
-      declare mutation: DocumentNode;
-
-      declare variables: NullableParamMutationVariables;
-
-      declare $: {
-        button: HTMLButtonElement;
-        mutation: PolymerApolloMutation<NullableParamMutationData, NullableParamMutationVariables>
-      };
-
-      static get properties() {
-        return {
-          mutation: { type: Object, value: () => NullableParamMutation },
-          variables: { type: Object, value: () => ({ nullable: '🤡' }) },
-        };
-      }
-
-      static get template() {
-        return html`
-          <apollo-mutation id="mutation"
-              mutation="[[mutation]]"
-              variables="[[variables]]"
-              data="{{data}}">
-          </apollo-mutation>
-
-          <button id="button" on-click="onClick"></button>
-
-          <output>[[data.nullableParam.nullable]]</output>
-        `;
-      }
-
-      onClick() {
-        this.$.mutation.mutate();
-      }
-    }
-
-    beforeEach(async function() {
-      const tag = defineCE(WrapperElement);
-      wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
-    });
-
-    beforeEach(function() {
-      wrapper.$.button.click();
-    });
-
-    beforeEach(nextFrame);
-
-    it('binds data up into parent component', async function() {
-      expect(wrapper.shadowRoot.textContent).to.contain('🤡');
-    });
-  });
-});

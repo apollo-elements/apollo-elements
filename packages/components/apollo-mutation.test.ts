@@ -15,9 +15,7 @@ import { fixture, expect, aTimeout, oneEvent } from '@open-wc/testing';
 
 import { html } from 'lit-html';
 
-import { stub } from 'sinon';
-
-import type * as Sinon from 'sinon';
+import { stub, SinonStub } from 'sinon';
 
 import 'sinon-chai';
 
@@ -45,8 +43,8 @@ import {
   MutationErrorEvent,
 } from './events';
 
-import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
-import NullableParamMutation from '../test-helpers/NullableParam.mutation.graphql';
+import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
+import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
@@ -301,7 +299,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   describe('with a link trigger', function() {
     let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
 
-    let replaceStateStub: Sinon.SinonStub;
+    let replaceStateStub: SinonStub;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
@@ -416,7 +414,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   describe('with a link trigger that wraps a button', function() {
     let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
-    let replaceStateStub: Sinon.SinonStub;
+    let replaceStateStub: SinonStub;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`

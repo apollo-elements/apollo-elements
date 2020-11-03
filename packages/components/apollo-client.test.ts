@@ -10,7 +10,7 @@ import { makeClient, NoParamQueryData, NoParamQueryVariables } from '@apollo-ele
 
 import { stub, SinonStub } from 'sinon';
 
-import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
+import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
 
 /** @ignore */
 class ShallowElement<D = unknown, V = unknown> extends ApolloElementMixin(HTMLElement)<D, V> {

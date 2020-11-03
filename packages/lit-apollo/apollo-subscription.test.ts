@@ -8,19 +8,60 @@ import type {
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { defineCE, unsafeStatic, fixture, expect, html } from '@open-wc/testing';
+import { defineCE, fixture, expect, html } from '@open-wc/testing';
 
 import { ApolloSubscription } from './apollo-subscription';
 import { LitElement, TemplateResult } from 'lit-element';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
+import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
+import {
+  describeSubscription,
+  setupSubscriptionClass,
+} from '@apollo-elements/test-helpers/subscription.test';
+
+class TestableApolloSubscription<D = unknown, V = unknown>
+  extends ApolloSubscription<D, V>
+  implements SubscriptionElement<D, V> {
+  render(): TemplateResult {
+    return html`
+      <output id="data">${this.stringify(this.data)}</output>
+      <output id="error">${this.stringify(this.error)}</output>
+      <output id="loading">${this.stringify(this.loading)}</output>
+    `;
+  }
+
+  stringify(x: unknown) { return JSON.stringify(x, null, 2); }
+
+  async hasRendered() {
+    await this.updateComplete;
+    return this;
+  }
+}
+
+describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription() {
+  describeSubscription({
+    class: TestableApolloSubscription,
+    setupFunction: setupSubscriptionClass(TestableApolloSubscription),
+  });
+
+  describe('subclassing', function() {
+    it('is an instance of LitElement', async function() {
+      const tag = defineCE(class Sub extends TestableApolloSubscription {});
+      const el = await fixture(`<${tag}></${tag}>`);
+      expect(el).to.be.an.instanceOf(LitElement);
+    });
+  });
+});
+
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
+    assertType<LitElement>                          (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -52,39 +93,3 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-class Test extends ApolloSubscription<unknown, unknown> {
-  set thing(v: unknown) {
-    // Check for LitElement interface
-    this.requestUpdate('thing', v);
-    // Check for HTMLElement interface
-    this.dispatchEvent(new CustomEvent('thing', { detail: { thing: v } }));
-  }
-
-  render(): TemplateResult {
-    return html`
-      ${this.thing}
-      ${this.error}
-      ${this.errors?.map(x => x.source)}
-    `;
-  }
-}
-
-describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription() {
-  it('is an instance of LitElement', async function() {
-    const tag = unsafeStatic(defineCE(class extends Test {}));
-    const el = await fixture(html`<${tag}></${tag}>`);
-    expect(el).to.be.an.instanceOf(LitElement);
-  });
-
-  it('defines default properties', async function definesObserveProperties() {
-    const tag = unsafeStatic(defineCE(class extends Test {}));
-    const el = await fixture<Test>(html`<${tag}></${tag}>`);
-    expect(el.data, 'data').to.be.null;
-    expect(el.error, 'error').to.be.null;
-    expect(el.errors, 'error').to.be.null;
-    expect(el.loading, 'loading').to.be.false;
-    expect(el.subscription, 'subscription').to.be.null;
-    expect(el.client, 'client').to.equal(window.__APOLLO_CLIENT__);
-  });
-});

@@ -6,7 +6,8 @@ import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { addMocksToSchema } from '@graphql-tools/mock';
 
-import TestSchema from './test.schema.graphql';
+import TestSchema from './graphql/test.schema.graphql';
+
 import { HelloWorld, NonNull, NoParam, Nullable } from './schema';
 
 declare global {
@@ -61,7 +62,14 @@ export function makeClient(): ApolloClient<NormalizedCacheObject> {
   // Create the Apollo Client
   return new ApolloClient({
     connectToDevTools: false,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      // prevent warnings when testing mutations
+      typePolicies: {
+        NoParam: {
+          keyFields: ['noParam'],
+        },
+      },
+    }),
     link: new SchemaLink({ schema }),
     defaultOptions: {
       watchQuery: {

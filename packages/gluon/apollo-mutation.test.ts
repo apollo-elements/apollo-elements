@@ -1,9 +1,9 @@
 import type {
   ApolloClient,
+  ApolloError,
   ErrorPolicy,
   FetchPolicy,
   FetchResult,
-  MutationUpdaterFn,
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
@@ -11,27 +11,88 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 
 import { ApolloMutation } from './apollo-mutation';
 
-import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { describeMutation, setupMutationClass } from '@apollo-elements/test-helpers/mutation.test';
+import { html } from 'lit-html';
+import { nextFrame } from '@open-wc/testing';
+import { GluonElement } from '@gluon/gluon';
 
-import { html } from '@gluon/gluon';
-import {
-  assertType,
-  client,
-  isApolloError,
-  NoParamMutationData,
-} from '@apollo-elements/test-helpers';
-import { TemplateResult } from 'lit-html';
-import sinon from 'sinon';
+class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements MutationElement<D, V> {
+  #data: D = null;
+
+  #error: ApolloError = null;
+
+  #errors: readonly GraphQLError[] = null;
+
+  #loading = false;
+
+  #called = false;
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get data() { return this.#data; }
+
+  set data(v: D) { this.#data = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get error() { return this.#error; }
+
+  set error(v: ApolloError) { this.#error = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get errors() { return this.#errors; }
+
+  set errors(v: readonly GraphQLError[]) { this.#errors = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get loading() { return this.#loading; }
+
+  set loading(v: boolean) { this.#loading = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get called() { return this.#called; }
+
+  set called(v: boolean) { this.#called = v; this.render(); }
+
+  get template() {
+    return html`
+      <output id="called">${this.stringify(this.called)}</output>
+      <output id="data">${this.stringify(this.data)}</output>
+      <output id="error">${this.stringify(this.error)}</output>
+      <output id="errors">${this.stringify(this.errors)}</output>
+      <output id="loading">${this.stringify(this.loading)}</output>
+    `;
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+
+  async hasRendered() {
+    await this.render();
+    await nextFrame();
+    return this;
+  }
+}
+
+describe('[gluon] ApolloMutation', function() {
+  describeMutation({
+    class: TestableApolloMutation,
+    setupFunction: setupMutationClass(TestableApolloMutation),
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
-  async render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
+    assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -75,82 +136,3 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-describe('[gluon] ApolloMutation', function describeApolloMutation() {
-  it('caches observed properties', async function cachesObserveProperties() {
-    class Test extends ApolloMutation<unknown, unknown> {
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    const err = new Error('error');
-
-    const client = null;
-
-    const mutation = NoParamMutation;
-
-    el.called = true;
-    expect(el.called, 'called').to.be.true;
-
-    el.client = client;
-    expect(el.client, 'client').to.equal(client);
-
-    el.data = 'data';
-    expect(el.data, 'data').to.equal('data');
-
-    el.error = err;
-    expect(el.error, 'error').to.equal(err);
-
-    el.loading = true;
-    expect(el.loading, 'loading').to.be.true;
-
-    el.mutation = mutation;
-    expect(el.mutation, 'mutation').to.equal(mutation);
-  });
-
-  it('renders on set "called"', async function() {
-    class Test extends ApolloMutation<unknown, unknown> {
-      get template() {
-        return html`${this.called}`;
-      }
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    element.called = true;
-
-    await element.render();
-
-    expect(element).shadowDom.to.equal('true');
-  });
-
-  it('allows passing custom update function', async function customUpdate() {
-    const mutation = NoParamMutation;
-
-    class Test extends ApolloMutation<NoParamMutationData, unknown> {
-      client = client;
-
-      mutation = mutation;
-
-      get template(): TemplateResult {
-        return html`${JSON.stringify(this.data || {}, null, 2)}`;
-      }
-
-      updater(): void { '💩'; }
-    }
-
-    const tagName = defineCE(Test);
-    const update = sinon.stub() as MutationUpdaterFn;
-    const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    const clientSpy = sinon.spy(element.client, 'mutate');
-    await element.mutate({ update });
-    expect(clientSpy).to.have.been.calledWith(sinon.match({ update }));
-    clientSpy.restore();
-  });
-});
