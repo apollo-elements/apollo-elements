@@ -7,20 +7,91 @@ import type {
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
+import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
 
-import { unsafeStatic, fixture, expect, html as fhtml } from '@open-wc/testing';
+import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
+import { FASTElement, customElement, DOM, html } from '@microsoft/fast-element';
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { describeSubscription } from '@apollo-elements/test-helpers/subscription.test';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { FASTElement, customElement } from '@microsoft/fast-element';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+
+const template = html<TestableApolloSubscription>`
+  <output id="data">${x => x.stringify(x.data)}</output>
+  <output id="error">${x => x.stringify(x.error)}</output>
+  <output id="loading">${x => x.stringify(x.loading)}</output>
+`;
+
+@customElement({ name: 'testable-apollo-subscription', template })
+class TestableApolloSubscription<D = unknown, V = unknown>
+  extends ApolloSubscription<D, V>
+  implements SubscriptionElement<D, V> {
+  async hasRendered() {
+    await nextFrame();
+    await DOM.nextUpdate();
+    await nextFrame();
+    await aTimeout(50);
+    return this;
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+}
+
+let counter = 1;
+
+describe('[fast] ApolloSubscription', function() {
+  describeSubscription({
+    async setupFunction<T extends SubscriptionElement>(opts?: SetupOptions<T>) {
+      const name = `fast-setup-function-element-${counter++}`;
+
+      @customElement({ name, template })
+      class Test extends TestableApolloSubscription { }
+
+      const attrs = opts?.attributes ? ` ${opts.attributes}` : '';
+      const innerHTML = opts?.innerHTML ?? '';
+
+      const spies = Object.fromEntries((opts?.spy ?? []).map(key =>
+        [key, spy(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonSpy>;
+
+      const stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
+        [key, stub(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonStub>;
+
+      const element = await fixture<T>(
+        `<${name}${attrs}>${innerHTML}</${name}>`);
+
+      for (const [key, val] of Object.entries(opts?.properties ?? {}))
+        element[key] = val;
+
+      await DOM.nextUpdate();
+
+      return { element, spies, stubs };
+    },
+  });
+
+  describe('subclassing', function() {
+    it('is an instance of FASTElement', async function() {
+      const name = 'is-an-instance-of-f-a-s-t-element';
+      @customElement({ name })
+      class Klass extends TestableApolloSubscription { }
+      const el = await fixture<Klass>(`<${name}></${name}>`);
+      expect(el).to.be.an.instanceOf(FASTElement);
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
+    assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -52,35 +123,3 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-class Test extends ApolloSubscription<unknown, unknown> {
-  set thing(v: unknown) {
-    // Check for FASTElement interface
-    this.$emit('thing', v);
-    // Check for HTMLElement interface
-    this.dispatchEvent(new CustomEvent('thing', { detail: { thing: v } }));
-  }
-}
-
-describe('[fast] ApolloSubscription', function describeApolloSubscription() {
-  it('is an instance of FASTElement', async function() {
-    const name = 'is-an-instance-of-f-a-s-t-element';
-    @customElement({ name }) class Klass extends Test {}
-    const tag = unsafeStatic(name);
-    const el = await fixture<Klass>(fhtml`<${tag}></${tag}>`);
-    expect(el).to.be.an.instanceOf(FASTElement);
-  });
-
-  it('defines default properties', async function definesObserveProperties() {
-    const name = 'defines-default-properties';
-    const tag = unsafeStatic(name);
-    @customElement({ name }) class Klass extends Test {}
-    const el = await fixture<Klass>(fhtml`<${tag}></${tag}>`);
-    expect(el.data, 'data').to.be.null;
-    expect(el.error, 'error').to.be.null;
-    expect(el.errors, 'error').to.be.null;
-    expect(el.loading, 'loading').to.be.false;
-    expect(el.subscription, 'subscription').to.be.null;
-    expect(el.client, 'client').to.equal(window.__APOLLO_CLIENT__);
-  });
-});

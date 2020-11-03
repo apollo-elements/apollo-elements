@@ -1,31 +1,17 @@
-import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
-import type Sinon from 'sinon';
+import type { SinonSpy, SinonStub } from 'sinon';
+import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
 
-import { aTimeout, expect, nextFrame } from '@open-wc/testing';
+import { aTimeout, nextFrame } from '@open-wc/testing';
 
-import NonNullableParamQuery from '@apollo-elements/test-helpers/NonNullableParam.query.graphql';
-import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
-import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
-import NullableParamQuery from '@apollo-elements/test-helpers/NullableParam.query.graphql';
+import { stub, spy } from 'sinon';
 
-import {
-  setupClient,
-  teardownClient,
-  isSubscription,
-  NonNullableParamQueryData,
-  NonNullableParamQueryVariables,
-} from '@apollo-elements/test-helpers';
-
-import { match, stub, spy } from 'sinon';
-
-import { define, html } from 'hybrids';
+import { define, html, Hybrids } from 'hybrids';
 
 import { ApolloQuery } from './apollo-query';
 
 import 'sinon-chai';
 
-import gql from 'graphql-tag';
-import { ApolloQueryElement } from './factories/query';
+import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
 
 let counter = 0;
 
@@ -35,481 +21,69 @@ function getTagName(): string {
   return tagName;
 }
 
-const basicRender =
-  <D = unknown, V = unknown>(host: ApolloQueryElement<D, V>): ReturnType<typeof html> =>
-    html`${JSON.stringify(host.data, null, 2)}`;
+function render<D = unknown, V = unknown>(host: QueryElement<D, V>): ReturnType<typeof html> {
+  return html`
+    <output id="data">${host.stringify(host.data)}</output>
+    <output id="error">${host.stringify(host.error)}</output>
+    <output id="errors">${host.stringify(host.errors)}</output>
+    <output id="loading">${host.stringify(host.loading)}</output>
+    <output id="networkStatus">${host.stringify(host.networkStatus)}</output>
+  `;
+}
 
-describe('[hybrids] ApolloQuery', function describeApolloQueryMixin() {
-  let element: ApolloQueryElement;
-  let render = basicRender;
+describe('[hybrids] ApolloQuery', function() {
+  describeQuery({
+    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>): Promise<SetupResult<T>> {
+      const { attributes, properties, innerHTML = '' } = opts ?? {};
 
-  function setupElement(properties = {}, innerHTML = '') {
-    const container = document.createElement('div');
-    const tag = getTagName();
-    define(tag, { ...ApolloQuery, render });
-    container.innerHTML = `<${tag}>${innerHTML}</${tag}>`;
-    const [element] = container.children as HTMLCollectionOf<ApolloQueryElement>;
-    document.body.appendChild(element);
-    // console.log(element.client);
-    const update = render(Object.assign(element, properties));
-    update({ ...element, ...properties }, container);
+      const tag = getTagName();
 
-    return element;
-  }
+      const stringify =
+        host => x => JSON.stringify(x, null, 2);
 
-  function setupFixture() {
-    element = setupElement();
-  }
+      const hasRendered =
+        host => async () => await aTimeout(50);
 
-  function teardownFixture() {
-    window.__APOLLO_CLIENT__ = undefined;
-    element?.remove?.();
-    element = undefined;
-    render = basicRender;
-  }
+      define<T>(tag, {
+        ...ApolloQuery,
+        stringify,
+        hasRendered,
+        render,
+      } as Hybrids<T>);
 
-  /* Spies */
+      const attrs = attributes ? ` ${attributes}` : '';
 
-  let observableQuerySubscribeToMoreSpy: Sinon.SinonSpy;
+      const template = document.createElement('template');
 
-  let refetchSpy: Sinon.SinonSpy;
+      template.innerHTML = `<${tag}${attrs}></${tag}>`;
 
-  let observableQueryFetchMoreSpy: Sinon.SinonSpy;
+      const [element] =
+    (template.content.cloneNode(true) as DocumentFragment)
+      .children as HTMLCollectionOf<T>;
 
-  let observableQuerySetOptionsSpy: Sinon.SinonSpy;
+      let spies: Record<string|keyof T, SinonSpy>;
+      let stubs: Record<string|keyof T, SinonStub>;
 
-  function spyRefetch() {
-    refetchSpy = spy(element.observableQuery, 'refetch');
-  }
+      // @ts-expect-error: gotta hook up the spies somehow
+      element.__testingEscapeHatch = function(el) {
+        spies = Object.fromEntries((opts?.spy ?? []).map(key =>
+          [key, spy(el, key)])) as Record<string|keyof T, SinonSpy>;
+        stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
+          [key, stub(el, key)])) as Record<string | keyof T, SinonStub>;
+      };
 
-  function restoreRefetch() {
-    refetchSpy.restore();
-  }
+      document.body.append(element);
 
-  function spyObservableQuerySubscribeToMore() {
-    observableQuerySubscribeToMoreSpy = stub(element.observableQuery, 'subscribeToMore');
-  }
-
-  function restoreObservableQuerySubscribeToMore() {
-    observableQuerySubscribeToMoreSpy.restore();
-  }
-
-  function spyObservableQueryFetchMore() {
-    observableQueryFetchMoreSpy = stub(element.observableQuery, 'fetchMore');
-  }
-
-  function restoreObservableQueryFetchMore() {
-    observableQueryFetchMoreSpy.restore();
-  }
-
-  function spyObservableQuerySetOptions() {
-    observableQuerySetOptionsSpy = stub(element.observableQuery, 'setOptions');
-  }
-
-  function restoreObservableQuerySetOptions() {
-    observableQuerySetOptionsSpy.restore();
-  }
-
-  /* Queries and Variables */
-
-  function setNullableParamQuery() {
-    element.query = NullableParamQuery;
-  }
-
-  function setNullableParamVariables() {
-    element.variables = { nullable: 'nullable' };
-  }
-
-  function setNonNullableParamQuery() {
-    element.query = NonNullableParamQuery;
-  }
-
-  function setInsufficientNonNullableQueryVariables() {
-    element.variables = {};
-  }
-
-  function setSufficientNonNullableQueryVariables() {
-    element.variables = { nonNull: 'nonNull' };
-  }
-
-  function setErrorNonNullableQueryVariables() {
-    element.variables = { nonNull: 'error' };
-  }
-
-  async function setNoParamQuery() {
-    element.query = NoParamQuery;
-  }
-
-  function setNoAutoSubscribe() {
-    element.noAutoSubscribe = true;
-  }
-
-  beforeEach(setupClient);
-  beforeEach(setupFixture);
-  afterEach(teardownFixture);
-  afterEach(teardownClient);
-
-  it('sets default properties', async function setsDefaultProperties() {
-    expect(element.data, 'data').to.be.null;
-    expect(element.error, 'error').to.be.null;
-    expect(element.errors, 'errors').to.be.null;
-    expect(element.errorPolicy, 'errorPolicy').to.equal('none');
-    expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
-    expect(element.networkStatus, 'networkStatus').to.be.undefined;
-    expect(element.nextFetchPolicy, 'nextFetchPolicy').to.be.undefined;
-    expect(element.noAutoSubscribe, 'noAutoSubscribe').to.be.false;
-    expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
-    expect(element.observableQuery, 'observableQuery').to.be.undefined;
-    expect(element.onData, 'onData').to.be.undefined;
-    expect(element.onError, 'onError').to.be.undefined;
-    expect(element.options, 'options').to.be.null;
-    expect(element.partial, 'partial').to.be.undefined;
-    expect(element.partialRefetch, 'partialRefetch').to.be.undefined;
-    expect(element.pollInterval, 'pollInterval').to.be.undefined;
-    expect(element.query, 'query').to.be.null;
-    expect(element.returnPartialData, 'returnPartialData').to.be.undefined;
-    expect(element.variables, 'variables').to.be.null;
-    expect(element.refetch, 'refetch').to.be.an.instanceOf(Function);
-  });
-
-  describe('when window.__APOLLO_CLIENT__ is set', function() {
-    beforeEach(teardownFixture);
-    beforeEach(teardownClient);
-    beforeEach(() => {
-      // @ts-expect-error: just checking the assignment;
-      window.__APOLLO_CLIENT__ = {};
-    });
-    beforeEach(setupFixture);
-    it('uses global client', async function defaultsToGlobalClient() {
-      expect(element.client).to.equal(window.__APOLLO_CLIENT__);
-    });
-  });
-
-  describe('query property', function() {
-    it('subscribes on set', async function subscribeOnSetQuery() {
-      expect(element.observableQuery).to.not.be.ok;
-
-      element.query = NoParamQuery;
-
-      expect(element.observableQuery).to.be.ok;
-    });
-
-    it('accepts a script child on connect', async function scriptChild() {
-      teardownFixture();
-      const script = NoParamQuery.loc.source.body;
-
-      const innerHTML = `
-        <script type="application/graphql">
-          ${script}
-        </script>
-      `;
-
-      element = setupElement({}, innerHTML);
-
-      expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-
-      expect(element.query).to.deep.equal(gql(script));
-    });
-
-    it('accepts a parsed query', async function parsedQuery() {
-      expect(element.query).to.be.null;
-      expect(element.observableQuery).to.not.be.ok;
-
-      element.query = NoParamQuery;
-
-      expect(element.query, 'set query').to.equal(NoParamQuery);
-      expect(element.observableQuery, 'get observableQuery').to.be.ok;
-    });
-
-    it('rejects a bad query', async function badQuery() {
-      const query = `query { noParam }`;
-
-      // @ts-expect-error: checking error
-      expect(() => element.query = query).to.throw('Query must be a gql-parsed DocumentNode');
-      expect(element.query).to.be.null;
-      expect(element.observableQuery).to.not.be.ok;
-    });
-
-    it('observes children for addition of query script', async function() {
-      const doc = NoParamQuery.loc.source.body;
-
-      expect(element.query).to.be.null;
-
-      element.innerHTML = `<script type="application/graphql">${doc}</script>`;
-
-      await aTimeout(100);
-
-      const { query } = element;
-
-      expect(query).to.deep.equal(gql(doc));
-    });
-
-    it('does not change document for invalid children', async function() {
-      const doc = `query { noParam }`;
-
-      expect(element.query).to.be.null;
-
-      element.innerHTML = `<script>${doc}</script>`;
+      for (const [key, val] of Object.entries(properties ?? {}))
+        element[key] = val;
 
       await nextFrame();
-    });
-  });
 
-  describe('setting options', function describeSetOptions() {
-    function setOptions() {
-      element.options = { query: null, errorPolicy: 'none' };
-    }
+      element.innerHTML = innerHTML;
 
-    beforeEach(setOptions);
+      await nextFrame();
 
-    describe('when there is no query', function() {
-      it('does nothing when there is no observableQuery', async function setOptionsNoQuery() {
-        element.options = { query: null, errorPolicy: 'none' };
-        expect(element.options).to.deep.equal({ query: null, errorPolicy: 'none' });
-      });
-    });
-
-    describe('when there is a query', function() {
-      beforeEach(setNoParamQuery);
-      beforeEach(spyObservableQuerySetOptions);
-      afterEach(restoreObservableQuerySetOptions);
-
-      it('calls observableQuery.subscribe', async function() {
-        element.options = { query: null, errorPolicy: 'none' };
-        expect(observableQuerySetOptionsSpy)
-          .to.have.been.calledWithMatch({ query: null, errorPolicy: 'none' });
-      });
-    });
-  });
-
-  describe('setting variables', function describeSetVariables() {
-    describe('without observableQuery', function() {
-      beforeEach(setNullableParamVariables);
-      it('does nothing', async function setVariablesNoQuery() {
-        expect(element.variables).to.deep.equal({ nullable: 'nullable' });
-      });
-    });
-
-    // classMethod factory is breaking sinon spies
-    describe('with an observableQuery', function() {
-      beforeEach(setNullableParamQuery);
-      beforeEach(spyRefetch);
-      beforeEach(setNullableParamVariables);
-      afterEach(restoreRefetch);
-      it('calls refetch', async function() {
-        expect(refetchSpy).to.have.been.calledWithMatch({ nullable: 'nullable' });
-      });
-    });
-  });
-
-  describe('subscribe', function describeSubscribe() {
-    beforeEach(setNoAutoSubscribe);
-    beforeEach(setNonNullableParamQuery);
-
-    describe('with insufficient variables', function() {
-      beforeEach(setInsufficientNonNullableQueryVariables);
-      beforeEach(nextFrame);
-
-      it('fails to query', async function subscribeNotEnoughVariables() {
-        expect(element.data).to.be.null;
-        expect(element.error).to.be.null;
-
-        expect(element.subscribe()).to.be.ok;
-
-        await nextFrame();
-
-        expect(element.data, 'error').to.be.null;
-        expect(element.error.message)
-          .to.equal('Variable "$nonNull" of required type "String!" was not provided.');
-      });
-    });
-
-    describe('with sufficient variables', function() {
-      beforeEach(setSufficientNonNullableQueryVariables);
-      beforeEach(() => element.subscribe());
-      beforeEach(nextFrame);
-
-      it('queries', async function subscribeEnoughVariables() {
-        expect(element.data)
-          .to.deep.equal({ nonNullParam: { __typename: 'NonNull', nonNull: 'nonNull' } });
-        expect(element.error).to.be.null;
-      });
-
-      it('creates an observableQuery', async function subscribeCreatesObservableQuery() {
-        expect(element.observableQuery).to.be.ok;
-      });
-
-      it('creates a subscription', async function subscribeReturnsSubscription() {
-        expect(isSubscription(element.subscribe())).to.be.true;
-      });
-    });
-
-    describe('with a GraphQL error', function() {
-      beforeEach(setNoAutoSubscribe);
-      beforeEach(setErrorNonNullableQueryVariables);
-      beforeEach(() => element.subscribe());
-      beforeEach(nextFrame);
-
-      it('sets element error', async function bindsErrorToError() {
-        expect(element.error.message).to.equal('error');
-      });
-    });
-  });
-
-  describe('subscribeToMore', function describeSubscribeToMore() {
-    describe('without a query', function() {
-      it('does nothing', async function subscribeToMoreNoQuery() {
-        expect(element.subscribeToMore(null)).to.be.undefined;
-      });
-    });
-
-    describe('with a query and sufficient variables', function() {
-      beforeEach(setNoParamQuery);
-      beforeEach(nextFrame);
-      beforeEach(spyObservableQuerySubscribeToMore);
-      beforeEach(nextFrame);
-      afterEach(restoreObservableQuerySubscribeToMore);
-      it('calls observableQuery.subscribeToMore when there is a query', async function() {
-        const opts = {
-          document: NoParamSubscription,
-          updateQuery: <T>(x: T): T => x,
-        };
-
-        expect(element.subscribeToMore(opts)).to.be.undefined;
-
-        expect(observableQuerySubscribeToMoreSpy).to.have.been.calledWithMatch(opts);
-      });
-    });
-  });
-
-  describe('executeQuery', function describeExecuteQuery() {
-    describe('with insufficient variables on element', function() {
-      beforeEach(setNoAutoSubscribe);
-      beforeEach(async function() {
-        element.query = NonNullableParamQuery;
-      });
-
-      describe('when calling with variables', function() {
-        beforeEach(async function() {
-          type D = NonNullableParamQueryData;
-          type V = NonNullableParamQueryVariables;
-
-          await (element as ApolloQueryInterface<D, V>)
-            .executeQuery({ variables: { nonNull: 'nonNull' } });
-        });
-
-        it('queries with element properties', async function callsClientQuery() {
-          expect(element.data).to.deep.equal({
-            nonNullParam: {
-              __typename: 'NonNull',
-              nonNull: 'nonNull',
-            },
-          });
-          expect(element.error, 'error').to.be.null;
-          expect(element.loading).to.be.false;
-          expect(element.partial).to.not.be.ok;
-          expect(element.networkStatus).to.equal(7);
-        });
-      });
-    });
-
-    describe('with variables set on element', function() {
-      beforeEach(async function() {
-        element.variables = { nonNull: 'nonNull' };
-      });
-
-      describe('calling with a query param', function() {
-        beforeEach(async function() {
-          await element.executeQuery({ query: NonNullableParamQuery });
-        });
-
-        it('queries', async function() {
-          expect(element.data).to.deep.equal({
-            nonNullParam: {
-              __typename: 'NonNull',
-              nonNull: 'nonNull',
-            },
-          });
-        });
-      });
-    });
-  });
-
-  describe('fetchMore', function describeFetchMore() {
-    describe('without a query', function() {
-      it('does nothing', async function fetchMoreNoQuery() {
-        expect(element.fetchMore()).to.be.undefined;
-        expect(element.observableQuery).to.be.undefined;
-      });
-    });
-
-    describe('with a query', function() {
-      beforeEach(setNoParamQuery);
-      beforeEach(spyObservableQueryFetchMore);
-      afterEach(restoreObservableQueryFetchMore);
-      it('calls observableQuery.fetchMore', async function() {
-        const args = { query: NoParamQuery, updateQuery: <T>(x: T): T => x };
-
-        expect(element.fetchMore(args)).to.be.undefined;
-
-        expect(observableQueryFetchMoreSpy).to.have.been.calledWith(match(args));
-      });
-    });
-  });
-
-  describe('watchQuery', function describeWatchQuery() {
-    describe('without a query set on the element', function() {
-      describe('calling with a query', function() {
-        it('creates an ObservableQuery with the passed query', function callsClientWatchQuery() {
-          const oq = element.watchQuery({ query: NoParamQuery });
-          expect(oq.options.query).to.equal(NoParamQuery);
-        });
-      });
-    });
-
-    describe('with a query set on the element', function() {
-      beforeEach(setNoParamQuery);
-      describe('calling with a query', function() {
-        it('creates an ObservableQuery with the passed query', function callsClientWatchQuery() {
-          const oq = element.watchQuery({ query: NoParamQuery });
-          expect(oq.options.query).to.equal(NoParamQuery);
-        });
-      });
-    });
-  });
-
-  describe('receiving data', function describeNextData() {
-    beforeEach(setNoParamQuery);
-    beforeEach(nextFrame);
-
-    it('assigns to host\'s data property', async function dataAssigned() {
-      expect(element.data).to.deep.equal({
-        noParam: {
-          __typename: 'NoParam',
-          noParam: 'noParam',
-        },
-      });
-    });
-
-    it('assigns to host\'s loading property', async function loadingAssigned() {
-      expect(element.loading).to.equal(false);
-    });
-
-    it('assigns to host\'s networkStatus property', async function networkStatusAssigned() {
-      expect(element.networkStatus).to.equal(7);
-    });
-
-    it('assigns to host\'s partial property', async function partialAssigned() {
-      expect(element.partial).to.be.undefined;
-    });
-  });
-
-  describe('receiving error', function describeNextError() {
-    beforeEach(setNonNullableParamQuery);
-    beforeEach(setErrorNonNullableQueryVariables);
-    beforeEach(nextFrame);
-    it('assigns to host\'s error property', async function errorAssigned() {
-      expect(element.error).to.be.ok;
-    });
+      return { element, spies, stubs };
+    },
   });
 });

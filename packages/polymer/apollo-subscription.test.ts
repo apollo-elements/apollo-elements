@@ -1,3 +1,5 @@
+import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
+
 import type {
   ApolloClient,
   FetchPolicy,
@@ -6,20 +8,153 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import { fixture, html, expect, oneEvent } from '@open-wc/testing';
+import { fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
-import './apollo-subscription';
-import { client } from '../test-helpers/client';
+import { setupClient, teardownClient } from '../test-helpers/client';
+
+import {
+  describeSubscription,
+  setupSubscriptionClass,
+} from '@apollo-elements/test-helpers/subscription.test';
 
 import { PolymerApolloSubscription } from './apollo-subscription';
 import { DocumentNode, GraphQLError } from 'graphql';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { html, PolymerElement } from '@polymer/polymer';
+
+import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
+
+import './apollo-subscription';
+
+class TestableApolloSubscription<D, V>
+  extends PolymerApolloSubscription<D, V>
+  implements SubscriptionElement<D, V> {
+  static get template() {
+    const template = document.createElement('template');
+    template.innerHTML = /* html */`
+      <output id="data"></output>
+      <output id="error"></output>
+      <output id="loading"></output>
+    `;
+    return template;
+  }
+
+  $(id: keyof TestableApolloSubscription<D, V>) { return this.shadowRoot.getElementById(id); }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(TestableApolloSubscription.template.content.cloneNode(true));
+    this.addEventListener('data-changed', this.render);
+    this.addEventListener('error-changed', this.render);
+    this.addEventListener('loading-changed', this.render);
+  }
+
+  render() {
+    this.$('data').textContent = this.stringify(this.data);
+    this.$('error').textContent = this.stringify(this.error);
+    this.$('loading').textContent = this.stringify(this.loading);
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+
+  async hasRendered() {
+    await nextFrame();
+    return this;
+  }
+}
+
+describe('[polymer] <apollo-subscription>', function() {
+  describeSubscription({
+    class: TestableApolloSubscription,
+    setupFunction: setupSubscriptionClass(TestableApolloSubscription),
+  });
+
+  describe('notifying properties', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
+    let element: PolymerApolloSubscription<unknown, unknown>;
+
+    beforeEach(async function() {
+      element = await fixture<typeof element>(`<apollo-subscription></apollo-subscription>`);
+    });
+
+    it('notifies on data change', async function() {
+      const data = { messages: ['hi'] };
+      setTimeout(() => element.data = data);
+      const { detail: { value } } = await oneEvent(element, 'data-changed');
+      expect(value).to.deep.equal(data);
+    });
+
+    it('notifies on error change', async function() {
+      const err = new Error('error');
+      setTimeout(() => element.error = err);
+      const { detail: { value } } = await oneEvent(element, 'error-changed');
+      expect(value).to.equal(err);
+    });
+
+    it('notifies on errors change', async function() {
+      const errs = [new GraphQLError('error')];
+      setTimeout(() => element.errors = errs);
+      const { detail: { value } } = await oneEvent(element, 'errors-changed');
+      expect(value).to.equal(errs);
+    });
+
+    it('notifies on loading change', async function() {
+      setTimeout(() => element.loading = true);
+      const { detail: { value } } = await oneEvent(element, 'loading-changed');
+      expect(value).to.be.true;
+    });
+
+    describe('when used in a Polymer template', function() {
+      let wrapper: PolymerElement;
+      class WrapperElement extends PolymerElement {
+        static get properties() {
+          return {
+            subscription: {
+              type: Object,
+              value: () => NullableParamSubscription,
+            },
+            variables: {
+              type: Object,
+              value: () => ({ nullable: '🤡' }),
+            },
+          };
+        }
+
+        static get template() {
+          return html`
+          <apollo-subscription
+              subscription="[[subscription]]"
+              variables="[[variables]]"
+              data="{{data}}"
+          ></apollo-subscription>
+
+          <output>[[data.nullableParam.nullable]]</output>
+        `;
+        }
+      }
+
+      beforeEach(async function() {
+        const tag = defineCE(WrapperElement);
+        wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
+      });
+
+      it('binds data up into parent component', async function() {
+        expect(wrapper.shadowRoot.textContent).to.contain('🤡');
+      });
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+    assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -51,74 +186,3 @@ class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-describe('[polymer] <apollo-subscription>', function() {
-  it('caches observed properties', async function() {
-    const el = await fixture<PolymerApolloSubscription<unknown, unknown>>(html`
-      <apollo-subscription
-      ></apollo-subscription>
-    `);
-
-    const err = new Error('error');
-
-    el.data = 'data';
-    expect(el.data, 'data').to.equal('data');
-
-    el.error = err;
-    expect(el.error, 'error').to.equal(err);
-
-    el.loading = true;
-    expect(el.loading, 'loading').to.equal(true);
-  });
-
-  it('notifies on data change', async function() {
-    const el = await fixture<PolymerApolloSubscription<unknown, unknown>>(html`
-      <apollo-subscription
-          .client="${client}"
-      ></apollo-subscription>
-    `);
-
-    const data = { messages: ['hi'] };
-    setTimeout(() => el.data = data);
-    const { detail: { value } } = await oneEvent(el, 'data-changed');
-    expect(value).to.deep.equal(data);
-  });
-
-  it('notifies on error change', async function() {
-    const el = await fixture<PolymerApolloSubscription<unknown, unknown>>(html`
-      <apollo-subscription
-          .client="${client}"
-      ></apollo-subscription>
-    `);
-
-    const err = new Error('error');
-    setTimeout(() => el.error = err);
-    const { detail: { value } } = await oneEvent(el, 'error-changed');
-    expect(value).to.equal(err);
-  });
-
-  it('notifies on errors change', async function() {
-    const el = await fixture<PolymerApolloSubscription<unknown, unknown>>(html`
-      <apollo-subscription
-          .client="${client}"
-      ></apollo-subscription>
-    `);
-
-    const errs = [new GraphQLError('error')];
-    setTimeout(() => el.errors = errs);
-    const { detail: { value } } = await oneEvent(el, 'errors-changed');
-    expect(value).to.equal(errs);
-  });
-
-  it('notifies on loading change', async function() {
-    const el = await fixture<PolymerApolloSubscription<unknown, unknown>>(html`
-      <apollo-subscription
-          .client="${client}"
-      ></apollo-subscription>
-    `);
-
-    setTimeout(() => el.loading = true);
-    const { detail: { value } } = await oneEvent(el, 'loading-changed');
-    expect(value).to.be.true;
-  });
-});

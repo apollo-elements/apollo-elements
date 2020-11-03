@@ -43,10 +43,9 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
    * @element
    */
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
-  class ApolloElement<
-    TData = unknown,
-    TVariables = unknown
-  > extends superclass implements ApolloElementInterface<TData, TVariables> {
+  class ApolloElement<TData = unknown, TVariables = unknown>
+    extends superclass
+    implements ApolloElementInterface<TData, TVariables> {
     static documentType = 'document';
 
     declare context?: Record<string, unknown>;
@@ -95,16 +94,6 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
         if (this.mo) // element is connected
           this.documentChanged?.(document);
       }
-    }
-
-    constructor() {
-      super();
-
-      this.data = null;
-      this.variables = null;
-      this.error = null;
-      this.errors = null;
-      this.loading = false;
     }
 
     /**
@@ -195,6 +184,35 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
   }
 
   Object.defineProperties(ApolloElement.prototype, {
+
+    data: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: null,
+    },
+
+    error: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: null,
+    },
+
+    errors: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: null,
+    },
+
+    loading: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: false,
+    },
+
     variables: {
       configurable: true,
       enumerable: true,

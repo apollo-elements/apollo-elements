@@ -3,25 +3,26 @@ import type {
   ErrorPolicy,
   FetchPolicy,
   FetchResult,
-  MutationUpdaterFn,
   NormalizedCacheObject,
 } from '@apollo/client/core';
+
+import type {
+  NonNullableParamMutationData,
+  NonNullableParamMutationVariables,
+  SetupOptions,
+} from '@apollo-elements/test-helpers';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { unsafeStatic, fixture, expect, html as fhtml } from '@open-wc/testing';
-import sinon from 'sinon';
-import 'sinon-chai';
+import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
+
+import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+
 import {
-  client,
   setupClient,
   teardownClient,
-  NoParamMutationData,
-  NonNullableParamMutationData,
-  NonNullableParamMutationVariables,
-  NoParamMutationVariables,
   isApolloError,
   assertType,
 } from '@apollo-elements/test-helpers';
@@ -29,12 +30,142 @@ import {
 import { ApolloMutation } from './apollo-mutation';
 import { FASTElement, html, customElement, DOM } from '@microsoft/fast-element';
 
-import NoParamMutation from '../test-helpers/NoParam.mutation.graphql';
+import { MutationElement, describeMutation } from '@apollo-elements/test-helpers/mutation.test';
+
+import 'sinon-chai';
+
+const template = html<TestableApolloMutation>`
+  <output id="called">${x => x.stringify(x.called)}</output>
+  <output id="data">${x => x.stringify(x.data)}</output>
+  <output id="error">${x => x.stringify(x.error)}</output>
+  <output id="errors">${x => x.stringify(x.errors)}</output>
+  <output id="loading">${x => x.stringify(x.loading)}</output>
+`;
+
+let counter = -1;
+
+@customElement({ name: 'fast-testable-apollo-mutation-class', template })
+class TestableApolloMutation<D = unknown, V = unknown>
+  extends ApolloMutation<D, V>
+  implements MutationElement<D, V> {
+  async hasRendered() {
+    await nextFrame();
+    await DOM.nextUpdate();
+    await nextFrame();
+    await aTimeout(50);
+    return this;
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+}
+
+describe('[fast] ApolloMutation', function describeApolloMutation() {
+  describeMutation({
+    async setupFunction<T extends MutationElement>(options: SetupOptions<T> = {}) {
+      const name = `fast-setup-function-element-${counter++}`;
+
+      const { properties, attributes, innerHTML = '' } = options;
+
+      @customElement({ name, template })
+      class Test extends TestableApolloMutation { }
+
+      const attrs = attributes ? ` ${attributes}` : '';
+
+      // for mutation components, which don't fetch on connect,
+      // and have optional instance callbacks,
+      // we must ensure spies are created *after* properties are applied
+      if (properties?.onCompleted)
+        Test.prototype.onCompleted = properties.onCompleted as unknown as Test['onCompleted'];
+
+      if (properties?.onError)
+        Test.prototype.onError = properties.onError as unknown as Test['onError'];
+
+      const element = await fixture<T>(`<${name}${attrs}>${innerHTML}</${name}>`);
+
+      const spies = Object.fromEntries((options?.spy ?? []).map(method =>
+        [method, spy(Test.prototype, method as keyof Test)])
+      ) as Record<keyof T | string, SinonSpy>;
+
+      const stubs = Object.fromEntries((options?.stub ?? []).map(method =>
+        [method, stub(Test.prototype, method as keyof Test)])
+      ) as Record<keyof T | string, SinonStub>;
+
+      for (const [key, val] of Object.entries(properties ?? {}))
+        key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
+
+      await DOM.nextUpdate();
+
+      return { element, spies, stubs };
+    },
+
+  });
+
+  describe('subclassing', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
+
+    it('is an instance of FASTElement', async function() {
+      const name = 'is-an-instance-of-f-a-s-t-element';
+      @customElement({ name })
+      class Test extends ApolloMutation<unknown, unknown> { }
+      const el = await fixture<Test>(`<${name}></${name}>`);
+      expect(el).to.be.an.instanceOf(FASTElement);
+    });
+
+    describe('refetchQueries', function() {
+      let element: Test;
+
+      class Test extends ApolloMutation<unknown, unknown> { }
+
+      describe(`when refetch-queries attribute set with comma-separated, badly-formatted query names`, function() {
+        beforeEach(async function() {
+          const name = `refetch-queries-attribute-${Date.now()}`;
+          @customElement({ name })
+          class Klass extends Test { }
+          element = await fixture<Klass>(`<${name} refetch-queries="A, B,C,    D"></${name}>`);
+          await DOM.nextUpdate();
+        });
+
+        it('sets the property as an array of query names', function() {
+          expect(element.refetchQueries)
+            .to.deep.equal(['A', 'B', 'C', 'D']);
+        });
+      }
+      );
+
+      describe(`when refetchQueries property set as array of query names`, function() {
+        const refetchQueries = ['A', 'B', 'C', 'D'];
+
+        beforeEach(async function setupElement() {
+          const name = `refetch-queries-property-${counter++}-${Math.floor(Math.random() * Date.now())}`;
+          @customElement({ name })
+          class Klass extends Test { }
+          element = await fixture<Klass>(`<${name}></${name}>`);
+        });
+
+        beforeEach(async function setRefetchQueries() {
+          element.refetchQueries = refetchQueries;
+          await DOM.nextUpdate();
+        });
+
+        it('sets the property as an array of query names', function() {
+          expect(element.refetchQueries).to.deep.equal(refetchQueries);
+        });
+
+        it('does not reflect', function() {
+          expect(element.getAttribute('refetch-queries')).to.be.null;
+        });
+      });
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
@@ -102,138 +233,3 @@ class TypeCheckProperty extends ApolloMutation<
 > {
   variables = { param: 'string' }
 }
-
-describe('[fast] ApolloMutation', function describeApolloMutation() {
-  beforeEach(setupClient);
-  afterEach(teardownClient);
-
-  it('is an instance of FASTElement', async function() {
-    const name = 'is-an-instance-of-f-a-s-t-element';
-    @customElement({ name }) class Test extends ApolloMutation<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-    expect(el).to.be.an.instanceOf(FASTElement);
-  });
-
-  it('renders when called is set', async function rendersOnCalled() {
-    const name = 'renders-when-called-is-set';
-    const template = html<Test>`${x => x.called ? 'CALLED' : 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloMutation<unknown, unknown> { }
-    const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .called="${true}"></${tag}>`);
-    expect(element).shadowDom.to.equal('CALLED');
-  });
-
-  it('uses element\'s updater method for mutation\'s `update` option by default', async function() {
-    const name = 'uses-elements-updater-1';
-    const template = html<Test>`${x => JSON.stringify(x.data ?? {}, null, 2)}`;
-    const mutation = NoParamMutation;
-
-    @customElement({ name, template })
-    class Test extends ApolloMutation<NoParamMutationData, NoParamMutationVariables> {
-      client = client;
-
-      mutation = mutation;
-
-      updater(): void { '💩'; }
-    }
-
-    const tag = unsafeStatic(name);
-
-    const element =
-      await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    const clientSpy =
-      sinon.spy(element.client, 'mutate');
-
-    await element.mutate();
-    expect(clientSpy).to.have.been.calledWith(sinon.match({ update: element.updater }));
-    clientSpy.restore();
-  });
-
-  it('allows passing custom update function', async function customUpdate() {
-    const name = 'allows-passing-custom-update-function';
-    const template = html<Test>`${x => JSON.stringify(x.data ?? {}, null, 2)}`;
-    const mutation = NoParamMutation;
-
-    @customElement({ name, template })
-    class Test extends ApolloMutation<NoParamMutationData, unknown> {
-      client = client;
-
-      mutation = mutation;
-
-      updater(): void { '💩'; }
-    }
-
-    const update = sinon.stub() as MutationUpdaterFn;
-    const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    const clientSpy = sinon.spy(element.client, 'mutate');
-    await element.mutate({ update });
-    expect(clientSpy).to.have.been.calledWith(sinon.match({ update }));
-    clientSpy.restore();
-  });
-
-  describe('refetchQueries', function() {
-    let element: Test;
-
-    class Test extends ApolloMutation<unknown, unknown> { }
-
-    describe(
-      'when refetch-queries attribute set with comma-separated, badly-formatted query names',
-      function() {
-        beforeEach(async function() {
-          const name = `refetch-queries-attribute-${Date.now()}`;
-          @customElement({ name }) class Klass extends Test { }
-
-          Klass;
-
-          const tag = unsafeStatic(name);
-
-          const attrVal = 'QueryA, QueryB,QueryC,    QueryD';
-
-          element =
-            await fixture<Test>(fhtml`<${tag} refetch-queries="${attrVal}"></${tag}>`);
-
-          await DOM.nextUpdate();
-        });
-
-        it('sets the property as an array of query names', function() {
-          expect(element.refetchQueries).to.deep.equal(['QueryA', 'QueryB', 'QueryC', 'QueryD']);
-        });
-      }
-    );
-
-    describe(
-      'when refetchQueries property set as array of query names',
-      function() {
-        beforeEach(async function() {
-          const name = `refetch-queries-property-${Math.floor(Math.random() * Date.now())}`;
-
-          @customElement({ name }) class Klass extends Test { }
-
-          Klass;
-
-          const tag = unsafeStatic(name);
-
-          element =
-            await fixture<Test>(fhtml`
-              <${tag}
-                  .refetchQueries="${['QueryA', 'QueryB', 'QueryC', 'QueryD']}"
-              ></${tag}>
-            `);
-
-          await DOM.nextUpdate();
-        });
-
-        it('sets the property as an array of query names', function() {
-          expect(element.refetchQueries).to.deep.equal(['QueryA', 'QueryB', 'QueryC', 'QueryD']);
-        });
-
-        it('does not reflect', function() {
-          expect(element.getAttribute('refetch-queries')).to.be.null;
-        });
-      });
-  });
-});

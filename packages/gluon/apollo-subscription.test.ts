@@ -1,30 +1,89 @@
 import type {
   ApolloClient,
+  ApolloError,
   FetchPolicy,
   FetchResult,
   Observable,
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type {
-  NoParamSubscriptionData as Data,
-  NoParamMutationVariables as Variables,
-} from '@apollo-elements/test-helpers/schema';
-
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { html } from 'lit-html';
+
+import { nextFrame } from '@open-wc/testing';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { setupClient, assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
-import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
+import {
+  describeSubscription,
+  setupSubscriptionClass,
+  SubscriptionElement,
+} from '@apollo-elements/test-helpers/subscription.test';
+
+import { GluonElement } from '@gluon/gluon';
+
+class TestableApolloSubscription<D = unknown, V = unknown>
+  extends ApolloSubscription<D, V>
+  implements SubscriptionElement<D, V> {
+  static get is() { return 'gluon-test-subscription-element'; }
+
+  #data: D = null;
+
+  #error: ApolloError = null;
+
+  #loading = false;
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get data() { return this.#data; }
+
+  set data(v: D) { this.#data = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get error() { return this.#error; }
+
+  set error(v: ApolloError) { this.#error = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get loading() { return this.#loading; }
+
+  set loading(v: boolean) { this.#loading = v; this.render(); }
+
+  get template() {
+    return html`
+      <output id="data">${this.stringify(this.data)}</output>
+      <output id="error">${this.stringify(this.error)}</output>
+      <output id="loading">${this.stringify(this.loading)}</output>
+    `;
+  }
+
+  $(id: keyof TestableApolloSubscription<D, V>) { return this.shadowRoot.getElementById(id); }
+
+  stringify(x: unknown) { return JSON.stringify(x, null, 2); }
+
+  async hasRendered() {
+    await nextFrame();
+    await this.render();
+    return this;
+  }
+}
+
+describe('[gluon] ApolloSubscription', function() {
+  describeSubscription({
+    class: TestableApolloSubscription,
+    setupFunction: setupSubscriptionClass(TestableApolloSubscription),
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
-  async render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
+    assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -56,65 +115,3 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-class Test extends ApolloSubscription<Data, Variables> {
-  static get is() { return 'gluon-test-subscription-element'; }
-}
-
-const err = new Error('error');
-
-describe('[gluon] ApolloSubscription', function describeApolloSubscription() {
-  let element: Test;
-  beforeEach(setupClient);
-
-  describe('simply instantiating', async function cachesObserveProperties() {
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test { }));
-
-      element = await fixture<Test>(html`<${tag}></${tag}>`);
-    });
-
-    it('has default properties', function() {
-      expect(element.data, 'data').to.be.null;
-      expect(element.variables, 'variables').to.be.null;
-      expect(element.subscription, 'subscription').to.be.null;
-      expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
-      expect(element.fetchResults, 'fetchResults').to.be.undefined;
-      expect(element.pollInterval, 'pollInterval').to.be.undefined;
-      expect(element.onSubscriptionData, 'onSubscriptionData').to.be.undefined;
-      expect(element.onError, 'onError').to.be.undefined;
-      expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.false;
-      expect(element.observable, 'observableQuery').to.be.undefined;
-    });
-
-    it('caches properties', function() {
-      const client = {} as typeof window.__APOLLO_CLIENT__;
-      element.client = client;
-      expect(element.client, 'client').to.equal(client);
-
-      const data = { messageSent: { message: null } };
-      element.data = data;
-      expect(element.data, 'data').to.deep.equal(data);
-
-      element.error = err;
-      expect(element.error, 'error').to.equal(err);
-
-      element.loading = true;
-      expect(element.loading, 'loading').to.be.true;
-    });
-  });
-
-  describe('with a subscription', function() {
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {
-        subscription = NoParamSubscription;
-      }));
-
-      element = await fixture<Test>(html`<${tag}></${tag}>`);
-    });
-
-    it('caches subscription property', function() {
-      expect(element.subscription, 'subscription').to.equal(NoParamSubscription);
-    });
-  });
-});

@@ -9,20 +9,65 @@ import type {
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { defineCE, fixture, unsafeStatic, expect, html as fhtml } from '@open-wc/testing';
+import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
+
+import { defineCE, fixture, expect, nextFrame } from '@open-wc/testing';
 
 import { ApolloQuery } from './apollo-query';
-import { TemplateResult, html, LitElement } from 'lit-element';
+import { html, LitElement, PropertyValues } from 'lit-element';
 import { NetworkStatus } from '@apollo/client/core';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+class TestableApolloQuery<D, V> extends ApolloQuery<D, V> {
+  render() {
+    return html`
+      <output id="data">${this.stringify(this.data)}</output>
+      <output id="error">${this.stringify(this.error)}</output>
+      <output id="errors">${this.stringify(this.errors)}</output>
+      <output id="loading">${this.stringify(this.loading)}</output>
+      <output id="networkStatus">${this.stringify(this.networkStatus)}</output>
+    `;
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+
+  async hasRendered() {
+    await nextFrame();
+    await this.updateComplete;
+    return this;
+  }
+}
+
+const setupFunction = setupQueryClass(TestableApolloQuery);
+
+describe('[lit-apollo] ApolloQuery', function() {
+  describeQuery({ setupFunction, class: TestableApolloQuery });
+
+  describe('subclassing', function() {
+    let el: ApolloQuery<unknown, unknown>;
+    beforeEach(async function subclass() {
+      class Test extends ApolloQuery<unknown, unknown> { }
+      const tagName = defineCE(Test);
+      el = await fixture<Test>(`<${tagName}></${tagName}>`);
+    });
+
+    it('produces an instance of LitElement', function() {
+      expect(el).to.be.an.instanceOf(LitElement);
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
-class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
-  render() {
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
+class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
+  typeCheck() {
+    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
     assertType<HTMLElement>                         (this);
+    assertType<LitElement>                          (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -67,83 +112,13 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   }
 }
 
-describe('[lit-apollo] ApolloQuery', function describeApolloQuery() {
-  it('is an instance of LitElement', async function() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      set thing(v: unknown) {
-        this.requestUpdate('thing', v);
-      }
-    }
+class TypeCheckLit extends ApolloQuery<unknown, unknown> {
+  update(changed: PropertyValues<TypeCheckLit>) {
+    changed.has('data');
+    super.update(changed);
+  }
 
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-    expect(el).to.be.an.instanceOf(LitElement);
-  });
-
-  it('renders when networkStatus is set', async function rendersOnNetworkStatus() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      render(): TemplateResult {
-        return html`${this.networkStatus === NetworkStatus.error ? 'SUCCESS' : 'FAIL'}`;
-      }
-    }
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag} .networkStatus="${NetworkStatus.error}"></${tag}>`);
-
-    expect(element).shadowDom.to.equal('SUCCESS');
-  });
-
-  it('renders by default', async function noRender() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      render(): TemplateResult {
-        return html`RENDERED`;
-      }
-    }
-
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    expect(element).shadowDom.to.equal('RENDERED');
-  });
-
-  it('does render when data is set', async function dataRender() {
-    class Test extends ApolloQuery<{ test: string }, unknown> {
-      render(): TemplateResult {
-        return html`${this.data.test}`;
-      }
-    }
-
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const el = await fixture<Test>(fhtml`<${tag} .data="${{ test: 'RENDERED' }}"></${tag}>`);
-    expect(el).shadowDom.to.equal('RENDERED');
-  });
-
-  it('does render when error is set', async function errorRender() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      render(): TemplateResult {
-        return html`${this.error}`;
-      }
-    }
-
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const el = await fixture<Test>(fhtml`<${tag} .error="${'ERROR'}"></${tag}>`);
-    expect(el).shadowDom.to.equal('ERROR');
-  });
-
-  it('does render when loading is set', async function loadingRender() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      render(): TemplateResult {
-        return html`${this.loading ? 'SUCCESS' : 'FAIL'}`;
-      }
-    }
-
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const el = await fixture<Test>(fhtml`<${tag} loading></${tag}>`);
-    expect(el).shadowDom.to.equal('SUCCESS');
-  });
-});
+  a() {
+    this.requestUpdate('data', null);
+  }
+}

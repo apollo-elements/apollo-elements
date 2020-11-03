@@ -8,10 +8,11 @@ import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 type TypeCheckData = { a: 'a', b: number };
 class TypeCheck extends ApolloElement<TypeCheckData> {
-  render() {
+  typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
+    assertType<LitElement>                          (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);

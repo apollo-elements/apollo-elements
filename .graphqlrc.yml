@@ -15,13 +15,13 @@ extensions:
 
     generates:
       packages/test-helpers/schema.ts:
-        schema: packages/test-helpers/test.schema.graphql
+        schema: packages/test-helpers/graphql/test.schema.graphql
         plugins:
           - typescript
           - typescript-operations
 
         documents:
-          - packages/test-helpers/*.query.graphql
-          - packages/test-helpers/*.mutation.graphql
-          - packages/test-helpers/*.subscription.graphql
-          - packages/test-helpers/*.fragment.graphql
+          - packages/test-helpers/graphql/*.query.graphql
+          - packages/test-helpers/graphql/*.mutation.graphql
+          - packages/test-helpers/graphql/*.subscription.graphql
+          - packages/test-helpers/graphql/*.fragment.graphql

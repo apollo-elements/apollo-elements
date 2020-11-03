@@ -22,7 +22,7 @@ const config = {
   rootDir: '../..',
 
   files: [
-    'packages/**/*.test.ts',
+    'packages/!(test-helpers)/**/*.test.ts',
   ],
 
   mimeTypes: {
@@ -34,7 +34,7 @@ const config = {
     exclude: [
       'packages/**/*.test.ts',
       'packages/**/*.test.js',
-      '**/test-helpers/*',
+      '**/test-helpers/**/*',
       '*__*-dev-server__*',
     ],
   },

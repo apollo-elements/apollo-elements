@@ -1,31 +1,105 @@
 import type {
   ApolloClient,
+  ApolloError,
   ErrorPolicy,
-  NetworkStatus,
   FetchPolicy,
   WatchQueryOptions,
   ObservableQuery,
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
+import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
+
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import { defineCE, fixture, unsafeStatic, expect, html as fhtml } from '@open-wc/testing';
+import { NetworkStatus } from '@apollo/client/core';
 
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 import { ApolloQuery } from './apollo-query';
-import { client } from '../test-helpers';
 
 import { html } from 'lit-html';
 
-import NoParamQuery from '@apollo-elements/test-helpers/NoParam.query.graphql';
+import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
+
+import { nextFrame } from '@open-wc/testing';
+import { GluonElement } from '@gluon/gluon';
+
+class TestableApolloQuery<D, V>
+  extends ApolloQuery<D, V>
+  implements QueryElement<D, V> {
+  #data: D = null;
+
+  #error: ApolloError = null;
+
+  #errors: readonly GraphQLError[] = null;
+
+  #loading = false;
+
+  #networkStatus = NetworkStatus.ready;
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get data() { return this.#data; }
+
+  set data(v: D) { this.#data = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get error() { return this.#error; }
+
+  set error(v: ApolloError) { this.#error = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get errors() { return this.#errors; }
+
+  set errors(v: readonly GraphQLError[]) { this.#errors = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get loading() { return this.#loading; }
+
+  set loading(v: boolean) { this.#loading = v; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get networkStatus() { return this.#networkStatus; }
+
+  set networkStatus(v: number) { this.#networkStatus = v; this.render(); }
+
+  get template() {
+    return html`
+      <output id="data">${this.stringify(this.data)}</output>
+      <output id="error">${this.stringify(this.error)}</output>
+      <output id="errors">${this.stringify(this.errors)}</output>
+      <output id="loading">${this.stringify(this.loading)}</output>
+      <output id="networkStatus">${this.stringify(this.networkStatus)}</output>
+    `;
+  }
+
+  $(id: keyof TestableApolloQuery<D, V>) { return this.shadowRoot.getElementById(id); }
+
+  stringify(x: unknown) { return JSON.stringify(x, null, 2); }
+
+  async hasRendered() {
+    await nextFrame();
+    await this.render();
+    return this;
+  }
+}
+
+describe('[gluon] ApolloQuery', function() {
+  describeQuery({
+    class: TestableApolloQuery,
+    setupFunction: setupQueryClass(TestableApolloQuery),
+  });
+});
+
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
-  async render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
+    assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
@@ -69,126 +143,3 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-describe('[gluon] ApolloQuery', function describeApolloQuery() {
-  it('caches observed properties', async function cachesObservedProperties() {
-    class Test extends ApolloQuery<unknown, unknown> {
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    const err = new Error('error');
-
-    const query = NoParamQuery;
-
-    element.client = client;
-    expect(element.client).to.equal(client);
-
-    element.data = 'data';
-    expect(element.data).to.equal('data');
-
-    element.error = err;
-    expect(element.error).to.equal(err);
-
-    element.loading = true;
-    expect(element.loading).to.equal(true);
-
-    element.networkStatus = 1;
-    expect(element.networkStatus).to.equal(1);
-
-    element.query = query;
-    expect(element.query).to.equal(query);
-  });
-
-  it('renders on set "data"', async function() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      get template() {
-        return html`${this.data}`;
-      }
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    element.data = 'hi';
-
-    await element.render();
-
-    expect(element).shadowDom.to.equal('hi');
-  });
-
-  it('renders on set "error"', async function() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      get template() {
-        return html`${this.error?.message}`;
-      }
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    element.error = new Error('hi');
-
-    await element.render();
-
-    expect(element).shadowDom.to.equal('hi');
-  });
-
-  it('renders on set "loading"', async function() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      get template() {
-        return html`${this.loading}`;
-      }
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    element.loading = true;
-
-    await element.render();
-
-    expect(element).shadowDom.to.equal('true');
-  });
-
-  it('renders on set "query"', async function() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      get template() {
-        return html`${this.query?.loc?.source?.body ?? ''}`;
-      }
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    element.query = NoParamQuery;
-
-    await element.render();
-
-    expect(element).shadowDom.to.equal(NoParamQuery.loc.source.body);
-  });
-
-  it('renders on set "networkStatus"', async function() {
-    class Test extends ApolloQuery<unknown, unknown> {
-      get template() {
-        return html`${this.networkStatus}`;
-      }
-    }
-
-    const tag = unsafeStatic(defineCE(Test));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    element.networkStatus = 5;
-
-    await element.render();
-
-    expect(element).shadowDom.to.equal('5');
-  });
-});

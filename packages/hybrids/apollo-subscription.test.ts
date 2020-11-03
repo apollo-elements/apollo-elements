@@ -1,19 +1,20 @@
-import { aTimeout, expect, nextFrame } from '@open-wc/testing';
+import type { SinonSpy, SinonStub } from 'sinon';
+import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+
+import { aTimeout, nextFrame } from '@open-wc/testing';
+
+import { stub, spy } from 'sinon';
+
 import 'sinon-chai';
-import gql from 'graphql-tag';
 
-import { define, html } from 'hybrids';
+import {
+  SubscriptionElement,
+  describeSubscription,
+} from '@apollo-elements/test-helpers/subscription.test';
 
-import { setupClient, teardownClient } from '../test-helpers/client';
+import { define, html, Hybrids } from 'hybrids';
 
-import { Observable } from '@apollo/client/core';
-
-import { ApolloSubscription, ApolloSubscriptionElement } from './apollo-subscription';
-
-import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
-
-import NullableParamSubscription from '@apollo-elements/test-helpers/NullableParam.subscription.graphql';
-import NonNullableParamSubscription from '@apollo-elements/test-helpers/NonNullableParam.subscription.graphql';
+import { ApolloSubscription } from './apollo-subscription';
 
 let counter = 0;
 
@@ -23,176 +24,71 @@ function getTagName(): string {
   return tagName;
 }
 
-const basicRender =
-  <D = unknown, V = unknown>(host: ApolloSubscriptionElement<D, V>): ReturnType<typeof html> =>
-    html`${JSON.stringify(host.data, null, 2)}`;
+function render<D = unknown, V = unknown>(
+  host: SubscriptionElement<D, V>
+): ReturnType<typeof html> {
+  return html`
+    <output id="data">${host.stringify(host.data)}</output>
+    <output id="error">${host.stringify(host.error)}</output>
+    <output id="loading">${host.stringify(host.loading)}</output>
+  `;
+}
 
-describe('[hybrids] ApolloSubscription', function describeApolloSubscription() {
-  let element: ApolloSubscriptionElement;
-  let render = basicRender;
+describe('[hybrids] ApolloSubscription', function() {
+  describeSubscription({
+    async setupFunction<T extends SubscriptionElement>(
+      opts?: SetupOptions<T>
+    ): Promise<SetupResult<T>> {
+      const { attributes, properties, innerHTML = '' } = opts ?? {};
 
-  function setupElement(properties = {}, innerHTML = '') {
-    const container = document.createElement('div');
-    const tag = getTagName();
-    define(tag, { ...ApolloSubscription, render });
-    container.innerHTML = `<${tag}>${innerHTML}</${tag}>`;
-    const [element] = container.children as HTMLCollectionOf<ApolloSubscriptionElement>;
-    document.body.appendChild(element);
-    const update = render(Object.assign(element, properties));
-    update({ ...element, ...properties }, container);
-    return element;
-  }
+      const tag = getTagName();
 
-  async function setupFixture() {
-    element = setupElement();
-    await nextFrame();
-  }
+      const stringify =
+        host => x => JSON.stringify(x, null, 2);
 
-  function teardownFixture() {
-    element?.remove?.();
-    element = undefined;
-    render = basicRender;
-  }
+      const hasRendered =
+        host => async () => await aTimeout(50);
 
-  function setNoParamSubscription() {
-    element.subscription = NoParamSubscription;
-  }
+      define<T>(tag, {
+        ...ApolloSubscription,
+        stringify,
+        hasRendered,
+        render,
+      } as Hybrids<T>);
 
-  function setNullableParamSubscription() {
-    element.subscription = NullableParamSubscription;
-  }
+      const attrs = attributes ? ` ${attributes}` : '';
 
-  beforeEach(setupClient);
-  beforeEach(setupFixture);
-  beforeEach(nextFrame);
-  afterEach(teardownFixture);
-  afterEach(teardownClient);
+      const template = document.createElement('template');
 
-  it('returns an instance of the superclass', async function returnsClass() {
-    expect(element).to.be.an.instanceOf(HTMLElement);
-  });
+      template.innerHTML = `<${tag}${attrs}></${tag}>`;
 
-  it('sets default properties', async function setsDefaultProperties() {
-    expect(element.data, 'data').to.be.null;
-    expect(element.variables, 'variables').to.be.null;
-    expect(element.subscription, 'subscription').to.be.null;
-    expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
-    expect(element.fetchResults, 'fetchResults').to.be.undefined;
-    expect(element.pollInterval, 'pollInterval').to.be.undefined;
-    expect(element.onSubscriptionData, 'onSubscriptionData').to.be.undefined;
-    expect(element.onError, 'onError').to.be.undefined;
-    expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.false;
-    expect(element.observable, 'observableQuery').to.be.undefined;
-  });
+      const [element] =
+        (template.content.cloneNode(true) as DocumentFragment)
+          .children as HTMLCollectionOf<T>;
 
-  it('defaults to window.__APOLLO_CLIENT__ as client', async function defaultsToGlobalClient() {
-    expect(element.client).to.equal(window.__APOLLO_CLIENT__);
-  });
+      let spies: Record<string|keyof T, SinonSpy>;
+      let stubs: Record<string|keyof T, SinonStub>;
 
-  describe('subscription property', function describeSubscription() {
-    it('accepts a script child on connect', async function scriptChild() {
-      teardownFixture();
+      // @ts-expect-error: gotta hook up the spies somehow
+      element.__testingEscapeHatch = function(el) {
+        spies = Object.fromEntries((opts?.spy ?? []).map(key =>
+          [key, spy(el, key)])) as Record<string|keyof T, SinonSpy>;
+        stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
+          [key, stub(el, key)])) as Record<string | keyof T, SinonStub>;
+      };
 
-      const script = NoParamSubscription.loc.source.body;
+      document.body.append(element);
 
-      const innerHTML = `
-        <script type="application/graphql">
-          ${script}
-        </script>
-      `;
+      for (const [key, val] of Object.entries(properties ?? {}))
+        element[key] = val;
 
-      element = setupElement({}, innerHTML);
+      await nextFrame();
 
-      expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
+      element.innerHTML = innerHTML;
 
-      expect(element.subscription).to.deep.equal(gql(script));
-    });
+      await nextFrame();
 
-    it('accepts a DocumentNode', async function() {
-      element.subscription = NoParamSubscription;
-
-      expect(element.subscription).to.equal(NoParamSubscription);
-    });
-
-    it('rejects a non-DocumentNode', async function() {
-      const subscription = `subscription { foo }`;
-      // @ts-expect-error: testing the error
-      expect(() => element.subscription = subscription)
-        .to.throw('Subscription must be a gql-parsed DocumentNode');
-      expect(element.subscription).to.not.be.ok;
-    });
-  });
-
-  describe('if subscription not yet initialized', function() {
-    describe('setting variables', function() {
-      let textContent: string;
-      beforeEach(function() {
-        element.variables = { nullable: 'INITIAL_VARS' };
-        textContent = element.shadowRoot?.textContent;
-      });
-
-      it('does not render', async function() {
-        expect(element.shadowRoot.textContent).to.equal(textContent);
-      });
-    });
-
-    describe('setting subscription that has no parameters', function() {
-      beforeEach(setNoParamSubscription);
-
-      beforeEach(() => aTimeout(100));
-
-      it('subscribes', async function() {
-        expect(element.data).to.be.ok;
-      });
-
-      it('renders', function() {
-        expect(element.shadowRoot.textContent).to.contain('messageSent');
-      });
-
-      describe('then setting another document with nullable variables', function() {
-        beforeEach(setNullableParamSubscription);
-        beforeEach(() => aTimeout(100));
-        it('renders second subscription', async function() {
-          expect(element.shadowRoot.textContent).to.not.contain('messageSent');
-          expect(element.shadowRoot.textContent).to.contain('nullable');
-        });
-        describe('then setting variables', function() {
-          beforeEach(function() {
-            element.variables = { nullable: 'quux' };
-          });
-          beforeEach(() => aTimeout(100));
-          it('renders new variables', async function() {
-            expect(element.shadowRoot.textContent).to.contain('quux');
-          });
-        });
-      });
-    });
-  });
-
-  describe('subscribe', function describeSubscribe() {
-    describe('with enough variables', function() {
-      beforeEach(async function() {
-        element.subscription = NullableParamSubscription;
-        element.variables = { param: 'param' };
-      });
-
-      it('creates an observable', function createsObservable() {
-        expect(element.observable).to.be.an.instanceof(Observable);
-      });
-    });
-
-    describe('with not enough variables', function() {
-      beforeEach(async function() {
-        element.cancel();
-        element.subscription = NonNullableParamSubscription;
-        element.variables = {};
-        element.subscribe();
-      });
-
-      it('does not subscribe', function notEnoughVariables() {
-        expect(element.data).to.be.null;
-        expect(element.error).to.be.null;
-      });
-    });
+      return { element, spies, stubs };
+    },
   });
 });

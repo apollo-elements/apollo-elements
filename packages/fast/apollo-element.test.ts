@@ -1,41 +1,10 @@
 import type { DocumentNode, GraphQLError } from 'graphql';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
-import {
-  expect,
-  fixture,
-  unsafeStatic,
-  html as fhtml,
-} from '@open-wc/testing';
+import { expect, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';
 import { customElement, DOM, FASTElement, html } from '@microsoft/fast-element';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
-
-type TypeCheckData = { a: 'a', b: number };
-class TypeCheck extends ApolloElement<TypeCheckData> {
-  render() {
-    /* eslint-disable func-call-spacing, no-multi-spaces */
-
-    assertType<HTMLElement>                         (this);
-
-    // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
-    assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
-
-    /* eslint-enable func-call-spacing, no-multi-spaces */
-  }
-}
 
 describe('[fast] ApolloElement', function describeApolloElement() {
   it('is an instance of FASTElement', async function() {
@@ -93,3 +62,30 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     expect(element).shadowDom.to.equal('LOADING');
   });
 });
+
+type TypeCheckData = { a: 'a', b: number };
+class TypeCheck extends ApolloElement<TypeCheckData> {
+  typeCheck() {
+    /* eslint-disable func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
+    assertType<FASTElement>                         (this);
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<Record<string, unknown>>             (this.context);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document);
+    assertType<Error>                               (this.error);
+    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<TypeCheckData>                       (this.data);
+    assertType<string>                              (this.error.message);
+    assertType<'a'>                                 (this.data.a);
+    // @ts-expect-error: b as number type
+    assertType<'a'>                                 (this.data.b);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}

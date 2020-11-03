@@ -1,7 +1,8 @@
-import type {
+import {
   ApolloClient,
   FetchPolicy,
   FetchResult,
+  NetworkStatus,
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
@@ -20,7 +21,10 @@ import type Sinon from 'sinon';
 
 import gql from 'graphql-tag';
 
-import { aTimeout, defineCE, expect, fixture, html as fhtml, unsafeStatic } from '@open-wc/testing';
+import {
+  aTimeout, defineCE, expect, fixture,
+  html as fhtml, nextFrame, unsafeStatic,
+} from '@open-wc/testing';
 
 import 'sinon-chai';
 
@@ -41,12 +45,102 @@ import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscript
 import NullableParamSubscription from '@apollo-elements/test-helpers/NullableParam.subscription.graphql';
 import NonNullableParamSubscription from '@apollo-elements/test-helpers/NonNullableParam.subscription.graphql';
 
-class Test<D = unknown, V = unknown> extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }
+import {
+  describeSubscription,
+  setupSubscriptionClass,
+  SubscriptionElement,
+} from '@apollo-elements/test-helpers/subscription.test';
+
+class Test<D = unknown, V = unknown>
+  extends ApolloSubscriptionMixin(HTMLElement)<D, V>
+  implements SubscriptionElement<D, V> {
+  #data: D = null;
+
+  #error: Error = null;
+
+  #loading = false;
+
+  static get template() {
+    const template = document.createElement('template');
+    template.innerHTML = /* html */`
+      <output id="data"></output>
+      <output id="error"></output>
+      <output id="loading"></output>
+    `;
+    return template;
+  }
+
+  $(id: keyof Test) { return this.shadowRoot.getElementById(id); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get data() { return this.#data; }
+
+  set data(value: D) {
+    this.#data = value;
+    this.render();
+  }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get error() { return this.#error; }
+
+  set error(value: Error) {
+    this.#error = value;
+    this.render();
+  }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get loading() { return this.#loading; }
+
+  set loading(value: boolean) {
+    this.#loading = value;
+    this.render();
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(Test.template.content.cloneNode(true));
+  }
+
+  render() {
+    this.$('data').textContent = this.stringify(this.data);
+    this.$('error').textContent = this.stringify(this.error);
+    this.$('loading').textContent = this.stringify(this.loading);
+  }
+
+  stringify(x: unknown) {
+    return JSON.stringify(x, null, 2);
+  }
+
+  async hasRendered() {
+    await nextFrame();
+    return this;
+  }
+}
+
+describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
+  describeSubscription({
+    class: Test,
+    setupFunction: setupSubscriptionClass(Test),
+  });
+
+  describe('subclassing', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
+
+    it('returns an instance of the superclass', async function returnsClass() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+
+      expect(element).to.be.an.instanceOf(HTMLElement);
+    });
+  });
+});
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
-  render() {
+  typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
@@ -81,424 +175,3 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-
-describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
-  beforeEach(setupClient);
-  afterEach(teardownClient);
-
-  it('returns an instance of the superclass', async function returnsClass() {
-    const tag = unsafeStatic(defineCE(class extends Test {}));
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    expect(element).to.be.an.instanceOf(HTMLElement);
-  });
-
-  it('sets default properties', async function setsDefaultProperties() {
-    const tag = unsafeStatic(defineCE(class extends Test { }));
-
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-
-    expect(element.data, 'data').to.be.null;
-    expect(element.variables, 'variables').to.be.null;
-    expect(element.subscription, 'subscription').to.be.null;
-    expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
-    expect(element.fetchResults, 'fetchResults').to.be.undefined;
-    expect(element.pollInterval, 'pollInterval').to.be.undefined;
-    expect(element.onSubscriptionData, 'onSubscriptionData').to.be.undefined;
-    expect(element.onError, 'onError').to.be.undefined;
-    expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.false;
-    expect(element.observable, 'observableQuery').to.be.undefined;
-  });
-
-  describe('subscription property', function describeSubscription() {
-    it('accepts a script child', async function scriptChild() {
-      class StubbedClass extends Test {}
-
-      spy(StubbedClass.prototype, 'subscribe');
-
-      const script = `
-        subscription NoParamSubscription {
-          messageSent {
-            message
-          }
-        }
-      `;
-
-      const tag = unsafeStatic(defineCE(StubbedClass));
-
-      const el = await fixture<StubbedClass>(fhtml`
-        <${tag}>
-          <script type="application/graphql">${script}</script>
-        </${tag}>`);
-
-      expect(el.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-      expect(el.subscription).to.deep.equal(gql(script));
-      expect(el.subscribe).to.have.been.called;
-    });
-
-    it('accepts a DocumentNode', async function() {
-      type D = NoParamSubscriptionData;
-      type V = NoParamSubscriptionVariables;
-      const subscription = NoParamSubscription;
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {}));
-      const el = await fixture<Test<D, V>>(fhtml`<${tag}></${tag}>`);
-
-      el.subscription = subscription;
-      expect(el.subscription).to.equal(subscription);
-    });
-
-    it('rejects a non-DocumentNode', async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-
-      const subscription = `subscription { foo }`;
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-      // @ts-expect-error: we're testing the error
-      expect(() => el.subscription = subscription)
-        .to.throw('Subscription must be a gql-parsed DocumentNode');
-      expect(el.subscription).to.not.be.ok;
-    });
-
-    it('calls subscribe if subscription not yet initialized', async function() {
-      const tag = unsafeStatic(defineCE(class extends Test { }));
-
-      const el =
-        await fixture<Test>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      const subscribeStub = stub(el, 'subscribe');
-      const subscription = gql`subscription { foo }`;
-      el.subscription = subscription;
-      expect(subscribeStub).to.have.been.called;
-    });
-
-    it('does not call subscribe if subscription already initialized', async function() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        subscription = NullableParamSubscription;
-
-        variables = { nullable: 'qux' };
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      const subscribeStub = stub(el, 'subscribe');
-
-      el.variables = { nullable: 'quux' };
-
-      expect(subscribeStub).to.not.have.been.calledTwice;
-    });
-
-    it('does not call subscribe if subscription is falsy', async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {
-        subscription = null;
-
-        variables = { bar: 'qux' };
-      }));
-
-      const el =
-        await fixture<Test>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      const subscribeStub = stub(el, 'subscribe');
-      el.variables = { bar: 'quux' };
-      expect(subscribeStub).to.not.have.been.calledTwice;
-    });
-  });
-
-  describe('variables property', function describeVariables() {
-    it('calls subscribe when element has not yet initialized the subscription', async function() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        subscription = NullableParamSubscription;
-
-        variables = { nullable: 'qux' };
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      const subscribeStub = stub(el, 'subscribe');
-      el.variables = { nullable: 'qux' };
-      expect(subscribeStub).to.have.been.called;
-    });
-
-    it(
-      'does not call subscribe when element already initialized the subscription',
-      async function() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        subscription = NullableParamSubscription;
-
-        variables = { nullable: 'qux' };
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      const subscribeStub = stub(el, 'subscribe');
-      el.variables = { nullable: 'quux' };
-      expect(subscribeStub).to.not.have.been.calledTwice;
-      });
-  });
-
-  describe('subscribe', function describeSubscribe() {
-    let clientSubscribeSpy: Sinon.SinonSpy;
-
-    beforeEach(function() {
-      clientSubscribeSpy = spy(window.__APOLLO_CLIENT__, 'subscribe');
-    });
-
-    afterEach(function() {
-      clientSubscribeSpy.restore();
-      clientSubscribeSpy = undefined;
-    });
-
-    it('creates an observable', async function createsObservable() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        subscription = NullableParamSubscription;
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      el.variables = { nullable: 'quux' };
-      el.subscribe();
-      expect(el.observable).to.be.an.instanceof(Observable);
-    });
-
-    it('does nothing when there are not enough variables', async function notEnoughVariables() {
-      type D = NonNullableParamSubscriptionData;
-      type V = NonNullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        subscription = NonNullableParamSubscription;
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      // @ts-expect-error: testing the case without enough variables
-      el.variables = {};
-
-      el.subscribe();
-
-      await aTimeout(100);
-
-      expect(el.data).to.be.null;
-    });
-
-    it('can take a specific fetchPolicy', async function specificFetchPolicy() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        noAutoSubscribe = true;
-
-        subscription = NullableParamSubscription;
-
-        variables = { nullable: 'quux' };
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      const fetchPolicy = 'cache-only';
-
-      el.subscribe({ fetchPolicy });
-
-      expect(clientSubscribeSpy).to.have.been.calledWithMatch({ fetchPolicy });
-    });
-
-    it('uses fetchPolicy set on the element', async function specificFetchPolicy() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        noAutoSubscribe = true;
-
-        subscription = NullableParamSubscription;
-
-        fetchPolicy = 'cache-only' as const;
-
-        variables = { nullable: 'quux' }
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      el.subscribe();
-
-      expect(clientSubscribeSpy).to.have.been.calledWithMatch({ fetchPolicy: 'cache-only' });
-    });
-
-    it('defaults to fetchPolicy set on the element', async function specificFetchPolicy() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        noAutoSubscribe = true;
-
-        subscription = NullableParamSubscription;
-
-        fetchPolicy = 'cache-only' as const;
-
-        variables = { nullable: 'quux' };
-      }));
-
-      const el =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag}></${tag}>
-        `);
-
-      el.subscribe({ fetchPolicy: undefined });
-
-      expect(clientSubscribeSpy).to.have.been.calledWithMatch({ fetchPolicy: 'cache-only' });
-    });
-
-    describe('with partial params', function() {
-      type D = NullableParamSubscriptionData;
-      type V = NullableParamSubscriptionVariables;
-
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        noAutoSubscribe = true;
-      }));
-
-      let el: Test<D, V>;
-
-      beforeEach(async function() {
-        el =
-          await fixture<Test<D, V>>(fhtml`
-            <${tag}></${tag}>
-          `);
-      });
-
-      it('defaults to element subscription', async function() {
-        const fetchPolicy = 'network-only';
-        el.subscription = NullableParamSubscription;
-        const variables = { nullable: 'bar' };
-        el.subscribe({ fetchPolicy, variables });
-        expect(clientSubscribeSpy).to.have.been
-          .calledWithMatch({
-            query: NullableParamSubscription,
-            fetchPolicy,
-            variables,
-          });
-      });
-
-      it('defaults to element fetchPolicy', async function() {
-        const fetchPolicy = 'network-only';
-        el.fetchPolicy = fetchPolicy;
-        const subscription = NullableParamSubscription;
-        const variables = { nullable: 'bar' };
-        el.subscribe({ subscription, variables });
-        expect(clientSubscribeSpy).to.have.been
-          .calledWithMatch({
-            fetchPolicy,
-            query: NullableParamSubscription,
-            variables,
-          });
-      });
-
-      it('defaults to element variables', async function() {
-        const fetchPolicy = 'network-only';
-        const subscription = NullableParamSubscription;
-        el.variables = { nullable: 'bar' };
-        el.subscribe({ fetchPolicy, subscription });
-        expect(clientSubscribeSpy).to.have.been
-          .calledWithMatch({
-            fetchPolicy,
-            query: subscription,
-            variables: el.variables,
-          });
-      });
-    });
-  });
-
-  describe('when subscription updates', function() {
-    type D = NonNullableParamSubscriptionData;
-    type V = NonNullableParamSubscriptionVariables;
-
-    let onSubscriptionDataSpy: Sinon.SinonSpy;
-
-    let onErrorSpy: Sinon.SinonSpy;
-
-    let element: Test<D, V>;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test<D, V> {
-        onSubscriptionData(x) { x; }
-
-        onError(x) { x; }
-      }));
-
-      element =
-        await fixture<Test<D, V>>(fhtml`
-          <${tag} .noAutoSubscribe="${true}"></${tag}>
-        `);
-    });
-
-    beforeEach(function() {
-      onSubscriptionDataSpy = spy(element, 'onSubscriptionData');
-      onErrorSpy = spy(element, 'onError');
-    });
-
-    afterEach(function() {
-      onSubscriptionDataSpy?.restore?.();
-      onErrorSpy?.restore?.();
-    });
-
-    describe('with data', function() {
-      beforeEach(async function() {
-        element.subscription = NonNullableParamSubscription;
-        element.variables = { nonNull: 'hola' };
-        element.subscribe();
-        await aTimeout(1000);
-      });
-
-      it('calls onSubscriptionData', function() {
-        expect(onSubscriptionDataSpy).to.have.been.called;
-        expect(onErrorSpy).to.not.have.been.called;
-      });
-    });
-
-    describe('with error', function() {
-      beforeEach(async function() {
-        element.subscription = NonNullableParamSubscription;
-        element.variables = { nonNull: 'error' };
-        element.subscribe();
-        await aTimeout(1000);
-      });
-
-      it('calls onError', function() {
-        expect(onSubscriptionDataSpy).to.not.have.been.called;
-        expect(onErrorSpy).to.have.been.called;
-      });
-    });
-  });
-});
