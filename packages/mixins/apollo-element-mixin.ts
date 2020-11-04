@@ -58,7 +58,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     declare loading: boolean;
 
-    client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__;
+    client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__ ?? null;
 
     /** @private */
     _document: DocumentNode = null;
@@ -142,11 +142,21 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     variablesChanged?(variables: TVariables): void
 
     /** @private */
-    onMutation(): void {
+    onMutation(records: MutationRecord[]): void {
       if (!this._documentSetByJS)
         this._document = this.getDOMGraphQLDocument();
       if (!this._variablesSetByJS)
         this._variables = this.getDOMVariables();
+
+      // notify when the first script child element changes
+      if (typeof this.documentChanged === 'function' &&
+        !this._documentSetByJS &&
+        records.some(({ addedNodes }) =>
+          [...addedNodes ?? []].some(node =>
+            node instanceof HTMLScriptElement &&
+            node.type === 'application/graphql' &&
+            node === this.querySelector('script[type="application/graphql"]')))
+      ) this.documentChanged(this.document);
     }
 
     /**
@@ -158,8 +168,14 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       const text = script?.innerText;
       if (!text)
         return null;
-      else
-        return gql(text.replace?.(/<!---->/g, ''));
+      else {
+        try {
+          return gql(text.replace?.(/<!---->/g, ''));
+        } catch (err) {
+          this.error = err;
+          return null;
+        }
+      }
     }
 
     /**

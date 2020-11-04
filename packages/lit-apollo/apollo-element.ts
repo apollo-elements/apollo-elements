@@ -18,7 +18,7 @@ export class ApolloElement<TData = unknown, TVariables = unknown>
   declare context?: Record<string, unknown>;
 
   @property({ attribute: false }) client: ApolloClient<NormalizedCacheObject> =
-    window.__APOLLO_CLIENT__;
+    window.__APOLLO_CLIENT__ ?? null;
 
   @property({ attribute: false }) data: TData = null;
 

@@ -1,6 +1,8 @@
 import type { Constructor, ApolloQueryInterface } from '@apollo-elements/interfaces';
 import type { GraphQLError } from 'graphql';
-import type { ApolloClient, NetworkStatus, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+
+import { NetworkStatus } from '@apollo/client/core';
 
 import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element';
@@ -27,21 +29,20 @@ export class ApolloQuery<TData, TVariables>
 
   declare networkStatus: NetworkStatus;
 
-  #networkStatus: NetworkStatus;
+  #networkStatus = NetworkStatus.ready;
 
   constructor() {
     super();
-    type This = this;
-    Object.defineProperties(this, {
+    Object.defineProperties(ApolloQuery.prototype, {
       networkStatus: {
         configurable: true,
         enumerable: true,
 
-        get(this: This): NetworkStatus {
+        get(this: ApolloQuery<TData, TVariables>): NetworkStatus {
           return this.#networkStatus;
         },
 
-        set(this: This, networkStatus: NetworkStatus) {
+        set(this: ApolloQuery<TData, TVariables>, networkStatus: NetworkStatus) {
           this.#networkStatus = networkStatus;
           this.render();
         },

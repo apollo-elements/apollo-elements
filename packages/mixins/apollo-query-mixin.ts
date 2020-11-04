@@ -7,7 +7,6 @@ import type {
   ObservableQuery,
   ApolloQueryResult,
   FetchMoreOptions,
-  NetworkStatus,
   SubscriptionOptions,
   SubscribeToMoreOptions,
   QueryOptions,
@@ -15,6 +14,8 @@ import type {
   WatchQueryOptions,
   ApolloError,
 } from '@apollo/client/core';
+
+import { NetworkStatus } from '@apollo/client/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
@@ -88,6 +89,9 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
     /** @private */
     __options: Partial<WatchQueryOptions> = null;
+
+    /** @private */
+    __networkStatus = NetworkStatus.ready;
 
     /** @protected */
     connectedCallback(): void {
@@ -274,8 +278,20 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     }
   }
 
-
   Object.defineProperties(ApolloQueryElement.prototype, {
+    networkStatus: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloQueryElement<unknown, unknown>) {
+        return this.__networkStatus;
+      },
+
+      set(this: ApolloQueryElement<unknown, unknown>, value) {
+        this.__networkStatus = value;
+      },
+    },
+
     query: {
       configurable: true,
       enumerable: true,
@@ -319,6 +335,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
       },
     },
   });
+
   return ApolloQueryElement;
 }
 
