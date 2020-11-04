@@ -13,16 +13,16 @@ export class ApolloElement<TData = unknown, TVariables = unknown>
   implements ApolloElementInterface<TData> {
   declare context?: Record<string, unknown>;
 
-  @observable data: TData = null;
+  declare variables: TVariables;
 
-  @observable variables: TVariables = null;
+  @observable client: ApolloClient<NormalizedCacheObject> =
+    window.__APOLLO_CLIENT__ ?? null;
+
+  @observable data: TData = null;
 
   @observable error: ApolloError | Error = null;
 
   @observable errors: readonly GraphQLError[] = null;
-
-  @observable client: ApolloClient<NormalizedCacheObject> =
-    window.__APOLLO_CLIENT__;
 
   @attr({ mode: 'boolean' }) loading = false;
 }
