@@ -3,9 +3,10 @@ import { Constructor } from '@apollo-elements/interfaces/constructor';
 import { property } from 'hybrids';
 
 import { cuid } from './cuid';
-import { ApolloElementElement } from '../factories/client';
 
 import * as cache from 'hybrids/esm/cache';
+
+import { ApolloElementElement } from '../factories/client';
 
 type Type = 'client' | 'subscription' | 'mutation' | 'query';
 
@@ -72,26 +73,36 @@ function applyPrototype<S extends HTMLElement>(
   return propertiesToAssign;
 }
 
+interface HookHybridsOptions<T> {
+  host: T,
+  key: keyof T|string,
+  init: unknown
+}
+
+export function hookIntoHybridsRender<T>(opts: HookHybridsOptions<T>): void {
+  const { host, init, key } = opts;
+  const config = property(init);
+  Object.defineProperty(host, key, {
+    enumerable: true,
+    configurable: true,
+    get() {
+      return cache.get(host, key, config.get);
+    },
+    set(newValue) {
+      cache.set(host, key, config.set, newValue);
+    },
+  });
+}
+
 function unsafeApplyElement<T extends ApolloElementElement>(host: T): void {
   // HACK: hook into hybrids reactivity system
-  Object.entries({
+  for (const [key, init] of Object.entries({
     data: null,
     error: null,
     errors: null,
     loading: false,
-  }).forEach(([key, val]) => {
-    const config = property(val);
-    Object.defineProperty(host, key, {
-      enumerable: true,
-      configurable: true,
-      get() {
-        return cache.get(host, key, config.get);
-      },
-      set(newValue) {
-        cache.set(host, key, config.set, newValue);
-      },
-    });
-  });
+  }))
+    hookIntoHybridsRender({ host, key, init });
 
   ELEMENT_APPLIED
     .set(host, applyPrototype(host, ApolloElementElement));
