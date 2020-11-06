@@ -15,6 +15,9 @@ declare global {
   }
 }
 
+const SCRIPT_SELECTOR =
+  'script[type="application/graphql"]';
+
 function capital(string: string): string {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
@@ -143,20 +146,19 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     /** @private */
     onMutation(records: MutationRecord[]): void {
-      if (!this._documentSetByJS)
+      const isGQLScriptChanged = (record: MutationRecord) =>
+        [...record?.addedNodes].some(node =>
+          node === this.querySelector(SCRIPT_SELECTOR));
+
+      if (!this._documentSetByJS) {
         this._document = this.getDOMGraphQLDocument();
+        // notify when the first script child element changes
+        if (records.some(isGQLScriptChanged))
+          this.documentChanged?.(this.document);
+      }
+
       if (!this._variablesSetByJS)
         this._variables = this.getDOMVariables();
-
-      // notify when the first script child element changes
-      if (typeof this.documentChanged === 'function' &&
-        !this._documentSetByJS &&
-        records.some(({ addedNodes }) =>
-          [...addedNodes ?? []].some(node =>
-            node instanceof HTMLScriptElement &&
-            node.type === 'application/graphql' &&
-            node === this.querySelector('script[type="application/graphql"]')))
-      ) this.documentChanged(this.document);
     }
 
     /**
@@ -164,7 +166,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * @private
      */
     getDOMGraphQLDocument(): DocumentNode | null {
-      const script = this.querySelector<HTMLScriptElement>('script[type="application/graphql"]');
+      const script = this.querySelector<HTMLScriptElement>(SCRIPT_SELECTOR);
       const text = script?.innerText;
       if (!text)
         return null;
