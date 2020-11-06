@@ -26,7 +26,7 @@ export class PolymerApolloElement<TData = unknown, TVariables = unknown>
 
   @notify errors: readonly GraphQLError[] = null;
 
-  @notify loading: boolean = null;
+  @notify loading = false;
 
   variablesChanged(variables: TVariables): void {
     this.dispatchEvent(new PolymerChangeEvent('variables', variables));
