@@ -11,7 +11,7 @@ export class ApolloMutation<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
   extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
-  #called: boolean;
+  #called = false;
 
   constructor() {
     super();
