@@ -56,7 +56,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
     updater?(...params: Parameters<MutationUpdaterFn<TData>>):
         ReturnType<MutationUpdaterFn<TData>>;
 
-    called = false;
+    declare called: boolean;
 
     ignoreResults = false;
 
@@ -65,6 +65,10 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
     constructor() {
       super();
       this.variables = null;
+    }
+
+    connectedCallback() {
+      super.connectedCallback?.();
     }
 
     /**
@@ -145,6 +149,13 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
   }
 
   Object.defineProperties(ApolloMutationElement.prototype, {
+    called: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: false,
+    },
+
     mutation: {
       configurable: true,
       enumerable: true,
@@ -158,6 +169,21 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       },
 
     },
+
+    optimisticResponse: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: null,
+    },
+
+    refetchQueries: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: null,
+    },
+
   });
 
   return ApolloMutationElement;
