@@ -43,8 +43,6 @@ export class PolymerApolloMutation<TData, TVariables>
   extends ApolloMutationMixin(PolymerApolloElement as Base)<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
   @notify called = false;
-
-  @notify loading = false;
 }
 
 customElements.define('apollo-mutation', PolymerApolloMutation);
