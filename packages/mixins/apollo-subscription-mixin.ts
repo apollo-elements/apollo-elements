@@ -20,7 +20,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
 
 function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
-  return class ApolloSubscriptionElement<TData, TVariables>
+  class ApolloSubscriptionElement<TData, TVariables>
     extends ApolloElementMixin(superclass)
     implements ApolloSubscriptionInterface<TData, TVariables> {
     static documentType = 'subscription';
@@ -28,8 +28,6 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     declare data: TData;
 
     declare fetchPolicy: FetchPolicy;
-
-    declare fetchResults: boolean;
 
     declare pollInterval: number;
 
@@ -43,50 +41,17 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     declare variables: TVariables;
 
-    declare skip: boolean;
-
     notifyOnNetworkStatusChange = false;
+
+    shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'] = false;
+
+    skip = false;
 
     onSubscriptionData?(_result: OnSubscriptionDataParams<TData>): void
 
     onSubscriptionComplete?(): void
 
     onError?(error: ApolloError): void
-
-    constructor() {
-      super();
-      type This = this;
-      Object.defineProperties(this, {
-        subscription: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): DocumentNode {
-            return this.document;
-          },
-
-          set(this: This, subscription) {
-            this.document = subscription;
-          },
-        },
-
-        noAutoSubscribe: {
-          configurable: true,
-          enumerable: true,
-
-          get(this: This): boolean {
-            return this.hasAttribute('no-auto-subscribe');
-          },
-
-          set(v: boolean) {
-            if (v)
-              this.setAttribute('no-auto-subscribe', '');
-            else
-              this.removeAttribute('no-auto-subscribe');
-          },
-        },
-      });
-    }
 
     /** @protected */
     connectedCallback(): void {
@@ -120,8 +85,10 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>) {
       this.initObservable(params);
 
-      if (this.observableSubscription)
+      if (this.observableSubscription && !(params.shouldResubscribe ?? this.shouldResubscribe))
         return;
+
+      this.loading = true;
 
       this.observableSubscription =
         this.observable.subscribe({
@@ -160,15 +127,19 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     /** @private */
     initObservable(params?: Partial<SubscriptionDataOptions<TData, TVariables>>): void {
-      if (this.observable || (params?.skip ?? this.skip))
+      const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
+      const client = params?.client ?? this.client;
+      const skip = params?.skip ?? this.skip;
+
+      const query = params?.subscription ?? this.subscription;
+      const variables = params?.variables ?? this.variables;
+      const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
+
+      if ((this.observable && !shouldResubscribe) || skip)
         return;
 
       this.observable =
-        this.client.subscribe({
-          query: params?.subscription ?? this.subscription,
-          variables: params?.variables ?? this.variables,
-          fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
-        });
+        client.subscribe({ query, variables, fetchPolicy });
     }
 
     /**
@@ -213,7 +184,40 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
         this.observableSubscription = undefined;
       }
     }
-  };
+  }
+
+  Object.defineProperties(ApolloSubscriptionElement.prototype, {
+    subscription: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloSubscriptionElement<unknown, unknown>): DocumentNode {
+        return this.document;
+      },
+
+      set(this: ApolloSubscriptionElement<unknown, unknown>, subscription) {
+        this.document = subscription;
+      },
+    },
+
+    noAutoSubscribe: {
+      configurable: true,
+      enumerable: true,
+
+      get(this: ApolloSubscriptionElement<unknown, unknown>): boolean {
+        return this.hasAttribute('no-auto-subscribe');
+      },
+
+      set(v: boolean) {
+        if (v)
+          this.setAttribute('no-auto-subscribe', '');
+        else
+          this.removeAttribute('no-auto-subscribe');
+      },
+    },
+  });
+
+  return ApolloSubscriptionElement;
 }
 
 /**

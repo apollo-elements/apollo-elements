@@ -83,6 +83,8 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
    */
   declare skip: boolean;
 
+  declare shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'];
+
   /**
    * Resets the observable and subscribes.
    */
@@ -109,6 +111,11 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
    * Callback for when data is updated
    */
   onSubscriptionData?(result: OnSubscriptionDataParams<TData>): void;
+
+  /**
+   * Callback for when error is updated
+   */
+  onError?(error: ApolloError): void;
 
   /**
    * Callback for when subscription completes.
