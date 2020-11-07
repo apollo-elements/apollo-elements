@@ -17,11 +17,13 @@ export function mutation<TData, TVariables>(
       apply(host, ApolloMutationElement, 'mutation');
       return getDescriptor(host).mutation.get.call(host);
     },
+
     set(host, val: DocumentNode) {
       apply(host, ApolloMutationElement, 'mutation');
       getDescriptor(host).mutation.set.call(host, val);
       return val;
     },
+
     connect(host, key, invalidate) {
       apply(host, ApolloMutationElement, 'mutation');
       hookIntoHybridsRender({ host, key: 'called', init: false });

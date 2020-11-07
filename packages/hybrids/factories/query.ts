@@ -17,11 +17,13 @@ export function query<TData, TVariables>(
       apply(host, ApolloQueryElement, 'query');
       return getDescriptor(host).query.get.call(host);
     },
+
     set(host, val: DocumentNode) {
       apply(host, ApolloQueryElement, 'query');
       getDescriptor(host).query.set.call(host, val);
       return val;
     },
+
     connect(host, key, invalidate) {
       apply(host, ApolloQueryElement, 'query');
       hookIntoHybridsRender({ host, key: 'networkStatus', init: 7 });
