@@ -2,7 +2,7 @@ import type { DocumentNode } from 'graphql';
 import type { Descriptor } from 'hybrids';
 
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
-import { apply, getDescriptor, hookIntoHybridsRender } from '../helpers/prototypes';
+import { apply, getDescriptor } from '../helpers/prototypes';
 
 class ApolloSubscriptionElement<D = unknown, V = unknown>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }
@@ -26,7 +26,8 @@ export function subscription<TData, TVariables>(
 
     connect(host, key, invalidate) {
       apply(host, ApolloSubscriptionElement, 'subscription');
-      hookIntoHybridsRender({ host, key: 'networkStatus', init: 7 });
+      // @ts-expect-error: gotta hook up spies somehow
+      host?.__testingEscapeHatch?.(host);
       const mo = new MutationObserver(() => invalidate());
       mo.observe(host, { characterData: true, childList: true, subtree: true });
       getDescriptor(host).connectedCallback.value.call(host);
