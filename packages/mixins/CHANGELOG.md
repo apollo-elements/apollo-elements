@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.1.1...@apollo-elements/mixins@3.2.0) (2020-11-08)
+
+
+### Bug Fixes
+
+* **mixins:** define mutation props on prototype ([2702283](https://github.com/apollo-elements/apollo-elements/commit/270228362496c523dd72a358362297b249ed5743))
+* **mixins:** set default networkStatus ([308e25c](https://github.com/apollo-elements/apollo-elements/commit/308e25cda2c4d8a265ab0537634a14265986fffb))
+
+
+### Features
+
+* **mixins:** fix subscription interface ([1847f96](https://github.com/apollo-elements/apollo-elements/commit/1847f96f6f237f99d43bad30b57cd4616131ae49))
+
+
+
+
+
 ## [3.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.1.0...@apollo-elements/mixins@3.1.1) (2020-10-30)
 
 

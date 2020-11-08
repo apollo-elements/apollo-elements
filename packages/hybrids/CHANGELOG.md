@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.2.0...@apollo-elements/hybrids@3.2.1) (2020-11-08)
+
+
+### Bug Fixes
+
+* **hybrids:** subscription prototype ([0b34a16](https://github.com/apollo-elements/apollo-elements/commit/0b34a1633083b72c5d597576a2fbf635928d17e7))
+
+
+
+
+
 # [3.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.1.0...@apollo-elements/hybrids@3.2.0) (2020-10-30)
 
 

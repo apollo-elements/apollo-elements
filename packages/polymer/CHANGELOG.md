@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.1.1...@apollo-elements/polymer@3.1.2) (2020-11-08)
+
+
+### Bug Fixes
+
+* **polymer:** move loading prop to element ([fb3e832](https://github.com/apollo-elements/apollo-elements/commit/fb3e832badb2e4efbcf1d2aaeaf6f6436a06b949))
+
+
+
+
+
 ## [3.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.1.0...@apollo-elements/polymer@3.1.1) (2020-10-30)
 
 **Note:** Version bump only for package @apollo-elements/polymer

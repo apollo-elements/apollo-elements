@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@3.1.1...@apollo-elements/gluon@3.1.2) (2020-11-08)
+
+
+### Bug Fixes
+
+* **gluon:** initialize called as false ([a876282](https://github.com/apollo-elements/apollo-elements/commit/a8762825feea2d7dc8882914e8a7e895ba491968))
+* **mixins:** set default networkStatus ([308e25c](https://github.com/apollo-elements/apollo-elements/commit/308e25cda2c4d8a265ab0537634a14265986fffb))
+
+
+
+
+
 ## [3.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@3.1.0...@apollo-elements/gluon@3.1.1) (2020-10-30)
 
 **Note:** Version bump only for package @apollo-elements/gluon

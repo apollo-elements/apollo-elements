@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/fast@1.1.1...@apollo-elements/fast@1.1.2) (2020-11-08)
+
+
+### Bug Fixes
+
+* **fast:** property descriptors ([adad450](https://github.com/apollo-elements/apollo-elements/commit/adad4504e80e260b334eb88049871f8049d970ef))
+* **fast:** set default for networkStatus ([28c75e7](https://github.com/apollo-elements/apollo-elements/commit/28c75e78cf169cd5f7ec13a3bb8f3953902fc988))
+
+
+
+
+
 ## [1.1.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/fast@1.1.0...@apollo-elements/fast@1.1.1) (2020-10-30)
 
 **Note:** Version bump only for package @apollo-elements/fast
