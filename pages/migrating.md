@@ -82,7 +82,7 @@ This link checks every outgoing operation (e.g. query or mutation) to make sure 
 
 ```ts
 import { ApolloLink } from '@apollo/client/link';
-import { hasAllVariables } from './has-all-variables';
+import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
 export const validateVariablesLink =
   new ApolloLink((operation, forward) =>
     hasAllVariables(operation) && forward(operation));
