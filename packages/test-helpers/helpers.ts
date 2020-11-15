@@ -1,3 +1,5 @@
+import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+
 // 🐤 quack quack 🦆
 export function isSubscription(x: unknown): x is ZenObservable.Subscription {
   return (
@@ -26,3 +28,15 @@ export function isSubscription(x: unknown): x is ZenObservable.Subscription {
 export function assertType<T>(x: T): asserts x is T { x; }
 
 export { isApolloError } from '@apollo/client/core';
+
+export function setupSpies<T>(keys: (keyof T)[] = [], prototype: T): Record<string|keyof T, SinonSpy> {
+  return Object.fromEntries(keys
+    .map(method =>
+      [method, spy(prototype, method as keyof T)])) as unknown as Record<string|keyof T, SinonSpy>;
+}
+
+export function setupStubs<T>(keys: (keyof T)[] = [], prototype: T): Record<string|keyof T, SinonStub> {
+  return Object.fromEntries(keys
+    .map(method =>
+      [method, stub(prototype, method as keyof T)])) as unknown as Record<string|keyof T, SinonStub>;
+}

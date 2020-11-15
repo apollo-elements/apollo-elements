@@ -8,6 +8,7 @@ import type {
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
+import type { SetupOptions } from '@apollo-elements/test-helpers';
 
 import {
   fixture,
@@ -22,9 +23,7 @@ import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client/core';
 
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
-
-import { SetupOptions, assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
 
 const template = html<TestableApolloQuery>`
@@ -65,11 +64,8 @@ describe('[fast] ApolloQuery', function() {
       const attrs = opts?.attributes ? ` ${opts.attributes}` : '';
       const innerHTML = opts?.innerHTML ?? '';
 
-      const spies = Object.fromEntries((opts?.spy ?? []).map(key =>
-        [key, spy(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonSpy>;
-
-      const stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
-        [key, stub(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonStub>;
+      const spies = setupSpies(opts?.spy, Test.prototype as unknown as T);
+      const stubs = setupStubs(opts?.stub, Test.prototype as unknown as T);
 
       const element = await fixture<T>(
         `<${name}${attrs}>${innerHTML}</${name}>`);

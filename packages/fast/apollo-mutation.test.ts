@@ -6,10 +6,12 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type {
+import {
   NonNullableParamMutationData,
   NonNullableParamMutationVariables,
   SetupOptions,
+  setupSpies,
+  setupStubs,
 } from '@apollo-elements/test-helpers';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
@@ -17,8 +19,6 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 import type { DocumentNode, GraphQLError } from 'graphql';
 
 import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
-
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
 import {
   setupClient,
@@ -84,13 +84,8 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
 
       const element = await fixture<T>(`<${name}${attrs}>${innerHTML}</${name}>`);
 
-      const spies = Object.fromEntries((options?.spy ?? []).map(method =>
-        [method, spy(Test.prototype, method as keyof Test)])
-      ) as Record<keyof T | string, SinonSpy>;
-
-      const stubs = Object.fromEntries((options?.stub ?? []).map(method =>
-        [method, stub(Test.prototype, method as keyof Test)])
-      ) as Record<keyof T | string, SinonStub>;
+      const spies = setupSpies(options?.spy, Test.prototype as unknown as T);
+      const stubs = setupStubs(options?.stub, Test.prototype as unknown as T);
 
       for (const [key, val] of Object.entries(properties ?? {}))
         key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
