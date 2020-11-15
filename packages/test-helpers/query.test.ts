@@ -735,6 +735,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.variables = { errorPolicy: 'foo' };
           });
 
+          beforeEach(nextFrame);
+
           it('calls refetch', function() {
             expect(element.refetch).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
           });
@@ -954,12 +956,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('refetch()', function() {
-          let spies: SinonSpy[];
-
           beforeEach(function setupSpies() {
-            spies = [
-              spy(element.observableQuery, 'refetch'),
-            ];
+            spies['observableQuery.refetch'] = spy(element.observableQuery, 'refetch');
           });
 
           beforeEach(function callRefetch() {
@@ -967,7 +965,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           afterEach(function restoreSpies() {
-            for (const spy of spies)
+            for (const spy of Object.values(spies))
               spy.restore();
           });
 
@@ -988,6 +986,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('setting new variables', function() {
+          beforeEach(function() {
+            // HACK: 🤷‍♂️ this fails only for haunted if I don't redeclare the spy here
+            spies.refetch.restore();
+            spies.refetch = spy(element, 'refetch');
+          });
+
           beforeEach(function setVariables() {
             element.variables = { nullable: '🍟' };
           });

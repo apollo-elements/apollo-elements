@@ -17,12 +17,19 @@ declare module '@pwrs/mixins/select' {
 const INSTANCES = new Set<CodeTabs>();
 
 const PACKAGES = {
+  'lit': { label: 'LitElement', icon: '/images/lit.svg' },
   'lit-apollo': { label: 'LitElement', icon: '/images/lit.svg' },
   'fast': { label: 'FAST', icon: '/images/fast.svg' },
   'gluon': { label: 'Gluon', icon: '/images/gluon.svg' },
+  'haunted': { label: 'Haunted', icon: '/images/haunted.svg' },
   'hybrids': { label: 'Hybrids', icon: '/images/hybrids.svg' },
   'mixins': { label: 'Vanilla', icon: '/images/js.svg' },
+  'vanilla': { label: 'Vanilla', icon: '/images/js.svg' },
   'polymer': { label: 'Polymer', icon: '/images/polymer.svg' },
+}
+
+function getPackage(tag: string) {
+  return PACKAGES[tag] ?? PACKAGES.vanilla;
 }
 
 @customElement('code-tabs')

@@ -158,6 +158,36 @@ class ThemeToggle extends ApolloQuery<Data, null> {
 ```
 
 </code-tab>
+
+<code-tab library="haunted">
+
+```ts
+import { useQuery, component, html } from '@apollo-elements/haunted';
+
+type Theme = 'dark'|'light';
+type Data = { theme: Theme };
+
+function ThemeToggle() {
+  const { data } = useQuery<Data, null>(ThemeToggleQuery);
+
+  const nextTheme = data?.theme === 'dark' ? 'light' : 'dark';
+
+  function toggleTheme(host) {
+    // TBD
+  }
+
+  return html`
+    <button @click="${toggleTheme}">
+      Change to ${nextTheme} theme
+    </button>
+  `,
+}
+
+customElements.define('theme-toggle', component(ThemeToggle));
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -279,6 +309,39 @@ class ThemeToggle extends TypePoliciesMixin(ApolloQuery)<Data, null> {
 
 </code-tab>
 
+<code-tab library="haunted">
+
+```ts
+import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
+import { typePolicies } from './typePolicies';
+
+function ThemeToggle({ client }) {
+  const { data } = useQuery<Data, null>(ThemeToggleQuery);
+
+  /**
+   * There's no TypePoliciesMixin for haunted,
+   * but you can use the `useEffect` hook to do the same
+   */
+  useEffect(({ host: { client } }) => {
+    client.cache.policies.addTypePolicies(typePolicies);
+  }, [client]);
+
+  const nextTheme = data?.theme === 'dark' ? 'light' : 'dark';
+
+  function toggleTheme(host) {
+    // TBD
+  }
+
+  return html`
+    <button @click="${toggleTheme}">
+      Change to ${nextTheme} theme
+    </button>
+  `,
+}
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -288,7 +351,7 @@ import { typePolicies } from './typePolicies';
  * There's no TypePoliciesMixin for hybrids,
  * but you can use this one-line function to do the same
  */
-function connnect(host) {
+function connect(host) {
   host.client.cache.policies.addTypePolicies(host.typePolicies);
 }
 
@@ -340,6 +403,20 @@ toggleTheme() {
   const theme = this.nextTheme;
   this.client.writeQuery({
     query: this.query,
+    data: { theme },
+  });
+}
+```
+
+</code-tab>
+
+<code-tab library="hybrids">
+
+```ts
+function toggleTheme() {
+  const theme = nextTheme;
+  client.writeQuery({
+    query: ToggleThemeQuery,
     data: { theme },
   });
 }
@@ -432,8 +509,18 @@ toggleTheme() {
 <code-tab library="hybrids">
 
 ```ts
+function toggleTheme() {
+  themeVar(nextTheme);
+}
+```
+
+</code-tab>
+
+<code-tab library="hybrids">
+
+```ts
 function toggleTheme(host) {
-  themeVar(this.nextTheme);
+  themeVar(host.nextTheme);
 }
 ```
 
@@ -492,6 +579,17 @@ toggleTheme() {
 toggleTheme() {
   localStorage.setItem('theme', this.nextTheme);
   this.client.cache.evict({ fieldName: 'theme' });
+}
+```
+
+</code-tab>
+
+<code-tab library="hybrids">
+
+```ts
+function toggleTheme() {
+  localStorage.setItem('theme', nextTheme);
+  client.cache.evict({ fieldName: 'theme' });
 }
 ```
 

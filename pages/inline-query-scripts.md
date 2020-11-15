@@ -101,6 +101,26 @@ class GreetMe extends ApolloQuery<Data, null> { }
 
 </code-tab>
 
+<code-tab library="haunted">
+
+```ts
+import { useQuery, component, html } from '@apollo-elements/haunted';
+
+function GreetMe() {
+  const { data } = useQuery(null);
+  return html`
+    <p>
+      ${data?.greeting ?? 'Hello'},
+      ${data?.name ?? 'friend'}
+    </p>
+  `;
+}
+
+customElements.define('greet-me', component(GreetMe));
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts

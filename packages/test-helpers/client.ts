@@ -8,7 +8,7 @@ import { addMocksToSchema } from '@graphql-tools/mock';
 
 import TestSchema from './graphql/test.schema.graphql';
 
-import { HelloWorld, NonNull, NoParam, Nullable } from './schema';
+import { HelloWorld, User, NonNull, NoParam, Nullable } from './schema';
 
 declare global {
   interface Window {
@@ -42,6 +42,14 @@ const mocks = {
     return {
       name: name ?? 'Chaver',
       greeting: greeting ?? 'Shalom',
+    };
+  },
+
+  User(_, { username, haircolor }): User {
+    return {
+      username,
+      haircolor,
+      nickname: `${haircolor} ${username}`,
     };
   },
 };

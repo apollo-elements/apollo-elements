@@ -14,7 +14,7 @@
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject>",
-          "default": "\"__APOLLO_CLIENT__\""
+          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
@@ -49,8 +49,7 @@
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean",
-          "default": "false"
+          "type": "boolean"
         }
       ]
     }

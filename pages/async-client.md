@@ -126,6 +126,7 @@ customElements.define('async-element', AsyncElement);
 ```
 
 </code-tab>
+
 <code-tab library="lit-apollo">
 
 ```ts
@@ -221,6 +222,53 @@ class AsyncElement extends ApolloQuery<Data, Variables> {
     this.subscribe();
   }
 };
+```
+
+</code-tab>
+
+<code-tab library="haunted">
+
+```ts
+import { useQuery, component, html } from '@apollo-elements/haunted';
+
+import UserSessionQuery from './UserSession.query.graphql';
+
+import type {
+  UserSessionQueryData as Data,
+  UserSessionQueryVariables as Variables,
+} from '../schema';
+
+import { getClient } from './client';
+import { formatDistance } from 'date-fns/esm';
+
+function AsyncElement(el) {
+  const { client, data } =
+    useQuery<Data, Variables>(UserSessionQuery, { noAutoSubscribe: true });
+
+  useEffect(async ({ host }) => {
+    if (host.client) return;
+    // asynchronously get a reference to the client
+    host.client = await getClient();
+    // only then start fetching data
+    host.subscribe();
+  }, [client]);
+
+  const name = data?.userSession.name ?? ''
+  const lastActive = data?.userSession.lastActive;
+
+  const time =
+    !lastActive ? '' : formatDistance(lastActive, Date.now(), { addSuffix: true });
+
+  return html`
+    <h1>👋 ${name}!</h1>
+    <p>
+      <span>Your last activity was</span>
+      <time>${time}</time>
+    </p>
+  `;
+};
+
+customElements.define('async-element', component(AsyncElement));
 ```
 
 </code-tab>

@@ -156,6 +156,26 @@ class BlogPost extends ApolloQuery<Data, Variables> {
 
 </code-tab>
 
+<code-tab library="haunted">
+
+```ts
+import { useQuery, component } from '@apollo-elements/haunted';
+import PostQuery from './Post.query.graphql';
+import { routeVar } from '../variables';
+
+function BlogPost() {
+  const { data } = useQuery(PostQuery, {
+    shouldSubscribe() {
+      return !!(routeVar().params?.postId)
+    },
+  });
+}
+
+customElements.define('blog-post', component(BlogPost));
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -240,6 +260,12 @@ ValidateVariablesMixin(ApolloQuery)<Data, Variables> {
   query = NonNullableQuery;
 }
 ```
+
+</code-tab>
+
+<code-tab library="haunted">
+
+There's no `ValidateVariablesMixin` for haunted, so use one of the other techniques.
 
 </code-tab>
 
@@ -448,10 +474,62 @@ class ToggleViews extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
 ```
 
 </code-tab>
+
+<code-tab library="haunted">
+
+```ts
+import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
+
+import { DetailsTypePolicies } from './typePolicies';
+
+function ToggleViews({ client }) {
+
+  /**
+   * There's no TypePoliciesMixin for haunted,
+   * but you can use the `useEffect` hook to do the same
+   */
+  useEffect(({ host: { client } }) => {
+    client.cache.policies.addTypePolicies(DetailsTypePolicies);
+  }, [client]);
+
+  const { data } = useQuery(DetailsOpenQuery)
+
+  function onToggle(event) {
+    client.cache.writeQuery({
+      query: DetailsOpenQuery,
+      data: {
+        ...data,
+        [`${event.target.id}Open`]: event.target.open,
+      }
+    });
+  }
+
+  return html`
+    <details id="eenie"
+        ?open="${data.eenieOpen ?? false}"
+        @toggle="${onToggle}">
+      <summary>Eenie</summary>
+      I'm the first mouse
+    </details>
+
+    <details id="meenie"
+        ?open="${data.meenieOpen ?? false}"
+        @toggle="${onToggle}">
+      <summary>Meenie</summary>
+      I'm the second mouse
+    </details>
+  `;
+}
+
+customElements.define('toggle-views', component(ToggleViews));
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
-import { client, query, define, property, html } from '@apollo-elements/fast';
+import { client, query, define, property, html } from '@apollo-elements/hybrids';
 
 import { DetailsTypePolicies } from './typePolicies';
 
@@ -485,7 +563,7 @@ const render = ({ data }) => html`
  * There's no TypePoliciesMixin for hybrids,
  * but you can use this one-line function to do the same
  */
-function connnect(host) {
+function connect(host) {
   host.client.cache.policies.addTypePolicies(host.typePolicies);
 }
 
@@ -493,20 +571,7 @@ define('toggle-views', {
   render,
   client: client(window.__APOLLO_QUERY__),
   query: query(DetailsOpenQuery),
-  typePolicies: property({
-    Query: {
-      fields: {
-        eenieOpen: {
-          read(prev) { return prev; },
-          merge(_, next) { return next; },
-        },
-        meenieOpen: {
-          read(prev) { return prev; },
-          merge(_, next) { return next; },
-        }
-      }
-    }
-  }, connect),
+  typePolicies: property(DetailsTypePolicies, connect),
 });
 ```
 

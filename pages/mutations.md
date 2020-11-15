@@ -244,6 +244,65 @@ export class ProfilePage extends ApolloQuery<Data, Variables> {
 ```
 
 </code-tab>
+
+<code-tab library="haunted">
+
+```ts
+import '@apollo-elements/components/apollo-mutation';
+import { useQuery, component, html } from '@apollo-elements/haunted';
+
+import ProfileQuery from './Profile.query.graphql';
+import UpdateProfileMutation from 'UpdateProfile.mutation.graphql';
+
+import type {
+  ProfileQueryData as Data,
+  ProfileQueryVariables as Variables,
+} from '../schema';
+
+function ProfilePage() {
+  const { data, loading } = useQuery(ProfileQuery);
+
+  return html`
+    <h2>Profile</h2>
+
+    <dl ?hidden="${loading || !data}">
+      <dt>Name</dt>
+      <dd>${data?.name}</dd>
+
+      <dt>Picture</dt>
+      <dd><img src="${ifDefined(data?.picture)}"/></dd>
+
+      <dt>Birthday</dt>
+      <dd>${data?.birthday}</dd>
+    </dl>
+
+    <form ?hidden="${!data?.isMe}">
+      <h3>Edit</h3>
+      <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
+        <label>Name
+          <input slot="variable" data-variable="name">
+        </label>
+
+        <label>Picture (URL)
+          <input slot="variable" data-variable="picture">
+        </label>
+
+        <label>Birthday
+          <input slot="variable" data-variable="birthday" type="date"/>
+        </label>
+
+        <button slot="trigger">Save</button>
+      </apollo-mutation>
+    </form>
+  `;
+
+}
+
+customElements.define('profile-page', component(ProfilePage));
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -261,7 +320,7 @@ import type {
 const render = ({ data, loading }) => html`
   <h2>Profile</h2>
 
-  <dl ?hidden="${loading || !data}">
+  <dl hidden="${loading || !data}">
     <dt>Name</dt>
     <dd>${data?.name}</dd>
 
@@ -272,9 +331,9 @@ const render = ({ data, loading }) => html`
     <dd>${data?.birthday}</dd>
   </dl>
 
-  <form ?hidden="${!data?.isMe}">
+  <form hidden="${!data?.isMe}">
     <h3>Edit</h3>
-    <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
+    <apollo-mutation mutation="${UpdateProfileMutation}" input-key="input">
       <label>Name
         <input slot="variable" data-variable="name">
       </label>

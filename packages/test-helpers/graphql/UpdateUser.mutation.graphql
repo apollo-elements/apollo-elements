@@ -1,0 +1,5 @@
+mutation UpdateUser($username: String!, $haircolor: String!) {
+  updateUser(username: $username, haircolor: $haircolor) {
+    nickname
+  }
+}

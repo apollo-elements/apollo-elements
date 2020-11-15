@@ -218,3 +218,7 @@ dl.tsd-comment-tags dt {
 .hljs-tag .hljs-attr {
   color: #03A9F4;
 }
+
+code-copy + code-copy {
+  margin-top: 1em;
+}
