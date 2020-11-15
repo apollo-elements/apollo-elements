@@ -12,6 +12,7 @@ declare global {
   interface HTMLElementEventMap {
     'apollo-element-connected': ApolloElementEvent;
     'apollo-element-disconnected': ApolloElementEvent;
+    'apollo-error': CustomEvent<ApolloError>;
   }
 }
 

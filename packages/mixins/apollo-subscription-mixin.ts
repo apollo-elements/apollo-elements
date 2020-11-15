@@ -19,9 +19,18 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 
+type ApolloSubscriptionResultEvent<TData = unknown> =
+  CustomEvent<OnSubscriptionDataParams<TData>>;
+
+declare global {
+  interface HTMLElementEventMap {
+    'apollo-subscription-result': ApolloSubscriptionResultEvent;
+  }
+}
+
 function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
   class ApolloSubscriptionElement<TData, TVariables>
-    extends ApolloElementMixin(superclass)
+    extends ApolloElementMixin(superclass)<TData, TVariables>
     implements ApolloSubscriptionInterface<TData, TVariables> {
     static documentType = 'subscription';
 
@@ -152,7 +161,9 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       const loading = false;
       const error = null;
       const subscriptionData = { data, loading, error };
-      this.onSubscriptionData?.({ client, subscriptionData });
+      const detail = { client, subscriptionData };
+      this.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
+      this.onSubscriptionData?.(detail);
       this.data = data;
       this.loading = loading;
       this.error = error;
@@ -163,6 +174,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      * @private
      */
     nextError(error: ApolloError) {
+      this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       this.error = error;
       this.loading = false;
       this.onError?.(error);
