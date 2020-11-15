@@ -7,7 +7,7 @@ import type {
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
-import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
 
 import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
@@ -16,8 +16,6 @@ import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 import { describeSubscription } from '@apollo-elements/test-helpers/subscription.test';
 
 import { ApolloSubscription } from './apollo-subscription';
-
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
 const template = html<TestableApolloSubscription>`
   <output id="data">${x => x.stringify(x.data)}</output>
@@ -55,11 +53,8 @@ describe('[fast] ApolloSubscription', function() {
       const attrs = opts?.attributes ? ` ${opts.attributes}` : '';
       const innerHTML = opts?.innerHTML ?? '';
 
-      const spies = Object.fromEntries((opts?.spy ?? []).map(key =>
-        [key, spy(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonSpy>;
-
-      const stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
-        [key, stub(Test.prototype, key as keyof Test)])) as Record<keyof T | string, SinonStub>;
+      const spies = setupSpies(opts?.spy, Test.prototype as unknown as T);
+      const stubs = setupStubs(opts?.stub, Test.prototype as unknown as T);
 
       const element = await fixture<T>(
         `<${name}${attrs}>${innerHTML}</${name}>`);

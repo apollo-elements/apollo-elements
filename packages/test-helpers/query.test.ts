@@ -33,9 +33,9 @@ import type {
 
 import { ObservableQuery } from '@apollo/client/core';
 
-import { match, spy, stub, SinonSpy, SinonStub } from 'sinon';
+import { match, spy, SinonSpy } from 'sinon';
 import { client, makeClient } from './client';
-import { isSubscription } from './helpers';
+import { isSubscription, setupSpies, setupStubs } from './helpers';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
 type QE<D, V> = HTMLElement & ApolloQueryInterface<D, V>;
@@ -78,17 +78,11 @@ export function setupQueryClass<T extends QueryElement>(Klass: Constructor<T>): 
 
     const { innerHTML = '', attributes, properties } = opts ?? {};
 
-
     const tag =
       defineCE(Test);
 
-    const spies = Object.fromEntries((opts?.spy ?? []).map(method =>
-      [method, spy(Test.prototype, method as keyof Test)])
-    ) as Record<keyof B | string, SinonSpy>;
-
-    const stubs = Object.fromEntries((opts?.stub ?? []).map(method =>
-      [method, stub(Test.prototype, method as keyof Test)])
-    ) as Record<keyof B | string, SinonStub>;
+    const spies = setupSpies(opts?.spy, Test.prototype as B);
+    const stubs = setupStubs(opts?.stub, Test.prototype as B);
 
     const attrs = attributes ? ` ${attributes}` : '';
 
@@ -361,7 +355,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       afterEach(function restoreSpies() {
-        for (const spy of Object.values(spies))
+        for (const spy of Object.values(spies ?? {}))
           spy.restore();
       });
 

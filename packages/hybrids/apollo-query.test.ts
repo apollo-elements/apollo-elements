@@ -1,9 +1,7 @@
 import type { SinonSpy, SinonStub } from 'sinon';
-import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { SetupOptions, SetupResult, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 
 import { aTimeout, nextFrame } from '@open-wc/testing';
-
-import { stub, spy } from 'sinon';
 
 import { define, html, Hybrids } from 'hybrids';
 
@@ -66,10 +64,8 @@ describe('[hybrids] ApolloQuery', function() {
 
       // @ts-expect-error: gotta hook up the spies somehow
       element.__testingEscapeHatch = function(el) {
-        spies = Object.fromEntries((opts?.spy ?? []).map(key =>
-          [key, spy(el, key)])) as Record<string|keyof T, SinonSpy>;
-        stubs = Object.fromEntries((opts?.stub ?? []).map(key =>
-          [key, stub(el, key)])) as Record<string | keyof T, SinonStub>;
+        spies = setupSpies(opts?.spy, el);
+        stubs = setupStubs(opts?.stub, el);
       };
 
       document.body.append(element);

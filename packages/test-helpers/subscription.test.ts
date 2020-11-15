@@ -6,7 +6,7 @@ import type { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/
 
 import { gql } from '@apollo/client/core';
 
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+import { spy, SinonSpy } from 'sinon';
 import { makeClient, setupClient, teardownClient } from './client';
 
 import NoParamSubscription from './graphql/NoParam.subscription.graphql';
@@ -21,6 +21,7 @@ import {
   NullableParamSubscriptionData,
   NullableParamSubscriptionVariables,
 } from './schema';
+import { setupSpies, setupStubs } from './helpers';
 
 type SE<D, V> = HTMLElement & ApolloSubscriptionInterface<D, V>;
 
@@ -63,13 +64,8 @@ export function setupSubscriptionClass<T extends SubscriptionElement>(Klass: Con
     const tag =
       defineCE(Test);
 
-    const spies = Object.fromEntries((opts?.spy ?? []).map(method =>
-      [method, spy(Test.prototype, method as keyof Test)])
-    ) as Record<keyof B | string, SinonSpy>;
-
-    const stubs = Object.fromEntries((opts?.stub ?? []).map(method =>
-      [method, stub(Test.prototype, method as keyof Test)])
-    ) as Record<keyof B | string, SinonStub>;
+    const spies = setupSpies(opts?.spy, Test.prototype as B);
+    const stubs = setupStubs(opts?.stub, Test.prototype as B);
 
     const attrs = attributes ? ` ${attributes}` : '';
 

@@ -1,5 +1,5 @@
-query HelloQuery($name: String) {
-  helloWorld(name: $name) {
+query HelloQuery($name: String, $greeting: String) {
+  helloWorld(name: $name, greeting: $greeting) {
     name
     greeting
   }

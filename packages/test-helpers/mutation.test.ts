@@ -15,7 +15,7 @@ import type {
   NullableParamMutationVariables,
 } from './schema';
 
-import { match, spy, stub, SinonSpy, SinonStub } from 'sinon';
+import { match, spy, SinonSpy } from 'sinon';
 
 import { makeClient, setupClient } from './client';
 import { ApolloMutationInterface } from '@apollo-elements/interfaces';
@@ -23,6 +23,7 @@ import { ApolloMutationInterface } from '@apollo-elements/interfaces';
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 import gql from 'graphql-tag';
+import { setupSpies, setupStubs } from './helpers';
 
 type ME<D, V> = HTMLElement & ApolloMutationInterface<D, V>;
 export interface MutationElement<D = unknown, V = unknown> extends ME<D, V> {
@@ -80,13 +81,8 @@ export function setupMutationClass<T extends MutationElement>(Klass: Constructor
     const element =
       await fixture<B>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
 
-    const spies = Object.fromEntries((opts?.spy ?? []).map(method =>
-      [method, spy(Test.prototype, method as keyof Test)])
-    ) as Record<keyof B | string, SinonSpy>;
-
-    const stubs = Object.fromEntries((opts?.stub ?? []).map(method =>
-      [method, stub(Test.prototype, method as keyof Test)])
-    ) as Record<keyof B | string, SinonStub>;
+    const spies = setupSpies(opts?.spy, Test.prototype as B);
+    const stubs = setupStubs(opts?.stub, Test.prototype as B);
 
     for (const [key, val] of Object.entries(properties ?? {}))
       key !== 'onCompleted' && key !== 'onError' && (element[key] = val);

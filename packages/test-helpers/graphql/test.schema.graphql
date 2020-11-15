@@ -26,7 +26,7 @@ type Query {
   nonNullParam(nonNull: String!): NonNull
   nullableParam(nullable: String): Nullable
   noParam: NoParam
-  helloWorld(name: String): HelloWorld
+  helloWorld(name: String, greeting: String): HelloWorld
 }
 
 type Subscription {

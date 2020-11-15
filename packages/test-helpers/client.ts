@@ -38,10 +38,10 @@ const mocks = {
     return { noParam: 'noParam' };
   },
 
-  HelloWorld(_, { name }): HelloWorld {
+  HelloWorld(_, { name, greeting }): HelloWorld {
     return {
       name: name ?? 'Chaver',
-      greeting: 'Shalom',
+      greeting: greeting ?? 'Shalom',
     };
   },
 };

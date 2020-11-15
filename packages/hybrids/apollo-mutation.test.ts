@@ -1,18 +1,12 @@
 import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
-import { aTimeout, expect, nextFrame } from '@open-wc/testing';
+import { aTimeout, nextFrame } from '@open-wc/testing';
 import 'sinon-chai';
-import gql from 'graphql-tag';
 
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+import { SinonSpy, SinonStub } from 'sinon';
 import { define, html, Hybrids } from 'hybrids';
 
-import NoParamMutation from '@apollo-elements/test-helpers/NoParam.mutation.graphql';
-import NullableParamMutation from '@apollo-elements/test-helpers/NullableParam.mutation.graphql';
-
 import { ApolloMutation } from './apollo-mutation';
-import { setupClient } from '@apollo-elements/test-helpers/client';
-import { ApolloError } from '@apollo/client/core';
-import { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 
 let counter = 0;
 
@@ -60,8 +54,8 @@ describe('[hybrids] ApolloMutation', function() {
       template.innerHTML = `<${tag}${attrs}></${tag}>`;
 
       const [element] =
-    (template.content.cloneNode(true) as DocumentFragment)
-      .children as HTMLCollectionOf<T>;
+        (template.content.cloneNode(true) as DocumentFragment)
+          .children as HTMLCollectionOf<T>;
 
       if (properties?.onCompleted)
         element.onCompleted = properties.onCompleted as T['onCompleted'];
@@ -74,10 +68,8 @@ describe('[hybrids] ApolloMutation', function() {
 
       // @ts-expect-error: gotta hook up the spies somehow
       element.__testingEscapeHatch = function(el) {
-        spies = Object.fromEntries((options?.spy ?? []).map(key =>
-          [key, spy(el, key)])) as Record<string|keyof T, SinonSpy>;
-        stubs = Object.fromEntries((options?.stub ?? []).map(key =>
-          [key, stub(el, key)])) as Record<string | keyof T, SinonStub>;
+        spies = setupSpies(options?.spy, el);
+        stubs = setupStubs(options?.stub, el);
       };
 
       document.body.append(element);
