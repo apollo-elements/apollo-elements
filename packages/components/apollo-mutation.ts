@@ -196,7 +196,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
 
   private inFlight = false;
 
-  private __variables: Variables = null;
+  protected __variables: Variables = null;
 
   /**
    * Slotted trigger node
@@ -236,31 +236,6 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     return link?.href;
   }
 
-  constructor() {
-    super();
-    type This = this;
-    Object.defineProperties(this, {
-      variables: {
-        configurable: true,
-        enumerable: true,
-
-        get(this: This): Variables {
-          if (this.__variables)
-            return this.__variables;
-          else
-            return this.getVariablesFromInputs() ?? this.getDOMVariables();
-        },
-
-        set(this: This, v: Variables) {
-          this.__variables = v;
-          if (this.mo) // element is connected
-            this.variablesChanged?.(v);
-        },
-
-      },
-    });
-  }
-
   connectedCallback(): void {
     super.connectedCallback();
     this.onSlotchange();
@@ -273,7 +248,10 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     `;
   }
 
-  private getVariablesFromInputs(): Variables {
+  /**
+   * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
+   */
+  protected getVariablesFromInputs(): Variables {
     const input = {
       ...this.dataset,
       ...this.inputs.reduce(toVariables, {}),
@@ -357,3 +335,24 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     this.dispatchEvent(new MutationErrorEvent<Data, Variables>(this, error));
   }
 }
+
+Object.defineProperties(ApolloMutationElement.prototype, {
+  variables: {
+    configurable: true,
+    enumerable: true,
+
+    get<V>(this: ApolloMutationElement<unknown, V>): V {
+      if (this.__variables)
+        return this.__variables;
+      else
+        return this.getVariablesFromInputs() ?? this.getDOMVariables();
+    },
+
+    set<V>(this: ApolloMutationElement<unknown, V>, v: V) {
+      this.__variables = v;
+      if (this.mo) // element is connected
+        this.variablesChanged?.(v);
+    },
+
+  },
+});
