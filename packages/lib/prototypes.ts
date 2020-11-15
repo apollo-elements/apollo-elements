@@ -1,12 +1,10 @@
-import { Constructor } from '@apollo-elements/interfaces/constructor';
+import type { Constructor } from '@apollo-elements/interfaces';
 
-import { property } from 'hybrids';
-
+import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 import { cuid } from './cuid';
 
-import * as cache from 'hybrids/esm/cache';
-
-import { ApolloElementElement } from '../factories/client';
+export class ApolloElementElement<D = unknown, V = unknown>
+  extends ApolloElementMixin(HTMLElement)<D, V> { }
 
 type Type = 'client' | 'subscription' | 'mutation' | 'query';
 
@@ -36,7 +34,7 @@ function getPrototypeDescriptor<S extends HTMLElement>(
 
   // class fields need a real instance in order to get their descriptors.
   if (!INSTANCES.get(source)) {
-    customElements.define(`apollo-elements-hybrids-intermediate-element-${cuid()}`, source);
+    customElements.define(`apollo-elements-intermediate-element-${cuid()}`, source);
     INSTANCES.set(source, new source());
   }
 
@@ -52,7 +50,7 @@ function getPrototypeDescriptor<S extends HTMLElement>(
   return descriptors;
 }
 
-function applyPrototype<S extends HTMLElement>(
+export function applyPrototype<S extends HTMLElement>(
   target: S,
   source: Constructor<S>,
 ): PropertyDescriptorMap {
@@ -73,41 +71,6 @@ function applyPrototype<S extends HTMLElement>(
   return propertiesToAssign;
 }
 
-interface HookHybridsOptions<T> {
-  host: T,
-  key: keyof T|string,
-  init: unknown
-}
-
-export function hookIntoHybridsRender<T>(opts: HookHybridsOptions<T>): void {
-  const { host, init, key } = opts;
-  const config = property(init);
-  Object.defineProperty(host, key, {
-    enumerable: true,
-    configurable: true,
-    get() {
-      return cache.get(host, key, config.get);
-    },
-    set(newValue) {
-      cache.set(host, key, config.set, newValue);
-    },
-  });
-}
-
-function unsafeApplyElement<T extends ApolloElementElement>(host: T): void {
-  // HACK: hook into hybrids reactivity system
-  for (const [key, init] of Object.entries({
-    data: null,
-    error: null,
-    errors: null,
-    loading: false,
-  }))
-    hookIntoHybridsRender({ host, key, init });
-
-  ELEMENT_APPLIED
-    .set(host, applyPrototype(host, ApolloElementElement));
-}
-
 function unsafeApply<T extends ApolloElementElement>(
   host: T,
   klass: Constructor<T>,
@@ -122,13 +85,25 @@ function unsafeApply<T extends ApolloElementElement>(
   });
 }
 
+function unsafeApplyElement<T extends ApolloElementElement>(
+  host: T,
+  effects: (host: T) => void
+): void {
+  effects(host);
+  ELEMENT_APPLIED
+    .set(host, applyPrototype(host, ApolloElementElement));
+}
+
+const noop = () => void null;
+
 export function apply<T extends ApolloElementElement>(
   host: T,
   klass: Constructor<T> | typeof ApolloElementElement,
-  type: Type
+  type: Type,
+  effects: (host: T) => void = noop,
 ): PropertyDescriptorMap {
   if (!isElementApplied(host) || klass === ApolloElementElement)
-    unsafeApplyElement(host);
+    unsafeApplyElement(host, effects);
 
   if (!getDescriptor(host) || klass !== ApolloElementElement)
     unsafeApply(host, klass, type);

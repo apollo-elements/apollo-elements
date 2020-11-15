@@ -2,7 +2,8 @@ import type { DocumentNode } from 'graphql';
 import type { Descriptor } from 'hybrids';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-import { apply, getDescriptor, hookIntoHybridsRender } from '../helpers/prototypes';
+import { hookPropertyIntoHybridsCache } from '../helpers/cache';
+import { apply, getDescriptor } from '@apollo-elements/lib/prototypes';
 
 class ApolloQueryElement<D = unknown, V = unknown>
   extends ApolloQueryMixin(HTMLElement)<D, V> { }
@@ -26,7 +27,7 @@ export function query<TData, TVariables>(
 
     connect(host, key, invalidate) {
       apply(host, ApolloQueryElement, 'query');
-      hookIntoHybridsRender({ host, key: 'networkStatus', init: 7 });
+      hookPropertyIntoHybridsCache({ host, key: 'networkStatus', init: 7 });
       // @ts-expect-error: gotta hook up spies somehow
       host?.__testingEscapeHatch?.(host);
       const mo = new MutationObserver(() => invalidate());
