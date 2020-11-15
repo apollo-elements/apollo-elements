@@ -23,6 +23,10 @@
           "default": "[\"uri\"]"
         },
         {
+          "name": "elements",
+          "type": "readonly ApolloElement[]"
+        },
+        {
           "name": "typePolicies",
           "description": "TypePolicies for the client",
           "type": "TypePolicies"
@@ -208,6 +212,12 @@
         {
           "name": "apollo-element-connected",
           "description": "when the element connects to the dom"
+        },
+        {
+          "name": "apollo-mutation-result"
+        },
+        {
+          "name": "apollo-error"
         }
       ],
       "slots": [

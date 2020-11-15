@@ -21,6 +21,12 @@ type HelloWorld {
   greeting: String
 }
 
+type User {
+  username: String
+  haircolor: String
+  nickname: String
+}
+
 type Query {
   messages: [Message]
   nonNullParam(nonNull: String!): NonNull
@@ -41,4 +47,5 @@ type Mutation {
   nullableParam(nullable: String): Nullable
   noParam: NoParam
   reset: [Message]
+  updateUser(username: String!, haircolor: String!): User
 }

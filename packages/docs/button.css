@@ -29,7 +29,10 @@ button[selected] {
 
 button:focus,
 button:hover,
-button:active,
+button:active {
+  text-decoration: underline 4px dotted lightgreen;
+}
+
 button[selected] {
-  text-shadow: -0.06ex 0 currentColor, 0.06ex 0 currentColor;
+  text-decoration: none;
 }

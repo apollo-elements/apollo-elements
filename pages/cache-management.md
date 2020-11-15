@@ -110,7 +110,9 @@ class BlogPost extends ApolloMutation<Data, Variables> {
     return html`
       <loading-overlay ?active="${this.loading}"></loading-overlay>
 
-      <label>New Post <textarea @input="${this.onInput}"></textarea></label>
+      <label>New Post
+        <textarea @input="${this.onInput}"></textarea>
+      </label>
 
       <button ?hidden="${this.data}" @click="${() => this.mutate()}">
         Post!
@@ -153,8 +155,8 @@ const name = 'blog-post';
 const template = html<BlogPost>`
   <loading-overlay ?active="${x => x.loading}"></loading-overlay>
 
-  <label>
-    New Post <textarea ${ref('textarea')}
+  <label> New Post
+    <textarea ${ref('textarea')}
         @input="${(x, { event }) => x.onInput(event)}"></textarea>
   </label>
 
@@ -184,6 +186,52 @@ class BlogPost extends ApolloMutation<Data, Variables> {
     this.textarea.value = '';
   }
 }
+```
+
+</code-tab>
+
+<code-tab library="haunted">
+
+```ts
+import type {
+  BlogPostMutationData as Data,
+  BlogPostMutationVariables as Variables
+} from '../../codegen/operations';
+
+import { useMutation, useState, component, html } from '@apollo-elements/haunted';
+
+import BlogPostMutation from './BlogPost.mutation.graphql';
+
+function BlogPost(el) {
+  const [content, setContent] = useState('');
+
+  const [addBlogPost, { data, loading }] =
+    useMutation<Data, Variables>(BlogPostMutation, {
+      onCompleted: () => setContent(''),
+    });
+
+  const variables = { content };
+
+  return html`
+    <loading-overlay ?active="${loading}"></loading-overlay>
+
+    <label>New Post
+      <textarea @input="${e => setContent(e.target.value)}"></textarea>
+    </label>
+
+    <button
+        ?hidden="${!!data}"
+        @click="${() => addBlogPost({ variables })}"
+    >Post!</button>
+
+    <article ?hidden="${!data}">
+      <strong>Post Succeeded!</strong>
+      <p>${data?.summary}</p>
+    </article>
+  `;
+}
+
+customElements.define('blog-post', component(BlogPost));
 ```
 
 </code-tab>
@@ -353,6 +401,44 @@ updater(
 
 </code-tab>
 
+<code-tab library="haunted">
+
+```ts
+/**
+ * update function which reads a cached query result, merges
+ * it with the mutation result, and then writes it back to the cache.
+ */
+function update(
+  cache: ApolloCache<NormalizedCacheObject>,
+  result: FetchResult<Data>
+) {
+  // 1: Read the cache synchronously to get the current list of posts
+  const query = LatestPostsQuery;
+  const cached = cache.readQuery({ query: LatestPostsQuery });
+
+  // 2: Calculate the expected result of LatestPostsQuery,
+  //    considering the mutation result
+  const data = { posts: [result.data.postBlogPost, ...cached.posts] }
+
+  // 3: Perform the cache update by calling `writeQuery`
+  cache.writeQuery({ query, data });
+}
+
+function BlogPost() {
+  const [content, setContent] = useState('');
+
+  const [addBlogPost, { data, loading }] =
+    useMutation<Data, Variables>(BlogPostMutation, {
+      onCompleted: () => setContent(''),
+      update,
+    });
+
+  return html`...`;
+}
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -452,6 +538,56 @@ onInput(event: KeyboardEvent & { target: HTMLTextareaElement }) {
       content,
     },
   }
+}
+```
+
+</code-tab>
+
+<code-tab library="haunted">
+
+```ts
+function BlogPost(el) {
+  const [datePosted, setDatePosted] = useState(new Date().toISOString());
+  const [content, setContent] = useState('');
+
+  const optimistic = {
+    postBlogPost: {
+      __typename: 'BlogPost',
+      url: '#',
+      // implementation left as an exercise to the reader
+      summary: summarize(content),
+      datePosted,
+      content,
+    },
+  };
+
+  const [addBlogPost, { data, loading }] =
+    useMutation<Data, Variables>(BlogPostMutation, {
+      onCompleted: () => setContent(''),
+      update,
+      optimisticResponse,
+    });
+
+  const variables = { content };
+
+  return html`
+    <loading-overlay ?active="${loading}"></loading-overlay>
+
+    <label>New Post <textarea @input="${e => setContent(e.target.value)}"></textarea></label>
+
+    <button
+        ?hidden="${!!data}"
+        @click="${() => {
+          setDatePosted(new Date().toISOString());
+          addBlogPost({ variables });
+        }}"
+    >Post!</button>
+
+    <article ?hidden="${!data}">
+      <strong>Post Succeeded!</strong>
+      <p>${data?.summary}</p>
+    </article>
+  `;
 }
 ```
 

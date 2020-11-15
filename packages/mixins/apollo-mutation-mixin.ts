@@ -51,8 +51,6 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     declare error: Error;
 
-    declare errors: readonly GraphQLError[];
-
     declare loading: boolean;
 
     declare variables: TVariables;
@@ -132,10 +130,12 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
      */
     onCompletedMutation(response: FetchResult<TData>, mutationId: number): FetchResult<TData> {
       const { data } = response;
+      this.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
       if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
         this.loading = false;
         this.error = null;
         this.data = data ?? null;
+        this.errors = response.errors ?? null;
       }
       this.onCompleted?.(data);
       return response;
@@ -146,6 +146,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
      * @private
      */
     onMutationError(error: ApolloError, mutationId: number): never {
+      this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       if (this.isMostRecentMutation(mutationId)) {
         this.loading = false;
         this.data = null;
