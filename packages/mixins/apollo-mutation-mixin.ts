@@ -14,7 +14,15 @@ import {
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { GraphQLError } from 'graphql';
+
+type ApolloMutationResultEvent<TData = unknown> =
+  CustomEvent<FetchResult<TData>>;
+
+declare global {
+  interface HTMLElementEventMap {
+    'apollo-mutation-result': ApolloMutationResultEvent;
+  }
+}
 
 function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
   class ApolloMutationElement<TData, TVariables>

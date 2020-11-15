@@ -1,34 +1,13 @@
-import {
-  ApolloClient,
-  FetchPolicy,
-  FetchResult,
-  NetworkStatus,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+import { ApolloClient, FetchPolicy, FetchResult, NormalizedCacheObject } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import type {
-  NonNullableParamSubscriptionData,
-  NonNullableParamSubscriptionVariables,
-  NoParamSubscriptionData,
-  NoParamSubscriptionVariables,
-  NullableParamSubscriptionData,
-  NullableParamSubscriptionVariables,
-} from '@apollo-elements/test-helpers/schema';
-
-import type Sinon from 'sinon';
-
-import gql from 'graphql-tag';
-
 import {
-  aTimeout, defineCE, expect, fixture,
+  defineCE, expect, fixture,
   html as fhtml, nextFrame, unsafeStatic,
 } from '@open-wc/testing';
 
 import 'sinon-chai';
-
-import { spy, stub } from 'sinon';
 
 import { Observable } from '@apollo/client/core';
 
@@ -40,10 +19,6 @@ import {
 } from '@apollo-elements/test-helpers';
 
 import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
-
-import NoParamSubscription from '@apollo-elements/test-helpers/NoParam.subscription.graphql';
-import NullableParamSubscription from '@apollo-elements/test-helpers/NullableParam.subscription.graphql';
-import NonNullableParamSubscription from '@apollo-elements/test-helpers/NonNullableParam.subscription.graphql';
 
 import {
   describeSubscription,

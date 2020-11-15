@@ -22,6 +22,15 @@ import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 
+type ApolloQueryResultEvent<TData = unknown> =
+  CustomEvent<ApolloQueryResult<TData>>;
+
+declare global {
+  interface HTMLElementEventMap {
+    'apollo-query-result': ApolloQueryResultEvent;
+  }
+}
+
 const pickExecuteQueryOpts =
   <TVariables>(opts: QueryOptions<TVariables>): QueryOptions<TVariables> =>
     stripUndefinedValues({
@@ -253,6 +262,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * @private
      */
     nextData(result?: ApolloQueryResult<TData>): void {
+      this.dispatchEvent(new CustomEvent('apollo-query-result', { detail: result }));
       this.data = result?.data ?? null;
       this.loading = result?.loading;
       this.networkStatus = result?.networkStatus;
@@ -269,6 +279,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * @private
      */
     nextError(error: ApolloError): void {
+      this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       this.error = error;
       this.onError?.(error);
     }
