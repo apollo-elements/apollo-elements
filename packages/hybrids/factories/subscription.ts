@@ -2,7 +2,7 @@ import type { DocumentNode } from 'graphql';
 import type { Descriptor } from 'hybrids';
 
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
-import { apply, getDescriptor } from '../helpers/prototypes';
+import { apply, getDescriptor } from '@apollo-elements/lib/prototypes';
 
 class ApolloSubscriptionElement<D = unknown, V = unknown>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }
