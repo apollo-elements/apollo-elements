@@ -250,6 +250,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       `);
     });
 
+    it('has no href', function() {
+      // @ts-expect-error: coverage...
+      expect(element.href).to.be.undefined;
+    });
+
     describe('clicking the button', function() {
       it('mutates', async function() {
         expect(element.data).to.be.null;
@@ -292,6 +297,17 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           expect(element.data).to.be.null;
         });
+      });
+    });
+
+    describe('when button is removed', function() {
+      beforeEach(function() {
+        element.querySelector('button').remove();
+      });
+
+      it('destroys trigger', function() {
+        // @ts-expect-error: coverage...
+        expect(element.button).to.be.null;
       });
     });
   });
@@ -550,6 +566,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       element = await fixture<typeof element>(html`
         <apollo-mutation .mutation="${NoParamMutation}">
           <input slot="variable" data-variable="varA" value="variable-a">
+          <input slot="variable" data-vrible="varB" value="variable-b">
           <button slot="trigger">Do It</button>
         </apollo-mutation>
       `);
@@ -588,9 +605,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('clicking the button', function() {
       it('fires mutation-error event', async function() {
-        await element.updateComplete;
-        const button = element.querySelector('button');
-        setTimeout(() => button.click());
+        setTimeout(() => element.querySelector('button').click());
         const event = await oneEvent(element, MutationErrorEvent.type);
         expect(event.detail.element).to.equal(element);
         expect(event.detail.error).to.be.an.instanceOf(ApolloError);

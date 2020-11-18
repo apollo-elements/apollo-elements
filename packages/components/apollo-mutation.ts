@@ -211,9 +211,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * If the slotted trigger node is a link with a button as it's first child, the button
    */
   protected get button(): ButtonLikeElement {
-    if (!this.trigger)
-      return null;
-    else if (isButton(this.trigger))
+    if (isButton(this.trigger))
       return this.trigger;
     else if (isLink(this.trigger) && isButton(this.trigger.firstElementChild))
       return this.trigger.firstElementChild;
