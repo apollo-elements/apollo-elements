@@ -21,6 +21,9 @@ export function client<TData, TVariables>(
       apply(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);
       host.client = (client ?? (useGlobal && window.__APOLLO_CLIENT__)) || null;
       getDescriptor(host).connectedCallback.value.call(host);
+      return () => {
+        getDescriptor(host).disconnectedCallback?.value?.call?.(host);
+      };
     },
   };
 }
