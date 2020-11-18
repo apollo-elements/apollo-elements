@@ -25,6 +25,10 @@ function isApolloElement(e: EventTarget): e is ApolloElement {
   );
 }
 
+function hasShadowRoot(node: Node): node is HTMLElement {
+  return node instanceof HTMLElement && !!node.shadowRoot;
+}
+
 function isApolloQuery(e: EventTarget): e is ApolloQueryInterface<unknown, unknown> {
   // @ts-expect-error: disambiguating
   return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
@@ -98,6 +102,10 @@ export class ApolloClientElement extends HTMLElement {
 
   #typePolicies: TypePolicies;
 
+  get elements(): readonly ApolloElement[] {
+    return [...this.#instances];
+  }
+
   /**
    * TypePolicies for the client
    */
@@ -147,19 +155,13 @@ export class ApolloClientElement extends HTMLElement {
       this.initialize(instance);
   }
 
-  /**
-   * Set of elements subscribed to changes on this element's client
-   */
-  get instances(): Set<ApolloElement> {
-    return this.#instances;
-  }
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.append(template.content.cloneNode(true));
     this.addEventListener('apollo-element-connected', this.onElementConnected.bind(this));
     this.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
+    window.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
   }
 
   attributeChangedCallback(attr: string, oldValue: string, newValue: string): void {
@@ -189,10 +191,9 @@ export class ApolloClientElement extends HTMLElement {
   }
 
   private addDeepInstances(child: Node): void {
-    if (!(child instanceof HTMLElement)) return;
     if (isApolloElement(child))
       this.#instances.add(child);
-    if (!child.shadowRoot) return;
+    if (!hasShadowRoot(child)) return;
     for (const grandchild of child.shadowRoot.children)
       this.addDeepInstances(grandchild);
   }
@@ -212,8 +213,8 @@ export class ApolloClientElement extends HTMLElement {
    * Performs clean up when the child disconnects
    */
   private onElementDisconnected(event: ApolloElementEvent): void {
-    const target = claimApolloElement(event);
-    if (!target) return;
+    const target = event.detail;
+    if (!this.#instances.has(target)) return;
     this.#instances.delete(target);
     delete target.client;
   }
