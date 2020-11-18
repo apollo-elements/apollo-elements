@@ -4,6 +4,7 @@ import {
   defineCE,
   expect,
   fixture,
+  nextFrame,
   html,
   unsafeStatic,
 } from '@open-wc/testing';
@@ -109,9 +110,17 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       let spies: Record<keyof typeof element, SinonSpy>;
 
+      let connectEvent: Event;
+
+      let disconnectEvent: Event;
+
       async function waitForRender() {
         await element.hasRendered();
       }
+
+      beforeEach(function listen() {
+        window.addEventListener('apollo-element-connected', e => connectEvent = e);
+      });
 
       beforeEach(async function setupElement() {
         ({ element, spies } = await setupFunction({
@@ -119,7 +128,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         }));
       });
 
+      beforeEach(function listen() {
+        window.addEventListener('apollo-element-disconnected', e => disconnectEvent = e);
+      });
+
       afterEach(function restoreSpies() {
+        connectEvent = undefined;
+        disconnectEvent = undefined;
         for (const spy of Object.values(spies))
           spy.restore();
       });
@@ -193,6 +208,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         element.query = null;
         expect(element.query, 'query').to.be.null;
+      });
+
+      it('notifies <apollo-client>', function() {
+        expect(connectEvent).to.be.ok;
+        expect(connectEvent.bubbles).to.be.true;
+        expect(connectEvent.composed).to.be.true;
       });
 
       describe('subscribeToMore()', function() {
@@ -301,6 +322,20 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
         });
       });
+
+      describe('disconnecting', function() {
+        beforeEach(function disconnect() {
+          element.remove();
+        });
+
+        beforeEach(nextFrame);
+
+        it('notifies <apollo-client>', function() {
+          expect(disconnectEvent).to.be.ok;
+          expect(disconnectEvent.bubbles).to.be.true;
+          expect(disconnectEvent.composed).to.be.true;
+        });
+      });
     });
 
     describe('with global client available', function() {
@@ -340,6 +375,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           ({ element, spies } = await setupFunction({
             spy: ['subscribe', 'refetch'],
           }));
+        });
+
+        beforeEach(function() {
+          spies['client.subscribe'] = spy(element.client, 'subscribe');
         });
 
         it('uses the global client', async function() {
@@ -402,7 +441,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls subscribe', async function() {
-            expect(element.subscribe).to.have.been.called;
+            expect(element.subscribe).to.have.been.calledOnce;
           });
 
           describe('then setting options', function() {
@@ -450,6 +489,27 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
                 expect(element.subscribe)
                   .to.have.been.calledWithMatch({ variables: { nullable: '✈' } });
               });
+            });
+          });
+
+          describe('then appending the element elsewhere', function() {
+            beforeEach(nextFrame);
+
+            beforeEach(async function() {
+              document.body.append(element);
+            });
+
+            beforeEach(nextFrame);
+
+            afterEach(function() {
+              for (const spy of Object.values(spies))
+                spy.restore();
+            });
+
+            afterEach(() => element.remove());
+
+            it('subscribes', function() {
+              expect(element.subscribe).to.have.been.calledTwice;
             });
           });
         });

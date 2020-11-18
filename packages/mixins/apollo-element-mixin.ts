@@ -117,6 +117,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * @fires 'apollo-element-disconnected' when the element disconnects from the dom
      */
     disconnectedCallback(): void {
+      this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
       window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
       this.mo?.disconnect();
       super.disconnectedCallback?.();
