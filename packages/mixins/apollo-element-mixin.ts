@@ -92,7 +92,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       else {
         this._document = document;
         this._documentSetByJS = true;
-        if (this.mo) // element is connected
+        if (this.mo) // `isConnected` is unreliable in this case
           this.documentChanged?.(document);
       }
     }
@@ -117,9 +117,9 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * @fires 'apollo-element-disconnected' when the element disconnects from the dom
      */
     disconnectedCallback(): void {
+      window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
       this.mo?.disconnect();
       super.disconnectedCallback?.();
-      this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
     }
 
     /**
