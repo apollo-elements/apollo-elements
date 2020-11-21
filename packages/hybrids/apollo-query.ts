@@ -1,11 +1,11 @@
+import type { Hybrids } from 'hybrids';
+import type { ApolloQueryElement } from '@apollo-elements/interfaces/apollo-query';
 
-import { Hybrids } from 'hybrids';
-
-import { ApolloQueryElement, query } from './factories/query';
+import { query } from './factories/query';
 import { client } from './factories/client';
 
 export const ApolloQuery: Hybrids<ApolloQueryElement> = {
-  client: client(null, { useGlobal: true }),
+  client: client(),
   query: query(null),
 };
 

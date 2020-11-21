@@ -1,10 +1,11 @@
 import type { Hybrids } from 'hybrids';
+import type { ApolloMutationElement } from '@apollo-elements/interfaces/apollo-mutation';
 
-import { ApolloMutationElement, mutation } from './factories/mutation';
+import { mutation } from './factories/mutation';
 import { client } from './factories/client';
 
 export const ApolloMutation: Hybrids<ApolloMutationElement> = {
-  client: client(null, { useGlobal: true }),
+  client: client(),
   mutation: mutation(null),
 };
 

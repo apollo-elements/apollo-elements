@@ -1,11 +1,10 @@
-import type { DocumentNode } from 'graphql';
+import type { DocumentNode } from '@apollo/client/core';
 import type { Descriptor } from 'hybrids';
 
-import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
+import { ApolloSubscriptionElement } from '@apollo-elements/interfaces/apollo-subscription';
 import { apply, getDescriptor } from '@apollo-elements/lib/prototypes';
 
-class ApolloSubscriptionElement<D = unknown, V = unknown>
-  extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }
+import { __testing_escape_hatch__ } from './client';
 
 const lastKnown = new WeakMap<ApolloSubscriptionElement, DocumentNode>();
 
@@ -28,15 +27,19 @@ export function subscription<D, V>(init: DocumentNode):
     get, set,
     connect(host, key, invalidate) {
       apply(host, ApolloSubscriptionElement, 'subscription');
-      // @ts-expect-error: gotta hook up spies somehow
-      host?.__testingEscapeHatch?.(host);
+      host?.[__testing_escape_hatch__]?.(host);
       const mo = new MutationObserver(() => invalidate());
       mo.observe(host, { characterData: true, childList: true, subtree: true });
-      getDescriptor(host).connectedCallback.value.call(host);
+
       // HACK: i'm pretty sure the hybrids setter is never getting called, so let's cache the values manually
       // If we don't do this, `parentNode.append(host)` will not preserve the value of `subscription`
       host.subscription ??= lastKnown.has(host) ? lastKnown.get(host) : init ?? null;
+
+      // NB: we'd prefer to use the connectedCallback, but in our case we can't
+      // because of the previous note, so instead we're copying the contents here
+      // getDescriptor(host).connectedCallback.value.call(host);
       host.documentChanged(host.subscription);
+
       return () => {
         lastKnown.set(host, host.subscription);
         mo.disconnect();

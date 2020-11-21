@@ -1,5 +1,7 @@
 import type { SinonSpy, SinonStub } from 'sinon';
-import { SetupOptions, SetupResult, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+
+import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
 
 import { aTimeout, nextFrame } from '@open-wc/testing';
 
@@ -10,6 +12,7 @@ import { ApolloQuery } from './apollo-query';
 import 'sinon-chai';
 
 import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
+import { __testing_escape_hatch__ } from './factories/client';
 
 let counter = 0;
 
@@ -36,15 +39,12 @@ describe('[hybrids] ApolloQuery', function() {
 
       const tag = getTagName();
 
-      const stringify =
-        host => x => JSON.stringify(x, null, 2);
-
       const hasRendered =
-        host => async () => await aTimeout(50);
+        host => async () => { await aTimeout(50); return host; };
 
       define<T>(tag, {
         ...ApolloQuery,
-        stringify,
+        stringify: () => stringify,
         hasRendered,
         render,
       } as Hybrids<T>);
@@ -56,14 +56,13 @@ describe('[hybrids] ApolloQuery', function() {
       template.innerHTML = `<${tag}${attrs}></${tag}>`;
 
       const [element] =
-    (template.content.cloneNode(true) as DocumentFragment)
-      .children as HTMLCollectionOf<T>;
+        (template.content.cloneNode(true) as DocumentFragment)
+          .children as HTMLCollectionOf<T>;
 
       let spies: Record<string|keyof T, SinonSpy>;
       let stubs: Record<string|keyof T, SinonStub>;
 
-      // @ts-expect-error: gotta hook up the spies somehow
-      element.__testingEscapeHatch = function(el) {
+      element[__testing_escape_hatch__] = function(el) {
         spies = setupSpies(opts?.spy, el);
         stubs = setupStubs(opts?.stub, el);
       };

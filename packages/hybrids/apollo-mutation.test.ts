@@ -6,7 +6,8 @@ import { SinonSpy, SinonStub } from 'sinon';
 import { define, html, Hybrids } from 'hybrids';
 
 import { ApolloMutation } from './apollo-mutation';
-import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import { SetupOptions, setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
+import { __testing_escape_hatch__ } from './factories/client';
 
 let counter = 0;
 
@@ -27,9 +28,6 @@ function render<D = unknown, V = unknown>(host: MutationElement<D, V>): ReturnTy
   `;
 }
 
-const stringify =
-  host => x => JSON.stringify(x, null, 2);
-
 const hasRendered =
   host => async () => { await aTimeout(50); return host; };
 
@@ -42,7 +40,7 @@ describe('[hybrids] ApolloMutation', function() {
 
       define<T>(tag, {
         ...ApolloMutation,
-        stringify,
+        stringify: () => stringify,
         hasRendered,
         render,
       } as Hybrids<T>);
@@ -66,8 +64,7 @@ describe('[hybrids] ApolloMutation', function() {
       let spies: Record<string|keyof T, SinonSpy>;
       let stubs: Record<string|keyof T, SinonStub>;
 
-      // @ts-expect-error: gotta hook up the spies somehow
-      element.__testingEscapeHatch = function(el) {
+      element[__testing_escape_hatch__] = function(el) {
         spies = setupSpies(options?.spy, el);
         stubs = setupStubs(options?.stub, el);
       };

@@ -1,5 +1,11 @@
 import type { SinonSpy, SinonStub } from 'sinon';
-import { SetupOptions, SetupResult, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import {
+  SetupOptions,
+  SetupResult,
+  setupSpies,
+  setupStubs,
+  stringify,
+} from '@apollo-elements/test-helpers';
 
 import { aTimeout, nextFrame } from '@open-wc/testing';
 
@@ -13,6 +19,7 @@ import {
 import { define, html, Hybrids } from 'hybrids';
 
 import { ApolloSubscription } from './apollo-subscription';
+import { __testing_escape_hatch__ } from './factories/client';
 
 let counter = 0;
 
@@ -41,15 +48,12 @@ describe('[hybrids] ApolloSubscription', function() {
 
       const tag = getTagName();
 
-      const stringify =
-        host => x => JSON.stringify(x, null, 2);
-
       const hasRendered =
-        host => async () => await aTimeout(50);
+        host => async () => { await aTimeout(50); return host; };
 
       define<T>(tag, {
         ...ApolloSubscription,
-        stringify,
+        stringify: () => stringify,
         hasRendered,
         render,
       } as Hybrids<T>);
@@ -67,8 +71,7 @@ describe('[hybrids] ApolloSubscription', function() {
       let spies: Record<string|keyof T, SinonSpy>;
       let stubs: Record<string|keyof T, SinonStub>;
 
-      // @ts-expect-error: gotta hook up the spies somehow
-      element.__testingEscapeHatch = function(el) {
+      element[__testing_escape_hatch__] = function(el) {
         spies = setupSpies(opts?.spy, el);
         stubs = setupStubs(opts?.stub, el);
       };
