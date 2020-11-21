@@ -16,6 +16,8 @@ import type {
 
 import type { ApolloElementInterface } from './apollo-element';
 
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
 export declare class ApolloQueryInterface<TData, TVariables>
   extends ApolloElementInterface<TData, TVariables> {
   /**
@@ -204,3 +206,6 @@ export declare class ApolloQueryInterface<TData, TVariables>
    */
   watchQuery(options?: Partial<WatchQueryOptions>): ObservableQuery;
 }
+
+export class ApolloQueryElement<D = unknown, V = unknown>
+  extends ApolloQueryMixin(HTMLElement)<D, V> { }

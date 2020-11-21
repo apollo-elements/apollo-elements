@@ -6,6 +6,13 @@
   "module": "index.js",
   "type": "module",
   "typings": "index.d.ts",
+  "exports": [
+    "./index.js",
+    "./apollo-element.js",
+    "./apollo-mutation.js",
+    "./apollo-query.js",
+    "./apollo-subscription.js"
+  ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc --noEmit",

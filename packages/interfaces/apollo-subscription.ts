@@ -11,6 +11,8 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
+import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
+
 export interface SubscriptionResult<TData> {
   /** whether the subscription is loading */
   loading: boolean;
@@ -146,3 +148,6 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /** @private */
   endSubscription(): void;
 }
+
+export class ApolloSubscriptionElement<TData = unknown, TVariables = unknown>
+  extends ApolloSubscriptionMixin(HTMLElement)<TData, TVariables> { }

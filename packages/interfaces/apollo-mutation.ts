@@ -9,6 +9,8 @@ import type {
 } from '@apollo/client/core';
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
+import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
+
 export declare class ApolloMutationInterface<TData, TVariables>
   extends ApolloElementInterface<TData, TVariables> {
   /**
@@ -108,3 +110,6 @@ export declare class ApolloMutationInterface<TData, TVariables>
    */
   public mutate(params?: Partial<MutationOptions<TData, TVariables>>): Promise<FetchResult<TData>>;
 }
+
+export class ApolloMutationElement<D = unknown, V = unknown>
+  extends ApolloMutationMixin(HTMLElement)<D, V> { }
