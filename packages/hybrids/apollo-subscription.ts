@@ -1,10 +1,11 @@
-import { Hybrids } from 'hybrids';
+import type { Hybrids } from 'hybrids';
+import type { ApolloSubscriptionElement } from '@apollo-elements/interfaces/apollo-subscription';
 
-import { ApolloSubscriptionElement, subscription } from './factories/subscription';
+import { subscription } from './factories/subscription';
 import { client } from './factories/client';
 
 export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
-  client: client(null, { useGlobal: true }),
+  client: client(),
   subscription: subscription(null),
 };
 

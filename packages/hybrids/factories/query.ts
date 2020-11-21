@@ -1,14 +1,11 @@
-import type { DocumentNode } from 'graphql';
+import type { DocumentNode } from '@apollo/client/core';
 import type { Descriptor } from 'hybrids';
 
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-import { hookPropertyIntoHybridsCache } from '../helpers/cache';
+import { ApolloQueryElement } from '@apollo-elements/interfaces/apollo-query';
 import { apply, getDescriptor } from '@apollo-elements/lib/prototypes';
 
-class ApolloQueryElement<D = unknown, V = unknown>
-  extends ApolloQueryMixin(HTMLElement)<D, V> { }
-
-export type { ApolloQueryElement };
+import { hookPropertyIntoHybridsCache } from '../helpers/cache';
+import { __testing_escape_hatch__ } from './client';
 
 const lastKnown = new WeakMap<ApolloQueryElement, DocumentNode>();
 
@@ -25,21 +22,27 @@ function set<T extends ApolloQueryElement>(host: T, val: DocumentNode) {
 
 export function query<D, V>(init: DocumentNode): Descriptor<ApolloQueryElement<D, V>> {
   return {
-    get,
-    set,
+    get, set,
 
     connect(host, key, invalidate) {
       apply(host, ApolloQueryElement, 'query');
+
       hookPropertyIntoHybridsCache({ host, key: 'networkStatus', init: 7 });
-      // @ts-expect-error: gotta hook up spies somehow
-      host?.__testingEscapeHatch?.(host);
+
+      host?.[__testing_escape_hatch__]?.(host);
+
       const mo = new MutationObserver(() => invalidate());
       mo.observe(host, { characterData: true, childList: true, subtree: true });
-      getDescriptor(host).connectedCallback.value.call(host);
+
       // HACK: i'm pretty sure the hybrids setter is never getting called, so let's cache the values manually
       // If we don't do this, `parentNode.append(host)` will not preserve the value of `query`
       host.query ??= lastKnown.has(host) ? lastKnown.get(host) : init ?? null;
+
+      // NB: we'd prefer to use the connectedCallback, but in our case we can't
+      // because of the previous note, so instead we're copying the contents here
+      // getDescriptor(host).connectedCallback.value.call(host);
       host.documentChanged(host.query);
+
       return () => {
         lastKnown.set(host, host.query);
         mo.disconnect();

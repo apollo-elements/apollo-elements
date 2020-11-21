@@ -1,8 +1,8 @@
+import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
+
 import { property } from 'hybrids';
 
 import * as cache from 'hybrids/esm/cache';
-
-import { ApolloElementElement } from '../factories/client';
 
 interface HookHybridsOptions<T> {
   host: T,

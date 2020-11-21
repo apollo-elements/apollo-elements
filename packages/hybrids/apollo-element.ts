@@ -2,10 +2,10 @@ import type { Hybrids } from 'hybrids';
 
 import { client } from './factories/client';
 
-import { ApolloElementElement } from './factories/client';
-
-export type { ApolloElementElement };
+import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
 
 export const ApolloElement: Hybrids<ApolloElementElement> = {
-  client: client(null, { useGlobal: true }),
+  client: client(),
 };
+
+export type { ApolloElementElement };
