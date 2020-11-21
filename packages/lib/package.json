@@ -45,6 +45,6 @@
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_lib.html",
   "dependencies": {
     "graphql-tag": "^2.11.0",
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   }
 }

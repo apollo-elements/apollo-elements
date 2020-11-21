@@ -49,6 +49,6 @@
   "dependencies": {
     "@apollo-elements/mixins": "^3.2.0",
     "@gluon/gluon": ">= 2",
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   }
 }

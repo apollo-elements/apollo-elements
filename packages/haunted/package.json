@@ -43,9 +43,9 @@
     "@apollo-elements/lib": "^3.3.0",
     "@apollo-elements/mixins": "^3.2.0",
     "haunted": "^4.7.1",
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   },
   "devDependencies": {
-    "@types/react": "^16.9.56"
+    "@types/react": "^17.0.0"
   }
 }
