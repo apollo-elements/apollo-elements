@@ -40,7 +40,10 @@
     "start:codegen": "graphql-codegen --watch",
     "start:tsc": "lerna run start --stream --parallel",
     "test": "wtr --coverage",
-    "test:watch": "wtr --watch"
+    "watch:test": "wtr --watch",
+    "watch:eslint": "esw",
+    "watch:codegen": "graphql-codegen --watch",
+    "watch:types": "lerna run lint:types -- --watch"
   },
   "lint-staged": {
     "*.ts": [
@@ -89,6 +92,7 @@
     "cz-lerna-changelog": "^2.0.3",
     "esbuild": "^0.8.4",
     "eslint": "^7.11.0",
+    "eslint-watch": "^7.0.0",
     "execa": "^4.1.0",
     "globby": "^11.0.1",
     "graphql": "^15.3.0",

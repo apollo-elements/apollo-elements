@@ -21,5 +21,9 @@
     "titleBar.inactiveBackground": "#dddddd99",
     "titleBar.inactiveForeground": "#15202b99"
   },
-  "peacock.color": "#dddddd"
+  "peacock.color": "#dddddd",
+  "npm.bin": "yarn",
+  "npm.packageManager": "yarn",
+  "eslint.packageManager": "yarn",
+  "stylelint.packageManager": "yarn"
 }
