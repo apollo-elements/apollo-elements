@@ -92,7 +92,8 @@ class UseQueryHook<TData, TVariables> extends ApolloHook<
     const subscribeToMore = this.state.host.subscribeToMore.bind(this.state.host);
 
     // updateQuery is deprecated, so we're not going to implement
-    const updateQuery = () => void null;
+    const updateQuery =
+      () => void null; /* c8 ignore next */
 
     const startPolling = (ms: number) =>
       void (this.pollingInterval = window.setInterval(refetch, ms));

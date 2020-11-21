@@ -19,7 +19,7 @@ interface Options {
 
 const validateVariablesLink =
   new ApolloLink((operation, forward) =>
-    hasAllVariables(operation) && forward(operation));
+    hasAllVariables(operation) && forward(operation)); /* c8 ignore next */ // this is called
 
 /**
  * Creates a simple ApolloClient

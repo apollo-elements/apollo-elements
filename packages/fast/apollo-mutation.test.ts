@@ -130,7 +130,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       }
       );
 
-      describe(`when refetchQueries property set as array of query names`, function() {
+      describe('when refetchQueries property set as array of query names', function() {
         const refetchQueries = ['A', 'B', 'C', 'D'];
 
         beforeEach(async function setupElement() {
@@ -147,6 +147,30 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
 
         it('sets the property as an array of query names', function() {
           expect(element.refetchQueries).to.deep.equal(refetchQueries);
+        });
+
+        it('does not reflect', function() {
+          expect(element.getAttribute('refetch-queries')).to.be.null;
+        });
+      });
+
+      describe('when refetchQueries property nullified', function() {
+        const refetchQueries = null;
+
+        beforeEach(async function setupElement() {
+          const name = `refetch-queries-property-${counter++}-${Math.floor(Math.random() * Date.now())}`;
+          @customElement({ name })
+          class Klass extends Test { }
+          element = await fixture<Klass>(`<${name}></${name}>`);
+        });
+
+        beforeEach(async function setRefetchQueries() {
+          element.refetchQueries = refetchQueries;
+          await DOM.nextUpdate();
+        });
+
+        it('sets the property as an array of query names', function() {
+          expect(element.refetchQueries).to.be.null;
         });
 
         it('does not reflect', function() {

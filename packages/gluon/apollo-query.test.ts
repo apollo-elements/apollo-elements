@@ -22,7 +22,10 @@ import { html } from 'lit-html';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
 
-import { nextFrame } from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+
+import { spy } from 'sinon';
+
 import { GluonElement } from '@gluon/gluon';
 
 class TestableApolloQuery<D, V>
@@ -88,6 +91,38 @@ describe('[gluon] ApolloQuery', function() {
   describeQuery({
     class: TestableApolloQuery,
     setupFunction: setupQueryClass(TestableApolloQuery),
+  });
+
+  describe('subclassing', function() {
+    let element: ApolloQuery<unknown, unknown>;
+    beforeEach(async function() {
+      const tag = defineCE(class extends ApolloQuery<unknown, unknown> {
+        static get is() {
+          return 'apollo-query';
+        }
+      });
+      element = await fixture<ApolloQuery<unknown, unknown>>(`<${tag}></${tag}>`);
+      spy(element, 'render');
+    });
+
+    afterEach(function() {
+      // @ts-expect-error: testing
+      element.render.restore();
+    });
+
+    describe('setting networkStatus', function() {
+      beforeEach(function() {
+        element.networkStatus = 0;
+      });
+
+      it('renders', function() {
+        expect(element.render).to.have.been.called;
+      });
+
+      it('caches', function() {
+        expect(element.networkStatus).to.equal(0);
+      });
+    });
   });
 });
 
