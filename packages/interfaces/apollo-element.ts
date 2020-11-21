@@ -1,6 +1,13 @@
-import type { DocumentNode, GraphQLError } from 'graphql';
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type { GraphQLError } from 'graphql';
+import type {
+  ApolloClient,
+  ApolloError,
+  DocumentNode,
+  NormalizedCacheObject,
+} from '@apollo/client/core';
 import type { CustomElement } from './constructor';
+
+import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
 /** @noInheritDoc */
 export declare class ApolloElementInterface<TData = unknown, TVariables = unknown>
@@ -36,3 +43,6 @@ export declare class ApolloElementInterface<TData = unknown, TVariables = unknow
   /** Whether a request is in flight. */
   declare loading: boolean;
 }
+
+export class ApolloElementElement<TData = unknown, TVariables = unknown>
+  extends ApolloElementMixin(HTMLElement)<TData, TVariables> { }
