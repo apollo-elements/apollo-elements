@@ -52,6 +52,6 @@
     "@apollo-elements/mixins": "^3.2.0",
     "lit-element": "^2",
     "lit-html": "^1",
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   }
 }

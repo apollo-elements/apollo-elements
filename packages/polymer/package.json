@@ -47,6 +47,6 @@
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_polymer.html",
   "dependencies": {
     "@apollo-elements/mixins": "^3.2.0",
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   }
 }

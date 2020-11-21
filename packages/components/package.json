@@ -48,6 +48,6 @@
     "@apollo-elements/lib": "^3.3.0",
     "@apollo-elements/mixins": "^3.2.0",
     "@apollo/client": ">= 3",
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   }
 }
