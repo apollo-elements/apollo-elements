@@ -1,10 +1,7 @@
 import type { Constructor } from '@apollo-elements/interfaces';
+import { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
 
-import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 import { cuid } from './cuid';
-
-export class ApolloElementElement<D = unknown, V = unknown>
-  extends ApolloElementMixin(HTMLElement)<D, V> { }
 
 type Type = 'client' | 'subscription' | 'mutation' | 'query';
 
