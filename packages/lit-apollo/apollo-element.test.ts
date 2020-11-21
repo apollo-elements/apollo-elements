@@ -1,13 +1,22 @@
 import type { DocumentNode, GraphQLError } from 'graphql';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+
 import { expect, defineCE, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';
+
 import { TemplateResult, html, LitElement } from 'lit-element';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+
+import {
+  assertType,
+  isApolloError,
+  setupClient,
+  teardownClient,
+} from '@apollo-elements/test-helpers';
 
 type TypeCheckData = { a: 'a', b: number };
-class TypeCheck extends ApolloElement<TypeCheckData> {
+type TypeCheckVars = { var: string };
+class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
   typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
@@ -22,6 +31,7 @@ class TypeCheck extends ApolloElement<TypeCheckData> {
     assertType<Error>                               (this.error);
     assertType<readonly GraphQLError[]>             (this.errors);
     assertType<TypeCheckData>                       (this.data);
+    assertType<TypeCheckVars>                       (this.variables);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -34,6 +44,63 @@ class TypeCheck extends ApolloElement<TypeCheckData> {
 }
 
 describe('[lit-apollo] ApolloElement', function describeApolloElement() {
+  describe('with a global client', function() {
+    let element: ApolloElement;
+    beforeEach(setupClient);
+    afterEach(teardownClient);
+    beforeEach(async function() {
+      const tag = defineCE(class Test extends ApolloElement { });
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+
+    afterEach(function() {
+      element.remove();
+      element = undefined;
+    });
+
+    it('uses global client', function() {
+      expect(element.client).to.equal(window.__APOLLO_CLIENT__);
+    });
+  });
+
+  describe('with no global client', function() {
+    let element: ApolloElement;
+    beforeEach(async function() {
+      const tag = defineCE(class Test extends ApolloElement { });
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+
+    afterEach(function() {
+      element.remove();
+      element = undefined;
+    });
+
+    it('uses global client', function() {
+      expect(element.client).to.be.null;
+    });
+
+    describe('setting client', function() {
+      const mock = {} as ApolloClient<NormalizedCacheObject>;
+      beforeEach(function() {
+        element.client = mock;
+      });
+
+      it('sets client', function() {
+        expect(element.client).to.equal(mock);
+      });
+
+      describe('then unsetting client', function() {
+        beforeEach(function() {
+          element.client = undefined;
+        });
+
+        it('sets client', function() {
+          expect(element.client).to.be.undefined;
+        });
+      });
+    });
+  });
+
   it('is an instance of LitElement', async function() {
     class Test extends ApolloElement {
       set thing(v: unknown) {

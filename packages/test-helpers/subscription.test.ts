@@ -21,7 +21,7 @@ import {
   NullableParamSubscriptionData,
   NullableParamSubscriptionVariables,
 } from './schema';
-import { setupSpies, setupStubs } from './helpers';
+import { restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 
 type SE<D, V> = HTMLElement & ApolloSubscriptionInterface<D, V>;
 
@@ -88,10 +88,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       let spies: Record<keyof typeof element, SinonSpy>;
 
-      async function waitForRender() {
-        await element.hasRendered();
-      }
-
       beforeEach(async function setupElement() {
         ({ element, spies } = await setupFunction({
           spy: ['subscribe'],
@@ -103,10 +99,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         element = undefined;
       });
 
-      afterEach(function restoreSpies() {
-        for (const spy of Object.values(spies))
-          spy.restore();
-      });
+      afterEach(restoreSpies(() => spies));
 
       it('has default properties', function() {
         expect(element.data, 'data').to.be.null;
@@ -159,7 +152,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           element.loading = true;
         });
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
 
         it('renders loading', async function() {
           expect(element.shadowRoot.getElementById('loading').textContent)
@@ -177,6 +170,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         it('does not call subscribe', function() {
+          // NB: haunted doesn't like spying on it's element methods
           expect(element.subscribe).to.not.have.been.called;
         });
       });
@@ -196,10 +190,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       let spies: Record<keyof typeof element, SinonSpy>;
 
-      async function waitForRender() {
-        await element.hasRendered();
-      }
-
       beforeEach(setupClient);
 
       beforeEach(async function setupElement() {
@@ -212,14 +202,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         spies['client.subscribe'] = spy(element.client, 'subscribe');
       });
 
-      afterEach(function restoreSpies() {
-        for (const spy of Object.values(spies))
-          spy.restore();
-      });
+      afterEach(restoreSpies(() => spies));
 
-      beforeEach(async function waitForRender() {
-        await element.hasRendered();
-      });
+      beforeEach(waitForRender(() => element));
 
       afterEach(function teardownElement() {
         element?.remove?.();
@@ -246,7 +231,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element.subscription = NullableParamSubscription;
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('renders second subscription', async function() {
             expect(element.shadowRoot.textContent).to.not.contain('messageSent');
@@ -258,7 +243,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               element.variables = { nullable: 'quux' };
             });
 
-            beforeEach(waitForRender);
+            beforeEach(waitForRender(() => element));
 
             it('renders new variables', async function() {
               expect(element.shadowRoot.textContent).to.contain('quux');
@@ -272,7 +257,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           element.subscription = NullableParamSubscription;
         });
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
 
         it('creates an observable', function() {
           expect(element.observable).to.be.an.instanceOf(Observable);
@@ -297,7 +282,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element.variables = { nullable: 'qux' };
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('creates a new observable', function() {
             expect(element.client.subscribe).to.have.been.calledTwice;
@@ -439,8 +424,12 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           expect(element.subscription).to.not.be.ok;
         });
 
-        it('sets error', function() {
+        it('does not set error', function() {
           expect(element.error).to.be.null;
+        });
+
+        it('throws expected error', function() {
+          expect(result.message).to.equal('Subscription must be a gql-parsed DocumentNode');
         });
       });
 
@@ -449,28 +438,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         let spies: Record<keyof typeof element, SinonSpy>;
 
-        async function waitForRender() {
-          await element.hasRendered();
-        }
-
-        beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction({
-            spy: ['subscribe'],
-          }));
-        });
-
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
-
-        beforeEach(async function waitForRender() {
-          await element.hasRendered();
-        });
-
-        afterEach(function teardownElement() {
-          element?.remove?.();
-          element = undefined;
+        beforeEach(function clientSpy() {
+          // @ts-expect-error: spy
+          window.__APOLLO_CLIENT__.subscribe?.restore?.();
+          spies ??= {} as typeof spies;
+          spies['client.subscribe'] = spy(window.__APOLLO_CLIENT__, 'subscribe');
         });
 
         beforeEach(async function setupElement() {
@@ -482,7 +454,14 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           }));
         });
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
+
+        afterEach(restoreSpies(() => spies));
+
+        afterEach(function teardownElement() {
+          element?.remove?.();
+          element = undefined;
+        });
 
         it('does not remove the script', function() {
           expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
@@ -492,8 +471,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           expect(element.subscription).to.deep.equal(gql(NoParamSubscription.loc.source.body));
         });
 
-        it('calls subscribe()', async function scriptChild() {
-          expect(element.subscribe).to.have.been.called;
+        it('calls subscribe()', function() {
+          expect(element.client.subscribe).to.have.been.calledOnce;
         });
       });
     });
@@ -528,10 +507,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           let spies: Partial<Record<string|keyof typeof element, SinonSpy>>;
 
-          async function waitForRender() {
-            await element.hasRendered();
-          }
-
           beforeEach(function spyClientSubscribe() {
             spies = {
               'client.subscribe': spy(window.__APOLLO_CLIENT__, 'subscribe'),
@@ -543,10 +518,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element = undefined;
           });
 
-          afterEach(function restoreSpies() {
-            for (const spy of Object.values(spies))
-              spy.restore();
-          });
+          afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
             type D = NullableParamSubscriptionData;
@@ -572,10 +544,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           let spies: Partial<Record<string|keyof typeof element, SinonSpy>>;
 
-          async function waitForRender() {
-            await element.hasRendered();
-          }
-
           beforeEach(function spyClientSubscribe() {
             spies = {
               'client.subscribe': spy(window.__APOLLO_CLIENT__, 'subscribe'),
@@ -587,10 +555,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element = undefined;
           });
 
-          afterEach(function restoreSpies() {
-            for (const spy of Object.values(spies))
-              spy.restore();
-          });
+          afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
             type D = NullableParamSubscriptionData;
@@ -619,10 +584,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           let spies: Partial<Record<string|keyof typeof element, SinonSpy>>;
 
-          async function waitForRender() {
-            await element.hasRendered();
-          }
-
           beforeEach(function spyClientSubscribe() {
             spies = {
               'client.subscribe': spy(window.__APOLLO_CLIENT__, 'subscribe'),
@@ -634,10 +595,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element = undefined;
           });
 
-          afterEach(function restoreSpies() {
-            for (const spy of Object.values(spies))
-              spy.restore();
-          });
+          afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
             type D = NullableParamSubscriptionData;
@@ -674,7 +632,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             describe('when subscription resolves', function() {
-              beforeEach(waitForRender);
+              beforeEach(waitForRender(() => element));
 
               it('calls onSubscriptionData', function() {
                 expect(element.onSubscriptionData).to.have.been.called;
@@ -696,7 +654,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             describe('when subscription rejects', function() {
-              beforeEach(waitForRender);
+              beforeEach(waitForRender(() => element));
 
               it('does not call onSubscriptionData', function() {
                 expect(element.onSubscriptionData).to.not.have.been.called;

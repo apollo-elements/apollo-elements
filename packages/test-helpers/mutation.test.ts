@@ -23,7 +23,7 @@ import { ApolloMutationInterface } from '@apollo-elements/interfaces';
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 import gql from 'graphql-tag';
-import { setupSpies, setupStubs } from './helpers';
+import { restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 
 type ME<D, V> = HTMLElement & ApolloMutationInterface<D, V>;
 export interface MutationElement<D = unknown, V = unknown> extends ME<D, V> {
@@ -97,10 +97,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
     describe('when simply instantiating', function() {
       let element: MutationElement;
 
-      async function waitForRender() {
-        await element.hasRendered();
-      }
-
       beforeEach(async function setupElement() {
         ({ element } = await setupFunction());
       });
@@ -164,7 +160,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           element.called = !element.called;
         });
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
 
         it('renders', function() {
           expect(element.shadowRoot.getElementById('called').textContent).to.equal('true');
@@ -229,20 +225,13 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         let spies: Record<keyof typeof element, SinonSpy>;
 
-        async function waitForRender() {
-          await element.hasRendered();
-        }
-
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
             spy: ['mutate'],
           }));
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies ?? {}))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -260,10 +249,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
 
         let spies: Record<keyof typeof element, SinonSpy>;
-
-        async function waitForRender() {
-          await element.hasRendered();
-        }
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction<typeof element>({
@@ -285,10 +270,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           element = undefined;
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies ?? {}))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         it('sets the mutation property', function() {
           expect(element.mutation).to.equal(NoParamMutation);
@@ -414,10 +396,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         let spies: Record<keyof typeof element, SinonSpy>;
 
-        async function waitForRender() {
-          await element.hasRendered();
-        }
-
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction<typeof element>({
             spy: ['onCompleted', 'onError'],
@@ -438,17 +416,14 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           element = undefined;
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies ?? {}))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         describe('when mutation resolves', function() {
           beforeEach(async function callMutate() {
             await element.mutate();
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('calls onCompleted with data', function() {
             expect(element.onCompleted).to.have.been
@@ -506,7 +481,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             }
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('calls onError with error', function() {
             expect(element.onError).to.have.been.calledWithMatch(error);
@@ -573,10 +548,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               };
             });
 
-            afterEach(function restoreSpies() {
-              for (const spy of Object.values(spies ?? {}))
-                spy.restore();
-            });
+            afterEach(restoreSpies(() => spies));
 
             afterEach(function teardownElement() {
               element.remove();

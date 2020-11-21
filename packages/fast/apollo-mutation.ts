@@ -9,7 +9,7 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
 import { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
 
 const refetchQueriesConverter: ValueConverter = {
-  toView() { return null; },
+  toView() { /* c8 ignore next */ return null; },
   fromView(value: string|string[]): string[] {
     return typeof value !== 'string' ? value : splitCommasAndTrim(value);
   },

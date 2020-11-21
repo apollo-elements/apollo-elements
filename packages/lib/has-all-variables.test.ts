@@ -1,7 +1,8 @@
 import type { Operation } from '@apollo/client/core';
 
 import { expect } from '@open-wc/testing';
-import gql from 'graphql-tag';
+
+import { gql } from '@apollo/client/core';
 
 import { hasAllVariables } from './has-all-variables';
 
@@ -105,6 +106,21 @@ describe('[lib] hasAllVariables', function() {
     fail('with first variable only null', { query, variables: { one: null } });
     fail('with second variable only null', { query, variables: { two: null } });
     fail(`with second variable null and first variable`, { query, variables: { one: '1', two: null } });
+  });
+
+  describe('for two nullable and two non-nullable variables', function() {
+    const query = gql`query OptOneNeedsOne($one: ID, $two: ID, $three: ID!, $four: ID!) { q(one: $one, two: $two, three: $three, four: $four) { one two three four } }`;
+    pass('with al variables', { query, variables: { one: '1', two: '2', three: '3', four: '4' } });
+    pass(`with first two variable null and last two variables set`, { query, variables: { one: null, two: null, three: '3', four: '4' } });
+    pass('with last two variable only', { query, variables: { three: '3', four: '4' } });
+
+    fail('with no variables', { query, variables: {} });
+    fail('with first two variables null', { query, variables: { one: null, two: null } });
+    fail('with first variable only', { query, variables: { one: '1' } });
+    fail('with first variable only null', { query, variables: { one: null } });
+    fail('with second variable only null', { query, variables: { two: null } });
+    fail(`with second variable null and first variable`, { query, variables: { one: '1', two: null } });
+    fail('with third variable only', { query, variables: { three: '3' } });
   });
 
   it('handles weird input', function() {

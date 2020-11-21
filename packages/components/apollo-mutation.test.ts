@@ -242,6 +242,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
   describe('with a button trigger', function() {
     let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
         <apollo-mutation .mutation="${NoParamMutation}">
@@ -249,6 +250,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         </apollo-mutation>
       `);
     });
+
+    function clickButton() {
+      element.querySelector('button').click();
+    }
 
     it('has no href', function() {
       // @ts-expect-error: coverage...
@@ -258,15 +263,13 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('clicking the button', function() {
       it('mutates', async function() {
         expect(element.data).to.be.null;
-        element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+        clickButton();
         await aTimeout(10);
         expect(element.data).to.be.ok;
       });
 
       it('fires will-mutate event', async function() {
-        setTimeout(() => {
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
-        });
+        setTimeout(clickButton);
 
         const event = await oneEvent(element, WillMutateEvent.type);
 
@@ -274,9 +277,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       it('fires mutation-completed event', async function() {
-        setTimeout(() => {
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
-        });
+        setTimeout(clickButton);
 
         const event = await oneEvent(element, MutationCompletedEvent.type);
 
@@ -291,7 +292,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
             expect(event.detail.element).to.equal(element);
           }, { once: true });
 
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          clickButton();
 
           await aTimeout(10);
 
@@ -328,6 +329,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     afterEach(function() {
       replaceStateStub.restore();
+      element.remove();
+      element = undefined;
     });
 
     describe('clicking the link', function() {
@@ -560,34 +563,144 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with variable inputs and a button trigger', function() {
-    let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NoParamMutation}">
-          <input slot="variable" data-variable="varA" value="variable-a">
-          <input slot="variable" data-vrible="varB" value="variable-b">
+        <apollo-mutation .mutation="${NullableParamMutation}">
+          <input slot="variable" data-variable="nullable" value="input">
+          <input slot="variable" data-vrible="nullable" value="fail">
           <button slot="trigger">Do It</button>
         </apollo-mutation>
       `);
     });
 
     describe('clicking the button', function() {
-      it('toggles input disabled property', async function() {
-        const input = element.querySelector('input');
-        const button = element.querySelector('button');
+      let input: HTMLInputElement;
+      let button: HTMLButtonElement;
+      let event: MutationCompletedEvent;
+
+      beforeEach(async function() {
+        input = element.querySelector('input');
+        button = element.querySelector('button');
         setTimeout(async function() {
           button.click();
           expect(input.disabled).to.be.true;
         });
 
-        const event = await oneEvent(element, MutationCompletedEvent.type);
+        event = await oneEvent(element, MutationCompletedEvent.type);
 
         await element.updateComplete;
+      });
 
+      it('toggles input disabled property', async function() {
         expect(event.detail.element).to.equal(element);
         expect(event.detail.data).to.equal(element.data);
         expect(input.disabled).to.be.false;
+      });
+
+      it('uses input variables', function() {
+        expect(element.data.nullableParam.nullable).to.equal('input');
+      });
+    });
+
+    describe('setting variables property', function() {
+      let input: HTMLInputElement;
+      let button: HTMLButtonElement;
+      let event: MutationCompletedEvent;
+
+      beforeEach(function() {
+        element.variables = { nullable: 'manual' };
+      });
+
+      beforeEach(async function() {
+        input = element.querySelector('input');
+        button = element.querySelector('button');
+        setTimeout(async function() {
+          button.click();
+          expect(input.disabled).to.be.true;
+        });
+
+        event = await oneEvent(element, MutationCompletedEvent.type);
+
+        await element.updateComplete;
+      });
+
+      describe('clicking the button', function() {
+        it('toggles input disabled property', async function() {
+          expect(event.detail.element).to.equal(element);
+          expect(event.detail.data).to.equal(element.data);
+          expect(input.disabled).to.be.false;
+        });
+
+        it('uses set variables instead of input variables', function() {
+          expect(element.data.nullableParam.nullable).to.equal('manual');
+        });
+      });
+    });
+  });
+
+  describe('with variable DOM and a button trigger', function() {
+    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+
+    beforeEach(async function() {
+      element = await fixture<typeof element>(html`
+        <apollo-mutation .mutation="${NullableParamMutation}">
+          <button slot="trigger">Do It</button>
+          <script type="application/json">
+            { "nullable": "DOM" }
+          </script>
+        </apollo-mutation>
+      `);
+    });
+
+    describe('clicking the button', function() {
+      let button: HTMLButtonElement;
+
+      beforeEach(async function() {
+        button = element.querySelector('button');
+        setTimeout(async function() {
+          button.click();
+        });
+
+        await oneEvent(element, MutationCompletedEvent.type);
+
+        await element.updateComplete;
+      });
+
+      it('uses DOM variables', function() {
+        expect(element.data.nullableParam.nullable).to.equal('DOM');
+      });
+    });
+
+    describe('setting variables property', function() {
+      let button: HTMLButtonElement;
+      let event: MutationCompletedEvent;
+
+      beforeEach(function() {
+        element.variables = { nullable: 'manual' };
+      });
+
+      beforeEach(async function() {
+        button = element.querySelector('button');
+        setTimeout(async function() {
+          button.click();
+        });
+
+        event = await oneEvent(element, MutationCompletedEvent.type);
+
+        await element.updateComplete;
+      });
+
+      describe('clicking the button', function() {
+        it('toggles input disabled property', async function() {
+          expect(event.detail.element).to.equal(element);
+          expect(event.detail.data).to.equal(element.data);
+        });
+
+        it('uses set variables instead of input variables', function() {
+          expect(element.data.nullableParam.nullable).to.equal('manual');
+        });
       });
     });
   });

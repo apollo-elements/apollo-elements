@@ -34,3 +34,6 @@ export declare class CustomElement extends HTMLElement {
  */
 export type Constructor<T = CustomElement> =
   new (...a: any[]) => T
+
+// BUG: https://github.com/modernweb-dev/web/issues/993#issuecomment-731726688
+null;

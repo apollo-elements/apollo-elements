@@ -35,7 +35,7 @@ import { ObservableQuery } from '@apollo/client/core';
 
 import { match, spy, SinonSpy } from 'sinon';
 import { client, makeClient } from './client';
-import { isSubscription, setupSpies, setupStubs } from './helpers';
+import { isSubscription, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
 type QE<D, V> = HTMLElement & ApolloQueryInterface<D, V>;
@@ -108,10 +108,6 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       let disconnectEvent: Event;
 
-      async function waitForRender() {
-        await element.hasRendered();
-      }
-
       beforeEach(function listen() {
         window.addEventListener('apollo-element-connected', e => connectEvent = e);
       });
@@ -126,16 +122,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         window.addEventListener('apollo-element-disconnected', e => disconnectEvent = e);
       });
 
-      afterEach(function restoreSpies() {
+      afterEach(restoreSpies(() => spies));
+
+      afterEach(function() {
         connectEvent = undefined;
         disconnectEvent = undefined;
-        for (const spy of Object.values(spies))
-          spy.restore();
       });
 
-      beforeEach(async function waitForRender() {
-        await element.hasRendered();
-      });
+      beforeEach(waitForRender(() => element));
 
       afterEach(function teardownElement() {
         element.remove();
@@ -217,10 +211,6 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('without setting query or variables', function() {
-        async function waitForRender() {
-          await element.hasRendered();
-        }
-
         function setProperties(properties: Partial<typeof element>) {
           return function() {
             for (const [key, val] of Object.entries(properties))
@@ -228,7 +218,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           };
         }
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
 
         it('renders', function() {
           expect(element.shadowRoot.getElementById('data')).to.be.ok;
@@ -240,7 +230,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('when data is set', function() {
           beforeEach(setProperties({ data: { data: 'data' } }));
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot.getElementById('data').textContent)
               .to.equal(element.stringify({ data: 'data' }));
@@ -249,7 +239,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('when error is set', function() {
           beforeEach(setProperties({ error: new Error('oops') }));
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot.getElementById('error').textContent)
               .to.equal(element.stringify(new Error('oops')));
@@ -258,7 +248,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('when errors is set', function() {
           beforeEach(setProperties({ errors: [new GraphQLError('oops')] }));
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot.getElementById('errors').textContent)
               .to.equal(element.stringify([new GraphQLError('oops')]));
@@ -267,7 +257,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('when loading is set', function() {
           beforeEach(setProperties({ loading: true }));
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot.getElementById('loading').textContent)
               .to.equal('true');
@@ -275,7 +265,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           describe('and then unset', function() {
             beforeEach(setProperties({ loading: false }));
-            beforeEach(waitForRender);
+            beforeEach(waitForRender(() => element));
             it('renders', function() {
               expect(element.shadowRoot.getElementById('loading').textContent)
                 .to.equal('false');
@@ -285,7 +275,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('when networkStatus is set', function() {
           beforeEach(setProperties({ networkStatus: NetworkStatus.error }));
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot.getElementById('networkStatus').textContent)
               .to.equal(NetworkStatus.error.toString());
@@ -298,7 +288,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element.query = NullableParamQuery;
         });
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
 
         it('does not call subscribe', function() {
           expect(element.subscribe).to.not.have.been.called;
@@ -309,7 +299,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.variables = { nullable: '✈' };
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('does not call subscribe', function() {
             expect(element.subscribe).to.not.have.been.called;
@@ -339,10 +329,6 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       let cached: typeof window.__APOLLO_CLIENT__;
 
-      async function waitForRender() {
-        await element.hasRendered();
-      }
-
       const mockClient = makeClient();
 
       beforeEach(function setGlobalClient() {
@@ -354,10 +340,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         window.__APOLLO_CLIENT__ = cached;
       });
 
-      afterEach(function restoreSpies() {
-        for (const spy of Object.values(spies ?? {}))
-          spy.restore();
-      });
+      afterEach(restoreSpies(() => spies));
 
       afterEach(function teardownElement() {
         element?.remove?.();
@@ -409,7 +392,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element.query = NullableParamQuery;
             });
 
-            beforeEach(waitForRender);
+            beforeEach(waitForRender(() => element));
 
             it('does not call subscribe', function() {
               expect(element.subscribe).to.not.have.been.called;
@@ -420,7 +403,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
                 element.variables = { nullable: '✈' };
               });
 
-              beforeEach(waitForRender);
+              beforeEach(waitForRender(() => element));
 
               it('does not call subscribe', function() {
                 expect(element.subscribe).to.not.have.been.called;
@@ -460,7 +443,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element.variables = { nullable: '✈' };
             });
 
-            beforeEach(waitForRender);
+            beforeEach(waitForRender(() => element));
 
             it('calls refetch', function() {
               expect(element.refetch).to.have.been.calledWithMatch({ nullable: '✈' });
@@ -477,7 +460,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
                 element.variables = { nullable: '✈' };
               });
 
-              beforeEach(waitForRender);
+              beforeEach(waitForRender(() => element));
 
               it('calls subscribe', function() {
                 expect(element.subscribe)
@@ -537,7 +520,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.innerHTML = `<script type="app/gql">query { noParam }</script>`;
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('does not change document', function() {
             expect(element.query).to.be.null;
@@ -549,7 +532,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.innerHTML = `<script type="application/graphql">quory { # hi }</script>`;
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('does not change document', function() {
             expect(element.query).to.be.null;
@@ -572,12 +555,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             }));
         });
 
-        beforeEach(waitForRender);
+        beforeEach(waitForRender(() => element));
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -601,7 +581,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.innerHTML = `<script type="application/graphql">${HelloQuery.loc.source.body}</script>`;
           });
 
-          beforeEach(waitForRender);
+          beforeEach(waitForRender(() => element));
 
           it('renders', function() {
             expect(element.shadowRoot.getElementById('data').textContent)
@@ -619,7 +599,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element.variables = { name: 'Aleichem' };
             });
 
-            beforeEach(waitForRender);
+            beforeEach(waitForRender(() => element));
 
             it('rerenders', function() {
               expect(element.shadowRoot.getElementById('data').textContent)
@@ -647,10 +627,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           }));
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -719,10 +696,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           spies['client.queryManager.watchQuery'] = spy(element.client.queryManager, 'watchQuery');
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -950,23 +924,15 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = undefined;
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         describe('refetch()', function() {
-          beforeEach(function setupSpies() {
+          beforeEach(function spyObservableQueryRefetch() {
             spies['observableQuery.refetch'] = spy(element.observableQuery, 'refetch');
           });
 
           beforeEach(function callRefetch() {
             element.refetch({ nullable: 'new args' });
-          });
-
-          afterEach(function restoreSpies() {
-            for (const spy of Object.values(spies))
-              spy.restore();
           });
 
           it('calls observableQuery.refetch', function() {
@@ -1096,10 +1062,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           }));
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1145,12 +1108,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       describe('with noAutoSubscribe set as a class field', function() {
         let element: QueryElement;
 
-        let spies: SinonSpy[];
+        let spies: Record<string, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          spies = [
-            spy(Klass.prototype, 'subscribe'),
-          ];
+          spies = {
+            subscribe: spy(Klass.prototype, 'subscribe'),
+          };
 
           class Test extends Klass {
             client = makeClient();
@@ -1163,10 +1126,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<QueryElement>(html`<${tag}></${tag}>`);
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of spies)
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1204,13 +1164,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         let element: QueryElement<Data, Variables>;
 
-        let spies: SinonSpy[];
+        let spies: Record<string, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          spies = [
-            spy(Klass.prototype, 'subscribe'),
-            spy(Klass.prototype, 'refetch'),
-          ];
+          spies = {
+            subscribe: spy(Klass.prototype, 'subscribe'),
+            refetch: spy(Klass.prototype, 'refetch'),
+          };
 
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
@@ -1223,10 +1183,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<Test>(html`<${tag}></${tag}>`);
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of spies)
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1263,13 +1220,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         let element: QueryElement<Data, Variables>;
 
-        let spies: SinonSpy[];
+        let spies: Record<string, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          spies = [
-            spy(Klass.prototype, 'subscribe'),
-            spy(Klass.prototype, 'refetch'),
-          ];
+          spies = {
+            subscribe: spy(Klass.prototype, 'subscribe'),
+            refetch: spy(Klass.prototype, 'refetch'),
+          };
 
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
@@ -1284,10 +1241,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<Test>(`<${tag}></${tag}>`);
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1311,14 +1265,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         let element: QueryElement<Data, Variables>;
 
-        let spies: SinonSpy[];
+        let spies: Record<string, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          spies = [
-            spy(Klass.prototype, 'subscribe'),
-            spy(Klass.prototype, 'watchQuery'),
-            spy(Klass.prototype, 'refetch'),
-          ];
+          spies = {
+            subscribe: spy(Klass.prototype, 'subscribe'),
+            watchQuery: spy(Klass.prototype, 'watchQuery'),
+            refetch: spy(Klass.prototype, 'refetch'),
+          };
 
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
@@ -1333,10 +1287,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<Test>(`<${tag}></${tag}>`);
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1396,10 +1347,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<Test>(`<${tag}></${tag}>`);
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1468,10 +1416,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element.subscribe();
         });
 
-        afterEach(function restoreSpies() {
-          for (const spy of Object.values(spies))
-            spy.restore();
-        });
+        afterEach(restoreSpies(() => spies));
 
         it('respects instance-specific fetchPolicy', async function() {
           expect(element.fetchPolicy).to.equal(fetchPolicy);
@@ -1515,10 +1460,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             };
           });
 
-          afterEach(function restoreSpies() {
-            for (const spy of Object.values(spies))
-              spy.restore();
-          });
+          afterEach(restoreSpies(() => spies));
 
           afterEach(function teardownElement() {
             element.remove();

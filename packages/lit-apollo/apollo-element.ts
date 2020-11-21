@@ -1,4 +1,4 @@
-import type { NormalizedCacheObject, ApolloClient, ApolloError } from '@apollo/client/core';
+import type { ApolloError } from '@apollo/client/core';
 import type { GraphQLError } from 'graphql';
 
 import { LitElement, property } from 'lit-element';
@@ -17,8 +17,7 @@ export class ApolloElement<TData = unknown, TVariables = unknown>
   implements ApolloElementInterface<TData> {
   declare context?: Record<string, unknown>;
 
-  @property({ attribute: false }) client: ApolloClient<NormalizedCacheObject> =
-    window.__APOLLO_CLIENT__ ?? null;
+  @property({ attribute: false }) client = /* c8 ignore next */ window.__APOLLO_CLIENT__ ?? null;
 
   @property({ attribute: false }) data: TData = null;
 

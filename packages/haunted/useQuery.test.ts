@@ -18,9 +18,9 @@ import type {
   HelloQueryVariables,
 } from '@apollo-elements/test-helpers/schema';
 
-describe('[haunted] useQuery', function() {
-  const ccOrig = ApolloQueryElement.prototype.connectedCallback;
+const ccOrig = ApolloQueryElement.prototype.connectedCallback;
 
+describe('[haunted] useQuery', function() {
   afterEach(function() {
     ApolloQueryElement.prototype.connectedCallback = ccOrig;
   });
@@ -76,6 +76,7 @@ describe('[haunted] useQuery', function() {
 
   describe('with noAutoSubscribe set', function() {
     let element: QueryElement;
+
     beforeEach(async function define() {
       function Component() {
         const { data } =

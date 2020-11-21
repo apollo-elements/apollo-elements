@@ -35,8 +35,8 @@ export function isClientOperation(operation: Operation): boolean {
   const query = operation?.query;
   const definitions = (query?.definitions ?? []) as OperationDefinitionNode[];
 
-  if (!hasDirectives(['client'], query))
-    return false;
+  if (!hasDirectives(['client'], query)) /* c8 ignore next */ // this is covered
+    return false; /* c8 ignore next */
 
   return definitions.reduce((acc, definition) => {
     const selections =
@@ -44,8 +44,8 @@ export function isClientOperation(operation: Operation): boolean {
         ?.selectionSet
         ?.selections ?? [];
 
-    if (!isOperationDefinition(definition))
-      return acc && true;
+    if (!isOperationDefinition(definition)) /* c8 ignore next */ // this is a typeguard, basically
+      return acc && true; /* c8 ignore next */
 
     else if (definition.directives.length && definition.directives.every(isClientDirective))
       return acc && true;

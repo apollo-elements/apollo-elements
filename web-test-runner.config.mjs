@@ -32,8 +32,8 @@ const config = {
   // @ts-expect-error: this seems like an error in wtr
   coverageConfig: {
     exclude: [
-      'packages/**/*.test.ts',
-      'packages/**/*.test.js',
+      'packages/**/*.test.{ts, js}',
+      'packages/lib/cuid.{ts, js}',
       '**/test-helpers/**/*',
       '*__*-dev-server__*',
     ],
