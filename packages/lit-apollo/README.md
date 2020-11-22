@@ -11,8 +11,10 @@
 
 <wcd-live data-title="Live Demo">
 
-[![View Live Demo](https://img.shields.io/badge/Live%20Demo-WebComponents.dev-informational?style=for-the-badge
-)](https://webcomponents.dev/edit/n67sjuzH56J05LOLnxx0?file=src%2FSpacexLaunches.ts)
+[![View Live Demo][1]][2]
+
+[1]: https://img.shields.io/badge/Live%20Demo-WebComponents.dev-informational?style=for-the-badge
+[2]: https://webcomponents.dev/edit/n67sjuzH56J05LOLnxx0?file=src%2FSpacexLaunches.ts
 
 </wcd-live>
 
