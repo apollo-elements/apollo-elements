@@ -1,13 +1,8 @@
 import type { ApolloError } from '@apollo/client/core';
 
-import {
-  ApolloMutation,
-  TemplateResult,
-  html,
-  customElement,
-  property,
-  queryAssignedNodes,
-} from '@apollo-elements/lit-apollo';
+import { ApolloMutation } from '@apollo-elements/lit-apollo/apollo-mutation';
+
+import { TemplateResult, html, customElement, property, queryAssignedNodes } from 'lit-element';
 
 import {
   MutationCompletedEvent,
@@ -15,6 +10,7 @@ import {
   WillMutateEvent,
   WillNavigateEvent,
 } from './events';
+import { isEmpty } from '@apollo-elements/lib/helpers';
 
 export * from './events';
 
@@ -214,6 +210,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     if (isButton(this.trigger))
       return this.trigger;
     else if (isLink(this.trigger) && isButton(this.trigger.firstElementChild))
+      /* c8 ignore next 3 */
       return this.trigger.firstElementChild;
     else
       return null;
@@ -250,6 +247,9 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
    */
   protected getVariablesFromInputs(): Variables {
+    if (isEmpty(this.dataset) && isEmpty(this.inputs))
+      return null;
+
     const input = {
       ...this.dataset,
       ...this.inputs.reduce(toVariables, {}),
@@ -309,10 +309,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     try {
       this.willMutate();
     } catch (e) {
-      if (e instanceof WillMutateError)
-        return;
-      else
-        throw e;
+      return;
     }
 
     await this.mutate();

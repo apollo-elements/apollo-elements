@@ -12,3 +12,9 @@ export function splitCommasAndTrim(value: string): string[] {
     .map(x => x.trim())
     .filter(Boolean);
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function isEmpty(x: object | Array<unknown>): boolean {
+  const { length } = Array.isArray(x) ? x : Object.keys(x);
+  return !length;
+}

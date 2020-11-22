@@ -1,4 +1,4 @@
-import type { ApolloElementInterface, ApolloQueryInterface } from '@apollo-elements/interfaces';
+import type { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
 import type { ApolloElementEvent } from '@apollo-elements/mixins/apollo-element-mixin';
 import type { ApolloClient, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
@@ -14,14 +14,12 @@ template.innerHTML = /* html */`
   <slot></slot>
 `;
 
-type ApolloElement = (HTMLElement & ApolloElementInterface);
+const DOCUMENT_TYPES = ['document', 'query', 'mutation', 'subscription'];
 
-function isApolloElement(e: EventTarget): e is ApolloElement {
-  return e instanceof HTMLElement && (
-    'data' in e &&
-    'error' in e &&
-    'errors' in e &&
-    'loading' in e
+function isApolloElement(element: Node): element is ApolloElementElement {
+  return element instanceof HTMLElement && (
+    // @ts-expect-error: it's fine
+    DOCUMENT_TYPES.includes(element.constructor.documentType)
   );
 }
 
@@ -29,17 +27,17 @@ function hasShadowRoot(node: Node): node is HTMLElement {
   return node instanceof HTMLElement && !!node.shadowRoot;
 }
 
-function isApolloQuery(e: EventTarget): e is ApolloQueryInterface<unknown, unknown> {
+function isApolloQuery(e: EventTarget): e is ApolloQueryElement {
   // @ts-expect-error: disambiguating
   return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
 }
 
-function claimApolloElement(event: ApolloElementEvent): ApolloElement {
+function claimApolloElement(event: ApolloElementEvent): ApolloElementElement {
   event.stopPropagation();
   return isApolloElement(event.detail) ? event.detail : null;
 }
 
-function isSubscribable(element: ApolloElement): element is ApolloQueryInterface<unknown, unknown> {
+function isSubscribable(element: ApolloElementElement): element is ApolloQueryElement {
   return (
     isApolloQuery(element) &&
     element.client &&
@@ -98,11 +96,11 @@ export class ApolloClientElement extends HTMLElement {
   #client: ApolloClient<NormalizedCacheObject>;
 
   /** Private cache of child `ApolloElement`s */
-  #instances: Set<ApolloElement> = new Set();
+  #instances: Set<ApolloElementElement> = new Set();
 
   #typePolicies: TypePolicies;
 
-  get elements(): readonly ApolloElement[] {
+  get elements(): readonly ApolloElementElement[] {
     return [...this.#instances];
   }
 
@@ -173,9 +171,6 @@ export class ApolloClientElement extends HTMLElement {
 
   connectedCallback(): void {
     this.findDeepInstances();
-    if (!this.client) return;
-    for (const instance of this.#instances)
-      this.initialize(instance);
   }
 
   async createApolloClient(): Promise<ApolloClient<NormalizedCacheObject>> {
@@ -187,15 +182,16 @@ export class ApolloClientElement extends HTMLElement {
 
   private findDeepInstances(): void {
     for (const child of this.children)
-      this.addDeepInstances(child);
+      this.addDeepInstance(child);
   }
 
-  private addDeepInstances(child: Node): void {
+  private async addDeepInstance(child: Node): Promise<void> {
+    await new Promise(requestAnimationFrame);
     if (isApolloElement(child))
       this.#instances.add(child);
     if (!hasShadowRoot(child)) return;
     for (const grandchild of child.shadowRoot.children)
-      this.addDeepInstances(grandchild);
+      this.addDeepInstance(grandchild);
   }
 
   /**
@@ -222,7 +218,7 @@ export class ApolloClientElement extends HTMLElement {
   /**
    * Set the client on the element, and if it's a query or subscription element, attemp to subscribe
    */
-  private initialize(element: ApolloElement): void {
+  private initialize(element: ApolloElementElement): void {
     element.client = this.client;
     if (isSubscribable(element))
       element.subscribe();
