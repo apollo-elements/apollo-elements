@@ -41,6 +41,7 @@ query CreateNetworkPageQuery {
 Then we'll define a component `all-sites` which fetches and displays the list of sites.
 
 <code-tabs>
+
 <code-tab library="mixins">
 
 ```ts
@@ -119,7 +120,7 @@ customElements.define('all-sites', SitesElement);
 
 </code-tab>
 
-<code-tab library="lit-apollo">
+<code-tab library="lit">
 
 ```ts
 import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
@@ -169,6 +170,7 @@ class SitesElement extends ApolloQuery<Data, Variables> {
 ```
 
 </code-tab>
+
 <code-tab library="fast">
 
 ```ts
@@ -316,6 +318,7 @@ define('all-sites', {
 ```
 
 </code-tab>
+
 </code-tabs>
 
 In order to create the Network, the user selects some Sites and then clicks a button which issues the `createNetwork` mutation, so let's implement that mutation now.
@@ -352,6 +355,7 @@ sequenceDiagram
 Then, when the user is ready to create the Network, she clicks the `Create` button, and the component issues the mutation over the network with variables based on the currently selected sites.
 
 <code-tabs>
+
 <code-tab library="mixins">
 
 ```ts
@@ -398,7 +402,7 @@ class SitesElement extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
 
 </code-tab>
 
-<code-tab library="lit-apollo">
+<code-tab library="lit">
 
 ```ts
 import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
@@ -538,6 +542,7 @@ function AllSites() {
 ```
 
 </code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -583,6 +588,7 @@ define('all-sites', {
 ```
 
 </code-tab>
+
 </code-tabs>
 
 This is great for the `/create-network` page, but things get tricker when we want to implement the `updateNetwork` mutation on page `/update-network/:networkId`. Now we have to show the same `<select-list>` of Sites, but the `selected` property of each one has to relate only to the specific page the user is viewing it on.

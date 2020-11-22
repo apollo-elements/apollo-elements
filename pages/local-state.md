@@ -98,7 +98,7 @@ customElements.define('theme-toggle', ThemeToggle);
 ```
 
 </code-tab>
-<code-tab library="lit-apollo">
+<code-tab library="lit">
 
 ```ts
 import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
@@ -277,7 +277,7 @@ TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<Data, null> {
 ```
 
 </code-tab>
-<code-tab library="lit-apollo">
+<code-tab library="lit">
 
 ```ts
 import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
@@ -382,7 +382,7 @@ toggleTheme() {
 
 </code-tab>
 
-<code-tab library="lit-apollo">
+<code-tab library="lit">
 
 ```ts
 toggleTheme() {
@@ -410,7 +410,7 @@ toggleTheme() {
 
 </code-tab>
 
-<code-tab library="hybrids">
+<code-tab library="haunted">
 
 ```ts
 function toggleTheme() {
@@ -486,7 +486,7 @@ toggleTheme() {
 
 </code-tab>
 
-<code-tab library="lit-apollo">
+<code-tab library="lit">
 
 ```ts
 toggleTheme() {
@@ -506,7 +506,7 @@ toggleTheme() {
 
 </code-tab>
 
-<code-tab library="hybrids">
+<code-tab library="haunted">
 
 ```ts
 function toggleTheme() {
@@ -552,6 +552,7 @@ Now in order to update the theme, we need to perform two steps:
 2. Invalidate the Apollo cache's value for theme on the root query using the `evict` method on `InMemoryCache`.
 
 <code-tabs>
+
 <code-tab library="mixins">
 
 ```ts
@@ -562,7 +563,8 @@ toggleTheme() {
 ```
 
 </code-tab>
-<code-tab library="lit-apollo">
+
+<code-tab library="lit">
 
 ```ts
 toggleTheme() {
@@ -584,7 +586,7 @@ toggleTheme() {
 
 </code-tab>
 
-<code-tab library="hybrids">
+<code-tab library="haunted">
 
 ```ts
 function toggleTheme() {

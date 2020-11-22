@@ -42,6 +42,7 @@ Let's define a component which performs the following tasks:
 We'll accomplish this by calling `subscribeToMore` on our element once it's connected to the DOM, passing in an `updateQuery` function to define the merge for new data:
 
 <code-tabs>
+
 <code-tab library="mixins">
 
 ```js
@@ -60,6 +61,7 @@ connectedCallback() {
 ```
 
 </code-tab>
+
 <code-tab library="lit-apollo">
 
 ```js
@@ -79,6 +81,7 @@ connectedCallback() {
 ```
 
 </code-tab>
+
 <code-tab library="fast">
 
 ```js
@@ -98,6 +101,31 @@ connectedCallback() {
 ```
 
 </code-tab>
+
+<code-tab library="haunted">
+
+```js
+function updateQuery(prev, { subscriptionData }) {
+  if (!subscriptionData.data) return prev;
+  return {
+    ...prev,
+    messages: [...prev.messages, subscriptionData.data.messageSent]
+  };
+}
+
+function Component() {
+  const { data, subscribeToMore } = useQuery(Query);
+
+  useEffect(() => {
+    subscribeToMore({ document: MessageSentSubscription, updateQuery });
+  }, [subscribeToMore]);
+
+  return html`...`;
+}
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```js
@@ -124,11 +152,13 @@ define('chat-query', {
 ```
 
 </code-tab>
+
 </code-tabs>
 
 Alternatively, we could create on a separate component to handle fetching the subscription side. In this example, `<chat-subscription>` has its `subscription` property passed in from the parent, rather than defined statically, as one normally would. This could be useful in cases where `<chat-subscription>` can update a variety of different queries.
 
 <code-tabs>
+
 <code-tab library="mixins">
 
 ```ts
@@ -220,6 +250,7 @@ customElements.define('chat-query', ChatQuery);
 ```
 
 </code-tab>
+
 <code-tab library="lit-apollo">
 
 ```ts
@@ -282,6 +313,7 @@ export class ChatQuery extends ApolloQuery<Data, Variables> {
 ```
 
 </code-tab>
+
 <code-tab library="fast">
 
 ```ts
@@ -341,6 +373,54 @@ export class ChatQuery extends ApolloQuery<Data, Variables> {
 ```
 
 </code-tab>
+
+<code-tab library="haunted">
+
+```ts
+import { useQuery, useSubscription, component, html } from '@apollo-elements/hybrids';
+import { format } from 'date-fns/fp';
+
+import MessagesQuery from './Messages.query.graphql';
+import MessageSentSubscription from './MessageSent.subscription.graphql';
+
+import type {
+  MessagesQueryData as Data,
+  MessagesQueryVariables as Variables,
+  MessagesSubscriptionData as SubscriptionData,
+  MessagesSubscriptionVariables as SubscriptionVariables,
+} from '../schema';
+
+function onSubscriptionData(host, result) {
+  const { client, subscriptionData: { data: { messageSent } } } = result
+  const { query } = host;
+  const { messages } = client.readQuery({ query });
+  const data = { messages: [...messages, messageSent] };
+  client.writeQuery({ query, data });
+}
+
+function Chat() {
+  const { data } = useSubscription(MessageSentSubscription, { onSubscriptionData });
+}
+
+function Messages() {
+  const { data } = useQuery(MessagesQuery);
+
+  return html`
+  <chat-subscription .subscription="${MessageSentSubscription}"></chat-subscription>
+  <dl>
+    ${data.messages.map(({ date, user, message }) => html`
+    <dt><time>${format('HH:mm', date)}</time> ${user}</dt>
+    <dd>${message}</dd>
+    `)}
+  </dl>
+`;
+
+customElements.define('chat-query', component(Messages));
+customElements.define('chat-subscription', component(Chat));
+```
+
+</code-tab>
+
 <code-tab library="hybrids">
 
 ```ts
@@ -406,6 +486,7 @@ define('chat-query', {
 ```
 
 </code-tab>
+
 </code-tabs>
 
 See this simple chat-app demo which demonstrates building custom elements which subscribe to a GraphQL server over websockets: [`#leeway`](https://leeway.apolloelements.dev)

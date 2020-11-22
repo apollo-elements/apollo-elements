@@ -28,12 +28,19 @@ npm install --save @apollo-elements/polymer
 
 Just import the elements.
 
+<code-copy>
+
 ```js
 import '@apollo-elements/polymer/apollo-query';
 import '@apollo-elements/polymer/apollo-mutation';
 ```
 
+</code-copy>
+
 You can now use them in your polymer template:
+
+<code-copy>
+
 ```html
 <apollo-query data="{{data}}" variables="[[variables]]">
   <script type="application/graphql">
@@ -51,6 +58,8 @@ You can now use them in your polymer template:
   [[data.user.name]]
 </paper-icon-item>
 ```
+
+</code-copy>
 
 ## 📚 Other Libraries
 Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)

@@ -46,11 +46,11 @@ function appendMeta(document: Document, path: string) {
     <link rel="stylesheet" href="/assets/css/theme.css">
   `;
 
-  if (document.body.querySelector('code-tabs') || document.body.querySelector('code-copy')) {
-    document.head.innerHTML += /* html */`
-      <script type="module" src="/components.js"></script>
-    `;
-  }
+  if (document.body.querySelector('wcd-live'))
+    document.head.innerHTML += /* html */`<script type="module" src="https://unpkg.com/@wcd/bennypowers.wcd-live"></script>`;
+
+  if (document.body.querySelector('code-tabs') || document.body.querySelector('code-copy'))
+    document.head.innerHTML += /* html */`<script type="module" src="/components.js"></script>`;
 
   document.body.querySelectorAll('meta').forEach(meta => {
     const name = meta.getAttribute('property') ?? meta.name;

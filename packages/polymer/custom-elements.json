@@ -394,6 +394,12 @@
         },
         {
           "name": "loading-changed"
+        },
+        {
+          "name": "apollo-subscription-result"
+        },
+        {
+          "name": "apollo-error"
         }
       ]
     }

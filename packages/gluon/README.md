@@ -43,10 +43,22 @@ query ParentQuery {
 }
 ```
 
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
+
 ```js
 import { ApolloQuery, html } from '@apollo-elements/gluon';
 import ParentQuery from './Parent.query.graphql';
+```
 
+</code-copy>
+
+</details>
+
+```js
 class ConnectedElement extends ApolloQuery {
   get template() {
     return (
@@ -72,10 +84,24 @@ customElements.define('connected-element', ConnectedElement)
 
 ### Mutations
 
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
+
 ```js
 import { ApolloMutation, html } from '@apollo-elements/gluon';
 import InputMutation from './Input.mutation.graphql';
+```
 
+</code-copy>
+
+</details>
+
+<code-copy>
+
+```js
 class MutationElement extends ApolloMutation {
   mutation = InputMutation;
 
@@ -91,6 +117,8 @@ class MutationElement extends ApolloMutation {
 
 customElements.define('input-mutation', MutationElement)
 ```
+
+</code-copy>
 
 ## 📚 Other Libraries
 Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)

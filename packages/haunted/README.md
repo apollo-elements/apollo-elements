@@ -37,8 +37,6 @@ First, let's define our component's [GraphQL query](https://graphql.org/learn/qu
 <code-copy>
 
 ```graphql
-# src/components/hello-query/Hello.query.graphql
-
 query HelloQuery {
   helloWorld {
     name
@@ -53,34 +51,42 @@ query HelloQuery {
 
 Next, we'll define our UI component with the `useQuery` hook. Import the hook and helpers, your query, and the types:
 
+<details>
+
+<summary>Imports</summary>
+
 <code-copy>
 
 ```ts
-// src/components/hello-query/hello-query.ts
-
 import { useQuery, component, html } from '@apollo-elements/haunted';
 
 import HelloQuery from './Hello.query.graphql';
+
+import type { ApolloQueryElement } from '@apollo-elements/haunted';
 
 import type {
   HelloQueryData as Data,
   HelloQueryVariables as Variables
 } from '../codegen/schema';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'hello-query': ApolloQueryElement<Data, Variables>;
+  }
+}
 ```
 
 </code-copy>
 
-Then define your component using the haunted API.
+</details>
+
+Then define your component's template function.
 
 <code-copy>
 
 ```ts
-type HelloQueryComponent =
-  HTMLElement & ApolloQueryInterface<HelloQueryData, HelloQueryVariables>;
-
 function Hello() {
-  const { data, error, loading } =
-    useQuery<HelloQueryData, HelloQueryVariables>(HelloQuery);
+  const { data, error, loading } = useQuery<Data, Variables>(HelloQuery);
 
   const greeting = data?.helloWorld.greeting ?? 'Hello';
   const name = data?.helloWorld.name ?? 'Friend';
@@ -95,96 +101,77 @@ function Hello() {
   `;
 }
 
-customElements.define('hello-query', component<HelloQueryComponent>(Hello));
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'hello-query': HelloQueryComponent
-  }
-}
+customElements.define('hello-query', component(Hello));
 ```
 
 </code-copy>
 
 ### 👾 Mutations
 
+Mutations are how you affect change on your graph. Define a mutation in graphql.
+
 <code-copy>
 
-```ts
-type UpdateUserComponent =
-  HTMLElement & ApolloMutationInterface<Data, Variables>;
-
-function UpdateUser() {
-  let username;
-
-  let haircolor;
-
-  const [updateUser, { data }] = useMutation<Data, Variables>(UpdateUserMutation);
-
-  const nickname = data?.updateUser?.nickname ?? 'nothing';
-
-  return html`
-    <label> Name
-      <input type="text" @input="${e => username = e.target.value}"/>
-    </label>
-
-    <label> Hair Colour
-      <select @input="${e => haircolor = e.target.value}">
-        <option>Black</option>
-        <option>Brown</option>
-        <option>Auburn</option>
-        <option>Red</option>
-        <option>Blond</option>
-        <option>Tutti Fruiti</option>
-      </select>
-    </label>
-
-    <button @click="${() => updateUser({
-      variables: {
-        username,
-        haircolor
-     }
-    })}">Save</button>
-
-    <output ?hidden="${!data}">We'll call you ${nickname}</output>
-  `;
-}
-
-customElements.define('update-user', component<UpdateUserComponent>(UpdateUser));
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'update-user': UpdateUserComponent
+```graphql
+mutation UpdateUser($username: String, $haircolor: String) {
+  updateUser(username: $username, haircolor: $haircolor) {
+    nickname
   }
 }
 ```
 
 </code-copy>
 
-### 🗞 Subscriptions
+Then import `useMutation` and the `haunted` API along with your data types.
+
+<details>
+
+<summary>Imports</summary>
 
 <code-copy>
 
 ```ts
-type UpdateUserComponent =
-  HTMLElement & ApolloMutationInterface<Data, Variables>;
+import { useMutation, useState, component, html } from '@apollo-elements/haunted';
 
+import type { ApolloMutationElement } from '@apollo-elements/haunted';
+
+import type {
+  UpdateUserMutationData as Data,
+  UpdateUserMutationVariables as Variables,
+} from '../codegen/schema';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'update-user': ApolloMutationElement<Data, Variables>;
+  }
+}
+```
+
+</code-copy>
+
+</details>
+
+Then to define your component's template function.
+
+<code-copy>
+
+```ts
 function UpdateUser() {
-  let username;
-
-  let haircolor;
-
+  const [username, setUsername] = useState('');
+  const [haircolor, setHaircolor] = useState('Black');
   const [updateUser, { data }] = useMutation<Data, Variables>(UpdateUserMutation);
+
+  const variables = { username, haircolor };
 
   const nickname = data?.updateUser?.nickname ?? 'nothing';
 
   return html`
     <label> Name
-      <input type="text" @input="${e => username = e.target.value}"/>
+      <input type="text" @input="${e => setUsername(e.target.value)}"/>
     </label>
 
     <label> Hair Colour
-      <select @input="${e => haircolor = e.target.value}">
+      <select @input="${e => setHaircolor(e.target.value)}">
         <option>Black</option>
         <option>Brown</option>
         <option>Auburn</option>
@@ -194,26 +181,69 @@ function UpdateUser() {
       </select>
     </label>
 
-    <button @click="${() => updateUser({
-      variables: {
-        username,
-        haircolor
-     }
-    })}">Save</button>
+    <button @click="${() => updateUser({ variables })}">Save</button>
 
     <output ?hidden="${!data}">We'll call you ${nickname}</output>
   `;
 }
 
-customElements.define('update-user', component<UpdateUserComponent>(UpdateUser));
+customElements.define('update-user', component(UpdateUser));
+```
+
+</code-copy>
+
+### 🗞 Subscriptions
+
+Subscriptions let you update your front end with real-time changes to the data graph.
+
+<code-copy>
+
+```graphql
+subscription NewsFlash {
+  news
+}
+```
+
+</code-copy>
+
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
+
+```ts
+import { useSubscription, component, html } from '@apollo-elements/haunted';
+
+import type { ApolloSubscriptionElement } from '@apollo-elements/haunted';
+
+import type {
+  NewsFlashData as Data,
+  NewsFlashVariables as Variables,
+} from '../codegen/schema';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'update-user': UpdateUserComponent
+    'news-flash': ApolloSubscriptionElement<Data, Variables>
   }
 }
 ```
 
+</code-copy>
+
+</details>
+
+```ts
+function NewsFlash() {
+  const { data } = useSubscription<Data, Variables>(NewsFlashSubscription);
+
+  return html`
+    Latest News: ${data.news}
+  `;
+}
+
+customElements.define('news-flash', component(NewsFlashSubscription));
+```
 
 </code-copy>
 

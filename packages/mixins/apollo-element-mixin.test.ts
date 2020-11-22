@@ -1,7 +1,7 @@
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 
 import { expect, html as fhtml } from '@open-wc/testing';
 import { defineCE, fixture, nextFrame, unsafeStatic } from '@open-wc/testing-helpers';

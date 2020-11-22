@@ -28,8 +28,6 @@ npm install --save @apollo-elements/fast
 First, let's define our component's [GraphQL query](https://graphql.org/learn/queries/).
 
 ```graphql
-# src/components/hello-query/Hello.query.graphql
-
 query HelloQuery {
   helloWorld {
     name
@@ -42,10 +40,13 @@ query HelloQuery {
 
 Next, we'll define our UI component. Import the base class and helpers, query, and types:
 
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
 
 ```ts
-// src/components/hello-query/hello-query.ts
-
 import { ApolloQuery, html, customElement } from '@apollo-elements/fast';
 
 import HelloQuery from './Hello.query.graphql';
@@ -56,9 +57,15 @@ import type {
 } from '../codegen/schema';
 ```
 
+</code-copy>
+
+</details>
+
 Then define your component's template. Make sure to set the `query` field, so your component starts fetching data automatically.
 
 > Read more about [working with Queries](https://apolloelements.dev/pages/using%20apollo/queries)
+
+<code-copy>
 
 ```ts
 const template = html<HelloQueryElement>`
@@ -80,6 +87,8 @@ export class HelloQueryElement extends ApolloQuery<Data, Variables> {
   query = HelloQuery;
 }
 ```
+
+</code-copy>
 
 ## 📚 Other Libraries
 Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)
