@@ -24,7 +24,7 @@
         },
         {
           "name": "elements",
-          "type": "readonly ApolloElement[]"
+          "type": "readonly ApolloElementElement<unknown, unknown>[]"
         },
         {
           "name": "typePolicies",
@@ -47,11 +47,6 @@
           "name": "client",
           "description": "Reference to the `ApolloClient` instance.",
           "type": "ApolloClient<NormalizedCacheObject>"
-        },
-        {
-          "name": "instances",
-          "description": "Set of elements subscribed to changes on this element's client",
-          "type": "Set<ApolloElement>"
         }
       ],
       "events": [

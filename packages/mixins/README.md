@@ -34,6 +34,9 @@ Connects a web component to apollo client and associates it with a specific Grap
 With it, you can create vanilla custom elements that render query data, for example:
 
 Create a template
+
+<code-copy>
+
 ```js
 const template = document.createElement('template');
       template.innerHTML = `
@@ -60,7 +63,11 @@ const template = document.createElement('template');
       `;
 ```
 
+</code-copy>
+
 Define the custom element
+
+<code-copy>
 
 ```js
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
@@ -76,7 +83,11 @@ class HelloQuery extends ApolloQueryMixin(HTMLElement) {
 customElements.define('hello-query', HelloQuery);
 ```
 
+</code-copy>
+
 Add reactivity
+
+<code-copy>
 
 ```js
 #data = null;
@@ -92,7 +103,12 @@ get error() { return this.#error; }
 set error(error) { this.#error = error; this.render(); }
 ```
 
+</code-copy>
+
 Render the data
+
+<code-copy>
+
 ```js
 
 $(id) { return this.shadowRoot.getElementById(id); }
@@ -116,6 +132,8 @@ render() {
     this.data?.helloWorld?.name ?? 'Friend';
 }
 ```
+
+</code-copy>
 
 And use it in HTML
 
@@ -147,6 +165,8 @@ Connects a web component to apollo client and associates it with a specific Grap
 ### 💼 ApolloClientMixin
 Optional mixin which connects an element to a specific `ApolloClient` instance.
 
+<code-copy>
+
 ```ts
 import { client } from './specific-apollo-client';
 
@@ -155,6 +175,8 @@ extends ApolloClientMixin(client, ApolloQueryMixin(HTMLElement)) {
   // ... do stuff with your client
 }
 ```
+
+</code-copy>
 
 ### ValidateVariablesMixin
 Optional mixin which prevents queries from automatically subscribing until their non-nullable variables are defined.

@@ -9,6 +9,13 @@
 
 <strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong>
 
+<wcd-live data-title="Live Demo">
+
+[![View Live Demo](https://img.shields.io/badge/Live%20Demo-WebComponents.dev-informational?style=for-the-badge
+)](https://webcomponents.dev/edit/n67sjuzH56J05LOLnxx0?file=src%2FSpacexLaunches.ts)
+
+</wcd-live>
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -18,18 +25,22 @@
 ## 🔧 Installation
 Apollo elements' `lit-apollo` is distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
+<code-copy>
+
 ```bash
 npm install --save @apollo-elements/lit-apollo
 ```
+
+</code-copy>
 
 ## 👩‍🚀 Usage
 > See our [docs on setting up Apollo client](https://apolloelements.dev/pages/guides/getting-started/apollo-client.html) so your components can fetch their data.
 
 First, let's define our component's [GraphQL query](https://graphql.org/learn/queries/).
 
-```graphql
-# src/components/hello-query/Hello.query.graphql
+<code-copy>
 
+```graphql
 query HelloQuery {
   helloWorld {
     name
@@ -38,13 +49,19 @@ query HelloQuery {
 }
 ```
 
+</code-copy>
+
 > Read our [docs on working with GraphQL files during development](https://apolloelements.dev/pages/guides/getting-started/buildless-development.html) and [in production](https://apolloelements.dev/pages/guides/getting-started/building-for-production.html) for more info, and be sure to read about [generating TypeScript types from GraphQL](https://apolloelements.dev/pages/guides/getting-started/codegen.html) to enhance your developer experience and reduce bugs.
 
 Next, we'll define our UI component. Import the base class and helpers, query, and types:
 
-```ts
-// src/components/hello-query/hello-query.ts
+<details>
 
+<summary>Imports</summary>
+
+<code-copy>
+
+```ts
 import { ApolloQuery, html, customElement } from '@apollo-elements/lit-apollo';
 
 import HelloQuery from './Hello.query.graphql';
@@ -55,7 +72,13 @@ import type {
 } from '../codegen/schema';
 ```
 
+</code-copy>
+
+</details>
+
 Then define your component's template. Make sure to set the `query` field, so your component starts fetching data automatically.
+
+<code-copy>
 
 ```ts
 @customElement('hello-query')
@@ -80,6 +103,7 @@ export class HelloQueryElement extends ApolloQuery<Data, Variables> {
 }
 ```
 
+</code-copy>
 
 ## 📚 Other Libraries
 Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)

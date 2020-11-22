@@ -10,7 +10,7 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 
 import { stub } from 'sinon';
 

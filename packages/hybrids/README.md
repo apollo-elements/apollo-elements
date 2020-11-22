@@ -36,36 +36,53 @@ This package provides `client`, `mutation`, `query`, and `subscription` [factori
 ### ❓ Queries
 Use the `client` and `query` factories to connect your element to the apollo cache:
 
+<code-copy>
+
+```graphql
+query HelloQuery($name: String) {
+  hello(name: $name)
+}
+```
+
+</code-copy>
+
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
+
 ```ts
 import { client, query, define, html } from '@apollo-elements/hybrids';
-import { gql } from '@apollo/client/core';
+import HelloQuery from './Hello.query.graphql';
+```
 
-import { apolloClient } from '../client'
+</code-copy>
 
+</details>
+
+<code-copy>
+
+```ts
 const render = ({ data }) => html`
   <p>${data?.hello ?? 'Hello'}</p>
-`
-
-const HelloQuery = gql`
-  query HelloQuery($name: String) {
-    hello(name: $name)
-  }
 `;
 
 define('hello-element', {
-  client: client(apolloClient),
+  client: client(),
   query: query(HelloQuery),
   render
 });
 ```
 
+</code-copy>
+
 Alternatively, you can spread in the ApolloQuery hybrid property descriptors to define a generic querying element.
+
+<code-copy>
 
 ```js
 import { ApolloQuery, define, html } from '@apollo-elements/hybrids';
-import { gql } from '@apollo/client/core';
-
-import { apolloClient } from '../client'
 
 const render = ({ data }) => html`
   <p>${data?.hello ?? 'Hello'}</p>
@@ -74,33 +91,58 @@ const render = ({ data }) => html`
 define('any-hello-element', { ...ApolloQuery, render });
 ```
 
+</code-copy>
+
 Use them by assigning your graphql nodes to the `query` property.
+
+<code-copy>
 
 ```js
 import HelloQuery from './Hello.query.graphql';
 const render = ({ data }) => html`
-  <any-hello-element query="${HelloQuery}" variables="${{ name: 'Mr. Magoo' }}></any-hello-element>
+  <any-hello-element
+      query="${HelloQuery}"
+      variables="${{ name: 'Mr. Magoo' }}"
+  ></any-hello-element>
 `;
 ```
+
+</code-copy>
 
 ### 👾 Mutations
 Like queries, you can use the `client` and `mutation` factories, or you can spread the generalized Hybrid.
 
+<code-copy>
+
+```graphql
+mutation Name($name: String!) {
+  name(name: $name) {
+    name
+  }
+}
+```
+
+</code-copy>
+
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
+
 ```ts
 import { mutation, define, html } from '@apollo-elements/hybrids';
-import { gql } from '@apollo/client/core';
+import NameMutation from './Name.mutation.graphql';
+```
 
-import { apolloClient } from '../client'
+</code-copy>
 
-const NameMutation = gql`
-  mutation Name($name: String!) {
-    name(name: $name) {
-      name
-    }
-  }
-`;
+</details>
 
-const onKeyup = ({ mutate }, ({ key, target: { value: name } })) => {
+<code-copy>
+
+```ts
+const onKeyup = ({ mutate }, { key, target: { value: name } }) => {
   if (key === 'Enter')
     mutate({ variables: { name } });
 }
@@ -109,37 +151,57 @@ const render = ({ data }) =>
   html`<input aria-label="Name" placeholder="Name" onkeyup="${onKeyup}"/>`;
 
 define('name-input', {
-  client: client(apolloClient),
+  client: client(),
   mutation: mutation(NameMutation),
   render,
 });
 ```
 
+</code-copy>
+
 ### 🗞 Subscriptions
 Just like `query` and `mutation`, use the `client` and `subscription` factories, or spread in the `ApolloSubscription` Hybrid prototype to define your subscription element.
 
-```js
-import { subscription, define, html } from '@apollo-elements/hybrids';
-import { gql } from '@apollo/client/core';
+<code-copy>
 
-import { apolloClient } from '../client'
+```graphql
+subscription {
+  news
+}
+```
 
-const NewsSubscription = gql`
-  subscription {
-    news
-  }
-`;
+</code-copy>
 
+<details>
+
+<summary>Imports</summary>
+
+<code-copy>
+
+```ts
+import { mutation, define, html } from '@apollo-elements/hybrids';
+import NameMutation from './Name.mutation.graphql';
+```
+
+</code-copy>
+
+</details>
+
+<code-copy>
+
+```ts
 const render = ({ data, error }) => error ? html`Error! ${error}` : html`
   Latest News: ${data.news}
 `;
 
 define('subscribing-element', {
-  client: client(apolloClient),
+  client: client(),
   subscription: subscription(NewsSubscription),
   render
 });
 ```
+
+</code-copy>
 
 If you'd like to set up a subscription with an initial value from a query, then update that query's cached value each time the subscription reports new data, pass a subscription `document` and an `updateQuery` function with signature `(prev: CachedValue, { subscriptionData }): next: CachedValue` to the `subscribeToMore` method on a query element:
 
