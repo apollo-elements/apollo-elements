@@ -27,5 +27,3 @@ export function client<TData, TVariables>(
     },
   };
 }
-
-export const __testing_escape_hatch__ = Symbol('__testing_escape_hatch__');

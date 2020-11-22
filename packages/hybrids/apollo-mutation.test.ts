@@ -7,7 +7,7 @@ import { define, html, Hybrids } from 'hybrids';
 
 import { ApolloMutation } from './apollo-mutation';
 import { SetupOptions, setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
-import { __testing_escape_hatch__ } from './factories/client';
+import { __testing_escape_hatch__ } from './helpers/accessors';
 
 let counter = 0;
 

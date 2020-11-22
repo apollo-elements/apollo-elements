@@ -19,7 +19,7 @@ import {
 import { define, html, Hybrids } from 'hybrids';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { __testing_escape_hatch__ } from './factories/client';
+import { __testing_escape_hatch__ } from './helpers/accessors';
 
 let counter = 0;
 

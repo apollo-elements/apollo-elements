@@ -12,7 +12,7 @@ import { ApolloQuery } from './apollo-query';
 import 'sinon-chai';
 
 import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
-import { __testing_escape_hatch__ } from './factories/client';
+import { __testing_escape_hatch__ } from './helpers/accessors';
 
 let counter = 0;
 
