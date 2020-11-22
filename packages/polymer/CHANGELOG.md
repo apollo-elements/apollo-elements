@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.1.2...@apollo-elements/polymer@3.2.0) (2020-11-22)
+
+
+### Features
+
+* add haunted support ([36b2648](https://github.com/apollo-elements/apollo-elements/commit/36b2648bf0f4ff096d9d21036fa7805d5909fa1a))
+
+
+
+
+
 ## [3.1.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.1.1...@apollo-elements/polymer@3.1.2) (2020-11-08)
 
 

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.2.0...@apollo-elements/mixins@3.3.0) (2020-11-22)
+
+
+### Bug Fixes
+
+* **mixins:** fire disconnect events on window ([8a79df3](https://github.com/apollo-elements/apollo-elements/commit/8a79df360b1943d50f76c8689da1a5ec6300276b))
+* **mixins:** improve event typings ([b25ac47](https://github.com/apollo-elements/apollo-elements/commit/b25ac47e2f272b08a41df77870fa13f30fce349d))
+
+
+### Features
+
+* add haunted support ([36b2648](https://github.com/apollo-elements/apollo-elements/commit/36b2648bf0f4ff096d9d21036fa7805d5909fa1a))
+* **mixins:** fire events on update ([47c67f8](https://github.com/apollo-elements/apollo-elements/commit/47c67f88a03a9e42b3bd59552ee3253731c0bd61))
+
+
+
+
+
 # [3.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.1.1...@apollo-elements/mixins@3.2.0) (2020-11-08)
 
 

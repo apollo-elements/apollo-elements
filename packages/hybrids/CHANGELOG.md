@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.2.1...@apollo-elements/hybrids@3.3.0) (2020-11-22)
+
+
+### Bug Fixes
+
+* **hybrids:** preserve state when disconnecting ([ec627dc](https://github.com/apollo-elements/apollo-elements/commit/ec627dc3e1886335a663579c1b24d442c14f3ebc))
+* **hybrids:** remove extraneous code ([f185bc8](https://github.com/apollo-elements/apollo-elements/commit/f185bc87797b117560d3d422ca385494b3f4803f))
+
+
+### Features
+
+* **hybrids:** make client argument optional ([bc4b60e](https://github.com/apollo-elements/apollo-elements/commit/bc4b60e8f555d1270111c57aa10b1353b4f225a9))
+* **lib:** move hybrids/prototype to lib ([839e9f1](https://github.com/apollo-elements/apollo-elements/commit/839e9f10f5d46d520a63d698d7105abcf0ac8cc3))
+
+
+
+
+
 ## [3.2.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/hybrids@3.2.0...@apollo-elements/hybrids@3.2.1) (2020-11-08)
 
 

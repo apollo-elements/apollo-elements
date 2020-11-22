@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.2.0...@apollo-elements/interfaces@1.3.0) (2020-11-22)
+
+
+### Features
+
+* **interfaces:** export basic elements ([db8cb2e](https://github.com/apollo-elements/apollo-elements/commit/db8cb2e6a7fe6e2728d38d8723ef8198e4b16d1c))
+
+
+
+
+
 # [1.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.1.0...@apollo-elements/interfaces@1.2.0) (2020-11-08)
 
 

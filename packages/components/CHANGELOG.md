@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.1.2...@apollo-elements/components@1.2.0) (2020-11-22)
+
+
+### Bug Fixes
+
+* **components:** bug fixes ([57c53b8](https://github.com/apollo-elements/apollo-elements/commit/57c53b84fa430b1001c63ab1443c84b151b38680))
+* **components:** handle disconnect events from window ([5eba5b7](https://github.com/apollo-elements/apollo-elements/commit/5eba5b734a936b2bd65df8fe9d53c6907e0d3343))
+* **components:** move variables to prototype ([2f8573d](https://github.com/apollo-elements/apollo-elements/commit/2f8573d13e2aa17d71329e4666693853fca1ee6b))
+
+
+### Features
+
+* add haunted support ([36b2648](https://github.com/apollo-elements/apollo-elements/commit/36b2648bf0f4ff096d9d21036fa7805d5909fa1a))
+
+
+
+
+
 ## [1.1.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.1.1...@apollo-elements/components@1.1.2) (2020-11-08)
 
 **Note:** Version bump only for package @apollo-elements/components

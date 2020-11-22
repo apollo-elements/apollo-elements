@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.3.0...@apollo-elements/lib@3.4.0) (2020-11-22)
+
+
+### Bug Fixes
+
+* **components:** bug fixes ([57c53b8](https://github.com/apollo-elements/apollo-elements/commit/57c53b84fa430b1001c63ab1443c84b151b38680))
+* **lib:** use interfaces element class ([f961707](https://github.com/apollo-elements/apollo-elements/commit/f9617076083a24637b9e1c0d6f2fe67f1bf9b20c))
+
+
+### Features
+
+* **lib:** move hybrids/prototype to lib ([839e9f1](https://github.com/apollo-elements/apollo-elements/commit/839e9f10f5d46d520a63d698d7105abcf0ac8cc3))
+
+
+
+
+
 # [3.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.2.0...@apollo-elements/lib@3.3.0) (2020-10-25)
 
 
