@@ -17,7 +17,11 @@ export function client<TData, TVariables>(
     connect(host) {
       apply(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);
 
-      host.client = client ?? (opts?.useGlobal === false ? null : window.__APOLLO_CLIENT__ ?? null);
+      const useGlobal = opts?.useGlobal ?? true;
+
+      const fallback = useGlobal ? window.__APOLLO_CLIENT__ : null; /* c8 ignore next */ // this is definitely covered
+
+      host.client = client ?? fallback ?? null;
 
       getDescriptor(host).connectedCallback.value.call(host);
 
