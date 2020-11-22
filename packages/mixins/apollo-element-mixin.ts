@@ -1,7 +1,11 @@
 import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql/language/ast';
 import type { GraphQLError } from 'graphql';
-import type { Constructor, ApolloElementInterface } from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  ApolloElementInterface,
+  ApolloElementElement,
+} from '@apollo-elements/interfaces';
 
 import { gql } from '@apollo/client/core';
 
@@ -26,7 +30,7 @@ function capital(string: string): string {
 /**
  * Fired when an element connects to or disconnects from the DOM
  */
-export class ApolloElementEvent<T = HTMLElement & ApolloElementInterface>
+export class ApolloElementEvent<T extends ApolloElementElement = ApolloElementElement>
   extends CustomEvent<T> {
   declare type: 'apollo-element-connected'|'apollo-element-disconnected';
 
