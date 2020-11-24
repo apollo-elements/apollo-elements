@@ -1,4 +1,7 @@
 import type { SinonSpy, SinonStub } from 'sinon';
+
+import type { OperationVariables } from '@apollo/client/core';
+
 import {
   SetupOptions,
   SetupResult,
@@ -29,7 +32,7 @@ function getTagName(): string {
   return tagName;
 }
 
-function render<D = unknown, V = unknown>(
+function render<D = unknown, V = OperationVariables>(
   host: SubscriptionElement<D, V>
 ): ReturnType<typeof html> {
   return html`

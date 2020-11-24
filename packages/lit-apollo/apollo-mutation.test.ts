@@ -4,6 +4,7 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
@@ -39,7 +40,7 @@ import type {
 import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 
 import { ApolloMutation } from './apollo-mutation';
-import { LitElement, html } from 'lit-element';
+import { LitElement, html, Constructor } from 'lit-element';
 
 import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
 
@@ -62,7 +63,7 @@ class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements Mutat
     return JSON.stringify(x, null, 2);
   }
 
-  async hasRendered(): Promise<TestableApolloMutation<D, V>> {
+  async hasRendered(): Promise<this> {
     await nextFrame();
     await this.updateComplete;
     return this;
@@ -72,7 +73,7 @@ class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements Mutat
 describe('[lit-apollo] ApolloMutation', function() {
   describeMutation({
     class: TestableApolloMutation,
-    setupFunction: setupMutationClass(TestableApolloMutation),
+    setupFunction: setupMutationClass(TestableApolloMutation as Constructor<MutationElement>),
   });
 
   describe('subclassing', function() {
@@ -211,6 +212,14 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloMutation<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }
 

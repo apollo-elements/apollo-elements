@@ -27,7 +27,7 @@ describe('[haunted] useQuery', function() {
   });
 
   describeQuery({
-    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>) {
+    async setupFunction<T extends QueryElement<any, any>>(opts?: SetupOptions<T>) {
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
       let spies!: Record<string|keyof T, SinonSpy>;

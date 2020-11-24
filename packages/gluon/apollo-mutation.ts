@@ -1,7 +1,10 @@
+import type { OperationVariables } from '@apollo/client/core';
 import { ApolloElement } from './apollo-element';
-import { ApolloMutationMixin } from '../mixins/apollo-mutation-mixin';
+import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
 import { defineObservedProperties } from './helpers/descriptor';
+
+export { html } from '@gluon/gluon';
 
 /**
  * `ApolloMutation`
@@ -12,10 +15,10 @@ import { defineObservedProperties } from './helpers/descriptor';
  *
  * @element
  */
-export class ApolloMutation<TData, TVariables>
+export class ApolloMutation<D, V = OperationVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
-  implements ApolloMutationInterface<TData, TVariables> { }
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
+  implements ApolloMutationInterface<D, V> { }
 
 defineObservedProperties(ApolloMutation, {
   called: false,

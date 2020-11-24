@@ -1,5 +1,6 @@
 import type { SinonSpy, SinonStub } from 'sinon';
 import type { Entries, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import type { OperationVariables } from '@apollo/client/core';
 
 import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
 
@@ -22,7 +23,9 @@ function getTagName(): string {
   return tagName;
 }
 
-function render<D = unknown, V = unknown>(host: QueryElement<D, V>): ReturnType<typeof html> {
+function render<D = unknown, V = OperationVariables>(
+  host: QueryElement<D, V>
+): ReturnType<typeof html> {
   return html`
     <output id="data">${host.stringify(host.data)}</output>
     <output id="error">${host.stringify(host.error)}</output>

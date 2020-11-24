@@ -27,7 +27,7 @@ describe('[haunted] useMutation', function() {
   });
 
   describeMutation({
-    async setupFunction<T extends MutationElement>(opts?: SetupOptions<T>) {
+    async setupFunction<T extends MutationElement<any, any>>(opts?: SetupOptions<T>) {
       const { innerHTML = '', attributes } = opts ?? {};
 
       const properties:
@@ -69,7 +69,6 @@ describe('[haunted] useMutation', function() {
           client,
           context,
           ignoreResults,
-          // @ts-expect-error: just for the interface
           mutation,
           optimisticResponse,
           // @ts-expect-error: just for the interface

@@ -1,11 +1,15 @@
 import type { GraphQLError } from 'graphql';
+
 import type {
   ApolloClient,
   ApolloError,
   DocumentNode,
   NormalizedCacheObject,
+  OperationVariables,
 } from '@apollo/client/core';
+
 import type { CustomElement } from './constructor';
+import type { ComponentDocument, Data, Variables } from './operation';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
@@ -17,7 +21,7 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * @fires 'apollo-element-connected' when the element connects to the dom
  * @fires 'apollo-element-disconnected' when the element disconnects from the dom
  */
-export declare class ApolloElementInterface<TData = unknown, TVariables = unknown>
+export declare class ApolloElementInterface<D = unknown, V = OperationVariables>
   extends CustomElement {
   declare static documentType: 'query'|'mutation'|'subscription';
 
@@ -30,16 +34,16 @@ export declare class ApolloElementInterface<TData = unknown, TVariables = unknow
    * If unset, the element can derive the document from the first
    * light-DOM `<script type="application/graphql">` child.
    */
-  declare document: DocumentNode | null;
+  declare document: DocumentNode | ComponentDocument<D> | null;
 
   /** Context to be passed to link execution chain. */
   declare context?: Record<string, unknown>;
 
-  /** Latest data */
-  declare data: TData | null;
+  /** data */
+  declare data: Data<D> | null;
 
   /** Operation variables */
-  declare variables: TVariables | null;
+  declare variables: Variables<D, V> | null;
 
   /** Latest error */
   declare error: Error | ApolloError | null;
@@ -51,5 +55,5 @@ export declare class ApolloElementInterface<TData = unknown, TVariables = unknow
   declare loading: boolean;
 }
 
-export class ApolloElementElement<TData = unknown, TVariables = unknown>
-  extends ApolloElementMixin(HTMLElement)<TData, TVariables> { }
+export class ApolloElementElement<D = unknown, V = OperationVariables>
+  extends ApolloElementMixin(HTMLElement)<D, V> { }

@@ -18,11 +18,11 @@ const DEFAULTS = {
 };
 
 export abstract class ApolloHook<
-  TData,
-  TVariables,
+  D,
+  V,
   OptionsType extends { client?: ApolloClient<NormalizedCacheObject> },
   ReturnType extends unknown,
-  ComponentClass extends ApolloElementElement<TData, TVariables>
+  ComponentClass extends ApolloElementElement<D, V>
 > extends Hook<[DocumentNode, OptionsType], ReturnType, ComponentClass> {
   abstract readonly type: 'query'|'mutation'|'subscription';
 

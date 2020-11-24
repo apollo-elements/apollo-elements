@@ -619,14 +619,18 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('executeQuery()', function() {
-            let result: ApolloQueryResult<NullableParamQueryData> | undefined;
+            let result: ApolloQueryResult<any> | undefined;
 
             beforeEach(function() {
               expect(element?.data).to.be.null;
             });
 
             beforeEach(async function() {
-              result = await element?.executeQuery();
+              result = await element!.executeQuery()!;
+            });
+
+            afterEach(function() {
+              result = undefined;
             });
 
             it('calls client query', function() {

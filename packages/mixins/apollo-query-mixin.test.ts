@@ -4,12 +4,13 @@ import type {
   ErrorPolicy,
   FetchPolicy,
   WatchQueryOptions,
-  ApolloError,
+  TypedDocumentNode,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
 
-import type { Constructor } from '@apollo-elements/interfaces';
+import type { Constructor, Entries } from '@apollo-elements/interfaces';
 
 import { NetworkStatus } from '@apollo/client/core';
 
@@ -26,23 +27,14 @@ import { ApolloQueryMixin } from './apollo-query-mixin';
 import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
 
 import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
+import { effect } from '@apollo-elements/lib/descriptors';
 
 class XL extends HTMLElement {}
 
-class Test<D = unknown, V = unknown>
+class TestableApolloQuery<D = unknown, V = OperationVariables>
   extends ApolloQueryMixin(XL)<D, V>
   implements QueryElement<D, V> {
   declare shadowRoot: ShadowRoot;
-
-  #data: D|null = null;
-
-  #error: Error|ApolloError|null = null;
-
-  #errors: readonly GraphQLError[] | null = null;
-
-  #loading = false;
-
-  #networkStatus = NetworkStatus.ready;
 
   static get template() {
     const template = document.createElement('template');
@@ -56,52 +48,12 @@ class Test<D = unknown, V = unknown>
     return template;
   }
 
-  $(id: keyof Test) { return this.shadowRoot.getElementById(id); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get data() { return this.#data; }
-
-  set data(value: D) {
-    this.#data = value;
-    this.render();
-  }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get error() { return this.#error; }
-
-  set error(value: Error) {
-    this.#error = value;
-    this.render();
-  }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get errors() { return this.#errors; }
-
-  set errors(value: readonly GraphQLError[]) {
-    this.#errors = value;
-    this.render();
-  }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get loading() { return this.#loading; }
-
-  set loading(value: boolean) {
-    this.#loading = value;
-    this.render();
-  }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get networkStatus() { return this.#networkStatus; }
-
-  set networkStatus(value) {
-    this.#networkStatus = value;
-    this.render();
-  }
+  $(id: keyof TestableApolloQuery) { return this.shadowRoot.getElementById(id); }
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.append(Test.template.content.cloneNode(true));
+    this.attachShadow({ mode: 'open' })
+      .append(TestableApolloQuery.template.content.cloneNode(true));
   }
 
   render() {
@@ -122,16 +74,38 @@ class Test<D = unknown, V = unknown>
   }
 }
 
-const setupFunction = setupQueryClass(Test);
+const DEFAULTS = {
+  data: null,
+  error: null,
+  errors: null,
+  loading: false,
+  networkStatus: NetworkStatus.ready,
+};
+
+Object.defineProperties(TestableApolloQuery.prototype, Object.fromEntries(
+  (Object.entries(DEFAULTS) as Entries<TestableApolloQuery>)
+    .map(([name, init]) => [
+      name,
+      effect<TestableApolloQuery>({
+        name,
+        init,
+        onSet() {
+          this.render();
+        },
+      }),
+    ])
+));
+
+const setupFunction = setupQueryClass(TestableApolloQuery);
 
 describe('[mixins] ApolloQueryMixin', function() {
-  describeQuery({ setupFunction, class: Test });
+  describeQuery({ setupFunction, class: TestableApolloQuery });
 });
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 
-class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
+class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
   variables = { d: 'd' as const, e: 0 };
 
   typeCheck() {
@@ -144,9 +118,9 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -181,6 +155,14 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
     assertType <Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloQueryMixin(HTMLElement)<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }
 

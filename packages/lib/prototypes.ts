@@ -91,7 +91,7 @@ function unsafeApplyElement<T extends ApolloElementElement>(
 
 const noop = () => void null;
 
-export function apply<T extends ApolloElementElement>(
+export function apply<T extends ApolloElementElement<any, any>>(
   host: T,
   klass: Constructor<T> | typeof ApolloElementElement,
   type: Type,

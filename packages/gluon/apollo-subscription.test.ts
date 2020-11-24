@@ -1,10 +1,11 @@
 import type {
   ApolloClient,
-  ApolloError,
   FetchPolicy,
   FetchResult,
-  Observable,
   NormalizedCacheObject,
+  Observable,
+  OperationVariables,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
@@ -24,33 +25,12 @@ import {
 
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloSubscription<D = unknown, V = unknown>
+class TestableApolloSubscription<D = unknown, V = OperationVariables>
   extends ApolloSubscription<D, V>
   implements SubscriptionElement<D, V> {
   declare shadowRoot: ShadowRoot;
 
   static get is() { return 'gluon-test-subscription-element'; }
-
-  #data: D|null = null;
-
-  #error: Error|ApolloError|null = null;
-
-  #loading = false;
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get data() { return this.#data; }
-
-  set data(v: D) { this.#data = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get error() { return this.#error; }
-
-  set error(v: ApolloError) { this.#error = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get loading() { return this.#loading; }
-
-  set loading(v: boolean) { this.#loading = v; this.render(); }
 
   get template() {
     return html`
@@ -115,5 +95,13 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloSubscription<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

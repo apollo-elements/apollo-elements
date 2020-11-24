@@ -1,12 +1,14 @@
+import type {
+  ApolloClient,
+  InMemoryCache,
+  NormalizedCacheObject,
+  TypePolicies,
+} from '@apollo/client/core';
+
 import type { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
 import type { ApolloElementEvent } from '@apollo-elements/mixins/apollo-element-mixin';
-import type { ApolloClient, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'apollo-client': ApolloClientElement;
-  }
-}
+declare global { interface HTMLElementTagNameMap { 'apollo-client': ApolloClientElement; } }
 
 const template = document.createElement('template');
 template.innerHTML = /* html */`
@@ -32,7 +34,9 @@ function isApolloQuery(e: EventTarget): e is ApolloQueryElement {
   return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
 }
 
-function claimApolloElement(event: ApolloElementEvent): ApolloElementElement | void {
+function claimApolloElement(
+  event: ApolloElementEvent
+): ApolloElementElement | void {
   event.stopPropagation();
   if (isApolloElement(event.detail))
     return event.detail;
@@ -94,12 +98,26 @@ export class ApolloClientElement extends HTMLElement {
   static readonly observedAttributes = ['uri'];
 
   /** Private reference to the `ApolloClient` instance */
-  #client: ApolloClient<NormalizedCacheObject> | null = null;
+  #client: ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null = null;
 
   /** Private cache of child `ApolloElement`s */
   #instances: Set<ApolloElementElement> = new Set();
 
   #typePolicies: TypePolicies | undefined = undefined;
+
+  /**
+   * Reference to the `ApolloClient` instance.
+   */
+  get client(): ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null {
+    return this.#client;
+  }
+
+  set client(value: ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null) {
+    this.#client = value;
+    this.dispatchEvent(new CustomEvent('client-changed', { detail: { value, client: value } }));
+    for (const instance of this.#instances)
+      this.initialize(instance);
+  }
 
   get elements(): readonly ApolloElementElement[] {
     return [...this.#instances];
@@ -141,20 +159,6 @@ export class ApolloClientElement extends HTMLElement {
     return this.hasAttribute('validate-variables');
   }
 
-  /**
-   * Reference to the `ApolloClient` instance.
-   */
-  get client(): ApolloClient<NormalizedCacheObject> | null {
-    return this.#client;
-  }
-
-  set client(value: ApolloClient<NormalizedCacheObject> | null) {
-    this.#client = value;
-    this.dispatchEvent(new CustomEvent('client-changed', { detail: { value, client: value } }));
-    for (const instance of this.#instances)
-      this.initialize(instance);
-  }
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' }).append(template.content.cloneNode(true));
@@ -174,11 +178,12 @@ export class ApolloClientElement extends HTMLElement {
     this.findDeepInstances();
   }
 
-  async createApolloClient(): Promise<ApolloClient<NormalizedCacheObject>> {
+  async createApolloClient(): Promise<ApolloClientElement['client']> {
     const { typePolicies, validateVariables } = this;
     const { uri } = this;
     const { createApolloClient } = await import('@apollo-elements/lib/create-apollo-client');
-    this.client = createApolloClient({ uri, typePolicies, validateVariables });
+    this.client =
+      createApolloClient({ uri, typePolicies, validateVariables }) as ApolloClientElement['client'];
     return this.client;
   }
 

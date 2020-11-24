@@ -6,8 +6,8 @@ import {
   fixture,
 } from '@open-wc/testing';
 
-import type { Constructor } from '@apollo-elements/interfaces/constructor';
-import type { ApolloError } from '@apollo/client/core';
+import type { ApolloMutationElement, Constructor, RefetchQueriesType } from '@apollo-elements/interfaces';
+import type { ApolloError, OperationVariables } from '@apollo/client/core';
 import type {
   NoParamMutationData,
   NoParamMutationVariables,
@@ -18,21 +18,20 @@ import type {
 import { match, spy, SinonSpy } from 'sinon';
 
 import { makeClient, setupClient } from './client';
-import { ApolloMutationElement } from '@apollo-elements/interfaces';
 
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 import gql from 'graphql-tag';
 import { Entries, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 
-type ME<D, V> = ApolloMutationElement<D, V>;
-export interface MutationElement<D = any, V = any> extends ME<D, V> {
+export interface MutationElement<D = unknown, V = OperationVariables> extends ApolloMutationElement<D, V> {
+  refetchQueries: RefetchQueriesType<D> | null;
   shadowRoot: ShadowRoot;
-  hasRendered(): Promise<MutationElement<D, V>>;
+  hasRendered(): Promise<this>;
   stringify(x: unknown): string;
 }
 
-export interface DescribeMutationComponentOptions {
+export interface DescribeMutationComponentOptions<E extends MutationElement = MutationElement<any, any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -49,13 +48,13 @@ export interface DescribeMutationComponentOptions {
    * The element must also implement a `stringify` method to perform that stringification,
    * as well as a `hasRendered` method which returns a promise that resolves when the element is finished rendering
    */
-  setupFunction: SetupFunction<MutationElement>;
+  setupFunction: SetupFunction<E>;
 
   /**
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: Constructor<MutationElement>;
+  class?: Constructor<E>;
 }
 
 export function setupMutationClass<T extends MutationElement>(Klass: Constructor<T>): SetupFunction<T> {
@@ -257,7 +256,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         let spies: Record<string|keyof MutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<MutationElement<NoParamMutationData, NoParamMutationVariables>>({
+          ({ element, spies } = await setupFunction<typeof element>({
             spy: ['onCompleted', 'onError'],
             properties: {
               mutation: NoParamMutation,
@@ -631,7 +630,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
 
             beforeEach(async function setupElement() {
-              class Test extends (Klass as Constructor<typeof element>) {
+              class Test extends (Klass as unknown as Constructor<typeof element>) {
                 mutation = NoParamMutation;
 
                 updater(): void { '💩'; }

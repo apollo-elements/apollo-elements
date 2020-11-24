@@ -5,6 +5,7 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
@@ -38,7 +39,7 @@ class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements Mutat
     return JSON.stringify(x, null, 2);
   }
 
-  async hasRendered(): Promise<TestableApolloMutation<D, V>> {
+  async hasRendered(): Promise<this> {
     await this.render();
     await nextFrame();
     return this;
@@ -101,5 +102,13 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TypeCheckTDN extends ApolloMutation<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

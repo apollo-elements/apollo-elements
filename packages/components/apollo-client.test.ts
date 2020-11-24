@@ -1,19 +1,31 @@
-import { ApolloElementElement } from '@apollo-elements/interfaces';
-import { ApolloElementMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
-import { ApolloClient, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
+import {
+  gql,
+  NormalizedCacheObject,
+  OperationVariables,
+  TypePolicies,
+} from '@apollo/client/core';
 
+import { ApolloClient } from '@apollo/client/core';
+
+import { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
 import { fixtureSync, expect, nextFrame, oneEvent, defineCE, aTimeout } from '@open-wc/testing';
 import { ApolloClientElement } from './apollo-client';
 
 import './apollo-client';
-import { makeClient, NoParamQueryData, NoParamQueryVariables } from '@apollo-elements/test-helpers';
+import { makeClient } from '@apollo-elements/test-helpers';
+import type {
+  NonNullableParamMutationData,
+  NonNullableParamMutationVariables,
+  NoParamQueryData,
+  NoParamQueryVariables,
+} from '@apollo-elements/test-helpers';
 
 import { spy, stub, SinonStub } from 'sinon';
 
 import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
 
 /** @ignore */
-class ShallowElement<D = unknown, V = unknown> extends ApolloElementMixin(HTMLElement)<D, V> {
+class ShallowElement<D = unknown, V = OperationVariables> extends ApolloElementElement<D, V> {
   declare shadowRoot: ShadowRoot;
 
   constructor() {
@@ -34,7 +46,7 @@ class DeepElement extends HTMLElement {
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHTML = `
+    this.attachShadow({ mode: 'open' }).innerHTML = /* html */`
       <query-element></query-element>
       <div id="fake"></div>
       <svg></svg>
@@ -44,12 +56,14 @@ class DeepElement extends HTMLElement {
 }
 
 /** @ignore */
-class QueryElement<D = unknown, V = unknown> extends ApolloQueryMixin(HTMLElement)<D, V> {
+class QueryElement<D = unknown, V = OperationVariables> extends ApolloQueryElement<D, V> {
   query = NoParamQuery;
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHTML = `<div id="fake"></div>`;
+    this.attachShadow({ mode: 'open' }).innerHTML = /* html */ `
+      <div id="fake"></div>
+    `;
   }
 }
 
@@ -118,7 +132,7 @@ describe('<apollo-client>', function() {
           <query-element></query-element>
         </apollo-client>
       `);
-      element.client = client;
+      element.client = client as ApolloClientElement['client'];
       shallow = element.querySelector('shallow-element');
       deep = shallow!.shadowRoot.querySelector('deep-element');
       query = deep!.shadowRoot.querySelector('query-element');
@@ -149,7 +163,7 @@ describe('<apollo-client>', function() {
     });
 
     describe('when setting client', function() {
-      const next = makeClient();
+      const next = makeClient() as ApolloClientElement['client'];
       beforeEach(function() {
         element!.client = next;
       });
@@ -206,15 +220,27 @@ describe('<apollo-client>', function() {
     });
 
     describe('setting typePolicies', function() {
-      const typePolicies: TypePolicies = { Query: { fields: { User() { return null; } } } };
+      const user = Symbol('user');
+      const typePolicies: TypePolicies = {
+        Query: {
+          fields: {
+            user() {
+              return user;
+            },
+          },
+        },
+      };
+
       beforeEach(function() {
         element!.typePolicies = typePolicies;
       });
 
+      afterEach(function() {
+        element!.typePolicies = undefined;
+      });
+
       it('loads the type policies', function() {
-        // @ts-expect-error: checking on client's private properties
-        expect(client.cache.policies.typePolicies.Query.fields.User.read)
-          .to.equal(typePolicies.Query.fields!.User);
+        expect(client?.readQuery({ query: gql`{ user @client }` }).user).to.equal(user);
       });
 
       it('returns the set typePolicies', function() {
@@ -257,7 +283,11 @@ describe('<apollo-client>', function() {
   describe('with uri and validate-variables', function() {
     beforeEach(mockFetch);
     afterEach(restoreFetch);
-    class ApolloQueryEl extends ApolloQueryMixin(HTMLElement)<unknown, unknown> { }
+    class ApolloQueryEl extends ApolloQueryElement<
+      NonNullableParamMutationData,
+      NonNullableParamMutationVariables
+    > { }
+
     const tag = defineCE(ApolloQueryEl);
     it('creates a new client', async function() {
       element = fixtureSync<ApolloClientElement>(/* html */`

@@ -1,4 +1,4 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject, OperationVariables } from '@apollo/client/core';
 import { Descriptor } from 'hybrids';
 
 import { hookElementIntoHybridsCache } from '../helpers/cache';
@@ -9,10 +9,10 @@ interface Opts {
   useGlobal: boolean;
 }
 
-export function client<TData, TVariables>(
+export function client<D = unknown, V = OperationVariables>(
   client?: ApolloClient<NormalizedCacheObject> | null,
   opts?: Opts
-): Descriptor<ApolloElementElement<TData, TVariables>> {
+): Descriptor<ApolloElementElement<D, V>> {
   return {
     connect(host) {
       apply(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);

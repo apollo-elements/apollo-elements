@@ -3,10 +3,10 @@ import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { TypePoliciesMixin } from './type-policies-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
-import { gql } from '@apollo/client/core';
+import { gql, OperationVariables } from '@apollo/client/core';
 
 describe('TypePoliciesMixin', function() {
-  class Base<D = unknown, V = unknown>
+  class Base<D = unknown, V = OperationVariables>
     extends TypePoliciesMixin(ApolloElementMixin(HTMLElement))<D, V> { }
 
   let element: Base;

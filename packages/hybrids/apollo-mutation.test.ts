@@ -1,3 +1,4 @@
+import { OperationVariables } from '@apollo/client/core';
 import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 import { aTimeout, nextFrame } from '@open-wc/testing';
 import 'sinon-chai';
@@ -23,7 +24,9 @@ function getTagName(): string {
   return tagName;
 }
 
-function render<D = unknown, V = unknown>(host: MutationElement<D, V>): ReturnType<typeof html> {
+function render<D = unknown, V = OperationVariables>(
+  host: MutationElement<D, V>
+): ReturnType<typeof html> {
   const { called, data, error, errors, loading } = host;
   return html`
     <output id="called">${host.stringify(called)}</output>

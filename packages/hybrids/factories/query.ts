@@ -1,4 +1,4 @@
-import type { DocumentNode } from '@apollo/client/core';
+import type { DocumentNode, OperationVariables } from '@apollo/client/core';
 import type { Descriptor } from 'hybrids';
 
 import { NetworkStatus } from '@apollo/client/core';
@@ -9,7 +9,9 @@ import { initDocument } from '../helpers/accessors';
 
 export type { ApolloQueryElement };
 
-export function query<D, V>(document?: DocumentNode): Descriptor<ApolloQueryElement<D, V>> {
+export function query<D = unknown, V = OperationVariables>(
+  document?: DocumentNode
+): Descriptor<ApolloQueryElement<D, V>> {
   return {
     connect(host, key, invalidate) {
       apply(host, ApolloQueryElement, 'query');
