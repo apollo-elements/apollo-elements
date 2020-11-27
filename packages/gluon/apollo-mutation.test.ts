@@ -24,41 +24,6 @@ import { GluonElement } from '@gluon/gluon';
 class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements MutationElement<D, V> {
   declare shadowRoot: ShadowRoot;
 
-  ____data: D|null = null;
-
-  ____error: Error|ApolloError|null = null;
-
-  ____errors: readonly GraphQLError[] | null = null;
-
-  ____loading = false;
-
-  ____called = false;
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get data() { return this.____data; }
-
-  set data(v: D) { this.____data = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get error() { return this.____error; }
-
-  set error(v: ApolloError) { this.____error = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get errors() { return this.____errors; }
-
-  set errors(v: readonly GraphQLError[]) { this.____errors = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get loading() { return this.____loading; }
-
-  set loading(v: boolean) { this.____loading = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get called() { return this.____called; }
-
-  set called(v: boolean) { this.____called = v; this.render(); }
-
   get template() {
     return html`
       <output id="called">${this.stringify(this.called)}</output>
