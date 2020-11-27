@@ -47,7 +47,7 @@ Object.defineProperties(ApolloElement.prototype, {
     enumerable: true,
 
     get(this: ApolloElement) {
-      return this.__error;
+      return this.__error ?? null;
     },
 
     set(this: ApolloElement, error) {
@@ -61,11 +61,11 @@ Object.defineProperties(ApolloElement.prototype, {
     enumerable: true,
 
     get(this: ApolloElement) {
-      return this.__error;
+      return this.__errors ?? null;
     },
 
-    set(this: ApolloElement, error) {
-      this.__error = error;
+    set(this: ApolloElement, errors) {
+      this.__errors = errors;
       this.render();
     },
   },

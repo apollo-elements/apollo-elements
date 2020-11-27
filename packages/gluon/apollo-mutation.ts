@@ -15,13 +15,18 @@ export class ApolloMutation<TData, TVariables>
 }
 
 
-Object.defineProperty(ApolloMutation.prototype, 'called', {
-  get(this: ApolloMutation<unknown, unknown>): boolean {
-    return this.__called;
-  },
+Object.defineProperties(ApolloMutation.prototype, {
+  called: {
+    configurable: true,
+    enumerable: true,
 
-  set(this: ApolloMutation<unknown, unknown>, called: boolean) {
-    this.__called = called;
-    this.render();
+    get(this: ApolloMutation<unknown, unknown>): boolean {
+      return this.__called;
+    },
+
+    set(this: ApolloMutation<unknown, unknown>, called: boolean) {
+      this.__called = called;
+      this.render();
+    },
   },
 });
