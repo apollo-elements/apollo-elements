@@ -69,7 +69,7 @@ export async function promptComponent(
       initial: options?.subdir ?? '',
       message: 'Sub directory. Leave blank to scaffold to src/components',
     }]),
-  };
+  } as ComponentOptions;
 }
 
 export async function prompt(): Promise<void> {

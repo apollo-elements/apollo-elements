@@ -22,3 +22,8 @@ declare module '@gluon/gluon' {
 
   export { html, render } from 'lit-html';
 }
+
+declare module 'hybrids/esm/cache' {
+  export const get: any;
+  export const set: any;
+}

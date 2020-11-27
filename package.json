@@ -43,7 +43,7 @@
     "watch:test": "wtr --watch",
     "watch:eslint": "esw",
     "watch:codegen": "graphql-codegen --watch",
-    "watch:types": "lerna run lint:types -- --watch"
+    "watch:types": "yarn workspaces run tsc --watch --noEmit"
   },
   "lint-staged": {
     "*.ts": [

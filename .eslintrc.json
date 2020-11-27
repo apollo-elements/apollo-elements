@@ -8,9 +8,11 @@
     }]
   },
   "overrides": [{
-    "files": ["packages/**/*.test.ts"],
+    "files": ["packages/**/*.test.ts", "packages/test-helpers/**/*.ts"],
     "rules": {
-      "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "TypeCheck"} ]
+      "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "TypeCheck"} ],
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-explicit-any": "off"
     }
   }, {
     "files": [

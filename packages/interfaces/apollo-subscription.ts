@@ -17,9 +17,9 @@ export interface SubscriptionResult<TData> {
   /** whether the subscription is loading */
   loading: boolean;
   /** subscription data */
-  data: TData;
+  data: TData | null;
   /** subscription error */
-  error: ApolloError;
+  error: ApolloError | null;
 }
 
 export interface SubscriptionDataOptions<TData = unknown, TVariables = OperationVariables> {
@@ -43,12 +43,12 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * Specifies the FetchPolicy to be used for this subscription.
    */
-  declare fetchPolicy: FetchPolicy;
+  declare fetchPolicy?: FetchPolicy;
 
   /**
    * The time interval (in milliseconds) on which this subscription should be refetched from the server.
    */
-  declare pollInterval: number;
+  declare pollInterval?: number;
 
   /**
    * Whether or not updates to the network status should trigger next on the observer of this subscription.
@@ -58,17 +58,17 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * Observable watching this element's subscription.
    */
-  declare observable: Observable<FetchResult<TData>>;
+  declare observable?: Observable<FetchResult<TData>>;
 
   /**
    * Subscription to the observable
    */
-  declare observableSubscription: ZenObservable.Subscription;
+  declare observableSubscription?: ZenObservable.Subscription;
 
   /**
    * A GraphQL document containing a single subscription.
    */
-  declare subscription: DocumentNode;
+  declare subscription: DocumentNode | null;
 
   /**
    * If true, the element will not begin querying data until you manually call `subscribe`
@@ -78,7 +78,7 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
    */
-  declare variables: TVariables;
+  declare variables: TVariables | null;
 
   /**
    * If skip is true, the query will be skipped entirely
@@ -101,13 +101,13 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
    * Determines whether the element is able to automatically subscribe
    * @protected
    */
-  canSubscribe(options?: Partial<SubscriptionOptions>): boolean
+  canSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
-  shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean
+  shouldSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
 
   /**
    * Callback for when data is updated

@@ -29,6 +29,8 @@ import './apollo-subscription';
 class TestableApolloSubscription<D, V>
   extends PolymerApolloSubscription<D, V>
   implements SubscriptionElement<D, V> {
+  declare shadowRoot: ShadowRoot;
+
   static get template() {
     const template = document.createElement('template');
     template.innerHTML = /* html */`
@@ -51,9 +53,9 @@ class TestableApolloSubscription<D, V>
   }
 
   render() {
-    this.$('data').textContent = this.stringify(this.data);
-    this.$('error').textContent = this.stringify(this.error);
-    this.$('loading').textContent = this.stringify(this.loading);
+    this.$('data')!.textContent = this.stringify(this.data);
+    this.$('error')!.textContent = this.stringify(this.error);
+    this.$('loading')!.textContent = this.stringify(this.loading);
   }
 
   stringify(x: unknown) {
@@ -109,8 +111,10 @@ describe('[polymer] <apollo-subscription>', function() {
     });
 
     describe('when used in a Polymer template', function() {
-      let wrapper: PolymerElement;
+      let wrapper: WrapperElement;
       class WrapperElement extends PolymerElement {
+        declare shadowRoot: ShadowRoot;
+
         static get properties() {
           return {
             subscription: {
@@ -158,12 +162,12 @@ class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> 
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -172,16 +176,16 @@ class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> 
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
-    assertType<DocumentNode>                          (this.subscription);
-    assertType<TypeCheckVars>                         (this.variables);
-    assertType<FetchPolicy>                           (this.fetchPolicy);
+    assertType<DocumentNode>                          (this.subscription!);
+    assertType<TypeCheckVars>                         (this.variables!);
+    assertType<FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange);
-    assertType<number>                                (this.pollInterval);
+    assertType<number>                                (this.pollInterval!);
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
-    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable);
-    assertType<ZenObservable.Subscription>            (this.observableSubscription);
+    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable!);
+    assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }

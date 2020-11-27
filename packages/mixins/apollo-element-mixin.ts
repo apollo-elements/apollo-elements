@@ -13,6 +13,9 @@ import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 declare global {
+  interface WindowEventMap {
+    'apollo-element-disconnected': ApolloElementEvent;
+  }
   interface HTMLElementEventMap {
     'apollo-element-connected': ApolloElementEvent;
     'apollo-element-disconnected': ApolloElementEvent;
@@ -55,35 +58,35 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     declare context?: Record<string, unknown>;
 
-    declare data: TData;
+    declare data: TData | null;
 
-    declare variables: TVariables;
+    declare variables: TVariables | null;
 
-    declare error: Error|ApolloError;
+    declare error: Error | ApolloError | null;
 
-    declare errors: readonly GraphQLError[];
+    declare errors: readonly GraphQLError[] | null;
 
     declare loading: boolean;
 
-    client: ApolloClient<NormalizedCacheObject> = window.__APOLLO_CLIENT__ ?? null;
+    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
     /** @private */
-    _document: DocumentNode = null;
+    _document: DocumentNode | null = null;
 
     /** @private */
     _documentSetByJS = false;
 
     /** @private */
-    _variables: TVariables = null;
+    _variables: TVariables | null = null;
 
     /** @private */
     _variablesSetByJS = false;
 
     /** @private */
-    mo: MutationObserver;
+    mo: MutationObserver | null = null;
 
     /** GraphQL Document */
-    get document(): DocumentNode {
+    get document(): DocumentNode | null {
       return this._document ?? this.getDOMGraphQLDocument();
     }
 
@@ -131,13 +134,13 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * Lifecycle callback that reacts to changes in the GraphQL document
      * @protected
      */
-    documentChanged?(document: DocumentNode): void
+    documentChanged?(document: DocumentNode | null): void
 
     /**
      * Lifecycle callback that reacts to changes in the operation variables
      * @protected
      */
-    variablesChanged?(variables: TVariables): void
+    variablesChanged?(variables: TVariables | null): void
 
     /** @private */
     onMutation(records: MutationRecord[]): void {
@@ -179,8 +182,9 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * Gets operation variables from the element's JSON script child
      * @private
      */
-    getDOMVariables(): TVariables {
+    getDOMVariables(): TVariables | null {
       const script = this.querySelector<HTMLScriptElement>('script[type="application/json"]');
+      if (!script) return null;
       try {
         return JSON.parse(script.innerText);
       } catch {

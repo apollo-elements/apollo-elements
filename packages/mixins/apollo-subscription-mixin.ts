@@ -34,21 +34,21 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     implements ApolloSubscriptionInterface<TData, TVariables> {
     static documentType = 'subscription';
 
-    declare data: TData;
+    declare data: TData | null;
 
-    declare fetchPolicy: FetchPolicy;
+    declare fetchPolicy?: FetchPolicy;
 
-    declare pollInterval: number;
+    declare pollInterval?: number;
 
     declare noAutoSubscribe: boolean;
 
-    declare observable: Observable<FetchResult<TData>>;
+    declare observable?: Observable<FetchResult<TData>>;
 
-    declare observableSubscription: ZenObservable.Subscription;
+    declare observableSubscription?: ZenObservable.Subscription;
 
-    declare subscription: DocumentNode;
+    declare subscription: DocumentNode | null;
 
-    declare variables: TVariables;
+    declare variables: TVariables | null;
 
     notifyOnNetworkStatusChange = false;
 
@@ -94,13 +94,13 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>) {
       this.initObservable(params);
 
-      if (this.observableSubscription && !(params.shouldResubscribe ?? this.shouldResubscribe))
+      if (this.observableSubscription && !(params?.shouldResubscribe ?? this.shouldResubscribe))
         return;
 
       this.loading = true;
 
       this.observableSubscription =
-        this.observable.subscribe({
+        this.observable!.subscribe({
           next: this.nextData.bind(this),
           error: this.nextError.bind(this),
           complete: this.onComplete.bind(this),
@@ -139,10 +139,14 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
       const client = params?.client ?? this.client;
       const skip = params?.skip ?? this.skip;
-
-      const query = params?.subscription ?? this.subscription;
+      // It's better to let Apollo client throw this error
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const query = params?.subscription ?? this.subscription!;
       const variables = params?.variables ?? this.variables;
       const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
+
+      if (!client)
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html');
 
       if ((this.observable && !shouldResubscribe) || skip)
         return;
@@ -156,8 +160,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      * @private
      */
     nextData(result: FetchResult<TData>) {
-      const { data } = result;
-      const { client } = this;
+      const data = result.data ?? null;
+      const client = this.client!;
       const loading = false;
       const error = null;
       const subscriptionData = { data, loading, error };
@@ -203,7 +207,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       configurable: true,
       enumerable: true,
 
-      get(this: ApolloSubscriptionElement<unknown, unknown>): DocumentNode {
+      get(this: ApolloSubscriptionElement<unknown, unknown>): DocumentNode | null {
         return this.document;
       },
 

@@ -8,7 +8,7 @@
         {
           "name": "uri",
           "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string"
+          "type": "string | null"
         },
         {
           "name": "validate-variables",
@@ -29,13 +29,13 @@
         {
           "name": "typePolicies",
           "description": "TypePolicies for the client",
-          "type": "TypePolicies"
+          "type": "TypePolicies | undefined"
         },
         {
           "name": "uri",
           "attribute": "uri",
           "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string"
+          "type": "string | null"
         },
         {
           "name": "validateVariables",
@@ -46,7 +46,7 @@
         {
           "name": "client",
           "description": "Reference to the `ApolloClient` instance.",
-          "type": "ApolloClient<NormalizedCacheObject>"
+          "type": "ApolloClient<NormalizedCacheObject> | null"
         }
       ],
       "events": [
@@ -69,7 +69,7 @@
         {
           "name": "refetch-queries",
           "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<{ [key: string]: any; }, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | undefined"
+          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null | undefined"
         },
         {
           "name": "called",
@@ -89,7 +89,7 @@
         {
           "name": "mutation",
           "description": "The mutation.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         },
         {
           "name": "optimisticResponse",
@@ -110,7 +110,7 @@
           "name": "refetchQueries",
           "attribute": "refetch-queries",
           "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<{ [key: string]: any; }, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | undefined"
+          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null | undefined"
         },
         {
           "name": "awaitRefetchQueries",
@@ -127,14 +127,8 @@
         {
           "name": "ignoreResults",
           "description": "If true, the returned data property will not update with the mutation result.",
-          "type": "boolean",
+          "type": "boolean | undefined",
           "default": "false"
-        },
-        {
-          "name": "mostRecentMutationId",
-          "description": "The ID number of the most recent mutation since the element was instantiated.",
-          "type": "number",
-          "default": "0"
         },
         {
           "name": "documentType",
@@ -149,38 +143,39 @@
         {
           "name": "data",
           "description": "Latest mutation data.",
-          "type": "TData"
+          "type": "TData | null"
         },
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables"
+          "type": "TVariables | null"
         },
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error | ApolloError"
+          "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
           "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
+          "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": "\"\""
         },
         {
           "name": "client",
           "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         }
       ],
       "events": [

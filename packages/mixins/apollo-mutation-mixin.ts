@@ -1,6 +1,5 @@
 import type { DocumentNode } from 'graphql/language/ast';
 import type { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 import {
   ErrorPolicy,
   MutationOptions,
@@ -8,8 +7,6 @@ import {
   FetchResult,
   ApolloError,
   FetchPolicy,
-  ApolloClient,
-  NormalizedCacheObject,
 } from '@apollo/client/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
@@ -30,9 +27,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
     implements ApolloMutationInterface<TData, TVariables> {
     static documentType = 'mutation';
 
-    declare data: TData;
-
-    declare mutation: DocumentNode;
+    declare mutation: DocumentNode | null;
 
     declare optimisticResponse?: TData | ((vars: TVariables) => TData);
 
@@ -40,20 +35,12 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     declare fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
 
-    declare refetchQueries?:
-      RefetchQueryDescription | ((result: FetchResult<TData>) => RefetchQueryDescription);
+    declare refetchQueries:
+      null | MutationOptions<TData, TVariables>['refetchQueries'];
 
     declare awaitRefetchQueries?: boolean;
 
-    declare client: ApolloClient<NormalizedCacheObject>;
-
-    declare context?: Record<string, unknown>;
-
-    declare error: Error;
-
-    declare loading: boolean;
-
-    declare variables: TVariables;
+    declare called: boolean;
 
     onCompleted?(_data: TData): void;
 
@@ -62,8 +49,6 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
     updater?(...params: Parameters<MutationUpdaterFn<TData>>):
         ReturnType<MutationUpdaterFn<TData>>;
 
-    declare called: boolean;
-
     ignoreResults = false;
 
     mostRecentMutationId = 0;
@@ -71,6 +56,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
     constructor() {
       super();
       this.variables = null;
+      this.loading ??= false;
     }
 
     connectedCallback() {
@@ -83,16 +69,22 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
     public async mutate(
       params?: Partial<MutationOptions<TData, TVariables>>
     ): Promise<FetchResult<TData>> {
+      if (!this.client)
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html'); /* c8 ignore next */ // covered
+
       const options: MutationOptions<TData, TVariables> = {
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        mutation: params?.mutation ?? this.mutation!,
+
         awaitRefetchQueries: params?.awaitRefetchQueries ?? this.awaitRefetchQueries,
         context: params?.context ?? this.context,
         errorPolicy: params?.errorPolicy ?? this.errorPolicy,
         fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
-        mutation: params?.mutation ?? this.mutation,
         optimisticResponse: params?.optimisticResponse ?? this.optimisticResponse,
-        refetchQueries: params?.refetchQueries ?? this.refetchQueries,
+        refetchQueries: params?.refetchQueries ?? this.refetchQueries ?? undefined,
         update: params?.update ?? this.updater,
-        variables: params?.variables ?? this.variables,
+        variables: params?.variables ?? this.variables ?? undefined,
       };
 
       const mutationId = this.generateMutationId();
@@ -136,8 +128,9 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
         this.error = null;
         this.data = data ?? null;
         this.errors = response.errors ?? null;
+        if (data)
+          this.onCompleted?.(data);
       }
-      this.onCompleted?.(data);
       return response;
     }
 
@@ -169,7 +162,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       configurable: true,
       enumerable: true,
 
-      get(this: ApolloMutationElement<unknown, unknown>): DocumentNode {
+      get(this: ApolloMutationElement<unknown, unknown>): DocumentNode | null {
         return this.document;
       },
 
@@ -183,7 +176,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       configurable: true,
       enumerable: true,
       writable: true,
-      value: null,
+      value: undefined,
     },
 
     refetchQueries: {

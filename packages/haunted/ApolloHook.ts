@@ -36,7 +36,7 @@ export abstract class ApolloHook<
 
   readonly reactiveProps: (keyof ComponentClass)[] = [];
 
-  protected disconnected: boolean;
+  protected disconnected = true;
 
   constructor(
     public id: number,
@@ -87,17 +87,17 @@ export abstract class ApolloHook<
 
     const props = ['loading', ...this.reactiveProps];
 
-    props.forEach((key: string) => {
-      PRIVATE[key] ??= new WeakMap();
-      PRIVATE[key].set(host, this.defaults[key]);
+    props.forEach((key: string | keyof ComponentClass) => {
+      PRIVATE[key as string] ??= new WeakMap();
+      PRIVATE[key as string].set(host, this.defaults[key as keyof ComponentClass]);
       Object.defineProperty(host, key, {
         configurable: true,
         enumerable: true,
         get() {
-          return PRIVATE[key].get(host);
+          return PRIVATE[key as string].get(host);
         },
         set(value: boolean) {
-          PRIVATE[key].set(host, value);
+          PRIVATE[key as string].set(host, value);
           // @ts-expect-error: borrowing a private API in order to set up reactivity
           host._scheduler.update();
         },

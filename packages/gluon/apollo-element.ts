@@ -1,4 +1,4 @@
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloError } from '@apollo/client/core';
 import type { ApolloElementInterface, Constructor } from '@apollo-elements/interfaces';
 import { DocumentNode, GraphQLError } from 'graphql';
 
@@ -16,80 +16,71 @@ export class ApolloElement<TData = unknown, TVariables = unknown>
   extends ApolloElementMixin(GluonElement as Constructor<GluonElement>)<TData, TVariables>
   implements ApolloElementInterface<TData> {
   /** The apollo client instance. */
-  declare client: ApolloClient<NormalizedCacheObject>;
+  protected __document: DocumentNode | null = null;
 
-  declare context?: Record<string, unknown>;
+  protected __data: TData | null= null;
 
-  declare data: TData;
+  protected __error: Error | ApolloError | null = null;
 
-  declare error: Error | ApolloError;
+  protected __errors: readonly GraphQLError[] | null = null;
 
-  declare errors: readonly GraphQLError[];
-
-  declare loading: boolean;
-
-  /** @private */
-  __document: DocumentNode = null;
-
-  /** @private */
-  __data: TData = null;
-
-  /** @private */
-  __error: Error | ApolloError = null;
-
-  /** @private */
-  __errors: readonly GraphQLError[] = null;
-
-  /** @private */
-  __loading = false;
-
-  constructor() {
-    super();
-
-    type This = this;
-
-    Object.defineProperties(this, {
-      data: {
-        configurable: true,
-        enumerable: true,
-
-        get(this: This) {
-          return this.__data;
-        },
-
-        set(this: This, data) {
-          this.__data = data;
-          this.render();
-        },
-      },
-
-      error: {
-        configurable: true,
-        enumerable: true,
-
-        get(this: This) {
-          return this.__error;
-        },
-
-        set(this: This, error) {
-          this.__error = error;
-          this.render();
-        },
-      },
-
-      loading: {
-        configurable: true,
-        enumerable: true,
-
-        get(this: This) {
-          return this.__loading;
-        },
-
-        set(this: This, loading) {
-          this.__loading = loading;
-          this.render();
-        },
-      },
-    });
-  }
+  protected __loading = false;
 }
+
+Object.defineProperties(ApolloElement.prototype, {
+  data: {
+    configurable: true,
+    enumerable: true,
+
+    get(this: ApolloElement) {
+      return this.__data;
+    },
+
+    set(this: ApolloElement, data) {
+      this.__data = data;
+      this.render();
+    },
+  },
+
+  error: {
+    configurable: true,
+    enumerable: true,
+
+    get(this: ApolloElement) {
+      return this.__error;
+    },
+
+    set(this: ApolloElement, error) {
+      this.__error = error;
+      this.render();
+    },
+  },
+
+  errors: {
+    configurable: true,
+    enumerable: true,
+
+    get(this: ApolloElement) {
+      return this.__error;
+    },
+
+    set(this: ApolloElement, error) {
+      this.__error = error;
+      this.render();
+    },
+  },
+
+  loading: {
+    configurable: true,
+    enumerable: true,
+
+    get(this: ApolloElement) {
+      return this.__loading;
+    },
+
+    set(this: ApolloElement, loading) {
+      this.__loading = loading;
+      this.render();
+    },
+  },
+});

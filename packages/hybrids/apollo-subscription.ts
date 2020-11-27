@@ -6,7 +6,7 @@ import { client } from './factories/client';
 
 export const ApolloSubscription: Hybrids<ApolloSubscriptionElement> = {
   client: client(),
-  subscription: subscription(null),
+  subscription: subscription(),
 };
 
 export type { ApolloSubscriptionElement };

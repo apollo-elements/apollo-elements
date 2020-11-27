@@ -2,7 +2,7 @@ import { html } from 'haunted';
 import { useSubscription } from './useSubscription';
 import { component } from 'haunted';
 
-import type { SetupOptions } from '@apollo-elements/test-helpers';
+import type { Entries, SetupOptions } from '@apollo-elements/test-helpers';
 import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
@@ -19,6 +19,7 @@ import type {
 } from '@apollo-elements/test-helpers/schema';
 
 import { ApolloSubscriptionElement } from '@apollo-elements/interfaces';
+import { DocumentNode } from 'graphql';
 
 describe('[haunted] useSubscription', function() {
   const ccOrig = ApolloSubscriptionElement.prototype.connectedCallback;
@@ -28,10 +29,10 @@ describe('[haunted] useSubscription', function() {
   });
 
   describeSubscription({
-    async setupFunction<T extends SubscriptionElement>(opts: SetupOptions<T>) {
+    async setupFunction<T extends SubscriptionElement>(opts?: SetupOptions<T>) {
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
-      ApolloSubscriptionElement.prototype.connectedCallback = function() {
+      ApolloSubscriptionElement.prototype.connectedCallback = function(this: T) {
         this.stringify = (x: unknown) => JSON.stringify(x, null, 2);
 
         this.hasRendered = async () => {
@@ -42,8 +43,8 @@ describe('[haunted] useSubscription', function() {
         ccOrig.call(this);
       };
 
-      function Subscription(this: SubscriptionElement) {
-        const { loading, data, error } = useSubscription(null);
+      function Subscription<H extends T>(this: H) {
+        const { loading, data, error } = useSubscription(null as unknown as DocumentNode);
 
         return html`
           <output id="data">${this.stringify(data)}</output>
@@ -63,7 +64,7 @@ describe('[haunted] useSubscription', function() {
       const spies = setupSpies(opts?.spy, element);
       const stubs = setupStubs(opts?.stub, element);
 
-      for (const [key, val] of Object.entries(properties ?? {}))
+      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
         element[key] = val;
 
       return { element, spies, stubs };
@@ -141,7 +142,7 @@ describe('[haunted] useSubscription', function() {
                 NullableParamSubscription
               );
 
-            const nullable = data?.nullableParam.nullable ?? 'fail';
+            const nullable = data?.nullableParam!.nullable ?? 'fail';
 
             return html`
               <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
@@ -159,11 +160,11 @@ describe('[haunted] useSubscription', function() {
         });
 
         it('renders data', function() {
-          expect(element.shadowRoot.querySelector('what-spin-such-loader').hasAttribute('active'))
+          expect(element.shadowRoot!.querySelector('what-spin-such-loader')!.hasAttribute('active'))
             .to.be.false;
-          expect(element.shadowRoot.getElementById('error').hidden).to.be.true;
-          expect(element.shadowRoot.textContent).to.not.include('fail');
-          expect(element.shadowRoot.textContent).to.include('Hello World');
+          expect(element.shadowRoot!.getElementById('error')!.hidden).to.be.true;
+          expect(element.shadowRoot!.textContent).to.not.include('fail');
+          expect(element.shadowRoot!.textContent).to.include('Hello World');
         });
       });
 
@@ -184,7 +185,7 @@ describe('[haunted] useSubscription', function() {
                 NullableParamSubscription, { variables }
               );
 
-            const nullable = data?.nullableParam.nullable ?? 'NullableParam';
+            const nullable = data?.nullableParam!.nullable ?? 'NullableParam';
 
             return html`
               <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
@@ -208,10 +209,10 @@ describe('[haunted] useSubscription', function() {
         });
 
         it('renders data', function() {
-          expect(element.shadowRoot.querySelector('what-spin-such-loader').hasAttribute('active'))
+          expect(element.shadowRoot!.querySelector('what-spin-such-loader')!.hasAttribute('active'))
             .to.be.false;
-          expect(element.shadowRoot.getElementById('error').hidden).to.be.true;
-          expect(element.shadowRoot.textContent).to.include('POW');
+          expect(element.shadowRoot!.getElementById('error')!.hidden).to.be.true;
+          expect(element.shadowRoot!.textContent).to.include('POW');
         });
       });
     });

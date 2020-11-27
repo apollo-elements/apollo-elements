@@ -36,9 +36,11 @@ describe('[lib] isValidGql', function() {
   });
 
   it('isValidGql Handles weird input', function() {
+    // @ts-expect-error: testing invalid input
     expect(isValidGql(void 0), 'no params').to.be.false;
     // @ts-expect-error: testing invalid input
     expect(isValidGql({}), 'undefined params').to.be.false;
+    // @ts-expect-error: testing invalid input
     expect(isValidGql(null), 'null params').to.be.false;
     // @ts-expect-error: testing invalid input
     expect(isValidGql(NaN), 'NaN params').to.be.false;

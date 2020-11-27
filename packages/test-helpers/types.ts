@@ -9,14 +9,14 @@ export type Library =
   'mixins' |
   'polymer'
 
-export interface TestableElement<D = unknown, V = unknown> extends ApolloElementInterface<D, V> {
+export interface TestableElement<D = any, V = any> extends ApolloElementInterface<D, V> {
   hasRendered(): Promise<TestableElement>
   stringify(x: unknown): string;
 }
 
 export interface SetupOptions<T extends TestableElement> {
   attributes?: string;
-  properties?: Partial<Record<keyof T, T[keyof T]>>;
+  properties?: Partial<T>;
   innerHTML?: string;
   spy?: (keyof T)[];
   stub?: (keyof T)[];

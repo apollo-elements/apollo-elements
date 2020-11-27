@@ -18,7 +18,6 @@ import type {
 import { NetworkStatus } from '@apollo/client/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { stripUndefinedValues } from '@apollo-elements/lib/helpers';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 
@@ -31,60 +30,35 @@ declare global {
   }
 }
 
-const pickExecuteQueryOpts =
-  <TVariables>(opts: QueryOptions<TVariables>): QueryOptions<TVariables> =>
-    stripUndefinedValues({
-      context: opts.context,
-      errorPolicy: opts.errorPolicy,
-      fetchPolicy: opts.fetchPolicy,
-      query: opts.query,
-      variables: opts.variables,
-    });
-
-const pickWatchQueryOpts =
-  (opts: WatchQueryOptions): WatchQueryOptions =>
-    stripUndefinedValues({
-      context: opts.context,
-      errorPolicy: opts.errorPolicy,
-      fetchPolicy: opts.fetchPolicy,
-      nextFetchPolicy: opts.nextFetchPolicy,
-      notifyOnNetworkStatusChange: opts.notifyOnNetworkStatusChange,
-      partialRefetch: opts.partialRefetch,
-      pollInterval: opts.pollInterval,
-      query: opts.query,
-      returnPartialData: opts.returnPartialData,
-      variables: opts.variables,
-    });
-
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
   class ApolloQueryElement<TData, TVariables>
     extends ApolloElementMixin(superclass)<TData, TVariables>
     implements ApolloQueryInterface<TData, TVariables> {
     static documentType = 'query';
 
-    declare query: DocumentNode;
+    declare query: DocumentNode | null;
 
-    declare fetchPolicy: FetchPolicy;
+    declare fetchPolicy?: FetchPolicy;
 
-    declare partial: boolean;
+    declare partial?: boolean;
 
-    declare partialRefetch: boolean;
+    declare partialRefetch?: boolean;
 
-    declare returnPartialData: boolean;
+    declare returnPartialData?: boolean;
 
-    declare nextFetchPolicy: FetchPolicy;
+    declare nextFetchPolicy?: FetchPolicy;
 
     declare networkStatus: NetworkStatus;
 
-    declare observableQuery: ObservableQuery;
+    declare observableQuery?: ObservableQuery<TData, TVariables>;
 
-    declare options: Partial<WatchQueryOptions>;
+    declare options: Partial<WatchQueryOptions<TVariables, TData>> | null;
 
     declare noAutoSubscribe: boolean;
 
     declare notifyOnNetworkStatusChange: boolean;
 
-    declare pollInterval: number;
+    declare pollInterval?: number;
 
     onData?(_result: ApolloQueryResult<TData>): void
 
@@ -93,7 +67,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     errorPolicy: ErrorPolicy = 'none';
 
     /** @private */
-    __options: Partial<WatchQueryOptions> = null;
+    __options: Partial<WatchQueryOptions> | null = null;
 
     /** @private */
     __networkStatus = NetworkStatus.ready;
@@ -104,7 +78,8 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
       this.documentChanged(this.query);
     }
 
-    documentChanged(query: DocumentNode): void {
+    documentChanged(query: DocumentNode | null): void {
+      if (!query) return;
       if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
         this.subscribe({ query });
     }
@@ -123,7 +98,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      *
      * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
      */
-    refetch(variables: TVariables): Promise<ApolloQueryResult<TData>> {
+    refetch(variables: TVariables): Promise<ApolloQueryResult<TData>> | void {
       return this.observableQuery?.refetch(variables);
     }
 
@@ -131,7 +106,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * Determines whether the element is able to automatically subscribe
      * @protected
      */
-    canSubscribe(options?: Partial<SubscriptionOptions>): boolean {
+    canSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean {
       return (
         !this.noAutoSubscribe &&
         !!this.client &&
@@ -144,30 +119,33 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      *
      * Override to prevent subscribing unless your conditions are met.
      */
-    shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
+    shouldSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean {
       return (void options, true);
     }
 
     /**
      * Resets the observableQuery and subscribes.
      */
-    subscribe(params?: Partial<SubscriptionOptions>): ZenObservable.Subscription {
-      const options: SubscriptionOptions = {
+    subscribe(
+      params?: Partial<SubscriptionOptions<TVariables, TData>>
+    ): ZenObservable.Subscription {
+      const options: SubscriptionOptions<TVariables, TData> = {
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        query: params?.query ?? this.query!,
         context: params?.context ?? this.context,
         fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
-        query: params?.query ?? this.query,
-        variables: params?.variables ?? this.variables,
+        variables: params?.variables ?? this.variables ?? undefined,
       };
 
       if (this.observableQuery)
         this.observableQuery.stopPolling();
 
-      this.observableQuery =
-        this.watchQuery(options);
+      this.observableQuery = this.watchQuery(options);
 
       this.loading = true;
 
-      return this.observableQuery.subscribe({
+      return this.observableQuery!.subscribe({
         next: this.nextData.bind(this),
         error: this.nextError.bind(this),
       });
@@ -181,7 +159,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * then a `{ subscriptionData: TSubscriptionResult }` object,
      * and returns an object with updated query data based on the new results.
      */
-    subscribeToMore(options: SubscribeToMoreOptions): () => void {
+    subscribeToMore(options: SubscribeToMoreOptions<TData, TVariables>): (() => void) | void {
       return this.observableQuery?.subscribeToMore(options);
     }
 
@@ -190,10 +168,20 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      */
     async executeQuery(
       params?: Partial<QueryOptions<TVariables>>
-    ): Promise<void | ApolloQueryResult<TData>> {
-      const query = params?.query ?? this.query;
-      const variables = params?.variables ?? this.variables;
-      const options = { ...pickExecuteQueryOpts(this), ...params, query, variables };
+    ): Promise<ApolloQueryResult<TData>> {
+      if (!this.client)
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html'); /* c8 ignore next */ // it's covered
+
+      const { context, errorPolicy, fetchPolicy } = this;
+
+      const options: QueryOptions<TVariables> = {
+        context, errorPolicy, fetchPolicy,
+        ...params,
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        query: params?.query ?? this.query!,
+        variables: params?.variables ?? this.variables ?? undefined,
+      };
 
       this.loading = true;
 
@@ -222,16 +210,20 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
         FetchMoreQueryOptions<TVariables, keyof TVariables> &
         FetchMoreOptions<TData, TVariables>
     )>): Promise<ApolloQueryResult<TData>> {
-      const options = {
-        query: params?.query ?? this.query,
+      const options: typeof params = {
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        query: params?.query ?? this.query!,
         updateQuery: params?.updateQuery,
-        variables: params?.variables,
+        variables: params?.variables ?? this.variables ?? undefined,
         context: params?.context ?? this.context,
       };
 
       this.loading = true;
 
-      return this.observableQuery?.fetchMore(options);
+      this.observableQuery ??= this.watchQuery(options);
+
+      return this.observableQuery!.fetchMore(options);
     }
 
     /**
@@ -246,13 +238,29 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * - `query` A GraphQL document that consists of a single query to be sent down to the server.
      * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
      */
-    watchQuery(params?: Partial<WatchQueryOptions>): ObservableQuery {
-      const options: WatchQueryOptions = {
-        ...pickWatchQueryOpts(this),
+    watchQuery(
+      params?: Partial<WatchQueryOptions<TVariables, TData>>
+    ): ObservableQuery<TData, TVariables> {
+      if (!this.client)
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html'); /* c8 ignore next */ // it's covered
+
+      const options: WatchQueryOptions<TVariables, TData> = {
+        context: this.context,
+        errorPolicy: this.errorPolicy,
+        fetchPolicy: this.fetchPolicy,
+        notifyOnNetworkStatusChange: this.notifyOnNetworkStatusChange,
+        partialRefetch: this.partialRefetch,
+        pollInterval: this.pollInterval,
+        returnPartialData: this.returnPartialData,
         ...params,
-        query: params?.query ?? this.query,
-        variables: params?.variables ?? this.variables,
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        query: params?.query ?? this.query!, /* c8 ignore next */ // it's covered
+        variables: params?.variables ?? this.variables ?? undefined,
       };
+
+      if (this.nextFetchPolicy)
+        options.nextFetchPolicy = this.nextFetchPolicy;
 
       return this.client.watchQuery(options);
     }
@@ -264,14 +272,15 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     nextData(result?: ApolloQueryResult<TData>): void {
       this.dispatchEvent(new CustomEvent('apollo-query-result', { detail: result }));
       this.data = result?.data ?? null;
-      this.loading = result?.loading;
-      this.networkStatus = result?.networkStatus;
+      this.loading = result?.loading ?? false;
+      this.networkStatus = result?.networkStatus ?? NetworkStatus.ready;
       this.partial = result?.partial;
-      if (result.error !== undefined)
+      if (result?.error !== undefined)
         this.error = result?.error;
-      if (result.errors !== undefined)
+      if (result?.errors !== undefined)
         this.errors = result?.errors ?? null;
-      this.onData?.(result);
+      if (result)
+        this.onData?.(result);
     }
 
     /**
@@ -316,7 +325,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
       configurable: true,
       enumerable: true,
 
-      get(this: ApolloQueryElement<unknown, unknown>): Partial<WatchQueryOptions> {
+      get(this: ApolloQueryElement<unknown, unknown>): Partial<WatchQueryOptions> | null {
         return this.__options;
       },
 

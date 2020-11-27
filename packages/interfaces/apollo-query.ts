@@ -23,22 +23,22 @@ export declare class ApolloQueryInterface<TData, TVariables>
   /**
    * Latest query data.
    */
-  declare data: TData;
+  declare data: TData | null;
 
   /**
    * A GraphQL document containing a single query.
    */
-  declare query: DocumentNode;
+  declare query: DocumentNode | null;
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
    */
-  declare variables: TVariables;
+  declare variables: TVariables | null;
 
   /**
    * Specifies the FetchPolicy to be used for this query.
    */
-  declare fetchPolicy: FetchPolicy;
+  declare fetchPolicy?: FetchPolicy;
 
   /**
    * When someone chooses cache-and-network or network-only as their
@@ -52,13 +52,13 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * options.fetchPolicy after the intial network request, without
    * having to set options.
    */
-  declare nextFetchPolicy: FetchPolicy;
+  declare nextFetchPolicy?: FetchPolicy;
 
   /**
    * If data was read from the cache with missing fields,
    * partial will be true. Otherwise, partial will be falsy
    */
-  declare partial: boolean;
+  declare partial?: boolean;
 
   /**
    * If true, perform a query refetch if the query result is marked as being partial,
@@ -68,13 +68,13 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * The default value is false for backwards-compatibility's sake,
    * but should be changed to true for most use-cases.
    */
-  declare partialRefetch: boolean;
+  declare partialRefetch?: boolean;
 
   /**
    * Opt into receiving partial results from the cache for queries
    * that are not fully satisfied by the cache.
    */
-  declare returnPartialData: boolean;
+  declare returnPartialData?: boolean;
 
   /**
    * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)
@@ -98,24 +98,24 @@ export declare class ApolloQueryInterface<TData, TVariables>
   declare networkStatus: NetworkStatus;
 
   /**
-   * The apollo ObservableQuery watching this element's query.
+   * The Apollo ObservableQuery watching this element's query.
    */
-  declare observableQuery: ObservableQuery;
+  declare observableQuery?: ObservableQuery<TData, TVariables>;
 
   /**
    * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
    */
-  declare options: Partial<WatchQueryOptions>;
+  declare options: Partial<WatchQueryOptions<TVariables, TData>> | null;
 
   /**
    * Whether or not updates to the network status should trigger next on the observer of this query.
    */
-  declare notifyOnNetworkStatusChange: boolean;
+  declare notifyOnNetworkStatusChange?: boolean;
 
   /**
    * The time interval (in milliseconds) on which this query should be refetched from the server.
    */
-  declare pollInterval: number;
+  declare pollInterval?: number;
 
   /**
    * Specifies the ErrorPolicy to be used for this query.
@@ -142,24 +142,24 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
-  refetch(variables: TVariables): Promise<ApolloQueryResult<TData>>;
+  refetch(variables: TVariables): Promise<ApolloQueryResult<TData>> | void;
 
   /**
    * Determines whether the element is able to automatically subscribe
    * @protected
    */
-  canSubscribe(options?: Partial<SubscriptionOptions>): boolean
+  canSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
-  shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean
+  shouldSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
 
   /**
    * Resets the observableQuery and subscribes.
    */
-  subscribe(options?: Partial<SubscriptionOptions>): ZenObservable.Subscription;
+  subscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): ZenObservable.Subscription;
 
   /**
    * Lets you pass a GraphQL subscription and updateQuery function
@@ -169,7 +169,7 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  subscribeToMore(options: SubscribeToMoreOptions): () => void;
+  subscribeToMore(options: SubscribeToMoreOptions<TData, TVariables>): (() => void) | void;
 
   /**
    * Executes a Query once and updates the component with the result
@@ -204,7 +204,9 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * - `query` A GraphQL document that consists of a single query to be sent down to the server.
    * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
    */
-  watchQuery(options?: Partial<WatchQueryOptions>): ObservableQuery;
+  watchQuery(
+    options?: Partial<WatchQueryOptions<TVariables, TData>>
+  ): ObservableQuery<TData, TVariables>;
 }
 
 export class ApolloQueryElement<D = unknown, V = unknown>

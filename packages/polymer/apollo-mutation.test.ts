@@ -39,6 +39,8 @@ import NullableParamMutation from '@apollo-elements/test-helpers/graphql/Nullabl
 class TestableApolloMutation<D, V>
   extends PolymerApolloMutation<D, V>
   implements MutationElement<D, V> {
+  declare shadowRoot: ShadowRoot;
+
   static get template() {
     const template = document.createElement('template');
     template.innerHTML = /* html */`
@@ -65,11 +67,11 @@ class TestableApolloMutation<D, V>
   }
 
   render() {
-    this.$('called').textContent = this.stringify(this.called);
-    this.$('data').textContent = this.stringify(this.data);
-    this.$('error').textContent = this.stringify(this.error);
-    this.$('errors').textContent = this.stringify(this.errors);
-    this.$('loading').textContent = this.stringify(this.loading);
+    this.$('called')!.textContent = this.stringify(this.called);
+    this.$('data')!.textContent = this.stringify(this.data);
+    this.$('error')!.textContent = this.stringify(this.error);
+    this.$('errors')!.textContent = this.stringify(this.errors);
+    this.$('loading')!.textContent = this.stringify(this.loading);
   }
 
   stringify(x: unknown) {
@@ -83,6 +85,8 @@ class TestableApolloMutation<D, V>
 }
 
 class WrapperElement extends PolymerElement {
+  declare shadowRoot: ShadowRoot;
+
   declare mutation: DocumentNode;
 
   declare variables: NullableParamMutationVariables;
@@ -152,8 +156,8 @@ describe('[polymer] <apollo-mutation>', function() {
     it('notifies on error change', async function() {
       const err = new Error('error');
       setTimeout(() => element.error = err);
-      const { detail: { value } } = await oneEvent(element, 'error-changed');
-      expect(value).to.equal(err);
+      const { detail: { value: { message } } } = await oneEvent(element, 'error-changed');
+      expect(message).to.equal('error');
     });
 
     it('notifies on errors change', async function() {
@@ -207,12 +211,12 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -221,26 +225,26 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloMutationInterface
-    assertType<DocumentNode>                        (this.mutation);
-    assertType<TypeCheckVars>                       (this.variables);
+    assertType<DocumentNode>                        (this.mutation!);
+    assertType<TypeCheckVars>                       (this.variables!);
     assertType<boolean>                             (this.called);
     assertType<boolean>                             (this.ignoreResults);
-    assertType<boolean>                             (this.awaitRefetchQueries);
+    assertType<boolean>                             (this.awaitRefetchQueries!);
     assertType<number>                              (this.mostRecentMutationId);
-    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
-    assertType<string>                              (this.fetchPolicy);
+    assertType<string>                              (this.fetchPolicy!);
     assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
       assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription>(this.refetchQueries);
+      assertType<RefetchQueryDescription>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
-      assertType<TypeCheckData>(this.optimisticResponse);
+      assertType<TypeCheckData>(this.optimisticResponse!);
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 

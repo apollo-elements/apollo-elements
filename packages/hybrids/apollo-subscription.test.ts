@@ -49,7 +49,7 @@ describe('[hybrids] ApolloSubscription', function() {
       const tag = getTagName();
 
       const hasRendered =
-        host => async () => { await aTimeout(50); return host; };
+        (host: T) => async () => { await aTimeout(50); return host; };
 
       define<T>(tag, {
         ...ApolloSubscription,
@@ -62,16 +62,18 @@ describe('[hybrids] ApolloSubscription', function() {
 
       const template = document.createElement('template');
 
-      template.innerHTML = `<${tag}${attrs}></${tag}>`;
+      template.innerHTML = `<${tag}${attrs}>${innerHTML}</${tag}>`;
 
       const [element] =
         (template.content.cloneNode(true) as DocumentFragment)
           .children as HTMLCollectionOf<T>;
 
-      let spies: Record<string|keyof T, SinonSpy>;
-      let stubs: Record<string|keyof T, SinonStub>;
+      let spies: Record<string | keyof T, SinonSpy> = {} as Record<string | keyof T, SinonSpy>;
 
-      element[__testing_escape_hatch__] = function(el) {
+      let stubs: Record<string|keyof T, SinonStub> = {} as Record<string|keyof T, SinonStub>;
+
+      // @ts-expect-error: it's for testing
+      element[__testing_escape_hatch__] = function(el: T) {
         spies = setupSpies(opts?.spy, el);
         stubs = setupStubs(opts?.stub, el);
       };
@@ -79,11 +81,8 @@ describe('[hybrids] ApolloSubscription', function() {
       document.body.append(element);
 
       for (const [key, val] of Object.entries(properties ?? {}))
+        // @ts-expect-error: it's for testing
         element[key] = val;
-
-      await nextFrame();
-
-      element.innerHTML = innerHTML;
 
       await nextFrame();
 

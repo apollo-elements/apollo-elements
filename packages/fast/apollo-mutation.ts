@@ -24,26 +24,9 @@ export class ApolloMutation<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
   extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloMutationInterface<TData, TVariables> {
-  declare data: TData;
-
-  declare variables: TVariables;
-
   declare mutation: DocumentNode;
 
   declare optimisticResponse?: TData | ((vars: TVariables) => TData)
-
-  declare loading: boolean;
-
-  declare ignoreResults: boolean;
-
-  declare mostRecentMutationId: number;
-
-  onCompleted?(_data: FetchResult<TData>): void
-
-  onError?(_error: Error): void
-
-  updater?(...params: Parameters<MutationUpdaterFn<TData>>):
-    ReturnType<MutationUpdaterFn<TData>>;
 
   @attr({ mode: 'boolean' }) called = false;
 
@@ -55,5 +38,5 @@ export class ApolloMutation<TData, TVariables>
    * As a property, you can pass any legal `refetchQueries` value.
    */
   @attr({ mode: 'fromView', attribute: 'refetch-queries', converter: refetchQueriesConverter })
-  refetchQueries: MutationOptions['refetchQueries'] = null;
+  refetchQueries: MutationOptions<TData, TVariables>['refetchQueries'] | null = null;
 }

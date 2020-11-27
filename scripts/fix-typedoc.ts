@@ -16,7 +16,7 @@ const EMOJI_REGEXP =
 const TEST = 'node_modules';
 
 function isSectionFromANodeModule(x: HTMLElement): boolean {
-  return x.textContent.includes(TEST);
+  return x.textContent!.includes(TEST);
 }
 
 function fixA11Y(document: Document, path: string) {
@@ -30,7 +30,7 @@ function graphTag(document: Document, property: string, content: string): void {
 }
 
 function appendMeta(document: Document, path: string) {
-  document.head.querySelector<HTMLMetaElement>('meta[name="description"]').content =
+  document.head.querySelector<HTMLMetaElement>('meta[name="description"]')!.content =
     '🌑 Custom elements meet Apollo GraphQL 🌜';
 
   document.head.innerHTML += /* html */`
@@ -40,7 +40,7 @@ function appendMeta(document: Document, path: string) {
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:site" content="PowersBenny">
     <meta name="twitter:creator" content="PowersBenny">
-    <meta property="og:title" content="${document.head.querySelector('title').textContent}">
+    <meta property="og:title" content="${document.head.querySelector('title')!.textContent}">
     <meta property="og:description" content="🌑 Custom elements meet Apollo GraphQL 🌜">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👩‍🚀</text></svg>">
     <link rel="stylesheet" href="/assets/css/theme.css">
@@ -69,11 +69,11 @@ function appendMeta(document: Document, path: string) {
 }
 
 function fixContent(document: Document, path: string) {
-  const homeLink = document.querySelector('header a.title');
+  const homeLink = document.querySelector('header a.title')!;
 
-  const footer = document.querySelector('footer.with-border-bottom');
+  const footer = document.querySelector('footer.with-border-bottom')!;
 
-  const generatorTag = document.querySelector('.tsd-generator');
+  const generatorTag = document.querySelector('.tsd-generator')!;
 
   homeLink.innerHTML = /* html */`
     <img src="/logo.svg" height="16px" width="16px" role="presentation"/>
@@ -84,7 +84,7 @@ function fixContent(document: Document, path: string) {
     <div class="container"></div>
   `;
 
-  footer.querySelector('.container:last-of-type')
+  footer.querySelector('.container:last-of-type')!
     .appendChild(generatorTag);
 
   generatorTag.classList.remove('container');
@@ -125,7 +125,7 @@ function fixContent(document: Document, path: string) {
     </a>
   `;
 
-  document.body.querySelector('header .table-wrap').innerHTML += /* html */`
+  document.body.querySelector('header .table-wrap')!.innerHTML += /* html */`
     <a class="social-link" href="https://github.com/apollo-elements/apollo-elements" rel="noopener noreferrer" target="_blank">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
         <title>GitHub</title>
@@ -181,7 +181,7 @@ function fixContent(document: Document, path: string) {
   if (path.includes(CLASSES_DIR)) {
     Array.from(document.querySelectorAll('section'))
       .filter(isSectionFromANodeModule)
-      .map(x => x.querySelector('a').getAttribute('name'))
+      .map(x => x.querySelector('a')?.getAttribute('name'))
       .filter(Boolean)
       .forEach(name => {
         document.querySelector(`[name="${name}"]`)
@@ -204,7 +204,7 @@ async function fixHTML(path: string) {
   appendMeta(document, path);
   fixContent(document, path);
 
-  const link = ({ href, textContent }) =>
+  const link = ({ href, textContent }: any) =>
     /* html */`<a target="_blank" rel="noreferrer noopener" href="${href}" class="tsd-signature-type">${textContent}</a>`;
 
   const content =

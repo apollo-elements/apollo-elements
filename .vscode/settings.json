@@ -25,5 +25,9 @@
   "npm.bin": "yarn",
   "npm.packageManager": "yarn",
   "eslint.packageManager": "yarn",
-  "stylelint.packageManager": "yarn"
+  "stylelint.packageManager": "yarn",
+  "lcov.path": [
+    "coverage/lcov.info",
+    "coverage-single/lcov.info"
+  ],
 }

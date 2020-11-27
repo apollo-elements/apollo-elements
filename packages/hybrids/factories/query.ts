@@ -9,11 +9,11 @@ import { initDocument } from '../helpers/accessors';
 
 export type { ApolloQueryElement };
 
-export function query<D, V>(document: DocumentNode): Descriptor<ApolloQueryElement<D, V>> {
+export function query<D, V>(document?: DocumentNode): Descriptor<ApolloQueryElement<D, V>> {
   return {
     connect(host, key, invalidate) {
       apply(host, ApolloQueryElement, 'query');
-      return initDocument<ApolloQueryElement>({
+      return initDocument<ApolloQueryElement<D, V>>({
         host, document, invalidate, defaults: { networkStatus: NetworkStatus.ready },
       });
     },

@@ -14,6 +14,7 @@ describe('[hybrids] client factory', function() {
 
   afterEach(function() {
     element.remove();
+    // @ts-expect-error: fixture
     element = undefined;
   });
 

@@ -1,6 +1,7 @@
 {
   "files": ["./declaration.d.ts"],
   "compilerOptions": {
+    "strict": true,
     "target": "ES2019",
     "module": "ESNext",
     "declaration": true,

@@ -1,4 +1,4 @@
-import type { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client/core';
 import { property } from 'lit-element';
 
 import { ApolloElement } from './apollo-element';
@@ -14,5 +14,5 @@ export class ApolloQuery<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
   extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
   implements ApolloQueryInterface<TData, TVariables> {
-  @property({ type: Number }) networkStatus: NetworkStatus;
+  @property({ type: Number }) networkStatus = NetworkStatus.ready;
 }

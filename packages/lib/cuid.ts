@@ -25,7 +25,7 @@ export function fingerprint(): string {
   return clientId;
 }
 
-let getRandomValue;
+let getRandomValue: typeof Math.random;
 if (window.crypto) {
   const lim = Math.pow(2, 32) - 1;
   getRandomValue = function() {
@@ -87,13 +87,13 @@ cuid.slug = function slug() {
     counter + print + random;
 };
 
-cuid.isCuid = function isCuid(stringToCheck) {
+cuid.isCuid = function isCuid(stringToCheck: string) {
   if (typeof stringToCheck !== 'string') return false;
   if (stringToCheck.startsWith('c')) return true;
   return false;
 };
 
-cuid.isSlug = function isSlug(stringToCheck) {
+cuid.isSlug = function isSlug(stringToCheck: string) {
   if (typeof stringToCheck !== 'string') return false;
   const stringLength = stringToCheck.length;
   if (stringLength >= 7 && stringLength <= 10) return true;

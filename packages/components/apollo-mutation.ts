@@ -29,11 +29,11 @@ interface InputLikeElement extends HTMLElement {
  * False when the element is a link.
  * @param node
  */
-function isButton(node: Element): node is ButtonLikeElement {
+function isButton(node: Element|null): node is ButtonLikeElement {
   return node?.tagName !== 'A';
 }
 
-function isLink(node: Element): node is HTMLAnchorElement {
+function isLink(node: Element|null): node is HTMLAnchorElement {
   return node instanceof HTMLAnchorElement;
 }
 
@@ -186,18 +186,18 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    */
   resolveURL?(data: Data): string | Promise<string>;
 
-  @queryAssignedNodes('trigger') private triggerNodes: NodeListOf<HTMLElement>;
+  @queryAssignedNodes('trigger') private triggerNodes!: NodeListOf<HTMLElement>;
 
-  @queryAssignedNodes('variable') private variableNodes: NodeListOf<InputLikeElement>;
+  @queryAssignedNodes('variable') private variableNodes!: NodeListOf<InputLikeElement>;
 
   private inFlight = false;
 
-  protected __variables: Variables = null;
+  protected __variables: Variables | null = null;
 
   /**
    * Slotted trigger node
    */
-  protected get trigger(): HTMLElement {
+  protected get trigger(): HTMLElement | null {
     const [node = null] = this.triggerNodes ?? [];
     return node;
   }
@@ -206,7 +206,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * If the slotted trigger node is a button, the trigger
    * If the slotted trigger node is a link with a button as it's first child, the button
    */
-  protected get button(): ButtonLikeElement {
+  protected get button(): ButtonLikeElement | null {
     if (isButton(this.trigger))
       return this.trigger;
     else if (isLink(this.trigger) && isButton(this.trigger.firstElementChild))
@@ -226,7 +226,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   /**
    * The `href` attribute of the link trigger
    */
-  protected get href(): string {
+  protected get href(): string|undefined {
     const link = isLink(this.trigger) ? this.trigger : null;
     return link?.href;
   }
@@ -246,7 +246,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   /**
    * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
    */
-  protected getVariablesFromInputs(): Variables {
+  protected getVariablesFromInputs(): Variables | null {
     if (isEmpty(this.dataset) && isEmpty(this.inputs))
       return null;
 
@@ -287,7 +287,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
 
     const url =
         typeof this.resolveURL !== 'function' ? this.href
-      : await this.resolveURL(this.data);
+      : await this.resolveURL(this.data!);
 
     history.replaceState(data, WillNavigateEvent.type, url);
   }
@@ -336,7 +336,7 @@ Object.defineProperties(ApolloMutationElement.prototype, {
     configurable: true,
     enumerable: true,
 
-    get<V>(this: ApolloMutationElement<unknown, V>): V {
+    get<V>(this: ApolloMutationElement<unknown, V>): V | null {
       if (this.__variables)
         return this.__variables;
       else

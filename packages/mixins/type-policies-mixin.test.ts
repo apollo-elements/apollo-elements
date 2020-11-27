@@ -36,7 +36,7 @@ describe('TypePoliciesMixin', function() {
     });
 
     it('adds typePolicies to the cache', async function() {
-      expect(await element.client.query({ query }))
+      expect(await element.client!.query({ query }))
         .to.deep.equal({
           data: { hello: 'hello' },
           loading: false,

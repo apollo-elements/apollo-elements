@@ -13,13 +13,13 @@
         {
           "name": "client",
           "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
           "description": "GraphQL Document",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         },
         {
           "name": "context",
@@ -29,22 +29,22 @@
         {
           "name": "data",
           "description": "Latest data",
-          "type": "TData"
+          "type": "TData | null"
         },
         {
           "name": "variables",
           "description": "Operation variables",
-          "type": "TVariables"
+          "type": "TVariables | null"
         },
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error | ApolloError"
+          "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
           "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
+          "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",

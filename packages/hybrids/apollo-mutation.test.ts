@@ -6,7 +6,13 @@ import { SinonSpy, SinonStub } from 'sinon';
 import { define, html, Hybrids } from 'hybrids';
 
 import { ApolloMutation } from './apollo-mutation';
-import { SetupOptions, setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
+import {
+  Entries,
+  SetupOptions,
+  setupSpies,
+  setupStubs,
+  stringify,
+} from '@apollo-elements/test-helpers';
 import { __testing_escape_hatch__ } from './helpers/accessors';
 
 let counter = 0;
@@ -29,7 +35,7 @@ function render<D = unknown, V = unknown>(host: MutationElement<D, V>): ReturnTy
 }
 
 const hasRendered =
-  host => async () => { await aTimeout(50); return host; };
+  (host: MutationElement) => async () => { await aTimeout(50); return host; };
 
 describe('[hybrids] ApolloMutation', function() {
   describeMutation({
@@ -61,17 +67,18 @@ describe('[hybrids] ApolloMutation', function() {
       if (properties?.onError)
         element.onError = properties.onCompleted as T['onError'];
 
-      let spies: Record<string|keyof T, SinonSpy>;
-      let stubs: Record<string|keyof T, SinonStub>;
+      let spies!: Record<string|keyof T, SinonSpy>;
+      let stubs!: Record<string|keyof T, SinonStub>;
 
-      element[__testing_escape_hatch__] = function(el) {
+      // @ts-expect-error: just for tests
+      element[__testing_escape_hatch__] = function(el: T) {
         spies = setupSpies(options?.spy, el);
         stubs = setupStubs(options?.stub, el);
       };
 
       document.body.append(element);
 
-      for (const [key, val] of Object.entries(properties ?? {}))
+      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
         key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
 
       await nextFrame();

@@ -15,14 +15,14 @@ export class ApolloElement<TData = unknown, TVariables = unknown>
 
   declare variables: TVariables;
 
-  @observable client: ApolloClient<NormalizedCacheObject> =
+  @observable client: ApolloClient<NormalizedCacheObject> | null =
     window.__APOLLO_CLIENT__ ?? null;
 
-  @observable data: TData = null;
+  @observable data: TData | null = null;
 
-  @observable error: ApolloError | Error = null;
+  @observable error: ApolloError | Error | null = null;
 
-  @observable errors: readonly GraphQLError[] = null;
+  @observable errors: readonly GraphQLError[] | null= null;
 
   @attr({ mode: 'boolean' }) loading = false;
 }

@@ -10,7 +10,7 @@ import { hasAllVariables } from './has-all-variables';
 
 interface Options {
   /** GraphQL endpoint URI */
-  uri: string;
+  uri?: string;
   /** Optional type policies to apply to the cache. */
   typePolicies?: TypePolicies;
   /** When true, client will not fetch operations that do not have all their non-nullable variables set */
@@ -19,7 +19,7 @@ interface Options {
 
 const validateVariablesLink =
   new ApolloLink((operation, forward) =>
-    hasAllVariables(operation) && forward(operation)); /* c8 ignore next */ // this is called
+    hasAllVariables(operation) ? forward(operation) : null); /* c8 ignore next */ // this is called
 
 /**
  * Creates a simple ApolloClient

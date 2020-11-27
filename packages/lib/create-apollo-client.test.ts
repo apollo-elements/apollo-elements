@@ -34,7 +34,7 @@ describe('createApolloClient()', function() {
 
     describe('querying NonNull without params', function() {
       beforeEach(async function() {
-        client.query({ query: NonNullableParamQuery });
+        client!.query({ query: NonNullableParamQuery });
       });
 
       it('fetches', function() {
@@ -59,7 +59,7 @@ describe('createApolloClient()', function() {
 
     describe('querying NonNull without params', function() {
       beforeEach(async function() {
-        client.query({ query: NonNullableParamQuery });
+        client!.query({ query: NonNullableParamQuery });
       });
 
       it('does not fetch', function() {
@@ -69,7 +69,7 @@ describe('createApolloClient()', function() {
 
     describe('querying NonNull with params', function() {
       beforeEach(async function() {
-        client.query<NonNullableParamQueryData, NonNullableParamQueryVariables>({
+        client!.query<NonNullableParamQueryData, NonNullableParamQueryVariables>({
           query: NonNullableParamQuery, variables: { nonNull: 'thing' },
         }).catch(() => null);
       });

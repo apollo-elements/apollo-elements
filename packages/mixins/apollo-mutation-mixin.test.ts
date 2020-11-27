@@ -12,7 +12,11 @@ import type { GraphQLError } from 'graphql';
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 import { assertType } from '@apollo-elements/test-helpers';
-import { describeMutation, setupMutationClass } from '@apollo-elements/test-helpers/mutation.test';
+import {
+  describeMutation,
+  MutationElement,
+  setupMutationClass,
+} from '@apollo-elements/test-helpers/mutation.test';
 
 import { ApolloMutationMixin } from './apollo-mutation-mixin';
 
@@ -20,22 +24,23 @@ import { isApolloError } from '@apollo/client/core';
 import { expect, nextFrame, defineCE, fixture } from '@open-wc/testing';
 
 import 'sinon-chai';
+import { Constructor } from 'lit-element';
 
 class XL extends HTMLElement {}
 
 /**
  * Testable Mixed-in Apollo Mutation class
  */
-class TestableApolloMutation<D = unknown, V = unknown> extends ApolloMutationMixin(XL)<D, V> {
-  #called = false;
+class TestableApolloMutation<D = any, V = any> extends ApolloMutationMixin(XL)<D, V> {
+  ___called = false;
 
-  #data: D = null;
+  ___data: D | null = null;
 
-  #error: Error = null;
+  ___error: Error | null = null;
 
-  #errors: readonly GraphQLError[] = null;
+  ___errors: readonly GraphQLError[] | null = null;
 
-  #loading = false;
+  ___loading = false;
 
   static get template() {
     const template = document.createElement('template');
@@ -49,45 +54,48 @@ class TestableApolloMutation<D = unknown, V = unknown> extends ApolloMutationMix
     return template;
   }
 
-  $(id: keyof TestableApolloMutation) { return this.shadowRoot.getElementById(id); }
+  $(id: keyof TestableApolloMutation) { return this.shadowRoot?.getElementById(id); }
 
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get called() { return this.#called; }
+  get called() { return this.___called; }
 
-  set called(value: boolean) { this.#called = value; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get data() { return this.#data; }
-
-  set data(value: D) { this.#data = value; this.render(); }
+  set called(value: boolean) { this.___called = value; this.render(); }
 
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get error() { return this.#error; }
+  get data() { return this.___data; }
 
-  set error(value: Error) { this.#error = value; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get errors() { return this.#errors; }
-
-  set errors(value: readonly GraphQLError[]) { this.#errors = value; this.render(); }
+  set data(value: D) { this.___data = value; this.render(); }
 
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get loading() { return this.#loading; }
+  get error() { return this.___error; }
 
-  set loading(value: boolean) { this.#loading = value; this.render(); }
+  set error(value: Error) { this.___error = value; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get errors() { return this.___errors; }
+
+  set errors(value: readonly GraphQLError[]) { this.___errors = value; this.render(); }
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  get loading() { return this.___loading; }
+
+  set loading(value: boolean) { this.___loading = value; this.render(); }
+
+  observed: Array<keyof TestableApolloMutation> = ['called', 'data', 'error', 'errors', 'loading'];
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.append(TestableApolloMutation.template.content.cloneNode(true));
+    this.observed ??= [];
+    this.attachShadow({ mode: 'open' })
+      .append(TestableApolloMutation.template.content.cloneNode(true));
   }
 
+
   render() {
-    this.$('called').textContent = this.stringify(this.called);
-    this.$('data').textContent = this.stringify(this.data);
-    this.$('error').textContent = this.stringify(this.error);
-    this.$('errors').textContent = this.stringify(this.errors);
-    this.$('loading').textContent = this.stringify(this.loading);
+    this.observed?.forEach(property => {
+      if (this.$(property))
+        this.$(property)!.textContent = this.stringify(this[property]);
+    });
   }
 
   stringify(x: unknown) {
@@ -102,8 +110,8 @@ class TestableApolloMutation<D = unknown, V = unknown> extends ApolloMutationMix
 
 describe('[mixins] ApolloMutationMixin', function() {
   describeMutation({
-    class: TestableApolloMutation,
-    setupFunction: setupMutationClass(TestableApolloMutation),
+    class: TestableApolloMutation as Constructor<MutationElement>,
+    setupFunction: setupMutationClass(TestableApolloMutation as Constructor<MutationElement>),
   });
 
   describe('instantiating simple derived class', function() {
@@ -129,10 +137,10 @@ class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>|null> (this.client);
+    assertType<Record<string, unknown>|undefined>        (this.context);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
+    assertType<DocumentNode|null>                   (this.document);
     assertType<Error>                               (this.error);
     assertType<readonly GraphQLError[]>             (this.errors);
     assertType<TypeCheckData>                       (this.data);
@@ -143,26 +151,26 @@ class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloMutationInterface
-    assertType<DocumentNode>                        (this.mutation);
-    assertType<TypeCheckVars>                       (this.variables);
+    assertType<DocumentNode|null>                   (this.mutation);
+    assertType<TypeCheckVars|null>                  (this.variables);
     assertType<boolean>                             (this.called);
     assertType<boolean>                             (this.ignoreResults);
-    assertType<boolean>                             (this.awaitRefetchQueries);
+    assertType<boolean|undefined>                   (this.awaitRefetchQueries);
     assertType<number>                              (this.mostRecentMutationId);
-    assertType<ErrorPolicy>                         (this.errorPolicy);
-    assertType<string>                              (this.errorPolicy);
+    assertType<ErrorPolicy|undefined>               (this.errorPolicy);
+    assertType<string|undefined>                    (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
-    assertType<string>                              (this.fetchPolicy);
-    assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
+    assertType<string|undefined>                    (this.fetchPolicy);
+    assertType<Extract<FetchPolicy, 'no-cache'>|undefined> (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
       assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription>(this.refetchQueries);
+      assertType<RefetchQueryDescription|undefined>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
-      assertType<TypeCheckData>(this.optimisticResponse);
+      assertType<TypeCheckData|undefined>(this.optimisticResponse);
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 

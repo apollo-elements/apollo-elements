@@ -37,6 +37,8 @@ import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
 class TestableApolloQuery<D, V>
   extends PolymerApolloQuery<D, V>
   implements QueryElement<D, V> {
+  declare shadowRoot: ShadowRoot;
+
   static get template() {
     const template = document.createElement('template');
     template.innerHTML = /* html */`
@@ -63,11 +65,11 @@ class TestableApolloQuery<D, V>
   }
 
   render() {
-    this.$('data').textContent = this.stringify(this.data);
-    this.$('error').textContent = this.stringify(this.error);
-    this.$('errors').textContent = this.stringify(this.errors);
-    this.$('loading').textContent = this.stringify(this.loading);
-    this.$('networkStatus').textContent = this.stringify(this.networkStatus);
+    this.$('data')!.textContent = this.stringify(this.data);
+    this.$('error')!.textContent = this.stringify(this.error);
+    this.$('errors')!.textContent = this.stringify(this.errors);
+    this.$('loading')!.textContent = this.stringify(this.loading);
+    this.$('networkStatus')!.textContent = this.stringify(this.networkStatus);
   }
 
   stringify(x: unknown) {
@@ -134,8 +136,10 @@ describe('[polymer] <apollo-query>', function() {
     });
 
     describe('when used in a Polymer template', function() {
-      let wrapper: PolymerElement;
+      let wrapper: WrapperElement;
       class WrapperElement extends PolymerElement {
+        declare shadowRoot: ShadowRoot;
+
         static get properties() {
           return {
             query: {
@@ -183,12 +187,12 @@ class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -197,28 +201,28 @@ class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloQueryInterface
-    assertType<DocumentNode>                        (this.query);
-    assertType<TypeCheckVars>                       (this.variables);
+    assertType<DocumentNode>                        (this.query!);
+    assertType<TypeCheckVars>                       (this.variables!);
     assertType<ErrorPolicy>                         (this.errorPolicy);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
-    assertType<FetchPolicy>                         (this.fetchPolicy);
+    assertType<FetchPolicy>                         (this.fetchPolicy!);
     assertType<string>                              (this.fetchPolicy);
-    assertType<FetchPolicy>                         (this.nextFetchPolicy);
+    assertType<FetchPolicy>                         (this.nextFetchPolicy!);
     assertType<string>                              (this.nextFetchPolicy);
     assertType<NetworkStatus>                       (this.networkStatus);
     assertType<number>                              (this.networkStatus);
     // @ts-expect-error: NetworkStatus is not a string
     assertType<string>                              (this.networkStatus);
     assertType<boolean>                             (this.notifyOnNetworkStatusChange);
-    assertType<number>                              (this.pollInterval);
-    assertType<boolean>                             (this.partial);
-    assertType<boolean>                             (this.partialRefetch);
-    assertType<boolean>                             (this.returnPartialData);
+    assertType<number>                              (this.pollInterval!);
+    assertType<boolean>                             (this.partial!);
+    assertType<boolean>                             (this.partialRefetch!);
+    assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<ObservableQuery>                     (this.observableQuery);
-    assertType<Partial<WatchQueryOptions>>          (this.options);
+    assertType<ObservableQuery<TypeCheckData, TypeCheckVars>>                     (this.observableQuery!);
+    assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }

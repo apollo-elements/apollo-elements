@@ -6,7 +6,7 @@ import { client } from './factories/client';
 
 export const ApolloQuery: Hybrids<ApolloQueryElement> = {
   client: client(),
-  query: query(null),
+  query: query(),
 };
 
 export type { ApolloQueryElement };

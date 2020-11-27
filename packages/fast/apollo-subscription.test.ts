@@ -7,7 +7,7 @@ import type {
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
-import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import { Entries, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
 
 import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
@@ -27,6 +27,8 @@ const template = html<TestableApolloSubscription>`
 class TestableApolloSubscription<D = unknown, V = unknown>
   extends ApolloSubscription<D, V>
   implements SubscriptionElement<D, V> {
+  declare shadowRoot: ShadowRoot;
+
   async hasRendered() {
     await nextFrame();
     await DOM.nextUpdate();
@@ -59,7 +61,7 @@ describe('[fast] ApolloSubscription', function() {
       const element = await fixture<T>(
         `<${name}${attrs}>${innerHTML}</${name}>`);
 
-      for (const [key, val] of Object.entries(opts?.properties ?? {}))
+      for (const [key, val] of Object.entries(opts?.properties ?? {}) as Entries<T>)
         element[key] = val;
 
       await DOM.nextUpdate();
@@ -89,13 +91,13 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -104,16 +106,16 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
-    assertType<DocumentNode>                          (this.subscription);
-    assertType<TypeCheckVars>                         (this.variables);
-    assertType<FetchPolicy>                           (this.fetchPolicy);
+    assertType<DocumentNode>                          (this.subscription!);
+    assertType<TypeCheckVars>                         (this.variables!);
+    assertType<FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange);
-    assertType<number>                                (this.pollInterval);
+    assertType<number>                                (this.pollInterval!);
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
-    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable);
-    assertType<ZenObservable.Subscription>            (this.observableSubscription);
+    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable!);
+    assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }

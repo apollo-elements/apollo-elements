@@ -24,14 +24,14 @@ class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
-    assertType<TypeCheckVars>                       (this.variables);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
+    assertType<TypeCheckVars>                       (this.variables!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -55,6 +55,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     afterEach(function() {
       element.remove();
+      // @ts-expect-error: fixture
       element = undefined;
     });
 
@@ -72,6 +73,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     afterEach(function() {
       element.remove();
+      // @ts-expect-error: fixture
       element = undefined;
     });
 
@@ -91,11 +93,11 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
       describe('then unsetting client', function() {
         beforeEach(function() {
-          element.client = undefined;
+          element.client = null;
         });
 
         it('sets client', function() {
-          expect(element.client).to.be.undefined;
+          expect(element.client).to.be.null;
         });
       });
     });
@@ -116,6 +118,8 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
   it('renders when client is set', async function rendersOnClient() {
     class Test extends ApolloElement {
+      declare shadowRoot: ShadowRoot;
+
       render(): TemplateResult {
         // @ts-expect-error: just testing assignment and rendering
         return html`${this.client?.test ?? 'FAIL'}`;
