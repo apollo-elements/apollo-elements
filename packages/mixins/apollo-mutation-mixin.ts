@@ -55,7 +55,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     constructor() {
       super();
-      this.variables = null;
+      this.variables ??= null;
       this.loading ??= false;
     }
 
@@ -94,9 +94,9 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       this.data = null;
       this.called = true;
 
-      return this.client.mutate(options)
-        .then((response: FetchResult<TData>) => this.onCompletedMutation(response, mutationId))
-        .catch((error: ApolloError) => this.onMutationError(error, mutationId));
+      return this.client.mutate<TData, TVariables>(options)
+        .then(this.onCompletedMutation.bind(this, mutationId))
+        .catch(this.onMutationError.bind(this, mutationId));
     }
 
     /**
@@ -120,7 +120,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
      * Callback for when a mutation is completed.
      * @private
      */
-    onCompletedMutation(response: FetchResult<TData>, mutationId: number): FetchResult<TData> {
+    onCompletedMutation(mutationId: number, response: FetchResult<TData>): FetchResult<TData> {
       const { data } = response;
       this.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
       if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
@@ -138,12 +138,12 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
      * Callback for when a mutation fails.
      * @private
      */
-    onMutationError(error: ApolloError, mutationId: number): never {
+    onMutationError(mutationId: number, error: ApolloError): never {
       this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       if (this.isMostRecentMutation(mutationId)) {
         this.loading = false;
         this.data = null;
-        this.error = error ?? null;
+        this.error = error;
       }
       this.onError?.(error);
       throw error;
