@@ -8,11 +8,11 @@ import { initDocument } from '../helpers/accessors';
 
 export type { ApolloMutationElement };
 
-export function mutation<D, V>(document: DocumentNode): Descriptor<ApolloMutationElement<D, V>> {
+export function mutation<D, V>(document?: DocumentNode): Descriptor<ApolloMutationElement<D, V>> {
   return {
     connect(host, key, invalidate) {
       apply(host, ApolloMutationElement, 'mutation');
-      return initDocument<ApolloMutationElement>({
+      return initDocument<ApolloMutationElement<D, V>>({
         host, document, invalidate, defaults: { called: false },
       });
     },

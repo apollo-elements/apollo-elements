@@ -12,9 +12,9 @@ function isNonNullType<T extends { type: { kind: string } }>(x: T) {
 }
 
 /** hasNonNullValue :: keyof TVariables VariableName => TVariables -> VariableName -> Boolean */
-function hasNonNullValue<T = Record<string, unknown>>(x: T) {
-  return (prop: keyof T): boolean =>
-    x?.[prop] != null;
+function hasNonNullValue<T>(x: T) {
+  return (prop: string): boolean =>
+    x?.[prop as keyof T] != null;
 }
 
 function isTrue(x: boolean): x is true {
@@ -22,8 +22,10 @@ function isTrue(x: boolean): x is true {
 }
 
 /** getVariableDefinitions :: OperationDefinitionNode -> [VariableDefinitionNode] */
-function getVariableDefinitions(x: OperationDefinitionNode): readonly VariableDefinitionNode[] {
-  return x.variableDefinitions;
+function getVariableDefinitions(
+  x: OperationDefinitionNode
+): readonly VariableDefinitionNode[] {
+  return x.variableDefinitions ?? []; /* c8 ignore next */ // couldn't repro
 }
 
 /** getVariableValue :: VariableDefinitionNode -> a */
@@ -38,13 +40,13 @@ function getVariableValue(x: VariableDefinitionNode) {
  */
 export function hasAllVariables(operation: Partial<Operation>): boolean {
   try {
-    return operation.query.definitions
-      .filter(isOperationDefinition)
-      .flatMap(getVariableDefinitions)
-      .filter(isNonNullType)
-      .map(getVariableValue)
-      .map(hasNonNullValue(operation.variables))
-      .every(isTrue); /* c8 ignore next */ // this is covered
+    return operation.query?.definitions
+      ?.filter(isOperationDefinition)
+      ?.flatMap(getVariableDefinitions)
+      ?.filter(isNonNullType)
+      ?.map(getVariableValue)
+      ?.map(hasNonNullValue(operation.variables))
+      ?.every(isTrue) ?? false; /* c8 ignore next */ // this is covered
   } catch {
     return false;
   }

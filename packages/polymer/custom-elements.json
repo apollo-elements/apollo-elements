@@ -8,7 +8,7 @@
         {
           "name": "mutation",
           "description": "The mutation.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         },
         {
           "name": "optimisticResponse",
@@ -28,7 +28,7 @@
         {
           "name": "refetchQueries",
           "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | undefined"
+          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null | undefined"
         },
         {
           "name": "awaitRefetchQueries",
@@ -44,7 +44,7 @@
         {
           "name": "ignoreResults",
           "description": "If true, the returned data property will not update with the mutation result.",
-          "type": "boolean",
+          "type": "boolean | undefined",
           "default": "false"
         },
         {
@@ -60,38 +60,39 @@
         {
           "name": "data",
           "description": "Latest mutation data.",
-          "type": "TData"
+          "type": "TData | null"
         },
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables"
+          "type": "TVariables | null"
         },
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error | ApolloError"
+          "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
           "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
+          "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": "\"\""
         },
         {
           "name": "client",
           "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         }
       ],
       "events": [
@@ -133,32 +134,32 @@
         {
           "name": "query",
           "description": "A GraphQL document containing a single query.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         },
         {
           "name": "fetchPolicy",
           "description": "Specifies the FetchPolicy to be used for this query.",
-          "type": "FetchPolicy"
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "partial",
           "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy",
-          "type": "boolean"
+          "type": "boolean | undefined"
         },
         {
           "name": "partialRefetch",
           "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
-          "type": "boolean"
+          "type": "boolean | undefined"
         },
         {
           "name": "returnPartialData",
           "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
-          "type": "boolean"
+          "type": "boolean | undefined"
         },
         {
           "name": "nextFetchPolicy",
           "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides an easy way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
-          "type": "FetchPolicy"
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "networkStatus",
@@ -168,13 +169,13 @@
         },
         {
           "name": "observableQuery",
-          "description": "The apollo ObservableQuery watching this element's query.",
-          "type": "ObservableQuery<any, Record<string, any>>"
+          "description": "The Apollo ObservableQuery watching this element's query.",
+          "type": "ObservableQuery<TData, TVariables> | undefined"
         },
         {
           "name": "options",
           "description": "Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.",
-          "type": "Partial<WatchQueryOptions<Record<string, any>, any>>"
+          "type": "Partial<WatchQueryOptions<TVariables, TData>> | null"
         },
         {
           "name": "noAutoSubscribe",
@@ -184,12 +185,12 @@
         {
           "name": "notifyOnNetworkStatusChange",
           "description": "Whether or not updates to the network status should trigger next on the observer of this query.",
-          "type": "boolean"
+          "type": "boolean | undefined"
         },
         {
           "name": "pollInterval",
           "description": "The time interval (in milliseconds) on which this query should be refetched from the server.",
-          "type": "number"
+          "type": "number | undefined"
         },
         {
           "name": "errorPolicy",
@@ -210,22 +211,22 @@
         {
           "name": "data",
           "description": "Latest query data.",
-          "type": "TData"
+          "type": "TData | null"
         },
         {
           "name": "variables",
           "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.",
-          "type": "TVariables"
+          "type": "TVariables | null"
         },
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error | ApolloError"
+          "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
           "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
+          "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
@@ -235,13 +236,13 @@
         {
           "name": "client",
           "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         }
       ],
       "events": [
@@ -283,12 +284,12 @@
         {
           "name": "fetchPolicy",
           "description": "Specifies the FetchPolicy to be used for this subscription.",
-          "type": "FetchPolicy"
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "pollInterval",
           "description": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
-          "type": "number"
+          "type": "number | undefined"
         },
         {
           "name": "noAutoSubscribe",
@@ -298,17 +299,17 @@
         {
           "name": "observable",
           "description": "Observable watching this element's subscription.",
-          "type": "Observable<FetchResult<TData, Record<string, any>, Record<string, any>>>"
+          "type": "Observable<FetchResult<TData, Record<string, any>, Record<string, any>>> | undefined"
         },
         {
           "name": "observableSubscription",
           "description": "Subscription to the observable",
-          "type": "Subscription"
+          "type": "Subscription | undefined"
         },
         {
           "name": "subscription",
           "description": "A GraphQL document containing a single subscription.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         },
         {
           "name": "notifyOnNetworkStatusChange",
@@ -340,22 +341,22 @@
         {
           "name": "data",
           "description": "Latest data",
-          "type": "TData"
+          "type": "TData | null"
         },
         {
           "name": "variables",
           "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "TVariables"
+          "type": "TVariables | null"
         },
         {
           "name": "error",
           "description": "Latest error",
-          "type": "Error | ApolloError"
+          "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
           "description": "Latest errors",
-          "type": "readonly GraphQLError[]"
+          "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
@@ -365,13 +366,13 @@
         {
           "name": "client",
           "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject>",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode"
+          "type": "DocumentNode | null"
         }
       ],
       "events": [

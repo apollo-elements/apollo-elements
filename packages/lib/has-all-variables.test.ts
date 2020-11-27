@@ -23,6 +23,14 @@ function fail(description: string, operation: Partial<Operation>): Mocha.Suite {
 }
 
 describe('[lib] hasAllVariables', function() {
+  describe('for no variables', function() {
+    const query = gql`query NoVars { q { one } }`;
+    pass('without variables', { query });
+    pass('with variable', { query, variables: { one: '1' } });
+    pass('with null variable', { query, variables: { one: null } });
+    pass('without variable', { query, variables: {} });
+  });
+
   describe('for one non-nullable variable', function() {
     const query = gql`query NeedsOne($one: ID!) { q(one: $one) { one } }`;
     pass('with variable', { query, variables: { one: '1' } });
@@ -126,7 +134,9 @@ describe('[lib] hasAllVariables', function() {
   it('handles weird input', function() {
     // @ts-expect-error: testing weird input
     expect(hasAllVariables(), 'no params').to.be.false;
+    // @ts-expect-error: testing weird input
     expect(hasAllVariables(void 0), 'void params').to.be.false;
+    // @ts-expect-error: testing weird input
     expect(hasAllVariables(null), 'null params').to.be.false;
     expect(hasAllVariables({}), 'empty object params').to.be.false;
     // @ts-expect-error: testing weird input
@@ -152,7 +162,9 @@ describe('[lib] hasAllVariables', function() {
     expect(hasAllVariables({ query, variables: [] }), 'empty array variables').to.be.false;
     expect(hasAllVariables({ query, variables: [1] }), 'array variables').to.be.false;
     expect(hasAllVariables({ query, variables: [1] }), 'array of object variables').to.be.false;
+    // @ts-expect-error: testing weird input
     expect(hasAllVariables({ query, variables: null }), 'null variables').to.be.false;
+    expect(hasAllVariables({ query, variables: { boo: 'foo' } }), 'weird variables').to.be.false;
     // @ts-expect-error: testing weird input
     expect(hasAllVariables({ query, variables: NaN }), 'NaN variables').to.be.false;
     // @ts-expect-error: testing weird input
@@ -165,6 +177,7 @@ describe('[lib] hasAllVariables', function() {
     expect(hasAllVariables({ query, variables: 1 }), 'Number 1 variables').to.be.false;
 
     expect(hasAllVariables({ variables: {} }), 'undefined query').to.be.false;
+    // @ts-expect-error: testing weird input
     expect(hasAllVariables({ query: null }), 'null query').to.be.false;
     // @ts-expect-error: testing weird input
     expect(hasAllVariables({ query: NaN }), 'NaN query').to.be.false;

@@ -1,9 +1,6 @@
 import type { ApolloError, DocumentNode, FetchPolicy } from '@apollo/client/core';
 
-import type {
-  QueryHookOptions as ReactQueryHookOptions,
-  QueryResult as ReactQueryResult,
-} from '@apollo/client/react/types/types';
+import type { QueryHookOptions as ReactQueryHookOptions } from '@apollo/client/react/types/types';
 
 import type { State } from 'haunted';
 
@@ -17,12 +14,14 @@ import { ApolloHook } from './ApolloHook';
 
 export type QueryHookOptions<D, V> = Partial<
   Omit<ReactQueryHookOptions<D, V>,
-      'displayName'
+      'data'
+    | 'displayName'
     | 'error'
     | 'fetchPolicy'
     | 'nextFetchPolicy'
     | 'ssr'
   > & {
+    data: D | null;
     noAutoSubscribe: boolean;
     shouldSubscribe: ApolloQueryElement['shouldSubscribe']
     error: Error | ApolloError;
@@ -30,8 +29,19 @@ export type QueryHookOptions<D, V> = Partial<
     nextFetchPolicy: FetchPolicy
   }>;
 
-export type QueryResult<TData, TVariables> = Omit<ReactQueryResult<TData, TVariables>, 'error'> & {
-  error: Error | ApolloError;
+export interface QueryResult<TData, TVariables> {
+  called: true;
+  client: ApolloQueryElement<TData, TVariables>['client'];
+  data: TData | null;
+  error: Error | ApolloError | null;
+  fetchMore: ApolloQueryElement<TData, TVariables>['fetchMore'];
+  loading: boolean;
+  networkStatus: NetworkStatus;
+  variables: TVariables | null;
+  refetch: ApolloQueryElement<TData, TVariables>['refetch'];
+  startPolling: (ms: number) => void;
+  stopPolling: () => void;
+  subscribeToMore: ApolloQueryElement<TData, TVariables>['subscribeToMore'];
 }
 
 class UseQueryHook<TData, TVariables> extends ApolloHook<
@@ -49,7 +59,7 @@ class UseQueryHook<TData, TVariables> extends ApolloHook<
     networkStatus: NetworkStatus.ready,
   };
 
-  pollingInterval: number;
+  pollingInterval?: number;
 
   constructor(
     id: number,
@@ -82,7 +92,7 @@ class UseQueryHook<TData, TVariables> extends ApolloHook<
     return { onCompleted, onError };
   }
 
-  update(_ = this.document, { variables } = this.options): QueryResult<TData, TVariables> {
+  update(_ = this.document, { variables = null } = this.options): QueryResult<TData, TVariables> {
     if (this.disconnected) this.connect();
 
     const { client, data, error, loading, networkStatus } = this.state.host;
@@ -91,21 +101,17 @@ class UseQueryHook<TData, TVariables> extends ApolloHook<
     const fetchMore = this.state.host.fetchMore.bind(this.state.host);
     const subscribeToMore = this.state.host.subscribeToMore.bind(this.state.host);
 
-    // updateQuery is deprecated, so we're not going to implement
-    const updateQuery =
-      () => void null; /* c8 ignore next */
-
     const startPolling = (ms: number) =>
       void (this.pollingInterval = window.setInterval(refetch, ms));
 
     const stopPolling = () =>
       clearInterval(this.pollingInterval);
 
-    const called = undefined;
+    const called = true;
 
     return {
       called, client, data, error, loading, networkStatus, variables,
-      fetchMore, refetch, startPolling, stopPolling, subscribeToMore, updateQuery,
+      fetchMore, refetch, startPolling, stopPolling, subscribeToMore,
     };
   }
 

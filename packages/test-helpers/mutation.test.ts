@@ -18,15 +18,16 @@ import type {
 import { match, spy, SinonSpy } from 'sinon';
 
 import { makeClient, setupClient } from './client';
-import { ApolloMutationInterface } from '@apollo-elements/interfaces';
+import { ApolloMutationElement } from '@apollo-elements/interfaces';
 
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 import gql from 'graphql-tag';
-import { restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
+import { Entries, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 
-type ME<D, V> = HTMLElement & ApolloMutationInterface<D, V>;
-export interface MutationElement<D = unknown, V = unknown> extends ME<D, V> {
+type ME<D, V> = ApolloMutationElement<D, V>;
+export interface MutationElement<D = any, V = any> extends ME<D, V> {
+  shadowRoot: ShadowRoot;
   hasRendered(): Promise<MutationElement<D, V>>;
   stringify(x: unknown): string;
 }
@@ -59,8 +60,7 @@ export interface DescribeMutationComponentOptions {
 
 export function setupMutationClass<T extends MutationElement>(Klass: Constructor<T>): SetupFunction<T> {
   return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-    // @ts-expect-error: no time for this
-    class Test extends Klass {}
+    class Test extends (Klass as Constructor<MutationElement>) {}
 
     const { innerHTML = '', attributes, properties } = opts ?? {};
 
@@ -84,7 +84,7 @@ export function setupMutationClass<T extends MutationElement>(Klass: Constructor
     const spies = setupSpies(opts?.spy, Test.prototype as B);
     const stubs = setupStubs(opts?.stub, Test.prototype as B);
 
-    for (const [key, val] of Object.entries(properties ?? {}))
+    for (const [key, val] of Object.entries(properties ?? {}) as Entries<B>)
       key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
 
     return { element, spies, stubs };
@@ -102,21 +102,26 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       it('has default properties', function() {
-        expect(element.awaitRefetchQueries, 'awaitRefetchQueries').to.be.undefined;
-        expect(element.called, 'called').to.be.false;
+        // nullable fields
         expect(element.client, 'client').to.be.null;
         expect(element.data, 'data').to.be.null;
-        expect(element.errorPolicy, 'errorPolicy').to.be.undefined;
-        expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
+        expect(element.mutation, 'mutation').to.be.null;
+        expect(element.refetchQueries, 'refetchQueries').to.be.null;
+        expect(element.variables, 'variables').to.be.null;
+
+        // defined fields
+        expect(element.called, 'called').to.be.false;
         expect(element.ignoreResults, 'ignoreResults').to.be.false;
         expect(element.mostRecentMutationId, 'mostRecentMutationId').to.equal(0);
-        expect(element.mutation, 'mutation').to.be.null;
+
+        // optional fields
+        expect(element.awaitRefetchQueries, 'awaitRefetchQueries').to.be.undefined;
+        expect(element.errorPolicy, 'errorPolicy').to.be.undefined;
+        expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
         expect(element.onCompleted, 'onCompleted').to.be.undefined;
         expect(element.onError, 'onError').to.be.undefined;
-        expect(element.optimisticResponse, 'optimisticResponse').to.be.null;
-        expect(element.refetchQueries, 'refetchQueries').to.be.null;
+        expect(element.optimisticResponse, 'optimisticResponse').to.be.undefined;
         expect(element.updater, 'updater').to.be.undefined;
-        expect(element.variables, 'variables').to.be.null;
       });
 
       it('caches observed properties', function() {
@@ -140,10 +145,10 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         element.data = null;
         expect(element.data, 'data').to.be.null;
 
-        const err = new Error('error');
-
-        element.error = err;
-        expect(element.error, 'error').to.equal(err);
+        try {
+          element.error = new Error('error');
+          expect(element.error.message, 'error').to.equal('error');
+        } catch { null; }
 
         element.error = null;
         expect(element.error, 'error').to.be.null;
@@ -163,7 +168,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         beforeEach(waitForRender(() => element));
 
         it('renders', function() {
-          expect(element.shadowRoot.getElementById('called').textContent).to.equal('true');
+          expect(element.shadowRoot.getElementById('called')!.textContent).to.equal('true');
         });
       });
 
@@ -171,8 +176,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction({
-            innerHTML: `<script type="application/graphql">${NoParamMutation.loc.source.body}</script>`,
+          ({ element } = await setupFunction<typeof element>({
+            innerHTML: `<script type="application/graphql">${NoParamMutation.loc!.source.body}</script>`,
           }));
         });
 
@@ -182,7 +187,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         it('sets the mutation property', function() {
           expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-          expect(element.mutation).to.deep.equal(gql(NoParamMutation.loc.source.body));
+          expect(element.mutation).to.deep.equal(gql(NoParamMutation.loc!.source.body));
         });
       });
 
@@ -223,7 +228,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       describe('when simply instantiating', function() {
         let element: MutationElement;
 
-        let spies: Record<keyof typeof element, SinonSpy>;
+        let spies: Record<string | keyof MutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
@@ -234,7 +239,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -248,10 +254,10 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       describe('with NoParam mutation property set', function() {
         let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
 
-        let spies: Record<keyof typeof element, SinonSpy>;
+        let spies: Record<string|keyof MutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<typeof element>({
+          ({ element, spies } = await setupFunction<MutationElement<NoParamMutationData, NoParamMutationVariables>>({
             spy: ['onCompleted', 'onError'],
             properties: {
               mutation: NoParamMutation,
@@ -262,11 +268,12 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         });
 
         beforeEach(function spyClientMutate() {
-          spies['client.mutate'] = spy(element.client, 'mutate');
+          spies!['client.mutate'] = spy(element.client!, 'mutate');
         });
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -286,7 +293,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('uses element\'s context', function() {
-            expect(element.client.mutate).to.have.been
+            expect(element.client!.mutate).to.have.been
               .calledWithMatch(match({ context: { the: 'context' } }));
           });
         });
@@ -297,9 +304,9 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('calls client.mutate with element props', function() {
-            expect(element.client.mutate).to.have.been.calledWithMatch({
+            expect(element.client!.mutate).to.have.been.calledWithMatch({
               mutation: element.mutation,
-              variables: element.variables,
+              variables: undefined,
               update: element.updater,
             });
           });
@@ -326,7 +333,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('defaults to element\'s mutation', function() {
             const { mutation } = element;
-            expect(element.client.mutate).to.have.been.calledWith(match({ mutation }));
+            expect(element.client!.mutate).to.have.been.calledWith(match({ mutation }));
           });
         });
 
@@ -340,7 +347,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('uses element\'s mutation', function() {
-            expect(element.client.mutate).to.have.been
+            expect(element.client!.mutate).to.have.been
               .calledWithMatch(match({ mutation: element.mutation }));
           });
         });
@@ -355,7 +362,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('uses element\'s optimisticResponse', function() {
-            expect(element.client.mutate).to.have.been
+            expect(element.client!.mutate).to.have.been
               .calledWithMatch(match({ optimisticResponse: element.optimisticResponse }));
           });
         });
@@ -370,7 +377,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('uses element\'s updater', function() {
-            expect(element.client.mutate).to.have.been
+            expect(element.client!.mutate).to.have.been
               .calledWithMatch(match({ update: element.updater }));
           });
         });
@@ -385,8 +392,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('uses element\'s variables', function() {
-            expect(element.client.mutate).to.have.been
-              .calledWithMatch(match({ variables: element.variables }));
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ variables: undefined }));
           });
         });
       });
@@ -394,7 +401,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       describe('with NullableParam mutation property set', function() {
         let element: MutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
-        let spies: Record<keyof typeof element, SinonSpy>;
+        let spies: Record<string | keyof typeof element, SinonSpy>;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction<typeof element>({
@@ -408,11 +415,12 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         });
 
         beforeEach(function spyClientMutate() {
-          spies['client.mutate'] = spy(element.client, 'mutate');
+          spies!['client.mutate'] = spy(element.client!, 'mutate');
         });
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -447,7 +455,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('renders data', function() {
-            expect(element.shadowRoot.getElementById('data').textContent)
+            expect(element.shadowRoot.getElementById('data')!.textContent)
               .to.equal(element.stringify({
                 nullableParam: {
                   nullable: 'Hello World',
@@ -488,14 +496,14 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('sets data, error, errors, and loading', function() {
-            expect(element.data).to.be.null;
-            expect(element.error).to.equal(error);
-            expect(element.errors).to.be.null;
-            expect(element.loading).to.be.false;
+            expect(element.data, 'data').to.be.null;
+            expect(element.error, 'error').to.equal(error);
+            expect(element.errors, 'errors').to.be.null;
+            expect(element.loading, 'loading').to.be.false;
           });
 
           it('renders error', function() {
-            expect(element.shadowRoot.getElementById('error').textContent)
+            expect(element.shadowRoot.getElementById('error')?.textContent)
               .to.equal(element.stringify(error));
           });
         });
@@ -544,7 +552,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               spies = {
                 onError: spy(element, 'onError'),
                 onCompleted: spy(element, 'onCompleted'),
-                ['client.mutate']: spy(element.client, 'mutate'),
+                ['client.mutate']: spy(element.client!, 'mutate'),
               };
             });
 
@@ -552,6 +560,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
             afterEach(function teardownElement() {
               element.remove();
+              // @ts-expect-error: reset the fixture
               element = undefined;
             });
 
@@ -635,7 +644,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
             beforeEach(function spyMethods() {
               spies = {
-                ['client.mutate']: spy(element.client, 'mutate'),
+                ['client.mutate']: spy(element.client!, 'mutate'),
               };
             });
 
@@ -646,7 +655,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
               it(`uses element's updater method for mutation's \`update\` option by default`, function() {
                 const update = element.updater;
-                expect(element.client.mutate).to.have.been.calledWith(match({ update }));
+                expect(element.client!.mutate).to.have.been.calledWith(match({ update }));
               });
             });
 
@@ -658,7 +667,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               });
 
               it('allows passing custom update function', function() {
-                expect(element.client.mutate).to.have.been.calledWith(match({ update }));
+                expect(element.client!.mutate).to.have.been.calledWith(match({ update }));
               });
             });
           });

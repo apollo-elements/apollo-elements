@@ -178,7 +178,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 
     describe('changing script text content', function() {
       beforeEach(function() {
-        element.querySelector('script').innerText = 'query bar { foo }';
+        element.querySelector('script')!.innerText = 'query bar { foo }';
       });
 
       beforeEach(nextFrame);
@@ -256,16 +256,16 @@ class TypeCheck extends Test<TypeCheckData> {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<unknown>                             (this.data);
     assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    assertType<number>                              (this.data.b);
+    assertType<'a'>                                 (this.data!.a);
+    assertType<number>                              (this.data!.b);
     if (isApolloError(this.error))
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 

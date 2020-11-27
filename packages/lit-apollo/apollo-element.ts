@@ -19,11 +19,11 @@ export class ApolloElement<TData = unknown, TVariables = unknown>
 
   @property({ attribute: false }) client = /* c8 ignore next */ window.__APOLLO_CLIENT__ ?? null;
 
-  @property({ attribute: false }) data: TData = null;
+  @property({ attribute: false }) data: TData | null = null;
 
-  @property({ attribute: false }) error: Error|ApolloError = null;
+  @property({ attribute: false }) error: Error | ApolloError | null = null;
 
-  @property({ attribute: false }) errors: readonly GraphQLError[] = null;
+  @property({ attribute: false }) errors: readonly GraphQLError[] | null = null;
 
   @property({ type: Boolean, reflect: true }) loading = false;
 }

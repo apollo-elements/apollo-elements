@@ -56,41 +56,41 @@ function TypeCheck() {
   assertType<HTMLElement>                         (el);
 
   // ApolloElementInterface
-  assertType<ApolloClient<NormalizedCacheObject>> (el.client);
-  assertType<Record<string, unknown>>             (el.context);
-  assertType<boolean>                             (el.loading);
-  assertType<DocumentNode>                        (el.document);
-  assertType<Error>                               (el.error);
-  assertType<readonly GraphQLError[]>             (el.errors);
-  assertType<TypeCheckData>                       (el.data);
-  assertType<string>                              (el.error.message);
-  assertType<'a'>                                 (el.data.a);
+  assertType<ApolloClient<NormalizedCacheObject>|null>  (el.client);
+  assertType<Record<string, unknown>|undefined>         (el.context);
+  assertType<boolean>                                   (el.loading);
+  assertType<DocumentNode|null>                         (el.document);
+  assertType<ApolloError|Error|null>                    (el.error);
+  assertType<readonly GraphQLError[]|null>              (el.errors);
+  assertType<TypeCheckData>                             (el.data!);
+  assertType<string>                                    (el.error!.message);
+  assertType<'a'>                                       (el.data.a);
   // @ts-expect-error: b as number type
-  assertType<'a'>                                 (el.data.b);
-  if (isApolloError(el.error))
-    assertType<readonly GraphQLError[]>           (el.error.graphQLErrors);
+  assertType<'a'>                                       (el.data.b);
+  if (isApolloError(el.error!))
+    assertType<readonly GraphQLError[]>                 (el.error.graphQLErrors);
 
   // ApolloMutationInterface
-  assertType<DocumentNode>                        (el.mutation);
-  assertType<TypeCheckVars>                       (el.variables);
-  assertType<boolean>                             (el.called);
-  assertType<boolean>                             (el.ignoreResults);
-  assertType<boolean>                             (el.awaitRefetchQueries);
-  assertType<number>                              (el.mostRecentMutationId);
-  assertType<ErrorPolicy>                         (el.errorPolicy);
-  assertType<string>                              (el.errorPolicy);
+  assertType<DocumentNode>                              (el.mutation!);
+  assertType<TypeCheckVars>                             (el.variables!);
+  assertType<boolean>                                   (el.called);
+  assertType<boolean>                                   (el.ignoreResults);
+  assertType<boolean|undefined>                         (el.awaitRefetchQueries);
+  assertType<number>                                    (el.mostRecentMutationId);
+  assertType<ErrorPolicy|undefined>                     (el.errorPolicy);
+  assertType<string|undefined>                          (el.errorPolicy);
   // @ts-expect-error: ErrorPolicy is not a number
-  assertType<number>                              (el.errorPolicy);
-  assertType<string>                              (el.fetchPolicy);
-  assertType<Extract<FetchPolicy, 'no-cache'>>    (el.fetchPolicy);
+  assertType<number>                                    (el.errorPolicy);
+  assertType<string|undefined>                          (el.fetchPolicy);
+  assertType<Extract<FetchPolicy, 'no-cache'>|undefined>(el.fetchPolicy);
 
   if (typeof el.refetchQueries === 'function')
     assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(el.refetchQueries);
   else
-    assertType<RefetchQueryDescription>(el.refetchQueries);
+    assertType<RefetchQueryDescription|null|undefined>(el.refetchQueries);
 
   if (typeof el.optimisticResponse !== 'function')
-    assertType<TypeCheckData>(el.optimisticResponse);
+    assertType<TypeCheckData|undefined>(el.optimisticResponse);
   else
     assertType<(vars: TypeCheckVars) => TypeCheckData>(el.optimisticResponse);
 
@@ -252,7 +252,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     function clickButton() {
-      element.querySelector('button').click();
+      element.querySelector('button')!.click();
     }
 
     it('has no href', function() {
@@ -303,7 +303,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('when button is removed', function() {
       beforeEach(function() {
-        element.querySelector('button').remove();
+        element.querySelector('button')!.remove();
       });
 
       it('destroys trigger', function() {
@@ -330,20 +330,21 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     afterEach(function() {
       replaceStateStub.restore();
       element.remove();
+      // @ts-expect-error: fixture
       element = undefined;
     });
 
     describe('clicking the link', function() {
       it('mutates', async function() {
         expect(element.data).to.be.null;
-        element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+        element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
         await aTimeout(10);
         expect(element.data).to.be.ok;
       });
 
       it('fires will-mutate event', async function() {
         setTimeout(() => {
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
         });
 
         const event = await oneEvent(element, WillMutateEvent.type);
@@ -353,7 +354,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
       it('fires mutation-completed event', async function() {
         setTimeout(() => {
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
         });
 
         const event = await oneEvent(element, MutationCompletedEvent.type);
@@ -364,7 +365,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
       it('fires will-navigate event', async function() {
         setTimeout(() => {
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
         });
 
         const event = await oneEvent(element, WillNavigateEvent.type);
@@ -375,7 +376,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
       it('navigates', async function() {
         setTimeout(() => {
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
         });
 
         await oneEvent(element, WillNavigateEvent.type);
@@ -391,7 +392,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
             expect(event.detail.element).to.equal(element);
           }, { once: true });
 
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
 
           await aTimeout(10);
 
@@ -407,7 +408,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
             expect(event.detail.element).to.equal(element);
           }, { once: true });
 
-          element.querySelector<HTMLButtonElement>('[slot="trigger"]').click();
+          element.querySelector<HTMLButtonElement>('[slot="trigger"]')!.click();
 
           await aTimeout(10);
 
@@ -421,10 +422,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         const link = element.querySelector('a');
         let count = 0;
         element.addEventListener(WillMutateEvent.type, function() { count++; });
-        link.click();
+        link!.click();
         await element.updateComplete;
-        link.click();
-        link.click();
+        link!.click();
+        link!.click();
         expect(count).to.equal(1);
       });
     });
@@ -454,14 +455,14 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('when element has `resolveURL` property', function() {
       beforeEach(function() {
         element.resolveURL =
-          ({ nullableParam }: NullableParamMutationData): string => `/nullable/${nullableParam.nullable}/`;
+          ({ nullableParam }: NullableParamMutationData): string => `/nullable/${nullableParam!.nullable}/`;
         element.setAttribute('data-nullable', 'special');
       });
 
       describe('clicking the button', function() {
         beforeEach(async function() {
           const button = element.querySelector('button');
-          button.click();
+          button!.click();
           await aTimeout(100);
         });
 
@@ -476,14 +477,14 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('mutates', async function() {
         const button = element.querySelector('button');
         expect(element.data).to.be.null;
-        button.click();
+        button!.click();
         await aTimeout(10);
         expect(element.data).to.be.ok;
       });
 
       it('fires will-mutate event', async function() {
         const button = element.querySelector('button');
-        setTimeout(() => button.click());
+        setTimeout(() => button!.click());
 
         const event = await oneEvent(element, WillMutateEvent.type);
 
@@ -494,8 +495,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         const button = element.querySelector('button');
 
         setTimeout(async function() {
-          button.click();
-          expect(button.disabled).to.be.true;
+          button!.click();
+          expect(button!.disabled).to.be.true;
         });
 
         const event = await oneEvent(element, MutationCompletedEvent.type);
@@ -504,12 +505,12 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
         expect(event.detail.element).to.equal(element);
         expect(event.detail.data).to.equal(element.data);
-        expect(button.disabled).to.be.false;
+        expect(button!.disabled).to.be.false;
       });
 
       it('fires will-navigate event', async function() {
         const button = element.querySelector('button');
-        setTimeout(() => button.click());
+        setTimeout(() => button!.click());
 
         const event = await oneEvent(element, WillNavigateEvent.type);
 
@@ -519,7 +520,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
       it('navigates', async function() {
         setTimeout(() => {
-          element.querySelector('button').click();
+          element.querySelector('button')!.click();
         });
 
         await oneEvent(element, WillNavigateEvent.type);
@@ -536,7 +537,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
             expect(event.detail.element).to.equal(element);
           }, { once: true });
 
-          button.click();
+          button!.click();
 
           await aTimeout(10);
 
@@ -552,7 +553,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
             expect(event.detail.element).to.equal(element);
           }, { once: true });
 
-          element.querySelector('button').click();
+          element.querySelector('button')!.click();
 
           await aTimeout(10);
 
@@ -581,8 +582,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       let event: MutationCompletedEvent;
 
       beforeEach(async function() {
-        input = element.querySelector('input');
-        button = element.querySelector('button');
+        input = element.querySelector('input')!;
+        button = element.querySelector('button')!;
         setTimeout(async function() {
           button.click();
           expect(input.disabled).to.be.true;
@@ -600,7 +601,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       it('uses input variables', function() {
-        expect(element.data.nullableParam.nullable).to.equal('input');
+        expect(element.data!.nullableParam!.nullable).to.equal('input');
       });
     });
 
@@ -614,8 +615,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       beforeEach(async function() {
-        input = element.querySelector('input');
-        button = element.querySelector('button');
+        input = element.querySelector('input')!;
+        button = element.querySelector('button')!;
         setTimeout(async function() {
           button.click();
           expect(input.disabled).to.be.true;
@@ -634,7 +635,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         });
 
         it('uses set variables instead of input variables', function() {
-          expect(element.data.nullableParam.nullable).to.equal('manual');
+          expect(element.data!.nullableParam!.nullable).to.equal('manual');
         });
       });
     });
@@ -658,7 +659,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       let button: HTMLButtonElement;
 
       beforeEach(async function() {
-        button = element.querySelector('button');
+        button = element.querySelector('button')!;
         setTimeout(async function() {
           button.click();
         });
@@ -669,7 +670,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       it('uses DOM variables', function() {
-        expect(element.data.nullableParam.nullable).to.equal('DOM');
+        expect(element.data!.nullableParam!.nullable).to.equal('DOM');
       });
     });
 
@@ -682,7 +683,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       beforeEach(async function() {
-        button = element.querySelector('button');
+        button = element.querySelector('button')!;
         setTimeout(async function() {
           button.click();
         });
@@ -699,7 +700,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         });
 
         it('uses set variables instead of input variables', function() {
-          expect(element.data.nullableParam.nullable).to.equal('manual');
+          expect(element.data!.nullableParam!.nullable).to.equal('manual');
         });
       });
     });
@@ -718,7 +719,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('clicking the button', function() {
       it('fires mutation-error event', async function() {
-        setTimeout(() => element.querySelector('button').click());
+        setTimeout(() => element.querySelector('button')!.click());
         const event = await oneEvent(element, MutationErrorEvent.type);
         expect(event.detail.element).to.equal(element);
         expect(event.detail.error).to.be.an.instanceOf(ApolloError);

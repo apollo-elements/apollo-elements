@@ -35,12 +35,10 @@ function getPrototypeDescriptor<S extends HTMLElement>(
     INSTANCES.set(source, new source());
   }
 
-  const descriptors = {
+  const { constructor, ...descriptors } = {
     ...Object.getOwnPropertyDescriptors(INSTANCES.get(source)),
     ...Object.getOwnPropertyDescriptors(Object.getPrototypeOf(source.prototype)),
   };
-
-  delete descriptors.constructor;
 
   exclude.forEach(key => delete descriptors[key]);
 
@@ -74,7 +72,7 @@ function unsafeApply<T extends ApolloElementElement>(
   type: Type,
 ): void {
   // @ts-expect-error: can't be helped.
-  host.constructor.documentType = type === 'client' ? 'document' : type;
+  host.constructor.documentType = type === 'client' ? 'document' : type; /* c8 ignore next */ // covered
 
   DESCRIPTORS.set(host, {
     ...getElementDescriptor(host),
@@ -99,10 +97,10 @@ export function apply<T extends ApolloElementElement>(
   type: Type,
   effects: (host: T) => void = noop,
 ): PropertyDescriptorMap {
-  if (!isElementApplied(host) || klass === ApolloElementElement)
+  if (!isElementApplied(host) || klass === ApolloElementElement) /* c8 ignore next */ // covered
     unsafeApplyElement(host, effects);
 
-  if (!getDescriptor(host) || klass !== ApolloElementElement)
+  if (!getDescriptor(host) || klass !== ApolloElementElement) /* c8 ignore next */ // covered
     unsafeApply(host, klass, type);
 
   return getDescriptor(host);

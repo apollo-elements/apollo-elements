@@ -24,7 +24,7 @@ export function notify<Class extends HTMLElement>(
     enumerable: true,
     configurable: true,
 
-    set<T>(this: Class, init: T) {
+    set<T extends Class[keyof Class]>(this: Class, init: T) {
       if (!INSTANCES.get(this))
         INSTANCES.set(this, {});
 
@@ -42,7 +42,7 @@ export function notify<Class extends HTMLElement>(
         },
       });
 
-      this[key as string] = init;
+      this[key as keyof Class] = init;
 
       this.dispatchEvent(new PolymerChangeEvent(key, init));
     },

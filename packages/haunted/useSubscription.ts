@@ -8,7 +8,6 @@ import type {
 
 import type {
   SubscriptionHookOptions as ReactSubscriptionHookOptions,
-  SubscriptionResult as ReactSubscriptionResult,
 } from '@apollo/client/react/types/types';
 
 import type { State } from 'haunted';
@@ -25,10 +24,13 @@ export type SubscriptionHookOptions<D, V> = Partial<
     noAutoSubscribe: boolean;
     shouldSubscribe: ApolloSubscriptionElement['shouldSubscribe'];
     fetchPolicy: FetchPolicy;
+    onSubscriptionData: ApolloSubscriptionElement<D, V>['onSubscriptionData']
   }>;
 
-export type SubscriptionResult<TData> = Omit<ReactSubscriptionResult<TData>, 'error'> & {
-  error: Error | ApolloError;
+export interface SubscriptionResult<TData> {
+  data: TData | null;
+  error: Error | ApolloError | null;
+  loading: boolean;
 }
 
 class UseSubscriptionHook<TData, TVariables> extends ApolloHook<
@@ -72,7 +74,7 @@ class UseSubscriptionHook<TData, TVariables> extends ApolloHook<
     };
   }
 
-  protected optionsToOptionalMethods() {
+  protected optionsToOptionalMethods(): Partial<ApolloSubscriptionElement<TData, TVariables>> {
     const { onSubscriptionData, shouldSubscribe } = this.options;
     return { onSubscriptionData, shouldSubscribe };
   }

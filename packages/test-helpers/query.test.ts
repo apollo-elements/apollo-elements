@@ -18,9 +18,9 @@ import NoParamSubscription from './graphql/NoParam.subscription.graphql';
 
 import gql from 'graphql-tag';
 
-import { ApolloQueryResult, NetworkStatus } from '@apollo/client/core';
+import { ApolloQueryResult, DefaultOptions, NetworkStatus } from '@apollo/client/core';
 
-import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
+import type { ApolloQueryElement, Constructor } from '@apollo-elements/interfaces';
 
 import type {
   NonNullableParamQueryData,
@@ -35,12 +35,12 @@ import { ObservableQuery } from '@apollo/client/core';
 
 import { match, spy, SinonSpy } from 'sinon';
 import { client, makeClient } from './client';
-import { isSubscription, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
+import { Entries, isSubscription, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
-type QE<D, V> = HTMLElement & ApolloQueryInterface<D, V>;
+type QE<D, V> = ApolloQueryElement<D, V>;
 
-export interface QueryElement<D = unknown, V = unknown> extends QE<D, V> {
+export interface QueryElement<D = any, V = any> extends QE<D, V> {
   hasRendered(): Promise<QueryElement<D, V>>;
   stringify(x: unknown): string;
 }
@@ -72,9 +72,8 @@ export interface DescribeQueryComponentOptions {
 }
 
 export function setupQueryClass<T extends QueryElement>(Klass: Constructor<T>): SetupFunction<T> {
-  return async function setupElement<B extends T>(opts: SetupOptions<B>): Promise<SetupResult<B>> {
-    // @ts-expect-error: no time for this
-    class Test extends Klass { }
+  return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
+    class Test extends (Klass as Constructor<QueryElement>) { }
 
     const { innerHTML = '', attributes, properties } = opts ?? {};
 
@@ -89,7 +88,7 @@ export function setupQueryClass<T extends QueryElement>(Klass: Constructor<T>): 
     const element =
       await fixture<B>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
 
-    for (const [key, val] of Object.entries(properties ?? {}))
+    for (const [key, val] of Object.entries(properties ?? {}) as Entries<B>)
       element[key] = val;
 
     return { element, spies, stubs };
@@ -100,13 +99,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
   const { setupFunction, class: Klass } = options;
   describe(`ApolloQuery interface`, function() {
     describe('when simply instantiating', function() {
-      let element: QueryElement;
+      let element: QueryElement | undefined;
 
-      let spies: Record<keyof typeof element, SinonSpy>;
+      let spies: Record<string|keyof QueryElement, SinonSpy> | undefined;
 
-      let connectEvent: Event;
+      let connectEvent: Event | undefined;
 
-      let disconnectEvent: Event;
+      let disconnectEvent: Event | undefined;
 
       beforeEach(function listen() {
         window.addEventListener('apollo-element-connected', e => connectEvent = e);
@@ -132,34 +131,44 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       beforeEach(waitForRender(() => element));
 
       afterEach(function teardownElement() {
-        element.remove();
+        element?.remove?.();
         element = undefined;
       });
 
       it('has default properties', function() {
+        if (!element)
+          throw new Error('No element');
+        // nullable fields
         expect(element.client, 'client').to.be.null;
         expect(element.data, 'data').to.be.null;
         expect(element.error, 'error').to.be.null;
         expect(element.errors, 'errors').to.be.null;
+        expect(element.options, 'options').to.be.null;
+        expect(element.query, 'query').to.be.null;
+        expect(element.variables, 'variables').to.be.null;
+
+        // defined fields
         expect(element.errorPolicy, 'errorPolicy').to.equal('none');
-        expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
         expect(element.networkStatus, 'networkStatus').to.equal(NetworkStatus.ready);
-        expect(element.nextFetchPolicy, 'nextFetchPolicy').to.be.undefined;
         expect(element.noAutoSubscribe, 'noAuthSubscribe').to.be.false;
+
+        // optional fields
+        expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
+        expect(element.nextFetchPolicy, 'nextFetchPolicy').to.be.undefined;
         expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
         expect(element.observableQuery, 'observableQuery').to.be.undefined;
         expect(element.onData, 'onData').to.be.undefined;
         expect(element.onError, 'onError').to.be.undefined;
-        expect(element.options, 'options').to.be.null;
         expect(element.partial, 'partial').to.be.undefined;
         expect(element.partialRefetch, 'partialRefetch').to.be.undefined;
         expect(element.pollInterval, 'pollInterval').to.be.undefined;
-        expect(element.query, 'query').to.be.null;
         expect(element.returnPartialData, 'returnPartialData').to.be.undefined;
-        expect(element.variables, 'variables').to.be.null;
       });
 
       it('caches observed properties', function() {
+        if (!element)
+          throw new Error('No element');
+
         const client = makeClient();
         element.client = client;
         expect(element.client, 'client').to.equal(client);
@@ -200,40 +209,42 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       it('notifies <apollo-client>', function() {
         expect(connectEvent).to.be.ok;
-        expect(connectEvent.bubbles).to.be.true;
-        expect(connectEvent.composed).to.be.true;
+        expect(connectEvent!.bubbles).to.be.true;
+        expect(connectEvent!.composed).to.be.true;
       });
 
       describe('subscribeToMore()', function() {
         it('does nothing when there is no observableQuery', function() {
-          expect(element.subscribeToMore(null)).to.be.undefined;
+          expect(element?.subscribeToMore({ document: gql`{ hi }` })).to.be.undefined;
         });
       });
 
       describe('without setting query or variables', function() {
         function setProperties(properties: Partial<typeof element>) {
           return function() {
-            for (const [key, val] of Object.entries(properties))
-              element[key] = val;
+            for (const [key, val] of Object.entries(properties!) as Entries<typeof element>)
+              element![key]! = val;
           };
         }
 
         beforeEach(waitForRender(() => element));
 
         it('renders', function() {
-          expect(element.shadowRoot.getElementById('data')).to.be.ok;
-          expect(element.shadowRoot.getElementById('error')).to.be.ok;
-          expect(element.shadowRoot.getElementById('errors')).to.be.ok;
-          expect(element.shadowRoot.getElementById('loading')).to.be.ok;
-          expect(element.shadowRoot.getElementById('networkStatus')).to.be.ok;
+          if (!element)
+            throw new Error('No element');
+          expect(element.shadowRoot?.getElementById('data')).to.be.ok;
+          expect(element.shadowRoot?.getElementById('error')).to.be.ok;
+          expect(element.shadowRoot?.getElementById('errors')).to.be.ok;
+          expect(element.shadowRoot?.getElementById('loading')).to.be.ok;
+          expect(element.shadowRoot?.getElementById('networkStatus')).to.be.ok;
         });
 
         describe('when data is set', function() {
           beforeEach(setProperties({ data: { data: 'data' } }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
-            expect(element.shadowRoot.getElementById('data').textContent)
-              .to.equal(element.stringify({ data: 'data' }));
+            expect(element?.shadowRoot?.getElementById('data')?.textContent)
+              .to.equal(element?.stringify({ data: 'data' }));
           });
         });
 
@@ -241,8 +252,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(setProperties({ error: new Error('oops') }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
-            expect(element.shadowRoot.getElementById('error').textContent)
-              .to.equal(element.stringify(new Error('oops')));
+            expect(element?.shadowRoot?.getElementById('error')?.textContent)
+              .to.equal(element?.stringify(new Error('oops')));
           });
         });
 
@@ -250,8 +261,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(setProperties({ errors: [new GraphQLError('oops')] }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
-            expect(element.shadowRoot.getElementById('errors').textContent)
-              .to.equal(element.stringify([new GraphQLError('oops')]));
+            expect(element?.shadowRoot?.getElementById('errors')?.textContent)
+              .to.equal(element?.stringify([new GraphQLError('oops')]));
           });
         });
 
@@ -259,7 +270,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(setProperties({ loading: true }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
-            expect(element.shadowRoot.getElementById('loading').textContent)
+            expect(element?.shadowRoot?.getElementById('loading')?.textContent)
               .to.equal('true');
           });
 
@@ -267,7 +278,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             beforeEach(setProperties({ loading: false }));
             beforeEach(waitForRender(() => element));
             it('renders', function() {
-              expect(element.shadowRoot.getElementById('loading').textContent)
+              expect(element?.shadowRoot?.getElementById('loading')?.textContent)
                 .to.equal('false');
             });
           });
@@ -277,55 +288,137 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(setProperties({ networkStatus: NetworkStatus.error }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
-            expect(element.shadowRoot.getElementById('networkStatus').textContent)
+            expect(element?.shadowRoot?.getElementById('networkStatus')?.textContent)
               .to.equal(NetworkStatus.error.toString());
+          });
+        });
+
+        describe('subscribe()', function() {
+          it('throws', function() {
+            expect(() => element?.subscribe())
+              .to.throw('No Apollo client');
+          });
+        });
+
+        describe('subscribe({ query })', function() {
+          it('throws', function() {
+            expect(() => element?.subscribe({ query: NullableParamQuery }))
+              .to.throw('No Apollo client');
+          });
+        });
+
+        describe('executeQuery()', function() {
+          it('throws', async function() {
+            try {
+              await element?.executeQuery();
+              expect.fail('did not throw');
+            } catch (error) {
+              expect(error.message).to.match(/^No Apollo client/);
+            }
+          });
+        });
+
+        describe('executeQuery({ query })', function() {
+          it('throws', async function() {
+            try {
+              await element?.executeQuery({ query: NullableParamQuery });
+              expect.fail('did not throw');
+            } catch (error) {
+              expect(error.message).to.match(/^No Apollo client/);
+            }
+          });
+        });
+
+        describe('watchQuery()', function() {
+          it('throws', function() {
+            expect(() => element?.watchQuery()).to.throw('No Apollo client');
+          });
+        });
+
+        describe('watchQuery({ query })', function() {
+          it('throws', function() {
+            expect(() => element?.watchQuery({ query: NullableParamQuery })).to.throw('No Apollo client');
           });
         });
       });
 
       describe('setting NullableParam query', function() {
         beforeEach(function setNullableParamQuery() {
-          element.query = NullableParamQuery;
+          element!.query = NullableParamQuery;
         });
 
         beforeEach(waitForRender(() => element));
 
         it('does not call subscribe', function() {
-          expect(element.subscribe).to.not.have.been.called;
+          expect(element?.subscribe).to.not.have.been.called;
         });
 
         describe('then setting variables', function() {
           beforeEach(function setVariables() {
-            element.variables = { nullable: '✈' };
+            element!.variables = { nullable: '✈' };
           });
 
           beforeEach(waitForRender(() => element));
 
           it('does not call subscribe', function() {
-            expect(element.subscribe).to.not.have.been.called;
+            expect(element?.subscribe).to.not.have.been.called;
+          });
+        });
+
+        describe('executeQuery()', function() {
+          it('throws', async function() {
+            try {
+              await element?.executeQuery();
+              expect.fail('did not throw');
+            } catch (error) {
+              expect(error.message).to.match(/^No Apollo client/);
+            }
+          });
+        });
+
+        describe('executeQuery({ query })', function() {
+          it('throws', async function() {
+            try {
+              await element?.executeQuery({ query: NonNullableParamQuery });
+              expect.fail('did not throw');
+            } catch (error) {
+              expect(error.message).to.match(/^No Apollo client/);
+            }
+          });
+        });
+
+        describe('watchQuery()', function() {
+          it('throws', function() {
+            expect(() => element?.watchQuery()).to.throw('No Apollo client');
+          });
+        });
+
+        describe('watchQuery({ query })', function() {
+          it('throws', function() {
+            expect(() => element?.watchQuery({ query: NonNullableParamQuery })).to.throw('No Apollo client');
           });
         });
       });
 
       describe('disconnecting', function() {
         beforeEach(function disconnect() {
-          element.remove();
+          element?.remove();
         });
 
         beforeEach(nextFrame);
 
         it('notifies <apollo-client>', function() {
           expect(disconnectEvent).to.be.ok;
-          expect(disconnectEvent.bubbles).to.be.true;
-          expect(disconnectEvent.composed).to.be.true;
+          expect(disconnectEvent?.bubbles).to.be.true;
+          expect(disconnectEvent?.composed).to.be.true;
         });
       });
     });
 
     describe('with global client available', function() {
-      let element: QueryElement;
+      let element: QueryElement | undefined;
 
-      let spies: Record<keyof typeof element, SinonSpy>;
+      let spies: Record<string|keyof QueryElement, SinonSpy> | undefined;
 
       let cached: typeof window.__APOLLO_CLIENT__;
 
@@ -355,11 +448,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         beforeEach(function() {
-          spies['client.subscribe'] = spy(element.client, 'subscribe');
+          spies!['client.subscribe'] = spy(element!.client!, 'subscribe');
+          spies!['client.query'] = spy(element!.client!, 'query');
         });
 
         it('uses the global client', async function() {
-          expect(element.client).to.equal(mockClient);
+          expect(element?.client).to.equal(mockClient);
         });
 
         describe('setting a malformed query', function() {
@@ -367,103 +461,140 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             // @ts-expect-error: testing the error handler
             expect(() => element.query = 'query { foo }')
               .to.throw('Query must be a gql-parsed DocumentNode');
-            expect(element.query, 'does not set query property').to.be.null;
-            expect(element.observableQuery, 'does not initialize an observableQuery').to.not.be.ok;
+            expect(element?.query, 'does not set query property').to.be.null;
+            expect(element?.observableQuery, 'does not initialize an observableQuery').to.not.be.ok;
           });
         });
 
         describe('setting options property', function() {
           beforeEach(function() {
-            element.options = { errorPolicy: 'none', query: null };
+            element!.options = { errorPolicy: 'none' };
           });
 
           it('sets options', function() {
-            expect(element.options).to.deep.equal({ errorPolicy: 'none', query: null });
+            expect(element?.options).to.deep.equal({ errorPolicy: 'none' });
           });
         });
 
         describe('when shouldSubscribe() is always false', function() {
           beforeEach(function setShouldSubscribe() {
-            element.shouldSubscribe = () => false;
+            element!.shouldSubscribe = () => false;
           });
 
           describe('setting NullableParam query', function() {
             beforeEach(function setNullableParamQuery() {
-              element.query = NullableParamQuery;
+              element!.query = NullableParamQuery;
             });
 
             beforeEach(waitForRender(() => element));
 
             it('does not call subscribe', function() {
-              expect(element.subscribe).to.not.have.been.called;
+              expect(element?.subscribe).to.not.have.been.called;
             });
 
             describe('then setting variables', function() {
               beforeEach(function setVariables() {
-                element.variables = { nullable: '✈' };
+                element!.variables = { nullable: '✈' };
               });
 
               beforeEach(waitForRender(() => element));
 
               it('does not call subscribe', function() {
-                expect(element.subscribe).to.not.have.been.called;
+                expect(element?.subscribe).to.not.have.been.called;
               });
             });
           });
         });
 
-        describe('setting a valid query', function() {
+        describe('executeQuery()', function() {
+          it('throws', async function() {
+            try {
+              await element?.executeQuery();
+              expect.fail('did not throw');
+            } catch (error) {
+              expect(error.message).to.match(/query/);
+            }
+          });
+        });
+
+        describe('executeQuery({ query })', async function() {
+          let result: ApolloQueryResult<any> | void;
+
+          beforeEach(async function() {
+            result = await element?.executeQuery({ query: NullableParamQuery });
+          });
+
+          it('calls client query', function() {
+            expect(element?.client?.query).to.have.been.calledWith(match({ query: NullableParamQuery }));
+          });
+
+          it('returns a result', function() {
+            expect(result).to.be.ok;
+          });
+        });
+
+        describe('watchQuery()', function() {
+          it('throws', function() {
+            expect(() => element?.watchQuery())
+              .to.throw(/query/);
+          });
+        });
+
+        describe('watchQuery({ query })', function() {
+          it('does not throw', function() {
+            expect(() => element?.watchQuery({ query: NullableParamQuery })).to.not.throw();
+          });
+        });
+
+        describe('setting NullableParam query', function() {
           beforeEach(function setNullableParamQuery() {
-            element.query = NullableParamQuery;
+            element!.query = NullableParamQuery;
           });
 
           it('calls subscribe', async function() {
-            expect(element.subscribe).to.have.been.calledOnce;
+            expect(element?.subscribe).to.have.been.calledOnce;
           });
 
           describe('then setting options', function() {
             beforeEach(function() {
-              spies['observableQuery.setOptions'] = spy(element.observableQuery, 'setOptions');
-              element.options = { errorPolicy: 'none', query: NoParamQuery };
+              spies!['observableQuery.setOptions'] = spy(element!.observableQuery!, 'setOptions');
+              element!.options = { errorPolicy: 'none', query: NoParamQuery };
             });
 
-            afterEach(function() {
-              for (const stub of Object.values(spies))
-                stub.restore();
-            });
+            afterEach(restoreSpies(() => spies));
 
             it('calls observableQuery.subscribe when there is a query', async function() {
-              expect(element.observableQuery.setOptions)
+              expect(element?.observableQuery?.setOptions)
                 .to.have.been.calledWith({ errorPolicy: 'none', query: NoParamQuery });
             });
           });
 
           describe('then setting variables', function() {
             beforeEach(function setVariables() {
-              element.variables = { nullable: '✈' };
+              element!.variables = { nullable: '✈' };
             });
 
             beforeEach(waitForRender(() => element));
 
             it('calls refetch', function() {
-              expect(element.refetch).to.have.been.calledWithMatch({ nullable: '✈' });
+              expect(element?.refetch).to.have.been.calledWithMatch({ nullable: '✈' });
             });
           });
 
           describe('then destroying observableQuery', function() {
             beforeEach(function destroyObservableQuery() {
-              element.observableQuery = undefined;
+              element!.observableQuery = undefined;
             });
 
             describe('then setting variables', function() {
               beforeEach(function setVariables() {
-                element.variables = { nullable: '✈' };
+                element!.variables = { nullable: '✈' };
               });
 
               beforeEach(waitForRender(() => element));
 
               it('calls subscribe', function() {
-                expect(element.subscribe)
+                expect(element?.subscribe)
                   .to.have.been.calledWithMatch({ variables: { nullable: '✈' } });
               });
             });
@@ -473,85 +604,146 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             beforeEach(nextFrame);
 
             beforeEach(async function() {
-              document.body.append(element);
+              document.body.append(element!);
             });
 
             beforeEach(nextFrame);
 
-            afterEach(function() {
-              for (const spy of Object.values(spies))
-                spy.restore();
-            });
+            afterEach(restoreSpies(() => spies));
 
-            afterEach(() => element.remove());
+            afterEach(() => element?.remove());
 
             it('subscribes', function() {
-              expect(element.subscribe).to.have.been.calledTwice;
+              expect(element?.subscribe).to.have.been.calledTwice;
+            });
+          });
+
+          describe('executeQuery()', function() {
+            let result: ApolloQueryResult<NullableParamQueryData> | undefined;
+
+            beforeEach(function() {
+              expect(element?.data).to.be.null;
+            });
+
+            beforeEach(async function() {
+              result = await element?.executeQuery();
+            });
+
+            it('calls client query', function() {
+              expect(element?.client?.query).to.have.been.calledWith(match({ query: NullableParamQuery }));
+            });
+
+            it('returns a result', function() {
+              expect(result).to.be.ok;
+            });
+
+            it('sets data', function() {
+              expect(element?.data).to.equal(result!.data);
+            });
+          });
+
+          describe('executeQuery({ query })', function() {
+            let result: ApolloQueryResult<NoParamQueryData> | undefined;
+
+            beforeEach(function() {
+              expect(element?.data).to.be.null;
+            });
+
+            beforeEach(async function() {
+              result = await element?.executeQuery({ query: NoParamQuery });
+            });
+
+            it('calls client query', function() {
+              expect(element?.client?.query).to.have.been.calledWith(match({ query: NoParamQuery }));
+            });
+
+            it('returns a result', function() {
+              expect(result).to.be.ok;
+            });
+
+            it('sets data', function() {
+              expect(element?.data).to.equal(result!.data);
             });
           });
         });
 
         describe('setting variables', function() {
           beforeEach(function() {
-            element.variables = { foo: 'foo' };
+            element!.variables = { foo: 'foo' };
           });
 
           it('does not create an observableQuery', function() {
-            expect(element.variables).to.deep.equal({ foo: 'foo' });
-            expect(element.observableQuery).to.not.be.ok;
+            expect(element?.variables).to.deep.equal({ foo: 'foo' });
+            expect(element?.observableQuery).to.not.be.ok;
           });
         });
 
         describe('fetchMore()', function() {
-          let result: ApolloQueryResult<typeof element['data']>;
+          let result: ApolloQueryResult<QueryElement['data']> | undefined;
+          let error: Error | undefined;
+
           beforeEach(async function() {
-            result = await element.fetchMore();
-            return result;
+            try {
+              result = await element!.fetchMore();
+              return result;
+            } catch (e) {
+              error = e;
+            }
           });
 
-          it('does nothing when there is no observableQuery', function() {
-            expect(result).to.be.undefined;
-            expect(element.observableQuery).to.be.undefined;
+          afterEach(function() {
+            result = undefined;
+            error = undefined;
+          });
+
+          it('throws', function() {
+            expect(result).to.not.be.ok;
+            expect(error).to.be.an.instanceOf(Error);
+            expect(error!.message).to.match(/query/);
+          });
+
+          it('does not set observableQuery', function( ) {
+            expect(element?.observableQuery).to.be.undefined;
           });
         });
 
         describe('appending a script child with wrong type', function() {
           beforeEach(function appendWrongTypeScript() {
-            element.innerHTML = `<script type="app/gql">query { noParam }</script>`;
+            element!.innerHTML = `<script type="app/gql">query { noParam }</script>`;
           });
 
           beforeEach(waitForRender(() => element));
 
           it('does not change document', function() {
-            expect(element.query).to.be.null;
+            expect(element?.query).to.be.null;
           });
         });
 
         describe('appending a script child with invalid contents', function() {
-          beforeEach(function appendWrongTypeScript() {
-            element.innerHTML = `<script type="application/graphql">quory { # hi }</script>`;
+          beforeEach(function appendBadScript() {
+            element!.innerHTML = `<script type="application/graphql">quory { # hi }</script>`;
           });
 
           beforeEach(waitForRender(() => element));
 
           it('does not change document', function() {
-            expect(element.query).to.be.null;
+            expect(element?.query).to.be.null;
           });
 
           it('sets error', function() {
-            expect(element.error.message.includes('quory')).to.be.true;
+            expect(element?.error?.message.includes('quory')).to.be.true;
           });
         });
       });
 
       describe('with a graphql script child', function() {
-        let spies: Record<keyof QueryElement, SinonSpy>;
+        let spies: Record<keyof QueryElement, SinonSpy> | undefined;
 
         beforeEach(async function setupElement() {
           ({ element, spies } =
             await setupFunction({
               spy: ['subscribe'],
-              innerHTML: `<script type="application/graphql">${NoParamQuery.loc.source.body}</script>`,
+              innerHTML: `<script type="application/graphql">${NoParamQuery.loc!.source.body}</script>`,
             }));
         });
 
@@ -560,32 +752,32 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove();
           element = undefined;
         });
 
         it('does not remove script', function() {
-          expect(element.firstElementChild).to.be.an.instanceof(HTMLElement);
+          expect(element?.firstElementChild).to.be.an.instanceof(HTMLElement);
         });
 
         it('sets query property', function() {
-          expect(element.query).to.deep.equal(gql(NoParamQuery.loc.source.body));
+          expect(element?.query).to.deep.equal(gql(NoParamQuery.loc!.source.body));
         });
 
         it('calls subscribe', function() {
-          expect(element.subscribe).to.have.been.called;
+          expect(element?.subscribe).to.have.been.called;
         });
 
         describe('changing the DOM script to HelloQuery', function() {
           beforeEach(function changeScript() {
-            element.innerHTML = `<script type="application/graphql">${HelloQuery.loc.source.body}</script>`;
+            element!.innerHTML = `<script type="application/graphql">${HelloQuery.loc!.source.body}</script>`;
           });
 
           beforeEach(waitForRender(() => element));
 
           it('renders', function() {
-            expect(element.shadowRoot.getElementById('data').textContent)
-              .to.equal(element.stringify({
+            expect(element?.shadowRoot?.getElementById('data')?.textContent)
+              .to.equal(element?.stringify({
                 helloWorld: {
                   __typename: 'HelloWorld',
                   name: 'Chaver',
@@ -596,14 +788,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           describe('setting the variables', function() {
             beforeEach(function setVariables() {
-              element.variables = { name: 'Aleichem' };
+              element!.variables = { name: 'Aleichem' };
             });
 
             beforeEach(waitForRender(() => element));
 
             it('rerenders', function() {
-              expect(element.shadowRoot.getElementById('data').textContent)
-                .to.equal(element.stringify({
+              expect(element?.shadowRoot?.getElementById('data')?.textContent)
+                .to.equal(element!.stringify({
                   helloWorld: {
                     __typename: 'HelloWorld',
                     name: 'Aleichem',
@@ -616,9 +808,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with no-auto-subscribe attribute set', function() {
-        let element: QueryElement;
+        let element: QueryElement | undefined;
 
-        let spies: Record<keyof QueryElement, SinonSpy>;
+        let spies: Record<keyof QueryElement, SinonSpy> | undefined;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
@@ -630,31 +822,31 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove();
           element = undefined;
         });
 
         it('has noAutoSubscribe property set', function() {
-          expect(element.noAutoSubscribe).to.be.true;
+          expect(element?.noAutoSubscribe).to.be.true;
         });
 
         describe('setting a valid query', function() {
           beforeEach(function setQuery() {
-            element.query = NoParamQuery;
+            element!.query = NoParamQuery;
           });
 
           it('does not call subscribe', async function noAutoSubscribe() {
-            expect(element.subscribe).to.not.have.been.called;
+            expect(element?.subscribe).to.not.have.been.called;
           });
         });
 
         describe('removing no-auto-subscribe attribute', function() {
           beforeEach(function removeAttribute() {
-            element.removeAttribute('no-auto-subscribe');
+            element?.removeAttribute('no-auto-subscribe');
           });
 
           it('unsets noAutoSubscribe property', function() {
-            expect(element.noAutoSubscribe).to.be.false;
+            expect(element?.noAutoSubscribe).to.be.false;
           });
         });
       });
@@ -663,27 +855,27 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         type Data = NoParamQueryData;
         type Variables = NoParamQueryVariables;
 
-        let element: QueryElement<Data, Variables>;
+        let element: QueryElement<Data, Variables> | undefined;
 
-        let spies: Record<keyof typeof element, SinonSpy>;
+        let spies: Record<string | keyof QueryElement<Data, Variables>, SinonSpy> | undefined;
 
         function resetPrivateWatchQuerySpy() {
-          spies['client.queryManager.watchQuery'].resetHistory();
+          spies!['client.queryManager.watchQuery'].resetHistory();
         }
 
         function callSubscribe() {
-          element.subscribe();
+          element?.subscribe();
         }
 
-        function setProperties(properties: Partial<typeof element>) {
+        function setProperties(properties?: Partial<typeof element>) {
           return function() {
-            for (const [key, val] of Object.entries(properties))
-              element[key] = val;
+            for (const [key, val] of Object.entries(properties ?? {}) as Entries<typeof element>)
+              element![key] = val;
           };
         }
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<typeof element>({
+          ({ element, spies } = await setupFunction<QueryElement<Data, Variables>>({
             spy: ['refetch'],
             properties: {
               query: NoParamQuery,
@@ -699,7 +891,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove();
           element = undefined;
         });
 
@@ -712,7 +904,23 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(nextFrame);
 
           it('calls refetch', function() {
-            expect(element.refetch).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+            expect(element?.refetch).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+          });
+        });
+
+        describe('executeQuery()', function() {
+          const query = NoParamQuery;
+
+          beforeEach(function spyClientQuery() {
+            spies!['client.query'] = spy(element!.client!, 'query');
+          });
+
+          beforeEach(function executeQuery() {
+            return element?.executeQuery();
+          });
+
+          it('accepts custom args', function() {
+            expect(element?.client?.query).to.have.been.calledWith(match({ query }));
           });
         });
 
@@ -720,38 +928,38 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           const query = NullableParamQuery;
 
           beforeEach(function spyClientQuery() {
-            spies['client.query'] = spy(element.client, 'query');
+            spies!['client.query'] = spy(element!.client!, 'query');
           });
 
           beforeEach(function executeQuery() {
-            return element.executeQuery({ query });
+            return element?.executeQuery({ query });
           });
 
           it('accepts custom args', function() {
-            expect(element.client.query).to.have.been.calledWith(match({ query }));
+            expect(element?.client?.query).to.have.been.calledWith(match({ query }));
           });
         });
 
         describe('fetchMore({ updateQuery })', function() {
-          let result: ApolloQueryResult<typeof element['data']>;
+          let result: ApolloQueryResult<QueryElement['data']>;
 
           beforeEach(function spyObservableQueryFetchMore() {
-            spies['observableQuery.fetchMore'] = spy(element.observableQuery, 'fetchMore');
+            spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
           });
 
           beforeEach(async function callFetchMore() {
-            result = await element.fetchMore();
+            result = await element!.fetchMore();
             return result;
           });
 
           it('calls observableQuery.fetchMore', async function() {
-            expect(element.observableQuery.fetchMore)
+            expect(element?.observableQuery?.fetchMore)
               .to.have.been.called;
           });
 
           it('updates data', function() {
             expect(result.data.noParam.noParam).to.equal('noParam');
-            expect(element.data.noParam.noParam).to.equal('noParam');
+            expect(element?.data?.noParam?.noParam).to.equal('noParam');
           });
         });
 
@@ -761,7 +969,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(callSubscribe);
 
           it('does not set an instance fetchPolicy', function() {
-            expect(element.fetchPolicy).to.be.undefined;
+            expect(element?.fetchPolicy).to.be.undefined;
           });
 
           it('respects client default fetchPolicy', async function() {
@@ -777,7 +985,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(setProperties({ fetchPolicy }));
           beforeEach(callSubscribe);
           it('respects instance-specific fetchPolicy', async function() {
-            expect(element.fetchPolicy).to.equal(fetchPolicy);
+            expect(element?.fetchPolicy).to.equal(fetchPolicy);
             // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
             expect(element.client.queryManager.watchQuery).to.have.been
               .calledWithMatch({ fetchPolicy });
@@ -786,39 +994,39 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('subscribeToMore()', function() {
           beforeEach(function spySubscribeToMore() {
-            spies['observableQuery.subscribeToMore'] =
-            spy(element.observableQuery, 'subscribeToMore');
+            spies!['observableQuery.subscribeToMore'] = spy(element!.observableQuery!, 'subscribeToMore');
           });
 
-          const args = { document: NoParamSubscription, updateQuery: x => x };
+          const args = { document: NoParamSubscription, updateQuery: (x: any) => x };
 
-          let result: () => void;
+          let result: (() => void) | void;
+
           beforeEach(function callSubscribeToMore() {
-            result = element.subscribeToMore(args);
+            result = element?.subscribeToMore(args);
           });
 
           it('calls observableQuery.subscribeToMore()', function() {
             expect(result).to.be.an.instanceof(Function);
-            expect(element.observableQuery.subscribeToMore).to.have.been.calledWith(args);
+            expect(element?.observableQuery?.subscribeToMore).to.have.been.calledWith(args);
           });
         });
 
         describe('watchQuery()', function() {
           beforeEach(function() {
-            spies['client.watchQuery'] = spy(element.client, 'watchQuery');
+            spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
           });
 
-          let result: ObservableQuery;
+          let result: ObservableQuery<Data, Variables> | void;
 
           beforeEach(function callWatchQuery() {
-            result = element.watchQuery();
+            result = element?.watchQuery();
             return result;
           });
 
           it('calls client watchQuery', function() {
-            const { query, variables } = element;
-            expect(element.client.watchQuery)
-              .to.have.been.calledWith(match({ query, variables }));
+            const { query } = element!;
+            expect(element?.client?.watchQuery)
+              .to.have.been.calledWith(match({ query, variables: undefined }));
           });
 
           it('creates an ObservableQuery', function() {
@@ -826,52 +1034,89 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
         });
 
-        describe('watchQuery({ variables })', function() {
+        describe('watchQuery()', function() {
           beforeEach(function() {
-            spies['client.watchQuery'] = spy(element.client, 'watchQuery');
+            spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
           });
 
-          let result: ObservableQuery;
+          let result: ObservableQuery<Data, Variables>;
 
           beforeEach(function callWatchQuery() {
-            result = element.watchQuery({ variables: {} });
+            element!.nextFetchPolicy = 'network-only';
+            result = element!.watchQuery();
+            return result;
+          });
+
+          it('uses element instance nextFetchPolicy', function() {
+            expect(element?.client?.watchQuery)
+              .to.have.been.calledWith(match({ nextFetchPolicy: 'network-only' }));
+          });
+        });
+
+        describe('watchQuery({ nextFetchPolicy })', function() {
+          beforeEach(function() {
+            spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
+          });
+
+          let result: ObservableQuery<Data, Variables>;
+
+          beforeEach(function callWatchQuery() {
+            result = element!.watchQuery({ nextFetchPolicy: 'network-only' });
+            return result;
+          });
+
+          it('uses passed nextFetchPolicy', function() {
+            expect(element?.client?.watchQuery)
+              .to.have.been.calledWith(match({ nextFetchPolicy: 'network-only' }));
+          });
+        });
+
+        describe('watchQuery({ variables })', function() {
+          beforeEach(function() {
+            spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
+          });
+
+          let result: ObservableQuery<Data, Variables>;
+
+          beforeEach(function callWatchQuery() {
+            result = element!.watchQuery({ variables: {} });
             return result;
           });
 
           it('uses element instance variables', function() {
-            const { query } = element;
-            expect(element.client.watchQuery)
+            const { query } = element!;
+            expect(element?.client?.watchQuery)
               .to.have.been.calledWith(match({ query, variables: {} }));
           });
         });
 
         describe('watchQuery({ query })', function() {
           beforeEach(function() {
-            spies['client.watchQuery'] = spy(element.client, 'watchQuery');
+            spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
           });
 
-          let result: ObservableQuery;
+          let result: ObservableQuery<Data, Variables>;
 
           beforeEach(function callWatchQuery() {
-            element.variables = {};
-            result = element.watchQuery({ query: NullableParamQuery });
+            element!.variables = {};
+            result = element!.watchQuery({ query: NullableParamQuery });
             return result;
           });
 
           it('uses element instance variables', function() {
-            const { variables } = element;
-            expect(element.client.watchQuery)
+            const { variables } = element!;
+            expect(element!.client!.watchQuery)
               .to.have.been.calledWith(match({ query: NullableParamQuery, variables }));
           });
         });
 
         describe('when client has default watchQuery options', function() {
-          let cache;
+          let cache: DefaultOptions;
           const variables = { foo: 'when client has default watchQuery options' };
 
           beforeEach(function setClientDefaults() {
-            cache = element.client.defaultOptions;
-            element.client.defaultOptions = {
+            cache = element!.client!.defaultOptions;
+            element!.client!.defaultOptions = {
               watchQuery: {
                 notifyOnNetworkStatusChange: true,
                 // @ts-expect-error: just checking that it passes arbitrary value, don't care abt the interface
@@ -881,15 +1126,16 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           beforeEach(function callWatchQuery() {
-            element.watchQuery({ variables });
+            // @ts-expect-error: just testing the call
+            element?.watchQuery({ variables });
           });
 
           afterEach(function restoreClientDefaults() {
-            element.client.defaultOptions = cache;
+            element!.client!.defaultOptions = cache;
           });
 
           it('uses default options', function() {
-            const { query } = element;
+            const { query } = element!;
             // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
             expect(element.client.queryManager.watchQuery)
               .to.have.been.calledWith(match({
@@ -906,12 +1152,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         type Data = NullableParamQueryData;
         type Variables = NullableParamQueryVariables;
 
-        let element: QueryElement<Data, Variables>;
+        let element: QueryElement<Data, Variables> | undefined;
 
-        let spies: Record<string, SinonSpy>;
+        let spies: Record<string, SinonSpy> | undefined;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<typeof element>({
+          ({ element, spies } = await setupFunction<QueryElement<Data, Variables>>({
             spy: ['refetch'],
             properties: {
               query: NullableParamQuery,
@@ -920,7 +1166,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove();
           element = undefined;
         });
 
@@ -928,25 +1174,25 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('refetch()', function() {
           beforeEach(function spyObservableQueryRefetch() {
-            spies['observableQuery.refetch'] = spy(element.observableQuery, 'refetch');
+            spies!['observableQuery.refetch'] = spy(element!.observableQuery!, 'refetch');
           });
 
           beforeEach(function callRefetch() {
-            element.refetch({ nullable: 'new args' });
+            element!.refetch({ nullable: 'new args' });
           });
 
           it('calls observableQuery.refetch', function() {
-            expect(element.observableQuery.refetch)
+            expect(element!.observableQuery!.refetch)
               .to.have.been.calledWith({ nullable: 'new args' });
           });
 
           describe('when observableQuery is destroyed', function() {
             beforeEach(function destroyObservableQuery() {
-              element.observableQuery = undefined;
+              element!.observableQuery = undefined;
             });
 
             it('does nothing', function() {
-              expect(element.refetch({ nullable: 'bar' })).to.be.undefined;
+              expect(element!.refetch({ nullable: 'bar' })).to.be.undefined;
             });
           });
         });
@@ -954,72 +1200,72 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('setting new variables', function() {
           beforeEach(function() {
             // HACK: 🤷‍♂️ this fails only for haunted if I don't redeclare the spy here
-            spies.refetch.restore();
-            spies.refetch = spy(element, 'refetch');
+            spies!.refetch.restore();
+            spies!.refetch = spy(element!, 'refetch');
           });
 
           beforeEach(function setVariables() {
-            element.variables = { nullable: '🍟' };
+            element!.variables = { nullable: '🍟' };
           });
 
           it('calls refetch', function() {
-            expect(element.refetch)
+            expect(element!.refetch)
               .to.have.been.calledWithMatch({ nullable: '🍟' });
           });
         });
 
         describe('executeQuery()', function() {
           beforeEach(function spyClientQuery() {
-            spies['client.query'] = spy(element.client, 'query');
+            spies!['client.query'] = spy(element!.client!, 'query');
           });
 
           beforeEach(function executeQuery() {
-            return element.executeQuery();
+            return element!.executeQuery();
           });
 
           it('calls client.query with element properties', function() {
-            const { errorPolicy, fetchPolicy, query } = element;
-            expect(element.client.query)
+            const { errorPolicy, fetchPolicy, query } = element!;
+            expect(element!.client!.query)
               .to.have.been.calledWith(match({ errorPolicy, fetchPolicy, query }));
           });
 
           it('sets data from the response', function() {
-            expect(element.data.nullableParam.nullable).to.equal('Hello World');
+            expect(element!.data!.nullableParam!.nullable).to.equal('Hello World');
           });
 
           it('sets loading from the response', function() {
-            expect(element.loading).to.be.false;
+            expect(element!.loading).to.be.false;
           });
 
           it('sets error from the response', function() {
-            expect(element.error).to.be.null;
+            expect(element!.error).to.be.null;
           });
 
           it('sets errors from the response', function() {
-            expect(element.errors).to.be.null;
+            expect(element!.errors).to.be.null;
           });
 
           it('sets networkStatus from the response', function() {
-            expect(element.networkStatus).to.equal(7);
+            expect(element!.networkStatus).to.equal(7);
           });
         });
 
         describe('executeQuery({ query })', function() {
           beforeEach(function spyClientQuery() {
-            spies['client.query'] = spy(element.client, 'query');
+            spies!['client.query'] = spy(element!.client!, 'query');
           });
 
           beforeEach(function setVariables() {
-            element.variables = { nullable: 'WHOOPIE' };
+            element!.variables = { nullable: 'WHOOPIE' };
           });
 
           beforeEach(function executeQuery() {
-            return element.executeQuery({ query: NoParamQuery });
+            return element!.executeQuery({ query: NoParamQuery });
           });
 
           it('defaults to element variables', async function() {
-            const { variables } = element;
-            expect(element.client.query)
+            const { variables } = element!;
+            expect(element!.client!.query)
               .to.have.been.calledWithMatch(match({ variables, query: NoParamQuery }));
           });
         });
@@ -1027,20 +1273,20 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('executeQuery({ variables })', function() {
           const variables: NullableParamQueryVariables = { nullable: 'WHOOPIE' };
           beforeEach(function spyClientQuery() {
-            spies['client.query'] = spy(element.client, 'query');
+            spies!['client.query'] = spy(element!.client!, 'query');
           });
 
           beforeEach(function executeQuery() {
-            return element.executeQuery({ variables });
+            return element!.executeQuery({ variables });
           });
 
           it('defaults to element query', async function() {
-            const { query } = element;
-            expect(element.client.query).to.have.been.calledWithMatch({ query, variables });
+            const { query } = element!;
+            expect(element!.client!.query).to.have.been.calledWithMatch({ query, variables });
           });
 
           it('updates data with the response', function() {
-            expect(element.data.nullableParam.nullable).to.equal('WHOOPIE');
+            expect(element!.data!.nullableParam!.nullable).to.equal('WHOOPIE');
           });
         });
       });
@@ -1049,12 +1295,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         type Data = NonNullableParamQueryData;
         type Variables = NonNullableParamQueryVariables;
 
-        let element: QueryElement<Data, Variables>;
+        let element: QueryElement<Data, Variables> | undefined;
 
-        let spies: Record<keyof typeof element, SinonSpy>;
+        let spies: Record<string|keyof QueryElement<Data, Variables>, SinonSpy> | undefined;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<typeof element>({
+          ({ element, spies } = await setupFunction<QueryElement<Data, Variables>>({
             spy: ['refetch', 'watchQuery'],
             properties: {
               query: NonNullableParamQuery,
@@ -1065,21 +1311,21 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove();
           element = undefined;
         });
 
         describe('subscribe()', function() {
           beforeEach(function() {
-            element.subscribe();
+            element?.subscribe();
           });
 
           it('calls watchQuery', async function() {
-            expect(element.watchQuery).to.have.been.called;
+            expect(element!.watchQuery).to.have.been.called;
           });
 
           it('creates an observableQuery', async function() {
-            expect(element.observableQuery).to.be.ok;
+            expect(element!.observableQuery).to.be.ok;
           });
         });
 
@@ -1087,16 +1333,16 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           let error: Error;
           beforeEach(async function() {
             try {
-              const r = await element.executeQuery({ variables: { nonNull: 'error' } });
+              const r = await element!.executeQuery({ variables: { nonNull: 'error' } });
               if (r)
-                expect.fail('did not reject query', r.data.nonNullParam.nonNull);
+                expect.fail('did not reject query', r!.data!.nonNullParam!.nonNull);
             } catch (e) {
               error = e;
             }
           });
 
           it('updates error with the error', function() {
-            expect(element.error).to.equal(error);
+            expect(element!.error).to.equal(error);
           });
         });
       });
@@ -1130,6 +1376,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -1187,6 +1434,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -1245,6 +1493,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -1291,6 +1540,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -1302,6 +1552,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           afterEach(function teardownSubscription() {
+            // @ts-expect-error: reset the fixture
             subscription = undefined;
           });
 
@@ -1325,7 +1576,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         let element: QueryElement<Data, Variables>;
 
-        let spies: Partial<Record<keyof typeof element, SinonSpy>>;
+        let spies: Record<string|keyof typeof element, SinonSpy>;
 
         beforeEach(async function setupElement() {
           spies = {
@@ -1339,11 +1590,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             query = NonNullableParamQuery;
 
+            // @ts-expect-error: test bad input
             variables = { nonNull: null };
           }
 
           const tag = defineCE(Test);
 
+          // @ts-expect-error: test bad input
           element = await fixture<Test>(`<${tag}></${tag}>`);
         });
 
@@ -1351,6 +1604,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         afterEach(function teardownElement() {
           element.remove();
+          // @ts-expect-error: reset the fixture
           element = undefined;
         });
 
@@ -1362,6 +1616,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           afterEach(function teardownSubscription() {
+            // @ts-expect-error: reset the fixture
             subscription = undefined;
           });
 
@@ -1385,7 +1640,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         let element: QueryElement<Data, Variables>;
 
-        let spies: Partial<Record<string | keyof typeof element, SinonSpy>>;
+        let spies: Record<string | keyof typeof element, SinonSpy>;
 
         const fetchPolicy = 'no-cache' as const;
 
@@ -1433,7 +1688,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           let element: QueryElement<Data, Variables>;
 
-          let spies: Partial<Record<string | keyof typeof element, SinonSpy>>;
+          let spies: Record<string | keyof typeof element, SinonSpy>;
 
           beforeEach(async function setupElement() {
             class Test extends (Klass as Constructor<QueryElement<Data, Variables>>) {
@@ -1443,9 +1698,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
               noAutoSubscribe = true;
 
-              onData(x) { x; }
+              onData(x: unknown) { x; }
 
-              onError(x) { x; }
+              onError(x: unknown) { x; }
             }
 
             const tag = defineCE(Test);
@@ -1464,6 +1719,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           afterEach(function teardownElement() {
             element.remove();
+            // @ts-expect-error: reset the fixture
             element = undefined;
           });
 

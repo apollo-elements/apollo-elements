@@ -15,7 +15,7 @@ export declare class ApolloElementInterface<TData = unknown, TVariables = unknow
   declare static documentType: 'query'|'mutation'|'subscription';
 
   /** The Apollo Client instance. */
-  declare client: ApolloClient<NormalizedCacheObject>;
+  declare client: ApolloClient<NormalizedCacheObject> | null;
 
   /**
    * GraphQL operation document i.e. query, subscription, or mutation.
@@ -23,22 +23,22 @@ export declare class ApolloElementInterface<TData = unknown, TVariables = unknow
    * If unset, the element can derive the document from the first
    * light-DOM `<script type="application/graphql">` child.
    */
-  declare document: DocumentNode;
+  declare document: DocumentNode | null;
 
   /** Context to be passed to link execution chain. */
   declare context?: Record<string, unknown>;
 
   /** Latest data */
-  declare data: TData;
+  declare data: TData | null;
 
   /** Operation variables */
-  declare variables: TVariables;
+  declare variables: TVariables | null;
 
   /** Latest error */
-  declare error: Error|ApolloError;
+  declare error: Error | ApolloError | null;
 
   /** Latest errors */
-  declare errors: readonly GraphQLError[];
+  declare errors: readonly GraphQLError[] | null;
 
   /** Whether a request is in flight. */
   declare loading: boolean;

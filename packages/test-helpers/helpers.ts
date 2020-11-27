@@ -1,11 +1,13 @@
 import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
+export type Entries<T> = [keyof T, T[keyof T]][]
+
 // 🐤 quack quack 🦆
 export function isSubscription(x: unknown): x is ZenObservable.Subscription {
   return (
-    x &&
+    !!x &&
     typeof x === 'object' &&
-    x.constructor.toString().startsWith('function Subscription')
+    x!.constructor.toString().startsWith('function Subscription')
   );
 }
 
@@ -45,26 +47,28 @@ export function setupStubs<T>(keys: (keyof T)[] = [], object: T): Record<string|
       [method, stub(object, method as keyof T)])) as unknown as Record<string|keyof T, SinonStub>;
 }
 
-export function restoreSpies(getSpies: () => Record<string, SinonSpy>): () => void {
+export function restoreSpies(getSpies: () => (Record<string, SinonSpy> | undefined)): () => void {
   return function() {
-    Object.keys(getSpies()).forEach(key => {
-      getSpies()[key].restore();
-      delete getSpies()[key];
+    const spies = getSpies();
+    Object.keys(spies ?? {}).forEach(key => {
+      spies?.[key].restore();
+      delete spies?.[key];
     });
   };
 }
 
-export function restoreStubs(getStubs: () => Record<string, SinonStub>): () => void {
+export function restoreStubs(getStubs: () => (Record<string, SinonStub> | undefined)): () => void {
   return function() {
-    Object.keys(getStubs()).forEach(key => {
-      getStubs()[key].restore();
-      delete getStubs()[key];
+    const stubs = getStubs();
+    Object.keys(stubs ?? {}).forEach(key => {
+      stubs?.[key].restore();
+      delete stubs?.[key];
     });
   };
 }
 
-export function waitForRender<T extends HTMLElement & { hasRendered:() => Promise<T> }>(getElement: () => T) {
+export function waitForRender<T extends HTMLElement & { hasRendered:() => Promise<T> }>(getElement: () => T | undefined) {
   return async function waitForRender(): Promise<void> {
-    await getElement().hasRendered();
+    await getElement()?.hasRendered();
   };
 }

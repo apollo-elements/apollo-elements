@@ -12,6 +12,8 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     const name = 'is-an-instance-of-f-a-s-t-element';
     @customElement({ name })
     class Test extends ApolloElement<Data> {
+      declare shadowRoot: ShadowRoot;
+
       dataChanged(oldVal: Data, newVal: Data): void {
         oldVal; newVal;
       }
@@ -26,7 +28,9 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     const name = 'renders-when-client-is-set';
     // @ts-expect-error: just testing assignment and rendering
     const template = html<Test>`${x => x.client?.test ?? 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloElement { }
+    @customElement({ name, template }) class Test extends ApolloElement {
+      declare shadowRoot: ShadowRoot;
+    }
     const tag = unsafeStatic(name);
     const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
     // @ts-expect-error: just testing assignment and rendering
@@ -72,13 +76,13 @@ class TypeCheck extends ApolloElement<TypeCheckData> {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type

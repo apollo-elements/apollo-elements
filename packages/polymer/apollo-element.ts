@@ -20,11 +20,11 @@ export class PolymerApolloElement<TData = unknown, TVariables = unknown>
 
   declare context?: Record<string, unknown>;
 
-  @notify data: TData = null;
+  @notify data: TData|null = null;
 
-  @notify error: Error|ApolloError = null;
+  @notify error: Error|ApolloError|null = null;
 
-  @notify errors: readonly GraphQLError[] = null;
+  @notify errors: readonly GraphQLError[]|null = null;
 
   @notify loading = false;
 

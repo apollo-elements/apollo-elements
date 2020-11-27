@@ -8,7 +8,7 @@ import { addMocksToSchema } from '@graphql-tools/mock';
 
 import TestSchema from './graphql/test.schema.graphql';
 
-import { HelloWorld, User, NonNull, NoParam, Nullable } from './schema';
+import { HelloWorld, User, NonNull, NoParam, Nullable, NonNullableParamQueryVariables, NullableParamQueryVariables, HelloQueryVariables, UpdateUserMutationVariables } from './schema';
 
 declare global {
   interface Window {
@@ -17,17 +17,17 @@ declare global {
   }
 }
 
-const typeDefs = TestSchema.loc.source.body;
+const typeDefs = TestSchema.loc!.source.body;
 
 const mocks = {
-  NonNull(_, { nonNull }): NonNull {
+  NonNull(_: any, { nonNull }: NonNullableParamQueryVariables): NonNull {
     if (nonNull === 'error')
       throw new Error(nonNull);
     else
       return { nonNull };
   },
 
-  Nullable(_, { nullable }): Nullable {
+  Nullable(_: any, { nullable }: NullableParamQueryVariables): Nullable {
     if (nullable === 'error')
       throw new Error(nullable);
     else
@@ -38,14 +38,14 @@ const mocks = {
     return { noParam: 'noParam' };
   },
 
-  HelloWorld(_, { name, greeting }): HelloWorld {
+  HelloWorld(_: any, { name, greeting }: HelloQueryVariables): HelloWorld {
     return {
       name: name ?? 'Chaver',
       greeting: greeting ?? 'Shalom',
     };
   },
 
-  User(_, { username, haircolor }): User {
+  User(_: any, { username, haircolor }: UpdateUserMutationVariables): User {
     return {
       username,
       haircolor,
@@ -56,6 +56,7 @@ const mocks = {
 
 const unmocked = makeExecutableSchema({ typeDefs });
 
+// @ts-expect-error: it's fine
 const schema = addMocksToSchema({ schema: unmocked, mocks });
 
 export function setupClient(): void {

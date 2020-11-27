@@ -2,7 +2,7 @@ import { html } from 'haunted';
 import { useQuery } from './useQuery';
 import { component } from 'haunted';
 
-import { restoreSpies, SetupOptions } from '@apollo-elements/test-helpers';
+import { Entries, restoreSpies, SetupOptions } from '@apollo-elements/test-helpers';
 import HelloQuery from '@apollo-elements/test-helpers/graphql/Hello.query.graphql';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
@@ -17,6 +17,7 @@ import type {
   HelloQueryData,
   HelloQueryVariables,
 } from '@apollo-elements/test-helpers/schema';
+import { DocumentNode } from 'graphql';
 
 const ccOrig = ApolloQueryElement.prototype.connectedCallback;
 
@@ -26,13 +27,13 @@ describe('[haunted] useQuery', function() {
   });
 
   describeQuery({
-    async setupFunction<T extends QueryElement>(opts: SetupOptions<T>) {
+    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>) {
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
-      let spies: Record<string|keyof T, SinonSpy>;
-      let stubs: Record<string|keyof T, SinonStub>;
+      let spies!: Record<string|keyof T, SinonSpy>;
+      let stubs!: Record<string|keyof T, SinonStub>;
 
-      ApolloQueryElement.prototype.connectedCallback = function() {
+      ApolloQueryElement.prototype.connectedCallback = function(this: T) {
         spies ??= setupSpies(opts?.spy, this);
         stubs ??= setupStubs(opts?.stub, this);
 
@@ -46,8 +47,8 @@ describe('[haunted] useQuery', function() {
         ccOrig.call(this);
       };
 
-      function Query(this: QueryElement) {
-        const { loading, data, error } = useQuery(null);
+      function Query<H extends QueryElement>(this: H) {
+        const { loading, data, error } = useQuery(null as unknown as DocumentNode);
 
         return html`
           <output id="data">${this.stringify(data)}</output>
@@ -66,7 +67,7 @@ describe('[haunted] useQuery', function() {
 
       const element = await fixture<T>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
 
-      for (const [key, val] of Object.entries(properties ?? {}))
+      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
         element[key] = val;
 
       return { element, spies, stubs };
@@ -75,7 +76,7 @@ describe('[haunted] useQuery', function() {
   });
 
   describe('with noAutoSubscribe set', function() {
-    let element: QueryElement;
+    let element: QueryElement & { shadowRoot: ShadowRoot };
 
     beforeEach(async function define() {
       function Component() {
@@ -97,7 +98,7 @@ describe('[haunted] useQuery', function() {
   });
 
   describe('with shouldSubscribe set', function() {
-    let element: QueryElement;
+    let element: QueryElement & { shadowRoot: ShadowRoot };
 
     function shouldSubscribe() {
       return false;
@@ -129,7 +130,9 @@ describe('[haunted] useQuery', function() {
       afterEach(teardownClient);
 
       describe('with startPolling', function() {
-        let element: ApolloQueryElement<HelloQueryData, HelloQueryVariables>;
+        let element: ApolloQueryElement<HelloQueryData, HelloQueryVariables> & {
+          shadowRoot: ShadowRoot
+        };
 
         let spies: Record<string | keyof typeof element, SinonSpy>;
 
@@ -149,12 +152,12 @@ describe('[haunted] useQuery', function() {
 
         beforeEach(function() {
           spies = {
-            'observableQuery.refetch': spy(element.observableQuery, 'refetch'),
+            'observableQuery.refetch': spy(element.observableQuery!, 'refetch'),
           };
         });
 
         beforeEach(function startPolling() {
-          element.shadowRoot.getElementById('start').click();
+          element.shadowRoot.getElementById('start')!.click();
         });
 
         beforeEach(() => aTimeout(70));
@@ -162,18 +165,18 @@ describe('[haunted] useQuery', function() {
         afterEach(restoreSpies(() => spies));
 
         it('refetches', function() {
-          expect(element.observableQuery.refetch).to.have.been.calledThrice;
+          expect(element.observableQuery!.refetch).to.have.been.calledThrice;
         });
 
         describe('then stopPolling', function() {
           beforeEach(function stopPolling() {
-            element.shadowRoot.getElementById('stop').click();
+            element.shadowRoot.getElementById('stop')!.click();
           });
 
           beforeEach(() => aTimeout(100));
 
           it('stops calling refetch', function() {
-            expect(element.observableQuery.refetch).to.have.been.calledThrice;
+            expect(element.observableQuery!.refetch).to.have.been.calledThrice;
           });
         });
       });
@@ -186,8 +189,8 @@ describe('[haunted] useQuery', function() {
             const { data, error, loading } =
               useQuery<HelloQueryData, HelloQueryVariables>(HelloQuery);
 
-            const greeting = data?.helloWorld.greeting ?? 'Hello';
-            const name = data?.helloWorld.name ?? 'Friend';
+            const greeting = data?.helloWorld!.greeting ?? 'Hello';
+            const name = data?.helloWorld!.name ?? 'Friend';
 
             return html`
               <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
@@ -205,10 +208,10 @@ describe('[haunted] useQuery', function() {
         });
 
         it('renders data', function() {
-          expect(element.shadowRoot.querySelector('what-spin-such-loader').hasAttribute('active'))
+          expect(element.shadowRoot!.querySelector('what-spin-such-loader')!.hasAttribute('active'))
             .to.be.false;
-          expect(element.shadowRoot.getElementById('error').hidden).to.be.true;
-          expect(element.shadowRoot.textContent).to.include('Shalom, Chaver!');
+          expect(element.shadowRoot!.getElementById('error')!.hidden).to.be.true;
+          expect(element.shadowRoot!.textContent).to.include('Shalom, Chaver!');
         });
       });
 
@@ -224,8 +227,8 @@ describe('[haunted] useQuery', function() {
             const { data, error, loading } =
               useQuery<HelloQueryData, HelloQueryVariables>(HelloQuery, { variables });
 
-            const greeting = data?.helloWorld.greeting ?? 'Hello';
-            const name = data?.helloWorld.name ?? 'Friend';
+            const greeting = data?.helloWorld!.greeting ?? 'Hello';
+            const name = data?.helloWorld!.name ?? 'Friend';
 
             return html`
               <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
@@ -249,10 +252,10 @@ describe('[haunted] useQuery', function() {
         });
 
         it('renders data', function() {
-          expect(element.shadowRoot.querySelector('what-spin-such-loader').hasAttribute('active'))
+          expect(element.shadowRoot!.querySelector('what-spin-such-loader')!.hasAttribute('active'))
             .to.be.false;
-          expect(element.shadowRoot.getElementById('error').hidden).to.be.true;
-          expect(element.shadowRoot.textContent).to.include('How\'s it going, Dude!');
+          expect(element.shadowRoot!.getElementById('error')!.hidden).to.be.true;
+          expect(element.shadowRoot!.textContent).to.include('How\'s it going, Dude!');
         });
       });
     });

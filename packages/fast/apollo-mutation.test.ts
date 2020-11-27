@@ -7,6 +7,7 @@ import type {
 } from '@apollo/client/core';
 
 import {
+  Entries,
   NonNullableParamMutationData,
   NonNullableParamMutationVariables,
   SetupOptions,
@@ -48,7 +49,9 @@ let counter = -1;
 class TestableApolloMutation<D = unknown, V = unknown>
   extends ApolloMutation<D, V>
   implements MutationElement<D, V> {
-  async hasRendered() {
+  declare shadowRoot: ShadowRoot;
+
+  async hasRendered(): Promise<TestableApolloMutation<D, V>> {
     await nextFrame();
     await DOM.nextUpdate();
     await nextFrame();
@@ -87,7 +90,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       const spies = setupSpies(options?.spy, Test.prototype as unknown as T);
       const stubs = setupStubs(options?.stub, Test.prototype as unknown as T);
 
-      for (const [key, val] of Object.entries(properties ?? {}))
+      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
         key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
 
       await DOM.nextUpdate();
@@ -190,13 +193,13 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -206,25 +209,25 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
 
     // ApolloMutationInterface
     assertType<DocumentNode>                        (this.mutation);
-    assertType<TypeCheckVars>                       (this.variables);
+    assertType<TypeCheckVars>                       (this.variables!);
     assertType<boolean>                             (this.called);
     assertType<boolean>                             (this.ignoreResults);
-    assertType<boolean>                             (this.awaitRefetchQueries);
+    assertType<boolean>                             (this.awaitRefetchQueries!);
     assertType<number>                              (this.mostRecentMutationId);
-    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
-    assertType<string>                              (this.fetchPolicy);
+    assertType<string>                              (this.fetchPolicy!);
     assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
       assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription>(this.refetchQueries);
+      assertType<RefetchQueryDescription>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
-      assertType<TypeCheckData>(this.optimisticResponse);
+      assertType<TypeCheckData>(this.optimisticResponse!);
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 

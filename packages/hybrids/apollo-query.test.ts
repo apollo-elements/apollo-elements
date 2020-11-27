@@ -1,5 +1,5 @@
 import type { SinonSpy, SinonStub } from 'sinon';
-import type { SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import type { Entries, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
 
 import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
 
@@ -40,7 +40,7 @@ describe('[hybrids] ApolloQuery', function() {
       const tag = getTagName();
 
       const hasRendered =
-        host => async () => { await aTimeout(50); return host; };
+        (host: T) => async () => { await aTimeout(50); return host; };
 
       define<T>(tag, {
         ...ApolloQuery,
@@ -59,17 +59,18 @@ describe('[hybrids] ApolloQuery', function() {
         (template.content.cloneNode(true) as DocumentFragment)
           .children as HTMLCollectionOf<T>;
 
-      let spies: Record<string|keyof T, SinonSpy>;
-      let stubs: Record<string|keyof T, SinonStub>;
+      let spies!: Record<string|keyof T, SinonSpy>;
+      let stubs!: Record<string|keyof T, SinonStub>;
 
-      element[__testing_escape_hatch__] = function(el) {
+      // @ts-expect-error: just for tests
+      element[__testing_escape_hatch__] = function(el: T) {
         spies = setupSpies(opts?.spy, el);
         stubs = setupStubs(opts?.stub, el);
       };
 
       document.body.append(element);
 
-      for (const [key, val] of Object.entries(properties ?? {}))
+      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
         element[key] = val;
 
       await nextFrame();

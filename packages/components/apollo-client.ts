@@ -23,7 +23,7 @@ function isApolloElement(element: Node): element is ApolloElementElement {
   );
 }
 
-function hasShadowRoot(node: Node): node is HTMLElement {
+function hasShadowRoot(node: Node): node is HTMLElement & { shadowRoot: ShadowRoot } {
   return node instanceof HTMLElement && !!node.shadowRoot;
 }
 
@@ -32,15 +32,16 @@ function isApolloQuery(e: EventTarget): e is ApolloQueryElement {
   return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
 }
 
-function claimApolloElement(event: ApolloElementEvent): ApolloElementElement {
+function claimApolloElement(event: ApolloElementEvent): ApolloElementElement | void {
   event.stopPropagation();
-  return isApolloElement(event.detail) ? event.detail : null;
+  if (isApolloElement(event.detail))
+    return event.detail;
 }
 
 function isSubscribable(element: ApolloElementElement): element is ApolloQueryElement {
   return (
     isApolloQuery(element) &&
-    element.client &&
+    !!element.client &&
     !element.noAutoSubscribe &&
     element.shouldSubscribe()
   );
@@ -93,12 +94,12 @@ export class ApolloClientElement extends HTMLElement {
   static readonly observedAttributes = ['uri'];
 
   /** Private reference to the `ApolloClient` instance */
-  #client: ApolloClient<NormalizedCacheObject>;
+  #client: ApolloClient<NormalizedCacheObject> | null = null;
 
   /** Private cache of child `ApolloElement`s */
   #instances: Set<ApolloElementElement> = new Set();
 
-  #typePolicies: TypePolicies;
+  #typePolicies: TypePolicies | undefined = undefined;
 
   get elements(): readonly ApolloElementElement[] {
     return [...this.#instances];
@@ -107,13 +108,14 @@ export class ApolloClientElement extends HTMLElement {
   /**
    * TypePolicies for the client
    */
-  get typePolicies(): TypePolicies {
-    return this.#typePolicies;
+  get typePolicies(): TypePolicies | undefined {
+    return this.#typePolicies ?? undefined;
   }
 
-  set typePolicies(typePolicies: TypePolicies) {
+  set typePolicies(typePolicies: TypePolicies | undefined) {
     this.#typePolicies = typePolicies;
-    this.client?.cache?.policies?.addTypePolicies(typePolicies);
+    if (typePolicies)
+      this.client?.cache?.policies?.addTypePolicies(typePolicies);
   }
 
   /**
@@ -121,11 +123,11 @@ export class ApolloClientElement extends HTMLElement {
    * create a new ApolloClient instance with some default parameters
    * @attr uri
    */
-  get uri(): string {
-    return this.getAttribute('uri');
+  get uri(): string | undefined {
+    return this.getAttribute('uri') ?? undefined;
   }
 
-  set uri(uri: string) {
+  set uri(uri: string | undefined) {
     if (typeof uri !== 'string') return;
     this.setAttribute('uri', uri);
     this.createApolloClient();
@@ -142,11 +144,11 @@ export class ApolloClientElement extends HTMLElement {
   /**
    * Reference to the `ApolloClient` instance.
    */
-  get client(): ApolloClient<NormalizedCacheObject> {
+  get client(): ApolloClient<NormalizedCacheObject> | null {
     return this.#client;
   }
 
-  set client(value: ApolloClient<NormalizedCacheObject>) {
+  set client(value: ApolloClient<NormalizedCacheObject> | null) {
     this.#client = value;
     this.dispatchEvent(new CustomEvent('client-changed', { detail: { value, client: value } }));
     for (const instance of this.#instances)
@@ -155,8 +157,7 @@ export class ApolloClientElement extends HTMLElement {
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.append(template.content.cloneNode(true));
+    this.attachShadow({ mode: 'open' }).append(template.content.cloneNode(true));
     this.addEventListener('apollo-element-connected', this.onElementConnected.bind(this));
     this.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
     window.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
@@ -174,7 +175,8 @@ export class ApolloClientElement extends HTMLElement {
   }
 
   async createApolloClient(): Promise<ApolloClient<NormalizedCacheObject>> {
-    const { uri, typePolicies, validateVariables } = this;
+    const { typePolicies, validateVariables } = this;
+    const { uri } = this;
     const { createApolloClient } = await import('@apollo-elements/lib/create-apollo-client');
     this.client = createApolloClient({ uri, typePolicies, validateVariables });
     return this.client;
@@ -212,7 +214,7 @@ export class ApolloClientElement extends HTMLElement {
     const target = event.detail;
     if (!this.#instances.has(target)) return;
     this.#instances.delete(target);
-    delete target.client;
+    target.client = null;
   }
 
   /**

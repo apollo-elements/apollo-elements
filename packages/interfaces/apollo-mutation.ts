@@ -16,15 +16,15 @@ export declare class ApolloMutationInterface<TData, TVariables>
   /**
    * Latest mutation data.
    */
-  declare data: TData;
+  declare data: TData | null;
 
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
    */
-  declare variables: TVariables;
+  declare variables: TVariables | null;
 
   /** The mutation. */
-  declare mutation: DocumentNode;
+  declare mutation: DocumentNode | null;
 
   /**
    * An object that represents the result of this mutation that
@@ -45,13 +45,13 @@ export declare class ApolloMutationInterface<TData, TVariables>
   /**
    * If true, the returned data property will not update with the mutation result.
    */
-  declare ignoreResults: boolean;
+  declare ignoreResults: boolean | undefined;
 
   /**
    * The ID number of the most recent mutation since the element was instantiated.
    * @private
    */
-  declare mostRecentMutationId: number;
+  declare mostRecentMutationId: number | undefined;
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.
@@ -66,8 +66,8 @@ export declare class ApolloMutationInterface<TData, TVariables>
   /**
    * Specifies the FetchPolicy to be used for this mutation.
    */
-  declare refetchQueries?:
-    RefetchQueryDescription | ((result: FetchResult<TData>) => RefetchQueryDescription);
+  declare refetchQueries:
+    null | MutationOptions<TData, TVariables>['refetchQueries'];
 
   /**
    * Queries refetched as part of refetchQueries are handled asynchronously,

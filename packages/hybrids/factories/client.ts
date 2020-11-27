@@ -10,7 +10,7 @@ interface Opts {
 }
 
 export function client<TData, TVariables>(
-  client?: ApolloClient<NormalizedCacheObject>,
+  client?: ApolloClient<NormalizedCacheObject> | null,
   opts?: Opts
 ): Descriptor<ApolloElementElement<TData, TVariables>> {
   return {

@@ -1,19 +1,18 @@
-import type { ApolloError } from '@apollo/client/core';
+import type { ApolloError, OperationVariables } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 import type { ApolloMutationElement } from './apollo-mutation';
 
-export interface MutationEventDetail<Data, Variables> {
+export interface MutationEventDetail<Data extends unknown, Variables extends OperationVariables> {
+  data?: Data | null;
+  error?: Error | ApolloError | null;
   element: ApolloMutationElement<Data, Variables>;
-  mutation: DocumentNode;
-  variables: Variables;
+  mutation: DocumentNode | null;
+  variables: Variables | null;
 }
 
-export class MutationEvent<
-  Detail extends MutationEventDetail<Data, Variables>,
-  Data = unknown,
-  Variables = unknown,
-> extends CustomEvent<Detail> {
-  constructor(type: string, init: CustomEventInit<Detail>) {
+export class MutationEvent<Data, Variables>
+  extends CustomEvent<MutationEventDetail<Data, Variables>> {
+  constructor(type: string, init: CustomEventInit<MutationEventDetail<Data, Variables>>) {
     super(type, {
       ...init,
       bubbles: true,
@@ -29,10 +28,8 @@ export class MutationEvent<
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillMutateEvent<
-  Data = unknown,
-  Variables = unknown
-> extends MutationEvent<MutationEventDetail<Data, Variables>> {
+export class WillMutateEvent<Data = unknown, Variables = OperationVariables>
+  extends MutationEvent<Data, Variables> {
   static type: 'will-mutate' = 'will-mutate';
 
   declare detail: MutationEventDetail<Data, Variables>;
@@ -63,8 +60,8 @@ extends MutationEventDetail<Data, Variables> {
  */
 export class MutationCompletedEvent<
   Data = unknown,
-  Variables = unknown
-> extends MutationEvent<MutationCompletedEventDetail<Data, Variables>> {
+  Variables = OperationVariables
+> extends MutationEvent<Data, Variables> {
   static type: 'mutation-completed' = 'mutation-completed';
 
   declare detail: MutationCompletedEventDetail<Data, Variables>;
@@ -95,8 +92,8 @@ extends MutationEventDetail<Data, Variables> {
  */
 export class WillNavigateEvent<
   Data = unknown,
-  Variables = unknown,
-> extends MutationEvent<MutationCompletedEventDetail<Data, Variables>> {
+  Variables = OperationVariables,
+> extends MutationEvent<Data, Variables> {
   static type: 'will-navigate' = 'will-navigate'
 
   declare detail: MutationCompletedEventDetail<Data, Variables>;
@@ -123,7 +120,7 @@ export class WillNavigateEvent<
 export class MutationErrorEvent<
   Data = unknown,
   Variables = unknown
-> extends MutationEvent<MutationErrorEventDetail<Data, Variables>> {
+> extends MutationEvent<Data, Variables> {
   static type: 'mutation-error' = 'mutation-error';
 
   declare detail: MutationErrorEventDetail<Data, Variables>;

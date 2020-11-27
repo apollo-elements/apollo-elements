@@ -7,7 +7,6 @@ import type {
 
 import type {
   MutationHookOptions as ReactMutationHookOptions,
-  MutationTuple as ReactMutationTuple,
 } from '@apollo/client/react/types/types';
 
 import type { State } from 'haunted';
@@ -20,13 +19,17 @@ import { ApolloHook } from './ApolloHook';
 
 type MutationHookOptions<TData, TVariables> =
   Omit<ReactMutationHookOptions<TData, TVariables>, 'client'> & {
-  client: ApolloClient<NormalizedCacheObject>,
+  client?: ApolloClient<NormalizedCacheObject>,
 }
 
 type MutationTuple<TData, TVariables> = [
-  ReactMutationTuple<TData, TVariables>[0],
-  Omit<ReactMutationTuple<TData, TVariables>[1], 'error'> & {
-    error: Error | ApolloError,
+  ApolloMutationElement<TData, TVariables>['mutate'],
+  {
+    called: boolean;
+    client: ApolloMutationElement<TData, TVariables>['client'] | null;
+    data: TData | null;
+    error: Error | ApolloError | null,
+    loading: boolean;
   }
 ]
 
@@ -47,7 +50,7 @@ class UseMutationHook<TData, TVariables> extends ApolloHook<
     called: false,
   };
 
-  pollingInterval: number;
+  pollingInterval?: number;
 
   constructor(
     id: number,
@@ -60,11 +63,10 @@ class UseMutationHook<TData, TVariables> extends ApolloHook<
     this.update();
   }
 
-  protected optionsToProperties() {
+  protected optionsToProperties(): Partial<ApolloMutationElement<TData, TVariables>> {
     const {
       onCompleted, onError, update,
       ignoreResults = false,
-      optimisticResponse = null,
       variables = null,
       refetchQueries = null,
       ...options
@@ -73,14 +75,13 @@ class UseMutationHook<TData, TVariables> extends ApolloHook<
     return {
       mutation,
       ignoreResults,
-      optimisticResponse,
       variables,
       refetchQueries,
       ...options,
     };
   }
 
-  protected optionsToOptionalMethods() {
+  protected optionsToOptionalMethods(): Partial<ApolloMutationElement<TData, TVariables>> {
     const { options: { onCompleted, onError, update: updater } } = this;
     return { onCompleted, onError, updater };
   }

@@ -4,6 +4,7 @@ import type {
   ErrorPolicy,
   FetchPolicy,
   WatchQueryOptions,
+  ApolloError,
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
@@ -31,11 +32,13 @@ class XL extends HTMLElement {}
 class Test<D = unknown, V = unknown>
   extends ApolloQueryMixin(XL)<D, V>
   implements QueryElement<D, V> {
-  #data: D = null;
+  declare shadowRoot: ShadowRoot;
 
-  #error: Error = null;
+  #data: D|null = null;
 
-  #errors: readonly GraphQLError[] = null;
+  #error: Error|ApolloError|null = null;
+
+  #errors: readonly GraphQLError[] | null = null;
 
   #loading = false;
 
@@ -102,11 +105,11 @@ class Test<D = unknown, V = unknown>
   }
 
   render() {
-    this.$('data').textContent = this.stringify(this.data);
-    this.$('error').textContent = this.stringify(this.error);
-    this.$('errors').textContent = this.stringify(this.errors);
-    this.$('loading').textContent = this.stringify(this.loading);
-    this.$('networkStatus').textContent = this.stringify(this.networkStatus);
+    this.$('data')!.textContent = this.stringify(this.data);
+    this.$('error')!.textContent = this.stringify(this.error);
+    this.$('errors')!.textContent = this.stringify(this.errors);
+    this.$('loading')!.textContent = this.stringify(this.loading);
+    this.$('networkStatus')!.textContent = this.stringify(this.networkStatus);
   }
 
   stringify(x: unknown) {
@@ -137,10 +140,10 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document);
+    assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error);
     assertType<readonly GraphQLError[]>             (this.errors);
     assertType<TypeCheckData>                       (this.data);
@@ -155,27 +158,27 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloQueryInterface
-    assertType<DocumentNode>                        (this.query);
+    assertType<DocumentNode>                        (this.query!);
     assertType<ErrorPolicy>                         (this.errorPolicy);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
-    assertType<FetchPolicy>                         (this.fetchPolicy);
+    assertType<FetchPolicy>                         (this.fetchPolicy!);
     assertType<string>                              (this.fetchPolicy);
-    assertType<FetchPolicy>                         (this.nextFetchPolicy);
+    assertType<FetchPolicy>                         (this.nextFetchPolicy!);
     assertType<string>                              (this.nextFetchPolicy);
     assertType<NetworkStatus>                       (this.networkStatus);
     assertType<number>                              (this.networkStatus);
     // @ts-expect-error: NetworkStatus is not a string
     assertType<string>                              (this.networkStatus);
     assertType<boolean>                             (this.notifyOnNetworkStatusChange);
-    assertType<number>                              (this.pollInterval);
-    assertType<boolean>                             (this.partial);
-    assertType<boolean>                             (this.partialRefetch);
-    assertType<boolean>                             (this.returnPartialData);
+    assertType<number>                              (this.pollInterval!);
+    assertType<boolean>                             (this.partial!);
+    assertType<boolean>                             (this.partialRefetch!);
+    assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<ObservableQuery>                     (this.observableQuery);
-    assertType<Partial<WatchQueryOptions>>          (this.options);
+    assertType<ObservableQuery<TypeCheckData, TypeCheckVars>>                     (this.observableQuery!);
+    assertType <Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
@@ -201,9 +204,9 @@ const runChecks = false;
 if (runChecks) {
   const instance = new MixedClass<{ foo: number }, unknown>();
   const inheritor = new Inheritor<{ foo: string }, unknown>();
-  assertType<number>(instance.data.foo);
+  assertType<number>(instance.data!.foo);
   assertType<boolean>(instance.mixinProp);
-  assertType<string>(inheritor.data.foo);
+  assertType<string>(inheritor.data!.foo);
   assertType<boolean>(inheritor.mixinProp);
   assertType<number>(inheritor.childProp);
 }

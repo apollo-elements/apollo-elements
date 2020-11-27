@@ -6,7 +6,7 @@ import { client } from './factories/client';
 
 export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   client: client(),
-  mutation: mutation(null),
+  mutation: mutation(),
 };
 
 export type { ApolloMutationElement };
