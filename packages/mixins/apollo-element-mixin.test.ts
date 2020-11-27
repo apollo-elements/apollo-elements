@@ -96,6 +96,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     expect(element.client, 'client').to.equal(client);
     expect(element.context, 'context').to.be.undefined;
     expect(element.document, 'document').to.be.null;
+    expect(element.variables, 'variables').to.be.null;
     expect(element.data, 'data').to.be.null;
     expect(element.error, 'error').to.be.null;
     expect(element.errors, 'errors').to.be.null;
@@ -207,6 +208,23 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     });
   });
 
+  describe('with invalid query script child', function() {
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test { }));
+
+      element = await fixture<Test>(fhtml`
+        <${tag}>
+          <script type="application/graphql">haha</script>
+        </${tag}>
+      `);
+    });
+
+    it('has null document', function() {
+      expect(element.document).to.be.null;
+    });
+  });
 
   describe('without query script child', function() {
     let element: Test;
@@ -246,10 +264,71 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
       });
     });
   });
+
+  describe('with no variables script child', function() {
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`
+        <${tag}></${tag}>
+      `);
+    });
+
+    it('does not set variables', function() {
+      expect(element.variables).to.be.null;
+    });
+  });
+
+  describe('with empty variables script child', function() {
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`
+        <${tag}><script type="application/json"></script></${tag}>
+      `);
+    });
+
+    it('does not set variables', function() {
+      expect(element.variables).to.be.null;
+    });
+  });
+
+  describe('with invalid variables script child', function() {
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`
+        <${tag}><script type="application/json">haha</script></${tag}>
+      `);
+    });
+
+    it('does not set variables', function() {
+      expect(element.variables).to.be.null;
+    });
+  });
+
+  describe('with parsable variables script child', function() {
+    let element: Test;
+
+    beforeEach(async function() {
+      const tag = unsafeStatic(defineCE(class extends Test {}));
+      element = await fixture<Test>(fhtml`
+        <${tag}><script type="application/json">{"foo":"bar"}</script></${tag}>
+      `);
+    });
+
+    it('sets variables', function() {
+      expect(element.variables).to.deep.equal({ foo: 'bar' });
+    });
+  });
 });
 
 type TypeCheckData = { a: 'a', b: number };
-class TypeCheck extends Test<TypeCheckData> {
+type TypeCheckVariables = { c: 'c', d: number };
+class TypeCheck extends Test<TypeCheckData, TypeCheckVariables> {
   typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
@@ -262,7 +341,8 @@ class TypeCheck extends Test<TypeCheckData> {
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
-    assertType<unknown>                             (this.data);
+    assertType<TypeCheckData>                       (this.data!);
+    assertType<TypeCheckVariables>                  (this.variables!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data!.a);
     assertType<number>                              (this.data!.b);

@@ -220,7 +220,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * Variable input nodes
    */
   protected get inputs(): InputLikeElement[] {
-    return [...this.variableNodes];
+    return [...this.variableNodes ?? []];
   }
 
   /**
@@ -312,7 +312,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
       return;
     }
 
-    await this.mutate();
+    await this.mutate().catch(() => void null);
   }
 
   /** @private */
