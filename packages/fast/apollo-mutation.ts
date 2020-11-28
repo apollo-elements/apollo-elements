@@ -1,5 +1,4 @@
-import type { MutationOptions, MutationUpdaterFn, FetchResult } from '@apollo/client/core';
-import type { DocumentNode } from 'graphql';
+import type { DocumentNode, MutationOptions } from '@apollo/client/core';
 
 import { attr, ValueConverter } from '@microsoft/fast-element';
 

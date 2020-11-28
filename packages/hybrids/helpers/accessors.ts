@@ -1,5 +1,7 @@
 import type { DocumentNode } from '@apollo/client/core';
 import type { ApolloElementElement } from '../apollo-element';
+import type { Entries } from '@apollo-elements/interfaces';
+
 import { getDescriptor } from '@apollo-elements/lib/prototypes';
 import { hookPropertyIntoHybridsCache } from './cache';
 
@@ -7,7 +9,7 @@ export const __testing_escape_hatch__ = Symbol('__testing_escape_hatch__');
 
 const VALUES = new WeakMap<ApolloElementElement, DocumentNode|null|undefined>();
 
-interface Options<T> {
+interface Options<T extends ApolloElementElement> {
   host: T,
   document?: DocumentNode,
   // can't be helped as hybrids' types are set
@@ -19,7 +21,7 @@ interface Options<T> {
 export function initDocument<T extends ApolloElementElement>(opts: Options<T>): () => void {
   const { host, document, invalidate, defaults = {} } = opts;
 
-  for (const [key, init] of Object.entries(defaults))
+  for (const [key, init] of Object.entries(defaults) as Entries<T>)
     hookPropertyIntoHybridsCache({ host, key, init }); /* c8 ignore next */ // this is certaily being called
 
   // @ts-expect-error: it's just for tests

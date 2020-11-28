@@ -287,7 +287,8 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
 
     const url =
         typeof this.resolveURL !== 'function' ? this.href
-      : await this.resolveURL(this.data!);
+        // If we get here without `data`, it's due to user error
+      : await this.resolveURL(this.data!); // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
     history.replaceState(data, WillNavigateEvent.type, url);
   }

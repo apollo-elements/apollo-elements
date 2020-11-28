@@ -7,7 +7,6 @@ import type {
   ErrorPolicy,
   FetchPolicy,
 } from '@apollo/client/core';
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 

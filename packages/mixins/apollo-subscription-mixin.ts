@@ -100,7 +100,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       this.loading = true;
 
       this.observableSubscription =
-        this.observable!.subscribe({
+        this.observable?.subscribe({
           next: this.nextData.bind(this),
           error: this.nextError.bind(this),
           complete: this.onComplete.bind(this),
@@ -161,7 +161,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      */
     nextData(result: FetchResult<TData>) {
       const data = result.data ?? null;
-      const client = this.client!;
+      // If we got to this line without a client, it's because of user error
+      const client = this.client!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
       const loading = false;
       const error = null;
       const subscriptionData = { data, loading, error };

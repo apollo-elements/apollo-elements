@@ -5,7 +5,7 @@
 export function getPrototypicalPropertyDescriptor<
   T extends unknown,
   Key extends keyof T,
->(o: T, key: Key extends keyof T ? keyof T : never): PropertyDescriptor {
+>(o: T, key: Key extends keyof T ? keyof T : never): PropertyDescriptor | undefined {
   let prototype: T|null = o;
 
   let descriptor = Object.getOwnPropertyDescriptor(prototype, key);
@@ -21,5 +21,5 @@ export function getPrototypicalPropertyDescriptor<
   while (prototype)
     walkPrototypeChain();
 
-  return descriptor!;
+  return descriptor;
 }

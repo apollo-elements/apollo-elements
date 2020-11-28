@@ -1,6 +1,6 @@
 import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
-export type Entries<T> = [keyof T, T[keyof T]][]
+export type { Entries } from '@apollo-elements/interfaces';
 
 // 🐤 quack quack 🦆
 export function isSubscription(x: unknown): x is ZenObservable.Subscription {
