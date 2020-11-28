@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node-script
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { readFile, writeFile, copyFile } from 'fs/promises';
 import { resolve } from 'path';
@@ -19,6 +20,8 @@ function isSectionFromANodeModule(x: HTMLElement): boolean {
   return x.textContent!.includes(TEST);
 }
 
+// might need this later
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function fixA11Y(document: Document, path: string) {
   // a11y fixes
   document.documentElement.lang = 'en';
@@ -204,7 +207,7 @@ async function fixHTML(path: string) {
   appendMeta(document, path);
   fixContent(document, path);
 
-  const link = ({ href, textContent }: any) =>
+  const link = ({ href, textContent }: { href: string, textContent: string }) =>
     /* html */`<a target="_blank" rel="noreferrer noopener" href="${href}" class="tsd-signature-type">${textContent}</a>`;
 
   const content =

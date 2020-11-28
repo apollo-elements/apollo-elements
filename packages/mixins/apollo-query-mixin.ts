@@ -146,7 +146,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
       this.loading = true;
 
-      return this.observableQuery!.subscribe({
+      return this.observableQuery?.subscribe({
         next: this.nextData.bind(this),
         error: this.nextError.bind(this),
       });
@@ -224,7 +224,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
       this.observableQuery ??= this.watchQuery(options);
 
-      return this.observableQuery!.fetchMore(options);
+      return this.observableQuery?.fetchMore(options);
     }
 
     /**

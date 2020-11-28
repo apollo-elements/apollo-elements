@@ -24,6 +24,58 @@ declare module '@gluon/gluon' {
 }
 
 declare module 'hybrids/esm/cache' {
-  export const get: any;
-  export const set: any;
+  import type { Descriptor } from 'hybrids';
+
+  export interface CacheEntry<T extends HTMLElement = HTMLElement> {
+      target: T,
+      key: keyof T,
+      value: T[keyof T],
+      contexts: unknown,
+      deps: unknown,
+      state: number,
+      checksum: number,
+      observed: boolean
+  }
+
+  export function getEntry<T extends HTMLElement>(
+    target: CacheEntry<T>,
+    key: keyof T
+  ): CacheEntry<T>;
+
+  export function getEntries<T extends HTMLElement>(target: CacheEntry<T>): CacheEntry<T>[];
+
+  export function get<T extends HTMLElement>(
+    target: T,
+    key: keyof T,
+    getter: Descriptor<T>['get'],
+    validate?: <V>(value: V) => boolean
+  ): T[keyof T];
+
+  export function set<T extends HTMLElement>(
+    target: T,
+    key: keyof T,
+    setter: Descriptor<T>['set'],
+    validate?: <V>(value: V) => boolean
+  ): T[keyof T];
+
+  export function invalidate<T extends HTMLElement>(
+    target: T,
+    key: keyof T,
+    clearValue: (...args: any[]) => void,
+    deleteValue: (...args: any[]) => void,
+  ): void
+
+  export function invalidateAll<T extends HTMLElement>(
+    target: T,
+    key: keyof T,
+    clearValue: (...args: any[]) => void,
+    deleteValue: (...args: any[]) => void,
+  ): void
+
+  export function observe<T extends HTMLElement>(
+    target: T,
+    key: keyof T,
+    getter: (key: keyof T) => T[keyof T],
+    fn: (...args: any[]) => void
+  ): () => void
 }
