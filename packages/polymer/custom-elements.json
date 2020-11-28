@@ -65,7 +65,8 @@
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables | null"
+          "type": "TVariables | null",
+          "default": "\"\""
         },
         {
           "name": "error",

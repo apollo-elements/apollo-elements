@@ -1,5 +1,17 @@
 import type { InMemoryCacheConfig, NormalizedCacheObject } from '@apollo/client/core';
 
+import type {
+  HelloQueryVariables,
+  HelloWorld,
+  NonNull,
+  NonNullableParamQueryVariables,
+  NoParam,
+  Nullable,
+  NullableParamQueryVariables,
+  UpdateUserMutationVariables,
+  User,
+} from './schema';
+
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 
 import { SchemaLink } from '@apollo/client/link/schema';
@@ -7,8 +19,6 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { addMocksToSchema } from '@graphql-tools/mock';
 
 import TestSchema from './graphql/test.schema.graphql';
-
-import { HelloWorld, User, NonNull, NoParam, Nullable, NonNullableParamQueryVariables, NullableParamQueryVariables, HelloQueryVariables, UpdateUserMutationVariables } from './schema';
 
 declare global {
   interface Window {
