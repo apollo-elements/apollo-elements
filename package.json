@@ -21,7 +21,7 @@
     "prerelease:build": "lerna run prepublishOnly",
     "prerelease:clean": "yarn clean",
     "prerelease:release": "lerna publish prerelease --dist-tag next",
-    "docs": "run-p docs:*",
+    "docs": "run-s build:codegen docs:*",
     "docs:analyze": "lerna run analyze",
     "docs:typedoc": "run-s docs:typedoc:*",
     "docs:typedoc:almost": "rimraf docs",

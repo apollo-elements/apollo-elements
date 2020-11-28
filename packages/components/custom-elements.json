@@ -8,7 +8,7 @@
         {
           "name": "uri",
           "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string | null"
+          "type": "string | undefined"
         },
         {
           "name": "validate-variables",
@@ -35,7 +35,7 @@
           "name": "uri",
           "attribute": "uri",
           "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string | null"
+          "type": "string | undefined"
         },
         {
           "name": "validateVariables",
@@ -148,7 +148,8 @@
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables | null"
+          "type": "TVariables | null",
+          "default": "\"\""
         },
         {
           "name": "error",
