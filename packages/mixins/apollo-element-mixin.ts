@@ -11,6 +11,7 @@ import { gql } from '@apollo/client/core';
 
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { effect, writable } from '@apollo-elements/lib/descriptors';
 
 declare global {
   interface WindowEventMap {
@@ -194,50 +195,18 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
   }
 
   Object.defineProperties(ApolloElement.prototype, {
-
-    data: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: null,
-    },
-
-    error: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: null,
-    },
-
-    errors: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: null,
-    },
-
-    loading: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: false,
-    },
-
-    variables: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloElement) {
-        return this._variables;
-      },
-
-      set(this: ApolloElement, variables) {
-        this._variables = variables;
+    data: writable(null),
+    error: writable(null),
+    errors: writable(null),
+    loading: writable(false),
+    variables: effect({
+      name: 'variables',
+      init: null,
+      onSet(variables) {
         if (this.mo) // element is connected
           this.variablesChanged?.(variables);
       },
-
-    },
+    }),
   });
 
   return ApolloElement;

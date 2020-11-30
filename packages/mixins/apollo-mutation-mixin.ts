@@ -1,6 +1,7 @@
 import type { DocumentNode } from 'graphql/language/ast';
 import type { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
-import {
+
+import type {
   ErrorPolicy,
   MutationOptions,
   MutationUpdaterFn,
@@ -9,6 +10,7 @@ import {
   FetchPolicy,
 } from '@apollo/client/core';
 
+import { gqlDocument, writable } from '@apollo-elements/lib/descriptors';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
 
@@ -151,41 +153,10 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
   }
 
   Object.defineProperties(ApolloMutationElement.prototype, {
-    called: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: false,
-    },
-
-    mutation: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloMutationElement<unknown, unknown>): DocumentNode | null {
-        return this.document;
-      },
-
-      set(this: ApolloMutationElement<unknown, unknown>, mutation) {
-        this.document = mutation;
-      },
-
-    },
-
-    optimisticResponse: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: undefined,
-    },
-
-    refetchQueries: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: null,
-    },
-
+    called: writable(false),
+    mutation: gqlDocument(),
+    optimisticResponse: writable(),
+    refetchQueries: writable(null),
   });
 
   return ApolloMutationElement;

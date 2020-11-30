@@ -18,6 +18,7 @@ import type {
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
+import { booleanAttr, gqlDocument } from '@apollo-elements/lib/descriptors';
 
 type ApolloSubscriptionResultEvent<TData = unknown> =
   CustomEvent<OnSubscriptionDataParams<TData>>;
@@ -204,34 +205,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
   }
 
   Object.defineProperties(ApolloSubscriptionElement.prototype, {
-    subscription: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloSubscriptionElement<unknown, unknown>): DocumentNode | null {
-        return this.document;
-      },
-
-      set(this: ApolloSubscriptionElement<unknown, unknown>, subscription) {
-        this.document = subscription;
-      },
-    },
-
-    noAutoSubscribe: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloSubscriptionElement<unknown, unknown>): boolean {
-        return this.hasAttribute('no-auto-subscribe');
-      },
-
-      set(v: boolean) {
-        if (v)
-          this.setAttribute('no-auto-subscribe', '');
-        else
-          this.removeAttribute('no-auto-subscribe');
-      },
-    },
+    subscription: gqlDocument(),
+    noAutoSubscribe: booleanAttr('no-auto-subscribe'),
   });
 
   return ApolloSubscriptionElement;
