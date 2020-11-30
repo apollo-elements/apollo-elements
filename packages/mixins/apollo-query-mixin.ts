@@ -21,6 +21,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 
+import { booleanAttr, effect, gqlDocument, writable } from '@apollo-elements/lib/descriptors';
+
 type ApolloQueryResultEvent<TData = unknown> =
   CustomEvent<ApolloQueryResult<TData>>;
 
@@ -291,55 +293,17 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
   }
 
   Object.defineProperties(ApolloQueryElement.prototype, {
-    networkStatus: {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: NetworkStatus.ready,
-    },
-
-    query: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloQueryElement<unknown, unknown>) {
-        return this.document;
-      },
-
-      set(this: ApolloQueryElement<unknown, unknown>, query) {
-        this.document = query;
-      },
-    },
-
-    options: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloQueryElement<unknown, unknown>): Partial<WatchQueryOptions> | null {
-        return this.__options;
-      },
-
-      set(this: ApolloQueryElement<unknown, unknown>, options) {
-        this.__options = options;
+    query: gqlDocument(),
+    networkStatus: writable(NetworkStatus.ready),
+    noAutoSubscribe: booleanAttr('no-auto-subscribe'),
+    options: effect<ApolloQueryElement<unknown, unknown>>({
+      name: 'options',
+      init: null,
+      onSet(options: ApolloQueryElement<unknown, unknown>['options']) {
+        if (!options) return;
         this.observableQuery?.setOptions(options);
       },
-    },
-
-    noAutoSubscribe: {
-      configurable: true,
-      enumerable: true,
-
-      get(this: ApolloQueryElement<unknown, unknown>): boolean {
-        return this.hasAttribute('no-auto-subscribe');
-      },
-
-      set(v: boolean) {
-        if (v)
-          this.setAttribute('no-auto-subscribe', '');
-        else
-          this.removeAttribute('no-auto-subscribe');
-      },
-    },
+    }),
   });
 
   return ApolloQueryElement;

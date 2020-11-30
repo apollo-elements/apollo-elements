@@ -1,6 +1,7 @@
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '../mixins/apollo-mutation-mixin';
 import { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
+import { defineObservedProperties } from './helpers/descriptor';
 
 /**
  * `ApolloMutation`
@@ -10,23 +11,8 @@ import { Constructor, ApolloMutationInterface } from '@apollo-elements/interface
 export class ApolloMutation<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
   extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
-  implements ApolloMutationInterface<TData, TVariables> {
-  protected __called = false;
-}
+  implements ApolloMutationInterface<TData, TVariables> { }
 
-
-Object.defineProperties(ApolloMutation.prototype, {
-  called: {
-    configurable: true,
-    enumerable: true,
-
-    get(this: ApolloMutation<unknown, unknown>): boolean {
-      return this.__called;
-    },
-
-    set(this: ApolloMutation<unknown, unknown>, called: boolean) {
-      this.__called = called;
-      this.render();
-    },
-  },
+defineObservedProperties(ApolloMutation, {
+  called: false,
 });
