@@ -589,6 +589,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           expect(input.disabled).to.be.true;
         });
 
+        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
 
         await element.updateComplete;
@@ -622,6 +623,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           expect(input.disabled).to.be.true;
         });
 
+        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
 
         await element.updateComplete;
@@ -688,6 +690,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           button.click();
         });
 
+        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
 
         await element.updateComplete;

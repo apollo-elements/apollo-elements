@@ -2,6 +2,13 @@ import type { ApolloError, OperationVariables } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 import type { ApolloMutationElement } from './apollo-mutation';
 
+export type MutationEventType = (
+    'mutation-completed'
+  | 'mutation-error'
+  | 'will-mutate'
+  | 'will-navigate'
+);
+
 export interface MutationEventDetail<Data extends unknown, Variables extends OperationVariables> {
   data?: Data | null;
   error?: Error | ApolloError | null;
@@ -12,7 +19,12 @@ export interface MutationEventDetail<Data extends unknown, Variables extends Ope
 
 export class MutationEvent<Data, Variables>
   extends CustomEvent<MutationEventDetail<Data, Variables>> {
-  constructor(type: string, init: CustomEventInit<MutationEventDetail<Data, Variables>>) {
+  declare type: MutationEventType;
+
+  constructor(
+    type: MutationEventType,
+    init: CustomEventInit<MutationEventDetail<Data, Variables>>
+  ) {
     super(type, {
       ...init,
       bubbles: true,
