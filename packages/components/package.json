@@ -4,11 +4,15 @@
   "description": "👩‍🚀🌛 Web component helpers for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
-  "exports": [
-    "./index.js",
-    "./apollo-client.js",
-    "./apollo-mutation.js"
-  ],
+  "exports": {
+    ".": "./index.js",
+    "./index": "./index.js",
+    "./index.js": "./index.js",
+    "./apollo-client": "./apollo-client.js",
+    "./apollo-client.js": "./apollo-client.js",
+    "./apollo-mutation": "./apollo-mutation.js",
+    "./apollo-mutation.js": "./apollo-mutation.js"
+  },
   "scripts": {
     "prepublishOnly": "yarn run-s prepublishOnly:*",
     "prepublishOnly:analyze": "npm run analyze",

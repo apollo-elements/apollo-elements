@@ -5,13 +5,11 @@
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "type": "commonjs",
+  "main": "./index.js",
   "typings": ".index.d.ts",
   "bin": {
     "create-app": "./index.js"
   },
-  "exports": [
-    "./index.js"
-  ],
   "keywords": [
     "generator",
     "custom elements",

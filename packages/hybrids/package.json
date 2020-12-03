@@ -6,13 +6,19 @@
   "module": "index.js",
   "type": "module",
   "typings": "index.d.ts",
-  "exports": [
-    "./index.js",
-    "./apollo-element.js",
-    "./apollo-mutation.js",
-    "./apollo-query.js",
-    "./apollo-subscription.js"
-  ],
+  "exports": {
+    ".": "./index.js",
+    "./index": "./index.js",
+    "./index.js": "./index.js",
+    "./apollo-element": "./apollo-element.js",
+    "./apollo-element.js": "./apollo-element.js",
+    "./apollo-mutation": "./apollo-mutation.js",
+    "./apollo-mutation.js": "./apollo-mutation.js",
+    "./apollo-query": "./apollo-query.js",
+    "./apollo-query.js": "./apollo-query.js",
+    "./apollo-subscription": "./apollo-subscription.js",
+    "./apollo-subscription.js": "./apollo-subscription.js"
+  },
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",

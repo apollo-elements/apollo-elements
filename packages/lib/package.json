@@ -6,14 +6,21 @@
   "module": "index.js",
   "type": "module",
   "typings": "index.d.ts",
-  "exports": [
-    "./escape.js",
-    "./index.js",
-    "./helpers.js",
-    "./has-all-variables.js",
-    "./is-client-operation.js",
-    "./is-valid-gql.js"
-  ],
+  "exports": {
+    ".": "./index.js",
+    "./index": "./index.js",
+    "./index.js": "./index.js",
+    "./escape": "./escape.js",
+    "./escape.js": "./escape.js",
+    "./helpers": "./helpers.js",
+    "./helpers.js": "./helpers.js",
+    "./has-all-variables": "./has-all-variables.js",
+    "./has-all-variables.js": "./has-all-variables.js",
+    "./is-client-operation": "./is-client-operation.js",
+    "./is-client-operation.js": "./is-client-operation.js",
+    "./is-valid-gql": "./is-valid-gql.js",
+    "./is-valid-gql.js": "./is-valid-gql.js"
+  },
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",

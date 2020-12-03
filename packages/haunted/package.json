@@ -6,12 +6,17 @@
   "module": "index.js",
   "type": "module",
   "typings": "index.d.ts",
-  "exports": [
-    "./index.js",
-    "./useMutation.js",
-    "./useQuery.js",
-    "./useSubscription.js"
-  ],
+  "exports": {
+    ".": "./index.js",
+    "./index": "./index.js",
+    "./index.js": "./index.js",
+    "./useMutation": "./useMutation.js",
+    "./useMutation.js": "./useMutation.js",
+    "./useQuery": "./useQuery.js",
+    "./useQuery.js": "./useQuery.js",
+    "./useSubscription": "./useSubscription.js",
+    "./useSubscription.js": "./useSubscription.js"
+  },
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
