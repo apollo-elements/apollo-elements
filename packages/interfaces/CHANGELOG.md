@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.3.0...@apollo-elements/interfaces@1.4.0-alpha.0) (2020-12-04)
+
+
+### Bug Fixes
+
+* package export maps ([1eaa0ed](https://github.com/apollo-elements/apollo-elements/commit/1eaa0eda5d329b7c7efdf732b63599b912eb8fc8))
+
+
+### Features
+
+* support TypeScript strict mode ([a8953d0](https://github.com/apollo-elements/apollo-elements/commit/a8953d08d8e050d9ad4e5b9728a7ed44fcc18fa8))
+
+
+
+
+
 # [1.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.2.0...@apollo-elements/interfaces@1.3.0) (2020-11-22)
 
 

@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@3.1.3...@apollo-elements/gluon@3.2.0-alpha.0) (2020-12-04)
+
+
+### Bug Fixes
+
+* package export maps ([1eaa0ed](https://github.com/apollo-elements/apollo-elements/commit/1eaa0eda5d329b7c7efdf732b63599b912eb8fc8))
+* **gluon:** broken property accessors ([89c9568](https://github.com/apollo-elements/apollo-elements/commit/89c95684d1ad887091e34037214dd8b5e939ab74))
+
+
+### Features
+
+* support TypeScript strict mode ([a8953d0](https://github.com/apollo-elements/apollo-elements/commit/a8953d08d8e050d9ad4e5b9728a7ed44fcc18fa8))
+
+
+
+
+
 ## [3.1.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/gluon@3.1.2...@apollo-elements/gluon@3.1.3) (2020-11-22)
 
 **Note:** Version bump only for package @apollo-elements/gluon

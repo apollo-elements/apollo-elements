@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@1.1.0...@apollo-elements/test-helpers@1.2.0-alpha.0) (2020-12-04)
+
+
+### Features
+
+* support TypeScript strict mode ([a8953d0](https://github.com/apollo-elements/apollo-elements/commit/a8953d08d8e050d9ad4e5b9728a7ed44fcc18fa8))
+
+
+
+
+
 # [1.1.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@1.0.2...@apollo-elements/test-helpers@1.1.0) (2020-11-22)
 
 
