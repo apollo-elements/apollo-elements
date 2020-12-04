@@ -20,7 +20,7 @@
     "prerelease:lint": "yarn lint",
     "prerelease:build": "lerna run prepublishOnly",
     "prerelease:clean": "yarn clean",
-    "prerelease:release": "lerna publish prerelease --dist-tag next",
+    "prerelease:release": "lerna publish --conventional-prerelease --pre-dist-tag next",
     "docs": "run-s build:codegen docs:*",
     "docs:analyze": "lerna run analyze",
     "docs:typedoc": "run-s docs:typedoc:*",

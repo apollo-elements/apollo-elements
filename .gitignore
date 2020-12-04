@@ -20,6 +20,14 @@ packages/hybrids/factories/*.d.ts
 packages/hybrids/factories/*.js
 packages/hybrids/factories/*.js.map
 
+packages/hybrids/helpers/*.d.ts
+packages/hybrids/helpers/*.js
+packages/hybrids/helpers/*.js.map
+
+packages/gluon/helpers/*.d.ts
+packages/gluon/helpers/*.js
+packages/gluon/helpers/*.js.map
+
 !packages/*/global.d.ts
 !packages/gluon/gluon.d.ts
 !packages/docs/rollup.config.js
