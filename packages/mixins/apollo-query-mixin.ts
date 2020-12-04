@@ -226,7 +226,10 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
       this.observableQuery ??= this.watchQuery(options);
 
-      return this.observableQuery?.fetchMore(options);
+      return this.observableQuery?.fetchMore(options).then(x => {
+        this.loading = false;
+        return x;
+      });
     }
 
     /**
@@ -288,6 +291,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     nextError(error: ApolloError): void {
       this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       this.error = error;
+      this.loading = false;
       this.onError?.(error);
     }
   }
