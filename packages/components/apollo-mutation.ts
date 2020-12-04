@@ -62,6 +62,8 @@ export class WillMutateError extends Error {}
  * @fires 'apollo-element-disconnected' when the element disconnects from the dom
  * @fires 'apollo-element-connected' when the element connects to the dom
  *
+ * See [[`ApolloMutationInterface`]] for more information on events
+ *
  * @example
  * Using data attributes
  * ```html

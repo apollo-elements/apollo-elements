@@ -6,11 +6,21 @@ import type { Constructor, CustomElement } from '@apollo-elements/interfaces';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 import { FASTElement, attr, observable } from '@microsoft/fast-element';
 
+/**
+ * `ApolloElement`
+ *
+ * 🚀 Custom element base class for Apollo FAST elements.
+ *
+ * See [[`ApolloElementInterface`]] for more information on events
+ *
+ * @element
+ */
 export class ApolloElement<TData = unknown, TVariables = unknown>
   extends ApolloElementMixin(
+    // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
     FASTElement as Constructor<CustomElement & FASTElement>
   )<TData, TVariables>
-  implements ApolloElementInterface<TData> {
+  implements ApolloElementInterface<TData, TVariables> {
   declare context?: Record<string, unknown>;
 
   declare variables: TVariables;

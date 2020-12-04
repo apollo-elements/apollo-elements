@@ -11,6 +11,10 @@ export { html } from './apollo-element';
  * 🚀 `ApolloQuery`
  *
  * Custom element base class that connects to your Apollo cache.
+ *
+ * See [[`ApolloQueryInterface`]] for more information on events
+ *
+ * @element
  */
 export class ApolloQuery<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin

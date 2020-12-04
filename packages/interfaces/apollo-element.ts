@@ -9,7 +9,14 @@ import type { CustomElement } from './constructor';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
-/** @noInheritDoc */
+/**
+ * Common base interface for apollo elements
+ *
+ * @element
+ *
+ * @fires 'apollo-element-connected' when the element connects to the dom
+ * @fires 'apollo-element-disconnected' when the element disconnects from the dom
+ */
 export declare class ApolloElementInterface<TData = unknown, TVariables = unknown>
   extends CustomElement {
   declare static documentType: 'query'|'mutation'|'subscription';

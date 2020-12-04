@@ -31,8 +31,8 @@ type Base = Constructor<PolymerApolloElement>;
  * <paper-button on-click="mutate">Submit</paper-button>
  * ```
  *
- * @fires 'apollo-element-disconnected' when the element disconnects from the dom
- * @fires 'apollo-element-connected' when the element connects to the dom
+ * See [[`ApolloMutationInterface`]] for more information on events
+ *
  * @fires 'data-changed'
  * @fires 'error-changed'
  * @fires 'errors-changed'

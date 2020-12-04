@@ -18,6 +18,16 @@ import type { ApolloElementInterface } from './apollo-element';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
+/**
+ * Common interface for query elements
+ *
+ * See [[`ApolloElementInterface`]] for more information on events
+ *
+ * @element
+ *
+ * @fires 'apollo-query-result' when the query resolves
+ * @fires 'apollo-error' when the query rejects
+ */
 export declare class ApolloQueryInterface<TData, TVariables>
   extends ApolloElementInterface<TData, TVariables> {
   /**

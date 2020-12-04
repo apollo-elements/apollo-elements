@@ -48,9 +48,6 @@ export class ApolloElementEvent<T extends ApolloElementElement = ApolloElementEl
 }
 
 function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) {
-  /**
-   * @element
-   */
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
   class ApolloElement<TData = unknown, TVariables = unknown>
     extends superclass
@@ -105,9 +102,6 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       }
     }
 
-    /**
-     * @fires 'apollo-element-connected' when the element connects to the dom
-     */
     connectedCallback(): void {
       super.connectedCallback?.();
 
@@ -121,9 +115,6 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
       this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
     }
 
-    /**
-     * @fires 'apollo-element-disconnected' when the element disconnects from the dom
-     */
     disconnectedCallback(): void {
       this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
       window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));

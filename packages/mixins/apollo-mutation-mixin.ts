@@ -48,8 +48,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     onError?(_error: Error): void;
 
-    updater?(...params: Parameters<MutationUpdaterFn<TData>>):
-        ReturnType<MutationUpdaterFn<TData>>;
+    updater?(...params: Parameters<MutationUpdaterFn<TData>>): ReturnType<MutationUpdaterFn<TData>>;
 
     ignoreResults = false;
 

@@ -9,6 +9,9 @@ import { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
  * `ApolloQuery`
  *
  * 🚀 Custom element base class that connects to your Apollo cache.
+ *
+ * See [[`ApolloQueryInterface`]] for more information on events
+ *
  */
 export class ApolloQuery<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin

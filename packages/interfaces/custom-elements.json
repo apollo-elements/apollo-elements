@@ -3,7 +3,69 @@
   "tags": [
     {
       "name": "",
-      "path": "./apollo-mutation-mixin.ts",
+      "path": "./apollo-element.ts",
+      "description": "Common base interface for apollo elements",
+      "properties": [
+        {
+          "name": "documentType",
+          "type": "\"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | null"
+        },
+        {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "data",
+          "description": "Latest data",
+          "type": "TData | null"
+        },
+        {
+          "name": "variables",
+          "description": "Operation variables",
+          "type": "TVariables | null"
+        },
+        {
+          "name": "error",
+          "description": "Latest error",
+          "type": "Error | ApolloError | null"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors",
+          "type": "readonly GraphQLError[] | null"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in flight.",
+          "type": "boolean"
+        }
+      ],
+      "events": [
+        {
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
+        }
+      ]
+    },
+    {
+      "name": "",
+      "path": "./apollo-mutation.ts",
+      "description": "Common interface for mutation elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
       "properties": [
         {
           "name": "mutation",
@@ -23,14 +85,7 @@
         {
           "name": "ignoreResults",
           "description": "If true, the returned data property will not update with the mutation result.",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "mostRecentMutationId",
-          "description": "The ID number of the most recent mutation since the element was instantiated.",
-          "type": "number",
-          "default": "0"
+          "type": "boolean | undefined"
         },
         {
           "name": "errorPolicy",
@@ -54,8 +109,17 @@
         },
         {
           "name": "documentType",
-          "type": "string",
-          "default": "\"mutation\""
+          "type": "\"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | null"
         },
         {
           "name": "context",
@@ -70,7 +134,7 @@
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "default": "\"\""
+          "type": "TVariables | null"
         },
         {
           "name": "error",
@@ -85,18 +149,7 @@
         {
           "name": "loading",
           "description": "Whether a request is in flight.",
-          "default": "\"\""
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
+          "type": "boolean"
         }
       ],
       "events": [
@@ -120,7 +173,8 @@
     },
     {
       "name": "",
-      "path": "./apollo-query-mixin.ts",
+      "path": "./apollo-query.ts",
+      "description": "Common interface for query elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
       "properties": [
         {
           "name": "query",
@@ -170,7 +224,7 @@
         {
           "name": "notifyOnNetworkStatusChange",
           "description": "Whether or not updates to the network status should trigger next on the observer of this query.",
-          "type": "boolean"
+          "type": "boolean | undefined"
         },
         {
           "name": "pollInterval",
@@ -180,8 +234,7 @@
         {
           "name": "errorPolicy",
           "description": "Specifies the ErrorPolicy to be used for this query.",
-          "type": "ErrorPolicy",
-          "default": "\"none\""
+          "type": "ErrorPolicy"
         },
         {
           "name": "noAutoSubscribe",
@@ -190,8 +243,17 @@
         },
         {
           "name": "documentType",
-          "type": "string",
-          "default": "\"query\""
+          "type": "\"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | null"
         },
         {
           "name": "context",
@@ -222,17 +284,6 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean"
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
         }
       ],
       "events": [
@@ -256,7 +307,8 @@
     },
     {
       "name": "",
-      "path": "./apollo-subscription-mixin.ts",
+      "path": "./apollo-subscription.ts",
+      "description": "Common interface for subscription elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
       "properties": [
         {
           "name": "fetchPolicy",
@@ -271,8 +323,7 @@
         {
           "name": "notifyOnNetworkStatusChange",
           "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
-          "type": "boolean",
-          "default": "false"
+          "type": "boolean"
         },
         {
           "name": "observable",
@@ -297,18 +348,25 @@
         {
           "name": "skip",
           "description": "If skip is true, the query will be skipped entirely",
-          "type": "boolean",
-          "default": "false"
+          "type": "boolean"
         },
         {
           "name": "shouldResubscribe",
-          "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined",
-          "default": "false"
+          "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined"
         },
         {
           "name": "documentType",
-          "type": "string",
-          "default": "\"subscription\""
+          "type": "\"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | null"
         },
         {
           "name": "context",
@@ -339,17 +397,6 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean"
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
         }
       ],
       "events": [

@@ -8,6 +8,11 @@ export { html } from './apollo-element';
  * `ApolloSubscription`
  *
  * 🚀 Custom element base class that updates with an Apollo GraphQL subscription.
+ *
+ * @element
+ *
+ * See [[`ApolloSubscriptionInterface`]] for more information on events
+ *
  */
 export class ApolloSubscription<TData, TVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin

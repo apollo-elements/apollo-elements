@@ -6,16 +6,17 @@ import { notify, PolymerChangeEvent } from './notify-decorator';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
 /**
- * @fires 'apollo-element-disconnected' when the element disconnects from the dom
- * @fires 'apollo-element-connected' when the element connects to the dom
  * @fires 'data-changed'
+ * @fires 'variables-changed'
  * @fires 'error-changed'
  * @fires 'errors-changed'
  * @fires 'loading-changed'
+ *
+ * See [[`ApolloElementInterface`]] for more information on events
  */
 export class PolymerApolloElement<TData = unknown, TVariables = unknown>
   extends ApolloElementMixin(HTMLElement)<TData, TVariables>
-  implements ApolloElementInterface<TData> {
+  implements ApolloElementInterface<TData, TVariables> {
   declare client: ApolloClient<NormalizedCacheObject>;
 
   declare context?: Record<string, unknown>;

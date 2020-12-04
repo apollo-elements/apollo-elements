@@ -32,8 +32,8 @@ type Base = Constructor<PolymerApolloElement>;
  * </paper-icon-item>
  * ```
  *
- * @fires 'apollo-element-disconnected' when the element disconnects from the dom
- * @fires 'apollo-element-connected' when the element connects to the dom
+ * See [[`ApolloQueryInterface`]] for more information on events
+ *
  * @fires 'data-changed'
  * @fires 'error-changed'
  * @fires 'errors-changed'

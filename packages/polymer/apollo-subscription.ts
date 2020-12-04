@@ -28,8 +28,8 @@ type Base = Constructor<PolymerApolloElement>;
  * </paper-toast>
  * ```
  *
- * @fires 'apollo-element-disconnected' when the element disconnects from the dom
- * @fires 'apollo-element-connected' when the element connects to the dom
+ * See [[`ApolloSubscriptionInterface`]] for more information on events
+ *
  * @fires 'data-changed'
  * @fires 'error-changed'
  * @fires 'errors-changed'

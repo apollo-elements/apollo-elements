@@ -202,13 +202,15 @@
         },
         {
           "name": "apollo-element-connected",
-          "description": "when the element connects to the dom"
+          "description": "when the element connects to the dom\n\nSee [[`ApolloMutationInterface`]] for more information on events"
         },
         {
-          "name": "apollo-mutation-result"
+          "name": "apollo-mutation-result",
+          "description": "when the mutation resolves"
         },
         {
-          "name": "apollo-error"
+          "name": "apollo-error",
+          "description": "when the mutation rejects"
         }
       ],
       "slots": [

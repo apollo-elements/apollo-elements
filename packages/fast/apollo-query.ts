@@ -9,6 +9,11 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  * `ApolloQuery`
  *
  * 🚀 Custom element base class that connects to your Apollo cache.
+ *
+ * @element
+ *
+ * See [[`ApolloQueryInterface`]] for more information on events
+ *
  */
 export class ApolloQuery<Data, Variables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin

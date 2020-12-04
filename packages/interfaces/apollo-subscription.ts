@@ -38,6 +38,16 @@ export interface OnSubscriptionDataParams<TData = unknown> {
   subscriptionData: SubscriptionResult<TData>;
 }
 
+/**
+ * Common interface for subscription elements
+ *
+ * See [[`ApolloElementInterface`]] for more information on events
+ *
+ * @element
+ *
+ * @fires 'apollo-subscription-result' when the subscription updates
+ * @fires 'apollo-error' when the query rejects
+ */
 export declare class ApolloSubscriptionInterface<TData, TVariables>
   extends ApolloElementInterface<TData, TVariables> {
   /**

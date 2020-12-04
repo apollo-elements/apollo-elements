@@ -10,6 +10,16 @@ import type {
 
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
+/**
+ * Common interface for mutation elements
+ *
+ * See [[`ApolloElementInterface`]] for more information on events
+ *
+ * @element
+ *
+ * @fires 'apollo-mutation-result' when the mutation resolves
+ * @fires 'apollo-error' when the mutation rejects
+ */
 export declare class ApolloMutationInterface<TData, TVariables>
   extends ApolloElementInterface<TData, TVariables> {
   /**

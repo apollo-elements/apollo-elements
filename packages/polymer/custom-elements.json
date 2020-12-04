@@ -98,14 +98,6 @@
       ],
       "events": [
         {
-          "name": "apollo-element-disconnected",
-          "description": "when the element disconnects from the dom"
-        },
-        {
-          "name": "apollo-element-connected",
-          "description": "when the element connects to the dom"
-        },
-        {
           "name": "data-changed"
         },
         {
@@ -121,10 +113,20 @@
           "name": "called-changed"
         },
         {
-          "name": "apollo-mutation-result"
+          "name": "apollo-mutation-result",
+          "description": "when the mutation resolves"
         },
         {
-          "name": "apollo-error"
+          "name": "apollo-error",
+          "description": "when the mutation rejects"
+        },
+        {
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         }
       ]
     },
@@ -248,14 +250,6 @@
       ],
       "events": [
         {
-          "name": "apollo-element-disconnected",
-          "description": "when the element disconnects from the dom"
-        },
-        {
-          "name": "apollo-element-connected",
-          "description": "when the element connects to the dom"
-        },
-        {
           "name": "data-changed"
         },
         {
@@ -271,10 +265,20 @@
           "name": "network-status-changed"
         },
         {
-          "name": "apollo-query-result"
+          "name": "apollo-query-result",
+          "description": "when the query resolves"
         },
         {
-          "name": "apollo-error"
+          "name": "apollo-error",
+          "description": "when the query rejects"
+        },
+        {
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         }
       ]
     },
@@ -378,14 +382,6 @@
       ],
       "events": [
         {
-          "name": "apollo-element-disconnected",
-          "description": "when the element disconnects from the dom"
-        },
-        {
-          "name": "apollo-element-connected",
-          "description": "when the element connects to the dom"
-        },
-        {
           "name": "data-changed"
         },
         {
@@ -398,10 +394,20 @@
           "name": "loading-changed"
         },
         {
-          "name": "apollo-subscription-result"
+          "name": "apollo-subscription-result",
+          "description": "when the subscription updates"
         },
         {
-          "name": "apollo-error"
+          "name": "apollo-error",
+          "description": "when the query rejects"
+        },
+        {
+          "name": "apollo-element-connected",
+          "description": "when the element connects to the dom"
+        },
+        {
+          "name": "apollo-element-disconnected",
+          "description": "when the element disconnects from the dom"
         }
       ]
     }
