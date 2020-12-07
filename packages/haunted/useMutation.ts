@@ -2,12 +2,13 @@ import type {
   ApolloClient,
   ApolloError,
   DocumentNode,
+  OperationVariables,
+  PureQueryOptions,
+  MutationUpdaterFn,
   NormalizedCacheObject,
+  ErrorPolicy,
+  WatchQueryFetchPolicy,
 } from '@apollo/client/core';
-
-import type {
-  MutationHookOptions as ReactMutationHookOptions,
-} from '@apollo/client/react/types/types';
 
 import type { State } from 'haunted';
 
@@ -16,29 +17,44 @@ import { ApolloMutationElement } from '@apollo-elements/interfaces/apollo-mutati
 import { hook } from 'haunted';
 
 import { ApolloHook } from './ApolloHook';
+import { ComponentDocument, Data, Variables } from '@apollo-elements/interfaces';
 
-type MutationHookOptions<TData, TVariables> =
-  Omit<ReactMutationHookOptions<TData, TVariables>, 'client'> & {
-  client?: ApolloClient<NormalizedCacheObject>,
+export interface MutationHookOptions<D, V> {
+  mutation?: ComponentDocument<D> | null;
+  variables?: Variables<D, V>;
+  optimisticResponse?: Data<D> | ((vars: Variables<D, V>) => Data<D>);
+  refetchQueries?: Array<string | PureQueryOptions> |
+    ((...args: any[]) => Array<string | PureQueryOptions>);
+  awaitRefetchQueries?: boolean;
+  errorPolicy?: ErrorPolicy;
+  update?: MutationUpdaterFn<Data<D>>;
+  client?: ApolloClient<NormalizedCacheObject>;
+  notifyOnNetworkStatusChange?: boolean;
+  context?: Record<string, any>;
+  onCompleted?: (data: Data<D>) => void;
+  onError?: (error: ApolloError) => void;
+  fetchPolicy?: Extract<WatchQueryFetchPolicy, 'no-cache'>;
+  ignoreResults?: boolean;
 }
 
-type MutationTuple<TData, TVariables> = [
-  ApolloMutationElement<TData, TVariables>['mutate'],
-  {
-    called: boolean;
-    client: ApolloMutationElement<TData, TVariables>['client'] | null;
-    data: TData | null;
-    error: Error | ApolloError | null,
-    loading: boolean;
-  }
-]
+export interface MutationHookResult<D, V> {
+  called: boolean;
+  client: ApolloMutationElement<D, V>['client'] | null;
+  data: Data<D> | null;
+  error: Error | ApolloError | null,
+  loading: boolean;
+}
 
-class UseMutationHook<TData, TVariables> extends ApolloHook<
-  TData,
-  TVariables,
-  MutationHookOptions<TData, TVariables>,
-  MutationTuple<TData, TVariables>,
-  ApolloMutationElement<TData, TVariables>
+export type MutateFn<D, V> = ApolloMutationElement<D, V>['mutate'];
+
+export type MutationTuple<D, V> = [MutateFn<D, V>, MutationHookResult<D, V>]
+
+class UseMutationHook<D = unknown, V = OperationVariables> extends ApolloHook<
+  D,
+  V,
+  MutationHookOptions<D, V>,
+  MutationTuple<D, V>,
+  ApolloMutationElement<D, V>
 > {
   readonly componentClass = ApolloMutationElement;
 
@@ -46,7 +62,7 @@ class UseMutationHook<TData, TVariables> extends ApolloHook<
 
   readonly reactiveProps = ['called' as const];
 
-  readonly defaults: Partial<ApolloMutationElement<TData, TVariables>> = {
+  readonly defaults: Partial<ApolloMutationElement<D, V>> = {
     called: false,
   };
 
@@ -54,16 +70,16 @@ class UseMutationHook<TData, TVariables> extends ApolloHook<
 
   constructor(
     id: number,
-    state: State<ApolloMutationElement<TData, TVariables>>,
-    mutation: DocumentNode,
-    options?: MutationHookOptions<TData, TVariables>
+    state: State<ApolloMutationElement<D, V>>,
+    mutation: DocumentNode | ComponentDocument<D>,
+    options?: MutationHookOptions<D, V>
   ) {
     super(id, state, mutation, options);
     this.init();
     this.update();
   }
 
-  protected optionsToProperties(): Partial<ApolloMutationElement<TData, TVariables>> {
+  protected optionsToProperties(): Partial<ApolloMutationElement<D, V>> {
     const {
       onCompleted, onError, update,
       ignoreResults = false,
@@ -81,12 +97,12 @@ class UseMutationHook<TData, TVariables> extends ApolloHook<
     };
   }
 
-  protected optionsToOptionalMethods(): Partial<ApolloMutationElement<TData, TVariables>> {
+  protected optionsToOptionalMethods(): Partial<ApolloMutationElement<D, V>> {
     const { options: { onCompleted, onError, update: updater } } = this;
     return { onCompleted, onError, updater };
   }
 
-  update(_ = this.document, { variables } = this.options): MutationTuple<TData, TVariables> {
+  update(_ = this.document, { variables } = this.options): MutationTuple<D, V> {
     if (this.disconnected) this.connect();
 
     const { host } = this.state;

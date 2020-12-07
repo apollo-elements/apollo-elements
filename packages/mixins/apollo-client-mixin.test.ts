@@ -1,12 +1,10 @@
+import { ApolloElementElement } from '@apollo-elements/interfaces';
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
 import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { ApolloClientMixin } from './apollo-client-mixin';
-import { ApolloElementMixin } from './apollo-element-mixin';
-
-class ApolloElement<D = unknown, V = unknown> extends ApolloElementMixin(HTMLElement)<D, V> {}
 
 describe('ApolloClientMixin', function() {
-  let element: ApolloElement;
+  let element: ApolloElementElement;
   let client: ApolloClient<NormalizedCacheObject>;
   beforeEach(function() {
     // @ts-expect-error: just testing the assignment;
@@ -15,7 +13,7 @@ describe('ApolloClientMixin', function() {
       cache: new InMemoryCache(),
       link: new HttpLink({ uri: '/graphql' }),
     });
-    class Test extends ApolloClientMixin(client, ApolloElement) {}
+    class Test extends ApolloClientMixin(client, ApolloElementElement) {}
     const tag = defineCE(Test);
     element = fixtureSync<Test>(`<${tag}></${tag}>`);
   });

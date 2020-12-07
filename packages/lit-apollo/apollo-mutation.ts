@@ -1,11 +1,18 @@
-import type { MutationOptions } from '@apollo/client/core';
+import type {
+  ApolloMutationInterface,
+  Constructor,
+  RefetchQueriesType,
+  Variables,
+} from '@apollo-elements/interfaces';
+
+import type { OperationVariables } from '@apollo/client/core';
 
 import { ComplexAttributeConverter, property } from 'lit-element';
 
 import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
-import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
+
+import { ApolloElement } from './apollo-element';
 
 const refetchQueriesConverter: ComplexAttributeConverter = {
   fromAttribute: splitCommasAndTrim,
@@ -19,10 +26,12 @@ const refetchQueriesConverter: ComplexAttributeConverter = {
  * See [[`ApolloMutationInterface`]] for more information on events
  *
  */
-export class ApolloMutation<TData, TVariables>
+export class ApolloMutation<D, V = OperationVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
-  implements ApolloMutationInterface<TData, TVariables> {
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
+  implements ApolloMutationInterface<D, V> {
+  declare variables: Variables<D, V> | null;
+
   @property({ type: Boolean }) called = false;
 
   /**
@@ -33,5 +42,5 @@ export class ApolloMutation<TData, TVariables>
    * As a property, you can pass any legal `refetchQueries` value.
    */
   @property({ attribute: 'refetch-queries', converter: refetchQueriesConverter })
-  refetchQueries: MutationOptions<TData, TVariables>['refetchQueries'] | null = null;
+  refetchQueries: RefetchQueriesType<D> | null = null;
 }

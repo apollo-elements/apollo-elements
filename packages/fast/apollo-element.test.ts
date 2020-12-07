@@ -1,5 +1,5 @@
 import type { DocumentNode, GraphQLError } from 'graphql';
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject, TypedDocumentNode } from '@apollo/client/core';
 import { expect, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';
@@ -68,7 +68,8 @@ describe('[fast] ApolloElement', function describeApolloElement() {
 });
 
 type TypeCheckData = { a: 'a', b: number };
-class TypeCheck extends ApolloElement<TypeCheckData> {
+type TypeCheckVars = { c: 'c', d: number };
+class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
   typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
@@ -83,6 +84,7 @@ class TypeCheck extends ApolloElement<TypeCheckData> {
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
+    assertType<TypeCheckVars>                       (this.variables!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
@@ -91,5 +93,13 @@ class TypeCheck extends ApolloElement<TypeCheckData> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloElement<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

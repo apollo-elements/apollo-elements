@@ -1,7 +1,12 @@
 import type { GraphQLError } from 'graphql';
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  ApolloError,
+  NormalizedCacheObject,
+  OperationVariables,
+} from '@apollo/client/core';
 import type { ApolloElementInterface } from '@apollo-elements/interfaces/apollo-element';
-import type { Constructor, CustomElement } from '@apollo-elements/interfaces';
+import type { Constructor, CustomElement, Data, Variables } from '@apollo-elements/interfaces';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 import { FASTElement, attr, observable } from '@microsoft/fast-element';
@@ -15,20 +20,18 @@ import { FASTElement, attr, observable } from '@microsoft/fast-element';
  *
  * @element
  */
-export class ApolloElement<TData = unknown, TVariables = unknown>
-  extends ApolloElementMixin(
-    // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-    FASTElement as Constructor<CustomElement & FASTElement>
-  )<TData, TVariables>
-  implements ApolloElementInterface<TData, TVariables> {
+export class ApolloElement<D = unknown, V = OperationVariables>
+  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
+  extends ApolloElementMixin(FASTElement as Constructor<CustomElement & FASTElement>)<D, V>
+  implements ApolloElementInterface<D, V> {
   declare context?: Record<string, unknown>;
 
-  declare variables: TVariables;
+  declare variables: Variables<D, V>;
 
   @observable client: ApolloClient<NormalizedCacheObject> | null =
     window.__APOLLO_CLIENT__ ?? null;
 
-  @observable data: TData | null = null;
+  @observable data: Data<D> | null = null;
 
   @observable error: ApolloError | Error | null = null;
 

@@ -5,13 +5,14 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { GraphQLError } from 'graphql';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import { assertType } from '@apollo-elements/test-helpers';
+import { assertType, Entries } from '@apollo-elements/test-helpers';
 import {
   describeMutation,
   MutationElement,
@@ -25,6 +26,7 @@ import { expect, nextFrame, defineCE, fixture } from '@open-wc/testing';
 
 import 'sinon-chai';
 import { Constructor } from 'lit-element';
+import { effect } from '@apollo-elements/lib/descriptors';
 
 class XL extends HTMLElement {}
 
@@ -32,16 +34,6 @@ class XL extends HTMLElement {}
  * Testable Mixed-in Apollo Mutation class
  */
 class TestableApolloMutation<D = any, V = any> extends ApolloMutationMixin(XL)<D, V> {
-  ___called = false;
-
-  ___data: D | null = null;
-
-  ___error: Error | null = null;
-
-  ___errors: readonly GraphQLError[] | null = null;
-
-  ___loading = false;
-
   static get template() {
     const template = document.createElement('template');
     template.innerHTML = /* html */`
@@ -55,31 +47,6 @@ class TestableApolloMutation<D = any, V = any> extends ApolloMutationMixin(XL)<D
   }
 
   $(id: keyof TestableApolloMutation) { return this.shadowRoot?.getElementById(id); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get called() { return this.___called; }
-
-  set called(value: boolean) { this.___called = value; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get data() { return this.___data; }
-
-  set data(value: D) { this.___data = value; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get error() { return this.___error; }
-
-  set error(value: Error) { this.___error = value; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get errors() { return this.___errors; }
-
-  set errors(value: readonly GraphQLError[]) { this.___errors = value; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get loading() { return this.___loading; }
-
-  set loading(value: boolean) { this.___loading = value; this.render(); }
 
   observed: Array<keyof TestableApolloMutation> = ['called', 'data', 'error', 'errors', 'loading'];
 
@@ -102,11 +69,33 @@ class TestableApolloMutation<D = any, V = any> extends ApolloMutationMixin(XL)<D
     return JSON.stringify(x, null, 2);
   }
 
-  async hasRendered() {
+  async hasRendered(): Promise<this> {
     await nextFrame();
     return this;
   }
 }
+
+const DEFAULTS = {
+  called: false,
+  data: null,
+  error: null,
+  errors: null,
+  loading: false,
+};
+
+Object.defineProperties(TestableApolloMutation.prototype, Object.fromEntries(
+  (Object.entries(DEFAULTS) as Entries<TestableApolloMutation>)
+    .map(([name, init]) => [
+      name,
+      effect<TestableApolloMutation>({
+        name,
+        init,
+        onSet() {
+          this.render();
+        },
+      }),
+    ])
+));
 
 describe('[mixins] ApolloMutationMixin', function() {
   describeMutation({
@@ -141,9 +130,9 @@ class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<Record<string, unknown>|undefined>        (this.context);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode|null>                   (this.document);
-    assertType<Error>                               (this.error);
-    assertType<readonly GraphQLError[]>             (this.errors);
-    assertType<TypeCheckData>                       (this.data);
+    assertType<Error>                               (this.error!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     assertType<number>                              (this.data.b);
@@ -190,3 +179,11 @@ class PropertyTest extends TestableApolloMutation<unknown, { hey: 'yo' }> {
   variables = { hey: 'yo' as const };
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends TestableApolloMutation<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
+  }
+}

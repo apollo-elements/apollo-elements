@@ -2,12 +2,22 @@ import { html } from 'haunted';
 import { useSubscription } from './useSubscription';
 import { component } from 'haunted';
 
+import { TypedDocumentNode, DocumentNode, gql } from '@apollo/client/core';
+
 import type { Entries, SetupOptions } from '@apollo-elements/test-helpers';
+
 import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { setupClient, setupSpies, setupStubs, teardownClient } from '@apollo-elements/test-helpers';
+import {
+  setupClient,
+  setupSpies,
+  setupStubs,
+  teardownClient,
+  assertType,
+} from '@apollo-elements/test-helpers';
+
 import {
   describeSubscription,
   SubscriptionElement,
@@ -19,7 +29,6 @@ import type {
 } from '@apollo-elements/test-helpers/schema';
 
 import { ApolloSubscriptionElement } from '@apollo-elements/interfaces';
-import { DocumentNode } from 'graphql';
 
 describe('[haunted] useSubscription', function() {
   const ccOrig = ApolloSubscriptionElement.prototype.connectedCallback;
@@ -218,3 +227,14 @@ describe('[haunted] useSubscription', function() {
     });
   });
 });
+
+type TypeCheckData = { a: 'a'; b: number };
+type TypeCheckVars = { c: 'c'; d: number };
+
+const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
+  gql`subscription TypedQuery($c: String, $d: Int) { a b }`;
+
+function TDNTypeCheck() {
+  const { data } = useSubscription(TDN);
+  assertType<TypeCheckData>(data!);
+}

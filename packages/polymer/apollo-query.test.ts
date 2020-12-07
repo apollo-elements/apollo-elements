@@ -7,6 +7,7 @@ import type {
   ObservableQuery,
   NormalizedCacheObject,
   DocumentNode,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import { gql } from '@apollo/client/core';
@@ -225,5 +226,13 @@ class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends PolymerApolloQuery<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

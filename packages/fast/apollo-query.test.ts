@@ -2,9 +2,11 @@ import type {
   ApolloClient,
   ErrorPolicy,
   FetchPolicy,
-  WatchQueryOptions,
-  ObservableQuery,
   NormalizedCacheObject,
+  ObservableQuery,
+  OperationVariables,
+  TypedDocumentNode,
+  WatchQueryOptions,
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
@@ -35,7 +37,7 @@ const template = html<TestableApolloQuery>`
 `;
 
 @customElement({ name: 'fast-testable-apollo-query-class', template })
-class TestableApolloQuery<D = unknown, V = unknown>
+class TestableApolloQuery<D = unknown, V = OperationVariables>
   extends ApolloQuery<D, V>
   implements QueryElement<D, V> {
   async hasRendered() {
@@ -139,5 +141,14 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloQuery<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
+    assertType<TDN>(this.query!);
   }
 }

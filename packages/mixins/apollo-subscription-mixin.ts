@@ -1,7 +1,6 @@
-import type { DocumentNode } from 'graphql/language/ast';
-
 import type {
   ApolloError,
+  DocumentNode,
   FetchPolicy,
   FetchResult,
   Observable,
@@ -9,10 +8,13 @@ import type {
 } from '@apollo/client/core';
 
 import type {
-  Constructor,
   ApolloSubscriptionInterface,
+  ComponentDocument,
+  Constructor,
+  Data,
   OnSubscriptionDataParams,
   SubscriptionDataOptions,
+  Variables,
 } from '@apollo-elements/interfaces';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
@@ -30,12 +32,15 @@ declare global {
 }
 
 function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
-  class ApolloSubscriptionElement<TData, TVariables>
-    extends ApolloElementMixin(superclass)<TData, TVariables>
-    implements ApolloSubscriptionInterface<TData, TVariables> {
+  class ApolloSubscriptionElement<D, V>
+    extends ApolloElementMixin(superclass)<D, V> implements ApolloSubscriptionInterface<D, V> {
     static documentType = 'subscription';
 
-    declare data: TData | null;
+    declare subscription: DocumentNode | ComponentDocument<D> | null;
+
+    declare data: Data<D> | null;
+
+    declare variables: Variables<D, V> | null;
 
     declare fetchPolicy?: FetchPolicy;
 
@@ -43,13 +48,9 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     declare noAutoSubscribe: boolean;
 
-    declare observable?: Observable<FetchResult<TData>>;
+    declare observable?: Observable<FetchResult<Data<D>>>;
 
     declare observableSubscription?: ZenObservable.Subscription;
-
-    declare subscription: DocumentNode | null;
-
-    declare variables: TVariables | null;
 
     notifyOnNetworkStatusChange = false;
 
@@ -57,7 +58,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     skip = false;
 
-    onSubscriptionData?(_result: OnSubscriptionDataParams<TData>): void
+    onSubscriptionData?(_result: OnSubscriptionDataParams<Data<D>>): void
 
     onSubscriptionComplete?(): void
 
@@ -77,7 +78,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       this.cancel();
     }
 
-    documentChanged(document: DocumentNode): void {
+    documentChanged(document: DocumentNode | ComponentDocument<D>): void {
       this.cancel();
 
       const query = document;
@@ -86,13 +87,13 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
         this.subscribe();
     }
 
-    variablesChanged(variables: TVariables): void {
+    variablesChanged(variables: Variables<D, V> | null): void {
       this.cancel();
       if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
         this.subscribe();
     }
 
-    public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>) {
+    public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>) {
       this.initObservable(params);
 
       if (this.observableSubscription && !(params?.shouldResubscribe ?? this.shouldResubscribe))
@@ -118,11 +119,11 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      * Determines whether the element is able to automatically subscribe
      * @protected
      */
-    canSubscribe(options?: Partial<SubscriptionOptions>): boolean {
+    canSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
       return (
         !this.noAutoSubscribe &&
         !!this.client &&
-        !!(options?.query ?? this.document)
+        !!(params?.query ?? this.document)
       );
     }
 
@@ -131,19 +132,19 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      *
      * Override to prevent subscribing unless your conditions are met.
      */
-    shouldSubscribe(options?: Partial<SubscriptionOptions>): boolean {
-      return (void options, true);
+    shouldSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
+      return (void params, true);
     }
 
     /** @private */
-    initObservable(params?: Partial<SubscriptionDataOptions<TData, TVariables>>): void {
+    initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void {
       const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
       const client = params?.client ?? this.client;
       const skip = params?.skip ?? this.skip;
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const query = params?.subscription ?? this.subscription!;
-      const variables = params?.variables ?? this.variables;
+      const variables = params?.variables ?? this.variables ?? undefined;
       const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
 
       if (!client)
@@ -153,14 +154,14 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
         return;
 
       this.observable =
-        client.subscribe({ query, variables, fetchPolicy });
+        client.subscribe<Data<D>, Variables<D, V>>({ query, variables, fetchPolicy });
     }
 
     /**
      * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
      * @private
      */
-    nextData(result: FetchResult<TData>) {
+    nextData(result: FetchResult<Data<D>>) {
       const data = result.data ?? null;
       // If we got to this line without a client, it's because of user error
       const client = this.client!; // eslint-disable-line @typescript-eslint/no-non-null-assertion

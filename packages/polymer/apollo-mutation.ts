@@ -1,9 +1,10 @@
+import type { OperationVariables } from '@apollo/client/core';
 import type { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
 
-type Base = Constructor<PolymerApolloElement>;
+type Base = Constructor<PolymerApolloElement<any, any>>;
 
 /**
  * @element apollo-mutation
@@ -39,16 +40,12 @@ type Base = Constructor<PolymerApolloElement>;
  * @fires 'loading-changed'
  * @fires 'called-changed'
  */
-export class PolymerApolloMutation<TData, TVariables>
-  extends ApolloMutationMixin(PolymerApolloElement as Base)<TData, TVariables>
-  implements ApolloMutationInterface<TData, TVariables> {
+export class PolymerApolloMutation<D = unknown, V = OperationVariables>
+  extends ApolloMutationMixin(PolymerApolloElement as Base)<D, V>
+  implements ApolloMutationInterface<D, V> {
   @notify called = false;
 }
 
 customElements.define('apollo-mutation', PolymerApolloMutation);
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'apollo-mutation': PolymerApolloMutation<unknown, unknown>;
-  }
-}
+declare global { interface HTMLElementTagNameMap { 'apollo-mutation': PolymerApolloMutation; } }

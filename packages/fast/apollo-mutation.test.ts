@@ -4,6 +4,8 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
+  OperationVariables,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import {
@@ -46,12 +48,12 @@ const template = html<TestableApolloMutation>`
 let counter = -1;
 
 @customElement({ name: 'fast-testable-apollo-mutation-class', template })
-class TestableApolloMutation<D = unknown, V = unknown>
+class TestableApolloMutation<D = unknown, V = OperationVariables>
   extends ApolloMutation<D, V>
   implements MutationElement<D, V> {
   declare shadowRoot: ShadowRoot;
 
-  async hasRendered(): Promise<TestableApolloMutation<D, V>> {
+  async hasRendered(): Promise<this> {
     await nextFrame();
     await DOM.nextUpdate();
     await nextFrame();
@@ -208,7 +210,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloMutationInterface
-    assertType<DocumentNode>                        (this.mutation);
+    assertType<DocumentNode>                        (this.mutation!);
     assertType<TypeCheckVars>                       (this.variables!);
     assertType<boolean>                             (this.called);
     assertType<boolean>                             (this.ignoreResults);
@@ -232,6 +234,15 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloMutation<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
+    assertType<TDN>(this.mutation!);
   }
 }
 

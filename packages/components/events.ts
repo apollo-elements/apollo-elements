@@ -1,4 +1,5 @@
-import type { ApolloError, OperationVariables } from '@apollo/client/core';
+import { Data, Variables } from '@apollo-elements/interfaces/operation';
+import type { ApolloError } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 import type { ApolloMutationElement } from './apollo-mutation';
 
@@ -9,22 +10,20 @@ export type MutationEventType = (
   | 'will-navigate'
 );
 
-export interface MutationEventDetail<Data extends unknown, Variables extends OperationVariables> {
-  data?: Data | null;
+export interface MutationEventDetail<D, V> {
+  data?: Data<D> | null;
   error?: Error | ApolloError | null;
-  element: ApolloMutationElement<Data, Variables>;
+  variables?: Variables<D, V> | null;
+  element: ApolloMutationElement<D, V>;
   mutation: DocumentNode | null;
-  variables: Variables | null;
 }
 
-export class MutationEvent<Data, Variables>
-  extends CustomEvent<MutationEventDetail<Data, Variables>> {
+export class MutationEvent<D, V> extends CustomEvent<MutationEventDetail<D, V>> {
   declare type: MutationEventType;
 
-  constructor(
-    type: MutationEventType,
-    init: CustomEventInit<MutationEventDetail<Data, Variables>>
-  ) {
+  declare detail: MutationEventDetail<D, V>;
+
+  constructor(type: MutationEventType, init: CustomEventInit) {
     super(type, {
       ...init,
       bubbles: true,
@@ -33,6 +32,8 @@ export class MutationEvent<Data, Variables>
   }
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Fired when the element is about to mutate.
  * Useful for setting variables or cancelling the mutation by calling `preventDefault`
@@ -40,13 +41,10 @@ export class MutationEvent<Data, Variables>
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillMutateEvent<Data = unknown, Variables = OperationVariables>
-  extends MutationEvent<Data, Variables> {
+export class WillMutateEvent<D = any, V = any> extends MutationEvent<D, V> {
   static type: 'will-mutate' = 'will-mutate';
 
-  declare detail: MutationEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>) {
+  constructor(element: ApolloMutationElement<D, V>) {
     const { mutation, variables } = element;
     super(WillMutateEvent.type, {
       cancelable: true,
@@ -59,27 +57,17 @@ export class WillMutateEvent<Data = unknown, Variables = OperationVariables>
   }
 }
 
-export interface MutationCompletedEventDetail<Data, Variables>
-extends MutationEventDetail<Data, Variables> {
- data: Data
-}
-
 /**
  * Fired when a mutation completes.
  * `detail` is the mutation data.
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class MutationCompletedEvent<
-  Data = unknown,
-  Variables = OperationVariables
-> extends MutationEvent<Data, Variables> {
+export class MutationCompletedEvent<D = any, V = any> extends MutationEvent<D, V> {
   static type: 'mutation-completed' = 'mutation-completed';
 
-  declare detail: MutationCompletedEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>, data: Data) {
-    const { mutation, variables } = element;
+  constructor(element: ApolloMutationElement<D, V>) {
+    const { data, mutation, variables } = element;
     super(MutationCompletedEvent.type, {
       detail: {
         data,
@@ -91,27 +79,17 @@ export class MutationCompletedEvent<
   }
 }
 
-export interface MutationErrorEventDetail<Data, Variables>
-extends MutationEventDetail<Data, Variables> {
-  error: ApolloError;
-}
-
 /**
  * Fired before an <apollo-element> with a link trigger mutates.
  * Cancel the event with `event.preventDefault()` to prevent navigation.
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillNavigateEvent<
-  Data = unknown,
-  Variables = OperationVariables,
-> extends MutationEvent<Data, Variables> {
+export class WillNavigateEvent<D = any, V = any> extends MutationEvent<D, V> {
   static type: 'will-navigate' = 'will-navigate'
 
-  declare detail: MutationCompletedEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>, data: Data) {
-    const { mutation, variables } = element;
+  constructor(element: ApolloMutationElement<D, V>) {
+    const { data, mutation, variables } = element;
     super(WillNavigateEvent.type, {
       cancelable: true,
       detail: {
@@ -129,16 +107,11 @@ export class WillNavigateEvent<
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class MutationErrorEvent<
-  Data = unknown,
-  Variables = unknown
-> extends MutationEvent<Data, Variables> {
+export class MutationErrorEvent<D = any, V = any> extends MutationEvent<D, V> {
   static type: 'mutation-error' = 'mutation-error';
 
-  declare detail: MutationErrorEventDetail<Data, Variables>;
-
-  constructor(element: ApolloMutationElement<Data, Variables>, error: ApolloError) {
-    const { mutation, variables } = element;
+  constructor(element: ApolloMutationElement<D, V>) {
+    const { mutation, variables, error } = element;
     super(MutationErrorEvent.type, {
       detail: {
         element,

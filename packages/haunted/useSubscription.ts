@@ -4,11 +4,11 @@ import type {
   DocumentNode,
   FetchPolicy,
   NormalizedCacheObject,
+  OperationVariables,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type {
-  SubscriptionHookOptions as ReactSubscriptionHookOptions,
-} from '@apollo/client/react/types/types';
+import type { ComponentDocument, Data, Variables } from '@apollo-elements/interfaces';
 
 import type { State } from 'haunted';
 
@@ -18,33 +18,37 @@ import { hook } from 'haunted';
 
 import { ApolloHook } from './ApolloHook';
 
-export type SubscriptionHookOptions<D, V> = Partial<
-  Omit<ReactSubscriptionHookOptions<D, V>, 'client'|'fetchPolicy'> & {
-    client: ApolloClient<NormalizedCacheObject>,
-    noAutoSubscribe: boolean;
-    shouldSubscribe: ApolloSubscriptionElement['shouldSubscribe'];
-    fetchPolicy: FetchPolicy;
-    onSubscriptionData: ApolloSubscriptionElement<D, V>['onSubscriptionData']
-  }>;
+export interface SubscriptionHookOptions<D, V> {
+  variables?: Variables<D, V> | null;
+  shouldResubscribe?: boolean | ((options: SubscriptionHookOptions<D, V>) => boolean);
+  skip?: boolean;
+  onSubscriptionComplete?: () => void;
+  subscription?: DocumentNode | ComponentDocument<D>;
+  client?: ApolloClient<NormalizedCacheObject>,
+  noAutoSubscribe?: boolean;
+  shouldSubscribe?: ApolloSubscriptionElement<D, V>['shouldSubscribe'];
+  fetchPolicy?: FetchPolicy;
+  onSubscriptionData?: ApolloSubscriptionElement<D, V>['onSubscriptionData']
+}
 
-export interface SubscriptionResult<TData> {
-  data: TData | null;
+export interface SubscriptionResult<D> {
+  data: Data<D> | null;
   error: Error | ApolloError | null;
   loading: boolean;
 }
 
-class UseSubscriptionHook<TData, TVariables> extends ApolloHook<
-  TData,
-  TVariables,
-  SubscriptionHookOptions<TData, TVariables>,
-  SubscriptionResult<TData>,
-  ApolloSubscriptionElement<TData, TVariables>
+class UseSubscriptionHook<D, V = OperationVariables> extends ApolloHook<
+  D,
+  V,
+  SubscriptionHookOptions<D, V>,
+  SubscriptionResult<D>,
+  ApolloSubscriptionElement<D, V>
 > {
   readonly type = 'subscription';
 
   readonly componentClass = ApolloSubscriptionElement;
 
-  readonly defaults: Partial<ApolloSubscriptionElement<TData, TVariables>> = {
+  readonly defaults: Partial<ApolloSubscriptionElement<D, V>> = {
     notifyOnNetworkStatusChange: false,
     shouldResubscribe: false,
     skip: false,
@@ -52,9 +56,9 @@ class UseSubscriptionHook<TData, TVariables> extends ApolloHook<
 
   constructor(
     id: number,
-    state: State<ApolloSubscriptionElement<TData, TVariables>>,
-    subscription: DocumentNode,
-    options?: SubscriptionHookOptions<TData, TVariables>
+    state: State<ApolloSubscriptionElement<D, V>>,
+    subscription: D extends TypedDocumentNode ? D : DocumentNode,
+    options?: SubscriptionHookOptions<D, V>
   ) {
     super(id, state, subscription, options);
     this.init();
@@ -74,12 +78,12 @@ class UseSubscriptionHook<TData, TVariables> extends ApolloHook<
     };
   }
 
-  protected optionsToOptionalMethods(): Partial<ApolloSubscriptionElement<TData, TVariables>> {
+  protected optionsToOptionalMethods(): Partial<ApolloSubscriptionElement<D, V>> {
     const { onSubscriptionData, shouldSubscribe } = this.options;
     return { onSubscriptionData, shouldSubscribe };
   }
 
-  update(): SubscriptionResult<TData> {
+  update(): SubscriptionResult<D> {
     if (this.disconnected) this.connect();
 
     const { data, error, loading } = this.state.host;

@@ -1,6 +1,16 @@
-import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  DocumentNode,
+  NormalizedCacheObject,
+  OperationVariables,
+  TypedDocumentNode,
+} from '@apollo/client/core';
 
-import type { ApolloElementElement, Constructor } from '@apollo-elements/interfaces';
+import type {
+  ApolloElementElement,
+  ComponentDocument,
+  Constructor,
+} from '@apollo-elements/interfaces';
 
 import type { State } from 'haunted';
 
@@ -18,21 +28,21 @@ const DEFAULTS = {
 };
 
 export abstract class ApolloHook<
-  TData,
-  TVariables,
+  D,
+  V,
   OptionsType extends { client?: ApolloClient<NormalizedCacheObject> },
   ReturnType extends unknown,
-  ComponentClass extends ApolloElementElement<TData, TVariables>
+  ComponentClass extends ApolloElementElement<D, V>
 > extends Hook<[DocumentNode, OptionsType], ReturnType, ComponentClass> {
   abstract readonly type: 'query'|'mutation'|'subscription';
 
   abstract readonly componentClass: Constructor<ComponentClass>;
 
-  abstract defaults: Partial<ComponentClass>;
-
   protected abstract optionsToProperties(): Partial<ComponentClass>;
 
   protected abstract optionsToOptionalMethods(): Partial<ComponentClass>;
+
+  abstract defaults: Partial<ComponentClass>;
 
   readonly reactiveProps: (keyof ComponentClass)[] = [];
 
@@ -41,7 +51,7 @@ export abstract class ApolloHook<
   constructor(
     public id: number,
     public state: State<ComponentClass>,
-    public document: DocumentNode,
+    public document: DocumentNode | ComponentDocument<D>,
     public options: OptionsType = {} as OptionsType,
   ) {
     super(id, state);

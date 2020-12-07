@@ -19,6 +19,7 @@ extensions:
         plugins:
           - typescript
           - typescript-operations
+          - typed-document-node
 
         documents:
           - packages/test-helpers/graphql/*.query.graphql

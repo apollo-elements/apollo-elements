@@ -1,4 +1,4 @@
-import { ApolloElementInterface } from '@apollo-elements/interfaces';
+import type { ApolloElementInterface } from '@apollo-elements/interfaces';
 import type { SinonSpy, SinonStub } from 'sinon';
 
 export type Library =
@@ -10,7 +10,7 @@ export type Library =
   'polymer'
 
 export interface TestableElement<D = any, V = any> extends ApolloElementInterface<D, V> {
-  hasRendered(): Promise<TestableElement>
+  hasRendered(): Promise<this>
   stringify(x: unknown): string;
 }
 

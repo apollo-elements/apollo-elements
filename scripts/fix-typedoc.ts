@@ -94,6 +94,7 @@ function fixContent(document: Document, path: string) {
 
   // Add CC BY-SA license to docs pages
   if (path.includes(PAGES_DIR)) {
+    document.body.querySelector('body > footer > .container:first-child')?.remove?.();
     generatorTag.innerHTML += /* html */`
       <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 42" height="51" version="1.0">

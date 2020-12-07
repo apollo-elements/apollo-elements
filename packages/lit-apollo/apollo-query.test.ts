@@ -5,6 +5,7 @@ import type {
   WatchQueryOptions,
   ObservableQuery,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
@@ -111,6 +112,15 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloQuery<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
+  }
+}
+
 
 class TypeCheckLit extends ApolloQuery<unknown, unknown> {
   update(changed: PropertyValues<TypeCheckLit>) {

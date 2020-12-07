@@ -6,6 +6,7 @@ import type {
   FetchResult,
   Observable,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import { fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
@@ -188,5 +189,13 @@ class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> 
     assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends PolymerApolloSubscription<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

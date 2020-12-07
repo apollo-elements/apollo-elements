@@ -21,6 +21,9 @@ const validateVariablesLink =
   new ApolloLink((operation, forward) =>
     hasAllVariables(operation) ? forward(operation) : null); /* c8 ignore next */ // this is called
 
+export type SimpleApolloClient =
+  ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache };
+
 /**
  * Creates a simple ApolloClient
  */

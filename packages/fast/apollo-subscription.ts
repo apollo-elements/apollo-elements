@@ -1,3 +1,4 @@
+import type { OperationVariables } from '@apollo/client/core';
 import { ApolloElement } from './apollo-element';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 import { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/interfaces';
@@ -12,8 +13,7 @@ import { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/inter
  * See [[`ApolloSubscriptionInterface`]] for more information on events
  *
  */
-export class ApolloSubscription<TData, TVariables>
+export class ApolloSubscription<D = unknown, V = OperationVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
-  implements ApolloSubscriptionInterface<TData, TVariables> {
-}
+  extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
+  implements ApolloSubscriptionInterface<D, V> { }

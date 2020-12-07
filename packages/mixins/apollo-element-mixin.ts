@@ -1,10 +1,20 @@
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
-import type { DocumentNode } from 'graphql/language/ast';
-import type { GraphQLError } from 'graphql';
 import type {
-  Constructor,
-  ApolloElementInterface,
+  ApolloClient,
+  ApolloError,
+  DocumentNode,
+  NormalizedCacheObject,
+  OperationVariables,
+} from '@apollo/client/core';
+
+import type { GraphQLError } from 'graphql';
+
+import type {
   ApolloElementElement,
+  ApolloElementInterface,
+  ComponentDocument,
+  Constructor,
+  Data,
+  Variables,
 } from '@apollo-elements/interfaces';
 
 import { gql } from '@apollo/client/core';
@@ -12,6 +22,7 @@ import { gql } from '@apollo/client/core';
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { effect, writable } from '@apollo-elements/lib/descriptors';
+import { stripHTMLComments } from '@apollo-elements/lib/helpers';
 
 declare global {
   interface WindowEventMap {
@@ -34,7 +45,7 @@ function capital(string: string): string {
 /**
  * Fired when an element connects to or disconnects from the DOM
  */
-export class ApolloElementEvent<T extends ApolloElementElement = ApolloElementElement>
+export class ApolloElementEvent<T = ApolloElementElement>
   extends CustomEvent<T> {
   declare type: 'apollo-element-connected'|'apollo-element-disconnected';
 
@@ -49,16 +60,15 @@ export class ApolloElementEvent<T extends ApolloElementElement = ApolloElementEl
 
 function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) {
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
-  class ApolloElement<TData = unknown, TVariables = unknown>
-    extends superclass
-    implements ApolloElementInterface<TData, TVariables> {
+  class ApolloElement<D = unknown, V = OperationVariables>
+    extends superclass implements ApolloElementInterface<D, V> {
     static documentType = 'document';
 
-    declare context?: Record<string, unknown>;
+    /** Latest data */
+    declare data: Data<D> | null;
 
-    declare data: TData | null;
-
-    declare variables: TVariables | null;
+    /** Operation variables */
+    declare variables: Variables<D, V> | null;
 
     declare error: Error | ApolloError | null;
 
@@ -66,16 +76,18 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     declare loading: boolean;
 
+    declare context?: Record<string, unknown>;
+
     client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
     /** @private */
-    _document: DocumentNode | null = null;
+    _document: DocumentNode | ComponentDocument<D> | null = null;
 
     /** @private */
     _documentSetByJS = false;
 
     /** @private */
-    _variables: TVariables | null = null;
+    _variables: Variables<D, V> | null = null;
 
     /** @private */
     _variablesSetByJS = false;
@@ -84,7 +96,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     mo: MutationObserver | null = null;
 
     /** GraphQL Document */
-    get document(): DocumentNode | null {
+    get document(): DocumentNode | ComponentDocument<D> | null {
       return this._document ?? this.getDOMGraphQLDocument();
     }
 
@@ -126,13 +138,13 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * Lifecycle callback that reacts to changes in the GraphQL document
      * @protected
      */
-    documentChanged?(document: DocumentNode | null): void
+    documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
 
     /**
      * Lifecycle callback that reacts to changes in the operation variables
      * @protected
      */
-    variablesChanged?(variables: TVariables | null): void
+    variablesChanged?(variables: Variables<D, V> | null): void
 
     /** @private */
     onDOMMutation(records: MutationRecord[]): void {
@@ -155,14 +167,15 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * Get a GraphQL DocumentNode from the element's GraphQL script child
      * @private
      */
-    getDOMGraphQLDocument(): DocumentNode | null {
+    getDOMGraphQLDocument(): DocumentNode | ComponentDocument<D> | null {
       const script = this.querySelector<HTMLScriptElement>(SCRIPT_SELECTOR);
       const text = script?.innerText;
       if (!text)
         return null; /* c8 ignore next */ // covered
       else {
         try {
-          return gql(text.replace?.(/<!---->/g, '')); /* c8 ignore next */ // covered
+          // admittedly, we have to trust the user here.
+          return gql(stripHTMLComments(text)) as DocumentNode | ComponentDocument<D>; /* c8 ignore next */ // covered
         } catch (err) {
           this.error = err;
           return null;
@@ -174,7 +187,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
      * Gets operation variables from the element's JSON script child
      * @private
      */
-    getDOMVariables(): TVariables | null {
+    getDOMVariables(): Variables<D, V> | null {
       const script = this.querySelector<HTMLScriptElement>('script[type="application/json"]');
       if (!script) return null; /* c8 ignore next */ // covered
       try {
@@ -193,7 +206,10 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     variables: effect({
       name: 'variables',
       init: null,
-      onSet(variables) {
+      onSet<E extends ApolloElement>(
+        this: E,
+        variables: E extends ApolloElement<infer D, infer V> ? Variables<D, V> : never | null
+      ) {
         if (this.mo) // element is connected
           this.variablesChanged?.(variables);
       },

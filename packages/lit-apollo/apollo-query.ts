@@ -1,9 +1,11 @@
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus, OperationVariables } from '@apollo/client/core';
+
 import { property } from 'lit-element';
 
-import { ApolloElement } from './apollo-element';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
+
+import { ApolloElement } from './apollo-element';
 
 /**
  * `ApolloQuery`
@@ -13,9 +15,9 @@ import { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
  * See [[`ApolloQueryInterface`]] for more information on events
  *
  */
-export class ApolloQuery<TData, TVariables>
+export class ApolloQuery<D = unknown, V = OperationVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<TData, TVariables>
-  implements ApolloQueryInterface<TData, TVariables> {
+  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
+  implements ApolloQueryInterface<D, V> {
   @property({ type: Number }) networkStatus = NetworkStatus.ready;
 }

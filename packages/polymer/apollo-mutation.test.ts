@@ -4,6 +4,7 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 import type { DocumentNode } from 'graphql';
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
@@ -249,5 +250,13 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends PolymerApolloMutation<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

@@ -3,7 +3,9 @@ import type {
   FetchPolicy,
   FetchResult,
   Observable,
+  OperationVariables,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { DocumentNode, GraphQLError } from 'graphql';
@@ -20,7 +22,7 @@ import {
   setupSubscriptionClass,
 } from '@apollo-elements/test-helpers/subscription.test';
 
-class TestableApolloSubscription<D = unknown, V = unknown>
+class TestableApolloSubscription<D = unknown, V = OperationVariables>
   extends ApolloSubscription<D, V>
   implements SubscriptionElement<D, V> {
   render(): TemplateResult {
@@ -91,5 +93,13 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloSubscription<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

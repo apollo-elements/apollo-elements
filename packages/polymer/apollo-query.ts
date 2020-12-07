@@ -1,10 +1,11 @@
+import type { OperationVariables } from '@apollo/client/core';
 import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
 
-type Base = Constructor<PolymerApolloElement>;
+type Base = Constructor<PolymerApolloElement<any, any>>;
 
 /**
  * @element apollo-query
@@ -40,16 +41,12 @@ type Base = Constructor<PolymerApolloElement>;
  * @fires 'loading-changed'
  * @fires 'network-status-changed'
  */
-export class PolymerApolloQuery<TData, TVariables>
-  extends ApolloQueryMixin(PolymerApolloElement as Base)<TData, TVariables>
-  implements ApolloQueryInterface<TData, TVariables> {
+export class PolymerApolloQuery<D = unknown, V = OperationVariables>
+  extends ApolloQueryMixin(PolymerApolloElement as Base)<D, V>
+  implements ApolloQueryInterface<D, V> {
   @notify networkStatus: NetworkStatus = NetworkStatus.ready;
 }
 
 customElements.define('apollo-query', PolymerApolloQuery);
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'apollo-query': PolymerApolloQuery<unknown, unknown>;
-  }
-}
+declare global { interface HTMLElementTagNameMap { 'apollo-query': PolymerApolloQuery; } }
