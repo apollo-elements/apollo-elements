@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/fast@1.2.0-alpha.0...@apollo-elements/fast@1.2.0-alpha.1) (2020-12-05)
+
+
+### Features
+
+* support for TypedDocumentNode ([152b4f0](https://github.com/apollo-elements/apollo-elements/commit/152b4f0e66ff22b7aa30c7b926db8291b0cbdfea))
+
+
+
+
+
 # [1.2.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/fast@1.1.3...@apollo-elements/fast@1.2.0-alpha.0) (2020-12-04)
 
 

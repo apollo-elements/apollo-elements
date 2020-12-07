@@ -1,22 +1,27 @@
-import type { DocumentNode } from 'graphql';
-
 import type {
+  ApolloQueryResult,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
-  ObservableQuery,
-  ApolloQueryResult,
   FetchMoreOptions,
-  NetworkStatus,
-  SubscriptionOptions,
-  SubscribeToMoreOptions,
-  QueryOptions,
   FetchMoreQueryOptions,
+  NetworkStatus,
+  ObservableQuery,
+  OperationVariables,
+  QueryOptions,
+  SubscribeToMoreOptions,
+  SubscriptionOptions,
   WatchQueryOptions,
 } from '@apollo/client/core';
 
+import type { ComponentDocument, Data, Variables } from './operation';
 import type { ApolloElementInterface } from './apollo-element';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
+export type FetchMoreParams<D, V> =
+  FetchMoreQueryOptions<Variables<D, V>, keyof Variables<D, V>, Data<D>> &
+  FetchMoreOptions<Data<D>, Variables<D, V>>
 
 /**
  * Common interface for query elements
@@ -28,22 +33,22 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  * @fires 'apollo-query-result' when the query resolves
  * @fires 'apollo-error' when the query rejects
  */
-export declare class ApolloQueryInterface<TData, TVariables>
-  extends ApolloElementInterface<TData, TVariables> {
+export declare class ApolloQueryInterface<D, V = OperationVariables>
+  extends ApolloElementInterface<D, V> {
   /**
    * Latest query data.
    */
-  declare data: TData | null;
+  declare data: Data<D> | null;
 
   /**
    * A GraphQL document containing a single query.
    */
-  declare query: DocumentNode | null;
+  declare query: DocumentNode | ComponentDocument<D> | null;
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
    */
-  declare variables: TVariables | null;
+  declare variables: Variables<D, V> | null;
 
   /**
    * Specifies the FetchPolicy to be used for this query.
@@ -110,12 +115,12 @@ export declare class ApolloQueryInterface<TData, TVariables>
   /**
    * The Apollo ObservableQuery watching this element's query.
    */
-  declare observableQuery?: ObservableQuery<TData, TVariables>;
+  declare observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
   /**
    * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
    */
-  declare options: Partial<WatchQueryOptions<TVariables, TData>> | null;
+  declare options: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null;
 
   /**
    * Whether or not updates to the network status should trigger next on the observer of this query.
@@ -141,7 +146,7 @@ export declare class ApolloQueryInterface<TData, TVariables>
   /**
    * Callback for when a query is completed.
    */
-  onData?(_result: ApolloQueryResult<TData>): void
+  onData?(_result: ApolloQueryResult<Data<D>>): void
 
   /**
    * Callback for when an error occurs in mutation.
@@ -152,24 +157,26 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
-  refetch(variables: TVariables): Promise<ApolloQueryResult<TData>> | void;
+  refetch(variables: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>>;
 
   /**
    * Determines whether the element is able to automatically subscribe
    * @protected
    */
-  canSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
+  canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
-  shouldSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
+  shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Resets the observableQuery and subscribes.
    */
-  subscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): ZenObservable.Subscription;
+  subscribe(
+    params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+  ): ZenObservable.Subscription;
 
   /**
    * Lets you pass a GraphQL subscription and updateQuery function
@@ -179,12 +186,14 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  subscribeToMore(options: SubscribeToMoreOptions<TData, TVariables>): (() => void) | void;
+  subscribeToMore(options: SubscribeToMoreOptions<Data<D>, Variables<D, V>>): (() => void) | void;
 
   /**
    * Executes a Query once and updates the component with the result
    */
-  executeQuery(options?: Partial<QueryOptions>): Promise<void | ApolloQueryResult<TData>>;
+  executeQuery(
+    params?: Partial<QueryOptions<Variables<D, V>>>
+  ): Promise<ApolloQueryResult<Data<D>> | void>;
 
   /**
    * Exposes the `ObservableQuery#fetchMore` method.
@@ -196,11 +205,7 @@ export declare class ApolloQueryInterface<TData, TVariables>
    *
    * The optional `variables` parameter is an optional new variables object.
    */
-  fetchMore(
-    options?:
-      Partial<FetchMoreQueryOptions<TVariables, keyof TVariables> &
-      FetchMoreOptions<TData, TVariables>>
-  ): Promise<ApolloQueryResult<TData>>;
+  fetchMore(params?: Partial<FetchMoreParams<D, V>>): Promise<ApolloQueryResult<Data<D>>>;
 
   /**
    * Creates an instance of ObservableQuery with the options provided by the element.
@@ -215,9 +220,9 @@ export declare class ApolloQueryInterface<TData, TVariables>
    * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
    */
   watchQuery(
-    options?: Partial<WatchQueryOptions<TVariables, TData>>
-  ): ObservableQuery<TData, TVariables>;
+    options?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
+  ): ObservableQuery<Data<D>, Variables<D, V>>;
 }
 
-export class ApolloQueryElement<D = unknown, V = unknown>
+export class ApolloQueryElement<D = unknown, V = OperationVariables>
   extends ApolloQueryMixin(HTMLElement)<D, V> { }

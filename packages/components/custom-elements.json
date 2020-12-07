@@ -23,8 +23,13 @@
           "default": "[\"uri\"]"
         },
         {
+          "name": "client",
+          "description": "Reference to the `ApolloClient` instance.",
+          "type": "(ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache; }) | null"
+        },
+        {
           "name": "elements",
-          "type": "readonly ApolloElementElement<unknown, unknown>[]"
+          "type": "readonly ApolloElementElement<unknown, Record<string, any>>[]"
         },
         {
           "name": "typePolicies",
@@ -42,11 +47,6 @@
           "attribute": "validate-variables",
           "description": "When true, client will not fetch operations that do not have all their non-nullable variables set",
           "type": "boolean"
-        },
-        {
-          "name": "client",
-          "description": "Reference to the `ApolloClient` instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null"
         }
       ],
       "events": [
@@ -68,8 +68,8 @@
         },
         {
           "name": "refetch-queries",
-          "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null | undefined"
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "called",
@@ -89,12 +89,25 @@
         {
           "name": "mutation",
           "description": "The mutation.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
+        },
+        {
+          "name": "refetchQueries",
+          "attribute": "refetch-queries",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
+        },
+        {
+          "name": "called",
+          "attribute": "called",
+          "description": "Whether the mutation has been fired",
+          "type": "boolean",
+          "default": "false"
         },
         {
           "name": "optimisticResponse",
           "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.",
-          "type": "TData | ((vars: TVariables) => TData) | undefined"
+          "type": "Data<D> | ((vars: Variables<D, V>) => Data<D>) | undefined"
         },
         {
           "name": "errorPolicy",
@@ -107,22 +120,9 @@
           "type": "\"no-cache\" | undefined"
         },
         {
-          "name": "refetchQueries",
-          "attribute": "refetch-queries",
-          "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null | undefined"
-        },
-        {
           "name": "awaitRefetchQueries",
           "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
           "type": "boolean | undefined"
-        },
-        {
-          "name": "called",
-          "attribute": "called",
-          "description": "Whether the mutation has been fired",
-          "type": "boolean",
-          "default": "false"
         },
         {
           "name": "ignoreResults",
@@ -136,19 +136,14 @@
           "default": "\"mutation\""
         },
         {
-          "name": "context",
-          "description": "Context to be passed to link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
-          "description": "Latest mutation data.",
-          "type": "TData | null"
+          "description": "Latest mutation",
+          "type": "Data<D> | null"
         },
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables | null",
+          "type": "Variables<D, V> | null",
           "default": "\"\""
         },
         {
@@ -168,6 +163,11 @@
           "default": "\"\""
         },
         {
+          "name": "context",
+          "description": "Context to be passed to link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null",
@@ -176,7 +176,7 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         }
       ],
       "events": [

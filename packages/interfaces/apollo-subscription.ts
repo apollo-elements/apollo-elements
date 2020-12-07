@@ -1,15 +1,17 @@
-import type { DocumentNode } from 'graphql';
-import type { ApolloElementInterface } from './apollo-element';
 import type {
   ApolloClient,
   ApolloError,
+  DocumentNode,
   FetchPolicy,
   FetchResult,
-  Observable,
-  SubscriptionOptions,
-  OperationVariables,
   NormalizedCacheObject,
+  Observable,
+  OperationVariables,
+  SubscriptionOptions,
 } from '@apollo/client/core';
+
+import type { ComponentDocument, Data, Variables } from './operation';
+import type { ApolloElementInterface } from './apollo-element';
 
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
@@ -22,13 +24,13 @@ export interface SubscriptionResult<TData> {
   error: ApolloError | null;
 }
 
-export interface SubscriptionDataOptions<TData = unknown, TVariables = OperationVariables> {
-  subscription: DocumentNode;
-  variables?: TVariables;
+export interface SubscriptionDataOptions<D = unknown, V = OperationVariables> {
+  subscription: DocumentNode | ComponentDocument<D>;
+  variables?: Variables<D, V>;
   fetchPolicy?: FetchPolicy;
   shouldResubscribe?:
     | boolean
-    | ((options: SubscriptionDataOptions<TData, TVariables>) => boolean);
+    | ((options: SubscriptionDataOptions<D, V>) => boolean);
   client?: ApolloClient<NormalizedCacheObject>;
   skip?: boolean;
 }
@@ -48,8 +50,8 @@ export interface OnSubscriptionDataParams<TData = unknown> {
  * @fires 'apollo-subscription-result' when the subscription updates
  * @fires 'apollo-error' when the query rejects
  */
-export declare class ApolloSubscriptionInterface<TData, TVariables>
-  extends ApolloElementInterface<TData, TVariables> {
+export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
+  extends ApolloElementInterface<D, V> {
   /**
    * Specifies the FetchPolicy to be used for this subscription.
    */
@@ -68,7 +70,7 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * Observable watching this element's subscription.
    */
-  declare observable?: Observable<FetchResult<TData>>;
+  declare observable?: Observable<FetchResult<Data<D>>>;
 
   /**
    * Subscription to the observable
@@ -78,7 +80,7 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * A GraphQL document containing a single subscription.
    */
-  declare subscription: DocumentNode | null;
+  declare subscription: DocumentNode | ComponentDocument<D> | null;
 
   /**
    * If true, the element will not begin querying data until you manually call `subscribe`
@@ -88,7 +90,7 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
    */
-  declare variables: TVariables | null;
+  declare variables: Variables<D, V> | null;
 
   /**
    * If skip is true, the query will be skipped entirely
@@ -100,7 +102,7 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   /**
    * Resets the observable and subscribes.
    */
-  public subscribe(params?: Partial<SubscriptionDataOptions<TData, TVariables>>): void
+  public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void
 
   /**
    * Cancels and clears the subscription
@@ -111,18 +113,18 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
    * Determines whether the element is able to automatically subscribe
    * @protected
    */
-  canSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
+  canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
-  shouldSubscribe(options?: Partial<SubscriptionOptions<TVariables, TData>>): boolean
+  shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Callback for when data is updated
    */
-  onSubscriptionData?(result: OnSubscriptionDataParams<TData>): void;
+  onSubscriptionData?(result: OnSubscriptionDataParams<Data<D>>): void;
 
   /**
    * Callback for when error is updated
@@ -135,13 +137,13 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   onSubscriptionComplete?(): void;
 
   /** @private */
-  initObservable(params?: Partial<SubscriptionDataOptions<TData, TVariables>>): void;
+  initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void;
 
   /**
    * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
    * @private
    */
-  nextData(result: FetchResult<TData>): void;
+  nextData(result: FetchResult<Data<D>>): void;
 
   /**
    * Sets `error` and `loading` on the instance when the subscription errors.
@@ -159,5 +161,5 @@ export declare class ApolloSubscriptionInterface<TData, TVariables>
   endSubscription(): void;
 }
 
-export class ApolloSubscriptionElement<TData = unknown, TVariables = unknown>
-  extends ApolloSubscriptionMixin(HTMLElement)<TData, TVariables> { }
+export class ApolloSubscriptionElement<D = unknown, V = OperationVariables>
+  extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }

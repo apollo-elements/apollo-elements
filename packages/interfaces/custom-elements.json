@@ -18,7 +18,7 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "context",
@@ -27,13 +27,13 @@
         },
         {
           "name": "data",
-          "description": "Latest data",
-          "type": "TData | null"
+          "description": "data",
+          "type": "Data<D> | null"
         },
         {
           "name": "variables",
           "description": "Operation variables",
-          "type": "TVariables | null"
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -70,12 +70,12 @@
         {
           "name": "mutation",
           "description": "The mutation.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "optimisticResponse",
           "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.",
-          "type": "TData | ((vars: TVariables) => TData) | undefined"
+          "type": "Data<D> | ((vars: Variables<D, V>) => Data<D>) | undefined"
         },
         {
           "name": "called",
@@ -100,7 +100,7 @@
         {
           "name": "refetchQueries",
           "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<TData, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null | undefined"
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "awaitRefetchQueries",
@@ -119,7 +119,7 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "context",
@@ -128,13 +128,13 @@
         },
         {
           "name": "data",
-          "description": "Latest mutation data.",
-          "type": "TData | null"
+          "description": "Latest mutation",
+          "type": "Data<D> | null"
         },
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "TVariables | null"
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -179,7 +179,7 @@
         {
           "name": "query",
           "description": "A GraphQL document containing a single query.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "fetchPolicy",
@@ -214,12 +214,12 @@
         {
           "name": "observableQuery",
           "description": "The Apollo ObservableQuery watching this element's query.",
-          "type": "ObservableQuery<TData, TVariables> | undefined"
+          "type": "ObservableQuery<Data<D>, Variables<D, V>> | undefined"
         },
         {
           "name": "options",
           "description": "Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.",
-          "type": "Partial<WatchQueryOptions<TVariables, TData>> | null"
+          "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null"
         },
         {
           "name": "notifyOnNetworkStatusChange",
@@ -253,7 +253,7 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "context",
@@ -263,12 +263,12 @@
         {
           "name": "data",
           "description": "Latest query data.",
-          "type": "TData | null"
+          "type": "Data<D> | null"
         },
         {
           "name": "variables",
           "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.",
-          "type": "TVariables | null"
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -328,7 +328,7 @@
         {
           "name": "observable",
           "description": "Observable watching this element's subscription.",
-          "type": "Observable<FetchResult<TData, Record<string, any>, Record<string, any>>> | undefined"
+          "type": "Observable<FetchResult<Data<D>, Record<string, any>, Record<string, any>>> | undefined"
         },
         {
           "name": "observableSubscription",
@@ -338,7 +338,7 @@
         {
           "name": "subscription",
           "description": "A GraphQL document containing a single subscription.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "noAutoSubscribe",
@@ -366,7 +366,7 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | null"
+          "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "context",
@@ -375,13 +375,13 @@
         },
         {
           "name": "data",
-          "description": "Latest data",
-          "type": "TData | null"
+          "description": "data",
+          "type": "Data<D> | null"
         },
         {
           "name": "variables",
           "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "TVariables | null"
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",

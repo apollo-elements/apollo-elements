@@ -1,5 +1,12 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from 'graphql';
+
+import type {
+  ApolloClient,
+  DocumentNode,
+  NormalizedCacheObject,
+  OperationVariables,
+  TypedDocumentNode,
+} from '@apollo/client/core';
 
 import { gql } from '@apollo/client/core';
 
@@ -12,7 +19,7 @@ import { client, assertType, isApolloError } from '@apollo-elements/test-helpers
 import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
 
 class XL extends HTMLElement {}
-class Test<D = unknown, V = unknown> extends ApolloElementMixin(XL)<D, V> { }
+class Test<D = unknown, V = OperationVariables> extends ApolloElementMixin(XL)<D, V> { }
 
 describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('returns an instance of the superclass', async function returnsClass() {
@@ -327,8 +334,8 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 });
 
 type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVariables = { c: 'c', d: number };
-class TypeCheck extends Test<TypeCheckData, TypeCheckVariables> {
+type TypeCheckVars = { c: 'c', d: number };
+class TypeCheck extends Test<TypeCheckData, TypeCheckVars> {
   typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
@@ -342,7 +349,7 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVariables> {
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
-    assertType<TypeCheckVariables>                  (this.variables!);
+    assertType<TypeCheckVars>                  (this.variables!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data!.a);
     assertType<number>                              (this.data!.b);
@@ -350,5 +357,13 @@ class TypeCheck extends Test<TypeCheckData, TypeCheckVariables> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends Test<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

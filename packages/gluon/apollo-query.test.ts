@@ -1,11 +1,11 @@
 import type {
   ApolloClient,
-  ApolloError,
   ErrorPolicy,
   FetchPolicy,
   WatchQueryOptions,
   ObservableQuery,
   NormalizedCacheObject,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
@@ -32,41 +32,6 @@ class TestableApolloQuery<D, V>
   extends ApolloQuery<D, V>
   implements QueryElement<D, V> {
   declare shadowRoot: ShadowRoot;
-
-  #data: D|null = null;
-
-  #error: ApolloError|null = null;
-
-  #errors: readonly GraphQLError[]|null = null;
-
-  #loading = false;
-
-  #networkStatus = NetworkStatus.ready;
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get data() { return this.#data; }
-
-  set data(v: D) { this.#data = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get error() { return this.#error; }
-
-  set error(v: ApolloError) { this.#error = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get errors() { return this.#errors; }
-
-  set errors(v: readonly GraphQLError[]) { this.#errors = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get loading() { return this.#loading; }
-
-  set loading(v: boolean) { this.#loading = v; this.render(); }
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  get networkStatus() { return this.#networkStatus; }
-
-  set networkStatus(v: number) { this.#networkStatus = v; this.render(); }
 
   get template() {
     return html`
@@ -178,5 +143,13 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+  }
+}
+
+type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+class TDNTypeCheck extends ApolloQuery<TDN> {
+  typeCheck() {
+    assertType<TypeCheckData>(this.data!);
+    assertType<TypeCheckVars>(this.variables!);
   }
 }

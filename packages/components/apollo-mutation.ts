@@ -1,4 +1,9 @@
-import type { ApolloError } from '@apollo/client/core';
+import type { OperationVariables } from '@apollo/client/core';
+
+import type {
+  ApolloMutationInterface,
+  Data, RefetchQueriesType, Variables, VariablesOf,
+} from '@apollo-elements/interfaces';
 
 import { ApolloMutation } from '@apollo-elements/lit-apollo/apollo-mutation';
 
@@ -145,7 +150,12 @@ export class WillMutateError extends Error {}
  * ```
  */
 @customElement('apollo-mutation')
-export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data, Variables> {
+export class ApolloMutationElement<D = unknown, V = OperationVariables>
+  extends ApolloMutation<D, V> implements ApolloMutationInterface<D, V> {
+  declare variables: Variables<D, V> | null;
+
+  declare refetchQueries: RefetchQueriesType<D> | null;
+
   /**
    * When set, variable data attributes will be packed into an
    * object property with the name of this property
@@ -186,7 +196,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
    * @param data mutation data
    * @returns url to navigate to
    */
-  resolveURL?(data: Data): string | Promise<string>;
+  resolveURL?(data: Data<D>): string | Promise<string>;
 
   @queryAssignedNodes('trigger') private triggerNodes!: NodeListOf<HTMLElement>;
 
@@ -194,7 +204,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
 
   private inFlight = false;
 
-  protected __variables: Variables | null = null;
+  protected __variables: Variables<D, V> | null = null;
 
   /**
    * Slotted trigger node
@@ -248,7 +258,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   /**
    * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
    */
-  protected getVariablesFromInputs(): Variables | null {
+  protected getVariablesFromInputs(): Variables<D, V> | null {
     if (isEmpty(this.dataset) && isEmpty(this.inputs))
       return null;
 
@@ -258,9 +268,9 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
     };
 
     if (this.inputKey)
-      return { [this.inputKey]: input } as unknown as Variables;
+      return { [this.inputKey]: input } as unknown as Variables<D, V>;
     else
-      return input as Variables;
+      return input as Variables<D, V>;
   }
 
   private onSlotchange(): void {
@@ -271,7 +281,7 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   }
 
   private willMutate(): void {
-    if (!this.dispatchEvent(new WillMutateEvent<Data, Variables>(this)))
+    if (!this.dispatchEvent(new WillMutateEvent<D, V>(this)))
       throw new WillMutateError('mutation was canceled');
 
     this.inFlight = true;
@@ -283,8 +293,8 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
       input.disabled = true;
   }
 
-  private async willNavigate(data: Data): Promise<void> {
-    if (!this.dispatchEvent(new WillNavigateEvent<Data, Variables>(this, data)))
+  private async willNavigate(data: Data<D>): Promise<void> {
+    if (!this.dispatchEvent(new WillNavigateEvent<D, V>(this)))
       return;
 
     const url =
@@ -319,18 +329,18 @@ export class ApolloMutationElement<Data, Variables> extends ApolloMutation<Data,
   }
 
   /** @private */
-  onCompleted(data: Data): void {
+  onCompleted(data: Data<D>): void {
     this.didMutate();
-    this.dispatchEvent(new MutationCompletedEvent<Data, Variables>(this, data));
+    this.dispatchEvent(new MutationCompletedEvent<D, V>(this));
 
     if (isLink(this.trigger))
       this.willNavigate(data);
   }
 
   /** @private */
-  onError(error: ApolloError): void {
+  onError(): void {
     this.didMutate();
-    this.dispatchEvent(new MutationErrorEvent<Data, Variables>(this, error));
+    this.dispatchEvent(new MutationErrorEvent<D, V>(this));
   }
 }
 
@@ -339,14 +349,14 @@ Object.defineProperties(ApolloMutationElement.prototype, {
     configurable: true,
     enumerable: true,
 
-    get<V>(this: ApolloMutationElement<unknown, V>): V | null {
+    get(this: ApolloMutationElement): VariablesOf<ApolloMutationElement> | null {
       if (this.__variables)
         return this.__variables;
       else
         return this.getVariablesFromInputs() ?? this.getDOMVariables();
     },
 
-    set<V>(this: ApolloMutationElement<unknown, V>, v: V) {
+    set(this: ApolloMutationElement, v: VariablesOf<ApolloMutationElement> | null) {
       this.__variables = v;
       if (this.mo) // element is connected
         this.variablesChanged?.(v);

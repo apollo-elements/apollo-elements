@@ -1,8 +1,8 @@
-import { NetworkStatus } from '@apollo/client/core';
+import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
 
 import { ApolloElement } from './apollo-element';
+import { NetworkStatus, OperationVariables } from '@apollo/client/core';
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
-import { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
 /**
@@ -15,9 +15,9 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  * See [[`ApolloQueryInterface`]] for more information on events
  *
  */
-export class ApolloQuery<Data, Variables>
+export class ApolloQuery<D = unknown, V = OperationVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<Data, Variables>
-  implements ApolloQueryInterface<Data, Variables> {
+  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
+  implements ApolloQueryInterface<D, V> {
   @attr({ converter: nullableNumberConverter }) networkStatus: NetworkStatus = NetworkStatus.ready;
 }

@@ -1,8 +1,17 @@
+import {
+  ApolloClient,
+  ApolloError,
+  NetworkStatus,
+  NormalizedCacheObject,
+  TypedDocumentNode,
+  gql,
+} from '@apollo/client/core';
+
 import { html } from 'haunted';
 import { useQuery } from './useQuery';
 import { component } from 'haunted';
 
-import { Entries, restoreSpies, SetupOptions } from '@apollo-elements/test-helpers';
+import { assertType, Entries, restoreSpies, SetupOptions } from '@apollo-elements/test-helpers';
 import HelloQuery from '@apollo-elements/test-helpers/graphql/Hello.query.graphql';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
@@ -27,7 +36,7 @@ describe('[haunted] useQuery', function() {
   });
 
   describeQuery({
-    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>) {
+    async setupFunction<T extends QueryElement<any, any>>(opts?: SetupOptions<T>) {
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
       let spies!: Record<string|keyof T, SinonSpy>;
@@ -261,3 +270,61 @@ describe('[haunted] useQuery', function() {
     });
   });
 });
+
+type TypeCheckData = { a: 'a'; b: number };
+type TypeCheckVars = { c: 'c'; d: number };
+
+const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
+  gql`query TypedQuery($c: String, $d: Int) { a b }`;
+
+function TDNTypeCheck() {
+  const {
+    called,
+    client,
+    data,
+    error,
+    fetchMore,
+    loading,
+    networkStatus,
+    variables,
+    refetch,
+    startPolling,
+    stopPolling,
+    subscribeToMore,
+  } = useQuery(TDN);
+
+  assertType<boolean>(called);
+  assertType<ApolloClient<NormalizedCacheObject>>(client!);
+  assertType<Error|ApolloError>(error!);
+  assertType<NetworkStatus>(networkStatus);
+  assertType<boolean>(loading);
+  assertType<TypeCheckData>(data!);
+  assertType<TypeCheckVars>(variables!);
+
+  assertType<void>(startPolling(12));
+
+  assertType<void>(stopPolling());
+
+  (async function typeCheckRefetch() {
+    const r = await refetch({ c: 'c', d: 2 });
+    assertType<'a'>(r.data.a);
+  });
+
+  (subscribeToMore({
+    document: gql`subscription { hi }`,
+    updateQuery(data) {
+      assertType<TypeCheckData>(data);
+      return { a: 'a', b: 3 };
+    },
+  }));
+
+  (async function typeCheckFetchMore() {
+    fetchMore({
+      variables: { c: 'c', d: 12 },
+      updateQuery(data) {
+        assertType<TypeCheckData>(data);
+        return { a: 'a', b: 3 };
+      },
+    });
+  });
+}

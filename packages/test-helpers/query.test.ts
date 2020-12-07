@@ -619,14 +619,18 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('executeQuery()', function() {
-            let result: ApolloQueryResult<NullableParamQueryData> | undefined;
+            let result: ApolloQueryResult<any> | undefined;
 
             beforeEach(function() {
               expect(element?.data).to.be.null;
             });
 
             beforeEach(async function() {
-              result = await element?.executeQuery();
+              result = await element!.executeQuery()!;
+            });
+
+            afterEach(function() {
+              result = undefined;
             });
 
             it('calls client query', function() {
@@ -1191,8 +1195,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element!.observableQuery = undefined;
             });
 
-            it('does nothing', function() {
-              expect(element!.refetch({ nullable: 'bar' })).to.be.undefined;
+            it('rejects', async function() {
+              try {
+                await element!.refetch({ nullable: 'bar' });
+                expect.fail('Did not reject');
+              } catch (error) {
+                expect(error.message).to.equal('Cannot refetch without an ObservableQuery');
+              }
             });
           });
         });

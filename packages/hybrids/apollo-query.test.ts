@@ -1,5 +1,6 @@
 import type { SinonSpy, SinonStub } from 'sinon';
-import type { Entries, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { assertType, Entries, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { OperationVariables, TypedDocumentNode, gql } from '@apollo/client/core';
 
 import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
 
@@ -13,6 +14,7 @@ import 'sinon-chai';
 
 import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
 import { __testing_escape_hatch__ } from './helpers/accessors';
+import { ApolloQueryElement, query } from './factories/query';
 
 let counter = 0;
 
@@ -22,7 +24,9 @@ function getTagName(): string {
   return tagName;
 }
 
-function render<D = unknown, V = unknown>(host: QueryElement<D, V>): ReturnType<typeof html> {
+function render<D = unknown, V = OperationVariables>(
+  host: QueryElement<D, V>
+): ReturnType<typeof html> {
   return html`
     <output id="data">${host.stringify(host.data)}</output>
     <output id="error">${host.stringify(host.error)}</output>
@@ -83,3 +87,20 @@ describe('[hybrids] ApolloQuery', function() {
     },
   });
 });
+
+type TypeCheckData = { a: 'a'; b: number };
+type TypeCheckVars = { c: 'c'; d: number };
+
+const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
+  gql`query TypedQuery($c: String, $d: Int) { a b }`;
+
+function TDNTypeCheck() {
+  const Class = define<ApolloQueryElement<typeof TDN>>('typed-query', {
+    query: query(TDN),
+  });
+
+  const instance = new Class();
+
+  assertType<TypeCheckData>(instance.data!);
+  assertType<TypeCheckVars>(instance.variables!);
+}

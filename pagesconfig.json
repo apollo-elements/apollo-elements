@@ -56,6 +56,9 @@
       }, {
         "title": "✂️ Code Splitting",
         "source": "./pages/code-splitting.md"
+      }, {
+        "title": "⌨️️ Typed Document Node",
+        "source": "./pages/typed-document-node.md"
     }]
   }]
 }

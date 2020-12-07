@@ -1,8 +1,9 @@
+import type { OperationVariables } from '@apollo/client/core';
 import { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/interfaces';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './apollo-element';
 
-type Base = Constructor<PolymerApolloElement>;
+type Base = Constructor<PolymerApolloElement<any, any>>;
 
 /**
  * @element apollo-subscription
@@ -35,14 +36,11 @@ type Base = Constructor<PolymerApolloElement>;
  * @fires 'errors-changed'
  * @fires 'loading-changed'
  */
-export class PolymerApolloSubscription<TData, TVariables>
-  extends ApolloSubscriptionMixin(PolymerApolloElement as Base)<TData, TVariables>
-  implements ApolloSubscriptionInterface<TData, TVariables> { }
+export class PolymerApolloSubscription<D = unknown, V = OperationVariables>
+  extends ApolloSubscriptionMixin(PolymerApolloElement as Base)<D, V>
+  implements ApolloSubscriptionInterface<D, V> { }
 
 customElements.define('apollo-subscription', PolymerApolloSubscription);
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'apollo-subscription': PolymerApolloSubscription<unknown, unknown>;
-  }
-}
+// eslint-disable-next-line max-len
+declare global { interface HTMLElementTagNameMap { 'apollo-subscription': PolymerApolloSubscription; } }

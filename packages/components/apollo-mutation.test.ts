@@ -45,6 +45,7 @@ import {
 
 import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
 import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
+import { OptimisticResponseType } from '@apollo-elements/interfaces';
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
@@ -92,7 +93,7 @@ function TypeCheck() {
   if (typeof el.optimisticResponse !== 'function')
     assertType<TypeCheckData|undefined>(el.optimisticResponse);
   else
-    assertType<(vars: TypeCheckVars) => TypeCheckData>(el.optimisticResponse);
+    assertType<OptimisticResponseType<TypeCheckData, TypeCheckVars>>(el.optimisticResponse);
 
   /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
 }
@@ -579,7 +580,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('clicking the button', function() {
       let input: HTMLInputElement;
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent;
+      let event: MutationCompletedEvent<typeof element>;
 
       beforeEach(async function() {
         input = element.querySelector('input')!;
@@ -609,7 +610,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('setting variables property', function() {
       let input: HTMLInputElement;
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent;
+      let event: MutationCompletedEvent<typeof element>;
 
       beforeEach(function() {
         element.variables = { nullable: 'manual' };
@@ -678,7 +679,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('setting variables property', function() {
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent;
+      let event: MutationCompletedEvent<typeof element>;
 
       beforeEach(function() {
         element.variables = { nullable: 'manual' };

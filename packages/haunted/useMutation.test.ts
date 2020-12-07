@@ -1,8 +1,22 @@
+import {
+  ApolloClient,
+  ApolloError,
+  NormalizedCacheObject,
+  TypedDocumentNode,
+  gql,
+} from '@apollo/client/core';
+
 import { html } from 'haunted';
 import { useMutation } from './useMutation';
 import { component } from 'haunted';
 
-import { Entries, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import {
+  assertType,
+  Entries,
+  SetupOptions,
+  setupSpies,
+  setupStubs,
+} from '@apollo-elements/test-helpers';
 
 import UpdateUserMutation from '@apollo-elements/test-helpers/graphql/UpdateUser.mutation.graphql';
 
@@ -27,7 +41,7 @@ describe('[haunted] useMutation', function() {
   });
 
   describeMutation({
-    async setupFunction<T extends MutationElement>(opts?: SetupOptions<T>) {
+    async setupFunction<T extends MutationElement<any, any>>(opts?: SetupOptions<T>) {
       const { innerHTML = '', attributes } = opts ?? {};
 
       const properties:
@@ -69,7 +83,6 @@ describe('[haunted] useMutation', function() {
           client,
           context,
           ignoreResults,
-          // @ts-expect-error: just for the interface
           mutation,
           optimisticResponse,
           // @ts-expect-error: just for the interface
@@ -196,3 +209,23 @@ describe('[haunted] useMutation', function() {
     });
   });
 });
+
+type TypeCheckData = { a: 'a'; b: number };
+type TypeCheckVars = { c: 'c'; d: number };
+
+const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
+  gql`query TypedQuery($c: String, $d: Int) { a b }`;
+
+function TDNTypeCheck() {
+  const [mutate, { called, client, data, error, loading }] = useMutation(TDN);
+  assertType<TypeCheckData>(data!);
+  assertType<boolean>(called);
+  assertType<boolean>(loading);
+  assertType<ApolloClient<NormalizedCacheObject>>(client!);
+  assertType<Error|ApolloError>(error!);
+
+  (async function() {
+    const r = await mutate({ variables: { c: 'c', d: 12 } });
+    assertType<TypeCheckData>(r!.data!);
+  });
+}
