@@ -1,13 +1,18 @@
 import type { OperationVariables } from '@apollo/client/core';
 
+import type { TemplateResult } from 'lit-element';
+
 import type {
   ApolloMutationInterface,
-  Data, RefetchQueriesType, Variables, VariablesOf,
+  Data,
+  RefetchQueriesType,
+  Variables,
+  VariablesOf,
 } from '@apollo-elements/interfaces';
 
 import { ApolloMutation } from '@apollo-elements/lit-apollo/apollo-mutation';
 
-import { TemplateResult, html, customElement, property, queryAssignedNodes } from 'lit-element';
+import { css, customElement, html, property, queryAssignedNodes } from 'lit-element';
 
 import {
   MutationCompletedEvent,
@@ -57,8 +62,8 @@ export class WillMutateError extends Error {}
  * or if all your variables properties are strings,
  * you can use the element's data attributes
  *
- * @slot trigger - the triggering element (e.g. button or anchor)
- * @slot variable - an input-like element with a `data-variable` attribute. it's `value` property will be queried to get the value for the corresponding variable
+ * @slot trigger - The triggering element. Must be a button or and anchor that wraps a button.
+ * @slot variable - An input with a `data-variable` attribute. It's `value` property gets the value for the corresponding variable.
  *
  * @fires will-mutate When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`
  * @fires will-navigate When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`
@@ -67,6 +72,8 @@ export class WillMutateError extends Error {}
  * @fires 'apollo-element-disconnected' when the element disconnects from the dom
  * @fires 'apollo-element-connected' when the element connects to the dom
  *
+ * @csspart variables - The container for variable inputs.
+ * @csspart trigger - The container for the trigger.
  * See [[`ApolloMutationInterface`]] for more information on events
  *
  * @example
@@ -155,6 +162,13 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
   declare variables: Variables<D, V> | null;
 
   declare refetchQueries: RefetchQueriesType<D> | null;
+
+  static readonly styles = [css`
+    [part="trigger"],
+    [part="variables"] {
+      display: contents;
+    }
+  `];
 
   /**
    * When set, variable data attributes will be packed into an
@@ -250,8 +264,13 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
 
   render(): TemplateResult {
     return html`
-      <slot name="trigger" @slotchange="${this.onSlotchange}"></slot>
-      <slot name="variable"></slot>
+      <div part="variables">
+        <slot name="variable"></slot>
+      </div>
+
+      <div part="trigger">
+        <slot name="trigger" @slotchange="${this.onSlotchange}"></slot>
+      </div>
     `;
   }
 
