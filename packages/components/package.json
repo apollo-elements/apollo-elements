@@ -8,6 +8,8 @@
     ".": "./index.js",
     "./index": "./index.js",
     "./index.js": "./index.js",
+    "./events": "./events.js",
+    "./events.js": "./events.js",
     "./apollo-client": "./apollo-client.js",
     "./apollo-client.js": "./apollo-client.js",
     "./apollo-mutation": "./apollo-mutation.js",
