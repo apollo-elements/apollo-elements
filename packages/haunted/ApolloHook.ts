@@ -4,7 +4,7 @@ import type { ApolloElementElement, Constructor } from '@apollo-elements/interfa
 
 import type { State } from 'haunted';
 
-import { apply } from '@apollo-elements/lib/prototypes';
+import { applyPrototype } from '@apollo-elements/lib/prototypes';
 
 import { Hook } from 'haunted';
 
@@ -63,7 +63,7 @@ export abstract class ApolloHook<
   }
 
   private initHost(): void {
-    apply(this.state.host, this.componentClass, this.type);
+    applyPrototype(this.state.host, this.componentClass, this.type);
     Object.assign(this.state.host, {
       ...this.defaults,
       ...this.optionsToProperties(),
