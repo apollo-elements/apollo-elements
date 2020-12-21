@@ -2,7 +2,7 @@ import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
 import { Descriptor } from 'hybrids';
 
 import { hookElementIntoHybridsCache } from '../helpers/cache';
-import { apply, getDescriptor } from '@apollo-elements/lib/prototypes';
+import { applyPrototype, getDescriptor } from '@apollo-elements/lib/prototypes';
 import { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
 
 interface Opts {
@@ -15,7 +15,7 @@ export function client<TData, TVariables>(
 ): Descriptor<ApolloElementElement<TData, TVariables>> {
   return {
     connect(host) {
-      apply(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);
+      applyPrototype(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);
 
       const useGlobal = opts?.useGlobal ?? true;
 
