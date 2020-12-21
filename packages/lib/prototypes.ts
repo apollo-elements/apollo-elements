@@ -5,6 +5,8 @@ import { cuid } from './cuid';
 
 type Type = 'client' | 'subscription' | 'mutation' | 'query';
 
+const noop = () => void null;
+
 const INSTANCES = new WeakMap();
 
 const DESCRIPTORS = new WeakMap();
@@ -45,7 +47,7 @@ function getPrototypeDescriptor<S extends HTMLElement>(
   return descriptors;
 }
 
-export function applyPrototype<S extends HTMLElement>(
+function unsafeApplyPrototype<S extends HTMLElement>(
   target: S,
   source: Constructor<S>,
 ): PropertyDescriptorMap {
@@ -76,7 +78,7 @@ function unsafeApply<T extends ApolloElementElement>(
 
   DESCRIPTORS.set(host, {
     ...getElementDescriptor(host),
-    ...applyPrototype(host, klass),
+    ...unsafeApplyPrototype(host, klass),
   });
 }
 
@@ -86,12 +88,19 @@ function unsafeApplyElement<T extends ApolloElementElement>(
 ): void {
   effects(host);
   ELEMENT_APPLIED
-    .set(host, applyPrototype(host, ApolloElementElement));
+    .set(host, unsafeApplyPrototype(host, ApolloElementElement));
 }
 
-const noop = () => void null;
-
-export function apply<T extends ApolloElementElement>(
+/**
+ * Applies a class' prototype to an element, mixing in the class' properties and methods to the element instance.
+ *
+ * @param  host Element to apply prototype properties to.
+ * @param  klass Class whose prototype to apply to the host element.
+ * @param  type Hint about what kind of class/host pair is in question.
+ * @param  effects function that will run the first time this element has a class prototype mixed in via this helper.
+ * @return Combined `PropertyDescriptorMap` for the instance.
+ */
+export function applyPrototype<T extends ApolloElementElement<any, any>>( // eslint-disable-line @typescript-eslint/no-explicit-any
   host: T,
   klass: Constructor<T> | typeof ApolloElementElement,
   type: Type,
