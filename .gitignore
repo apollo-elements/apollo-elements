@@ -3,15 +3,22 @@ coverage
 .nyc_output
 .npmrc
 forever*.log
-/docs
 analysis.json
 lerna-debug.log
 package-lock.json
+
+yarn-error.log
+
+*.draft.md
+
+docs/_data/cems
 
 packages/*/*.js
 packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
+
+packages/*/docs/*.yml
 
 packages/test-helpers/schema.ts
 packages/components/README.md
@@ -31,3 +38,10 @@ packages/gluon/helpers/*.js.map
 !packages/*/global.d.ts
 !packages/gluon/gluon.d.ts
 !packages/docs/rollup.config.js
+
+## Rocket ignore files
+docs/_merged_data/
+docs/_merged_assets/
+docs/_merged_includes/
+_site-dev
+_site
