@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/test-helpers",
-  "version": "1.2.0-alpha.1",
+  "version": "1.2.0-alpha.2",
   "private": true,
   "description": "Testing helper functions for apollo-elements",
   "main": "index.js",

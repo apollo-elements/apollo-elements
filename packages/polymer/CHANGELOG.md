@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.3.0-alpha.0...@apollo-elements/polymer@3.3.0-alpha.2) (2020-12-21)
+
+
+### Features
+
+* support for TypedDocumentNode ([d39ca4e](https://github.com/apollo-elements/apollo-elements/commit/d39ca4e0094220cfceba97b9bfe59ed078045560))
+
+
+
+
+
 # [3.3.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.3.0-alpha.0...@apollo-elements/polymer@3.3.0-alpha.1) (2020-12-05)
 
 

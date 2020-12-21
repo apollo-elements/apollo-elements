@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0-alpha.0...@apollo-elements/components@1.3.0-alpha.2) (2020-12-21)
+
+
+### Bug Fixes
+
+* **components:** export events ([30616e1](https://github.com/apollo-elements/apollo-elements/commit/30616e192d75489d34d90ea0fb99e154cfbbfae1))
+
+
+### Features
+
+* support for TypedDocumentNode ([d39ca4e](https://github.com/apollo-elements/apollo-elements/commit/d39ca4e0094220cfceba97b9bfe59ed078045560))
+
+
+
+
+
 # [1.3.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0-alpha.0...@apollo-elements/components@1.3.0-alpha.1) (2020-12-05)
 
 

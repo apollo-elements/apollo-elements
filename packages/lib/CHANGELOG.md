@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.5.0-alpha.0...@apollo-elements/lib@4.0.0-alpha.0) (2020-12-21)
+
+
+### Bug Fixes
+
+* **lib:** export maps ([93e0489](https://github.com/apollo-elements/apollo-elements/commit/93e04895bc2a4a7b0409907ac1f4e94f2cfcbf7b))
+
+
+### Features
+
+* support for TypedDocumentNode ([d39ca4e](https://github.com/apollo-elements/apollo-elements/commit/d39ca4e0094220cfceba97b9bfe59ed078045560))
+
+
+### BREAKING CHANGES
+
+* **lib:** rename apply to applyPrototype in @apollo-elements/lib
+
+affects: @apollo-elements/lib
+
+
+
+
+
 # [3.5.0-alpha.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@3.5.0-alpha.0...@apollo-elements/lib@3.5.0-alpha.1) (2020-12-05)
 
 
