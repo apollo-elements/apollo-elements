@@ -17,25 +17,25 @@ import { ApolloMutationElement } from '@apollo-elements/interfaces/apollo-mutati
 import { hook } from 'haunted';
 
 import { ApolloHook } from './ApolloHook';
-import { ComponentDocument, Data, Variables } from '@apollo-elements/interfaces';
+import { ComponentDocument, Data } from '@apollo-elements/interfaces';
 
-export interface MutationHookOptions<D, V> {
-  mutation?: ComponentDocument<D> | null;
-  variables?: Variables<D, V>;
-  optimisticResponse?: Data<D> | ((vars: Variables<D, V>) => Data<D>);
-  refetchQueries?: Array<string | PureQueryOptions> |
-    ((...args: any[]) => Array<string | PureQueryOptions>);
-  awaitRefetchQueries?: boolean;
-  errorPolicy?: ErrorPolicy;
-  update?: MutationUpdaterFn<Data<D>>;
+export type MutationHookOptions<D, V> = Partial<Pick<ApolloMutationElement<D, V>,
+  | 'context'
+  | 'mutation'
+  | 'errorPolicy'
+  | 'fetchPolicy'
+  | 'variables'
+  | 'refetchQueries'
+  | 'awaitRefetchQueries'
+  | 'optimisticResponse'
+  | 'ignoreResults'
+  | 'onCompleted'
+  | 'onError'
+> & {
   client?: ApolloClient<NormalizedCacheObject>;
+  update: ApolloMutationElement['updater']
   notifyOnNetworkStatusChange?: boolean;
-  context?: Record<string, any>;
-  onCompleted?: (data: Data<D>) => void;
-  onError?: (error: ApolloError) => void;
-  fetchPolicy?: Extract<WatchQueryFetchPolicy, 'no-cache'>;
-  ignoreResults?: boolean;
-}
+}>;
 
 export interface MutationHookResult<D, V> {
   called: boolean;
