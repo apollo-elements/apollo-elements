@@ -1,17 +1,14 @@
 import type {
   ApolloClient,
-  ApolloError,
   DocumentNode,
-  ErrorPolicy,
   NormalizedCacheObject,
-  FetchPolicy,
   OperationVariables,
   TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { State } from 'haunted';
 
-import type { ComponentDocument, Data, Variables } from '@apollo-elements/interfaces';
+import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
 
 import { NetworkStatus } from '@apollo/client/core';
 
@@ -21,39 +18,39 @@ import { hook } from 'haunted';
 
 import { ApolloHook } from './ApolloHook';
 
-export interface QueryHookOptions<D, V> {
-  errorPolicy?: ErrorPolicy;
-  pollInterval?: number;
+export type QueryHookOptions<D, V> = Partial<Pick<ApolloQueryInterface<D, V>,
+  | 'context'
+  | 'errorPolicy'
+  | 'fetchPolicy'
+  | 'nextFetchPolicy'
+  | 'noAutoSubscribe'
+  | 'notifyOnNetworkStatusChange'
+  | 'onError'
+  | 'partialRefetch'
+  | 'pollInterval'
+  | 'query'
+  | 'returnPartialData'
+  | 'shouldSubscribe'
+  | 'variables'
+> & {
   client?: ApolloClient<NormalizedCacheObject>;
-  notifyOnNetworkStatusChange?: boolean;
-  context?: Record<string, any>;
-  partialRefetch?: boolean;
-  returnPartialData?: boolean;
-  query?: ComponentDocument<D>;
-  data?: Data<D> | null;
-  variables?: Variables<D, V> | null;
-  noAutoSubscribe?: boolean;
-  shouldSubscribe?: ApolloQueryElement<D, V>['shouldSubscribe']
-  error?: Error | ApolloError;
-  fetchPolicy?: FetchPolicy;
-  nextFetchPolicy?: FetchPolicy
-  onError?(error: Error | ApolloError): void;
   onCompleted?(data: D): void;
-}
+}>;
 
-export interface QueryResult<D, V> {
+export type QueryResult<D, V> = Pick<ApolloQueryInterface<D, V>,
+    'client'
+  | 'data'
+  | 'error'
+  | 'fetchMore'
+  | 'loading'
+  | 'networkStatus'
+  | 'refetch'
+  | 'subscribeToMore'
+  | 'variables'
+> & {
   called: true;
-  client: ApolloQueryElement<D, V>['client'];
-  data: Data<D> | null;
-  error: Error | ApolloError | null;
-  fetchMore: ApolloQueryElement<D, V>['fetchMore'];
-  loading: boolean;
-  networkStatus: NetworkStatus;
-  variables: Variables<D, V> | null;
-  refetch: ApolloQueryElement<D, V>['refetch'];
   startPolling: (ms: number) => void;
   stopPolling: () => void;
-  subscribeToMore: ApolloQueryElement<D, V>['subscribeToMore'];
 }
 
 class UseQueryHook<D = unknown, V = OperationVariables> extends ApolloHook<

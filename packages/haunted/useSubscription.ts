@@ -1,14 +1,10 @@
 import type {
   ApolloClient,
-  ApolloError,
   DocumentNode,
-  FetchPolicy,
   NormalizedCacheObject,
   OperationVariables,
   TypedDocumentNode,
 } from '@apollo/client/core';
-
-import type { ComponentDocument, Data, Variables } from '@apollo-elements/interfaces';
 
 import type { State } from 'haunted';
 
@@ -18,24 +14,25 @@ import { hook } from 'haunted';
 
 import { ApolloHook } from './ApolloHook';
 
-export interface SubscriptionHookOptions<D, V> {
-  variables?: Variables<D, V> | null;
-  shouldResubscribe?: boolean | ((options: SubscriptionHookOptions<D, V>) => boolean);
-  skip?: boolean;
-  onSubscriptionComplete?: () => void;
-  subscription?: DocumentNode | ComponentDocument<D>;
-  client?: ApolloClient<NormalizedCacheObject>,
-  noAutoSubscribe?: boolean;
-  shouldSubscribe?: ApolloSubscriptionElement<D, V>['shouldSubscribe'];
-  fetchPolicy?: FetchPolicy;
-  onSubscriptionData?: ApolloSubscriptionElement<D, V>['onSubscriptionData']
-}
+export type SubscriptionHookOptions<D, V> = Partial<Pick<ApolloSubscriptionElement<D, V>,
+  | 'fetchPolicy'
+  | 'noAutoSubscribe'
+  | 'onSubscriptionComplete'
+  | 'onSubscriptionData'
+  | 'shouldResubscribe'
+  | 'shouldSubscribe'
+  | 'skip'
+  | 'subscription'
+  | 'variables'
+> & {
+  client?: ApolloClient<NormalizedCacheObject>;
+}>;
 
-export interface SubscriptionResult<D> {
-  data: Data<D> | null;
-  error: Error | ApolloError | null;
-  loading: boolean;
-}
+export type SubscriptionResult<D> = Pick<ApolloSubscriptionElement<D>,
+  | 'data'
+  | 'error'
+  | 'loading'
+>;
 
 class UseSubscriptionHook<D, V = OperationVariables> extends ApolloHook<
   D,

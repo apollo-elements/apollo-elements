@@ -85,7 +85,6 @@ describe('[haunted] useMutation', function() {
           ignoreResults,
           mutation,
           optimisticResponse,
-          // @ts-expect-error: just for the interface
           refetchQueries,
           variables,
           onCompleted,
@@ -229,3 +228,4 @@ function TDNTypeCheck() {
     assertType<TypeCheckData>(r!.data!);
   });
 }
+TDNTypeCheck;
