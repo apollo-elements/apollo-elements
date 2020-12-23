@@ -4,6 +4,11 @@ import type { ApolloMutationElement } from '@apollo-elements/interfaces/apollo-m
 import { mutation } from './factories/mutation';
 import { client } from './factories/client';
 
+/**
+ * Hybrids descriptor bag.
+ *
+ * Spread into your hybrids to implement the [ApolloMutationElement](/api/interfaces/mutation/) interface.
+ */
 export const ApolloMutation: Hybrids<ApolloMutationElement> = {
   client: client(),
   mutation: mutation(),
