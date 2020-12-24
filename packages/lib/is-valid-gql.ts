@@ -1,13 +1,19 @@
 import type { DocumentNode } from 'graphql';
 
 /**
- * isValidGql :: DocumentNode a => a -> Bool
  * Validates a graphql document node.
+ *
+ * ```haskell
+ * isValidGql :: DocumentNode a => a -> Bool
+ * ```
+ * @param doc Maybe a DocumentNode
+ * @return Whether the argument is a DocumentNode
  */
-export const isValidGql = (doc: DocumentNode): boolean =>
-  !!(
+export function isValidGql(doc: any): doc is DocumentNode {
+  return !!(
     doc &&
     typeof doc === 'object' &&
     'kind' in doc &&
     'definitions' in doc
   );
+}

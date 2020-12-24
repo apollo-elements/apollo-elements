@@ -14,6 +14,8 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  * when its `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
+ * See [ApolloQueryInterface](/api/interfaces/query/) for more information.
+ *
  * @example
  * ```html
  * <apollo-query data="{{data}}" variables="[[variables]]">
@@ -32,8 +34,6 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  *   [[data.user.name]]
  * </paper-icon-item>
  * ```
- *
- * See [[`ApolloQueryInterface`]] for more information on events
  *
  * @fires 'data-changed'
  * @fires 'error-changed'

@@ -1,0 +1,116 @@
+.markdown-body .call-to-action:nth-of-type(2) {
+  --primary-color: #222;
+  --primary-color-lighter: #333;
+  --primary-color-darker: #000;
+}
+
+.advantage {
+  margin: 7rem 0;
+}
+
+.advantage h2 {
+  border: 0;
+  text-align: center;
+}
+
+#libraries ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 140px);
+  grid-template-rows: repeat(auto-fit, 140px);
+  gap: 20px;
+  list-style-type: none;
+  place-content: center;
+}
+
+#libraries li,
+#libraries ul {
+  margin: 0;
+  padding: 0;
+}
+
+#libraries li {
+  display: contents;
+}
+
+#libraries ul a {
+  color: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.9;
+  padding: 20px;
+  display: flex;
+  text-decoration: none;
+  border-radius: 100%;
+  transition: background 0.2s ease-in-out;
+  height: 100%;
+  outline: none;
+}
+
+#libraries figure {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 100px min-content;
+}
+
+#libraries figcaption {
+  text-align: center;
+}
+
+#libraries ul img {
+  width: 100px;
+}
+
+#libraries ul a:hover figcaption,
+#libraries ul a:focus figcaption {
+  color: var(--primary-color-lighter);
+  text-shadow: 2px 2px 2px var(--footer-background);
+}
+
+@media (prefers-color-scheme: dark) {
+  #libraries ul a:hover figcaption,
+  #libraries ul a:focus figcaption {
+    text-shadow: 2px 2px 2px var(--primary-color-darker);
+  }
+}
+
+#demos {
+  --x-tabs-min-height: 505px;
+}
+
+#demos #default-tab {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  justify-content: center;
+  height: var(--x-tabs-min-height);
+  gap: 20px;
+  align-items: center;
+}
+
+#demos #default-tab svg {
+  fill: currentColor;
+  width: 100px;
+  transform: rotate(30deg);
+}
+
+#demos #default-tab p {
+  font-size: 48px;
+}
+
+#demos x-tab[selected] {
+  height: var(--x-tabs-min-height, 505px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+codesandbox-button[show-demo] {
+  flex: 1;
+}
+
+@media screen and (min-width: 1024px) {
+  .page-background {
+    top: -210px;
+    right: -463px;
+    transform: rotate(45deg);
+  }
+}

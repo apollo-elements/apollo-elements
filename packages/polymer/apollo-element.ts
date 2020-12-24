@@ -17,8 +17,6 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * @fires 'error-changed'
  * @fires 'errors-changed'
  * @fires 'loading-changed'
- *
- * See [[`ApolloElementInterface`]] for more information on events
  */
 export class PolymerApolloElement<D = unknown, V = OperationVariables>
   extends ApolloElementMixin(HTMLElement)<D, V>

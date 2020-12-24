@@ -13,6 +13,8 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  * when its `called`, `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
+ * See [ApolloMutationInterface](/api/interfaces/mutation/) for more information.
+ *
  * @example
  *
  * ```html
@@ -31,8 +33,6 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  * <paper-input label="Picture URL" value="{{picture}}"></paper-input>
  * <paper-button on-click="mutate">Submit</paper-button>
  * ```
- *
- * See [[`ApolloMutationInterface`]] for more information on events
  *
  * @fires 'data-changed'
  * @fires 'error-changed'

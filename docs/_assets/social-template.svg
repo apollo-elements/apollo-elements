@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="social-template-b" x1="68.634%" x2="97.022%" y1="63.781%" y2="36.219%">
+      <stop offset="0%"/>
+      <stop offset="100%" stop-color="#4A4A4A"/>
+    </linearGradient>
+    <linearGradient id="social-template-c" x1="0%" x2="50%" y1="36.219%" y2="63.781%">
+      <stop offset="0%" stop-color="#D500F9"/>
+      <stop offset="100%" stop-color="#A0F"/>
+    </linearGradient>
+    <linearGradient id="social-template-d" x1="50%" y1="36.219%" y2="63.781%">
+      <stop offset="0%" stop-color="#D500F9"/>
+      <stop offset="100%" stop-color="#A0F"/>
+    </linearGradient>
+    <rect id="social-template-a" width="1200" height="630"/>
+    <radialGradient id="social-template-e" cy="62.859%" r="90.501%" fx="50%" fy="62.859%" gradientTransform="scale(-1 -.9) rotate(-1.034 -73.557 55.395)">
+      <stop offset="0%" stop-color="#FFF"/>
+      <stop offset="100%"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use fill="#212121" xlink:href="#social-template-a"/>
+    <use fill="url(#social-template-b)" fill-opacity=".12" xlink:href="#social-template-a" style="mix-blend-mode:multiply"/>
+    <use stroke="url(#social-template-c)" stroke-width="10" xlink:href="#social-template-a"/>
+    <use stroke="url(#social-template-d)" stroke-width="10" xlink:href="#social-template-a"/>
+    <g fill-rule="nonzero" transform="translate(783 135)">
+      <path fill="#FFF" stroke="url(#social-template-e)" stroke-width="16" d="M189.752815,-0.552043228 L304.256734,65.6620992 C321.425499,75.5902753 332,93.9350143 332,113.785857 L332,246.214143 C332,266.064986 321.425499,284.409725 304.256734,294.337901 L189.752815,360.552043 C172.579842,370.482652 151.420158,370.482652 134.247185,360.552043 L19.7432659,294.337901 C2.5745009,284.409725 -8,266.064986 -8,246.214143 L-8,113.785857 C-8,93.9350143 2.5745009,75.5902753 19.743266,65.6620991 L134.247185,-0.552043237 C151.420158,-10.4826523 172.579842,-10.4826523 189.752815,-0.552043237 Z"/>
+      <g fill="#000" transform="translate(24 82)">
+        <polygon points="0 97.924 33.12 .367 74.013 .367 37.879 97.632 65.024 195.616 28.826 195.633"/>
+        <polygon points="202.987 98.37 236.107 .367 277 .367 240.866 98.37 268.011 195.616 231.812 195.633" transform="rotate(180 239.993 98)"/>
+        <polygon points="116.139 .367 161.556 .367 227.169 195.59 186.068 195.59 138.857 41.907 112.346 125.971 153.149 125.971 164.358 162.56 102.389 162.56 91.665 195.633 50.563 195.633"/>
+      </g>
+    </g>
+  </g>
+</svg>

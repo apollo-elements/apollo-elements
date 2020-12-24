@@ -42,7 +42,7 @@ declare global {
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
   class ApolloQueryElement<D = unknown, V = OperationVariables>
     extends ApolloElementMixin(superclass)<D, V> implements ApolloQueryInterface<D, V> {
-    static documentType = 'query';
+    static documentType = 'query' as const;
 
     declare query: DocumentNode | ComponentDocument<D> | null;
 
@@ -118,7 +118,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
     /**
      * Determines whether the element is able to automatically subscribe
-     * @protected
+     * @private
      */
     canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>): boolean {
       /* c8 ignore next 4 */
@@ -133,6 +133,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
      * Determines whether the element should attempt to automatically subscribe i.e. begin querying
      *
      * Override to prevent subscribing unless your conditions are met.
+     * @protected
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean {
       return (void options, true);
@@ -140,6 +141,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
     /**
      * Resets the observableQuery and subscribes.
+     * @param params options for controlling how the subscription subscribes
      */
     subscribe(
       params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
@@ -214,7 +216,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
 
     /**
      * Exposes the `ObservableQuery#fetchMore` method.
-     * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.fetchMore
+     * https://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore
      *
      * The optional `updateQuery` parameter is a function that takes the previous query data,
      * then a `{ subscriptionData: TSubscriptionResult }` object,

@@ -6,9 +6,10 @@ import { copy } from '@web/rollup-plugin-copy';
 
 export default {
   input: './packages/docs/components.ts',
+  external: id=>id.startsWith('lit'),
   output: {
     format: 'es',
-    file: './docs/components.js',
+    file: './packages/docs/components.js',
   },
   plugins: [
     litcss(),

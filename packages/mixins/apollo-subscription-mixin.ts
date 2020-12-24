@@ -34,7 +34,7 @@ declare global {
 function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
   class ApolloSubscriptionElement<D, V>
     extends ApolloElementMixin(superclass)<D, V> implements ApolloSubscriptionInterface<D, V> {
-    static documentType = 'subscription';
+    static documentType = 'subscription' as const;
 
     declare subscription: DocumentNode | ComponentDocument<D> | null;
 
@@ -117,7 +117,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     /**
      * Determines whether the element is able to automatically subscribe
-     * @protected
+     * @private
      */
     canSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
       return (
@@ -170,10 +170,10 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       const subscriptionData = { data, loading, error };
       const detail = { client, subscriptionData };
       this.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
-      this.onSubscriptionData?.(detail);
       this.data = data;
       this.loading = loading;
       this.error = error;
+      this.onSubscriptionData?.(detail);
     }
 
     /**

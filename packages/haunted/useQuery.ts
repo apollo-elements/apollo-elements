@@ -96,7 +96,7 @@ class UseQueryHook<D = unknown, V = OperationVariables> extends ApolloHook<
   }
 
   protected optionsToOptionalMethods() {
-    // shouldSubscribe is handled just fine by `applyPrototype`
+    // shouldSubscribe is handled just fine by `apply`
     const { onCompleted, onError } = this.options;
     return { onCompleted, onError };
   }

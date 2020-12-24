@@ -1,0 +1,29 @@
+{
+  "name": "Apollo Elements",
+  "short_name": "Apollo Elements",
+  "display": "standalone",
+  "orientation": "portrait",
+  "splash_pages": null,
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "Scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "./_static/icons/android-chrome-192x192.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "./_static/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./_static/icons/maskable-icon.jpg",
+      "sizes": "1024x1024",
+      "type": "image/jpg",
+      "purpose": "any maskable"
+    }
+  ]
+}

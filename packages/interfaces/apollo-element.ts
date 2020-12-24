@@ -23,7 +23,7 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  */
 export declare class ApolloElementInterface<D = unknown, V = OperationVariables>
   extends CustomElement {
-  declare static documentType: 'query'|'mutation'|'subscription';
+  declare static documentType: 'document'|'query'|'mutation'|'subscription';
 
   /** The Apollo Client instance. */
   declare client: ApolloClient<NormalizedCacheObject> | null;
@@ -36,7 +36,7 @@ export declare class ApolloElementInterface<D = unknown, V = OperationVariables>
    */
   declare document: DocumentNode | ComponentDocument<D> | null;
 
-  /** Context to be passed to link execution chain. */
+  /** Context passed to the link execution chain. */
   declare context?: Record<string, unknown>;
 
   /** data */
@@ -53,6 +53,18 @@ export declare class ApolloElementInterface<D = unknown, V = OperationVariables>
 
   /** Whether a request is in flight. */
   declare loading: boolean;
+
+  /**
+   * Lifecycle callback that reacts to changes in the GraphQL document
+   * @protected
+   */
+  documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
+
+  /**
+   * Lifecycle callback that reacts to changes in the operation variables
+   * @protected
+   */
+  variablesChanged?(variables: Variables<D, V> | null): void
 }
 
 export class ApolloElementElement<D = unknown, V = OperationVariables>

@@ -25,14 +25,14 @@ npm init @apollo-elements
 ## 🗺 Guides and Docs
 If you just want to see the API Docs, check them out for all our packages at [apolloelements.dev](https://apolloelements.dev)
 
-- [🧱 Components](https://apolloelements.dev/modules/_apollo_elements_components.html)
-- [🍸 Mixins](https://apolloelements.dev/modules/_apollo_elements_mixins.html)
-- [🔥 lit-apollo](https://apolloelements.dev/modules/_apollo_elements_lit_apollo.html)
-- [🏁 FAST](https://apolloelements.dev/modules/_apollo_elements_fast.html)
-- [👻 Haunted](https://apolloelements.dev/modules/_apollo_elements_haunted.html)
-- [🦄 Hybrids](https://apolloelements.dev/modules/_apollo_elements_hybrids.html)
-- [🔬 Gluon](https://apolloelements.dev/modules/_apollo_elements_gluon.html)
-- [🧬 Polymer](https://apolloelements.dev/modules/_apollo_elements_polymer.html)
+- [🧱 Components](https://apolloelements.dev/api/libraries/components/)
+- [🍸 Mixins](https://apolloelements.dev/api/libraries/mixins/)
+- [🔥 lit-apollo](https://apolloelements.dev/api/libraries/lit-apollo/)
+- [🏁 FAST](https://apolloelements.dev/api/libraries/fast/)
+- [👻 Haunted](https://apolloelements.dev/api/libraries/haunted/)
+- [🦄 Hybrids](https://apolloelements.dev/api/libraries/hybrids/)
+- [🔬 Gluon](https://apolloelements.dev/api/libraries/gluon/)
+- [🧬 Polymer](https://apolloelements.dev/api/libraries/polymer/)
 
 ## Works Across Frameworks
 
@@ -71,54 +71,6 @@ import '@apollo-elements/components/apollo-mutation';
 
 </code-copy>
 
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```html
-<script type="module"
-  src="https://unpkg.com/@apollo-elements/components?module"></script>
-<script type="module"
-  src="https://unpkg.com/@apollo-elements/polymer/apollo-query?module"></script>
-
-<apollo-client uri="/graphql">
-  <apollo-query>
-    <script type="application/graphql">
-      query QuoteQuery($name: String) {
-        quote name
-      }
-    </script>
-    <script type="application/json">
-      { "name": "Neil Armstrong" }
-    </script>
-  </apollo-query>
-
-  <apollo-mutation data-type="Quote">
-    <script type="application/graphql">
-      mutation QuoteMutation($name: String, $quote: String) {
-        addQuote(name: $name, quote: $quote) { name quote }
-      }
-    </script>
-    <button slot="trigger">OK</button>
-    <label for="name">Name</label>
-    <input id="name" slot="variable" data-variable="name" value="Neil"/>
-    <label for="comment">Comment</label>
-    <textarea id="comment" slot="variable" data-variable="quote"
-              value="That's one small step..."></textarea>
-  </apollo-mutation>
-</apollo-client>
-```
-
-</code-copy>
-
-</details>
-
 [Read More](./packages/components)
 
 ### 🍸 Mixins
@@ -143,56 +95,6 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
 
 </code-copy>
 
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```js
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-
-import HelloQuery from './Hello.query.graphql';
-
-const template = document.createElement('template');
-template.innerHTML = `
-  <span id="hello"></span>
-`;
-
-class HelloElement extends ApolloQueryMixin(HTMLElement) {
-  query = HelloQuery;
-
-  #data = null;
-
-  set data(data) { this.render(this.#data = data); }
-
-  get data() { return this.#data; }
-
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' })
-      .append(template.content.cloneNode(true));
-  }
-
-  render() {
-    const greeting = this.data?.greeting ?? 'hello';
-    const name = this.data?.name ?? 'world';
-    this.shadowRoot.getElementById('hello').textContent =
-      `${greeting}, ${name}!`;
-  }
-}
-
-customElements.define('hello-element', HelloElement);
-```
-
-</code-copy>
-
-</details>
-
 [Read More](./packages/mixins)
 
 ### 🔥 lit-apollo
@@ -215,41 +117,6 @@ import { ApolloSubscription } from '@apollo-elements/lit-apollo/apollo-subscript
 ```
 
 </code-copy>
-
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```ts
-import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
-
-import HelloQuery from './Hello.query.graphql';
-
-@customElement('hello-element')
-class HelloElement extends ApolloQuery {
-  query = HelloQuery;
-
-  render() {
-    const greeting = this.data?.greeting ?? 'hello';
-    const name = this.data?.name ?? 'world';
-    return html`
-      <span id="hello">
-        ${greeting}, ${name}!
-      </span>
-    `;
-  }
-}
-```
-
-</code-copy>
-
-</details>
 
 [Read More](./packages/lit-apollo)
 
@@ -274,41 +141,7 @@ import { ApolloSubscription } from '@apollo-elements/fast/apollo-subscription';
 
 </code-copy>
 
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```ts
-import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
-
-import HelloQuery from './Hello.query.graphql';
-
-const getGreeting = x => x.data?.greeting ?? 'hello';
-const getName = x => x.data?.name ?? 'world';
-const name = 'hello-element';
-const template = html<HelloElement>`
-  <span id="hello">
-    ${getGreeting}, ${getName}!
-  </span>
-`;
-
-@customElement({ name, template }))
-class HelloElement extends ApolloQueryMixin(HTMLElement) {
-  query = HelloQuery;
-}
-```
-
-</code-copy>
-
-</details>
-
-[Read More](./packages/lit-apollo)
+[Read More](./packages/fast)
 
 ### 👻 Haunted
 
@@ -331,41 +164,6 @@ import { useSubscription } from '@apollo-elements/haunted/useSubscription';
 ```
 
 </code-copy>
-
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```ts
-import { useQuery, component, html } from '@apollo-elements/haunted';
-
-import HelloQuery from './Hello.query.graphql';
-
-function HelloElement() {
-  const { data } = useQuery(HelloQuery);
-
-  const greeting = data?.greeting ?? 'hello';
-  const name = data?.name ?? 'world';
-
-  return html`
-    <span id="hello">
-      ${greeting}, ${name}!
-    </span>
-  `;
-}
-
-customElements.define('hello-element', component(HelloElement));
-```
-
-</code-copy>
-
-</details>
 
 [Read More](./packages/haunted)
 
@@ -392,41 +190,6 @@ import { ApolloSubscription } from '@apollo-elements/hybrids/apollo-subscription
 
 </code-copy>
 
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```ts
-import { client, query, define, html } from '@apollo-elements/hybrids';
-
-import HelloQuery from './Hello.query.graphql';
-
-const getGreeting = x => x.data?.greeting ?? 'hello';
-const getName = x => x.data?.name ?? 'world';
-
-const HelloElement = {
-  client: client(window.__APOLLO_CLIENT__),
-  query: query(HelloQuery),
-  render: host => html`
-    <span id="hello">
-      ${getGreeting(host)}, ${getName(host)}!
-    </span>
-  `,
-};
-
-define('hello-element', HelloElement);
-```
-
-</code-copy>
-
-</details>
-
 [Read More](./packages/hybrids)
 
 ### 👩‍🔬 Gluon
@@ -449,48 +212,6 @@ import { ApolloSubscription } from '@apollo-elements/gluon/apollo-subscription';
 ```
 
 </code-copy>
-
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```ts
-import { ApolloQuery, html } from '@apollo-elements/gluon';
-
-import HelloQuery from './Hello.query.graphql';
-
-class HelloElement extends ApolloQuery {
-  query = HelloQuery;
-
-  #data = null;
-
-  set data(data) { this.#data = data; this.render(); }
-
-  get data() { return this.#data; }
-
-  get template() {
-    const greeting = this.data?.greeting ?? 'hello';
-    const name = this.data?.name ?? 'world';
-    return html`
-      <span id="hello">
-        ${greeting}, ${name}!
-      </span>
-    `;
-  }
-}
-
-customElements.define('hello-element', HelloElement);
-```
-
-</code-copy>
-
-</details>
 
 [Read More](./packages/gluon)
 
@@ -515,63 +236,6 @@ import '@apollo-elements/polymer/apollo-subscription';
 ```
 
 </code-copy>
-
-<details>
-
-<summary><center>
-
-**👇 Click for Example 👇**
-
-</center></summary>
-
-<code-copy>
-
-```ts
-import { PolymerElement, html } from '@polymer/polymer';
-import '@apollo-elements/polymer/apollo-query';
-
-class HelloElement extends PolymerElement {
-  static get template() {
-    return html`
-      <apollo-query data="{{data}}">
-        <script type="application/graphql">
-          query HelloQuery {
-            greeting
-            name
-          }
-        </script>
-      </query>
-
-      <span id="hello">
-        [[getGreeting(data)]], [[getName(data)]]!
-      </span>
-    `;
-  }
-
-  static get properties() {
-    return {
-      data: {
-        type: Object,
-        value: () => null,
-      },
-    };
-  }
-
-  getGreeting(data) {
-    return data && data.greeting || 'hello';
-  }
-
-  getName(data) {
-    return data && data.name || 'world';
-  }
-}
-
-customElements.define('hello-element', HelloElement);
-```
-
-</code-copy>
-
-</details>
 
 [Read More](./packages/polymer)
 

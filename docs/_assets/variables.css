@@ -1,0 +1,199 @@
+:root {
+  /* colors */
+  --blue-100: #bbdefb;
+  --blue-900: #0d47a1;
+  --blue-grey-100: #cfd8dc;
+  --blue-grey-900: #263238;
+  --cyan-400: #26c6da;
+  --cyan-600: #00acc1;
+  --cyan-700: #0097a7;
+  --cyan-800: #00838f;
+  --cyan-900: #006064;
+  --deep-orange-200: #ffab91;
+  --deep-orange-600: #f4511e;
+  --deep-orange-a400: #ff3d00;
+  --deep-orange-a700: #dd2c00;
+  --deep-orange-900: #bf360c;
+  --grey-100: #f5f5f5;
+  --grey-200: #eee;
+  --grey-50: #fafafa;
+  --grey-900: #212121;
+  --light-blue-300: #4fc3f7;
+  --light-blue-400: #29b6f6;
+  --light-blue-500: #03a9f4;
+  --light-blue-600: #039be5;
+  --light-blue-700: #0288d1;
+  --light-blue-800: #0277bd;
+  --light-blue-900: #01579b;
+  --light-green-a400: #76ff03;
+  --near-black: #111;
+  --pink-a200: #ff4081;
+  --pink-a400: #f50057;
+  --pink-a700: #c51162;
+  --purple-700: #7b1fa2;
+  --purple-a200: #e040fb;
+  --purple-a400: #d500f9;
+  --purple-a700: #a0f;
+  --teal-700: #00796b;
+  --teal-900: #004d40;
+
+  /* theme */
+  --primary-color-accent: var(--blue-grey-100);
+  --primary-color-darker: var(--purple-700);
+  --primary-color-lighter: var(--purple-a400);
+  --primary-color: var(--purple-a700);
+  --primary-lines-color: #ccc;
+  --primary-text-color: #2c3e50;
+
+  /* Contrast colors */
+  --contrast-color-light: #fff;
+  --contrast-color-dark: var(--page-background);
+
+  /* background-colors */
+  --page-background: white;
+  --footer-background: rgba(0, 0, 0, 0.1);
+  --text-color: black;
+  --text-contrast-color: var(--contrast-color-light);
+
+  /* code blocks */
+  --code-button-focus-background: var(--grey-200);
+  --code-button-focus-color: var(--text-color);
+  --code-button: var(--page-background);
+  --code-tabs-background: transparent;
+  --wcd-snippet-button-background: var(--code-button);
+  --wcd-snippet-button-focus-background: var(--code-button-focus-background);
+  --wcd-snippet-button-focus-color: var(--code-button-focus-color);
+
+  /* markdown */
+  --markdown-blockquote-color: var(--light-blue-900);
+  --markdown-link-color: var(--pink-a700);
+  --markdown-syntax-attr-name-color: var(--blue-900);
+  --markdown-syntax-background-color: var(--grey-50);
+  --markdown-syntax-boolean-color: var(--light-blue-900);
+  --markdown-syntax-class-name-color: var(--deep-orange-a700);
+  --markdown-syntax-comment-color: var(--teal-700);
+  --markdown-syntax-function-color: var(--cyan-900);
+  --markdown-syntax-keyword-color: var(--deep-orange-a400);
+  --markdown-syntax-keyword-color: var(--light-blue-900);
+  --markdown-syntax-number-color: var(--light-blue-900);
+  --markdown-syntax-operator-color: var(--light-blue-900);
+  --markdown-syntax-punctuation-color: var(--teal-900);
+  --markdown-syntax-string-color: var(--deep-orange-a700);
+  --markdown-syntax-tag-color: var(--cyan-900);
+  --markdown-syntax-variable-color: var(--deep-orange-a700);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* theme */
+    --primary-color-accent: var(--blue-grey-100);
+    --primary-color-darker: var(--purple-a700);
+    --primary-color-lighter: var(--purple-a200);
+    --primary-color: var(--purple-a400);
+    --primary-lines-color: #ccc;
+    --primary-text-color: var(--grey-200);
+
+    /* Text colors */
+    --sidebar-tag-background-color: var(--code-button-focus-background);
+    --text-color: white;
+    --text-contrast-color: var(--contrast-color-light);
+
+    /* background-colors */
+    --footer-background: #151515;
+    --page-background: var(--near-black);
+
+    /* code blocks */
+    --code-button-focus-background: #333;
+    --code-button-focus-color: white;
+    --code-button: var(--page-background);
+    --code-tabs-background: transparent;
+    --wcd-snippet-button-background: var(--code-button);
+    --wcd-snippet-button-focus-background: var(--code-button-focus-background);
+    --wcd-snippet-button-focus-color: var(--code-button-focus-color);
+
+    /* search */
+    --rocket-search-background-color: var(--code-button-focus-background);
+    --rocket-search-highlight-color: var(--primary-color-lighter);
+    --rocket-search-fill-color: var(--primary-lines-color);
+    --rocket-search-hover-background-color: var(--near-black);
+    --rocket-search-input-border-color: var(--page-background);
+    --rocket-search-input-overlay-border-color: var(--page-background);
+
+    /* markdown */
+    --markdown-blockquote-color: var(--blue-100);
+    --markdown-link-color: var(--pink-a200);
+    --markdown-code-background-color: var(--grey-900);
+    --markdown-octicon-link: white;
+    --markdown-pre-background-color: var(--grey-900);
+    --markdown-syntax-attr-name-color: var(--light-blue-500);
+    --markdown-syntax-background-color: var(--grey-900);
+    --markdown-syntax-boolean-color: var(--light-blue-300);
+    --markdown-syntax-class-name-color: var(--deep-orange-200);
+    --markdown-syntax-color: white;
+    --markdown-syntax-comment-color: var(--light-green-a400);
+    --markdown-syntax-function-color: var(--cyan-400);
+    --markdown-syntax-keyword-color: var(--light-blue-300);
+    --markdown-syntax-number-color: var(--light-blue-300);
+    --markdown-syntax-operator-color: var(--light-blue-300);
+    --markdown-syntax-punctuation-color: var(--cyan-600);
+    --markdown-syntax-string-color: var(--deep-orange-200);
+    --markdown-syntax-tag-color: var(--cyan-400);
+    --markdown-syntax-variable-color: var(--deep-orange-200);
+    --markdown-table-background-color: var(--grey-900);
+    --markdown-table-border-color: var(--markdown-table-background-color);
+    --markdown-table-row-odd-background-color: var(--blue-grey-900);
+  }
+}
+
+body[theme="dark"] {
+  --primary-text-color: var(--grey-200);
+
+  /* Text colors */
+  --text-color: white;
+  --text-contrast-color: var(--contrast-color-light);
+  --sidebar-tag-background-color: var(--code-button-focus-background);
+
+  /* background-colors */
+  --page-background: var(--near-black);
+  --footer-background: #151515;
+
+  /* code blocks */
+  --code-tabs-background: transparent;
+  --code-button: var(--page-background);
+  --code-button-focus-color: white;
+  --code-button-focus-background: #333;
+  --wcd-snippet-button-background: var(--code-button);
+  --wcd-snippet-button-focus-color: var(--code-button-focus-color);
+  --wcd-snippet-button-focus-background: var(--code-button-focus-background);
+
+  /* search */
+  --rocket-search-background-color: var(--code-button-focus-background);
+  --rocket-search-highlight-color: var(--primary-color-lighter);
+  --rocket-search-fill-color: var(--primary-lines-color);
+  --rocket-search-hover-background-color: var(--near-black);
+  --rocket-search-input-border-color: var(--page-background);
+  --rocket-search-input-overlay-border-color: var(--page-background);
+
+  /* markdown */
+  --markdown-syntax-keyword-color: var(--light-blue-300);
+  --markdown-syntax-color: white;
+  --markdown-syntax-punctuation-color: var(--cyan-600);
+  --markdown-syntax-class-name-color: var(--deep-orange-200);
+  --markdown-syntax-string-color: var(--deep-orange-200);
+  --markdown-syntax-function-color: var(--cyan-400);
+  --markdown-syntax-operator-color: var(--light-blue-300);
+  --markdown-syntax-comment-color: #66bb6a;
+  --markdown-syntax-number-color: var(--light-blue-300);
+  --markdown-syntax-boolean-color: var(--light-blue-300);
+  --markdown-syntax-tag-color: var(--cyan-400);
+  --markdown-syntax-variable-color: var(--deep-orange-200);
+  --markdown-syntax-attr-name-color: var(--light-blue-500);
+  --markdown-octicon-link: white;
+  --markdown-syntax-background-color: var(--grey-900);
+  --markdown-pre-background-color: var(--grey-900);
+  --markdown-link-color: var(--pink-a200);
+  --markdown-blockquote-color: var(--blue-100);
+  --markdown-table-background-color: var(--grey-900);
+  --markdown-table-border-color: var(--markdown-table-background-color);
+  --markdown-table-row-odd-background-color: var(--blue-grey-900);
+}

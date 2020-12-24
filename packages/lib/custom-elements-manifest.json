@@ -1,0 +1,346 @@
+{
+  "schemaVersion": "1",
+  "$schema": "https://raw.githubusercontent.com/webcomponents/custom-elements-manifest/master/schema.json",
+  "modules": [{
+    "kind": "javascript-module",
+    "path": "./index.js",
+    "exports": [{
+        "name": "createApolloClient",
+        "kind": "js",
+        "declaration": {
+          "name": "createApolloClient",
+          "module": "./create-apollo-client.js"
+        }
+      }, {
+        "name": "hasAllVariables",
+        "kind": "js",
+        "declaration": {
+          "name": "hasAllVariables",
+          "module": "./has-all-variables.js"
+        }
+      }, {
+        "name": "isValidGql",
+        "kind": "js",
+        "declaration": {
+          "name": "isValidGql",
+          "module": "./is-valid-gql.js"
+        }
+      }, {
+        "name": "isClientOperation",
+        "kind": "js",
+        "declaration": {
+          "name": "isClientOperation",
+          "module": "./is-client-operation.js"
+        }
+      }, {
+        "name": "booleanAttr",
+        "kind": "js",
+        "declaration": {
+          "name": "booleanAttr",
+          "module": "./descriptors.js"
+        }
+      }, {
+        "name": "effect",
+        "kind": "js",
+        "declaration": {
+          "name": "effect",
+          "module": "./descriptors.js"
+        }
+      }, {
+        "name": "gqlDocument",
+        "kind": "js",
+        "declaration": {
+          "name": "gqlDocument",
+          "module": "./descriptors.js"
+        }
+      }, {
+        "name": "writable",
+        "kind": "js",
+        "declaration": {
+          "name": "writable",
+          "module": "./descriptors.js"
+        }
+    }, {
+        "name": "apply",
+        "kind": "js",
+        "declaration": {
+          "name": "apply",
+          "module": "./prototypes.js"
+        }
+    }],
+    "declarations": []
+  }, {
+    "kind": "javascript-module",
+    "path": "./create-apollo-client.js",
+    "exports": [{
+      "name": "createApolloClient",
+      "kind": "js",
+      "declaration": {
+        "name": "createApolloClient"
+      }
+    }],
+    "declarations": [{
+      "kind": "function",
+      "name": "createApolloClient",
+      "parameters": [{
+        "name": "options",
+        "type": {
+          "type": "Options"
+        },
+        "description": "Limited configuration options for the client.",
+        "summary": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| uri      | string | URI to the client's GraphQL endpoint. |\n| typePolicies | TypePolicies | The client's [type policies](https://www.apollographql.com/docs/react/caching/cache-configuration/#typepolicy-fields). |\n| validateVariables | boolean | Whether to prevent operations that do not have all their non-nullable variables defined. |\n"
+      }],
+      "return": {
+        "description": "A simple Apollo client instance.",
+        "type": {
+          "type": "ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache }"
+        }
+      }
+    }]
+  }, {
+    "kind": "javascript-module",
+    "path": "./has-all-variables.js",
+    "exports": [{
+      "name": "hasAllVariables",
+      "kind": "js",
+      "declaration": {
+        "name": "hasAllVariables"
+      }
+    }],
+    "declarations": [{
+      "kind": "function",
+      "name": "hasAllVariables",
+      "summary": "Checks whether an operation includes all its non-nullable variables\n\n```haskell\nhasAllVariables :: Operation -> Bool\n```",
+      "return": {
+        "description": "Whether the operation has all it's required variables.",
+        "type": {
+          "type": "boolean"
+        }
+      },
+      "parameters": [{
+        "name": "operation",
+        "summary": "The GraphQL operation to validate",
+        "optional": false,
+        "type": {
+          "type": "Partial<Operation>",
+          "references": [{
+            "name": "Operation",
+            "start": 8,
+            "end": 16,
+            "package": "@apollo/client/core"
+          }]
+        }
+      }]
+    }]
+  }, {
+    "kind": "javascript-module",
+    "path": "./is-valid-gql.js",
+    "exports": [{
+      "name": "isValidGql",
+      "kind": "js",
+      "declaration": {
+        "name": "isValidGql"
+      }
+    }],
+    "declarations": [{
+      "kind": "function",
+      "name": "isValidGql",
+      "summary": "Validates a graphql document node.\n\n```haskell\nisValidGql :: DocumentNode a => a -> Bool\n```",
+      "return": {
+        "description": "Whether the argument is a DocumentNode",
+        "type": {
+          "type": "boolean"
+        }
+      },
+      "parameters": [{
+        "name": "doc",
+        "description": "Maybe a DocumentNode",
+        "optional": false,
+        "type": {
+          "type": "any"
+        }
+      }]
+    }]
+  }, {
+    "kind": "javascript-module",
+    "path": "./is-client-operation.js",
+    "exports": [{
+      "name": "isClientOperation",
+      "kind": "js",
+      "declaration": {
+        "name": "isClientOperation"
+      }
+    }],
+    "declarations": [{
+      "kind": "function",
+      "name": "isClientOperation",
+      "summary": "Helper to determine whether an operation is client-side-only\n\n```haskell\nisClientOperation :: Operation -> Bool\n```",
+      "return": {
+        "description": "Whether the operation is client-side-only, i.e. true when the Operation will make no network calls.",
+        "type": {
+          "type": "boolean"
+        }
+      },
+      "parameters": [{
+        "name": "operation",
+        "description": "Operation to check",
+        "optional": false,
+        "type": {
+          "type": "Operation"
+        }
+      }]
+    }]
+  }, {
+    "kind": "javascript-module",
+    "path": "./descriptors.js",
+    "exports": [{
+      "name": "booleanAttr",
+      "kind": "js",
+      "declaration": {
+        "name": "booleanAttr"
+      }
+    }, {
+      "name": "effect",
+      "kind": "js",
+      "declaration": {
+        "name": "effect"
+      }
+    }, {
+      "name": "gqlDocument",
+      "kind": "js",
+      "declaration": {
+        "name": "gqlDocument"
+      }
+    }, {
+      "name": "writable",
+      "kind": "js",
+      "declaration": {
+        "name": "writable"
+      }
+    }],
+    "declarations": [{
+      "kind": "function",
+      "name": "booleanAttr",
+      "summary": "Creates a `PropertyDescriptor` for a boolean property that reflects to a boolean attribute",
+      "return": {
+        "type": {
+          "type": "PropertyDescriptor"
+        }
+      },
+      "parameters": [{
+        "name": "attr",
+        "description": "Attribute name",
+        "optional": false,
+        "type": {
+          "type": "string"
+        }
+      }]
+    }, {
+      "kind": "function",
+      "name": "effect",
+      "summary": "Creates a `PropertyDescriptor` for a boolean property that reflects to a boolean attribute",
+      "return": {
+        "type": {
+          "type": "PropertyDescriptor"
+        }
+      },
+      "parameters": [{
+        "name": "options",
+        "description": "Configuration for the property: it's name, initial value, and setter side-effect.",
+        "summary":"| Property | Type | Description |\n| -------- | ---- | ----------- |\n| name     | `keyof C` | Name of the property. |\n| init     | `C[keyof C]` | The property's initial value. |\n| onSet    | `(this: C, value: C[keyof C]) => void` | Site effect to run when setting the property. |\n",
+        "optional": false,
+        "type": {
+          "type": "PropertyEffectOptions<C>",
+          "references": [{
+            "name": "PropertyEffectOptions",
+            "start": 0,
+            "end": 21
+          }, {
+            "name": "C",
+            "start": 22,
+            "end": 22
+          }]
+        }
+      }]
+    }, {
+      "kind": "function",
+      "name": "gqlDocument",
+      "summary": "Creates a `PropertyDescriptor` for an `ApolloElement`'s `document` property.",
+      "return": {
+        "type": {
+          "type": "PropertyDescriptor"
+        }
+      }
+    }, {
+      "kind": "function",
+      "name": "writable",
+      "summary": "Creates a `PropertyDescriptor` for a writable property.",
+      "parameters": [{"name": "init", "optional": true, "description": "The property's initial value.", "type": {"type": "unknown"}}],
+      "return": {
+        "type": {
+          "type": "PropertyDescriptor"
+        }
+      }
+    }]
+  }, {
+    "kind": "javascript-module",
+    "path": "./prototypes.js",
+    "exports": [{
+      "name": "apply",
+      "kind": "js",
+      "declaration": {
+        "name": "apply"
+      }
+    }],
+    "declarations": [{
+      "kind": "function",
+      "name": "apply",
+      "summary": "Applies a class' prototype to an element, mixing in the class' properties and methods to the element instance.",
+      "return": {
+        "description": "Combined `PropertyDescriptorMap` for the instance.",
+        "type": {
+          "type": "PropertyDescriptorMap"
+        }
+      },
+      "parameters": [{
+        "name": "host",
+        "summary": "Element to apply prototype properties to.",
+        "optional": false,
+        "type": {
+          "type": "T extends ApolloElementElement",
+          "references": [{
+            "name": "T", "start": 0,"end": 0
+          }, {
+            "name": "ApolloElementElement", "start": 10,"end": 30
+          }]
+        }
+      }, {
+        "name": "klass",
+        "summary": "Class whose prototype to apply to the host element.",
+        "optional": false,
+        "type": {
+          "type": "Constructor<T> | typeof ApolloElementElement",
+          "references": [
+            { "name": "Constructor", "start": 0,"end": 11 },
+            { "name": "T", "start": 13,"end": 13 },
+            { "name": "ApolloElementElement", "start": 25,"end": 44 }
+          ]
+        }
+      }, {
+        "name": "type",
+        "summary": "Hint about what kind of class/host pair is in question.",
+        "type": {
+          "type": "'client' | 'subscription' | 'mutation' | 'query'"
+        }
+      }, {
+        "name": "effects",
+        "summary": "function that will run the first time this element has a class prototype mixed in via this helper.",
+        "optional": true,
+        "default": "() => void null",
+        "type": {
+          "type": "(host: T) => void"
+        }
+      }]
+    }]
+  }]
+}

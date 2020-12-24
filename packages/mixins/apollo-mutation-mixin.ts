@@ -37,7 +37,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
   class ApolloMutationElement<D, V = OperationVariables>
     extends ApolloElementMixin(superclass)<D, V>
     implements ApolloMutationInterface<D, V> {
-    static documentType = 'mutation';
+    static documentType = 'mutation' as const;
 
     declare mutation: DocumentNode | ComponentDocument<D> | null;
 

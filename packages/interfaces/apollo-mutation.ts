@@ -38,7 +38,7 @@ export type OptimisticResponseType<D, V> =
 export declare class ApolloMutationInterface<D, V = OperationVariables>
   extends ApolloElementInterface<D, V> {
   /**
-   * Latest mutation
+   * Latest mutation data
    */
   declare data: Data<D> | null;
 
@@ -62,14 +62,14 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
   declare optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
-   * Whether the mutation has been fired
+   * Whether the mutation was called
    */
   declare called: boolean;
 
   /**
    * If true, the returned data property will not update with the mutation result.
    */
-  declare ignoreResults: boolean | undefined;
+  declare ignoreResults?: boolean;
 
   /**
    * The ID number of the most recent mutation since the element was instantiated.
@@ -88,7 +88,11 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
   declare fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
 
   /**
-   * Specifies the FetchPolicy to be used for this mutation.
+   * A list of query names which will be refetched once this mutation has returned.
+   * This is often used if you have a set of queries which may be affected by a mutation and will have to update.
+   * Rather than writing a mutation query reducer (i.e. `updateQueries`) for this,
+   * you can refetch the queries that will be affected
+   * and achieve a consistent store once these queries return.
    */
   declare refetchQueries: RefetchQueriesType<D> | null;
 

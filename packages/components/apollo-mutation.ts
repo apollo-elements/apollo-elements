@@ -140,15 +140,21 @@ export class WillMutateError extends Error {}
  *
  * @example
  * Using DOM properties
- * ```js
- * html`
- * <apollo-mutation
- *     .mutation="${SomeMutation}"
- *     .variables="${{ type: "Type", action: "ACTION" }}">
+ * ```html
+ * <apollo-mutation id="mutation">
  *   <mwc-button slot="trigger" label="OK"></mwc-button>
  * </apollo-mutation>
+ * <script>
+ *   document.getElementById('mutation').mutation = SomeMutation;
+ *   document.getElementById('mutation').variables = {
+ *     type: "Type",
+ *     action: "ACTION"
+ *   };
+ * </script>
  * ```
+ *
  * Will mutate with the following as `variables`:
+ *
  * ```json
  * {
  *   "type": "Type",
@@ -190,22 +196,23 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
    * Function can be synchronous or async.
    * If this function is not defined, will navigate to the `href` property of the link trigger.
    * @example Navigate to a post's page after creating it
-   * ```graphql
-   * mutation CreatePostMutation($title: String, $content: String) {
-   *   createPost(title: $title, content: $content) {
-   *     slug
-   *   }
-   * }
-   * ```
-   * ```ts
-   * const mutationTemplate = html`
-   * <apollo-mutation
-   *     .mutation="${CreatePostMutation}"
-   *     .resolveURL="${(data: Data) => `/posts/${data.createPost.slug}/`}">
+   * ```html
+   * <apollo-mutation id="mutation">
+   *   <script type="application/graphql">
+   *     mutation CreatePostMutation($title: String, $content: String) {
+   *       createPost(title: $title, content: $content) {
+   *         slug
+   *       }
+   *     }
+   *   </script>
    *   <mwc-textfield label="Post title" slot="variable" data-variable="title"></mwc-textfield>
    *   <mwc-textarea label="Post Content" slot="variable" data-variable="content"></mwc-textarea>
    * </apollo-mutation>
-   * `
+   *
+   * <script>
+   *   document.getElementById('mutation').resolveURL =
+   *     data => `/posts/${data.createPost.slug}/`;
+   * </script>
    * ```
    * @param data mutation data
    * @returns url to navigate to

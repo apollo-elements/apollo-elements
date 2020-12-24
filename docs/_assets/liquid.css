@@ -1,0 +1,91 @@
+.devto-link,
+.github-repo {
+  --avatar-size: calc(2.2vw + 45px);
+
+  width: min(640px, 90vw);
+  margin: 0.95em auto;
+}
+
+.devto-link a,
+.github-repo a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.devto-link a:hover,
+.github-repo a:hover,
+.devto-link a:focus,
+.github-repo a:focus {
+  color: var(--text-color);
+  text-decoration: 4px underline solid var(--primary-color);
+}
+
+.devto-link {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: var(--avatar-size);
+  grid-template-areas:
+    'avatar title'
+    'avatar content';
+}
+
+.devto-link h3 {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.devto-link .avatar-link {
+  grid-area: avatar;
+  border-radius: 100%;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  overflow: hidden;
+}
+
+.devto-link .article-link {
+  grid-area: title;
+}
+
+.devto-link .content {
+  grid-area: content;
+  color: var(--primary-text-color);
+}
+
+.devto-link .tag {
+  color: var(--text-color);
+}
+
+.github-repo header,
+.devto-link .taglist,
+.github-repo .github-star-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.devto-link h3,
+.devto-link h4,
+.github-repo header h3 {
+  margin: 0;
+}
+
+.devto-link .anchor,
+.github-repo .anchor {
+  display: none;
+}
+
+.github-repo header svg {
+  width: 40px;
+}
+
+.devto-link .taglist,
+.github-repo .github-star-links {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.devto-link .taglist li,
+.github-repo .github-star-links li {
+  margin: 0;
+}

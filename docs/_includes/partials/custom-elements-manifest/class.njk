@@ -1,0 +1,119 @@
+{% from "./macros.njk" import codeBlock, linkHeading %}
+
+{% set fields = declaration | getFields %}
+{% set methods = declaration | getMethods %}
+{% set slots = declaration | getSlots %}
+{% set cssParts = declaration | getCssParts %}
+{% set cssProperties = declaration | getCssProperties %}
+{% set events = declaration | getEvents %}
+
+{% if declaration.summary %}
+  {% markdown %}{{ declaration.summary | safe }}{% endmarkdown %}
+{% endif %}
+
+{% if fields.length %}
+  {% block beforeProperties %}{% endblock %}
+  {{ linkHeading('Properties', level=2) }}
+  {% for property in fields %}
+    {% if not property.inheritedFrom %}
+      {% include "./property.njk" %}
+    {% endif %}
+  {% endfor %}
+  {% for property in fields %}
+    {% if property.inheritedFrom %}
+      {% include "./property.njk" %}
+    {% endif %}
+  {% endfor %}
+  {% block afterProperties %}{% endblock %}
+{% endif %}
+
+{% if methods.length %}
+  {{ linkHeading('Methods', level=2) }}
+  {% for method in methods %}
+    {% if not method.inheritedFrom %}
+      {% include "./method.njk" %}
+    {% endif %}
+  {% endfor %}
+  {% for method in methods %}
+    {% if method.inheritedFrom %}
+      {% include "./method.njk" %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if slots.length %}
+  {{ linkHeading('Slots', level=2) }}
+  {% for slot in slots %}
+    {% include "./slot.njk" %}
+  {% endfor %}
+{% endif %}
+
+{% if cssParts.length %}
+  {{ linkHeading('CSS Shadow Parts', level=2) }}
+  <table class="css-parts-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cssPart in cssParts %}
+        <tr>
+          <td>{{ cssPart.name }}</td>
+          <td>{{ cssPart.description }}</td>
+        </tr>
+        {% if cssPart.summary %}
+          {% markdown %}{{ cssPart.summary | safe }}{% endmarkdown %}
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% if cssProperties.length %}
+  {{ linkHeading('CSS Custom Properties', level=2) }}
+  <table class="css-custom-properties-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Default Value</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cssProp in cssProperties %}
+        <tr>
+          <td>{{ cssProp.name }}</td>
+          <td>{{ codeBlock(cssProp.defaultValue, lang="css") }}</td>
+          <td>{{ cssProp.description }}</td>
+        </tr>
+        {% if cssProp.summary %}
+          {% markdown %}{{ cssProp.summary | safe }}{% endmarkdown %}
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% if events.length %}
+  {{ linkHeading('Events', level=2) }}
+  <table class="events-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events %}
+        <tr>
+          <td>{{ event.name }}</td>
+          <td>{{ codeBlock(event.type.type) }}</td>
+          <td>{% markdown %}{{ event.description | safe }}{% endmarkdown %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %} {# events #}

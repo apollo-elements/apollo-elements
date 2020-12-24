@@ -39,18 +39,13 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/polymer"
   },
-  "keywords": [
-    "Apollo",
-    "GraphQL",
-    "Web Components",
-    "Custom Elements"
-  ],
+  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
-  "homepage": "https://apolloelements.dev/modules/_apollo_elements_polymer.html",
+  "homepage": "https://apolloelements.dev/api/libraries/polymer/",
   "dependencies": {
     "@apollo-elements/mixins": "^3.4.0-alpha.2",
     "tslib": "^2.0.3"

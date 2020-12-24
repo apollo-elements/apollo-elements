@@ -1,0 +1,130 @@
+type-doc [slot="name"] {
+  flex-wrap: wrap;
+}
+
+type-doc [slot="name"] h3,
+type-doc [slot="name"] h4,
+type-doc [slot="name"] h5,
+type-doc [slot="name"] h6 {
+  display: inline;
+  margin: 0;
+}
+
+type-doc [slot="name"] em,
+type-doc [slot="name"] span {
+  color: var(--markdown-syntax-punctuation-color);
+}
+
+type-doc > pre[class*="language"] {
+  background: var(--markdown-table-row-odd-background-color);
+}
+
+type-doc [slot="type"] pre[class*="language"] {
+  display: inline;
+  padding: 0;
+  background: none;
+}
+
+type-doc > * {
+  grid-column: span 2;
+}
+
+type-doc[kind="method"] thead,
+type-doc[kind="parameter"] thead,
+type-doc[kind="return"] thead {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+type-doc[kind="property"] > [slot="name"] .anchor,
+type-doc[kind="function"] > [slot="name"] .anchor,
+type-doc[kind="method"] > [slot="name"] .anchor {
+  position: absolute;
+  left: 0;
+}
+
+type-doc type-doc[kind="return"] {
+  padding-left: 0;
+}
+
+type-doc [slot="attribute"],
+type-doc [slot="type"] {
+  display: flex;
+  align-items: baseline;
+}
+
+type-doc[data-inherited-from] header {
+  justify-content: space-between;
+}
+
+type-doc:not([data-inherited-from]) [slot="type"]::before {
+  content: 'type: ';
+}
+
+type-doc [slot="attribute"]::before {
+  content: 'attr: ';
+}
+
+type-doc [slot="attribute"]::before,
+type-doc [slot="type"]::before {
+  font-style: italic;
+  font-size: 11px;
+  margin-right: 4px;
+  display: inline-block;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+type-doc [slot="type"] p,
+type-doc [slot="type"] pre {
+  margin: 0;
+}
+
+type-doc[kind="property"] [slot="name"],
+type-doc[kind="property"] [slot="attribute"],
+type-doc[kind="function"] [slot="name"],
+type-doc[kind="method"] [slot="name"] {
+  --mono: 1;
+
+  font-family: Recursive, monospace;
+  font-variation-settings:
+    var(--mono, 1),
+    var(--casl, 0),
+    var(--wght, 500),
+    var(--slnt, 0),
+    var(--CRSV, 0.5);
+  margin: 0;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  color: var(--markdown-syntax-function-color);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+type-doc type-doc[kind="return"] [slot="name"] {
+  color: inherit;
+}
+
+type-doc[kind="property"] [slot="attribute"] {
+  color: var(--markdown-syntax-punctuation-color);
+}
+
+.events-table td pre[class*="language"] {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+}
+
+@media (max-width: 1200) {
+  type-docs pre[class*="language"] {
+    max-width: 100%;
+    overflow-x: scroll;
+  }
+}
+
+pre.language-ts a {
+  color: inherit;
+  text-decoration: underline 1px dotted;
+}

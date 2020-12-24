@@ -30,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
-  "homepage": "https://apolloelements.dev/modules/_apollo_elements_create.html",
+  "homepage": "https://apolloelements.dev/guides/getting-started/",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.com"
@@ -42,11 +42,11 @@
   },
   "dependencies": {
     "case": "^1.6.3",
-    "execa": "^4.1.0",
+    "execa": "^5.0.0",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
     "prompts": "^2.4.0",
     "tslib": "^2.0.3",
-    "yargs": "^16.1.1"
+    "yargs": "^16.2.0"
   }
 }

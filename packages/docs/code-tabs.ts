@@ -1,122 +1,49 @@
-import { Item, SelectMixin } from '@pwrs/mixins/select';
-import { LitElement, customElement, html, TemplateResult, property, queryAll } from 'lit-element';
-import { ifDefined } from "lit-html/directives/if-defined";
+import { XTabs, XTab, Tab } from './x-tabs';
+import { customElement, html, PropertyValues } from 'lit-element';
 
 import './code-copy';
 
-import ButtonStyles from './button.css';
-import TabsStyles from './tabs.css';
-import TabStyles from './tab.css';
+const PACKAGES = new Map<string, Tab>(Object.entries<Tab>({
+  lit:      { id: 'lit', label:'LitElement', iconHref: new URL('./library-logos/lit.svg', import.meta.url).href, synonyms: ['lit-apollo'] },
+  fast:     { id: 'fast', label:'FAST',       iconHref: new URL('./library-logos/fast.svg', import.meta.url).href },
+  gluon:    { id: 'gluon', label:'Gluon',      iconHref: new URL('./library-logos/html5.svg', import.meta.url).href },
+  haunted:  { id: 'haunted', label:'Haunted',    iconHref: new URL('./library-logos/haunted.svg', import.meta.url).href },
+  hybrids:  { id: 'hybrids', label:'Hybrids',    iconHref: new URL('./library-logos/hybrids.svg', import.meta.url).href },
+  vanilla:  { id: 'vanilla', label:'Vanilla',    iconHref: new URL('./library-logos/html5.svg', import.meta.url).href, synonyms: ['mixins', 'html'] },
+  polymer:  { id: 'polymer', label:'Polymer',    iconHref: new URL('./library-logos/polymer.svg', import.meta.url).href },
+}));
 
-declare module '@pwrs/mixins/select' {
-  export interface Item {
-    library: keyof typeof PACKAGES;
-  }
-}
+PACKAGES.set('lit-apollo', PACKAGES.get('lit'))
+PACKAGES.set('mixins', PACKAGES.get('vanilla'))
+PACKAGES.set('html', PACKAGES.get('vanilla'))
 
-const INSTANCES = new Set<CodeTabs>();
+const PACKAGE_MANAGERS = new Map<string, Tab>(Object.entries<Tab>({
+  npm:  { id: 'npm', label:'NPM',    iconHref: new URL('./pm-logos/npm.svg', import.meta.url).href, synonyms: ['NPM'] },
+  yarn: { id: 'yarn', label:'Yarn',   iconHref: new URL('./pm-logos/yarn.svg', import.meta.url).href },
+  pnpm: { id: 'pnpm', label:'PNPM',   iconHref: new URL('./pm-logos/pnpm.svg', import.meta.url).href },
+}));
 
-const PACKAGES = {
-  'lit': { label: 'LitElement', icon: '/images/lit.svg' },
-  'lit-apollo': { label: 'LitElement', icon: '/images/lit.svg' },
-  'fast': { label: 'FAST', icon: '/images/fast.svg' },
-  'gluon': { label: 'Gluon', icon: '/images/gluon.svg' },
-  'haunted': { label: 'Haunted', icon: '/images/haunted.svg' },
-  'hybrids': { label: 'Hybrids', icon: '/images/hybrids.svg' },
-  'mixins': { label: 'Vanilla', icon: '/images/js.svg' },
-  'vanilla': { label: 'Vanilla', icon: '/images/js.svg' },
-  'polymer': { label: 'Polymer', icon: '/images/polymer.svg' },
-}
+const COLLECTIONS = new Map<string, Map<string, Tab>>(Object.entries({
+  libraries: PACKAGES,
+  'package-managers': PACKAGE_MANAGERS,
+}));
 
-function getPackage(tag: string) {
-  return PACKAGES[tag] ?? PACKAGES.vanilla;
-}
-
+// TODO: XTabs should have enough to make this unneeded, i.e define XTabs as <code-tabs collection="libraries">, with a 'copy' attr
 @customElement('code-tabs')
-export class CodeTabs extends SelectMixin(LitElement) {
+export class CodeTabs extends XTabs {
   static readonly allowedChildren = ['code-tab'];
 
-  static readonly styles = [ButtonStyles, TabsStyles];
-
-  @queryAll('button[role="tab"]') tabs: NodeListOf<HTMLButtonElement>;
-
   connectedCallback() {
+    this.defaultTab =
+        this.collection === 'libraries' ? 'lit'
+      : this.collection === 'package-managers' ? 'npm'
+      : undefined;
     super.connectedCallback();
-    INSTANCES.add(this);
-    this.setAttribute('role', 'tablist');
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback?.();
-    INSTANCES.delete(this);
-  }
-
-  firstUpdated(changed) {
-    super.firstUpdated(changed);
-    const lib = localStorage.getItem('code-tabs-selected-lib');
-    const index = !lib ? 0 : this.items.findIndex(x => x.library === lib);
-    this.selectIndex(index);
-    this.onSelect();
-  }
-
-  render(): TemplateResult {
-    const items = this.items ?? [];
-    return html`
-      <div id="tabs" role="tablist">
-        ${items.map(({ library }) => {
-          const { icon, label } = PACKAGES[library];
-          return html`
-        <button role="tab"
-            @click="${this.onClickTab}"
-            data-library="${library}">
-          <img src="${ifDefined(icon)}" alt=""/>
-          ${label}
-        </button>
-        `})}
-      </div>
-
-      <div role="tabpanel">
-        <slot></slot>
-      </div>
-    `;
-  }
-
-  onClickTab(event: Event & { target: HTMLButtonElement }) {
-    const tabs = [...this.tabs]
-    let tab = event.target;
-    while (!tabs.includes(tab))
-      tab = tab.parentElement as HTMLButtonElement;
-    const index = [...this.tabs].indexOf(tab);
-    this.selectIndex(index);
-  }
-
-  onSelect() {
-    for (const tab of this.tabs)
-      tab.removeAttribute('selected');
-    const tab =
-      this.tabs[this.selectedIndex as number];
-    tab.setAttribute('selected', '');
-    const { left } = tab.getBoundingClientRect();
-    this.shadowRoot.getElementById('tabs')
-      .scrollTo({ behavior: 'smooth', left });
-    const item = this.selectedItem as Item;
-    localStorage.setItem('code-tabs-selected-lib', item.library);
-    INSTANCES.forEach(x => x.selectLib(item.library))
-  }
-
-  selectLib(library: string) {
-    const index =
-      this.items.findIndex(x => x.library === library)
-    if (index >= 0 && this.selectedIndex !== index)
-      this.selectIndex(index)
   }
 }
 
 @customElement('code-tab')
-export class CodeTab extends LitElement {
-  static readonly styles = [TabStyles];
-
-  @property({ reflect: true }) library: keyof typeof PACKAGES;
+export class CodeTab extends XTab {
 
   render() {
     return html`
@@ -124,5 +51,19 @@ export class CodeTab extends LitElement {
         <slot></slot>
       </code-copy>
     `;
+  }
+
+  updated(changed: PropertyValues<this>): void {
+    const { tab } = this;
+    const { collection } = this.closest<CodeTabs>('code-tabs');
+    if (!collection || !tab) return;
+    const col = COLLECTIONS.get(collection);
+    if (!col) return;
+    const { label, iconHref, synonyms } = col.get(this.tab);
+    this.setAttribute('data-id', this.tab);
+    this.setAttribute('data-label', label);
+    this.setAttribute('data-icon-href', iconHref);
+    if (synonyms)
+      this.setAttribute('data-synonyms', synonyms.join(''));
   }
 }

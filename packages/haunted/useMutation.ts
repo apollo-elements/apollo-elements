@@ -3,11 +3,7 @@ import type {
   ApolloError,
   DocumentNode,
   OperationVariables,
-  PureQueryOptions,
-  MutationUpdaterFn,
   NormalizedCacheObject,
-  ErrorPolicy,
-  WatchQueryFetchPolicy,
 } from '@apollo/client/core';
 
 import type { State } from 'haunted';

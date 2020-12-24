@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1210" height="640" viewBox="0 0 1210 640">
+  <defs>
+    <linearGradient id="social-image-a" x1="68.634%" x2="97.022%" y1="63.781%" y2="36.219%">
+      <stop offset="0%"/>
+      <stop offset="100%" stop-color="#4A4A4A"/>
+    </linearGradient>
+    <linearGradient id="social-image-b" x1="0%" x2="50%" y1="36.219%" y2="63.781%">
+      <stop offset="0%" stop-color="#D500F9"/>
+      <stop offset="100%" stop-color="#A0F"/>
+    </linearGradient>
+    <linearGradient id="social-image-c" x1="50%" y1="36.219%" y2="63.781%">
+      <stop offset="0%" stop-color="#D500F9"/>
+      <stop offset="100%" stop-color="#A0F"/>
+    </linearGradient>
+    <radialGradient id="social-image-d" cx="100.028%" cy="62.089%" r="90.501%" fx="100.028%" fy="62.089%" gradientTransform="matrix(-.99984 .01624 -.01796 -.9041 2.012 1.166)">
+      <stop offset="0%" stop-color="#FFF"/>
+      <stop offset="100%"/>
+    </radialGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <g transform="translate(5 5)">
+      <rect width="1200" height="630" fill="#212121" fill-rule="nonzero"/>
+      <rect width="1200" height="630" fill="url(#social-image-a)" fill-opacity=".12" fill-rule="nonzero"/>
+      <rect width="1200" height="630" stroke="url(#social-image-b)" stroke-width="10"/>
+      <rect width="1200" height="630" stroke="url(#social-image-c)" stroke-width="10"/>
+      <g fill-rule="nonzero" transform="translate(775 127)">
+        <path fill="#FFF" stroke="url(#social-image-d)" stroke-width="16" d="M197.752815,7.44795677 L312.256734,73.6620992 C329.425499,83.5902753 340,101.935014 340,121.785857 L340,254.214143 C340,274.064986 329.425499,292.409725 312.256734,302.337901 L197.752815,368.552043 C180.579842,378.482652 159.420158,378.482652 142.247185,368.552043 L27.7432659,302.337901 C10.5745009,292.409725 0,274.064986 0,254.214143 L0,121.785857 C0,101.935014 10.5745009,83.5902753 27.743266,73.6620991 L142.247185,7.44795676 C159.420158,-2.4826523 180.579842,-2.4826523 197.752815,7.44795676 L197.752815,7.44795677 Z"/>
+        <g fill="#000" transform="translate(32 90)">
+          <polygon points="0 97.924 33.12 .367 74.013 .367 37.879 97.632 65.024 195.616 28.826 195.633"/>
+          <polygon points="202.986 98.37 236.106 .367 276.999 .367 240.865 98.37 268.01 195.616 231.811 195.633" transform="rotate(180 239.993 98)"/>
+          <polygon points="116.139 .367 161.556 .367 227.169 195.59 186.068 195.59 138.857 41.907 112.346 125.971 153.149 125.971 164.358 162.56 102.389 162.56 91.665 195.633 50.563 195.633"/>
+        </g>
+      </g>
+    </g>
+    <text fill="#EEE" font-family="OpenSans-Bold, Open Sans" font-size="124" font-weight="bold">
+      <tspan x="105" y="325">Apollo</tspan> <tspan x="105" y="453">Elements</tspan>
+    </text>
+    <text fill="#DDD" font-family="OpenSans, Open Sans" font-size="38">
+      <tspan x="105" y="499">GraphQL Web Components</tspan>
+    </text>
+  </g>
+</svg>

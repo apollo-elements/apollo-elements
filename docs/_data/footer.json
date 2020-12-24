@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Discover",
+    "children": [
+      {
+        "text": "Blog",
+        "href": "/blog/"
+      },
+      {
+        "text": "Help and Feedback",
+        "href": "https://github.com/apollo-elements/apollo-elements/issues"
+      }
+    ]
+  },
+  {
+    "name": "Follow",
+    "children": [
+      {
+        "text": "Github",
+        "href": "https://github.com/apollo-elements/apollo-elements"
+      },
+      {
+        "text": "Discord",
+        "href": "https://discord.gg/xuTK3T"
+      }
+    ]
+  },
+  {
+    "name": "Support",
+    "children": [
+      {
+        "text": "Sponsor",
+        "href": "https://opencollective.com/apollo-elements"
+      },
+      {
+        "text": "Contribute",
+        "href": "https://github.com/apollo-elements/apollo-elements/"
+      }
+    ]
+  }
+]

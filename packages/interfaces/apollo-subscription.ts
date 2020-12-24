@@ -97,6 +97,9 @@ export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
    */
   declare skip: boolean;
 
+  /**
+   * Determines if your subscription should be unsubscribed and subscribed again.
+   */
   declare shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'];
 
   /**

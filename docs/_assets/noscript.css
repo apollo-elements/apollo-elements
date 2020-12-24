@@ -1,0 +1,24 @@
+:not(:defined) {
+  opacity: 1 !important;
+}
+
+code-tab:not(:defined) pre {
+  border-top-left-radius: 0;
+}
+
+code-tab:not(:defined)::before {
+  content: attr(tab);
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 5px;
+  background: var(--markdown-table-row-odd-background-color);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  font-size: 12px;
+}
+
+type-doc type-doc {
+  margin-bottom: 0;
+  background: transparent;
+  padding: 0.3rem 0.8rem;
+}

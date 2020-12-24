@@ -1,6 +1,8 @@
 /**
- * Similar to Object.getOwnPropertyDescriptor,
- * except it traverses the entire prototype chain
+ * Similar to `Object.getOwnPropertyDescriptor`, except it traverses the entire prototype chain
+ *
+ * @param o Object to get descriptor of
+ * @param key Object key to get descriptor for
  */
 export function getPrototypicalPropertyDescriptor<
   T extends unknown,

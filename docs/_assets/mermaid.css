@@ -1,0 +1,63 @@
+svg a {
+  text-decoration: 1px underline dotted;
+}
+
+.actor { fill: var(--markdown-table-row-odd-background-color); }
+.actor-line { stroke: var(--primary-lines-color); }
+.messageText { stroke: var(--text-color); }
+
+text.actor,
+.messageText { fill: var(--text-color); }
+
+#arrowhead path,
+#crosshead path,
+.messageLine0,
+.messageLine1 { stroke: var(--markdown-link-color); }
+
+.messageLine0 {
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+}
+
+.messageLine1 {
+  stroke-width: 1.5;
+  stroke-dasharray: 2, 2;
+}
+
+.classGroup {
+  fill: var(--markdown-table-row-odd-background-color);
+}
+
+g.classGroup text {
+  fill: var(--text-color);
+  stroke: none;
+  font-size: 10px;
+}
+
+g.classGroup text .title {
+  font-weight: bolder;
+}
+
+.relation {
+  stroke: var(--primary-lines-color);
+  stroke-width: 1;
+  fill: none;
+}
+
+#compositionEnd,
+#compositionStart,
+#dependencyStart,
+#extensionEnd,
+#extensionStart,
+.extension {
+  fill: var(--primary-lines-color);
+  stroke: var(--primary-lines-color);
+  stroke-width: 1;
+}
+
+#aggregationEnd,
+#aggregationStart {
+  fill: var(--markdown-syntax-number-color);
+  stroke: var(--primary-lines-color);
+  stroke-width: 1;
+}

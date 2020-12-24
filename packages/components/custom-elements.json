@@ -16,8 +16,7 @@
           "type": "boolean"
         }
       ],
-      "properties": [
-        {
+      "properties": [{
           "name": "observedAttributes",
           "type": "string[]",
           "default": "[\"uri\"]"
@@ -38,13 +37,11 @@
         },
         {
           "name": "uri",
-          "attribute": "uri",
           "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
           "type": "string | undefined"
         },
         {
           "name": "validateVariables",
-          "attribute": "validate-variables",
           "description": "When true, client will not fetch operations that do not have all their non-nullable variables set",
           "type": "boolean"
         }
