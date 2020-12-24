@@ -1,0 +1,8 @@
+{% from "./macros.njk" import codeBlock, linkHeading %}
+
+{% extends "./class.njk" %}
+
+{% block beforeProperties %}
+  {{ linkHeading('Signature', level=2)}}
+  {% include "./function.njk" %}
+{% endblock %}

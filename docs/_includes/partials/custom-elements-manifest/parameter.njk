@@ -1,0 +1,12 @@
+{% from "./macros.njk" import codeBlock %}
+
+<type-doc kind="parameter" data-parameter="{{ param.name }}">
+  <h4 slot="name">{{ param.name }}</h4>
+  <span slot="type">{{ codeBlock(param.type | getTypeString) }}</span>
+  {% if param.summary %}
+    {% markdown %}{{ param.summary | safe }}{% endmarkdown %}
+  {% endif %}
+  {% if param.description %}
+    {% markdown %}{{ param.description | safe }}{% endmarkdown %}
+  {% endif %}
+</type-doc>

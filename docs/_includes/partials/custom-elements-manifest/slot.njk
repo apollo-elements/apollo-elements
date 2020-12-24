@@ -1,0 +1,16 @@
+{% from "./macros.njk" import codeBlock, linkHeading %}
+
+<type-doc kind="slot" data-property="{{ slot.name or 'Default' }}">
+  <span slot="name">
+    {{ linkHeading(slot.name, prefix='slot') }}
+  </span>
+  {% if slot.allowedChildren %}
+    <h4>Allowed Children</h4>
+    <ul class="allowed-children">
+    {% for child in slot.allowedChildren %}
+      <li>{{ child }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  {% markdown %}{{ slot.summary | safe }}{% endmarkdown %}
+</type-doc>

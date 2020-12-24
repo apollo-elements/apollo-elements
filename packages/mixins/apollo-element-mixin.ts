@@ -62,23 +62,30 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
   class ApolloElement<D = unknown, V = OperationVariables>
     extends superclass implements ApolloElementInterface<D, V> {
-    static documentType = 'document';
+    static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
+
+    /** The Apollo Client instance. */
+    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
     /** Latest data */
     declare data: Data<D> | null;
 
-    /** Operation variables */
+    /**
+     * An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.
+     */
     declare variables: Variables<D, V> | null;
 
+    /** Latest error. */
     declare error: Error | ApolloError | null;
 
+    /** Latest errors. */
     declare errors: readonly GraphQLError[] | null;
 
+    /** Whether a request is in-flight. */
     declare loading: boolean;
 
+    /** Context passed to the link execution chain. */
     declare context?: Record<string, unknown>;
-
-    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
     /** @private */
     _document: DocumentNode | ComponentDocument<D> | null = null;
@@ -95,7 +102,10 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     /** @private */
     mo: MutationObserver | null = null;
 
-    /** GraphQL Document */
+    /**
+     * A GraphQL document containing a single query, mutation, or subscription.
+     * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
+     */
     get document(): DocumentNode | ComponentDocument<D> | null {
       return this._document ?? this.getDOMGraphQLDocument();
     }
@@ -135,14 +145,16 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     }
 
     /**
-     * Lifecycle callback that reacts to changes in the GraphQL document
+     * Lifecycle callback that reacts to changes in the GraphQL document.
      * @protected
+     * @param document The GraphQL document.
      */
     documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
 
     /**
-     * Lifecycle callback that reacts to changes in the operation variables
+     * Lifecycle callback that reacts to changes in the operation variables.
      * @protected
+     * @param variables The variables.
      */
     variablesChanged?(variables: Variables<D, V> | null): void
 

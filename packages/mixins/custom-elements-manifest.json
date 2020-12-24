@@ -1,0 +1,2238 @@
+{
+  "schemaVersion": "1",
+  "$schema": "https://raw.githubusercontent.com/webcomponents/custom-elements-manifest/master/schema.json",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElementMixin",
+          "declaration": {
+            "name": "ApolloElementMixin",
+            "module": "./apollo-element-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQueryMixin",
+          "declaration": {
+            "name": "ApolloQueryMixin",
+            "module": "./apollo-query-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutationMixin",
+          "declaration": {
+            "name": "ApolloMutationMixin",
+            "module": "./apollo-mutation-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscriptionMixin",
+          "declaration": {
+            "name": "ApolloSubscriptionMixin",
+            "module": "./apollo-subscription-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-element-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ApolloElementMixin",
+          "superclass": {
+            "name": "CustomElement",
+            "module": "./constructor.ts",
+            "package": "@apollo-elements/interfaces"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "client",
+              "description": "The Apollo Client instance",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject> | null",
+                "references": [
+                  {
+                    "name": "ApolloClient",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "NormalizedCacheObject",
+                    "start": 14,
+                    "end": 34
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "description": "A GraphQL document containing a single query, mutation, or subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode | null",
+                "references": [
+                  {
+                    "name": "DocumentNode",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "TypedDocumentNode",
+                    "start": 16,
+                    "end": 32
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "description": "Latest data.",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "description": "An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "description": "Latest error",
+              "optional": true,
+              "type": {
+                "type": "Error | ApolloError | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "description": "Latest errors.",
+              "optional": true,
+              "type": {
+                "type": "readonly GraphQLError[] | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "description": "Whether a request is in-flight.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "optional": true,
+              "description": "Context passed to the link execution chain.",
+              "type": {
+                "type": "Record<string, unknown>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "name": "documentType",
+              "description": "Hint about what kind of component this is",
+              "type": {
+                "type": "'document'|'query'|'mutation'|'subscription'"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document.",
+              "parameters": [
+                {
+                  "name": "document",
+                  "description": "The GraphQL document.",
+                  "type": {
+                    "type": "DocumentNode | TypedDocumentNode | null",
+                    "references": [
+                      {
+                        "name": "DocumentNode",
+                        "start": 0,
+                        "end": 12
+                      },
+                      {
+                        "name": "TypedDocumentNode",
+                        "start": 16,
+                        "end": 32
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the operation variables.",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "description": "The variables.",
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "description": "when the element connects to the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "description": "when the element disconnects from the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<CustomElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloElement>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElementMixin",
+          "declaration": {
+            "name": "ApolloElementMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-query-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ApolloQueryMixin",
+          "superclass": {
+            "name": "ApolloElementInterface",
+            "module": "./apollo-element.ts",
+            "package": "@apollo-elements/interfaces"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "query",
+              "description": "A GraphQL document containing a single query. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).\n\n```html\n<script type=\"application/graphql\">\n  query { helloWorld }\n</script>\n```",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode",
+                "references": [
+                  {
+                    "name": "DocumentNode",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "TypedDocumentNode",
+                    "start": 16,
+                    "end": 32
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "optional": true,
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.\n",
+              "type": {
+                "type": "FetchPolicy"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "nextFetchPolicy",
+              "optional": true,
+              "description": "When someone chooses `cache-and-network` or `network-only` as their initial `FetchPolicy`, they often do not want future cache updates to trigger unconditional network requests, which is what repeatedly applying the `cache-and-network` or `network-only` policies would seem to imply. Instead, when the cache reports an update after the initial network request, it may be desirable for subsequent network requests to be triggered only if the cache result is incomplete. The `nextFetchPolicy` option provides a way to update `options.fetchPolicy` after the intial network request, without having to set options.",
+              "type": {
+                "type": "FetchPolicy"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "partial",
+              "description": "If data was read from the cache with missing fields, partial will be true. Otherwise, partial will be falsy.",
+              "optional": true,
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "partialRefetch",
+              "optional": true,
+              "description": "If true, perform a query refetch if the query result is marked as being partial, and the returned data is reset to an empty Object by the Apollo Client QueryManager (due to a cache miss). The default value is false for backwards-compatibility's sake, but should be changed to true for most use-cases.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "returnPartialData",
+              "optional": true,
+              "description": "Opt into receiving partial results from the cache for queries that are not fully satisfied by the cache.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "networkStatus",
+              "description": "\n`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however.\n",
+              "type": {
+                "type": "NetworkStatus"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "observableQuery",
+              "optional": true,
+              "summary": "The `ObservableQuery` watching this element's query.",
+              "type": {
+                "type": "ObservableQuery<Data<D>, Variables<D, V>>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "summary": "Set to reobserve the `ObservableQuery`",
+              "type": {
+                "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "optional": true,
+              "description": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "optional": true,
+              "description": "The time interval (in milliseconds) on which this query should be refetched from the server.",
+              "type": {
+                "type": "number"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "description": "Specifies the `ErrorPolicy` to be used for this query.",
+              "type": {
+                "type": "ErrorPolicy"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "reflects": true,
+              "description": "When true, the component will not automatically subscribe to new data. Call the `subscribe()` method to do so.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refetch",
+              "async": true,
+              "description": "Update the variables of this observable query, and fetch the new results.",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "summary": "Partial new set of variables. If there are missing variables, the previous values of those variables will be used.",
+                  "type": {
+                    "type": "Variables<D, V>"
+                  }
+                }
+              ],
+              "return": {
+                "summary": "Result of the query operation",
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | <pre class=\"language-ts\"><code class=\"language-ts\">Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | If the query resolved, the data. |\n| error | <pre class=\"language-ts\"><code class=\"language-ts\">ApolloError</code></pre> | If the query rejected, the error. |\n| errors | <pre class=\"language-ts\"><code class=\"language-ts\"><span class=\"token keyword\">readonly</span> GraphQLError<span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span></code></pre> | If the query returned partials results, and some were errors, the list of errors. |\n| loading | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the operation is in-flight. |\n| partial | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the query returned partial data. |\n| networkStatus | <pre class=\"language-ts\"><code class=\"language-ts\">NetworkStatus</code></pre> | See [NetworkStatus](#networkstatus). |\n",
+                "type": {
+                  "type": "Promise<ApolloQueryResult<Data<D>>>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "privacy": "protected",
+              "description": "Determines whether the element should attempt to subscribe i.e. begin querying. Override to prevent subscribing unless your conditions are met.",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | See [query](#query) |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | See [variables](#variables) |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | See [fetchPolicy](#fetchpolicy) |\n| errorPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">ErrorPolicy</code></pre> | See [errorPolicy](#errorpolicy) |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "summary": "Resets the observableQuery and subscribes.",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "summary": "Options to control how the component subscribes to its `ObservableQuery`",
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | See [query](#query) |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | See [variables](#variables) |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | See [fetchPolicy](#fetchpolicy) |\n| errorPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">ErrorPolicy</code></pre> | See [errorPolicy](#errorpolicy) |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | Context object passed through the link execution chain. |\n",
+                  "type": {
+                    "type": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "ZenObservable.Subscription"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "subscribeToMore",
+              "description": "Lets you pass a GraphQL subscription and updateQuery function to subscribe to more updates for your query. The `updateQuery` parameter is a function that takes the previous query data, then an object with a `subscriptionData` property that is a `SubscriptionResult`, and returns an object with updated query data based on the new results.",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "SubscribeToMoreOptions<Data<D>, Variables<D, V>>"
+                  }
+                }
+              ],
+              "return": {
+                "description": "function which unsubscribes from the subscription",
+                "type": {
+                  "type": "(() => void) | void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "executeQuery",
+              "async": true,
+              "summary": "Executes a Query once and updates the component with the result",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "summary": "Options for the operation. All values default to their respective element instance property values.",
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | Specifies the [`fetchPolicy`](#fetchpolicy) to be used for this query. |\n| errorPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">ErrorPolicy</code></pre> | Specifies the [`ErrorPolicy`](#errorpolicy) to be used for this query. |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | Context object passed through the link execution chain. |\n",
+                  "type": {
+                    "type": "Partial<QueryOptions<Variables<D, V>>>"
+                  }
+                }
+              ],
+              "return": {
+                "summary": "Result of the query operation",
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | <pre class=\"language-ts\"><code class=\"language-ts\">Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | If the query resolved, the data. |\n| error | <pre class=\"language-ts\"><code class=\"language-ts\">ApolloError</code></pre> | If the query rejected, the error. |\n| errors | <pre class=\"language-ts\"><code class=\"language-ts\"><span class=\"token keyword\">readonly</span> GraphQLError<span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span></code></pre> | If the query returned partials results, and some were errors, the list of errors. |\n| loading | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the operation is in-flight. |\n| partial | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the query returned partial data. |\n| networkStatus | <pre class=\"language-ts\"><code class=\"language-ts\">NetworkStatus</code></pre> | See [NetworkStatus](#networkstatus). |\n",
+                "type": {
+                  "type": "Promise<ApolloQueryResult<Data<D>> | void>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "fetchMore",
+              "async": true,
+              "summary": "Exposes the [`ObservableQuery#fetchMore`](https://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore) method.",
+              "description": "The optional `updateQuery` parameter is a function that takes the previous query data, then an object with a `subscriptionData` property that is a `SubscriptionResult`, and returns an object with updated query data based on the new results.\n\nThe `variables` parameter is an optional new variables object.",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<FetchMoreParams<D, V>>"
+                  },
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | Query to fetch, defaults to `this.query` |\n| updateQuery | <pre class=\"language-ts\"><code class=\"language-ts\">Function</code></pre>| Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | Query variables |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "return": {
+                "summary": "Result of the query operation",
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | <pre class=\"language-ts\"><code class=\"language-ts\">Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | If the query resolved, the data. |\n| error | <pre class=\"language-ts\"><code class=\"language-ts\">ApolloError</code></pre> | If the query rejected, the error. |\n| errors | <pre class=\"language-ts\"><code class=\"language-ts\"><span class=\"token keyword\">readonly</span> GraphQLError<span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span></code></pre> | If the query returned partials results, and some were errors, the list of errors. |\n| loading | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the operation is in-flight. |\n| partial | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the query returned partial data. |\n| networkStatus | <pre class=\"language-ts\"><code class=\"language-ts\">NetworkStatus</code></pre> | See [NetworkStatus](#networkstatus). |\n",
+                "type": {
+                  "type": "Promise<ApolloQueryResult<Data<D>>>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "watchQuery",
+              "description": "Creates an instance of ObservableQuery with the options provided by the element.\n- `context` Context to be passed to link execution chain\n- `errorPolicy` Specifies the ErrorPolicy to be used for this query\n- `fetchPolicy` Specifies the FetchPolicy to be used for this query\n- `fetchResults` Whether or not to fetch results\n- `metadata` Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.\n- `notifyOnNetworkStatusChange` Whether or not updates to the network status should trigger next on the observer of this query\n- `pollInterval` The time interval (in milliseconds) on which this query should be refetched from the server.\n- `query` A GraphQL document that consists of a single query to be sent down to the server.\n- `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.\n",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "ObservableQuery<Data<D>, Variables<D, V>>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onData",
+              "optional": true,
+              "summary": "Callback for when a query is completed.",
+              "parameters": [
+                {
+                  "name": "result",
+                  "summary": "Result of the query operation",
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | <pre class=\"language-ts\"><code class=\"language-ts\">Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | If the query resolved, the data. |\n| error | <pre class=\"language-ts\"><code class=\"language-ts\">ApolloError</code></pre> | If the query rejected, the error. |\n| errors | <pre class=\"language-ts\"><code class=\"language-ts\"><span class=\"token keyword\">readonly</span> GraphQLError<span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span></code></pre> | If the query returned partials results, and some were errors, the list of errors. |\n| loading | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the operation is in-flight. |\n| partial | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Whether the query returned partial data. |\n| networkStatus | <pre class=\"language-ts\"><code class=\"language-ts\">NetworkStatus</code></pre> | See [NetworkStatus](#networkstatus). |\n",
+                  "type": {
+                    "type": "ApolloQueryResult<Data<D>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onError",
+              "optional": true,
+              "summary": "Callback for when an error occurs.",
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "type": "Error"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloQueryInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-query.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "description": "The Apollo Client instance",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject> | null",
+                "references": [
+                  {
+                    "name": "ApolloClient",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "NormalizedCacheObject",
+                    "start": 14,
+                    "end": 34
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "description": "A GraphQL document containing a single query, mutation, or subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode | null",
+                "references": [
+                  {
+                    "name": "DocumentNode",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "TypedDocumentNode",
+                    "start": 16,
+                    "end": 32
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "description": "Latest query data.",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "description": "An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "description": "Latest error",
+              "optional": true,
+              "type": {
+                "type": "Error | ApolloError | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "description": "Latest errors.",
+              "optional": true,
+              "type": {
+                "type": "readonly GraphQLError[] | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "description": "Whether a request is in-flight.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "optional": true,
+              "description": "Context passed to the link execution chain.",
+              "type": {
+                "type": "Record<string, unknown>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "name": "documentType",
+              "description": "Hint that this is a query component",
+              "type": {
+                "type": "'query'"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document.",
+              "parameters": [
+                {
+                  "name": "document",
+                  "description": "The GraphQL document.",
+                  "type": {
+                    "type": "DocumentNode | TypedDocumentNode | null",
+                    "references": [
+                      {
+                        "name": "DocumentNode",
+                        "start": 0,
+                        "end": 12
+                      },
+                      {
+                        "name": "TypedDocumentNode",
+                        "start": 16,
+                        "end": 32
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the operation variables.",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "description": "The variables.",
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "description": "when the element connects to the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "description": "when the element disconnects from the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-query-result",
+              "description": "when the query resolves",
+              "type": {
+                "type": "CustomEvent<ApolloQueryResult<Data<D>>>"
+              }
+            },
+            {
+              "name": "apollo-error",
+              "description": "when the query rejects",
+              "type": {
+                "type": "CustomEvent<ApolloError>"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<CustomElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloQuery>"
+            }
+          },
+          "attributes": [
+            {
+              "name": "no-auto-subscribe",
+              "fieldName": "noAutoSubscribe",
+              "type": {
+                "type": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloQueryMixin",
+          "declaration": {
+            "name": "ApolloQueryMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-mutation-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ApolloMutationMixin",
+          "superclass": {
+            "name": "ApolloElementInterface",
+            "module": "./apollo-element.ts",
+            "package": "@apollo-elements/interfaces"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "mutation",
+              "description": "A GraphQL document containing a single mutation. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).\n\n```html\n<script type=\"application/graphql\">\n  mutation { updateLastSeen }\n</script>\n```",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "optimisticResponse",
+              "description": "An object that represents the result of this mutation that will be optimistically stored before the server has actually returned a result.\n\nThis is most often used for optimistic UI, where we want to be able to see the result of a mutation immediately, and update the UI later if any errors appear.\n\n```ts\nelement.optimisticResponse = ({ name }: HelloMutationVariables) => ({\n  __typename: 'Mutation',\n  hello: {\n    __typename: 'Greeting',\n    name,\n  },\n});\n```\n",
+              "type": {
+                "type": "Data<D> | ((vars: Variables<D, V>) => Data<D>)"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "summary": "Whether the mutation was called",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refetchQueries",
+              "description": "A list of query names which will be refetched once this mutation has returned. This is often used if you have a set of queries which may be affected by a mutation and will have to update. Rather than writing a mutation query reducer (i.e. `updateQueries`) for this, you can refetch the queries that will be affected and achieve a consistent store once these queries return.",
+              "type": {
+                "type": "RefetchQueriesType<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "awaitRefetchQueries",
+              "optional": true,
+              "description": "Queries refetched as part of `refetchQueries` are handled asynchronously, and are not waited on before the mutation is completed (resolved). Setting this to true will make sure refetched queries are completed before the mutation is considered done. false by default.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "ignoreResults",
+              "optional": true,
+              "description": "If true, the returned data property will not update with the mutation result.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "optional": true,
+              "description": "Specifies the `ErrorPolicy` to be used for this mutation.",
+              "type": {
+                "type": "ErrorPolicy"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "optional": true,
+              "description": "Specifies the FetchPolicy to be used for this mutation.",
+              "type": {
+                "type": "Extract<FetchPolicy, 'no-cache'>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "description": "Latest mutation data.",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "mutate",
+              "async": true,
+              "description": "This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "summary": "Optional, partial mutation params",
+                  "type": {
+                    "type": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
+                  },
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | See [awaitRefetchQueries](#awaitrefetchqueries) |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | See [context](/api/interfaces/element/#context) |\n| errorPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">ErrorPolicy</code></pre> | See [errorPolicy](/api/interfaces/element/#errorpolicy) |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | See [fetchPolicy](#fetchpolicy) |\n| mutation | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | See [mutation](#mutation) |\n| optimisticResponse | <pre class=\"language-ts\"><code class=\"language-ts\">OptimisticResponseType<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span></code></pre> | See [optimisticResponse](#optimisticresponse) |\n| refetchQueries | <pre class=\"language-ts\"><code class=\"language-ts\">RefetchQueriesType<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | See [refetchQueries](#refetchqueries) |\n| update | <pre class=\"language-ts\"><code class=\"language-ts\">MutationUpdaterFn<span class=\"token operator\">&lt;</span>Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;&gt;</span> </code></pre> | See [updater](#updater) |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | See [variables](#variables) |\n"
+                }
+              ],
+              "return": {
+                "summary": "A `FetchResult` object containing the result of the mutation and some metadata.",
+                "type": {
+                  "type": "Promise<FetchResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | <pre class=\"language-ts\"><code class=\"language-ts\">Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | The result of a successful execution of the mutation |\n| errors | <pre class=\"language-ts\"><code class=\"language-ts\"><span class=\"token keyword\">readonly</span> GraphQLError<span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span></code></pre> | included when any errors occurred as a non-empty array |\n| extensions | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Reserved for adding non-standard properties |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | See [context](/api/interfaces/element/#context) |\n"
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updater",
+              "optional": true,
+              "description": "This function will be called twice over the lifecycle of a mutation. Once at the very beginning if an `optimisticResponse` was provided. The writes created from the optimistic data will be rolled back before the second time this function is called which is when the mutation has succesfully resolved. At that point update will be called with the actual mutation result and those writes will not be rolled back.\n\nNote that since this function is intended to be used to update the store, it cannot be used with a `no-cache` fetch policy. If you're interested in performing some action after a mutation has completed, and you don't need to update the store, use the Promise returned from `client.mutate` instead.\n",
+              "parameters": [
+                {
+                  "name": "cache",
+                  "description": "Use the `cache.writeQuery`, `cache.writeFragment`, etc. methods to update the cache following the mutation.",
+                  "type": {
+                    "type": "ApolloCache"
+                  }
+                },
+                {
+                  "name": "result",
+                  "summary": "See [mutate](#mutate-returns)",
+                  "type": {
+                    "type": "FetchResult<Data<D>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | <pre class=\"language-ts\"><code class=\"language-ts\">Data<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token operator\">&gt;</span></code></pre> | The result of a successful execution of the mutation |\n| errors | <pre class=\"language-ts\"><code class=\"language-ts\"><span class=\"token keyword\">readonly</span> GraphQLError<span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span></code></pre> | included when any errors occurred as a non-empty array |\n| extensions | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Reserved for adding non-standard properties |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | See [context](/api/interfaces/element/#context) |\n"
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCompleted",
+              "optional": true,
+              "summary": "Callback for when a mutation is completed.",
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "type": "Data<D>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onError",
+              "optional": true,
+              "summary": "Callback for when an error occurs in mutation.",
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "type": "Error"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutationInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-mutation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "description": "The Apollo Client instance",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject> | null",
+                "references": [
+                  {
+                    "name": "ApolloClient",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "NormalizedCacheObject",
+                    "start": 14,
+                    "end": 34
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "description": "A GraphQL document containing a single query, mutation, or subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode | null",
+                "references": [
+                  {
+                    "name": "DocumentNode",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "TypedDocumentNode",
+                    "start": 16,
+                    "end": 32
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "description": "Latest error",
+              "optional": true,
+              "type": {
+                "type": "Error | ApolloError | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "description": "Latest errors.",
+              "optional": true,
+              "type": {
+                "type": "readonly GraphQLError[] | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "description": "Whether a request is in-flight.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "optional": true,
+              "description": "Context passed to the link execution chain.",
+              "type": {
+                "type": "Record<string, unknown>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "name": "documentType",
+              "description": "Hint that this is a mutation component",
+              "type": {
+                "type": "'mutation'"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document.",
+              "parameters": [
+                {
+                  "name": "document",
+                  "description": "The GraphQL document.",
+                  "type": {
+                    "type": "DocumentNode | TypedDocumentNode | null",
+                    "references": [
+                      {
+                        "name": "DocumentNode",
+                        "start": 0,
+                        "end": 12
+                      },
+                      {
+                        "name": "TypedDocumentNode",
+                        "start": 16,
+                        "end": 32
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the operation variables.",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "description": "The variables.",
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "description": "when the element connects to the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "description": "when the element disconnects from the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-mutation-result",
+              "description": "when the mutation resolves",
+              "type": {
+                "type": "CustomEvent<FetchResult<Data<D>>>"
+              }
+            },
+            {
+              "name": "apollo-error",
+              "description": "when the mutation rejects",
+              "type": {
+                "type": "CustomEvent<ApolloError>"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<CustomElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloMutation>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloMutationMixin",
+          "declaration": {
+            "name": "ApolloMutationMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-subscription-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ApolloSubscriptionMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "subscription",
+              "description": "A GraphQL document containing a single subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).\n\n```html\n<script type=\"application/graphql\">\n  subscription { messages { text } }\n</script>\n```",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "FetchPolicy",
+              "description": "Specifies the FetchPolicy to be used for this subscription.",
+              "type": {
+                "type": "FetchPolicy"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "observableSubscription",
+              "summary": "Subscription to the observable",
+              "type": {
+                "type": "ZenObservable.Subscription"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "description": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "skip",
+              "summary": "If skip is true, the query will be skipped entirely",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shouldResubscribe",
+              "description": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "type": {
+                "type": "boolean | ((options: SubscriptionDataOptions<D, V>) => boolean)"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "optional": true,
+              "description": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
+              "type": {
+                "type": "number"
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "observable",
+              "optional": true,
+              "type": {
+                "type": "Observable<FetchResult<Data<D>>>"
+              },
+              "summary": "Observable watching this element's subscription.",
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "summary": "Resets the observable and subscribes.",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "summary": "Options for controlling how the subscription subscribes.",
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | <pre class=\"language-ts\"><code class=\"language-ts\">ApolloClient</code></pre> | Apollo Client to use for the subscription. |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | See [fetchPolicy](/api/interfaces/subscription#fetchpolicy) |\n| shouldResubscribe | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | If skip is true, the subscription will be skipped entirely. |\n| subscription | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | GraphQL document with a single subscription. |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | An object containing all of the variables your subscription needs to execute. |\n",
+                  "type": {
+                    "type": "Partial<SubscriptionDataOptions<D, V>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "cancel",
+              "summary": "Cancels and clears the subscription",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "privacy": "protected",
+              "description": "Determines whether the element should attempt to subscribe i.e. begin querying Override to prevent subscribing unless your conditions are met",
+              "parameters": [
+                {
+                  "name": "options",
+                  "options": true,
+                  "type": {
+                    "type": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | See [query](#query) |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | See [variables](#variables) |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | See [fetchPolicy](#fetchpolicy) |\n| errorPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">ErrorPolicy</code></pre> | See [errorPolicy](#errorpolicy) |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onSubscriptionData",
+              "optional": true,
+              "summary": "Callback for when subscription data updates.",
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "type": "Data<D>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onError",
+              "optional": true,
+              "summary": "Callback for when an error occurs.",
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "type": "Error"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onSubscriptionComplete",
+              "optional": true,
+              "summary": "Callback for when subscription completes.",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloSubscriptionInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-subscription.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "description": "The Apollo Client instance",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject> | null",
+                "references": [
+                  {
+                    "name": "ApolloClient",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "NormalizedCacheObject",
+                    "start": 14,
+                    "end": 34
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "description": "A GraphQL document containing a single query, mutation, or subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "type": {
+                "type": "DocumentNode | TypedDocumentNode | null",
+                "references": [
+                  {
+                    "name": "DocumentNode",
+                    "start": 0,
+                    "end": 12
+                  },
+                  {
+                    "name": "TypedDocumentNode",
+                    "start": 16,
+                    "end": 32
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "description": "Latest subscription data.",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "description": "Latest error",
+              "optional": true,
+              "type": {
+                "type": "Error | ApolloError | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "description": "Latest errors.",
+              "optional": true,
+              "type": {
+                "type": "readonly GraphQLError[] | null",
+                "references": [
+                  {
+                    "name": "Error",
+                    "start": 0,
+                    "end": 5
+                  },
+                  {
+                    "name": "ApolloError",
+                    "start": 9,
+                    "end": 19
+                  }
+                ]
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "description": "Whether a request is in-flight.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "optional": true,
+              "description": "Context passed to the link execution chain.",
+              "type": {
+                "type": "Record<string, unknown>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "static": true,
+              "name": "documentType",
+              "description": "Hint that this is a subscription component",
+              "type": {
+                "type": "'subscription'"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document.",
+              "parameters": [
+                {
+                  "name": "document",
+                  "description": "The GraphQL document.",
+                  "type": {
+                    "type": "DocumentNode | TypedDocumentNode | null",
+                    "references": [
+                      {
+                        "name": "DocumentNode",
+                        "start": 0,
+                        "end": 12
+                      },
+                      {
+                        "name": "TypedDocumentNode",
+                        "start": 16,
+                        "end": 32
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the operation variables.",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "description": "The variables.",
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "description": "when the element connects to the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "description": "when the element disconnects from the DOM",
+              "type": {
+                "type": "CustomEvent<ApolloElement>"
+              }
+            },
+            {
+              "name": "apollo-subscription-result",
+              "description": "when the subscription resolves",
+              "type": {
+                "type": "CustomEvent<FetchResult<Data<D>>>"
+              }
+            },
+            {
+              "name": "apollo-error",
+              "description": "when the mutation rejects",
+              "type": {
+                "type": "CustomEvent<ApolloError>"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<CustomElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloSubscription>"
+            }
+          },
+          "attributes": [
+            {
+              "name": "no-auto-subscribe",
+              "fieldName": "noAutoSubscribe",
+              "type": {
+                "type": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloSubscriptionMixin",
+          "declaration": {
+            "name": "ApolloSubscriptionMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-client-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ApolloClientMixin",
+          "description": "Mixin which applies a specific ApolloClient instance to the element.",
+          "members": [
+            {
+              "kind": "field",
+              "name": "client",
+              "description": "The specified client",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject>"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<ApolloElement>"
+              }
+            },
+            {
+              "name": "client",
+              "description": "The specific ApolloClient instance.",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloElement>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloClientMixin",
+          "declaration": {
+            "name": "ApolloClientMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./validate-variables-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "ValidateVariablesMixin",
+          "description": "Mixin which prevents operations from fetching until their required variables are set.",
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<ApolloElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloElement>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ValidateVariablesMixin",
+          "declaration": {
+            "name": "ValidateVariablesMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./type-policies-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "TypePoliciesMixin",
+          "description": "Mixin which adds type policies to the Apollo cache.",
+          "members": [
+            {
+              "kind": "field",
+              "name": "typePolicies",
+              "description": "Type Policies added to the cache when the element connects.",
+              "type": {
+                "type": "TypePolicies"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<ApolloElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloElement & { typePolicies: TypePolicies }>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TypePoliciesMixin",
+          "declaration": {
+            "name": "TypePoliciesMixin"
+          }
+        }
+      ]
+    }
+  ]
+}

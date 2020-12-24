@@ -36,7 +36,12 @@ function getVariableValue(x: VariableDefinitionNode) {
 /**
  * Checks whether an operation includes all its non-nullable variables
  *
+ * ```haskell
  * hasAllVariables :: Operation -> Bool
+ * ```
+ *
+ * @param operation The GraphQL operation to validate.
+ * @return Whether the operation has all it's required variables.
  */
 export function hasAllVariables(operation: Partial<Operation>): boolean {
   try {

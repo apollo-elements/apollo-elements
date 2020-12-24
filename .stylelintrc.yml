@@ -1,0 +1,17 @@
+extends: "stylelint-config-standard"
+
+ignoreFiles:
+  - node_modules/**/*
+
+rules:
+  selector-type-no-unknown:
+    - true
+    - ignore:
+      - custom-elements
+    - ignoreTypes:
+      - heading
+      - actions
+
+  selector-pseudo-element-no-unknown:
+    - true
+    - ignorePseudoElements: /part(.*)/

@@ -1,9 +1,13 @@
 {
   "extends": "./tsconfig.settings.json",
   "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "module": "es2020",
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-       "@apollo-elements/*": ["packages/*/src"]
+      "@apollo-elements/*": ["packages/*/src"]
     }
   }
 }

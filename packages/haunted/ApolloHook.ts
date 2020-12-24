@@ -1,10 +1,4 @@
-import type {
-  ApolloClient,
-  DocumentNode,
-  NormalizedCacheObject,
-  OperationVariables,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
 
 import type {
   ApolloElementElement,

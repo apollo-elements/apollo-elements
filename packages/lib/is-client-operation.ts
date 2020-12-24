@@ -33,6 +33,16 @@ const getDirectives =
       return [...acc, ...x.selectionSet?.selections.reduce(getDirectives, [])];
   };
 
+/**
+ * Helper to determine whether an operation is client-side-only
+ *
+ * ```haskell
+ * isClientOperation :: Operation -> Bool
+ * ```
+ *
+ * @param  operation Operation to check
+ * @return           Whether the operation is client-side-only, i.e. true when the Operation will make no network calls.
+ */
 export function isClientOperation(operation: Operation): boolean {
   const query = operation?.query;
   const definitions = query?.definitions;

@@ -2,35 +2,27 @@
   display: block;
   position: relative;
   border-radius: 6px;
-  background: #111;
+  background: var(--code-button-background, transparent);
   overflow: hidden;
 }
 
 button {
   color: inherit;
   position: relative;
-  background: none;
   padding: 9px 16px;
   border: none;
   cursor: pointer;
   display: block;
   font-size: 16px;
-  background: hsla(0 0% 100% / 0.1);
+  background: var(--code-button, hsla(0 100% 100% / 0.9));
+  outline: none;
+  transition: color, background 0.1s ease;
 }
 
 button:focus,
 button:hover {
-  background: hsla(0 0% 100% / 0.15);
-}
-
-button[selected] {
-  background: #111;
-}
-
-button:focus,
-button:hover,
-button:active {
-  text-decoration: underline 4px dotted lightgreen;
+  color: var(--code-button-focus-color, hsla(0 100% 100% / 0.75));
+  background: var(--code-button-focus-background, hsla(0 100% 0% / 0.75));
 }
 
 button[selected] {

@@ -119,12 +119,13 @@ export class ApolloClientElement extends HTMLElement {
       this.initialize(instance);
   }
 
+  /** List of all ApolloElements registered to this client. */
   get elements(): readonly ApolloElementElement[] {
     return [...this.#instances];
   }
 
   /**
-   * TypePolicies for the client
+   * Type Policies for the client.
    */
   get typePolicies(): TypePolicies | undefined {
     return this.#typePolicies ?? undefined;
@@ -137,7 +138,7 @@ export class ApolloClientElement extends HTMLElement {
   }
 
   /**
-   * When the URI attribute is set, <apollo-client> will asynchronously
+   * When the URI attribute is set, `<apollo-client>` will asynchronously
    * create a new ApolloClient instance with some default parameters
    * @attr uri
    */
@@ -152,7 +153,7 @@ export class ApolloClientElement extends HTMLElement {
   }
 
   /**
-   * When true, client will not fetch operations that do not have all their non-nullable variables set
+   * When true, client will not fetch operations that do not have all their non-nullable variables set.
    * @attr validate-variables
    */
   get validateVariables(): boolean {

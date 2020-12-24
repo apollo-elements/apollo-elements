@@ -27,7 +27,6 @@ const simpleMutation = gql`mutation { foo { bar } }`;
 describe('[lib] isValidGql', function() {
   it('isValidGql Validates simple query', function() {
     expect(isValidGql(simpleValid)).to.be.true;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(simpleInvalid)).to.be.false;
   });
 
@@ -36,23 +35,14 @@ describe('[lib] isValidGql', function() {
   });
 
   it('isValidGql Handles weird input', function() {
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(void 0), 'no params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql({}), 'undefined params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(null), 'null params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(NaN), 'NaN params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(1), 'Number params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(true), 'Boolean params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql('foo'), 'String params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql((() => 'hmm')), 'Function params').to.be.false;
-    // @ts-expect-error: testing invalid input
     expect(isValidGql(Promise.resolve()), 'Promise params').to.be.false;
   });
 });

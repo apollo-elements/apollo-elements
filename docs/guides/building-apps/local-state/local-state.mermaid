@@ -1,0 +1,8 @@
+sequenceDiagram
+    participant CA as Apollo Cache
+    participant UI as <all-sites>
+    participant OL as <select-item>
+    CA->>UI: AllSitesQuery
+    UI-->>OL: Property Assignment
+    OL->>UI: MouseEvent
+    UI-->>CA: writeFragment

@@ -1,23 +1,14 @@
 {
   "name": "Apollo Elements",
-  "out": "docs",
-  "readme": "README.md",
+  "json": "docs/_data/api.json",
   "excludeExternals": true,
-  "excludeNotExported": true,
-  "includeDeclarations": false,
-  "theme": "pages-plugin",
-
-  "favicon": "./logo.svg",
 
   "gitRemote": "https://github.com/apollo-elements/apollo-elements.git",
 
-  "inputFiles": [ "packages" ],
-
-  "includes": [
-    "./pages"
-  ],
+  "includes": [ "./declaration.d.ts"  ],
 
   "exclude": [
+    "./docs",
     "./packages/create/template",
     "./packages/test-helpers",
     "./packages/docs",

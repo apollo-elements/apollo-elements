@@ -1,16 +1,47 @@
+img {
+  height: var(--x-tabs-icon-height, 24px);
+  width: auto;
+}
+
 #tabs {
   display: flex;
-  background: hsla(0 0% 100% / 0.1);
+  background: var(--code-tabs-background, hsla(0 100% 100% / 0.9));
   overflow-x: scroll;
+  justify-content: var(--x-code-justify-tabs, start);
 }
 
 #tabs button {
   display: flex;
   align-items: center;
   gap: 9px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 }
 
-img {
-  height: 24px;
-  width: auto;
+#tabs button[selected] {
+  background: var(--markdown-syntax-background-color, #f6f8fa);
+}
+
+#tabs button[selected]:focus,
+#tabs button[selected]:hover {
+  color: inherit;
+}
+
+#tabs button[selected]::before {
+  content: '',;
+  z-index: -1,;
+  position: absolute;
+  left: -100%;
+  border-bottom-right-radius: 3px;
+  background-color: var(--markdown-syntax-background-color, #f6f8fa);
+}
+
+#tabpanel {
+  background-color: var(--x-tabs-background-color, var(--markdown-syntax-background-color));
+  border-radius: 3px;
+  min-height: var(--x-tabs-min-height, 1px);
+}
+
+:host([selected-index="0"]) #tabpanel {
+  border-top-left-radius: 0;
 }

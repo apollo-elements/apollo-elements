@@ -12,6 +12,7 @@
     "noEmitOnError": false,
     "sourceMap": true,
     "moduleResolution": "Node",
+    "downlevelIteration": true,
     "plugins": [
       { "name": "typescript-lit-html-plugin" },
       { "name": "ts-lit-plugin" }

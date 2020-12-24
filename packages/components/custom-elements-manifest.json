@@ -1,230 +1,580 @@
 {
   "schemaVersion": "1",
   "$schema": "https://raw.githubusercontent.com/webcomponents/custom-elements-manifest/master/schema.json",
-  "modules": [{
-    "kind": "javascript-module",
-    "path": "./index.js",
-    "declarations": [],
-    "exports": [{
-      "name": "apollo-client",
-      "kind": "custom-element-definition",
-      "declaration": {
-        "name": "apollo-client",
-        "module": "./apollo-client.js"
-      }
-    }, {
-      "name": "apollo-mutation",
-      "kind": "custom-element-definition",
-      "declaration": {
-        "name": "apollo-mutation",
-        "module": "./apollo-mutation.js"
-      }
-    }]
-  }, {
-    "kind": "javascript-module",
-    "path": "./apollo-client.js",
-    "declarations": [{
-      "kind": "class",
-      "name": "ApolloClientElement",
-      "tagName": "apollo-client",
-      "summary": "\nProvides an ApolloClient instance to all nested ApolloElement children, even across (open) shadow boundaries.\n\n## Examples\n### Generate a simple ApolloClient instance\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### Prevent network calls when required variables are absent\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### Providing a client to a tree of Nodes\n```html\n<apollo-client id=\"client-a\">\n  <apollo-mutation>\n    <!--...-->\n  </apollo-mutation>\n</apollo-client>\n```\n\n### Nesting separate clients\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```\n",
-      "properties": [{
-          "name": "uri",
-          "attribute": "uri",
-          "reflects": true,
-          "type": "string",
-          "summary": "When the URI attribute is set, `<apollo-client>` will asynchronously create a new ApolloClient instance with some default parameters."
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "name": "apollo-client",
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "apollo-client",
+            "module": "./apollo-client.js"
+          }
         },
         {
-          "name": "client",
-          "type": "ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null",
-          "attribute": false,
-          "summary": "Reference to the `ApolloClient` instance."
-        },
-        {
-          "name": "elements",
-          "type": "readonly ApolloElementElement[]",
-          "readonly": true,
-          "attribute": false,
-          "summary": "List of all ApolloElements registered to this client."
-        },
-        {
-          "name": "typePolicies",
-          "type": "TypePolicies",
-          "optional": true,
-          "attribute": false,
-          "summary": "Type Policies for the client."
-        },
-        {
-          "name": "validateVariables",
-          "type": "boolean",
-          "attribute": "validate-variables",
-          "summary": "When true, client will not fetch operations that do not have all their non-nullable variables set."
-        }
-      ],
-      "methods": [{
-        "name": "createApolloClient",
-        "async": true,
-        "return": {
-          "type": "Promise<ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache }>",
-          "summary": "A simple ApolloClient instance"
-        }
-      }],
-      "events": [{
-        "type": "client-changed",
-        "detail": {
-          "type": "{ value: ApolloClient, client: ApolloClient }"
-        },
-        "description": "Fired when the client instance changes. Compatible with Polymer-style two-way binding."
-      }]
-    }],
-    "exports": [{
-      "kind": "custom-element-definition",
-      "name": "apollo-client",
-      "declaration": {
-        "name": "ApolloClientElement"
-      }
-    }, {
-      "kind": "js",
-      "name": "ApolloClientElement",
-      "declaration": {
-        "name": "ApolloClientElement"
-      }
-    }]
-  }, {
-    "kind": "javascript-module",
-    "path": "./apollo-mutation.js",
-    "declarations": [{
-      "kind": "class",
-      "tagName": "apollo-mutation",
-      "name": "ApolloMutationElement",
-      "summary": "Simple Mutation component that takes a button or link-wrapped button as it's trigger. When loading, it disables the button. On error, it toasts a snackbar with the error message. You can pass a `variables` object property, or if all your variables properties are strings, you can use the element's data attributes\n\n\n### Example: Using data attributes\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button slot=\"trigger\">OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n### Example: Using data attributes and variables\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button slot=\"trigger\" label=\"OK\"></mwc-button>\n  <mwc-textfield slot=\"variable\"\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea slot=\"variable\"\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n### Example: Using data attributes and variables with input property\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button slot=\"trigger\" label=\"OK\"></mwc-button>\n  <mwc-textfield slot=\"variable\"\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n### Example: Using DOM properties\n```js\nhtml`\n<apollo-mutation\n    .mutation=\"${SomeMutation}\"\n    .variables=\"${{ type: \"Type\", action: \"ACTION\" }}\">\n  <mwc-button slot=\"trigger\" label=\"OK\"></mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n",
-      "cssParts": [{
-        "name": "variables",
-        "description": "The container for variable inputs."
-      }, {
-        "name": "trigger",
-        "description": "The container for variable inputs."
-      }],
-      "slots": [{
-        "name": "trigger",
-        "summary": "The triggering element. Must be a button or and anchor that wraps a button."
-      }, {
-        "name": "variables",
-        "summary": "An input with a `data-variable` attribute. It's `value` property gets the value for the corresponding variable."
-      }],
-      "properties": [{
-          "name": "inputKey",
-          "attribute": "input-key",
-          "reflects": false,
-          "type": {
-            "type": "string"
-          },
-          "summary": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n  console.log(a.variables) // { variable: 'var' }\n  console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```\n"
-        }, {
-          "name": "trigger",
-          "protected": true,
-          "readonly": true,
-          "type": {
-            "type": "HTMLElement | null"
-          },
-          "description": "Slotted trigger node"
-        },
-        {
-          "name": "button",
-          "protected": true,
-          "readonly": true,
-          "type": {
-            "type": "ButtonLikeElement | null"
-          },
-          "description": "If the slotted trigger node is a button, this is the trigger. If the slotted trigger node is a link with a button as it's first child, this is the button."
-        },
-        {
-          "name": "inputs",
-          "protected": true,
-          "readonly": true,
-          "type": {
-            "type": "InputLikeElement[]"
-          },
-          "description": "Variable input elements."
-        },
-        {
-          "name": "href",
-          "protected": true,
-          "readonly": true,
-          "type": {
-            "type": "string|undefined"
-          },
-          "description": "The `href` attribute of the link trigger."
-        }
-      ],
-      "methods": [{
-          "name": "resolveURL",
-          "optional": true,
-          "return": {
-            "type": "string|Promise<string>",
-            "description": "url to navigate to."
-          },
-          "parameters": [{
-            "name": "data",
-            "description": "mutation data",
-            "type": {
-              "type": "Data<D>"
-            }
-          }],
-          "summary": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger.\n\n#### Example: Navigate to a post's page after creating it\n```graphql\nmutation CreatePostMutation($title: String, $content: String) {\n  createPost(title: $title, content: $content) {\n    slug\n  }\n}\n```\n```ts\nconst mutationTemplate = html`\n<apollo-mutation\n    .mutation=\"${CreatePostMutation}\"\n    .resolveURL=\"${(data: Data) => `/posts/${data.createPost.slug}/`}\">\n  <mwc-textfield label=\"Post title\" slot=\"variable\" data-variable=\"title\"></mwc-textfield>\n  <mwc-textarea label=\"Post Content\" slot=\"variable\" data-variable=\"content\"></mwc-textarea>\n</apollo-mutation>\n`\n```\n"
-        },
-        {
-          "name": "getVariablesFromInputs",
-          "protected": true,
-          "description": "Constructs a variables object from the element's data-attributes and any slotted variable inputs.",
-          "return": {
-            "type": "Variables<D, V> | null"
+          "name": "apollo-mutation",
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "apollo-mutation",
+            "module": "./apollo-mutation.js"
           }
         }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-client.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ApolloClientElement",
+          "tagName": "apollo-client",
+          "summary": "\nProvides an ApolloClient instance to all nested ApolloElement children, even across (open) shadow boundaries.\n\n## Examples\n### Generate a simple ApolloClient instance\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### Prevent network calls when required variables are absent\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### Providing a client to a tree of Nodes\n```html\n<apollo-client id=\"client-a\">\n  <apollo-mutation>\n    <!--...-->\n  </apollo-mutation>\n</apollo-client>\n```\n\n### Nesting separate clients\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```\n",
+          "attributes": [
+            {
+              "name": "uri",
+              "type": {
+                "type": "string"
+              },
+              "fieldName": "uri"
+            },
+            {
+              "name": "validate-variables",
+              "type": {
+                "type": "boolean"
+              },
+              "fieldName": "validateVariables"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "uri",
+              "reflects": true,
+              "type": {
+                "type": "string"
+              },
+              "summary": "When the URI attribute is set, `<apollo-client>` will asynchronously create a new ApolloClient instance with some default parameters."
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null"
+              },
+              "summary": "Reference to the `ApolloClient` instance."
+            },
+            {
+              "kind": "field",
+              "name": "elements",
+              "type": {
+                "type": "readonly ApolloElementElement[]"
+              },
+              "readonly": true,
+              "summary": "List of all ApolloElements registered to this client."
+            },
+            {
+              "kind": "field",
+              "name": "typePolicies",
+              "optional": true,
+              "summary": "Type Policies for the client.",
+              "type": {
+                "type": "TypePolicies"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validateVariables",
+              "summary": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createApolloClient",
+              "async": true,
+              "return": {
+                "summary": "A simple ApolloClient instance",
+                "type": {
+                  "type": "Promise<ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache }>"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": "client-changed",
+              "detail": {
+                "type": "{ value: ApolloClient, client: ApolloClient }"
+              },
+              "description": "Fired when the client instance changes. Compatible with Polymer-style two-way binding."
+            }
+          ]
+        }
       ],
-      "events": [{
-          "type": "will-mutate",
-          "detail": {
-            "type": "{ element: this }"
-          },
-          "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation."
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "apollo-client",
+          "declaration": {
+            "name": "ApolloClientElement"
+          }
         },
         {
-          "type": "will-navigate",
-          "detail": {
-            "type": "{ data: Data, element: this }"
-          },
-          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router."
-        },
-        {
-          "type": "mutation-completed",
-          "detail": {
-            "type": "{ data: Data, element: this }"
-          },
-          "description": "When the mutation resolves."
-        },
-        {
-          "type": "mutation-error",
-          "detail": {
-            "type": "{ error: ApolloError, element: this }"
-          },
-          "description": "When the mutation rejects."
+          "kind": "js",
+          "name": "ApolloClientElement",
+          "declaration": {
+            "name": "ApolloClientElement"
+          }
         }
       ]
-    }],
-    "exports": [{
-      "kind": "custom-element-definition",
-      "name": "apollo-mutation",
-      "declaration": {
-        "name": "ApolloMutationElement"
-      }
-    }, {
-      "kind": "js",
-      "name": "ApolloMutationElement",
-      "declaration": {
-        "name": "ApolloMutationElement"
-      }
-    }]
-  }]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-mutation.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "tagName": "apollo-mutation",
+          "name": "ApolloMutationElement",
+          "summary": "Simple Mutation component that takes a button or link-wrapped button as it's trigger. When loading, it disables the button. On error, it toasts a snackbar with the error message. You can pass a `variables` object property, or if all your variables properties are strings, you can use the element's data attributes\n\n\n### Example: Using data attributes\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button slot=\"trigger\">OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n### Example: Using data attributes and variables\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button slot=\"trigger\" label=\"OK\"></mwc-button>\n  <mwc-textfield slot=\"variable\"\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea slot=\"variable\"\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n### Example: Using data attributes and variables with input property\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button slot=\"trigger\" label=\"OK\"></mwc-button>\n  <mwc-textfield slot=\"variable\"\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n### Example: Using DOM properties\n```html\n<apollo-mutation id=\"mutation\">\n  <mwc-button slot=\"trigger\" label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\n  document.getElementById('mutation').mutation = SomeMutation;\n  document.getElementById('mutation').variables = {\n    type: \"Type\",\n    action: \"ACTION\"\n  };\n</script>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n",
+          "attributes": [
+            {
+              "name": "input-key",
+              "type": "string",
+              "fieldName": "inputKey"
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "variables",
+              "description": "The container for variable inputs."
+            },
+            {
+              "name": "trigger",
+              "description": "The container for variable inputs."
+            }
+          ],
+          "slots": [
+            {
+              "name": "trigger",
+              "summary": "The triggering element. Must be a button or and anchor that wraps a button."
+            },
+            {
+              "name": "variables",
+              "summary": "An input with a `data-variable` attribute. It's `value` property gets the value for the corresponding variable."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "inputKey",
+              "reflects": false,
+              "type": {
+                "type": "string"
+              },
+              "summary": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n  console.log(a.variables) // { variable: 'var' }\n  console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```\n"
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "privacy": "protected",
+              "readonly": true,
+              "type": {
+                "type": "HTMLElement | null"
+              },
+              "description": "Slotted trigger node"
+            },
+            {
+              "kind": "field",
+              "name": "button",
+              "privacy": "protected",
+              "readonly": true,
+              "type": {
+                "type": "ButtonLikeElement | null"
+              },
+              "description": "If the slotted trigger node is a button, this is the trigger. If the slotted trigger node is a link with a button as it's first child, this is the button."
+            },
+            {
+              "kind": "field",
+              "name": "inputs",
+              "privacy": "protected",
+              "description": "Variable input elements.",
+              "readonly": true,
+              "type": {
+                "type": "InputLikeElement[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "description": "The `href` attribute of the link trigger.",
+              "privacy": "protected",
+              "readonly": true,
+              "type": {
+                "type": "string|undefined"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveURL",
+              "optional": true,
+              "return": {
+                "type": {
+                  "type": "string|Promise<string>"
+                },
+                "description": "url to navigate to."
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "description": "mutation data",
+                  "type": {
+                    "type": "Data<D>"
+                  }
+                }
+              ],
+              "summary": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger.\n\n#### Example: Navigate to a post's page after creating it\n```html\n<apollo-mutation id=\"mutation\">\n  <script type=\"application/graphql\">\n    mutation CreatePostMutation($title: String, $content: String) {\n      createPost(title: $title, content: $content) {\n        slug\n      }\n    }\n  </script>\n  <mwc-textfield label=\"Post title\" slot=\"variable\" data-variable=\"title\"></mwc-textfield>\n  <mwc-textarea label=\"Post Content\" slot=\"variable\" data-variable=\"content\"></mwc-textarea>\n</apollo-mutation>\n\n<script>\n  document.getElementById('mutation').resolveURL =\n    data => `/posts/${data.createPost.slug}/`;\n</script>\n```"
+            },
+            {
+              "kind": "method",
+              "name": "getVariablesFromInputs",
+              "privacy": "protected",
+              "description": "Constructs a variables object from the element's data-attributes and any slotted variable inputs.",
+              "return": {
+                "type": {
+                  "type": "Variables<D, V> | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mutation",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "optimisticResponse",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refetchQueries",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "awaitRefetchQueries",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "ignoreResults",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "mutate",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updater",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onCompleted",
+              "optional": true,
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onError",
+              "optional": true,
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "documentType",
+              "static": true,
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document.",
+              "parameters": [
+                {
+                  "name": "document",
+                  "description": "The GraphQL document.",
+                  "type": {
+                    "type": "DocumentNode | TypedDocumentNode | null",
+                    "references": [
+                      {
+                        "name": "DocumentNode",
+                        "start": 0,
+                        "end": 12
+                      },
+                      {
+                        "name": "TypedDocumentNode",
+                        "start": 16,
+                        "end": 32
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "optional": true,
+              "description": "Lifecycle callback that reacts to changes in the operation variables.",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "description": "The variables.",
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": "will-mutate",
+              "detail": {
+                "type": "{ element: this }"
+              },
+              "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation."
+            },
+            {
+              "type": "will-navigate",
+              "detail": {
+                "type": "{ data: Data, element: this }"
+              },
+              "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router."
+            },
+            {
+              "type": "mutation-completed",
+              "detail": {
+                "type": "{ data: Data, element: this }"
+              },
+              "description": "When the mutation resolves."
+            },
+            {
+              "type": "mutation-error",
+              "detail": {
+                "type": "{ error: ApolloError, element: this }"
+              },
+              "description": "When the mutation rejects."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "apollo-mutation",
+          "declaration": {
+            "name": "ApolloMutationElement"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutationElement",
+          "declaration": {
+            "name": "ApolloMutationElement"
+          }
+        }
+      ]
+    }
+  ]
 }

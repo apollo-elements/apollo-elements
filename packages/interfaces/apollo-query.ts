@@ -36,7 +36,7 @@ export type FetchMoreParams<D, V> =
 export declare class ApolloQueryInterface<D, V = OperationVariables>
   extends ApolloElementInterface<D, V> {
   /**
-   * Latest query data.
+   * The latest query data.
    */
   declare data: Data<D> | null;
 
@@ -47,11 +47,24 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
 
   /**
    * An object map from variable name to variable value, where the variables are used within the GraphQL query.
+   *
+   * Setting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.
+   *
+   * @summary Query variables.
    */
   declare variables: Variables<D, V> | null;
 
   /**
-   * Specifies the FetchPolicy to be used for this query.
+   * Determines where the client may return a result from. The options are:
+   *
+   * - `cache-first` (default): return result from cache, fetch from network if cached result is not available.
+   * - `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.
+   * - `cache-only`: return result from cache if available, fail otherwise.
+   * - `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache
+   * - `network-only`: return result from network, fail if network call doesn't succeed, save to cache
+   * - `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.
+   *
+   * @summary The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.
    */
   declare fetchPolicy?: FetchPolicy;
 
@@ -63,15 +76,19 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * to imply. Instead, when the cache reports an update after the
    * initial network request, it may be desirable for subsequent network
    * requests to be triggered only if the cache result is incomplete.
-   * The nextFetchPolicy option provides an easy way to update
+   * The nextFetchPolicy option provides a way to update
    * options.fetchPolicy after the intial network request, without
    * having to set options.
+   *
+   * @summary Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.
    */
   declare nextFetchPolicy?: FetchPolicy;
 
   /**
    * If data was read from the cache with missing fields,
-   * partial will be true. Otherwise, partial will be falsy
+   * partial will be true. Otherwise, partial will be falsy.
+   *
+   * @summary True when the query returned partial data.
    */
   declare partial?: boolean;
 
@@ -82,6 +99,8 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    *
    * The default value is false for backwards-compatibility's sake,
    * but should be changed to true for most use-cases.
+   *
+   * @summary Set to retry any partial query results.
    */
   declare partialRefetch?: boolean;
 
@@ -113,12 +132,12 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   declare networkStatus: NetworkStatus;
 
   /**
-   * The Apollo ObservableQuery watching this element's query.
+   * The Apollo `ObservableQuery` watching this element's query.
    */
   declare observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
   /**
-   * Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.
+   * Set to reobserve the `ObservableQuery`
    */
   declare options: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null;
 
@@ -133,7 +152,10 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   declare pollInterval?: number;
 
   /**
-   * Specifies the ErrorPolicy to be used for this query.
+   * errorPolicy determines the level of events for errors in the execution result. The options are:
+   * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
+   * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
+   * - `all`: errors are treated like data and will notify observables
    */
   declare errorPolicy: ErrorPolicy;
 
@@ -144,30 +166,25 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   declare noAutoSubscribe: boolean;
 
   /**
-   * Callback for when a query is completed.
+   * Optional callback for when a query is completed.
    */
   onData?(_result: ApolloQueryResult<Data<D>>): void
 
   /**
-   * Callback for when an error occurs in mutation.
+   * Optional callback for when an error occurs.
    */
   onError?(_error: Error): void
 
   /**
-   * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
+   * Update the variables of this observable query, and fetch the new results.
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
   refetch(variables: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>>;
 
   /**
-   * Determines whether the element is able to automatically subscribe
-   * @protected
-   */
-  canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
-
-  /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
+   * @protected
    */
   shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
@@ -197,7 +214,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
 
   /**
    * Exposes the `ObservableQuery#fetchMore` method.
-   * https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.fetchMore
+   * https://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore
    *
    * The optional `updateQuery` parameter is a function that takes the previous query data,
    * then a `{ subscriptionData: TSubscriptionResult }` object,

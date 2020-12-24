@@ -1,0 +1,57 @@
+[hidden] {
+  display: none !important;
+}
+
+main { counter-reset: footnotes; }
+
+[role="doc-noteref"]::after {
+  counter-increment: footnotes;
+  content: counter(footnotes);
+  vertical-align: super;
+  font-size: 0.8rem;
+}
+
+main :not(:defined) {
+  opacity: 0;
+}
+
+main code-copy:not(:defined), /* code-copy is fouc-safe */
+main :defined {
+  opacity: 1;
+  transition: opacity 0.15s ease-in;
+}
+
+.visually-hidden {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+#main-header a {
+  order: 1;
+}
+
+#footer-badges img {
+  width: 145px;
+}
+
+@media screen and (min-width: 1024px) {
+  #main-header .logo-link {
+    margin-right: initial;
+  }
+
+  #main-header .search {
+    margin-left: auto;
+  }
+
+  #main-header .content-area > * {
+    margin-right: 25px;
+  }
+}
+
+table code[class*="language-"],
+table pre[class*="language-"] {
+  margin: 0;
+  padding: 0;
+  background: none;
+  display: inline-block;
+}

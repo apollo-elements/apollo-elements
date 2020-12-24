@@ -72,7 +72,7 @@ Define the custom element
 ```js
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 
-class HelloQuery extends ApolloQueryMixin(HTMLElement) {
+class HelloQueryElement extends ApolloQueryMixin(HTMLElement) {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -80,7 +80,7 @@ class HelloQuery extends ApolloQueryMixin(HTMLElement) {
   }
 }
 
-customElements.define('hello-query', HelloQuery);
+customElements.define('hello-query', HelloQueryElement);
 ```
 
 </code-copy>

@@ -1,0 +1,25 @@
+code[class*="language-"],
+pre[class*="language-"] {
+  border-radius: 6px;
+}
+
+.markdown-body wcd-snippet,
+.markdown-body code-copy,
+.markdown-body code-tab {
+  margin-bottom: 16px;
+}
+
+.markdown-body wcd-snippet pre,
+.markdown-body code-copy pre,
+.markdown-body code-tab pre {
+  margin-bottom: 0;
+}
+
+code-tabs[collection="libraries"] {
+  --x-tabs-min-height: 100px;
+}
+
+code-tabs[collection="package-managers"] {
+  --x-tabs-icon-height: 18px;
+  --x-code-justify-tabs: end;
+}
