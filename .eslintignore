@@ -12,3 +12,9 @@ packages/*/*.d.ts
 packages/test-helpers/schema.ts
 
 packages/create/template
+
+docs/_merged_data/
+docs/_merged_assets/
+docs/_merged_includes/
+_site
+_site-dev

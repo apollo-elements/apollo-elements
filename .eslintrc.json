@@ -1,25 +1,33 @@
 {
   "extends": "@pwrs",
   "rules": {
-    "camelcase": ["error", { "allow": ["__testing_escape_hatch__"] } ],
-    "@typescript-eslint/ban-ts-comment": ["warn", {
-      "ts-expect-error": "allow-with-description",
-      "ts-ignore": "allow-with-description"
-    }]
+    "camelcase": ["error", { "allow": ["__testing_escape_hatch__"] }],
+    "valid-jsdoc": "off",
+    "@typescript-eslint/ban-ts-comment": [
+      "warn",
+      {
+        "ts-expect-error": "allow-with-description",
+        "ts-ignore": "allow-with-description"
+      }
+    ]
   },
-  "overrides": [{
-    "files": ["packages/**/*.test.ts", "packages/test-helpers/**/*.ts"],
-    "rules": {
-      "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "TypeCheck"} ],
-      "@typescript-eslint/no-non-null-assertion": "off",
-      "@typescript-eslint/no-explicit-any": "off"
+  "overrides": [
+    {
+      "files": ["packages/**/*.test.ts", "packages/test-helpers/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "varsIgnorePattern": "TypeCheck" }
+        ],
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": ["scripts/*"],
+      "rules": {
+        "no-console": "off"
+      }
     }
-  }, {
-    "files": [
-      "scripts/*"
-    ],
-    "rules": {
-      "no-console": "off"
-    }
-  }]
+  ]
 }

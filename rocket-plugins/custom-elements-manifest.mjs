@@ -4,56 +4,6 @@ import { markdown } from './markdown.mjs';
 import { externalTypeLinks } from './link-to-type.mjs';
 import githubUrl from 'get-github-url';
 
-function sanitize(str) {
-  return str.replace('<', '&lt;').replace('>', '&gt;');
-}
-
-function typeNameTemplate({ type, references = [] }) {
-  if (!references.length) return type;
-  else {
-    const strings = [];
-    let i = 0;
-    let ri = 0;
-    let lastEnd = 0;
-    // eslint-disable-next-line easy-loops/easy-loops
-    while (i < type.length) {
-      const reference = references[ri];
-      if (!reference) {
-        strings.push(sanitize(type.substring(lastEnd)));
-        break;
-      } else {
-        const { start, end, name } = reference || {};
-        if (start !== i)
-          i++;
-        else {
-          strings.push(sanitize(type.substring(lastEnd, start - 1)));
-          strings.push(`<a href="#ref-${name}">${name}</a>`);
-          i = end + 1;
-          lastEnd = end;
-          ri++;
-        }
-      }
-    }
-
-    return strings.join('');
-  }
-}
-
-function withoutExtension(path) {
-  return path.replace(/^(\w+)/, '$1');
-}
-
-function linkTypes(options, markdown) {
-  const { modules = [], nameLinks = {} } = options;
-  for (const module of modules) {
-    return markdown.replace(/<a href="#ref-(\w+)">/g, (tag, name) => {
-      const userLink = nameLinks[name];
-      const localLink = withoutExtension(module.path) === name;
-      return !userLink ? tag : `<a href="${userLink}">`;
-    });
-  }
-}
-
 export function manifestModuleImports(eleventyConfig, globalOptions) {
   eleventyConfig.addFilter('manifestModuleImports', function(moduleData, opts = {}) {
     if (!moduleData) return '';

@@ -39,10 +39,13 @@ function readJSONSync(path) {
  * For any return or parameter type found in the manifest,
  * if it has an associated Markdown file in docs/api/types/,
  * replace the `description` field with the markdown file's contents.
- * @param  {Record<string, string>} table object map of typename to markdown description
- * @return {(member: Descriptor) => Descriptor}       parameter or return descriptor
+ * @param  {object} table object map of typename to markdown description
  */
 function replaceDescriptionUsingTables(table) {
+  /**
+   * @param  {CEM.Descriptor} member
+   * @return {CEM.Descriptor}
+   */
   return function(member) {
     const typeNames = Object.keys(table);
     // /^(Partial<|Promise<)?(a|b|c)/;
@@ -183,6 +186,7 @@ function transformPolymerManifest(base) {
  * @return {import('custom-elements-manifest/schema').Package}
  */
 function transformMixinsManifest(base) {
+  /* eslint-disable max-len */
   const PATH_RE = /apollo-(\w+)/;
   return {
     ...base,
@@ -220,7 +224,7 @@ function transformMixinsManifest(base) {
         exports:
           exports.map(exp => {
             const { kind } = exp;
-            const module = exp.declaration.module && exp.declaration.module.replace(PATH_RE, 'apollo-$1-mixin');
+            const module = exp.declaration.module && exp.declaration.module.replace(PATH_RE, `apollo-$1-mixin`);
             const name = `${exp.name}Mixin`;
             const { name: _, module: __, ...rest } = exp.declaration;
             const declaration = { name, module, ...rest };
@@ -286,7 +290,7 @@ function transformMixinsManifest(base) {
           {
             kind: 'mixin',
             name: 'ValidateVariablesMixin',
-            description: 'Mixin which prevents operations from fetching until their required variables are set.',
+            description: `Mixin which prevents operations from fetching until their required variables are set.`,
             parameters: [
               {
                 name: 'superclass',
@@ -359,6 +363,7 @@ function transformMixinsManifest(base) {
 
     ],
   };
+  /* eslint-enable max-len */
 }
 
 /**
