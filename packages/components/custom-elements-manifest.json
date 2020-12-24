@@ -108,11 +108,11 @@
           ],
           "events": [
             {
-              "type": "client-changed",
-              "detail": {
-                "type": "{ value: ApolloClient, client: ApolloClient }"
-              },
-              "description": "Fired when the client instance changes. Compatible with Polymer-style two-way binding."
+              "name": "client-changed",
+              "description": "Fired when the client instance changes. Compatible with Polymer-style two-way binding.",
+              "type": {
+                "type": "CustomEvent<{ value: ApolloClient, client: ApolloClient }>"
+              }
             }
           ]
         }
@@ -529,25 +529,25 @@
           ],
           "events": [
             {
-              "type": "will-mutate",
-              "detail": {
-                "type": "{ element: this }"
-              },
-              "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation."
+              "name": "will-mutate",
+              "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation.",
+              "type": {
+                "type": "CustomEvent<{ element: this }>"
+              }
             },
             {
-              "type": "will-navigate",
-              "detail": {
-                "type": "{ data: Data, element: this }"
-              },
-              "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router."
+              "name": "will-navigate",
+              "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router.",
+              "type": {
+                "type": "CustomEvent<{ data: Data, element: this }>"
+              }
             },
             {
-              "type": "mutation-completed",
-              "detail": {
-                "type": "{ data: Data, element: this }"
-              },
-              "description": "When the mutation resolves."
+              "name": "mutation-completed",
+              "description": "When the mutation resolves.",
+              "type": {
+                "type": "CustomEvent<{ data: Data, element: this }>"
+              }
             },
             {
               "type": "mutation-error",

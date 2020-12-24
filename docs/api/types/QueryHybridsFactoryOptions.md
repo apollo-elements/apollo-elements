@@ -12,6 +12,6 @@
 | notifyOnNetworkStatusChange | See [notifyOnNetworkStatusChange](/api/interfaces/query#notifyonnetworkstatuschange) |
 | partialRefetch | <pre class="language-ts"><code class="language-ts">boolean</code></pre> | See [partialRefetch](/api/interfaces/query#partialrefetch) |
 | returnPartialData | <pre class="language-ts"><code class="language-ts">boolean</code></pre> | See [returnPartialData](/api/interfaces/query#returnpartialdata) |
-| shouldSubscribe | See [shouldSubscribe](/api/interfaces/query#shouldsubscribe) | Predicate which determines whether to automatically subscribe |
+| shouldSubscribe | Predicate which determines whether to automatically subscribe.  See [shouldSubscribe](/api/interfaces/query#shouldsubscribe). |
 | onError | Callback for when an error occurs. See [onError](/api/interfaces/query#onerror). |
 | onData | Callback for when the query resolves. See [onData](/api/interfaces/query#ondata). |
