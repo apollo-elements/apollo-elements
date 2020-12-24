@@ -35,5 +35,8 @@ jobs:
       - name: Build
         run: |
           sudo yarn clean
-          sudo yarn deploy:prepublish
+          sudo yarn deploy:tags
+          sudo yarn deploy:lint
+          sudo yarn deploy:build
           sudo yarn clean
+          echo "Skipping automated deploy..."
