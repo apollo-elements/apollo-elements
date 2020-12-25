@@ -23,7 +23,7 @@ pnpm init @apollo-elements
 
 Read the [getting started](./getting-started/) guide for a more detailed breakdown of how to set up your projects, including an introduction to GraphQL, the Apollo Client, [buildless development](./getting-started/buildless-development/) workflows, and [production optimizations](./getting-started/building-for-production/). When you're ready to start building your app component, the [building apps](./building-apps/) guide shows you how to write, [query](./building-apps/queries/), [mutation](./building-apps/mutations/), and [subscription](./building-apps/subscriptions/) components, and how to manage [local state](./building-apps/local-state/).
 
-Learn about advanced techniques like [operation variable validation](./cool-tricks/validating-variables/) and [code splitting](./cool-tricks/code-splitting) in the [cool tricks](./cool-tricks/) section. Use our [pre-made components](../api/components/) to streamline your workflow. Dive into the [API documentation](../api/) for details on how each component class works.
+Learn about advanced techniques like [operation variable validation](./cool-tricks/validating-variables/) and [code splitting](./cool-tricks/code-splitting/) in the [cool tricks](./cool-tricks/) section. Use our [pre-made components](../api/components/) to streamline your workflow. Dive into the [API documentation](../api/) for details on how each component class works.
 
 <style>
   #moon-landing {
