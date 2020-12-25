@@ -1,5 +1,6 @@
 module.exports = async function siteConfig() {
   return {
+    analytics: 'G-3H2TDNQDBR', 
     dir: 'ltr',
     lang: 'en',
     name: 'Apollo Elements',
@@ -48,6 +49,5 @@ module.exports = async function siteConfig() {
       ].join(','),
       'social-template.svg',
     ].join('/'),
-    // analytics: 'UA-131782693-2', // modern web key
   };
 };
