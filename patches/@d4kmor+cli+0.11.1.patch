@@ -34,13 +34,3 @@ index ceaf716..fedd827 100755
  }
  
  export class RocketBuild {
-diff --git a/node_modules/@d4kmor/cli/src/shared/eleventyConfigEmpty.js b/node_modules/@d4kmor/cli/src/shared/eleventyConfigEmpty.js
-index 7b9d113..4abb6dd 100644
---- a/node_modules/@d4kmor/cli/src/shared/eleventyConfigEmpty.js
-+++ b/node_modules/@d4kmor/cli/src/shared/eleventyConfigEmpty.js
-@@ -46,4 +46,5 @@ export const eleventyConfigEmpty = {
-   setQuietMode: () => {},
-   addExtension: () => {},
-   addDataExtension: () => {},
-+  on: () => {},
- };
