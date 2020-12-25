@@ -10,20 +10,24 @@
   "start_url": "/",
   "icons": [
     {
-      "src": "./_static/icons/android-chrome-192x192.png",
+      "src": "../_merged_assets/_static/icons/android-chrome-192x192.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "./_static/icons/android-chrome-512x512.png",
+      "src": "../_merged_assets/_static/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "./_static/icons/maskable-icon.jpg",
+      "src": "../_merged_assets/_static/icons/maskable-icon.jpg",
       "sizes": "1024x1024",
       "type": "image/jpg",
       "purpose": "any maskable"
+    },
+    {
+      "src": "../merged_assets/logo.svg",
+      "sizes": "any"
     }
   ]
 }
