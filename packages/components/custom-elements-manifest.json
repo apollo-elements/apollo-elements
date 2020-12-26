@@ -550,11 +550,11 @@
               }
             },
             {
-              "type": "mutation-error",
-              "detail": {
-                "type": "{ error: ApolloError, element: this }"
-              },
-              "description": "When the mutation rejects."
+              "name": "mutation-error",
+              "description": "When the mutation rejects.",
+              "type": {
+                "type": "CustomEvent<{ error: ApolloError, element: this }>"
+              }
             }
           ]
         }

@@ -9,7 +9,7 @@ module: './apollo-client.js'
 
 Reuse the same query component for two different GraphQL endpoints.
 
-```ts wcd jpNhlIZvECSa3DtawJOk www/index.html
+```html wcd jpNhlIZvECSa3DtawJOk www/index.html
 <apollo-client uri="https://api.spacex.land/graphql">
   <introspection-queries></introspection-queries>
 </apollo-client>

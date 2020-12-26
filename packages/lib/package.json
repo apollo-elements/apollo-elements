@@ -8,6 +8,8 @@
   "typings": "index.d.ts",
   "exports": {
     ".": "./index.js",
+    "./cuid": "./cuid.js",
+    "./cuid.js": "./cuid.js",
     "./create-apollo-client": "./create-apollo-client.js",
     "./create-apollo-client.js": "./create-apollo-client.js",
     "./descriptors": "./descriptors.js",
@@ -42,12 +44,7 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/lib"
   },
-  "keywords": [
-    "Apollo",
-    "GraphQL",
-    "Web Components",
-    "Custom Elements"
-  ],
+  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {
