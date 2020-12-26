@@ -29,7 +29,6 @@ const config = {
     '**/*.graphql': 'js',
   },
 
-  // @ts-expect-error: this seems like an error in wtr
   coverageConfig: {
     exclude: [
       'packages/**/*.test.{ts, js}',
