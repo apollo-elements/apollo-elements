@@ -1,2 +1,31 @@
 [build]
   publish = "_site/"
+
+
+[[redirects]]
+  from = /modules/_apollo_elements_haunted.html
+  to = /api/libraries/haunted/
+[[redirects]]
+  from = /modules/_apollo_elements_components.html
+  to = /api/components/
+[[redirects]]
+  from = /pages/Guides/getting-started.html
+  to = /guides/getting-started/
+[[redirects]]
+  from = /pages/Guides/migrating.html
+  to = /guides/getting-started/migrating/
+[[redirects]]
+  from = /pages/Using%20Apollo/local-state.html
+  to = /guides/building-apps/local-state/
+[[redirects]]
+  from = /pages/Using%20Apollo/mutations.html
+  to = /guides/building-apps/mutations/
+[[redirects]]
+  from = /pages/Using%20Apollo/queries.html
+  to = /guides/building-apps/queries/
+[[redirects]]
+  from = /pages/Using%20Apollo/subscriptions.html
+  to = /guides/building-apps/subscriptions/
+[[redirects]]
+  from = /pages/using%20apollo/queries
+  to = /guides/building-apps/queries/
