@@ -34,15 +34,15 @@ If you just want to see the API Docs, check them out for all our packages at [ap
 - [🔬 Gluon](https://apolloelements.dev/api/libraries/gluon/)
 - [🧬 Polymer](https://apolloelements.dev/api/libraries/polymer/)
 
-## Works Across Frameworks
+## Use in any Framework
 
 Elements created with Apollo Elements work in any framework. Write GraphQL components once and use them in page with ease, even Angular, Preact, React, Svelte, or Vue apps.
 
-- ❤️ Angular: https://codesandbox.io/s/apollo-elements-in-angular-9smgl?file=/src/app/app.component.html
-- 💙 Preact: https://codesandbox.io/s/apollo-elements-in-preact-yowom?file=/src/index.js
-- 💜 React: https://codesandbox.io/s/apollo-elements-in-react-00ev3?file=/src/LaunchesDemo.js
-- 🧡 Svelte: https://codesandbox.io/s/apollo-elements-in-svelte-u6js9?file=/LaunchesDemo.svelte
-- 💚 Vue: https://codesandbox.io/s/apollo-elements-in-vue-cq769?file=/src/components/ApolloElementsDemo.vue
+- [Angular ❤️ Apollo Elements](https://codesandbox.io/s/apollo-elements-in-angular-9smgl?file=/src/app/app.component.html)
+- [Preact 💙 Apollo Elements](https://codesandbox.io/s/apollo-elements-in-preact-yowom?file=/src/index.js)
+- [React 💜 Apollo Elements](https://codesandbox.io/s/apollo-elements-in-react-00ev3?file=/src/LaunchesDemo.js)
+- [Svelte 🧡 Apollo Elements](https://codesandbox.io/s/apollo-elements-in-svelte-u6js9?file=/LaunchesDemo.svelte)
+- [Vue 💚 Apollo Elements](https://codesandbox.io/s/apollo-elements-in-vue-cq769?file=/src/components/ApolloElementsDemo.vue)
 
 ## 📦 Packages
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
@@ -71,7 +71,7 @@ import '@apollo-elements/components/apollo-mutation';
 
 </code-copy>
 
-[Read More](./packages/components)
+[Read More](https://apolloelements.dev/api/components/)
 
 ### 🍸 Mixins
 
@@ -95,7 +95,7 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
 
 </code-copy>
 
-[Read More](./packages/mixins)
+[Read More](https://apolloelements.dev/api/libraries/mixins/)
 
 ### 🔥 lit-apollo
 These base classes extend from [`LitElement`](https://lit-element.polymer-project.org), so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
@@ -118,7 +118,7 @@ import { ApolloSubscription } from '@apollo-elements/lit-apollo/apollo-subscript
 
 </code-copy>
 
-[Read More](./packages/lit-apollo)
+[Read More](https://apolloelements.dev/api/libraries/lit-apollo/)
 
 ### 🏁 FAST
 These base classes extend from [`FASTElement`](https://fast.design), with all it's ergonomics and reactivity.
@@ -141,7 +141,7 @@ import { ApolloSubscription } from '@apollo-elements/fast/apollo-subscription';
 
 </code-copy>
 
-[Read More](./packages/fast)
+[Read More](https://apolloelements.dev/api/libraries/fast/)
 
 ### 👻 Haunted
 
@@ -165,7 +165,7 @@ import { useSubscription } from '@apollo-elements/haunted/useSubscription';
 
 </code-copy>
 
-[Read More](./packages/haunted)
+[Read More](https://apolloelements.dev/api/libraries/haunted/)
 
 ### 🦄 Hybrids
 
@@ -190,7 +190,7 @@ import { ApolloSubscription } from '@apollo-elements/hybrids/apollo-subscription
 
 </code-copy>
 
-[Read More](./packages/hybrids)
+[Read More](https://apolloelements.dev/api/libraries/hybrids/)
 
 ### 👩‍🔬 Gluon
 These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonjs), a simplified <abbr title="web components">wc</abbr> library that uses `lit-html` for templating while keeping component state and lifecycle concerns 'close to the metal'.
@@ -213,7 +213,7 @@ import { ApolloSubscription } from '@apollo-elements/gluon/apollo-subscription';
 
 </code-copy>
 
-[Read More](./packages/gluon)
+[Read More](https://apolloelements.dev/api/libraries/gluon/)
 
 ### 🧬 Polymer
 
@@ -237,7 +237,7 @@ import '@apollo-elements/polymer/apollo-subscription';
 
 </code-copy>
 
-[Read More](./packages/polymer)
+[Read More](https://apolloelements.dev/api/libraries/polymer/)
 
 ## ‍🙏️ Acknowledgements
 `apollo-elements` is a community project maintained by Benny Powers. We proudly use [Open Web Components](https://open-wc.org) and [Modern Web](https://modern-web.dev) tools. Thanks to [Netlify](https://netlify.com) and [Heroku](https://heroku.com) for hosting our documentation and demos.
