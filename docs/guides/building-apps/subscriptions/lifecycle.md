@@ -5,7 +5,7 @@ description: Details on how to Apollo Elements GraphQL subscription components w
 # Building Apps >> Subscriptions >> Component Lifecycle || 30
 
 ## `connectedCallback`
-On connecting to the DOM, the element reads it's `subscription` and `variables` properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
+On connecting to the DOM, the element reads it's `subscription` and `variables` properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
 
 ## `documentChanged`
 When the `subscription` property changes (via JavaScript assignment, or when the GraphQL script child changes) the element sets up its `Observable` and begins fetching data (unless [configured otherwise](../#preventing-automatic-subscription)).
@@ -18,10 +18,10 @@ When the `variables` property changes (via JavaScript assignment or when the JSO
 If both a JSON script child and a JavaScript property are present, JavaScript takes precedence.
 
 ## `shouldSubscribe`
-Called synchronously before all automatic attempts to subscribe. If it returns true, the element will subscribe and begin fetching. Returns `true` by default, Override to [prevent automatic subscription](/guides/building-apps/queries#preventing-automatic-subscription).
+Called synchronously before all automatic attempts to subscribe. If it returns true, the element will subscribe and begin fetching. Returns `true` by default, Override to [prevent automatic subscription](/guides/building-apps/queries/#preventing-automatic-subscription).
 
 ## `subscribe`
-When called automatically (via `documentChanged` or `variablesChanged`) or explicitly, attemptes to subscribe. If a `observableSubscription` already exists, it will use that one, unless [`shouldResubscribe`](/api/interfaces/subscription#shouldresubscribe) is set.
+When called automatically (via `documentChanged` or `variablesChanged`) or explicitly, attemptes to subscribe. If a `observableSubscription` already exists, it will use that one, unless [`shouldResubscribe`](/api/interfaces/subscription#/shouldresubscribe) is set.
 
 ## `cancel`
 When called, ends the subscription and unsets the `Observable`.
@@ -30,12 +30,12 @@ When called, ends the subscription and unsets the `Observable`.
 Unary function which takes an object containing `client` and `subscriptionData`. The `subscriptionData` contains `data`, `loading`, and `error` properties. It is called **after** the element instance's properties are set.
 
 ## `onSubscriptionComplete`
-The [`onSubscriptionComplete`](/api/interfaces/subscription#onsubscriptioncomplete) callback is a function of no parameters that is called when the subscription ends (e.g. via `cancel` or on disconnect).
+The [`onSubscriptionComplete`](/api/interfaces/subscription/#onsubscriptioncomplete) callback is a function of no parameters that is called when the subscription ends (e.g. via `cancel` or on disconnect).
 
 `onData` is called *after* the element instance' properties are set.
 
 ## `onError`
-The [`onError`](/api/interfaces/query#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
+The [`onError`](/api/interfaces/query/#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
 
 `onError` is called *after* the element instance' properties are set.
 

@@ -78,7 +78,7 @@ This produces the exact same HTML output as above, but with a much cleaner sourc
 
 ### Code Tabs
 
-One of the guiding philosophies in this project is to give users more options. Want to create vanilla HTML elements? Use the [mixins](/api/libraries/mixins/)! Don't want to use a global apollo client? Try the [`<apollo-client>`](/api/components/apollo-component/). I wanted the docs site to reflect that, letting the user choose how they want to view the code examples.
+One of the guiding philosophies in this project is to give users more options. Want to create vanilla HTML elements? Use the [mixins](/api/libraries/mixins/)! Don't want to use a global apollo client? Try the [`<apollo-client>`](/api/components/apollo-client/). I wanted the docs site to reflect that, letting the user choose how they want to view the code examples.
 
 Inspired by sites like the [Stripe API Docs](https://stripe.com/docs/api/authentication?lang=php), which let you choose which SDK to view snippets for, I developed the `<code-tabs>` web component. When users pick a library (e.g. `lit-apollo` or `haunted`), every other instance of `<code-tabs>` on the page updates and their preference is stored in localStorage.
 

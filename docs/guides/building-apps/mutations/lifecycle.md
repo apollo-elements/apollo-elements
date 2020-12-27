@@ -5,7 +5,7 @@ description: Details on how to Apollo Elements GraphQL mutation components work.
 # Building Apps >> Mutations >> Component Lifecycle || 30
 
 ## `connectedCallback`
-On connecting to the DOM, the element reads it's mutation and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
+On connecting to the DOM, the element reads it's mutation and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
 
 ## `mutate`
 
@@ -53,13 +53,13 @@ element.updater: MutationUpdaterFn<AddPostsMutationData, AddPostsMutationVariabl
 
 ## `onCompleted`
 
-The [`onCompleted`](/api/interfaces/mutation#oncompleted) callback is a unary function that takes a [`FetchResult`](https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/link/core/types.ts#L24-L32).
+The [`onCompleted`](/api/interfaces/mutation/#oncompleted) callback is a unary function that takes a [`FetchResult`](https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/link/core/types.ts#L24-L32).
 
 `onCompleted` is called *after* the element instance' properties are set.
 
 ## `onError`
 
-The [`onError`](/api/interfaces/mutation#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
+The [`onError`](/api/interfaces/mutation/#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
 
 `onError` is called *after* the element instance' properties are set.
 

@@ -11,17 +11,17 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 
 <code-tabs collection="package-managers">
 
-```bash tab npm
-npm i -S @apollo-elements/lit-apollo
-```
+  ```bash tab npm
+  npm i -S @apollo-elements/lit-apollo
+  ```
 
-```bash tab yarn
-yarn add @apollo-elements/lit-apollo
-```
+  ```bash tab yarn
+  yarn add @apollo-elements/lit-apollo
+  ```
 
-```bash tab pnpm
-pnpm add @apollo-elements/lit-apollo
-```
+  ```bash tab pnpm
+  pnpm add @apollo-elements/lit-apollo
+  ```
 
 </code-tabs>
 

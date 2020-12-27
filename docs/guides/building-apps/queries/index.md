@@ -236,7 +236,7 @@ If your variables are static, you can even do this by adding a <abbr title="Java
 </apollo-query>
 ```
 
-For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) takes a second options parameter with a `variables` property.
+For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
 
 <code-tabs collection="libraries">
 
@@ -288,10 +288,11 @@ For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can appl
   ```ts tab hybrids
   define('hello-query', {
     client: client(),
-    query: query(HelloQuery),
-    variables: property({
-      greeting: "How's it going",
-      name: 'Dude'
+    query: query(HelloQuery, {
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      }
     }),
   });
   ```

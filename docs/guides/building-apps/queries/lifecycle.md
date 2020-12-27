@@ -5,7 +5,7 @@ description: Details on how to Apollo Elements GraphQL query components work.
 # Building Apps >> Queries >> Component Lifecycle || 10
 
 ## `connectedCallback`
-On connecting to the DOM, the element reads it's query and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
+On connecting to the DOM, the element reads it's query and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
 
 ## `documentChanged`
 
@@ -37,13 +37,13 @@ Set this property at any point to reobserve the `ObservableQuery`.
 
 ## `onData`
 
-The [`onData`](/api/interfaces/query#ondata) callback is a unary function that takes an `ApolloQueryResult` containing `data`, `loading`, `error`, etc.
+The [`onData`](/api/interfaces/query/#ondata) callback is a unary function that takes an `ApolloQueryResult` containing `data`, `loading`, `error`, etc.
 
 `onData` is called *after* the element instance' properties are set.
 
 ## `onError`
 
-The [`onError`](/api/interfaces/query#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
+The [`onError`](/api/interfaces/query/#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
 
 `onError` is called *after* the element instance' properties are set.
 
