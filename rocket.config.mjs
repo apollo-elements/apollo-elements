@@ -20,13 +20,14 @@ import esbuild from 'rollup-plugin-esbuild';
 import inclusiveLangPlugin from '@11ty/eleventy-plugin-inclusive-language';
 import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
+import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 
 import { setupWrap } from './rocket-plugins/wrap.mjs';
-import { setupImport } from './rocket-plugins/imports.mjs';
 import { githubTag } from './rocket-plugins/liquid/github.mjs';
 import { linkTag } from './rocket-plugins/liquid/link.mjs';
 import { customElementsManifest } from './rocket-plugins/custom-elements-manifest.mjs';
 import { generateManifests } from './rocket-plugins/copy-manifests.mjs';
+import { fixNoscript } from './rocket-plugins/fix-noscript.mjs';
 
 const graphql = fromRollup(_graphql);
 const litcss = fromRollup(_litcss);
@@ -34,6 +35,8 @@ const litcss = fromRollup(_litcss);
 // TODO: IMMEDIATE: move code-copy immediately to mdjs/core
 // TODO: IMMEDIATE: cem-api over to new presets
 // TODO: DEFERRED: after presets API is settled, move code-tabs, because it needs config in the preset init options
+
+const isProd = process.env.ELEVENTY_ENV === 'production';
 
 /** @type {import('@d4kmor/cli/src/types').RocketCliOptions} */
 const config = {
@@ -115,13 +118,14 @@ const config = {
     /* end dev.to blog shortcodes */
 
     /* start auto-import web components */
-    function importSpecifier(tagName, isProd) {
+    function importSpecifier(tagName) {
       return isProd ?
         '@apollo-elements/docs/components.js'
-      : `@apollo-elements/docs/${tagName}.ts`;
+      : `@apollo-elements/docs/${tagName}`;
     }
 
-    eleventyConfig.addPlugin(setupImport, {
+    eleventyConfig.addPlugin(addWebComponentDefinitions, {
+      singleScript: true,
       specifiers: {
         'code-copy': importSpecifier,
         'code-tabs': importSpecifier,
@@ -135,6 +139,11 @@ const config = {
 
     // one day
     // eleventyConfig.addPlugin(mermaid);
+
+    // In some cases, 11ty is encoding `<noscript><link>`, in the `<head>`,
+    // even though that is legitimate HTML. This transform ensures the final
+    // HTML has noscript styles.
+    eleventyConfig.addTransform(fixNoscript);
   },
 
   build: {

@@ -83,7 +83,7 @@ const getEvents = declaration =>
   declaration?.events ?? [];
 
 const getGithubURL = ({ repository: { url = '', directory = '' } = {} } = {}) =>
-  !url ? '' : `${githubUrl(url)}${directory ? `/tree/master/${directory}` : ''}`.replace('//', '/');
+  !url ? '' : `${githubUrl(url)}${directory ? `/tree/master/${directory}` : ''}`;
 
 function getHeadings(module) {
   const { exports = [], declarations = [] } = module ?? {};
