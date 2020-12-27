@@ -16,7 +16,7 @@ If your app used `client.writeData` (e.g. to set default values when loading the
 ## Check Non-Nullable Variables
 Query and Subscription elements in `@apollo-elements` 2 tried to prevent operations with non-nullable variables from fetching if their required arguments were null or undefined. Version 3 removes that check by default, so as long as there's a client and a query, they subscribe immediately. To avoid errors, always make sure to set your variables before you query.
 
-To components from fetching until they have their required variables, see [Validating Variables](../cool-tricks/validating-variables.md).
+To components from fetching until they have their required variables, see [Validating Variables](../cool-tricks/validating-variables/).
 
 ## Replace Resolvers with Type Policies
 Apollo client 3 deprecates local resolvers in favour of type policies. Your resolvers will still work for now, but it's recommended to migrate them.
