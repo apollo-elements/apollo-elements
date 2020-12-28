@@ -54,7 +54,7 @@ import TypedQuery from './Typed.query.graphql';
 
 Pass your `TypedDocumentNode` objects' type as the first type argument to your component constructors. These examples assume you followed the first approach outlined above. If you are generating types, omit the `typeof` operator.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins';

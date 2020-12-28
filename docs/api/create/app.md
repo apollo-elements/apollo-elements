@@ -7,7 +7,7 @@ Generate an Apollo Elements skeleton app.
 
 ## Example
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm init @apollo-elements -- \

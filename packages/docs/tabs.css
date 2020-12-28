@@ -1,5 +1,5 @@
 img {
-  height: var(--x-tabs-icon-height, 24px);
+  height: var(--code-tabs-icon-height, 24px);
   width: auto;
 }
 
@@ -7,7 +7,7 @@ img {
   display: flex;
   background: var(--code-tabs-background, hsla(0 100% 100% / 0.9));
   overflow-x: scroll;
-  justify-content: var(--x-code-justify-tabs, start);
+  justify-content: var(--code-tabs-justify-tabs, start);
 }
 
 #tabs button {
@@ -37,9 +37,9 @@ img {
 }
 
 #tabpanel {
-  background-color: var(--x-tabs-background-color, var(--markdown-syntax-background-color));
+  background-color: var(--code-tabs-background-color, var(--markdown-syntax-background-color));
   border-radius: 3px;
-  min-height: var(--x-tabs-min-height, 1px);
+  min-height: var(--code-tabs-min-height, 1px);
 }
 
 :host([selected-index="0"]) #tabpanel {

@@ -5,7 +5,7 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 
 Apollo Elements helps you build full-scale, high-performance GraphQL frontends with state-of-the-art web technologies. Use your favourite web components base library like [lit-element](../api/libraries/lit-apollo/) or [FAST](../api/libraries/fast/); or write your components with [vanilla JS](../api/libraries/mixins/). If you're starting from scratch, use the app generator to bootstrap a project.
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm init @apollo-elements

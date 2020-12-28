@@ -9,7 +9,7 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 
 ## Installing
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm i -S @apollo-elements/haunted

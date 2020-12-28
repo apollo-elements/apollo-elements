@@ -40,7 +40,7 @@ Apollo client ensures that the component always has the latest data by {% footno
 
 When the `ObservableQuery` subscription produces new data (e.g. on response from the GraphQL server, or if local state changes), it sets the element's `data`, `loading` and `error` properties (as well as `errors` if `returnPartialData` property is true). The following example shows how a simple query element written with different component libraries (or none) renders it's state.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixins } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -238,7 +238,7 @@ If your variables are static, you can even do this by adding a <abbr title="Java
 
 For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   export class HelloQueryElement extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
@@ -317,7 +317,7 @@ For more information, see [query element lifecycle](./lifecycle/)
 
 If you want to keep your element from automatically subscribing, you can opt out of the default behaviour by setting the `noAutoSubscribe` property.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   class LazyGreeting extends HelloQueryElement {

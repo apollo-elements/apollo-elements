@@ -99,7 +99,7 @@ If you'd prefer to avoid assigning to the `window`, you have more options...
 
 Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your components' classes to connect them to a specific client:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloClientMixin, ApolloQueryMixin } from '@apollo-elements/mixins';

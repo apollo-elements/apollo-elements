@@ -10,7 +10,7 @@ Apollo Elements comes with an app and component generator.
 
 Start the generator with this command:
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm init @apollo-elements

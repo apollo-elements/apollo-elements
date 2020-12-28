@@ -12,7 +12,7 @@ Unlike query and subscription components, mutation components don't automaticall
 
 As such, you can only expect your component's `data` property to be truthy once the mutation resolves.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import type { ResultOf, VariablesOf } from '@graphql-typed-document-node/core';

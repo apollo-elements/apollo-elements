@@ -21,7 +21,7 @@ mutation BlogPostMutation($content: String) {
 
 And this component definition in `components/blog-post/blog-post.ts`:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import type {
@@ -296,7 +296,7 @@ But that would mean an extra network round-trip that you might not need.
 ## Update the Cache Synchronously
 Instead, you can define an `updater` method on `BlogPost` which instructs the apollo cache how to handle the results of the `BlogPostMutation`.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   /**
@@ -435,7 +435,7 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
 
 The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in this example are calculated by the server. If we know what they will be (or can offer a pretty good guess) at the moment we send the mutation, we can "optimistically" update the UI by setting the `optimisticResponse` property on our element:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   onInput(event: KeyboardEvent & { target: HTMLTextareaElement }) {
