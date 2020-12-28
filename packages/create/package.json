@@ -22,6 +22,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
+    "analyze": "echo 'No analyze step for create'",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w",

@@ -7,16 +7,17 @@
       "attributes": [
         {
           "name": "uri",
-          "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
           "type": "string | undefined"
         },
         {
           "name": "validate-variables",
-          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
           "type": "boolean"
         }
       ],
-      "properties": [{
+      "properties": [
+        {
           "name": "observedAttributes",
           "type": "string[]",
           "default": "[\"uri\"]"
@@ -24,25 +25,28 @@
         {
           "name": "client",
           "description": "Reference to the `ApolloClient` instance.",
-          "type": "(ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache; }) | null"
+          "type": "ApolloClient<NormalizedCacheObject> | null"
         },
         {
           "name": "elements",
+          "description": "List of all ApolloElements registered to this client.",
           "type": "readonly ApolloElementElement<unknown, Record<string, any>>[]"
         },
         {
           "name": "typePolicies",
-          "description": "TypePolicies for the client",
+          "description": "Type Policies for the client.",
           "type": "TypePolicies | undefined"
         },
         {
           "name": "uri",
-          "description": "When the URI attribute is set, <apollo-client> will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "attribute": "uri",
+          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
           "type": "string | undefined"
         },
         {
           "name": "validateVariables",
-          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set",
+          "attribute": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
           "type": "boolean"
         }
       ],
@@ -65,17 +69,22 @@
         },
         {
           "name": "refetch-queries",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
           "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "called",
-          "description": "Whether the mutation has been fired",
+          "description": "Whether the mutation was called",
           "type": "boolean",
           "default": "false"
         }
       ],
       "properties": [
+        {
+          "name": "styles",
+          "type": "CSSResult[]",
+          "default": "[null]"
+        },
         {
           "name": "inputKey",
           "attribute": "input-key",
@@ -91,13 +100,13 @@
         {
           "name": "refetchQueries",
           "attribute": "refetch-queries",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
           "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "called",
           "attribute": "called",
-          "description": "Whether the mutation has been fired",
+          "description": "Whether the mutation was called",
           "type": "boolean",
           "default": "false"
         },
@@ -129,12 +138,18 @@
         },
         {
           "name": "documentType",
-          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
           "default": "\"mutation\""
         },
         {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
+          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
+        },
+        {
           "name": "data",
-          "description": "Latest mutation",
+          "description": "Latest mutation data",
           "type": "Data<D> | null"
         },
         {
@@ -161,14 +176,8 @@
         },
         {
           "name": "context",
-          "description": "Context to be passed to link execution chain.",
+          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
@@ -199,7 +208,7 @@
         },
         {
           "name": "apollo-element-connected",
-          "description": "when the element connects to the dom\n\nSee [[`ApolloMutationInterface`]] for more information on events"
+          "description": "when the element connects to the dom"
         },
         {
           "name": "apollo-mutation-result",
@@ -213,11 +222,21 @@
       "slots": [
         {
           "name": "trigger",
-          "description": "the triggering element (e.g. button or anchor)"
+          "description": "The triggering element. Must be a button or and anchor that wraps a button."
         },
         {
           "name": "variable",
-          "description": "an input-like element with a `data-variable` attribute. it's `value` property will be queried to get the value for the corresponding variable"
+          "description": "An input with a `data-variable` attribute. It's `value` property gets the value for the corresponding variable."
+        }
+      ],
+      "cssParts": [
+        {
+          "name": "variables",
+          "description": "The container for variable inputs."
+        },
+        {
+          "name": "trigger",
+          "description": "The container for the trigger.\nSee [[`ApolloMutationInterface`]] for more information on events"
         }
       ]
     }
