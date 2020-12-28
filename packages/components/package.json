@@ -5,15 +5,18 @@
   "main": "index.js",
   "module": "index.js",
   "exports": {
-    ".": "./index.js",
-    "./index": "./index.js",
-    "./index.js": "./index.js",
-    "./events": "./events.js",
-    "./events.js": "./events.js",
-    "./apollo-client": "./apollo-client.js",
-    "./apollo-client.js": "./apollo-client.js",
-    "./apollo-mutation": "./apollo-mutation.js",
-    "./apollo-mutation.js": "./apollo-mutation.js"
+    ".": {
+      "esbuild": "./index.ts",
+      "default": "./index.js"
+    },
+    "./*": {
+      "esbuild": "./*.ts",
+      "default": "./*.js"
+    },
+    "./*.js": {
+      "esbuild": "./*.ts",
+      "default": "./*.js"
+    }
   },
   "scripts": {
     "prepublishOnly": "yarn run-s prepublishOnly:*",
@@ -37,12 +40,7 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/components"
   },
-  "keywords": [
-    "Apollo",
-    "GraphQL",
-    "Web Components",
-    "Custom Elements"
-  ],
+  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {
