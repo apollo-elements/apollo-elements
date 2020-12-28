@@ -6,6 +6,8 @@
 
 Helper functions for Apollo Elements
 
+> 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/lib/) 🔎
+
 ## createApolloClient
 Creates a simple ApolloClient instance given a URI and some params.
 

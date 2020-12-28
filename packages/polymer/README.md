@@ -9,6 +9,8 @@
 
 <strong>👩‍🚀 For developing with space-age Polymers 👨‍🚀</strong>
 
+> 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/polymer/) 🔎
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -24,7 +26,7 @@ npm install --save @apollo-elements/polymer
 `@apollo-elements/polymer` does not depend on `@polymer/polymer`. The components extend directly from HTMLElement, so they're suitable for use in any project, not just [Polymer library](https://polymer-library.polymer-project.org/) apps.
 
 ## 👩‍🚀 Usage
-> See our [docs on setting up Apollo client](https://apolloelements.dev/pages/guides/getting-started/apollo-client.html) so your components can fetch their data.
+> See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
 Just import the elements.
 
@@ -62,7 +64,7 @@ You can now use them in your polymer template:
 </code-copy>
 
 ## 📚 Other Libraries
-Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)
+Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelements.dev/)
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

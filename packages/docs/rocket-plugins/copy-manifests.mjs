@@ -1,32 +1,33 @@
+// @ts-check
 /* eslint-env node */
 /* eslint-disable no-console, easy-loops/easy-loops */
 
+/** @typedef {import('custom-elements-manifest/schema')} CEM */
+
 import globby from 'globby';
+
+import R from 'ramda';
 
 import { copyFileSync, mkdirSync, readdirSync, readFileSync, rmdirSync, writeFileSync } from 'fs';
 
 import { dirname, relative } from 'path';
 
-import R from 'ramda';
-
 const { mapObjIndexed } = R;
-
-/** @typedef {import('custom-elements-manifest/schema')} CEM */
 
 function getManifestPath(name) {
   switch (name) {
     case 'lit':
       name = 'lit-apollo';
   }
-  const { pathname } = new URL(`../packages/${name}/custom-elements-manifest.json`, import.meta.url);
+  const { pathname } = new URL(`../../../packages/${name}/custom-elements-manifest.json`, import.meta.url);
   return pathname;
 }
 
-const typeTablesDirURL = new URL('../docs/api/types/', import.meta.url);
+const typeTablesDirURL = new URL('../../../docs/api/types/', import.meta.url);
 
 function projectPath(pathname) {
   return relative(new URL(import.meta.url).pathname, pathname)
-    .replace('../../', '');
+    .replace('../../../', '');
 }
 
 function readJSONSync(path) {
@@ -122,6 +123,7 @@ function capitalize(str) {
  * @return {import('custom-elements-manifest/schema').Package}
  */
 function transformPolymerManifest(base) {
+  const polymerChangedEventsJson = readJSONSync('../polymer-changed-events.json');
   return {
     ...base,
     modules: base.modules.map(({ kind, path, declarations, exports }) => ({
@@ -142,11 +144,7 @@ function transformPolymerManifest(base) {
         events: [
           ...events,
           /* eslint-disable max-len */
-          { name: 'data-changed', description: 'Notifies that `data` changed', type: { type: 'PolymerChangeEvent<Data<D>>' } },
-          { name: 'variables-changed', description: 'Notifies that `variables` changed', type: { type: 'PolymerChangeEvent<Variables<D, V>>' } },
-          { name: 'error-changed', description: 'Notifies that `error` changed', type: { type: 'PolymerChangeEvent<Error|ApolloError>' } },
-          { name: 'errors-changed', description: 'Notifies that `errors` changed', type: { type: 'PolymerChangeEvent<readonly GraphQLError[]>' } },
-          { name: 'loading-changed', description: 'Notifies that `loading` changed', type: { type: 'PolymerChangeEvent<boolean>' } },
+          ...polymerChangedEventsJson,
           ...(
               path.includes('query') ? [{ name: 'network-status-changed', description: 'Notifies that `networkStatus` changed', type: { type: 'PolymerChangeEvent<NetworkStatus>' } }]
             : path.includes('mutation') ? [{ name: 'called-changed', description: 'Notifies that `called` changed', type: { type: 'PolymerChangeEvent<boolean>' } }]
@@ -188,6 +186,7 @@ function transformPolymerManifest(base) {
 function transformMixinsManifest(base) {
   /* eslint-disable max-len */
   const PATH_RE = /apollo-(\w+)/;
+  const mixinsJson = readJSONSync('../mixins.json');
   return {
     ...base,
     modules: [
@@ -231,136 +230,7 @@ function transformMixinsManifest(base) {
             return { kind, name, declaration };
           }),
       })),
-
-      {
-        kind: 'javascript-module',
-        path: './apollo-client-mixin.js',
-        declarations: [
-          {
-            kind: 'mixin',
-            name: 'ApolloClientMixin',
-            description: 'Mixin which applies a specific ApolloClient instance to the element.',
-            members: [
-              {
-                kind: 'field',
-                name: 'client',
-                description: 'The specified client',
-                type: {
-                  type: 'ApolloClient<NormalizedCacheObject>',
-                },
-              },
-            ],
-            parameters: [
-              {
-                name: 'superclass',
-                type: {
-                  type: 'Constructor<ApolloElement>',
-                },
-              },
-              {
-                name: 'client',
-                description: 'The specific ApolloClient instance.',
-                type: {
-                  type: 'ApolloClient<NormalizedCacheObject>',
-                },
-              },
-            ],
-            return: {
-              type: {
-                type: `Constructor<ApolloElement>`,
-              },
-            },
-          },
-        ],
-        exports: [
-          {
-            kind: 'js',
-            name: 'ApolloClientMixin',
-            declaration: {
-              name: 'ApolloClientMixin',
-            },
-          },
-        ],
-      },
-
-      {
-        kind: 'javascript-module',
-        path: './validate-variables-mixin.js',
-        declarations: [
-          {
-            kind: 'mixin',
-            name: 'ValidateVariablesMixin',
-            description: `Mixin which prevents operations from fetching until their required variables are set.`,
-            parameters: [
-              {
-                name: 'superclass',
-                type: {
-                  type: 'Constructor<ApolloElement>',
-                },
-              },
-            ],
-            return: {
-              type: {
-                type: `Constructor<ApolloElement>`,
-              },
-            },
-          },
-        ],
-        exports: [
-          {
-            kind: 'js',
-            name: 'ValidateVariablesMixin',
-            declaration: {
-              name: 'ValidateVariablesMixin',
-            },
-          },
-        ],
-      },
-
-      {
-        kind: 'javascript-module',
-        path: './type-policies-mixin.js',
-        declarations: [
-          {
-            kind: 'mixin',
-            name: 'TypePoliciesMixin',
-            description: 'Mixin which adds type policies to the Apollo cache.',
-            members: [
-              {
-                kind: 'field',
-                name: 'typePolicies',
-                description: 'Type Policies added to the cache when the element connects.',
-                type: {
-                  type: 'TypePolicies',
-                },
-              },
-            ],
-            parameters: [
-              {
-                name: 'superclass',
-                type: {
-                  type: 'Constructor<ApolloElement>',
-                },
-              },
-            ],
-            return: {
-              type: {
-                type: `Constructor<ApolloElement & { typePolicies: TypePolicies }>`,
-              },
-            },
-          },
-        ],
-        exports: [
-          {
-            kind: 'js',
-            name: 'TypePoliciesMixin',
-            declaration: {
-              name: 'TypePoliciesMixin',
-            },
-          },
-        ],
-      },
-
+      ...mixinsJson
     ],
   };
   /* eslint-enable max-len */
@@ -454,26 +324,26 @@ export function generateManifestsFromInterfaces() {
 }
 
 export function copyCustomElementManifests() {
-  const pkgJson = readJSONSync('../package.json');
+  const pkgJson = readJSONSync('../../../package.json');
   const packageJsons = globby.sync(pkgJson.workspaces.map(w => `${w}/package.json`));
   const manifests = Promise.all(packageJsons.map(async function getJson(ppath) {
     let from;
     let to;
 
     try {
-      const pkgJsonUrl = new URL(`../${ppath}`, import.meta.url);
+      const pkgJsonUrl = new URL(`../../../${ppath}`, import.meta.url);
       const cemUrl = new URL('./custom-elements-manifest.json', pkgJsonUrl);
-      const { name } = readJSONSync(`../${ppath}`);
+      const { name } = readJSONSync(`../../../${ppath}`);
 
-      ({ pathname: from } = new URL(cemUrl, new URL('../', import.meta.url)));
-      ({ pathname: to } = new URL(`../docs/_data/cems/${name}/custom-elements-manifest.json`, import.meta.url));
+      ({ pathname: from } = new URL(cemUrl.pathname, new URL('../', import.meta.url)));
+      ({ pathname: to } = new URL(`../../../docs/_data/cems/${name}/custom-elements-manifest.json`, import.meta.url));
 
       mkdirSync(dirname(to), { recursive: true });
 
       const manifestContent = readFileSync(from, 'utf8');
       writeFileSync(to, manifestContent, 'utf8');
 
-      copyFileSync(pkgJsonUrl.pathname, new URL(`../docs/_data/cems/${name}/package.json`, import.meta.url).pathname);
+      copyFileSync(pkgJsonUrl.pathname, new URL(`../../../docs/_data/cems/${name}/package.json`, import.meta.url).pathname);
 
       console.log('Custom Elements Manifest written to', projectPath(to));
 

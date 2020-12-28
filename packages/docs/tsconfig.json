@@ -1,8 +1,14 @@
 {
-  "include": [".", "../../declaration.d.ts", "./node_modules", "../node_modules"],
+  "include": [
+    ".",
+    "../../declaration.d.ts",
+    "./node_modules",
+    "../node_modules"
+  ],
   "compilerOptions": {
     "target": "es2020",
-    "module": "ESNext",
+    "module": "es2020",
+    "esModuleInterop": true,
     "useDefineForClassFields": false,
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,

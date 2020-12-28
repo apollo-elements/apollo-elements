@@ -2,8 +2,8 @@
   "files": ["./declaration.d.ts"],
   "compilerOptions": {
     "strict": true,
-    "target": "ES2019",
-    "module": "ESNext",
+    "target": "es2019",
+    "module": "es2020",
     "declaration": true,
     "useDefineForClassFields": false,
     "importHelpers": true,

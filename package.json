@@ -30,7 +30,7 @@
     "prerelease:release": "lerna publish --conventional-prerelease --pre-dist-tag next",
     "prerelease:postclean": "yarn clean",
     "docs": "run-s build:codegen docs:*",
-    "docs:analyze": "node --input-type module -e \"await import('./rocket-plugins/copy-manifests.mjs').then(m => m.generateManifests())\"",
+    "docs:analyze": "node --input-type module -e \"await import('./packages/docs/rocket-plugins/copy-manifests.mjs').then(m => m.generateManifests())\"",
     "docs:rollup": "rollup -c rollup.config.docs.js",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
     "docs:copy": "cpx 'docs/_assets/**/*.{svg,png,jpg}' _site/_merged_assets/",

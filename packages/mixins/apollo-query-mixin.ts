@@ -189,7 +189,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
       params?: Partial<QueryOptions<Variables<D, V>>>
     ): Promise<ApolloQueryResult<Data<D>>> {
       if (!this.client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html'); /* c8 ignore next */ // it's covered
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // it's covered
 
       const { context, errorPolicy, fetchPolicy } = this;
 
@@ -261,7 +261,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
       params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
     ): ObservableQuery<Data<D>, Variables<D, V>> {
       if (!this.client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html'); /* c8 ignore next */ // it's covered
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // it's covered
 
       const options: WatchQueryOptions<Variables<D, V>, Data<D>> = {
         context: this.context,

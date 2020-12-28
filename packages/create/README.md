@@ -11,6 +11,8 @@
 
 <strong>⚡️ App and Component Generator for Apollo Elements 🚀</strong>
 
+> 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/create/) 🔎
+
 To quickly get started with apollo-elements, generate a skeleton app with this command
 
 ```

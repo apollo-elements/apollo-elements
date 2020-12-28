@@ -9,6 +9,8 @@
 
 <strong>👩‍🚀 Launch your app at full speed! 👨‍🚀</strong>
 
+> 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/fast/) 🔎
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -23,7 +25,7 @@ npm install --save @apollo-elements/fast
 ```
 
 ## 👩‍🚀 Usage
-> See our [docs on setting up Apollo client](https://apolloelements.dev/pages/guides/getting-started/apollo-client.html) so your components can fetch their data.
+> See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
 First, let's define our component's [GraphQL query](https://graphql.org/learn/queries/).
 
@@ -36,7 +38,7 @@ query HelloQuery {
 }
 ```
 
-> Read our [docs on working with GraphQL files during development](https://apolloelements.dev/pages/guides/getting-started/buildless-development.html) and [in production](https://apolloelements.dev/pages/guides/getting-started/building-for-production.html) for more info, and be sure to read about [generating TypeScript types from GraphQL](https://apolloelements.dev/pages/guides/getting-started/codegen.html) to enhance your developer experience and reduce bugs.
+> Read our [docs on working with GraphQL files during development](https://apolloelements.dev/guides/getting-started/buildless-development/) and [in production](https://apolloelements.dev/guides/getting-started/building-for-production/) for more info, and be sure to read about [generating TypeScript types from GraphQL](https://apolloelements.dev/guides/getting-started/codegen/) to enhance your developer experience and reduce bugs.
 
 Next, we'll define our UI component. Import the base class and helpers, query, and types:
 
@@ -91,7 +93,7 @@ export class HelloQueryElement extends ApolloQuery<Data, Variables> {
 </code-copy>
 
 ## 📚 Other Libraries
-Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelement.dev)
+Looking for other libraries? Want to use Apollo with vanilla `extends HTMLElement` components? Check out our [docs site](https://apolloelements.dev/)
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

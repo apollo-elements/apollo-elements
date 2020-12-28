@@ -11,6 +11,8 @@
 
 Apollo Elements hybrids make it easy to take existing hybrids component descriptors and connect them to your Apollo cache.
 
+> 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/hybrids/) 🔎
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [👩‍🚀 Usage](#-usage)
@@ -29,7 +31,7 @@ npm install --save @apollo-elements/hybrids
 
 ## 👩‍🚀 Usage
 
-> See our [docs on setting up Apollo client](https://apolloelements.dev/pages/guides/getting-started/apollo-client.html) so your components can fetch their data.
+> See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
 This package provides `client`, `mutation`, `query`, and `subscription` [factories](https://hybrids.js.org/#/getting-started/concepts?id=factories) that you can apply to your hybrids definitions; as well as `ApolloQuery`, `ApolloMutation`, and `ApolloSubscription` objects which you can spread in to your hybrid property descriptors.
 

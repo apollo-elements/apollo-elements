@@ -1,0 +1,130 @@
+[
+  {
+    "kind": "javascript-module",
+    "path": "./apollo-client-mixin.js",
+    "declarations": [
+      {
+        "kind": "mixin",
+        "name": "ApolloClientMixin",
+        "description": "Mixin which applies a specific ApolloClient instance to the element.",
+        "members": [
+          {
+            "kind": "field",
+            "name": "client",
+            "description": "The specified client",
+            "type": {
+              "type": "ApolloClient<NormalizedCacheObject>"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "superclass",
+            "type": {
+              "type": "Constructor<ApolloElement>"
+            }
+          },
+          {
+            "name": "client",
+            "description": "The specific ApolloClient instance.",
+            "type": {
+              "type": "ApolloClient<NormalizedCacheObject>"
+            }
+          }
+        ],
+        "return": {
+          "type": {
+            "type": "Constructor<ApolloElement>"
+          }
+        }
+      }
+    ],
+    "exports": [
+      {
+        "kind": "js",
+        "name": "ApolloClientMixin",
+        "declaration": {
+          "name": "ApolloClientMixin"
+        }
+      }
+    ]
+  },
+
+  {
+    "kind": "javascript-module",
+    "path": "./validate-variables-mixin.js",
+    "declarations": [
+      {
+        "kind": "mixin",
+        "name": "ValidateVariablesMixin",
+        "description": "Mixin which prevents operations from fetching until their required variables are set.",
+        "parameters": [
+          {
+            "name": "superclass",
+            "type": {
+              "type": "Constructor<ApolloElement>"
+            }
+          }
+        ],
+        "return": {
+          "type": {
+            "type": "Constructor<ApolloElement>"
+          }
+        }
+      }
+    ],
+    "exports": [
+      {
+        "kind": "js",
+        "name": "ValidateVariablesMixin",
+        "declaration": {
+          "name": "ValidateVariablesMixin"
+        }
+      }
+    ]
+  },
+
+  {
+    "kind": "javascript-module",
+    "path": "./type-policies-mixin.js",
+    "declarations": [
+      {
+        "kind": "mixin",
+        "name": "TypePoliciesMixin",
+        "description": "Mixin which adds type policies to the Apollo cache.",
+        "members": [
+          {
+            "kind": "field",
+            "name": "typePolicies",
+            "description": "Type Policies added to the cache when the element connects.",
+            "type": {
+              "type": "TypePolicies"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "superclass",
+            "type": {
+              "type": "Constructor<ApolloElement>"
+            }
+          }
+        ],
+        "return": {
+          "type": {
+            "type": "Constructor<ApolloElement & { typePolicies: TypePolicies }>"
+          }
+        }
+      }
+    ],
+    "exports": [
+      {
+        "kind": "js",
+        "name": "TypePoliciesMixin",
+        "declaration": {
+          "name": "TypePoliciesMixin"
+        }
+      }
+    ]
+  }
+]

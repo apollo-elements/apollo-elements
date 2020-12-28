@@ -22,13 +22,13 @@ import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 
-import { setupWrap } from './rocket-plugins/wrap.mjs';
-import { githubTag } from './rocket-plugins/liquid/github.mjs';
-import { linkTag } from './rocket-plugins/liquid/link.mjs';
-import { customElementsManifest } from './rocket-plugins/custom-elements-manifest.mjs';
-import { generateManifests } from './rocket-plugins/copy-manifests.mjs';
-import { fixNoscript } from './rocket-plugins/fix-noscript.mjs';
-import { wrapTab } from './rocket-plugins/code-tabs.mjs';
+import { setupWrap } from './packages/docs/rocket-plugins/wrap.mjs';
+import { githubTag } from './packages/docs/rocket-plugins/liquid/github.mjs';
+import { linkTag } from './packages/docs/rocket-plugins/liquid/link.mjs';
+import { customElementsManifest } from './packages/docs/rocket-plugins/custom-elements-manifest.mjs';
+import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.mjs';
+import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.mjs';
+import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.mjs';
 
 const graphql = fromRollup(_graphql);
 const litcss = fromRollup(_litcss);

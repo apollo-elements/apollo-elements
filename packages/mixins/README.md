@@ -9,6 +9,8 @@
 
 A set of [class mixin functions](https://alligator.io/js/class-composition/#composition-with-javascript-classes) that add Apollo GraphQL goodness to your web component classes.
 
+> 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/mixins/) 🔎
+
 ## 📓 Contents
 - [🔧 Installation](#-installation)
 - [🍸 Mixins](#-mixins)
@@ -189,7 +191,7 @@ Optional mixin which lets you declare type policies for a component's query.
 Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/), which are essentially function composition.
 
 ## 📚 Other Libraries
-Looking for other libraries? Want to use Apollo with your favourite custom-elements library? Check out our [docs site](https://apolloelement.dev)
+Looking for other libraries? Want to use Apollo with your favourite custom-elements library? Check out our [docs site](https://apolloelements.dev/)
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.

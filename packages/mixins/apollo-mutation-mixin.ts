@@ -86,7 +86,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
       params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
     ): Promise<FetchResult<Data<D>>> {
       if (!this.client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html'); /* c8 ignore next */ // covered
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
 
       const options: MutationOptions<Data<D>, Variables<D, V>> = {
         // It's better to let Apollo client throw this error

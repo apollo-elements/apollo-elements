@@ -14,7 +14,7 @@ PACKAGES.set('mixins', PACKAGES.get('vanilla'));
 PACKAGES.set('html', PACKAGES.get('vanilla'));
 
 const PACKAGE_MANAGERS = new Map(Object.entries({
-  npm: { id: 'npm', label: 'NPM', iconHref: '/_merged_assets/pm-logos/npm.svg' },
+  npm: { id: 'npm', label: 'NPM', iconHref: '/_merged_assets/pm-logos/npm.svg', synonyms: [] },
   yarn: { id: 'yarn', label: 'Yarn', iconHref: '/_merged_assets/pm-logos/yarn.svg' },
   pnpm: { id: 'pnpm', label: 'PNPM', iconHref: '/_merged_assets/pm-logos/pnpm.svg' },
 }));

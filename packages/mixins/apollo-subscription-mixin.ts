@@ -148,7 +148,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
       const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
 
       if (!client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/pages/guides/getting-started/apollo-client.html');
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
 
       if ((this.observable && !shouldResubscribe) || skip)
         return;
