@@ -6,6 +6,6 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 ---
 # Web Component Libraries >> FAST >> ApolloMutation || 30
 
-`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`]/api/interfaces/mutation/).
+`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`](/api/interfaces/mutation/).
 
 Read the [mutation component guides](../../../../guides/building-apps/mutations/) for examples and tips.

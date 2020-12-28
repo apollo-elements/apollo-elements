@@ -6,6 +6,6 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 ---
 # Web Component Libraries >> Haunted >> useSubscription || 30
 
-Apollo `useSubscription` hook for web components. Elements that call `useSubscription` inherit the [`ApolloSubscriptionInterface`]/api/interfaces/subscription/).
+Apollo `useSubscription` hook for web components. Elements that call `useSubscription` inherit the [`ApolloSubscriptionInterface`](/api/interfaces/subscription/).
 
 Read the [subscription component guides](../../../../guides/building-apps/subscriptions/) for examples and tips.

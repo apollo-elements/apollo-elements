@@ -6,7 +6,7 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 ---
 # Web Component Libraries >> Haunted >> useMutation || 20
 
-Apollo `useMutation` hook for web components. Elements that call `useMutation` inherit the [`ApolloMutationInterface`]/api/interfaces/mutation/).
+Apollo `useMutation` hook for web components. Elements that call `useMutation` inherit the [`ApolloMutationInterface`](/api/interfaces/mutation/).
 
 Read the [mutation component guides](../../../../guides/building-apps/mutations/) for examples and tips.
 
@@ -47,6 +47,6 @@ function AddUser() {
 customElements.define('add-user', component(AddUser));
 ```
 
-Elements that call `useMutation` inherit the [`ApolloMutationInterface`]/api/interfaces/query/).
+Elements that call `useMutation` inherit the [`ApolloMutationInterface`](/api/interfaces/query/).
 
 Read the [mutation component guides](../../../../guides/building-apps/mutations/) for examples and tips.
