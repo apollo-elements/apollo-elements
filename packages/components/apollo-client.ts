@@ -18,6 +18,12 @@ template.innerHTML = /* html */`
 
 const DOCUMENT_TYPES = ['document', 'query', 'mutation', 'subscription'];
 
+function isInMemoryCache(
+  cache: ApolloClient<NormalizedCacheObject>['cache']
+): cache is InMemoryCache {
+  return !!cache && ('policies' in cache);
+}
+
 function isApolloElement(element: Node): element is ApolloElementElement {
   return element instanceof HTMLElement && (
     // @ts-expect-error: it's fine
@@ -98,7 +104,7 @@ export class ApolloClientElement extends HTMLElement {
   static readonly observedAttributes = ['uri'];
 
   /** Private reference to the `ApolloClient` instance */
-  #client: ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null = null;
+  #client: ApolloClient<NormalizedCacheObject> | null = null;
 
   /** Private cache of child `ApolloElement`s */
   #instances: Set<ApolloElementElement> = new Set();
@@ -108,11 +114,11 @@ export class ApolloClientElement extends HTMLElement {
   /**
    * Reference to the `ApolloClient` instance.
    */
-  get client(): ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null {
+  get client(): ApolloClient<NormalizedCacheObject> | null {
     return this.#client;
   }
 
-  set client(value: ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null) {
+  set client(value: ApolloClient<NormalizedCacheObject> | null) {
     this.#client = value;
     this.dispatchEvent(new CustomEvent('client-changed', { detail: { value, client: value } }));
     for (const instance of this.#instances)
@@ -133,8 +139,8 @@ export class ApolloClientElement extends HTMLElement {
 
   set typePolicies(typePolicies: TypePolicies | undefined) {
     this.#typePolicies = typePolicies;
-    if (typePolicies)
-      this.client?.cache?.policies?.addTypePolicies(typePolicies);
+    if (typePolicies && this.client && isInMemoryCache(this.client?.cache))
+      this.client.cache.policies.addTypePolicies(typePolicies);
   }
 
   /**
@@ -183,8 +189,7 @@ export class ApolloClientElement extends HTMLElement {
     const { typePolicies, validateVariables } = this;
     const { uri } = this;
     const { createApolloClient } = await import('@apollo-elements/lib/create-apollo-client');
-    this.client =
-      createApolloClient({ uri, typePolicies, validateVariables }) as ApolloClientElement['client'];
+    this.client = createApolloClient({ uri, typePolicies, validateVariables });
     return this.client;
   }
 
