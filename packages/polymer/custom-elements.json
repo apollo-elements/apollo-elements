@@ -12,12 +12,12 @@
         },
         {
           "name": "refetchQueries",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
           "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "called",
-          "description": "Whether the mutation has been fired",
+          "description": "Whether the mutation was called",
           "type": "boolean",
           "default": "false"
         },
@@ -49,12 +49,18 @@
         },
         {
           "name": "documentType",
-          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
           "default": "\"mutation\""
         },
         {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
+          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
+        },
+        {
           "name": "data",
-          "description": "Latest mutation",
+          "description": "Latest mutation data",
           "type": "Data<D> | null"
         },
         {
@@ -81,14 +87,8 @@
         },
         {
           "name": "context",
-          "description": "Context to be passed to link execution chain.",
+          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
@@ -141,12 +141,12 @@
         },
         {
           "name": "fetchPolicy",
-          "description": "Specifies the FetchPolicy to be used for this query.",
+          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
           "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "partial",
-          "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy",
+          "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
           "type": "boolean | undefined"
         },
         {
@@ -176,12 +176,12 @@
         },
         {
           "name": "observableQuery",
-          "description": "The Apollo ObservableQuery watching this element's query.",
+          "description": "The Apollo `ObservableQuery` watching this element's query.",
           "type": "ObservableQuery<Data<D>, Variables<D, V>> | undefined"
         },
         {
           "name": "options",
-          "description": "Exposes the [`ObservableQuery#setOptions`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.setOptions) method.",
+          "description": "Set to reobserve the `ObservableQuery`",
           "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null"
         },
         {
@@ -201,23 +201,29 @@
         },
         {
           "name": "errorPolicy",
-          "description": "Specifies the ErrorPolicy to be used for this query.",
+          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
           "type": "ErrorPolicy",
           "default": "\"none\""
         },
         {
           "name": "documentType",
-          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
           "default": "\"query\""
         },
         {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
+          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
+        },
+        {
           "name": "data",
-          "description": "Latest query data.",
+          "description": "The latest query data.",
           "type": "Data<D> | null"
         },
         {
           "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
           "type": "Variables<D, V> | null"
         },
         {
@@ -237,14 +243,8 @@
         },
         {
           "name": "context",
-          "description": "Context to be passed to link execution chain.",
+          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",
@@ -328,6 +328,7 @@
         },
         {
           "name": "shouldResubscribe",
+          "description": "Determines if your subscription should be unsubscribed and subscribed again.",
           "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined",
           "default": "false"
         },
@@ -339,8 +340,14 @@
         },
         {
           "name": "documentType",
-          "type": "\"query\" | \"mutation\" | \"subscription\"",
+          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
           "default": "\"subscription\""
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null",
+          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "data",
@@ -369,14 +376,8 @@
         },
         {
           "name": "context",
-          "description": "Context to be passed to link execution chain.",
+          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
           "name": "document",

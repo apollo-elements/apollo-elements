@@ -23,6 +23,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
+    "analyze": "echo 'No analyze step for hybrids'",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",

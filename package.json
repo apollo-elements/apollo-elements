@@ -33,7 +33,7 @@
     "docs:analyze": "node --input-type module -e \"await import('./rocket-plugins/copy-manifests.mjs').then(m => m.generateManifests())\"",
     "docs:rollup": "rollup -c rollup.config.docs.js",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
-    "docs:copy": "cpx 'docs/_assets/framework-logos/*.svg' _site/_merged_assets/framework-logos",
+    "docs:copy": "cpx 'docs/_assets/**/*.{svg,png,jpg}' _site/_merged_assets/",
     "lint": "run-s lint:*",
     "lint:clean": "rimraf packages/gluon/declaration.d.ts",
     "lint:eslint": "eslint .",

@@ -23,6 +23,7 @@
     "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
+    "analyze": "echo 'No analyze step for docs'",
     "start": "tsc -w --noEmit"
   },
   "repository": {
