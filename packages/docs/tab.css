@@ -5,3 +5,8 @@
 :host([selected]) {
   display: block;
 }
+
+code-copy {
+  display: flex;
+  flex: 1;
+}
