@@ -64,7 +64,7 @@
               "kind": "field",
               "name": "client",
               "type": {
-                "type": "ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache } | null"
+                "type": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "Reference to the `ApolloClient` instance."
             },
@@ -101,7 +101,7 @@
               "return": {
                 "summary": "A simple ApolloClient instance",
                 "type": {
-                  "type": "Promise<ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache }>"
+                  "type": "Promise<ApolloClient<NormalizedCacheObject>>"
                 }
               }
             }
