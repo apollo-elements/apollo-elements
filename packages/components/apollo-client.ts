@@ -19,7 +19,7 @@ template.innerHTML = /* html */`
 const DOCUMENT_TYPES = ['document', 'query', 'mutation', 'subscription'];
 
 function isInMemoryCache(
-  cache: ApolloClient<NormalizedCacheObject>['cache']
+  cache?: ApolloClient<NormalizedCacheObject>['cache']
 ): cache is InMemoryCache {
   return !!cache && ('policies' in cache);
 }

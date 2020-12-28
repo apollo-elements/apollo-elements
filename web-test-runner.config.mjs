@@ -4,11 +4,9 @@ import { fromRollup } from '@web/dev-server-rollup';
 
 import _commonjs from '@rollup/plugin-commonjs';
 import _graphql from '@apollo-elements/rollup-plugin-graphql';
-import _nodeResolve from '@rollup/plugin-node-resolve';
 
 const graphql = fromRollup(_graphql);
 const commonjs = fromRollup(_commonjs);
-const nodeResolve = fromRollup(_nodeResolve);
 
 const cjsIncludes = [
   '**/fast-json-stable-stringify/index.js',

@@ -74,8 +74,13 @@ const config = {
       { // NB: Remove on next major rocket ver
         name: 'hack-root-dir',
         transform(context) {
-          if (process.env.ELEVENTY_ENV !== 'production' && context.response.is('html'))
-            return { body: context.body.replace(/_site-dev/g, '').replace(/(href|src)="\/\//g, '$1="/') };
+          if (process.env.ELEVENTY_ENV !== 'production' && context.response.is('html')) {
+            return {
+              body: context.body
+                .replace(/_site-dev/g, '')
+                .replace(/(href|src)="\/\//g, '$1="/'),
+            };
+          }
         },
       },
       litcss(),
@@ -144,7 +149,7 @@ const config = {
     /* start auto-import web components */
     function importSpecifier(tagName) {
       return isProd ?
-        '@apollo-elements/docs/components.js'
+        '@apollo-elements/docs/components'
       : `@apollo-elements/docs/${tagName}`;
     }
 
@@ -176,7 +181,7 @@ const config = {
     rollup(config) {
       config.plugins = [
         _litcss(),
-        _nodeResolve(nodeResolve),
+        _nodeResolve(),
         esbuild({
           tsconfig: './packages/docs/tsconfig.json',
           include: 'packages/docs/*',

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const PACKAGES = new Map(Object.entries({
   lit: { id: 'lit', label: 'LitElement', iconHref: '/_merged_assets/library-logos/lit.svg', synonyms: ['lit-apollo'] },
   fast: { id: 'fast', label: 'FAST', iconHref: '/_merged_assets/library-logos/fast.svg' },
@@ -17,6 +18,7 @@ const PACKAGE_MANAGERS = new Map(Object.entries({
   yarn: { id: 'yarn', label: 'Yarn', iconHref: '/_merged_assets/pm-logos/yarn.svg' },
   pnpm: { id: 'pnpm', label: 'PNPM', iconHref: '/_merged_assets/pm-logos/pnpm.svg' },
 }));
+/* eslint-enable max-len */
 
 function getCollection(tab) {
   if (PACKAGES.has(tab)) return PACKAGES;
