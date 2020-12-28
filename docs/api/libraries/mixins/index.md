@@ -4,7 +4,7 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 
 ## Installation
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm i -S @apollo-elements/mixins

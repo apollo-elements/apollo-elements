@@ -16,10 +16,10 @@ pre[class*="language-"] {
 }
 
 code-tabs[collection="libraries"] {
-  --x-tabs-min-height: 100px;
+  --code-tabs-min-height: 100px;
 }
 
 code-tabs[collection="package-managers"] {
-  --x-tabs-icon-height: 18px;
-  --x-code-justify-tabs: end;
+  --code-tabs-icon-height: 18px;
+  --code-tabs-justify-tabs: end;
 }

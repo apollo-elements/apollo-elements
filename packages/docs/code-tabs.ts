@@ -1,69 +1,197 @@
-import { XTabs, XTab, Tab } from './x-tabs';
-import { customElement, html, PropertyValues } from 'lit-element';
+import { Item, SelectMixin } from '@pwrs/mixins/select/select-mixin';
+import {
+  LitElement,
+  customElement,
+  html,
+  TemplateResult,
+  PropertyValues,
+  property,
+  internalProperty,
+  queryAll,
+} from 'lit-element';
 
-import './code-copy';
+import { ifDefined } from "lit-html/directives/if-defined";
 
-const PACKAGES = new Map<string, Tab>(Object.entries<Tab>({
-  lit:      { id: 'lit', label:'LitElement', iconHref: new URL('./library-logos/lit.svg', import.meta.url).href, synonyms: ['lit-apollo'] },
-  fast:     { id: 'fast', label:'FAST',       iconHref: new URL('./library-logos/fast.svg', import.meta.url).href },
-  gluon:    { id: 'gluon', label:'Gluon',      iconHref: new URL('./library-logos/html5.svg', import.meta.url).href },
-  haunted:  { id: 'haunted', label:'Haunted',    iconHref: new URL('./library-logos/haunted.svg', import.meta.url).href },
-  hybrids:  { id: 'hybrids', label:'Hybrids',    iconHref: new URL('./library-logos/hybrids.svg', import.meta.url).href },
-  vanilla:  { id: 'vanilla', label:'Vanilla',    iconHref: new URL('./library-logos/html5.svg', import.meta.url).href, synonyms: ['mixins', 'html'] },
-  polymer:  { id: 'polymer', label:'Polymer',    iconHref: new URL('./library-logos/polymer.svg', import.meta.url).href },
-}));
+import ButtonStyles from './button.css';
+import TabsStyles from './tabs.css';
+import TabStyles from './tab.css';
 
-PACKAGES.set('lit-apollo', PACKAGES.get('lit'))
-PACKAGES.set('mixins', PACKAGES.get('vanilla'))
-PACKAGES.set('html', PACKAGES.get('vanilla'))
+declare module '@pwrs/mixins/select/select-mixin' {
+  export interface Item {
+    dataset: DOMStringMap & Tab;
+  }
+}
 
-const PACKAGE_MANAGERS = new Map<string, Tab>(Object.entries<Tab>({
-  npm:  { id: 'npm', label:'NPM',    iconHref: new URL('./pm-logos/npm.svg', import.meta.url).href, synonyms: ['NPM'] },
-  yarn: { id: 'yarn', label:'Yarn',   iconHref: new URL('./pm-logos/yarn.svg', import.meta.url).href },
-  pnpm: { id: 'pnpm', label:'PNPM',   iconHref: new URL('./pm-logos/pnpm.svg', import.meta.url).href },
-}));
+export interface Tab {
+  id: string;
+  label: string;
+  iconHref?: string;
+  iconTemplate?: string;
+  synonyms?: string[];
+}
 
-const COLLECTIONS = new Map<string, Map<string, Tab>>(Object.entries({
-  libraries: PACKAGES,
-  'package-managers': PACKAGE_MANAGERS,
-}));
+const INSTANCES = new Set<CodeTabs>();
 
-// TODO: XTabs should have enough to make this unneeded, i.e define XTabs as <code-tabs collection="libraries">, with a 'copy' attr
 @customElement('code-tabs')
-export class CodeTabs extends XTabs {
+export class CodeTabs extends SelectMixin(LitElement) {
   static readonly allowedChildren = ['code-tab'];
 
+  static readonly styles = [ButtonStyles, TabsStyles];
+
+  @internalProperty() labels = new Map<string, Tab>();
+
+  @queryAll('[role="tab"]') tabs: NodeListOf<HTMLButtonElement>;
+
+  @property({ attribute: 'default-tab' }) defaultTab: string;
+
+  @property() collection: string;
+
+  constructor() {
+    super();
+    this.onClickTab = this.onClickTab.bind(this);
+  }
+
+  protected initialSelectedIndex = 0;
+
   connectedCallback() {
-    this.defaultTab =
-        this.collection === 'libraries' ? 'lit'
-      : this.collection === 'package-managers' ? 'npm'
-      : undefined;
     super.connectedCallback();
+    this.setAttribute('role', 'tablist');
+    this.initialSelectedIndex = parseInt(this.getAttribute('selected-index'));
+    if (this.collection)
+      this.initCollection()
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback?.();
+    INSTANCES.delete(this);
+  }
+
+  async firstUpdated(changed: PropertyValues<this>): Promise<void> {
+    this.initLabels();
+    super.firstUpdated(changed);
+    this.selectIndex(await this.getInitialSelectedIndex());
+    this.onSelect();
+  }
+
+  updated(changed: PropertyValues<this>): void {
+    super.updated(changed);
+    if (changed.has('collection'))
+      this.initCollection();
+  }
+
+  protected async getInitialSelectedIndex() {
+    await this.updateComplete;
+    const stored = localStorage.getItem(`code-tabs-selected-${this.collection}`);
+    const index =
+        stored ? this.items.findIndex(x => x.dataset.id === stored)
+      : this.defaultTab ? this.items.findIndex(x => x.dataset.id === this.defaultTab)
+      : this.initialSelectedIndex
+    return index;
+  }
+
+  private initCollection() {
+    if (this.collection) {
+      INSTANCES.add(this);
+    } else {
+      INSTANCES.delete(this);
+    }
+  }
+
+  render(): TemplateResult {
+    const items = this.items ?? [];
+    return html`
+      <div id="tabs" role="tablist">
+        ${items.map(({ dataset: { id, iconHref, label } }, i) => html`
+        <button role="tab" data-id="${id}" @click="${this.onClickTab}" ?selected="${this.selectedIndex === i}">
+          <img src="${ifDefined(iconHref)}" role="presentation"/>
+          ${label}
+        </button>
+        `)}
+      </div>
+
+      <div id="tabpanel" role="tabpanel">
+        <slot></slot>
+        <div id="default" ?hidden="${this.selectedItem}">
+          <slot name="default"></slot>
+        </div>
+      </div>
+    `;
+  }
+
+  public selectId(idToSelect: string) {
+    const synonyms = this.getLabel(idToSelect)?.synonyms ?? [];
+    const index =
+      this.items.findIndex(({ dataset: { id }}) => id === idToSelect || synonyms.includes(id))
+    if (index >= 0 && this.selectedIndex !== index)
+      this.selectIndex(index)
+  }
+
+  onSelect() {
+    for (const tab of this.tabs)
+      tab.removeAttribute('selected');
+    const tab = this.tabs[this.selectedIndex as number];
+    if (!tab) return;
+    tab.setAttribute('selected', '');
+    const { left } = tab.getBoundingClientRect();
+    this.shadowRoot.getElementById('tabs')
+      .scrollTo({ behavior: 'smooth', left });
+  }
+
+  private onClickTab(event: Event & { target: HTMLButtonElement }) {
+    const tabs = [...this.tabs]
+    let tab = event.target;
+    while (!tabs.includes(tab))
+      tab = tab.parentElement as HTMLButtonElement;
+    const index = [...this.tabs].indexOf(tab);
+    this.selectIndex(index);
+    if (this.collection) {
+      const [{ dataset: { id = this.defaultTab } }] = [this.selectedItem].flat();
+      localStorage.setItem(`code-tabs-selected-${this.collection}`, id);
+      INSTANCES.forEach(x => x.selectId(id))
+    }
+    this.fire('tab-selected', event.target);
+  }
+
+  private getLabel(tag: string) {
+    return this.labels.get(tag) ?? null;
+  }
+
+  protected initLabels(event?: Event): void {
+    if (!!event) this.labels.clear();
+    this.items
+      .forEach(({ dataset: { id, label, iconHref, ...dataset } }: HTMLElement) => {
+        const synonyms = (dataset.synonyms ?? '')
+          .split(',')
+          .map(x => x.trim());
+
+        const pkg: Tab = { id, label ,iconHref, synonyms  };
+
+        this.labels.set(pkg.id, pkg);
+        for (const synonym of synonyms)
+          this.labels.set(synonym, pkg)
+      });
   }
 }
 
 @customElement('code-tab')
-export class CodeTab extends XTab {
+export class CodeTab extends LitElement {
+  static readonly styles = [TabStyles];
+
+  @property() tab: string;
+
+  @property({ type: Boolean, attribute: 'no-copy' }) noCopy = false;
 
   render() {
-    return html`
-      <code-copy>
+    if (this.noCopy) {
+      return html`
         <slot></slot>
-      </code-copy>
-    `;
-  }
-
-  updated(changed: PropertyValues<this>): void {
-    const { tab } = this;
-    const { collection } = this.closest<CodeTabs>('code-tabs');
-    if (!collection || !tab) return;
-    const col = COLLECTIONS.get(collection);
-    if (!col) return;
-    const { label, iconHref, synonyms } = col.get(this.tab);
-    this.setAttribute('data-id', this.tab);
-    this.setAttribute('data-label', label);
-    this.setAttribute('data-icon-href', iconHref);
-    if (synonyms)
-      this.setAttribute('data-synonyms', synonyms.join(''));
+      `;
+    } else {
+      return html`
+        <code-copy>
+          <slot></slot>
+        </code-copy>
+      `;
+    }
   }
 }

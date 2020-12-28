@@ -35,7 +35,7 @@ query CreateNetworkPageQuery {
 
 Then we'll define a component `all-sites` which fetches and displays the list of sites.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
 
@@ -393,7 +393,7 @@ This mutation requires an input which is a list of site IDs. In order to provide
 
 Then, when the user is ready to create the Network, she clicks the `Create` button, and the component issues the mutation over the network with variables based on the currently selected sites.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
 

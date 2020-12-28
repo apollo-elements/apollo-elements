@@ -41,7 +41,7 @@ query ThemeToggle {
 
 Let's define a custom element that displays a button to toggle the theme.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -231,7 +231,7 @@ const client = new ApolloClient({
 
 or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoliciesmixin) to lazy-load the type policies when the component connects:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
@@ -320,7 +320,7 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
 
 All that's left is to define the `toggleTheme` function to actually update the cache:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   toggleTheme() {
@@ -402,7 +402,7 @@ export const typePolicies: TypePolicy = {
 
 Last, we'll refactor the `toggleTheme` method to directly update the value of `themeVar`. We do that by calling `themeVar` with a value. Apollo Client will ensure that all queries that depend on `theme` will get the new value every time we call.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   toggleTheme() {
@@ -456,7 +456,7 @@ Now in order to update the theme, we need to perform two steps:
 1. Change the stored value
 2. Invalidate the Apollo cache's value for theme on the root query using the `evict` method on `InMemoryCache`.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   toggleTheme() {

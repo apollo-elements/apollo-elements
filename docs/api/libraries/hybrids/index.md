@@ -9,7 +9,7 @@ Hybrids is a unique web components framework which combines aspects of functiona
 
 ## Installation
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm i -S @apollo-elements/hybrids

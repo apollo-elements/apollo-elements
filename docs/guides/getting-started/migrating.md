@@ -51,7 +51,7 @@ export const DetailsTypePolicies: TypePolicies = {
 
 Use `TypePoliciesMixin` to declare a component's type policies by setting the `typePolicies` property on the component.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixins } from '@apollo-elements/mixins';

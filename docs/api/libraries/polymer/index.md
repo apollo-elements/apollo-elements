@@ -9,7 +9,7 @@ Polymer is the <abbr title="original gangsta">OG</abbr> web components library, 
 
 ## Installation
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm i -S @apollo-elements/polymer

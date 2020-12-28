@@ -5,7 +5,7 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 
 Utility components that help you factor your graphql-based app.
 
-<code-tabs collection="package-managers">
+<code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
 npm i -S @apollo-elements/components

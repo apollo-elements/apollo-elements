@@ -28,6 +28,7 @@ import { linkTag } from './rocket-plugins/liquid/link.mjs';
 import { customElementsManifest } from './rocket-plugins/custom-elements-manifest.mjs';
 import { generateManifests } from './rocket-plugins/copy-manifests.mjs';
 import { fixNoscript } from './rocket-plugins/fix-noscript.mjs';
+import { wrapTab } from './rocket-plugins/code-tabs.mjs';
 
 const graphql = fromRollup(_graphql);
 const litcss = fromRollup(_litcss);
@@ -38,6 +39,11 @@ const litcss = fromRollup(_litcss);
 
 const isProd = process.env.ELEVENTY_ENV === 'production';
 
+const nodeResolve = {
+  exportConditions: ['default', 'esbuild', 'import'],
+  extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
+};
+
 /** @type {import('@d4kmor/cli/src/types').RocketCliOptions} */
 const config = {
   themes: [
@@ -47,13 +53,31 @@ const config = {
   ],
 
   devServer: {
-    nodeResolve: true,
+    nodeResolve,
     port: 9048,
     mimeTypes: {
       '**/*.graphql': 'js',
       '**/packages/docs/*.css': 'js',
     },
+    middleware: [
+      // NB: Remove on next major rocket ver
+      function rewriteRoot(context, next) {
+        if (
+          context.url.startsWith('/') &&
+          !context.url.match(/node_modules|__web-dev-server__|packages\/docs/)
+        )
+          context.url = `_site-dev/${context.url}`;
+        return next();
+      },
+    ],
     plugins: [
+      { // NB: Remove on next major rocket ver
+        name: 'hack-root-dir',
+        transform(context) {
+          if (process.env.ELEVENTY_ENV !== 'production' && context.response.is('html'))
+            return { body: context.body.replace(/_site-dev/g, '').replace(/(href|src)="\/\//g, '$1="/') };
+        },
+      },
       litcss(),
       graphql(),
       esbuildPlugin({ ts: true }),
@@ -129,7 +153,6 @@ const config = {
       specifiers: {
         'code-copy': importSpecifier,
         'code-tabs': importSpecifier,
-        'x-tabs': importSpecifier,
         'wcd-snippet': importSpecifier,
         'type-doc': importSpecifier,
         'codesandbox-button': '@power-elements/codesandbox-button',
@@ -153,7 +176,7 @@ const config = {
     rollup(config) {
       config.plugins = [
         _litcss(),
-        _nodeResolve(),
+        _nodeResolve(nodeResolve),
         esbuild({
           tsconfig: './packages/docs/tsconfig.json',
           include: 'packages/docs/*',
@@ -174,8 +197,8 @@ const config = {
   setupUnifiedPlugins: [
     setupWrap({
       copy: () => ({ tagName: 'code-copy' }),
-      tab: ([tab]) => ({ tagName: 'code-tab', attributes: { tab } }),
       wcd: ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
+      tab: ([tab]) => wrapTab(tab),
     }),
   ],
 

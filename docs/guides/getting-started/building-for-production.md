@@ -52,7 +52,7 @@ export default {
 
 These plugins let you import CSS tagged-template literals and GraphQL files as JavaScript objects. With them, you can do fun tricks in your source modules:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import HelloQuery from './Hello.query.graphql';

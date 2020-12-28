@@ -19,7 +19,10 @@ const cjsIncludes = [
 
 /** @type {import('@web/test-runner').TestRunnerConfig} */
 const config = {
-  nodeResolve: true,
+  nodeResolve: {
+    exportConditions: ['default', 'esbuild', 'import'],
+    extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
+  },
 
   rootDir: '../..',
 
@@ -61,10 +64,6 @@ const config = {
     graphql(),
     commonjs({ include: cjsIncludes }),
     esbuildPlugin({ ts: true }),
-    nodeResolve({
-      exportConditions: ['default', 'esbuild', 'import'],
-      extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
-    }),
   ],
 };
 

@@ -74,14 +74,14 @@
 }
 
 #demos {
-  --x-tabs-min-height: 505px;
+  --code-tabs-min-height: 505px;
 }
 
 #demos #default-tab {
   display: grid;
   grid-template-columns: min-content max-content;
   justify-content: center;
-  height: var(--x-tabs-min-height);
+  height: var(--code-tabs-min-height);
   gap: 20px;
   align-items: center;
 }
@@ -96,8 +96,8 @@
   font-size: 48px;
 }
 
-#demos x-tab[selected] {
-  height: var(--x-tabs-min-height, 505px);
+#demos code-tab[selected] {
+  height: var(--code-tabs-min-height, 505px);
   display: flex;
   align-items: center;
   justify-content: center;

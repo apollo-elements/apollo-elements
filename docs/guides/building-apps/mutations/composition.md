@@ -26,7 +26,7 @@ mutation UpdateProfileMutation($input: UpdateProfileInput) {
 
 To make it easier to write declarative mutations, you can import the `<apollo-mutation>` element from `@apollo-elements/components`, like in this example, which combines a query and a mutation into a single component:
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
 

@@ -58,7 +58,7 @@ export const AdminTypePolicies = {
 
 import `TypePoliciesMixin` from the mixins package to easily register type policies on a component. For example, in `src/components/profile/profile.ts` you can use `UserTypePolicies`
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
@@ -178,7 +178,7 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
 
 And you can lazy-load that same code for use in `src/components/admin-profile/admin-profile.ts`.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';

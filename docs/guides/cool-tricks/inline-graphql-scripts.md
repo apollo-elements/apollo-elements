@@ -8,7 +8,7 @@ GraphQL script element to your connected element.
 
 Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
-<code-tabs collection="libraries">
+<code-tabs collection="libraries" default-tab="lit">
 
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
