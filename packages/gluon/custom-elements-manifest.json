@@ -1547,7 +1547,7 @@
             },
             {
               "kind": "field",
-              "name": "FetchPolicy",
+              "name": "fetchPolicy",
               "description": "Specifies the FetchPolicy to be used for this subscription.",
               "type": {
                 "type": "FetchPolicy"
