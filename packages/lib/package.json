@@ -7,25 +7,18 @@
   "type": "module",
   "typings": "index.d.ts",
   "exports": {
-    ".": "./index.js",
-    "./cuid": "./cuid.js",
-    "./cuid.js": "./cuid.js",
-    "./create-apollo-client": "./create-apollo-client.js",
-    "./create-apollo-client.js": "./create-apollo-client.js",
-    "./descriptors": "./descriptors.js",
-    "./descriptors.js": "./descriptors.js",
-    "./has-all-variables": "./has-all-variables.js",
-    "./has-all-variables.js": "./has-all-variables.js",
-    "./helpers": "./helpers.js",
-    "./helpers.js": "./helpers.js",
-    "./index": "./index.js",
-    "./index.js": "./index.js",
-    "./is-client-operation": "./is-client-operation.js",
-    "./is-client-operation.js": "./is-client-operation.js",
-    "./is-valid-gql": "./is-valid-gql.js",
-    "./is-valid-gql.js": "./is-valid-gql.js",
-    "./prototypes": "./prototypes.js",
-    "./prototypes.js": "./prototypes.js"
+    ".": {
+      "esbuild": "./index.ts",
+      "default": "./index.js"
+    },
+    "./*": {
+      "esbuild": "./*.ts",
+      "default": "./*.js"
+    },
+    "./*.js": {
+      "esbuild": "./*.ts",
+      "default": "./*.js"
+    }
   },
   "scripts": {
     "prepublishOnly": "tsc -b .",

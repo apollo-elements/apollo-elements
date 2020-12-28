@@ -7,15 +7,18 @@
   "type": "module",
   "typings": "index.d.ts",
   "exports": {
-    ".": "./index.js",
-    "./index": "./index.js",
-    "./index.js": "./index.js",
-    "./useMutation": "./useMutation.js",
-    "./useMutation.js": "./useMutation.js",
-    "./useQuery": "./useQuery.js",
-    "./useQuery.js": "./useQuery.js",
-    "./useSubscription": "./useSubscription.js",
-    "./useSubscription.js": "./useSubscription.js"
+    ".": {
+      "esbuild": "./index.ts",
+      "default": "./index.js"
+    },
+    "./*": {
+      "esbuild": "./*.ts",
+      "default": "./*.js"
+    },
+    "./*.js": {
+      "esbuild": "./*.ts",
+      "default": "./*.js"
+    }
   },
   "scripts": {
     "prepublishOnly": "tsc -b .",
