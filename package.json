@@ -7,8 +7,8 @@
   "scripts": {
     "build": "run-s build:*",
     "build:codegen": "graphql-codegen",
-    "build:packages": "lerna run build",
-    "build:analyze": "lerna run analyze",
+    "build:packages": "yarn workspaces run build",
+    "build:analyze": "yarn workspaces run analyze",
     "clean": "run-s clean:*",
     "clean:packages": "rimraf 'packages/!(create)/**/!(rollup.config).{js,js.map,d.ts}'",
     "clean:create-app": "rimraf 'packages/create/*.{js,js.map,d.ts}'",
@@ -17,7 +17,7 @@
     "deploy:preclean": "yarn clean",
     "deploy:tags": "git pull --tags",
     "deploy:lint": "yarn lint",
-    "deploy:build": "lerna run prepublishOnly",
+    "deploy:build": "yarn workspaces run prepublishOnly",
     "deploy:clean": "yarn clean",
     "deploy:lerna": "lerna publish --conventional-graduate",
     "deploy:postclean": "yarn clean",
@@ -25,7 +25,7 @@
     "prerelease:preclean": "yarn clean",
     "prerelease:tags": "git pull --tags",
     "prerelease:lint": "yarn lint",
-    "prerelease:build": "lerna run prepublishOnly",
+    "prerelease:build": "yarn workspaces run prepublishOnly",
     "prerelease:clean": "yarn clean",
     "prerelease:release": "lerna publish --conventional-prerelease --pre-dist-tag next",
     "prerelease:postclean": "yarn clean",
@@ -37,12 +37,12 @@
     "lint": "run-s lint:*",
     "lint:clean": "rimraf packages/gluon/declaration.d.ts",
     "lint:eslint": "eslint .",
-    "lint:types": "lerna run lint:types",
+    "lint:types": "yarn workspaces run lint:types",
     "postinstall": "patch-package",
     "start": "run-p start:*",
     "start:clean": "yarn clean",
     "start:codegen": "graphql-codegen --watch",
-    "start:tsc": "lerna run start --stream --parallel",
+    "start:tsc": "yarn workspaces run start --stream --parallel",
     "start:docs": "rocket start",
     "test": "wtr --coverage",
     "watch:test": "wtr --watch",
@@ -51,15 +51,9 @@
     "watch:types": "yarn workspaces run tsc --watch --noEmit"
   },
   "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "git add"
-    ]
+    "*.ts": ["eslint --fix", "git add"]
   },
-  "workspaces": [
-    "packages/*",
-    "docs"
-  ],
+  "workspaces": ["packages/*", "docs"],
   "devDependencies": {
     "@11ty/eleventy-plugin-inclusive-language": "^1.0.0",
     "@11ty/eleventy-plugin-syntaxhighlight": "^3.0.4",
