@@ -150,6 +150,13 @@ const config = {
     eleventyConfig.addFilter('cloudinary', cloudinary);
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);
+    eleventyConfig.addFilter('icon', icon => {
+      const path = `/_assets/icons/${icon}.svg`;
+      const asset = eleventyConfig.getFilter('asset');
+      const toAbsPath = eleventyConfig.getFilter('toAbsPath');
+      const inlineFilePath = eleventyConfig.getFilter('inlineFilePath');
+      return inlineFilePath(toAbsPath(asset(path)));
+    });
     /* end blog */
 
     /* start auto-import web components */

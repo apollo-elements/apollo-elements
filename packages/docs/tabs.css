@@ -6,7 +6,7 @@ img {
 #tabs {
   display: flex;
   background: var(--code-tabs-background, hsla(0 100% 100% / 0.9));
-  overflow-x: scroll;
+  overflow-x: auto;
   justify-content: var(--code-tabs-justify-tabs, start);
 }
 
