@@ -1,34 +1,43 @@
 /* eslint-disable max-len */
-const PACKAGES = new Map(Object.entries({
-  lit: { id: 'lit', label: 'LitElement', iconHref: '/_merged_assets/library-logos/lit.svg', synonyms: ['lit-apollo'] },
-  fast: { id: 'fast', label: 'FAST', iconHref: '/_merged_assets/library-logos/fast.svg' },
-  gluon: { id: 'gluon', label: 'Gluon', iconHref: '/_merged_assets/library-logos/html5.svg' },
-  haunted: { id: 'haunted', label: 'Haunted', iconHref: '/_merged_assets/library-logos/haunted.svg' },
-  hybrids: { id: 'hybrids', label: 'Hybrids', iconHref: '/_merged_assets/library-logos/hybrids.svg' },
-  vanilla: { id: 'vanilla', label: 'Vanilla', iconHref: '/_merged_assets/library-logos/html5.svg', synonyms: ['mixins', 'html'] },
-  polymer: { id: 'polymer', label: 'Polymer', iconHref: '/_merged_assets/library-logos/polymer.svg' },
-}));
+const identify = x => [
+  [x.id, x],
+  ...!Array.isArray(x.synonyms) ? [] : x.synonyms.map(syn => [syn, x])
+];
 
-PACKAGES.set('lit-apollo', PACKAGES.get('lit'));
-PACKAGES.set('mixins', PACKAGES.get('vanilla'));
-PACKAGES.set('html', PACKAGES.get('vanilla'));
+const PACKAGES = new Map([
+  { id: 'lit', label: 'LitElement', iconHref: '/_merged_assets/library-logos/lit.svg', synonyms: ['lit-apollo'] },
+  { id: 'fast', label: 'FAST', iconHref: '/_merged_assets/library-logos/fast.svg' },
+  { id: 'gluon', label: 'Gluon', iconHref: '/_merged_assets/library-logos/html5.svg' },
+  { id: 'haunted', label: 'Haunted', iconHref: '/_merged_assets/library-logos/haunted.svg' },
+  { id: 'hybrids', label: 'Hybrids', iconHref: '/_merged_assets/library-logos/hybrids.svg' },
+  { id: 'vanilla', label: 'Vanilla', iconHref: '/_merged_assets/library-logos/html5.svg', synonyms: ['mixins', 'html'] },
+  { id: 'polymer', label: 'Polymer', iconHref: '/_merged_assets/library-logos/polymer.svg' },
+].flatMap(identify));
 
-const PACKAGE_MANAGERS = new Map(Object.entries({
-  npm: { id: 'npm', label: 'NPM', iconHref: '/_merged_assets/pm-logos/npm.svg', synonyms: [] },
-  yarn: { id: 'yarn', label: 'Yarn', iconHref: '/_merged_assets/pm-logos/yarn.svg' },
-  pnpm: { id: 'pnpm', label: 'PNPM', iconHref: '/_merged_assets/pm-logos/pnpm.svg' },
-}));
+const PACKAGE_MANAGERS = new Map([
+  { id: 'npm', label: 'NPM', iconHref: '/_merged_assets/pm-logos/npm.svg', synonyms: [] },
+  { id: 'yarn', label: 'Yarn', iconHref: '/_merged_assets/pm-logos/yarn.svg' },
+  { id: 'pnpm', label: 'PNPM', iconHref: '/_merged_assets/pm-logos/pnpm.svg' },
+].flatMap(identify));
+
+const FRAMEWORKS = new Map([
+  { id: 'angular', label: 'Angular', iconHref: '/_merged_assets/framework-logos/angular.svg' },
+  { id: 'preact', label: 'Preact', iconHref: '/_merged_assets/framework-logos/preact.svg' },
+  { id: 'react', label: 'React', iconHref: '/_merged_assets/framework-logos/react.svg' },
+  { id: 'svelte', label: 'Svelte', iconHref: '/_merged_assets/framework-logos/svelte.svg' },
+  { id: 'vue', label: 'Vue', iconHref: '/_merged_assets/framework-logos/vue.svg' },
+].flatMap(identify))
 /* eslint-enable max-len */
 
+const COLLECTIONS = [FRAMEWORKS, PACKAGE_MANAGERS, PACKAGES];
+
 function getCollection(tab) {
-  if (PACKAGES.has(tab)) return PACKAGES;
-  else if (PACKAGE_MANAGERS.has(tab)) return PACKAGE_MANAGERS;
-  else return null;
+  return COLLECTIONS.find(x => x.has(tab));
 }
 
 export function wrapTab(tab) {
   const tagName = 'code-tab';
-  const collection = getCollection(tab);
+  const collection = getCollection(tab)
   if (!collection)
     throw new Error(`Unknown collection for ${tab}`);
 

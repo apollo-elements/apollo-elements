@@ -1,5 +1,13 @@
 {% extends 'layout.njk' %}
 
+{% block headContent %}
+  {% if generateSocialImage %}
+    {% set socialMediaImage = generateSocialImage | cloudinary(title=title, description=description, tags=tags) | url %}
+    {% set cover_image = socialMediaImage %}
+  {% endif %}
+  {% include 'partials/head-content.njk' %}
+{% endblock %}
+
 {% block bodyTag %}
   <body layout="with-sidebar">
 {% endblock bodyTag %}

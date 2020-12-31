@@ -26,7 +26,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "../merged_assets/logo.svg",
+      "src": "../_merged_assets/logo.svg",
       "sizes": "any"
     }
   ]

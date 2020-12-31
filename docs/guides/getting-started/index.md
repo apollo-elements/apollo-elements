@@ -4,11 +4,46 @@ description: Build a high-performance GraphQL web app with Apollo Elements
 
 # Getting Started || 10
 
-Apollo Elements comes with an app and component generator.
+<style data-helmet>
+  #apollo-elements-cycle-diagram .entity {
+    letter-spacing: -2.6px;
+    fill: var(--text-color);
+    font-family: Recursive;
+    font-size: 48px;
+    font-variation-settings:
+        "MONO" 1,
+        "CASL" 0.5,
+        "wght" 500,
+        "slnt" -7,
+        "CRSV" 0.5;
+  }
 
-## Generator
+  #apollo-elements-cycle-diagram .arrow { fill: var(--page-background); }
+  #apollo-elements-cycle-diagram .venn { opacity: 0.5; }
+  #apollo-client-venn-region { fill: var(--pink-a200); }
+  #apollo-elements-venn-region { fill: var(--purple-a400); }
+  body[theme="dark"] #apollo-elements-cycle-diagram .venn { opacity: 0.5; }
+  @media (prefers-color-scheme: dark) {
+    #apollo-elements-cycle-diagram .venn { opacity: 0.5; }
+  }
+</style>
 
-Start the generator with this command:
+Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each component in your app reads it's data from the graph with a [query](../building-apps/queries/), and can change the state of the app with [mutations](../building-apps/mutations/) or through one of the [local state](../building-apps/local-state/) techniques.
+
+<figure>
+
+{% include ./cycle.svg | safe %}
+
+<figcaption>
+
+Circular flow chart showing the essential UI loop for Apollo Elements apps: [Queries](../building-apps/queries/) fetch data from the server, render them via component templates to the DOM, where [mutation components](../building-apps/mutations/) fire in response to user events, and update the Apollo cache, which in turn notifies connected query elements.
+
+</figcaption>
+</figure>
+
+## App Generator
+
+Apollo Elements comes with an app and component generator. Start the generator with this command:
 
 <code-tabs collection="package-managers" default-tab="npm">
 

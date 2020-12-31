@@ -1,0 +1,44 @@
+{% extends 'home.njk' %}
+
+{% block headContent %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ '/_assets/blog.css' | asset | url }}">
+{% endblock %}
+
+{% block bodyTag %}
+  <body layout="blog-overview">
+{% endblock bodyTag %}
+
+{% block main %}
+  <main class="markdown-body">
+    {% include 'partials/addTitleHeadline.njk' %}
+    {{ content.html | safe }}
+    <div class="articles">
+      {% for post in posts %}
+        {% if post.data.published %}
+          {% if post.data.generateSocialImage %}
+            {% set cover_image = post.data.generateSocialImage | cloudinary(post.data) | url %}
+          {% else %}
+            {% set cover_image = post.data.cover_image %}
+          {% endif %}
+
+          <article>
+            {% if cover_image %}
+              <a href="{{ post.url | url }}">
+                <img src="{{ cover_image | url }}" alt="">
+              </a>
+            {% endif %}
+
+            <div class="content">
+              <h2>
+                <a href="{{ post.url | url }}">{{ post.data.title }}</a>
+              </h2>
+              <p>{{ post.data.description }}</p>
+              <a class="read" href="{{ post.url | url }}">...read more</a>
+            </div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </main>
+{% endblock main %}

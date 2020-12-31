@@ -88,11 +88,11 @@ type-doc[kind="method"] [slot="name"] {
 
   font-family: Recursive, monospace;
   font-variation-settings:
-    var(--mono, 1),
-    var(--casl, 0),
-    var(--wght, 500),
-    var(--slnt, 0),
-    var(--CRSV, 0.5);
+    "MONO" var(--mono, 1),
+    "CASL" var(--casl, 0),
+    "wght" var(--wght, 500),
+    "slnt" var(--slnt, 0),
+    "CRSV" var(--CRSV, 0.5);
   margin: 0;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
