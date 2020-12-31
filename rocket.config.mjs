@@ -29,6 +29,7 @@ import { customElementsManifest } from './packages/docs/rocket-plugins/custom-el
 import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.mjs';
 import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.mjs';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.mjs';
+import { cloudinary } from './packages/docs/rocket-plugins/cloudinary.mjs';
 
 const graphql = fromRollup(_graphql);
 const litcss = fromRollup(_litcss);
@@ -60,6 +61,10 @@ const config = {
       '**/packages/docs/*.css': 'js',
     },
     middleware: [
+      async (ctx, next) => {
+        await next();
+        ctx.set('Cache-Control', 'max-age=60');
+      },
       // NB: Remove on next major rocket ver
       function rewriteRoot(context, next) {
         if (
@@ -83,7 +88,7 @@ const config = {
           }
         },
       },
-      litcss(),
+      litcss({ include: ['**/packages/docs/*.css'] }),
       graphql(),
       esbuildPlugin({ ts: true }),
     ],
@@ -141,10 +146,11 @@ const config = {
 
     /* end custom-elements-manifest */
 
-    /* start dev.to blog shortcodes */
+    /* start blog */
+    eleventyConfig.addFilter('cloudinary', cloudinary);
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);
-    /* end dev.to blog shortcodes */
+    /* end blog */
 
     /* start auto-import web components */
     function importSpecifier(tagName) {
@@ -171,7 +177,7 @@ const config = {
     // In some cases, 11ty is encoding `<noscript><link>`, in the `<head>`,
     // even though that is legitimate HTML. This transform ensures the final
     // HTML has noscript styles.
-    eleventyConfig.addTransform(fixNoscript);
+    eleventyConfig.addPlugin(fixNoscript);
   },
 
   build: {

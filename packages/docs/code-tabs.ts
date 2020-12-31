@@ -80,6 +80,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
   }
 
   protected async getInitialSelectedIndex() {
+    if (this.querySelector('[slot=default]')) return -1;
     await this.updateComplete;
     const stored = localStorage.getItem(`code-tabs-selected-${this.collection}`);
     const index =

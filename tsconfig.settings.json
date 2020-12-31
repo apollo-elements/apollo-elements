@@ -16,6 +16,7 @@
     "plugins": [
       { "name": "typescript-lit-html-plugin" },
       { "name": "ts-lit-plugin" }
-    ]
+    ],
+    "lib": ["DOM", "es5", "ScriptHost", "es2020"]
   }
 }

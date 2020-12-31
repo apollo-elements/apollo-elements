@@ -55,3 +55,7 @@ table pre[class*="language-"] {
   background: none;
   display: inline-block;
 }
+
+.token.interpolation {
+  color: var(--markdown-syntax-color);
+}
