@@ -8,7 +8,7 @@ tags:
   - custom elements
 published: true
 generateSocialImage: true
-date: Created
+date: 2021-01-01
 updated: Last Modified
 ---
 
@@ -114,7 +114,119 @@ In this code snippet, the `<posts-list>` component renders a list of post summar
 
 And since that internal DOM is so strongly encapsulated, our colleagues on the Angular team can import it into their app with confidence that indeed nothing will go wrong, even if down the line we change the internal structure of the component.
 
-You can write complex single-page apps like this, each component managing it's own internal state while using a templating system like `lit-html` or an old-school JavaScript framework to hook up properties and events, and the Apollo cache for [managing client-side state](https://apolloelements.dev/guides/building-apps/local-state/) more generally.
+<code-tabs collection="frameworks" default-tab="preact">
+
+```html tab angular
+<label>Posts per page
+  <input type="number" step="10" [(ngModel)]="limit"/>
+</label>
+
+<label>Sort
+  <select [(ngModel)]="sort">
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+</label>
+
+<posts-list
+    [limit]="limit"
+    [sort]="sort"
+    (like-post)="onLikePost($event)"
+></posts-list>
+```
+
+```tsx tab preact
+function PostContainer() {
+  const [limit, setLimit] = useState(10);
+  const [sort, setSort] = useState('asc');
+  return (
+    <label>Posts per page
+      <input
+          type="number"
+          step="10"
+          value={limit}
+          onInput={e => setLimit(e.target.value)}/>
+    </label>
+
+    <label>Sort
+      <select onInput={e => setSort(e.target.value)}>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </label>
+
+    <posts-list
+        limit={limit}
+        sort={sort}
+        onlike-post={onLikePost}
+    ></posts-list>
+  );
+}
+```
+
+```tsx tab react
+function PostContainer() {
+  const postsListRef = createRef(null);
+  const [limit, setLimit] = useState(10);
+  const [sort, setSort] = useState('asc');
+  useEffect(() => postsListRef.current.addEventListener('like-post', onLikePost));
+  useEffect(() => postsListRef.current.limit = limit, [limit]);
+  useEffect(() => postsListRef.current.sort = sort, [sort]);
+
+  return (
+    <label>Posts per page
+      <input
+          type="number"
+          step="10"
+          value={limit}
+          onInput={e => setLimit(e.target.value)}/>
+    </label>
+
+    <label>Sort
+      <select onInput={e => setSort(e.target.value)}>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </label>
+
+    <posts-list ref={postsListRef}></posts-list>
+  );
+}
+```
+
+```html tab svelte
+<label>Posts per page
+  <input type="number" step="10" bind:value={limit}/>
+</label>
+
+<label>Sort
+  <select bind:value={sort}>
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+</label>
+
+<posts-list limit={limit} sort={sort} on:like-post={onLikePost}></posts-list>
+```
+
+```html tab vue
+<label>Posts per page
+  <input type="number" step="10" v-model="limit"/>
+</label>
+
+<label>Sort
+  <select v-model="sort">
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+</label>
+
+<posts-list limit="limit" sort="sort" @like-post="onLikePost"></posts-list>
+```
+
+</code-tabs>
+
+You can write complex single-page apps with just Apollo Elements. Each component manages it's own internal state while using a templating system like `lit-html` or an old-school JavaScript framework to hook up properties and events, and the Apollo cache for [managing client-side state](https://apolloelements.dev/guides/building-apps/local-state/) more generally.
 
 ## Learn More
 Interested to learn more? Read our [getting started guide](https://apolloelements.dev/guides/) to find out how your team can bring GraphQL to your web app one web component at a time. Or if you've already started, check out the [API docs](https://apolloelements.dev/api/) for the low-down on how components work using your favourite web component library.
