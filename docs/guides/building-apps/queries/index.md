@@ -381,5 +381,3 @@ You can also set the boolean `no-auto-subscribe` attribute to the element instan
 ```
 
 If you want your component to automatically subscribe, but only if its required variables are present, see [Validating Variables](/guides/cool-tricks/validating-variables/).
-
-{% footnotes %}
