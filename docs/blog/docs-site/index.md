@@ -2,7 +2,7 @@
 title: Launching a Stellar Docs Site with Rocket
 published: true
 description: How I brought Apollo Element's documentation into the space age with 11ty and the Rocket meta-framework for web components.
-date: Created
+date: 2020-12-29
 updated: Last Modified
 tags:
   - graphql
