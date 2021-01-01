@@ -59,3 +59,8 @@ table pre[class*="language-"] {
 .token.interpolation {
   color: var(--markdown-syntax-color);
 }
+
+#footnotes-label {
+  border: none;
+  font-size: 16px;
+}

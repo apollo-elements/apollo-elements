@@ -22,6 +22,7 @@ import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 
+import { markdown } from './packages/docs/rocket-plugins/markdown.mjs';
 import { setupWrap } from './packages/docs/rocket-plugins/wrap.mjs';
 import { githubTag } from './packages/docs/rocket-plugins/liquid/github.mjs';
 import { linkTag } from './packages/docs/rocket-plugins/liquid/link.mjs';
@@ -148,6 +149,7 @@ const config = {
 
     /* start blog */
     eleventyConfig.addFilter('cloudinary', cloudinary);
+    eleventyConfig.addFilter('markdown', markdown);
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);
     eleventyConfig.addFilter('icon', icon => {

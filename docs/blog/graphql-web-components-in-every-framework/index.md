@@ -55,13 +55,9 @@ return <spicy-input ref={spicyInputRef}></spicy-input>
 
 </code-tabs>
 
-<aside><small>
+{% assign react_footnote = "Why all the extra code for React? As of this writing, [React has the poorest HTML and DOM support of any framework](https://custom-elements-everywhere.com/#react). Hopefully this will change soon. In the meantime there are a few [wrapper](https://www.npmjs.com/package/reactify-wc) libraries that make it easier to use web components in React by handling all this boilerplate for you." | markdown | replace: "<p>" , "" | replace: "</p>" , "" %}
 
-Why all the extra code for React? As of this writing, [React has the poorest HTML and DOM support of any framework](https://custom-elements-everywhere.com/#react). Hopefully this will change soon. In the meantime there are a few [wrapper](https://www.npmjs.com/package/reactify-wc) libraries that make it easier to use web components in React by handling all this boilerplate for you.
-
-</small></aside>
-
-> TL;DR: web components work in all frameworks, or none, since they're just HTML and the DOM.
+> TL;DR: web components work in {% footnoteref "react" react_footnote %}all frameworks{% endfootnoteref %}, or none, since they're just HTML and the DOM.
 
 ## GraphQL Meets Web Components
 
