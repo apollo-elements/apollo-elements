@@ -72,7 +72,8 @@
             {
               "kind": "field",
               "name": "client",
-              "description": "The Apollo Client instance",
+              "summary": "The Apollo Client instance",
+              "description": "Defaults to `window.__APOLLO_CLIENT__`, which is set by default when creating an Apollo Client. That means that in most cases, it's not necessary to explicity set the `client` property. For more information see [Getting Started: Apollo Client](https://apolloelements.dev/guides/getting-started/apollo-client/).",
               "type": {
                 "type": "ApolloClient<NormalizedCacheObject> | null",
                 "references": [
@@ -629,7 +630,8 @@
             {
               "kind": "field",
               "name": "client",
-              "description": "The Apollo Client instance",
+              "summary": "The Apollo Client instance",
+              "description": "Defaults to `window.__APOLLO_CLIENT__`, which is set by default when creating an Apollo Client. That means that in most cases, it's not necessary to explicity set the `client` property. For more information see [Getting Started: Apollo Client](https://apolloelements.dev/guides/getting-started/apollo-client/).",
               "type": {
                 "type": "ApolloClient<NormalizedCacheObject> | null",
                 "references": [
@@ -1088,7 +1090,8 @@
             {
               "kind": "field",
               "name": "client",
-              "description": "The Apollo Client instance",
+              "summary": "The Apollo Client instance",
+              "description": "Defaults to `window.__APOLLO_CLIENT__`, which is set by default when creating an Apollo Client. That means that in most cases, it's not necessary to explicity set the `client` property. For more information see [Getting Started: Apollo Client](https://apolloelements.dev/guides/getting-started/apollo-client/).",
               "type": {
                 "type": "ApolloClient<NormalizedCacheObject> | null",
                 "references": [
@@ -1525,7 +1528,8 @@
             {
               "kind": "field",
               "name": "client",
-              "description": "The Apollo Client instance",
+              "summary": "The Apollo Client instance",
+              "description": "Defaults to `window.__APOLLO_CLIENT__`, which is set by default when creating an Apollo Client. That means that in most cases, it's not necessary to explicity set the `client` property. For more information see [Getting Started: Apollo Client](https://apolloelements.dev/guides/getting-started/apollo-client/).",
               "type": {
                 "type": "ApolloClient<NormalizedCacheObject> | null",
                 "references": [
