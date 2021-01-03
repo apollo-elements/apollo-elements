@@ -60,7 +60,10 @@
       if (location.hash) {
         const anchor = document.querySelector(location.hash)
         const doc = anchor && anchor.closest('type-doc');
-        if (doc) doc.expanded = true;
+        if (doc) {
+          doc.expanded = true;
+          doc.scrollIntoView();
+        }
       }
     </script>
   </main>
