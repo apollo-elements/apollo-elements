@@ -151,6 +151,7 @@
           "kind": "function",
           "name": "client",
           "summary": "Hybrids descriptor factory for an [ApolloElement](/api/interfaces/element/)",
+          "description": "Defaults to `window.__APOLLO_CLIENT__`, which is set by default when creating an Apollo Client. That means that in most cases, it's not necessary to explicity set the `client` property. For more information see [Getting Started: Apollo Client](https://apolloelements.dev/guides/getting-started/apollo-client/).",
           "parameters": [
             {
               "name": "client",
