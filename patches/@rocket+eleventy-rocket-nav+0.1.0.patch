@@ -1,7 +1,7 @@
-diff --git a/node_modules/@d4kmor/eleventy-rocket-nav/eleventy-rocket-nav.js b/node_modules/@d4kmor/eleventy-rocket-nav/eleventy-rocket-nav.js
-index b52dc0d..e418645 100644
---- a/node_modules/@d4kmor/eleventy-rocket-nav/eleventy-rocket-nav.js
-+++ b/node_modules/@d4kmor/eleventy-rocket-nav/eleventy-rocket-nav.js
+diff --git a/node_modules/@rocket/eleventy-rocket-nav/eleventy-rocket-nav.js b/node_modules/@rocket/eleventy-rocket-nav/eleventy-rocket-nav.js
+index c81108b..dea9709 100644
+--- a/node_modules/@rocket/eleventy-rocket-nav/eleventy-rocket-nav.js
++++ b/node_modules/@rocket/eleventy-rocket-nav/eleventy-rocket-nav.js
 @@ -68,7 +68,7 @@ const headingsCache = new Map();
   * @param {NavigationNode[]} nodes
   * @param {string} key

@@ -1,0 +1,35 @@
+diff --git a/node_modules/plugins-manager/src/metaConfigToRollupConfig.js b/node_modules/plugins-manager/src/metaConfigToRollupConfig.js
+index 42c8f4c..0d6bd15 100644
+--- a/node_modules/plugins-manager/src/metaConfigToRollupConfig.js
++++ b/node_modules/plugins-manager/src/metaConfigToRollupConfig.js
+@@ -16,7 +16,7 @@ export function metaConfigToRollupConfig(config, metaPlugins = []) {
+       return pluginObj.plugin();
+     }
+   });
+-  config.plugins = plugins;
++  config.plugins = [...config.plugins,...plugins];
+ 
+   delete config.setupPlugins;
+   return config;
+diff --git a/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js b/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js
+index e875b67..8b9f9fb 100644
+--- a/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js
++++ b/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js
+@@ -13,7 +13,7 @@ export function metaConfigToWebDevServerConfig(config, metaPlugins, { wrapperFun
+ 
+   const plugins = _metaPlugins.map(pluginObj => {
+     const usePlugin =
+-      typeof wrapperFunction === 'function' ? wrapperFunction(pluginObj.plugin) : pluginObj.plugin;
++      typeof wrapperFunction === 'function' && pluginObj.wrap ? wrapperFunction(pluginObj.plugin) : pluginObj.plugin;
+ 
+     if (pluginObj.options) {
+       return usePlugin(pluginObj.options);
+@@ -21,7 +21,7 @@ export function metaConfigToWebDevServerConfig(config, metaPlugins, { wrapperFun
+       return usePlugin();
+     }
+   });
+-  config.plugins = plugins;
++  config.plugins = [...config.plugins,...plugins];
+ 
+   delete config.setupPlugins;
+   return config;

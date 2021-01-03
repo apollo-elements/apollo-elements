@@ -2,18 +2,17 @@
 
 /* eslint-env node */
 
-import { rocketLaunch } from '@d4kmor/launch';
-import { rocketBlog } from '@d4kmor/blog';
-import { rocketSearch } from '@d4kmor/search';
+import { rocketLaunch } from '@rocket/launch';
+import { rocketBlog } from '@rocket/blog';
+import { rocketSearch } from '@rocket/search';
 
-import { absoluteBaseUrlNetlify } from '@d4kmor/core/helpers';
+import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
 
-import _litcss from 'rollup-plugin-lit-css';
-import _nodeResolve from '@rollup/plugin-node-resolve';
-import _graphql from '@apollo-elements/rollup-plugin-graphql';
+import litcss from 'rollup-plugin-lit-css';
+import graphql from '@apollo-elements/rollup-plugin-graphql';
 
 import esbuild from 'rollup-plugin-esbuild';
 
@@ -32,8 +31,7 @@ import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.mjs';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.mjs';
 import { cloudinary } from './packages/docs/rocket-plugins/cloudinary.mjs';
 
-const graphql = fromRollup(_graphql);
-const litcss = fromRollup(_litcss);
+import { addPlugin } from 'plugins-manager';
 
 // TODO: IMMEDIATE: move code-copy immediately to mdjs/core
 // TODO: IMMEDIATE: cem-api over to new presets
@@ -41,59 +39,15 @@ const litcss = fromRollup(_litcss);
 
 const isProd = process.env.ELEVENTY_ENV === 'production';
 
-const nodeResolve = {
-  exportConditions: ['default', 'esbuild', 'import'],
-  extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
-};
+const nodeResolve = {};
 
-/** @type {import('@d4kmor/cli/src/types').RocketCliOptions} */
+/** @type {import('@rocket/cli/src/types').RocketCliOptions} */
 const config = {
-  themes: [
+  presets: [
     rocketLaunch(),
     rocketBlog(),
     rocketSearch(),
   ],
-
-  devServer: {
-    nodeResolve,
-    port: 9048,
-    mimeTypes: {
-      '**/*.graphql': 'js',
-      '**/packages/docs/*.css': 'js',
-    },
-    middleware: [
-      async (ctx, next) => {
-        await next();
-        ctx.set('Cache-Control', 'max-age=60');
-      },
-      // NB: Remove on next major rocket ver
-      function rewriteRoot(context, next) {
-        if (
-          context.url.startsWith('/') &&
-          !context.url.match(/node_modules|__web-dev-server__|packages\/docs/)
-        )
-          context.url = `_site-dev/${context.url}`;
-        return next();
-      },
-    ],
-    plugins: [
-      { // NB: Remove on next major rocket ver
-        name: 'hack-root-dir',
-        transform(context) {
-          if (process.env.ELEVENTY_ENV !== 'production' && context.response.is('html')) {
-            return {
-              body: context.body
-                .replace(/_site-dev/g, '')
-                .replace(/(href|src)="\/\//g, '$1="/'),
-            };
-          }
-        },
-      },
-      litcss({ include: ['**/packages/docs/*.css'] }),
-      graphql(),
-      esbuildPlugin({ ts: true }),
-    ],
-  },
 
   eleventy(eleventyConfig) {
     // eleventyConfig.addPlugin(inclusiveLangPlugin);
@@ -189,30 +143,56 @@ const config = {
     eleventyConfig.addPlugin(fixNoscript);
   },
 
-  build: {
-    emptyOutputDir: false,
-    absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
+  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
-    rollup(config) {
-      config.plugins = [
-        _litcss(),
-        _nodeResolve(),
-        esbuild({
-          tsconfig: './packages/docs/tsconfig.json',
-          include: 'packages/docs/*',
-          sourceMap: true,
-          loaders: {
-            '.ts': 'ts',
-            '.css': 'ts',
-            '.graphql': 'ts',
-          },
-        }),
-        ...config.plugins,
-      ];
-      return config;
+  devServer: {
+    port: 9048,
+    nodeResolve: {
+      exportConditions: ['default', 'esbuild', 'import'],
+      extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
     },
-
+    mimeTypes: {
+      '**/*.ts': 'js',
+      '**/*.graphql': 'js',
+      '**/packages/docs/*.css': 'js',
+    },
+    middleware: [
+      // async (ctx, next) => {
+      //   await next();
+      //   ctx.set('Cache-Control', 'max-age=60');
+      // },
+    ],
+    plugins: [
+      fromRollup(graphql)(),
+      fromRollup(litcss)({ include: ['**/packages/docs/*.css'] }),
+      esbuildPlugin({ ts: true }),
+    ],
   },
+
+  setupDevAndBuildPlugins: [
+    // addPlugin({ name: 'graphql', plugin: graphql }),
+    // addPlugin({
+    //   name: 'litcss',
+    //   plugin: litcss,
+    //   options: { include: ['**/packages/docs/*.css'] },
+    // }),
+  ],
+
+  setupBuildPlugins: [
+    addPlugin({
+      name: 'esbuild-rollup',
+      plugin: esbuild,
+      options: {
+        tsconfig: './packages/docs/tsconfig.json',
+        include: 'packages/docs/*',
+        sourceMap: true,
+        loaders: {
+          '.ts': 'ts',
+          '.css': 'ts',
+          '.graphql': 'ts',
+        },
+      } }),
+  ],
 
   setupUnifiedPlugins: [
     setupWrap({
