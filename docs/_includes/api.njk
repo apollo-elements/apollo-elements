@@ -56,5 +56,12 @@
     {% include 'partials/previousNext.njk' %}
     {% include 'partials/content-footer.njk' %}
 
+    <script type="module" async>
+      if (location.hash) {
+        const anchor = document.querySelector(location.hash)
+        const doc = anchor && anchor.closest('type-doc');
+        if (doc) doc.expanded = true;
+      }
+    </script>
   </main>
 {% endblock main %}
