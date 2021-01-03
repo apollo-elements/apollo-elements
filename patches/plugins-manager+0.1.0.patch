@@ -1,5 +1,5 @@
 diff --git a/node_modules/plugins-manager/src/metaConfigToRollupConfig.js b/node_modules/plugins-manager/src/metaConfigToRollupConfig.js
-index 42c8f4c..0d6bd15 100644
+index 42c8f4c..28c3d36 100644
 --- a/node_modules/plugins-manager/src/metaConfigToRollupConfig.js
 +++ b/node_modules/plugins-manager/src/metaConfigToRollupConfig.js
 @@ -16,7 +16,7 @@ export function metaConfigToRollupConfig(config, metaPlugins = []) {
@@ -7,12 +7,12 @@ index 42c8f4c..0d6bd15 100644
      }
    });
 -  config.plugins = plugins;
-+  config.plugins = [...config.plugins,...plugins];
++  config.plugins = [...config.plugins || [],...plugins];
  
    delete config.setupPlugins;
    return config;
 diff --git a/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js b/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js
-index e875b67..8b9f9fb 100644
+index e875b67..58f947f 100644
 --- a/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js
 +++ b/node_modules/plugins-manager/src/metaConfigToWebDevServerConfig.js
 @@ -13,7 +13,7 @@ export function metaConfigToWebDevServerConfig(config, metaPlugins, { wrapperFun
@@ -29,7 +29,7 @@ index e875b67..8b9f9fb 100644
      }
    });
 -  config.plugins = plugins;
-+  config.plugins = [...config.plugins,...plugins];
++  config.plugins = [...config.plugins || [],...plugins];
  
    delete config.setupPlugins;
    return config;
