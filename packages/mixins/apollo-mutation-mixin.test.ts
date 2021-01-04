@@ -126,8 +126,8 @@ class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>|null> (this.client);
-    assertType<Record<string, unknown>|undefined>        (this.context);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode|null>                   (this.document);
     assertType<Error>                               (this.error!);
@@ -143,11 +143,10 @@ class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<DocumentNode|null>                   (this.mutation);
     assertType<TypeCheckVars|null>                  (this.variables);
     assertType<boolean>                             (this.called);
-    assertType<boolean>                             (this.ignoreResults);
-    assertType<boolean|undefined>                   (this.awaitRefetchQueries);
-    assertType<number>                              (this.mostRecentMutationId);
-    assertType<ErrorPolicy|undefined>               (this.errorPolicy);
-    assertType<string|undefined>                    (this.errorPolicy);
+    assertType<boolean>                             (this.ignoreResults!);
+    assertType<boolean>                             (this.awaitRefetchQueries!);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
+    assertType<string>                              (this.errorPolicy!);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
     assertType<string|undefined>                    (this.fetchPolicy);

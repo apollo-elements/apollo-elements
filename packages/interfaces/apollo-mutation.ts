@@ -28,7 +28,7 @@ export type OptimisticResponseType<D, V> =
 /**
  * Common interface for mutation elements
  *
- * See [[`ApolloElementInterface`]] for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  *
  * @element
  *
@@ -70,12 +70,6 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
    * If true, the returned data property will not update with the mutation result.
    */
   declare ignoreResults?: boolean;
-
-  /**
-   * The ID number of the most recent mutation since the element was instantiated.
-   * @private
-   */
-  declare mostRecentMutationId: number | undefined;
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.

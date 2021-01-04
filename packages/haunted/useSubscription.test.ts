@@ -49,7 +49,7 @@ describe('[haunted] useSubscription', function() {
           return this;
         };
 
-        ccOrig.call(this);
+        ccOrig?.call?.(this);
       };
 
       function Subscription<H extends T>(this: H) {

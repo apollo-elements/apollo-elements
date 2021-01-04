@@ -33,10 +33,15 @@ declare global {
   }
 }
 
-function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
+type MixinInstance = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new <D, V = Record<string, any>>(): ApolloMutationInterface<D, V>;
+  documentType: 'mutation';
+}
+
+function ApolloMutationMixinImpl<B extends Constructor>(superclass: B): MixinInstance & B {
   class ApolloMutationElement<D, V = OperationVariables>
-    extends ApolloElementMixin(superclass)<D, V>
-    implements ApolloMutationInterface<D, V> {
+    extends ApolloElementMixin(superclass)<D, V> implements ApolloMutationInterface<D, V> {
     static documentType = 'mutation' as const;
 
     declare mutation: DocumentNode | ComponentDocument<D> | null;
@@ -67,7 +72,10 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     ignoreResults = false;
 
-    mostRecentMutationId = 0;
+    /**
+     * The ID number of the most recent mutation since the element was instantiated.
+     */
+    private mostRecentMutationId = 0;
 
     constructor() {
       super();
@@ -117,26 +125,26 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     /**
      * Increments and returns the most recent mutation id.
-     * @private
      */
-    generateMutationId(): number {
+    private generateMutationId(): number {
       this.mostRecentMutationId += 1;
       return this.mostRecentMutationId;
     }
 
     /**
      * Returns true when an ID matches the most recent mutation id.
-     * @private
      */
-    isMostRecentMutation(mutationId: number): boolean {
+    private isMostRecentMutation(mutationId: number): boolean {
       return this.mostRecentMutationId === mutationId;
     }
 
     /**
      * Callback for when a mutation is completed.
-     * @private
      */
-    onCompletedMutation(mutationId: number, response: FetchResult<Data<D>>): FetchResult<Data<D>> {
+    private onCompletedMutation(
+      mutationId: number,
+      response: FetchResult<Data<D>>
+    ): FetchResult<Data<D>> {
       const { data } = response;
       this.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
       if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
@@ -152,9 +160,8 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B) {
 
     /**
      * Callback for when a mutation fails.
-     * @private
      */
-    onMutationError(mutationId: number, error: ApolloError): never {
+    private onMutationError(mutationId: number, error: ApolloError): never {
       this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       if (this.isMostRecentMutation(mutationId)) {
         this.loading = false;

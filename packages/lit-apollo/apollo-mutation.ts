@@ -23,15 +23,12 @@ const refetchQueriesConverter: ComplexAttributeConverter = {
  *
  * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  *
- * See [[`ApolloMutationInterface`]] for more information on events
+ * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
  *
  */
 export class ApolloMutation<D, V = OperationVariables>
-  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
   implements ApolloMutationInterface<D, V> {
-  declare variables: Variables<D, V> | null;
-
   @property({ type: Boolean }) called = false;
 
   /**

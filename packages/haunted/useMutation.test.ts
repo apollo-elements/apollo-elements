@@ -58,7 +58,7 @@ describe('[haunted] useMutation', function() {
           return this;
         };
 
-        ccOrig.call(this);
+        ccOrig?.call?.(this);
       };
 
       const {

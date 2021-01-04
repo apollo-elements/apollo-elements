@@ -626,7 +626,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             beforeEach(async function() {
-              result = await element!.executeQuery()!;
+              result = (await element?.executeQuery() || undefined);
             });
 
             afterEach(function() {
@@ -654,7 +654,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             beforeEach(async function() {
-              result = await element?.executeQuery({ query: NoParamQuery });
+              result = (await element?.executeQuery({ query: NoParamQuery }) || undefined);
             });
 
             it('calls client query', function() {

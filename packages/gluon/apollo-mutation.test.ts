@@ -82,9 +82,8 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<DocumentNode|null>                             (this.mutation);
     assertType<TypeCheckVars|null>                            (this.variables);
     assertType<boolean>                                       (this.called);
-    assertType<boolean>                                       (this.ignoreResults);
+    assertType<boolean>                                       (this.ignoreResults!);
     assertType<boolean|undefined>                             (this.awaitRefetchQueries);
-    assertType<number>                                        (this.mostRecentMutationId);
     assertType<ErrorPolicy|undefined>                         (this.errorPolicy);
     assertType<string|undefined>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number

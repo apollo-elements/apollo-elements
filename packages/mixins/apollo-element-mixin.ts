@@ -45,8 +45,7 @@ function capital(string: string): string {
 /**
  * Fired when an element connects to or disconnects from the DOM
  */
-export class ApolloElementEvent<T = ApolloElementElement>
-  extends CustomEvent<T> {
+export class ApolloElementEvent<T = ApolloElementElement> extends CustomEvent<T> {
   declare type: 'apollo-element-connected'|'apollo-element-disconnected';
 
   constructor(type: 'apollo-element-connected'|'apollo-element-disconnected', detail: T) {
@@ -58,10 +57,18 @@ export class ApolloElementEvent<T = ApolloElementElement>
   }
 }
 
-function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) {
+type MixinInstance = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new <D = unknown, V = Record<string, any>>(...a: any[]): ApolloElementInterface<D, V>;
+  documentType: 'document' | 'query' | 'mutation' | 'subscription';
+}
+
+function ApolloElementMixinImplementation<B extends Constructor>(superclass: B): MixinInstance & B {
   // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
-  class ApolloElement<D = unknown, V = OperationVariables>
-    extends superclass implements ApolloElementInterface<D, V> {
+  class ApolloElement<
+    D = unknown,
+    V = OperationVariables
+  > extends superclass implements ApolloElementInterface<D, V> {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
     /** The Apollo Client instance. */
@@ -87,20 +94,15 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     /** Context passed to the link execution chain. */
     declare context?: Record<string, unknown>;
 
-    /** @private */
-    _document: DocumentNode | ComponentDocument<D> | null = null;
+    private _document: DocumentNode | ComponentDocument<D> | null = null;
 
-    /** @private */
-    _documentSetByJS = false;
+    private _documentSetByJS = false;
 
-    /** @private */
-    _variables: Variables<D, V> | null = null;
+    private _variables: Variables<D, V> | null = null;
 
-    /** @private */
-    _variablesSetByJS = false;
+    private _variablesSetByJS = false;
 
-    /** @private */
-    mo: MutationObserver | null = null;
+    protected mo?: MutationObserver;
 
     /**
      * A GraphQL document containing a single query, mutation, or subscription.
@@ -146,20 +148,17 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     /**
      * Lifecycle callback that reacts to changes in the GraphQL document.
-     * @protected
      * @param document The GraphQL document.
      */
-    documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
+    protected documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
 
     /**
      * Lifecycle callback that reacts to changes in the operation variables.
-     * @protected
      * @param variables The variables.
      */
-    variablesChanged?(variables: Variables<D, V> | null): void
+    protected variablesChanged?(variables: Variables<D, V> | null): void
 
-    /** @private */
-    onDOMMutation(records: MutationRecord[]): void {
+    private onDOMMutation(records: MutationRecord[]): void {
       const isGQLScriptChanged = (record: MutationRecord) =>
         [...record?.addedNodes].some(node =>
           node === this.querySelector(SCRIPT_SELECTOR));
@@ -177,9 +176,8 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     /**
      * Get a GraphQL DocumentNode from the element's GraphQL script child
-     * @private
      */
-    getDOMGraphQLDocument(): DocumentNode | ComponentDocument<D> | null {
+    protected getDOMGraphQLDocument(): DocumentNode | ComponentDocument<D> | null {
       const script = this.querySelector<HTMLScriptElement>(SCRIPT_SELECTOR);
       const text = script?.innerText;
       if (!text)
@@ -197,9 +195,8 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
 
     /**
      * Gets operation variables from the element's JSON script child
-     * @private
      */
-    getDOMVariables(): Variables<D, V> | null {
+    protected getDOMVariables(): Variables<D, V> | null {
       const script = this.querySelector<HTMLScriptElement>('script[type="application/json"]');
       if (!script) return null; /* c8 ignore next */ // covered
       try {
@@ -218,16 +215,16 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B) 
     variables: effect({
       name: 'variables',
       init: null,
-      onSet<E extends ApolloElement>(
-        this: E,
-        variables: E extends ApolloElement<infer D, infer V> ? Variables<D, V> : never | null
-      ) {
+      onSet(variables: unknown) {
+        // @ts-ignore: This is essentially a class accessor, I'm working around some TS limitations
         if (this.mo) // element is connected
+        // @ts-ignore: This is essentially a class accessor, I'm working around some TS limitations
           this.variablesChanged?.(variables);
       },
     }),
   });
 
+  // @ts-expect-error: Actually, it is.
   return ApolloElement;
 }
 

@@ -39,7 +39,13 @@ declare global {
   }
 }
 
-function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
+type MixinInstance = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new <D = unknown, V = Record<string, any>>(...a: any[]): ApolloQueryInterface<D, V>;
+  documentType: 'query';
+}
+
+function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstance & B {
   class ApolloQueryElement<D = unknown, V = OperationVariables>
     extends ApolloElementMixin(superclass)<D, V> implements ApolloQueryInterface<D, V> {
     static documentType = 'query' as const;
@@ -84,7 +90,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     /** @private */
     __networkStatus = NetworkStatus.ready;
 
-    /** @protected */
     connectedCallback(): void {
       super.connectedCallback();
       this.documentChanged(this.query);

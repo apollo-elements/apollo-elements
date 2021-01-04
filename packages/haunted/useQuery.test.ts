@@ -54,7 +54,7 @@ describe('[haunted] useQuery', function() {
           return this;
         };
 
-        ccOrig.call(this);
+        ccOrig?.call?.(this);
       };
 
       function Query<H extends QueryElement>(this: H) {

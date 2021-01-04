@@ -10,7 +10,7 @@ import { ApolloElement } from './apollo-element';
  *
  * 🚀 Custom element base class that updates with an Apollo GraphQL subscription.
  *
- * See [[`ApolloSubscriptionInterface`]] for more information on events
+ * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/interfaces/subscription) for more information on events
  *
  */
 export class ApolloSubscription<D = unknown, V = OperationVariables>

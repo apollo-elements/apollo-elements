@@ -143,7 +143,7 @@ class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeCheckVars>
     assertType<TypeCheckVars>                         (this.variables!);
     assertType<FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                (this.fetchPolicy);
-    assertType<boolean>                               (this.notifyOnNetworkStatusChange);
+    assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
     assertType<number>                                (this.pollInterval!);
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);

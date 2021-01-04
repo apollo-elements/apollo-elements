@@ -74,7 +74,7 @@ export class WillMutateError extends Error {}
  *
  * @csspart variables - The container for variable inputs.
  * @csspart trigger - The container for the trigger.
- * See [[`ApolloMutationInterface`]] for more information on events
+ * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
  *
  * @example
  * Using data attributes
@@ -165,10 +165,6 @@ export class WillMutateError extends Error {}
 @customElement('apollo-mutation')
 export class ApolloMutationElement<D = unknown, V = OperationVariables>
   extends ApolloMutation<D, V> implements ApolloMutationInterface<D, V> {
-  declare variables: Variables<D, V> | null;
-
-  declare refetchQueries: RefetchQueriesType<D> | null;
-
   static readonly styles = [css`
     [part="trigger"],
     [part="variables"] {

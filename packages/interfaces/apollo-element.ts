@@ -54,17 +54,31 @@ export declare class ApolloElementInterface<D = unknown, V = OperationVariables>
   /** Whether a request is in flight. */
   declare loading: boolean;
 
+  connectedCallback(): void;
+
+  protected mo?: MutationObserver;
+
   /**
    * Lifecycle callback that reacts to changes in the GraphQL document
-   * @protected
    */
-  documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
+  protected documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void;
 
   /**
    * Lifecycle callback that reacts to changes in the operation variables
-   * @protected
    */
-  variablesChanged?(variables: Variables<D, V> | null): void
+  protected variablesChanged?(variables: Variables<D, V> | null): void;
+
+  /**
+   * Gets operation variables from the element's JSON script child
+   */
+  protected getDOMVariables(): Variables<D, V> | null;
+
+  /**
+   * Get a GraphQL DocumentNode from the element's GraphQL script child
+   */
+  protected getDOMGraphQLDocument(): DocumentNode | ComponentDocument<D> | null;
+
+  private onDOMMutation(records: MutationRecord[]): void;
 }
 
 export class ApolloElementElement<D = unknown, V = OperationVariables>

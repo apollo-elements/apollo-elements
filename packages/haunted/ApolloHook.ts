@@ -112,12 +112,12 @@ export abstract class ApolloHook<
   protected connect(): void {
     const { connectedCallback, disconnectedCallback } = this.componentClass.prototype;
     Object.assign(this.state.host, { connectedCallback, disconnectedCallback });
-    this.state.host.connectedCallback();
+    this.state.host.connectedCallback?.();
     this.disconnected = false;
   }
 
   teardown(): void {
-    this.state.host.disconnectedCallback();
+    this.state.host.disconnectedCallback?.();
     this.disconnected = true;
   }
 }

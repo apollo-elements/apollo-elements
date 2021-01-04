@@ -284,7 +284,7 @@
         },
         {
           "name": "trigger",
-          "description": "The container for the trigger.\nSee [[`ApolloMutationInterface`]] for more information on events"
+          "description": "The container for the trigger.\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events"
         }
       ]
     }

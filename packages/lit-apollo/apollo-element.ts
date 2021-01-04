@@ -16,12 +16,11 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  *
  * 🚀 Custom element base class for apollo lit elements.
  *
- * See [[`ApolloElementInterface`]] for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  */
 export class ApolloElement<D = unknown, V = OperationVariables>
   // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloElementMixin(LitElement as Constructor<LitElement>)<D, V>
-  implements ApolloElementInterface<D, V> {
+  extends ApolloElementMixin(LitElement as Constructor<LitElement>)<D, V> {
   declare context?: Record<string, unknown>;
 
   @property({ attribute: false }) client = /* c8 ignore next */ window.__APOLLO_CLIENT__ ?? null;

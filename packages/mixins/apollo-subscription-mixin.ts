@@ -31,7 +31,14 @@ declare global {
   }
 }
 
-function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBase) {
+type MixinInstance = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new <D = unknown, V = Record<string, any>>(...a: any[]): ApolloSubscriptionInterface<D, V>;
+  documentType: 'subscription';
+}
+
+function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): MixinInstance & B {
+  // @ts-expect-error: it is though
   class ApolloSubscriptionElement<D, V>
     extends ApolloElementMixin(superclass)<D, V> implements ApolloSubscriptionInterface<D, V> {
     static documentType = 'subscription' as const;
@@ -64,17 +71,15 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     onError?(error: ApolloError): void
 
-    /** @protected */
     connectedCallback(): void {
-      super.connectedCallback();
+      super.connectedCallback?.();
       if (!this.canSubscribe() || !this.shouldSubscribe()) return;
       this.initObservable();
       this.subscribe();
     }
 
-    /** @protected */
     disconnectedCallback(): void {
-      super.disconnectedCallback();
+      super.disconnectedCallback?.();
       this.cancel();
     }
 
@@ -117,9 +122,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     /**
      * Determines whether the element is able to automatically subscribe
-     * @private
      */
-    canSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
+    protected canSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
       return (
         !this.noAutoSubscribe &&
         !!this.client &&
@@ -132,12 +136,11 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
      *
      * Override to prevent subscribing unless your conditions are met.
      */
-    shouldSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
+    protected shouldSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
       return (void params, true);
     }
 
-    /** @private */
-    initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void {
+    private initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void {
       const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
       const client = params?.client ?? this.client;
       const skip = params?.skip ?? this.skip;
@@ -159,9 +162,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     /**
      * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
-     * @private
      */
-    nextData(result: FetchResult<Data<D>>) {
+    private nextData(result: FetchResult<Data<D>>) {
       const data = result.data ?? null;
       // If we got to this line without a client, it's because of user error
       const client = this.client!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
@@ -178,9 +180,8 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     /**
      * Sets `error` and `loading` on the instance when the subscription errors.
-     * @private
      */
-    nextError(error: ApolloError) {
+    private nextError(error: ApolloError) {
       this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       this.error = error;
       this.loading = false;
@@ -189,15 +190,13 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
 
     /**
      * Shuts down the subscription
-     * @private
      */
-    onComplete(): void {
+    private onComplete(): void {
       this.onSubscriptionComplete?.();
       this.endSubscription();
     }
 
-    /** @private */
-    endSubscription() {
+    private endSubscription() {
       if (this.observableSubscription) {
         this.observableSubscription.unsubscribe();
         this.observableSubscription = undefined;
@@ -210,6 +209,7 @@ function ApolloSubscriptionMixinImpl<TBase extends Constructor>(superclass: TBas
     noAutoSubscribe: booleanAttr('no-auto-subscribe'),
   });
 
+  // @ts-expect-error: it is though
   return ApolloSubscriptionElement;
 }
 

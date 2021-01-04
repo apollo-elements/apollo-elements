@@ -12,7 +12,7 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  *
  * @element
  *
- * See [[`ApolloQueryInterface`]] for more information on events
+ * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
  *
  */
 export class ApolloQuery<D = unknown, V = OperationVariables>

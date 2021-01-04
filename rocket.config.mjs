@@ -179,6 +179,7 @@ const config = {
   ],
 
   setupBuildPlugins: [
+    // @ts-expect-error: going to figure this out later
     addPlugin({
       name: 'esbuild-rollup',
       plugin: esbuild,

@@ -43,7 +43,7 @@ export interface OnSubscriptionDataParams<TData = unknown> {
 /**
  * Common interface for subscription elements
  *
- * See [[`ApolloElementInterface`]] for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  *
  * @element
  *
@@ -114,9 +114,8 @@ export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
 
   /**
    * Determines whether the element is able to automatically subscribe
-   * @protected
    */
-  canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
+  protected canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
@@ -139,29 +138,24 @@ export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
    */
   onSubscriptionComplete?(): void;
 
-  /** @private */
-  initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void;
+  private initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void;
 
   /**
    * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
-   * @private
    */
-  nextData(result: FetchResult<Data<D>>): void;
+  private nextData(result: FetchResult<Data<D>>): void;
 
   /**
    * Sets `error` and `loading` on the instance when the subscription errors.
-   * @private
    */
-  nextError(error: ApolloError): void;
+  private nextError(error: ApolloError): void;
 
   /**
    * Shuts down the subscription
-   * @private
    */
-  onComplete(): void;
+  private onComplete(): void;
 
-  /** @private */
-  endSubscription(): void;
+  private endSubscription(): void;
 }
 
 export class ApolloSubscriptionElement<D = unknown, V = OperationVariables>

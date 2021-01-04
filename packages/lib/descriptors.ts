@@ -1,7 +1,7 @@
-import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
+import type { ApolloElementInterface } from '@apollo-elements/interfaces/apollo-element';
 import type { DocumentNode } from '@apollo/client/core';
 
-interface PropertyEffectOptions<C extends ApolloElementElement> {
+interface PropertyEffectOptions<C extends ApolloElementInterface> {
   /** Name of the property. */
   name: keyof C,
   /** The property's initial value. */
@@ -20,7 +20,7 @@ interface PropertyEffectOptions<C extends ApolloElementElement> {
  *
  * @param  attr Attribute name
  */
-export function booleanAttr<C extends ApolloElementElement>(
+export function booleanAttr<C extends ApolloElementInterface>(
   attr: string
 ): PropertyDescriptor {
   return {
@@ -47,7 +47,7 @@ export function booleanAttr<C extends ApolloElementElement>(
  * @param options Configuration for the property: it's name, initial value, and setter side-effect.
  */
 export function effect<
-  C extends ApolloElementElement<any, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+  C extends ApolloElementInterface<any, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
 >(options: PropertyEffectOptions<C>): PropertyDescriptor {
   const { name, init, onSet } = options;
   const privateName = `_${name}` as typeof name; // little white lies
@@ -69,7 +69,7 @@ export function effect<
 /**
  * Creates a `PropertyDescriptor` for an `ApolloElement`'s `document` property.
  */
-export function gqlDocument<C extends ApolloElementElement>(): PropertyDescriptor {
+export function gqlDocument<C extends ApolloElementInterface>(): PropertyDescriptor {
   return {
     configurable: true,
     enumerable: true,
