@@ -38,9 +38,6 @@ export function initDocument<T extends ApolloElementElement<any, any>>(
 
   getDescriptor(host).connectedCallback.value.call(host);
 
-  if (VALUES.has(host))
-    host.documentChanged?.(host.document); /* c8 ignore next */ // covered
-
   if (!VALUES.has(host))
     VALUES.set(host, document);
 

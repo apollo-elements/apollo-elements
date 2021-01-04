@@ -11,8 +11,17 @@ declare module '@apollo/client/cache' {
   }
 }
 
-function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(superclass: B) {
-  return class TypePoliciesElement extends superclass {
+type MixinInstance = {
+  /**
+   * TypePolicies for the component
+   */
+  typePolicies?: TypePolicies;
+}
+
+function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(
+  superclass: B
+): MixinInstance & B {
+  class TypePoliciesElement extends superclass {
     /**
      * TypePolicies for the component
      */
@@ -23,7 +32,9 @@ function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(su
       if (this.typePolicies)
         this.client?.cache.policies.addTypePolicies(this.typePolicies);
     }
-  };
+  }
+
+  return TypePoliciesElement;
 }
 
 /**

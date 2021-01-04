@@ -26,7 +26,7 @@ export type FetchMoreParams<D, V> =
 /**
  * Common interface for query elements
  *
- * See [[`ApolloElementInterface`]] for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  *
  * @element
  *
@@ -185,6 +185,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    * @protected
+   * @override
    */
   shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 

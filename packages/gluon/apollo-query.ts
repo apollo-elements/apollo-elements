@@ -13,7 +13,7 @@ export { html } from '@gluon/gluon';
  *
  * Custom element base class that connects to your Apollo cache.
  *
- * See [[`ApolloQueryInterface`]] for more information on events
+ * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
  *
  * @element
  */

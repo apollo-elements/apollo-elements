@@ -13,7 +13,7 @@ export { html } from '@gluon/gluon';
  *
  * @element
  *
- * See [[`ApolloSubscriptionInterface`]] for more information on events
+ * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/interfaces/subscription) for more information on events
  *
  */
 export class ApolloSubscription<D = unknown, V = OperationVariables>

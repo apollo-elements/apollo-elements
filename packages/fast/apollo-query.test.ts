@@ -133,7 +133,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<number>                              (this.networkStatus);
     // @ts-expect-error: NetworkStatus is not a string
     assertType<string>                              (this.networkStatus);
-    assertType<boolean>                             (this.notifyOnNetworkStatusChange);
+    assertType<boolean>                             (this.notifyOnNetworkStatusChange!);
     assertType<number>                              (this.pollInterval!);
     assertType<boolean>                             (this.partial!);
     assertType<boolean>                             (this.partialRefetch!);

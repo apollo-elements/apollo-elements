@@ -13,7 +13,7 @@ export { html } from '@gluon/gluon';
  *
  * 🚀 Custom element base class for apollo gluon elements.
  *
- * See [[`ApolloElementInterface`]] for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  *
  * @element
  */

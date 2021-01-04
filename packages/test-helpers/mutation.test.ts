@@ -111,6 +111,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         // defined fields
         expect(element.called, 'called').to.be.false;
         expect(element.ignoreResults, 'ignoreResults').to.be.false;
+        // @ts-expect-error: tsk tsk testing private properties
         expect(element.mostRecentMutationId, 'mostRecentMutationId').to.equal(0);
 
         // optional fields
@@ -311,6 +312,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('sets mostRecentMutationId', function() {
+            // @ts-expect-error: tsk tsk testing private properties
             expect(element.mostRecentMutationId).to.equal(1);
           });
 
@@ -320,6 +322,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             });
 
             it('sets mostRecentMutationId', function() {
+              // @ts-expect-error: tsk tsk testing private properties
               expect(element.mostRecentMutationId).to.equal(2);
             });
           });

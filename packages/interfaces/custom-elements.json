@@ -126,7 +126,7 @@
     {
       "name": "",
       "path": "./apollo-mutation.d.ts",
-      "description": "Common interface for mutation elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
+      "description": "Common interface for mutation elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
       "properties": [
         {
           "name": "mutation",
@@ -235,7 +235,7 @@
     {
       "name": "",
       "path": "./apollo-mutation.ts",
-      "description": "Common interface for mutation elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
+      "description": "Common interface for mutation elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
       "properties": [
         {
           "name": "mutation",
@@ -344,7 +344,7 @@
     {
       "name": "",
       "path": "./apollo-query.d.ts",
-      "description": "Common interface for query elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
+      "description": "Common interface for query elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
       "properties": [
         {
           "name": "query",
@@ -478,7 +478,7 @@
     {
       "name": "",
       "path": "./apollo-query.ts",
-      "description": "Common interface for query elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
+      "description": "Common interface for query elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
       "properties": [
         {
           "name": "query",
@@ -612,7 +612,7 @@
     {
       "name": "",
       "path": "./apollo-subscription.d.ts",
-      "description": "Common interface for subscription elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
+      "description": "Common interface for subscription elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
       "properties": [
         {
           "name": "fetchPolicy",
@@ -726,7 +726,7 @@
     {
       "name": "",
       "path": "./apollo-subscription.ts",
-      "description": "Common interface for subscription elements\n\nSee [[`ApolloElementInterface`]] for more information on events",
+      "description": "Common interface for subscription elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
       "properties": [
         {
           "name": "fetchPolicy",

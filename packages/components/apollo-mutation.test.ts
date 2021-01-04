@@ -76,14 +76,13 @@ function TypeCheck() {
   assertType<DocumentNode>                              (el.mutation!);
   assertType<TypeCheckVars>                             (el.variables!);
   assertType<boolean>                                   (el.called);
-  assertType<boolean>                                   (el.ignoreResults);
-  assertType<boolean|undefined>                         (el.awaitRefetchQueries);
-  assertType<number>                                    (el.mostRecentMutationId);
-  assertType<ErrorPolicy|undefined>                     (el.errorPolicy);
-  assertType<string|undefined>                          (el.errorPolicy);
+  assertType<boolean>                                   (el.ignoreResults!);
+  assertType<boolean>                                   (el.awaitRefetchQueries!);
+  assertType<ErrorPolicy>                               (el.errorPolicy!);
+  assertType<string>                                    (el.errorPolicy!);
   // @ts-expect-error: ErrorPolicy is not a number
-  assertType<number>                                    (el.errorPolicy);
-  assertType<string|undefined>                          (el.fetchPolicy);
+  assertType<number>                                    (el.errorPolicy!);
+  assertType<string>                                    (el.fetchPolicy!);
   assertType<Extract<FetchPolicy, 'no-cache'>|undefined>(el.fetchPolicy);
 
   if (typeof el.refetchQueries === 'function')

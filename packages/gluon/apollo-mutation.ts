@@ -11,7 +11,7 @@ export { html } from '@gluon/gluon';
  *
  * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  *
- * See [[`ApolloMutationInterface`]] for more information on events
+ * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
  *
  * @element
  */
