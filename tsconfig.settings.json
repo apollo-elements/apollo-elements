@@ -11,6 +11,7 @@
     "experimentalDecorators": true,
     "noEmitOnError": false,
     "sourceMap": true,
+    "inlineSources": true,
     "moduleResolution": "Node",
     "downlevelIteration": true,
     "plugins": [

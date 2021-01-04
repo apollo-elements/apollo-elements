@@ -20,6 +20,14 @@
       "default": "./*.js"
     }
   },
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "*.js.map",
+    "**/*.d.ts",
+    "**/*.js",
+    "**/*.js.map"
+  ],
   "scripts": {
     "preprepublishOnly": "rimraf declaration.d.ts",
     "prepublishOnly": "tsc -b .",
