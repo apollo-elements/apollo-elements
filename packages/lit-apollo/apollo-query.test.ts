@@ -1,5 +1,6 @@
 import type {
   ApolloClient,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
   WatchQueryOptions,
@@ -8,7 +9,7 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 

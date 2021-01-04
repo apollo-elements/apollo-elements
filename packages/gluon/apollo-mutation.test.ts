@@ -1,6 +1,7 @@
 import type {
   ApolloClient,
   ApolloError,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
   FetchResult,
@@ -10,7 +11,7 @@ import type {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 

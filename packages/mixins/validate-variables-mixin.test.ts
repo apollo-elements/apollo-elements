@@ -8,7 +8,7 @@ import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.gr
 import NullableParamQuery from '@apollo-elements/test-helpers/graphql/NullableParam.query.graphql';
 import NonNullableParamQuery from '@apollo-elements/test-helpers/graphql/NonNullableParam.query.graphql';
 
-import type { DocumentNode } from 'graphql';
+import type { DocumentNode } from '@apollo/client/core';
 
 describe('ValidateVariablesMixin', function() {
   let element: ApolloQueryInterface<unknown, unknown>;

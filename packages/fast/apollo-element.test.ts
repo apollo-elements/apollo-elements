@@ -1,5 +1,12 @@
-import type { DocumentNode, GraphQLError } from 'graphql';
-import type { ApolloClient, NormalizedCacheObject, TypedDocumentNode } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  DocumentNode,
+  NormalizedCacheObject,
+  TypedDocumentNode,
+} from '@apollo/client/core';
+
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import { expect, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';

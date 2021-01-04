@@ -1,11 +1,17 @@
-import {
+import type {
+  UpdateUserMutationData,
+  UpdateUserMutationVariables,
+} from '@apollo-elements/test-helpers/schema';
+
+import type {
   ApolloClient,
   ApolloError,
+  DocumentNode,
   NormalizedCacheObject,
   TypedDocumentNode,
-  gql,
 } from '@apollo/client/core';
 
+import { gql } from '@apollo/client/core';
 import { html } from 'haunted';
 import { useMutation } from './useMutation';
 import { component } from 'haunted';
@@ -25,13 +31,7 @@ import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
 import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
 import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 
-import type {
-  UpdateUserMutationData,
-  UpdateUserMutationVariables,
-} from '@apollo-elements/test-helpers/schema';
-
 import { ApolloMutationElement } from '@apollo-elements/interfaces';
-import { DocumentNode } from 'graphql';
 
 describe('[haunted] useMutation', function() {
   const ccOrig = ApolloMutationElement.prototype.connectedCallback;

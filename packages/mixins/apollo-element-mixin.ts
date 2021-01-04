@@ -6,7 +6,7 @@ import type {
   OperationVariables,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type {
   ApolloElementElement,

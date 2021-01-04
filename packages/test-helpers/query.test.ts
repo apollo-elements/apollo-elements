@@ -16,7 +16,7 @@ import NonNullableParamQuery from './graphql/NonNullableParam.query.graphql';
 
 import NoParamSubscription from './graphql/NoParam.subscription.graphql';
 
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 
 import { ApolloQueryResult, DefaultOptions, NetworkStatus } from '@apollo/client/core';
 
@@ -36,7 +36,7 @@ import { ObservableQuery } from '@apollo/client/core';
 import { match, spy, SinonSpy } from 'sinon';
 import { client, makeClient } from './client';
 import { Entries, isSubscription, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
-import { GraphQLError } from 'graphql/error/GraphQLError';
+import { GraphQLError } from 'graphql';
 
 type QE<D, V> = ApolloQueryElement<D, V>;
 

@@ -1,11 +1,7 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject,
-  TypePolicies,
-} from '@apollo/client/core';
+import type { NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
+
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client/core';
+
 import { hasAllVariables } from './has-all-variables';
 
 interface Options {

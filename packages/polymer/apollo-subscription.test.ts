@@ -2,6 +2,7 @@ import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscrip
 
 import type {
   ApolloClient,
+  DocumentNode,
   FetchPolicy,
   FetchResult,
   Observable,
@@ -19,7 +20,7 @@ import {
 } from '@apollo-elements/test-helpers/subscription.test';
 
 import { PolymerApolloSubscription } from './apollo-subscription';
-import { DocumentNode, GraphQLError } from 'graphql';
+import { GraphQLError } from 'graphql';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 import { html, PolymerElement } from '@polymer/polymer';
 

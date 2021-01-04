@@ -1,5 +1,6 @@
 import type {
   ApolloClient,
+  DocumentNode,
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
@@ -8,7 +9,7 @@ import type {
 } from '@apollo/client/core';
 
 import type { Entries } from '@apollo-elements/interfaces';
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import {
   defineCE, expect, fixture,
