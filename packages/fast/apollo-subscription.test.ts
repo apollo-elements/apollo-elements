@@ -1,5 +1,6 @@
 import type {
   ApolloClient,
+  DocumentNode,
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
@@ -8,9 +9,11 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
-import { Entries, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
+
+import { Entries, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 
 import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
 import { FASTElement, customElement, DOM, html } from '@microsoft/fast-element';

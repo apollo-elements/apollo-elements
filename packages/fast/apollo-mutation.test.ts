@@ -1,5 +1,6 @@
 import type {
   ApolloClient,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
   FetchResult,
@@ -19,7 +20,7 @@ import {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
 

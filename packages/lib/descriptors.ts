@@ -1,5 +1,5 @@
-import { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
-import { DocumentNode } from '@apollo/client/core';
+import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
+import type { DocumentNode } from '@apollo/client/core';
 
 interface PropertyEffectOptions<C extends ApolloElementElement> {
   /** Name of the property. */
@@ -47,7 +47,7 @@ export function booleanAttr<C extends ApolloElementElement>(
  * @param options Configuration for the property: it's name, initial value, and setter side-effect.
  */
 export function effect<
-  C extends ApolloElementElement,
+  C extends ApolloElementElement<any, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
 >(options: PropertyEffectOptions<C>): PropertyDescriptor {
   const { name, init, onSet } = options;
   const privateName = `_${name}` as typeof name; // little white lies

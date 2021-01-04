@@ -1,12 +1,13 @@
 import type {
   ApolloClient,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client/core';
-import type { DocumentNode } from 'graphql';
+
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';

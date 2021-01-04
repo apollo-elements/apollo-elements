@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { Constructor, Entries } from '@apollo-elements/interfaces';
-import { effect } from '@apollo-elements/lib/descriptors';
 import type { ApolloElement } from '../apollo-element';
 
-type NonFunctionPropertyNames<T extends ApolloElement> = {
+import { effect } from '@apollo-elements/lib/descriptors';
+
+type NonFunctionPropertyNames<T extends ApolloElement<any, any>> = {
   [K in keyof T]: T[K] extends (...args: any[]) => unknown ? never : K;
 }[keyof Omit<T, keyof HTMLElement>];
 
-type ObservableProperties<T extends ApolloElement> =
+type ObservableProperties<T extends ApolloElement<any, any>> =
   Record<NonFunctionPropertyNames<T>, T[NonFunctionPropertyNames<T>]>
 
-export function defineObservedProperties<C extends Constructor<ApolloElement>>(
+export function defineObservedProperties<C extends Constructor<ApolloElement<any, any>>>(
   Class: C,
   properties: Partial<ObservableProperties<InstanceType<C>>>
 ): void {

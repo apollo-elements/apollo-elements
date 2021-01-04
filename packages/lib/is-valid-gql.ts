@@ -1,4 +1,4 @@
-import type { DocumentNode } from 'graphql';
+import type { DocumentNode } from '@apollo/client/core';
 
 /**
  * Validates a graphql document node.

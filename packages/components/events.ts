@@ -1,6 +1,5 @@
 import { Data, Variables } from '@apollo-elements/interfaces/operation';
-import type { ApolloError } from '@apollo/client/core';
-import type { DocumentNode } from 'graphql';
+import type { ApolloError, DocumentNode } from '@apollo/client/core';
 import type { ApolloMutationElement } from './apollo-mutation';
 
 export type MutationEventType = (

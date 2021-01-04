@@ -1,14 +1,15 @@
 import type {
   ApolloClient,
-  NormalizedCacheObject,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
-  WatchQueryOptions,
-  TypedDocumentNode,
+  NormalizedCacheObject,
   OperationVariables,
+  TypedDocumentNode,
+  WatchQueryOptions,
 } from '@apollo/client/core';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type { Constructor, Entries } from '@apollo-elements/interfaces';
 

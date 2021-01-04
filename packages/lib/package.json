@@ -44,9 +44,13 @@
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
-  "homepage": "https://apolloelements.dev/modules/_apollo_elements_lib.html",
+  "homepage": "https://apolloelements.dev/api/lib/",
   "dependencies": {
-    "graphql-tag": "^2.11.0",
+    "@apollo-elements/interfaces": "^1.4.0-alpha.2",
+    "@apollo/client": "^3.3.6",
     "tslib": "^2.0.3"
+  },
+  "peerDependencies": {
+    "graphql": "^15.4.0"
   }
 }

@@ -57,7 +57,7 @@ If you're using TypeScript and importing CSS and GraphQL files with the rollup p
 
 ```ts copy
 declare module '*.graphql' {
-  import { DocumentNode } from 'graphql';
+  import { DocumentNode } from '@apollo/client/core';
   const defaultDocument: DocumentNode;
   export default defaultDocument;
 }

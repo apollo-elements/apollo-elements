@@ -1,11 +1,18 @@
-import {
+import type {
+  HelloQueryData,
+  HelloQueryVariables,
+} from '@apollo-elements/test-helpers/schema';
+
+import type {
   ApolloClient,
   ApolloError,
+  DocumentNode,
   NetworkStatus,
   NormalizedCacheObject,
   TypedDocumentNode,
-  gql,
 } from '@apollo/client/core';
+
+import { gql } from '@apollo/client/core';
 
 import { html } from 'haunted';
 import { useQuery } from './useQuery';
@@ -21,12 +28,6 @@ import { setupClient, setupSpies, setupStubs, teardownClient } from '@apollo-ele
 import { describeQuery, QueryElement } from '@apollo-elements/test-helpers/query.test';
 
 import { spy, SinonSpy, SinonStub } from 'sinon';
-
-import type {
-  HelloQueryData,
-  HelloQueryVariables,
-} from '@apollo-elements/test-helpers/schema';
-import { DocumentNode } from 'graphql';
 
 const ccOrig = ApolloQueryElement.prototype.connectedCallback;
 

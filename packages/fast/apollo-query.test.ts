@@ -1,5 +1,6 @@
 import type {
   ApolloClient,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
   NormalizedCacheObject,
@@ -9,7 +10,8 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import type { Entries, SetupOptions } from '@apollo-elements/test-helpers';
 
 import {

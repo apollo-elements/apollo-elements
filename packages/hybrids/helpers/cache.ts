@@ -33,7 +33,10 @@ export function hookPropertyIntoHybridsCache<T extends HTMLElement>(opts: CacheH
   });
 }
 
-export function hookElementIntoHybridsCache<T extends ApolloElementElement>(host: T): void {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function hookElementIntoHybridsCache<T extends ApolloElementElement<any, any>>(
+  host: T
+): void {
   for (const [key, init] of Object.entries(PROPERTIES) as Entries<T>)
     hookPropertyIntoHybridsCache({ host, key, init });
 }

@@ -1,16 +1,17 @@
 import type {
   ApolloClient,
+  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
-  WatchQueryOptions,
-  ObservableQuery,
   NormalizedCacheObject,
+  ObservableQuery,
   TypedDocumentNode,
+  WatchQueryOptions,
 } from '@apollo/client/core';
 
 import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
 
-import type { DocumentNode, GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import { NetworkStatus } from '@apollo/client/core';
 

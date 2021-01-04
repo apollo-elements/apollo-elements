@@ -1,4 +1,4 @@
-import type { GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type {
   ApolloClient,

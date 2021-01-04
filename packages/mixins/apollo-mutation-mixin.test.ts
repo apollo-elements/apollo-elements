@@ -8,7 +8,7 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from 'graphql';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 

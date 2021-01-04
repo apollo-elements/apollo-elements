@@ -313,14 +313,16 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B) {
     query: gqlDocument(),
     networkStatus: writable(NetworkStatus.ready),
     noAutoSubscribe: booleanAttr('no-auto-subscribe'),
-    options: effect<ApolloQueryElement<unknown, OperationVariables>>({
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    options: effect<ApolloQueryElement<any, any>>({
       name: 'options',
       init: null,
-      onSet(options: ApolloQueryElement<unknown, OperationVariables>['options']) {
+      onSet(options: ApolloQueryElement<any, any>['options']) {
         if (!options) return;
         this.observableQuery?.setOptions(options);
       },
     }),
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   });
 
   return ApolloQueryElement;

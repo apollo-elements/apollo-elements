@@ -21,7 +21,7 @@ import { makeClient, setupClient } from './client';
 
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 import { Entries, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
 
 export interface MutationElement<D = unknown, V = OperationVariables> extends ApolloMutationElement<D, V> {

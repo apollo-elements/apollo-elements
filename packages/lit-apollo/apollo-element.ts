@@ -1,10 +1,15 @@
 import type { ApolloError, OperationVariables } from '@apollo/client/core';
-import type { GraphQLError } from 'graphql';
+
+import type {
+  ApolloElementInterface,
+  Constructor,
+  Data,
+  GraphQLError,
+} from '@apollo-elements/interfaces';
 
 import { LitElement, property } from 'lit-element';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
-import { ApolloElementInterface, Constructor, Data } from '@apollo-elements/interfaces';
 
 /**
  * `ApolloElement`
