@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0...@apollo-elements/components@1.3.1) (2021-01-04)
+
+
+### Bug Fixes
+
+* fix mixin types ([d3f789f](https://github.com/apollo-elements/apollo-elements/commit/d3f789f62cc088505bf7a6f4e390ac37c54ef6c1))
+
+
+
+
+
 # [1.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0-alpha.2...@apollo-elements/components@1.3.0) (2021-01-04)
 
 
