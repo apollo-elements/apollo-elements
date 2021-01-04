@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0-alpha.2...@apollo-elements/components@1.3.0) (2021-01-04)
+
+
+### Bug Fixes
+
+* remove .ts sources from packages ([c71057e](https://github.com/apollo-elements/apollo-elements/commit/c71057ee42ae610621113d5da9555f0a8c42d96c))
+* **components:** type of ApolloClient#client ([417f2b5](https://github.com/apollo-elements/apollo-elements/commit/417f2b558cf2d156e0f31fba3041e212252735d8))
+* **lib:** add graphql as peerDependency ([6804208](https://github.com/apollo-elements/apollo-elements/commit/68042089167222b8ca13895f88077b38e973e186))
+
+
+### Features
+
+* **components:** add css parts to mutation ([ca42f8a](https://github.com/apollo-elements/apollo-elements/commit/ca42f8a415b5fa9137233d09c726c56e5637cc33))
+
+
+
+
+
 # [1.3.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0-alpha.0...@apollo-elements/components@1.3.0-alpha.2) (2020-12-21)
 
 

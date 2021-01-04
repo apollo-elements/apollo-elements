@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.3.0-alpha.0...@apollo-elements/create@1.3.0) (2021-01-04)
+
+
+### Bug Fixes
+
+* **lib:** add graphql as peerDependency ([6804208](https://github.com/apollo-elements/apollo-elements/commit/68042089167222b8ca13895f88077b38e973e186))
+
+
+
+
+
 # [1.3.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.2.1...@apollo-elements/create@1.3.0-alpha.0) (2020-12-04)
 
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.4.0-alpha.2...@apollo-elements/mixins@3.4.0) (2021-01-04)
+
+
+### Bug Fixes
+
+* remove .ts sources from packages ([c71057e](https://github.com/apollo-elements/apollo-elements/commit/c71057ee42ae610621113d5da9555f0a8c42d96c))
+* **lib:** add graphql as peerDependency ([6804208](https://github.com/apollo-elements/apollo-elements/commit/68042089167222b8ca13895f88077b38e973e186))
+
+
+
+
+
 # [3.4.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/mixins@3.4.0-alpha.0...@apollo-elements/mixins@3.4.0-alpha.2) (2020-12-21)
 
 

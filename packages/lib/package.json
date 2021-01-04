@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/lib",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0",
   "description": "Library functions for apollo-elements",
   "main": "index.js",
   "module": "index.js",
@@ -46,7 +46,12 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/lib"
   },
-  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements"
+  ],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {
@@ -54,7 +59,7 @@
   },
   "homepage": "https://apolloelements.dev/api/lib/",
   "dependencies": {
-    "@apollo-elements/interfaces": "^1.4.0-alpha.2",
+    "@apollo-elements/interfaces": "^1.4.0",
     "@apollo/client": "^3.3.6",
     "tslib": "^2.0.3"
   },

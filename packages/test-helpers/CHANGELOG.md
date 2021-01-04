@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@1.2.0-alpha.2...@apollo-elements/test-helpers@1.2.0) (2021-01-04)
+
+
+### Bug Fixes
+
+* **lib:** add graphql as peerDependency ([6804208](https://github.com/apollo-elements/apollo-elements/commit/68042089167222b8ca13895f88077b38e973e186))
+
+
+
+
+
 # [1.2.0-alpha.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/test-helpers@1.2.0-alpha.0...@apollo-elements/test-helpers@1.2.0-alpha.2) (2020-12-21)
 
 
