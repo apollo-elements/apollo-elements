@@ -6,6 +6,7 @@ forever*.log
 analysis.json
 lerna-debug.log
 package-lock.json
+*.tgz
 
 yarn-error.log
 

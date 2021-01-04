@@ -18,6 +18,14 @@
       "default": "./*.js"
     }
   },
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "*.js.map",
+    "**/*.d.ts",
+    "**/*.js",
+    "**/*.js.map"
+  ],
   "scripts": {
     "prepublishOnly": "yarn run-s prepublishOnly:*",
     "prepublishOnly:analyze": "npm run analyze",

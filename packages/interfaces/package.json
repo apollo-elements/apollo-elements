@@ -20,9 +20,17 @@
       "default": "./*.js"
     }
   },
+  "files": [
+    "*.d.ts",
+    "*.d.ts",
+    "*.d.ts",
+    "**/*.d.ts",
+    "**/*.d.ts",
+    "**/*.d.ts"
+  ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
-    "build": "tsc --noEmit",
+    "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
