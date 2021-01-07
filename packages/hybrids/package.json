@@ -57,6 +57,7 @@
   "license": "ISC",
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_hybrids.html",
   "dependencies": {
+    "@apollo-elements/interfaces": "^1.4.1",
     "@apollo-elements/lib": "^4.0.1",
     "@apollo-elements/mixins": "^3.4.1",
     "hybrids": ">= 2",

@@ -2,7 +2,6 @@ import type {
   ApolloMutationInterface,
   Constructor,
   RefetchQueriesType,
-  Variables,
 } from '@apollo-elements/interfaces';
 
 import type { OperationVariables } from '@apollo/client/core';

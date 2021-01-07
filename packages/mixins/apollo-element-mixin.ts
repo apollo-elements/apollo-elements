@@ -6,14 +6,13 @@ import type {
   OperationVariables,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
 import type {
   ApolloElementElement,
   ApolloElementInterface,
   ComponentDocument,
   Constructor,
   Data,
+  GraphQLError,
   Variables,
 } from '@apollo-elements/interfaces';
 

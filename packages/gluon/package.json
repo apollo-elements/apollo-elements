@@ -62,6 +62,7 @@
   },
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_gluon.html",
   "dependencies": {
+    "@apollo-elements/interfaces": "^1.4.1",
     "@apollo-elements/mixins": "^3.4.1",
     "@gluon/gluon": ">= 2",
     "tslib": "^2.0.3"

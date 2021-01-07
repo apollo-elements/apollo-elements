@@ -22,11 +22,11 @@
   },
   "files": [
     "*.d.ts",
-    "*.d.ts",
-    "*.d.ts",
+    "*.js",
+    "*.js.map",
     "**/*.d.ts",
-    "**/*.d.ts",
-    "**/*.d.ts"
+    "**/*.js",
+    "**/*.js.map"
   ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
@@ -46,12 +46,7 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/interfaces"
   },
-  "keywords": [
-    "Apollo",
-    "GraphQL",
-    "Web Components",
-    "Custom Elements"
-  ],
+  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {

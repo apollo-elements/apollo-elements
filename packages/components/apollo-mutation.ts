@@ -5,7 +5,6 @@ import type { TemplateResult } from 'lit-element';
 import type {
   ApolloMutationInterface,
   Data,
-  RefetchQueriesType,
   Variables,
   VariablesOf,
 } from '@apollo-elements/interfaces';

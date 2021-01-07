@@ -1,11 +1,6 @@
 import type { ApolloError, OperationVariables } from '@apollo/client/core';
 
-import type {
-  ApolloElementInterface,
-  Constructor,
-  Data,
-  GraphQLError,
-} from '@apollo-elements/interfaces';
+import type { Constructor, Data, GraphQLError } from '@apollo-elements/interfaces';
 
 import { LitElement, property } from 'lit-element';
 
