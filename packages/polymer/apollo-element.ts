@@ -5,8 +5,12 @@ import type {
   OperationVariables,
 } from '@apollo/client/core';
 
-import type { ApolloElementInterface, Data, Variables } from '@apollo-elements/interfaces';
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type {
+  ApolloElementInterface,
+  Data,
+  GraphQLError,
+  Variables,
+} from '@apollo-elements/interfaces';
 
 import { notify, PolymerChangeEvent } from './notify-decorator';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';

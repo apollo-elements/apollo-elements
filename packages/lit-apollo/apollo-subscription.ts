@@ -1,7 +1,7 @@
 import type { OperationVariables } from '@apollo/client/core';
+import type { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/interfaces';
 
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
-import { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/interfaces';
 
 import { ApolloElement } from './apollo-element';
 

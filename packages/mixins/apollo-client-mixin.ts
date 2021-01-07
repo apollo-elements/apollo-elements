@@ -1,5 +1,9 @@
-import { ApolloElementInterface, CustomElement, Constructor } from '@apollo-elements/interfaces';
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloElementInterface,
+  CustomElement,
+  Constructor,
+} from '@apollo-elements/interfaces';
 
 export function ApolloClientMixin<B extends Constructor<ApolloElementInterface & CustomElement>>(
   client: ApolloClient<NormalizedCacheObject>,

@@ -1,9 +1,10 @@
-import { NetworkStatus, OperationVariables } from '@apollo/client/core';
+import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
+import type { OperationVariables } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client/core';
 
 import { property } from 'lit-element';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-import { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
 
 import { ApolloElement } from './apollo-element';
 

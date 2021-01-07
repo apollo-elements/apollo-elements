@@ -61,6 +61,7 @@
   },
   "homepage": "https://apolloelements.dev/api/libraries/polymer/",
   "dependencies": {
+    "@apollo-elements/interfaces": "^1.4.1",
     "@apollo-elements/mixins": "^3.4.1",
     "tslib": "^2.0.3"
   }
