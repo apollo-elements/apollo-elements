@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.1...@apollo-elements/components@1.3.2) (2021-01-07)
+
+
+### Bug Fixes
+
+* depend on interfaces package ([90e5974](https://github.com/apollo-elements/apollo-elements/commit/90e5974946f502925aa1d7f1f9fbb1ecbe4302dc))
+
+
+
+
+
 ## [1.3.1](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.0...@apollo-elements/components@1.3.1) (2021-01-04)
 
 

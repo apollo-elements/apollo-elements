@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/lib",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Library functions for apollo-elements",
   "main": "index.js",
   "module": "index.js",
@@ -59,7 +59,7 @@
   },
   "homepage": "https://apolloelements.dev/api/lib/",
   "dependencies": {
-    "@apollo-elements/interfaces": "^1.4.1",
+    "@apollo-elements/interfaces": "^1.4.2",
     "@apollo/client": "^3.3.6",
     "tslib": "^2.0.3"
   },
