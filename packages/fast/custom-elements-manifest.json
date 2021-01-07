@@ -83,7 +83,8 @@
             {
               "kind": "field",
               "name": "document",
-              "description": "A GraphQL document containing a single query, mutation, or subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "summary": "Internal property corresponding to `query`, `mutation`, or `subscription`. Use those instead.",
+              "description": "A GraphQL document containing a single query, mutation, or subscription. You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM). The `document` property should be considered internal and its use avoided.",
               "type": {
                 "type": "DocumentNode | TypedDocumentNode | null",
                 "references": [
