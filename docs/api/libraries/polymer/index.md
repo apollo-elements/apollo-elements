@@ -27,25 +27,34 @@ pnpm add @apollo-elements/polymer
 
 Import `apollo-query`, `apollo-mutation`, or `apollo-subscription` to bind data up into your Polymer elements.
 
+## Examples
+
 These custom elements fire [polymer](https://polymer-library.polymer-project.org)-style `*-changed` events when the Apollo cache updates their state. They extend directly from `HTMLElement` so they're small in size, and their notifying properties make them perfect for use in Polymer templates.
+
+### Using `<apollo-client>` to Scope a Client to it's Children
+
+This example uses [`<apollo-client>`](/api/components/apollo-client/) to create a client and assign it to `<apollo-query>`. There's no need to explicitly assign the `client` property, since `<apollo-client>` automatically sets the client on all it's deeply nested children.
 
 ```ts wcd 9kmJUbA735YuF4HRBzO7 src/Hello.ts
 import { PolymerElement, html } from '@polymer/polymer';
+import '@apollo-elements/components/apollo-client';
 import '@apollo-elements/polymer/apollo-query';
 
 class HelloQueryElement extends PolymerElement {
   static get template() {
     return html`
-      <apollo-query data="{%raw%}{{data}}{%endraw%}">
-        <script type="application/graphql">
-          query HelloQuery($name: String, $greeting: String) {
-            hello(name: $name, greeting: $greeting) {
-              name
-              greeting
+      <apollo-client uri="/graphql">
+        <apollo-query data="{%raw%}{{data}}{%endraw%}" variables="[[variables]]">
+          <script type="application/graphql">
+            query HelloQuery($name: String, $greeting: String) {
+              hello(name: $name, greeting: $greeting) {
+                name
+                greeting
+              }
             }
-          }
-        </script>
-      </apollo-query>
+          </script>
+        </apollo-query>
+      </apollo-client>
 
       <span id="hello">
         [[getGreeting(data)]], [[getName(data)]]!
@@ -55,21 +64,74 @@ class HelloQueryElement extends PolymerElement {
 
   static get properties() {
     return {
-      data: {
+      data: { type: Object },
+      variables: {
         type: Object,
-        value: () => null,
+        value: () => ({
+          name: 'Partner',
+          greeting: 'Howdy',
+        }),
       },
     };
   }
 
   getGreeting(data) {
-    return data?.hello?.greeting ?? 'hello';
+    return data && data.hello && data.hello.greeting || 'hello';
   }
 
   getName(data) {
-    return data?.hello?.name ?? 'world';
+    return data && data.hello && data.hello.name || 'world';
   }
 }
 
 customElements.define('hello-query', HelloQueryElement);
 ```
+
+### Using Two-Way Binding to Set the Client
+
+If you prefer, you can use Polymer's two-way binding to set an element's client property, instead of nesting the apollo elements under an `<apollo-client>` element.
+
+```html
+<apollo-client uri="/graphql" client="{%raw%}{{ownClient}}{%endraw%}"></apollo-client>
+<apollo-client uri="https://api.spacex.land/graphql" client="{%raw%}{{spaceXClient}}{%endraw%}"></apollo-client>
+
+<apollo-query
+    client="[[ownClient]]"
+    data="{%raw%}{{helloData}}{%endraw%}"
+    variables="[[helloVariables]]">
+  <script type="application/graphql">
+    query HelloQuery($name: String, $greeting: String) {
+      hello(name: $name, greeting: $greeting) {
+        name
+        greeting
+      }
+    }
+  </script>
+</apollo-query>
+
+<apollo-query
+    client="[[spacexClient]]"
+    data="{%raw%}{{launchesData}}{%endraw%}"
+    variables="[[launchesVariables]]">
+  <script type="application/graphql">
+    query LaunchesQuery($sort: String = "launch_date_utc"){
+      launches(sort: $sort, order: "desc") {
+        launch_date_utc
+        mission_name
+        rocket {
+          rocket_name
+        }
+      }
+    }
+  </script>
+</apollo-query>
+
+<p>
+  <span>[[getGreeting(helloData)]]</span>,
+  <span>[[getGreeting(helloData)]]</span>!
+  Latest launch is
+  <span>[[launchesData.launches.0.mission_name]]</span>.
+</p>
+```
+
+## Exports
