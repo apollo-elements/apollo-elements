@@ -21,7 +21,10 @@ Inherits from [`ApolloMutationInterface`](/api/interfaces/mutation/)
     <latest-users limit="5"></latest-users>
 
     <apollo-mutation slot="actions" refetch-queries="LatestUsers">
-      <mwc-textfield slot="variable" data-variable="name" label="User name" outlined></mwc-textfield>
+      <mwc-textfield slot="variable"
+          data-variable="name"
+          label="User name"
+          outlined></mwc-textfield>
       <mwc-button slot="trigger" label="Add user"></mwc-button>
       <script type="application/graphql">
         mutation InsertUser($name: String!) {

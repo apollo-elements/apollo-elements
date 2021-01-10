@@ -117,6 +117,22 @@ function capitalize(str) {
   return (str.charAt(0).toUpperCase() + str.slice(1));
 }
 
+function polymerElementDefinition(path) {
+  const name = path.replace(/^\.\/(\w+-\w+)\.(js|ts)$/, '$1');
+  const className = `PolymerApollo${capitalize(name.replace('apollo-', ''))}`;
+  const filepath = `./${className}.description.md`;
+  const { pathname } = new URL(filepath, import.meta.url);
+  const description = readFileSync(pathname, 'utf8');
+  return {
+    kind: 'custom-element-definition',
+    name,
+    description,
+    declaration: {
+      name: className,
+    },
+  };
+}
+
 /**
  * Transform the Interfaces manifest for the Polymer package
  * @param  {import('custom-elements-manifest/schema').Package} base interfaces manifest
@@ -296,31 +312,61 @@ function interfacesToPackage(manifest, pkg) {
   }
 }
 
-function polymerElementDefinition(path) {
-  const name = path.replace(/^\.\/(\w+-\w+)\.(js|ts)$/, '$1');
-  const className = `PolymerApollo${capitalize(name.replace('apollo-', ''))}`;
-  const filepath = `./${className}.description.md`;
-  const { pathname } = new URL(filepath, import.meta.url);
-  const description = readFileSync(pathname, 'utf8');
+const isMutationModule = module => module.path.includes('apollo-mutation');
+
+const isClassDeclaration = declaration => declaration.kind === 'class';
+
+function interfacesToComponentsPackage(manifest, interfacesManifest) {
+  const mutationInterfaceMembers =
+    interfacesManifest
+      .modules
+      .find(isMutationModule)
+      .declarations
+      .find(isClassDeclaration)
+      .members;
+
   return {
-    kind: 'custom-element-definition',
-    name,
-    description,
-    declaration: {
-      name: className,
-    },
-  };
+    ...manifest,
+    modules: manifest.modules.map(module =>
+      !isMutationModule(module) ? module : ({
+      ...module,
+      declarations: module.declarations.map(declaration => !isClassDeclaration(declaration) ? declaration : ({
+        ...declaration,
+        members: [
+          ...declaration.members,
+          ...mutationInterfaceMembers
+            .map(m => ({
+              ...m,
+              inheritedFrom: m.inheritedFrom ?? {
+                "name": "ApolloMutation",
+                "package": "@apollo-elements/lit-apollo",
+                "module": "./apollo-mutation.js"
+              },
+            })),
+        ],
+      })),
+    })),
+  }
+}
+
+function writeTransformedManifest(pathname, data) {
+  const content = JSON.stringify(data, null, 2);
+  writeFileSync(pathname, content, 'utf-8');
+  console.log('Generated', projectPath(pathname));
 }
 
 export function generateManifestsFromInterfaces() {
   const interfacesManifest = readJSONSync(getManifestPath('interfaces'));
 
-  for (const pkg of ['lit', 'fast', 'gluon', 'polymer', 'mixins']) { // eslint-disable-line easy-loops/easy-loops
-    const pathname = getManifestPath(pkg);
-    const content = JSON.stringify(interfacesToPackage(interfacesManifest, pkg), null, 2);
-    writeFileSync(pathname, content, 'utf-8');
-    console.log('Generated', projectPath(pathname));
-  }
+  for (const pkg of ['lit', 'fast', 'gluon', 'polymer', 'mixins'])
+    writeTransformedManifest(getManifestPath(pkg), interfacesToPackage(interfacesManifest, pkg))
+
+  const componentsBase = readJSONSync(new URL('../components-manifest.json', import.meta.url).pathname);
+
+  writeTransformedManifest(
+    getManifestPath('components'),
+    interfacesToComponentsPackage(componentsBase, interfacesManifest),
+  );
 }
 
 export function copyCustomElementManifests() {
