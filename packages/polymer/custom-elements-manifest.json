@@ -895,7 +895,8 @@
             {
               "kind": "field",
               "name": "variables",
-              "description": "An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "summary": "Query variables",
+              "description": "An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.\nIf the element has not yet subscribed and [`noAutoSubscribe`](#noautosubscribe) is not set, setting variables causes the element to subscribe, otherwise, setting variables causes the query to refetch.",
               "type": {
                 "type": "Variables<D, V> | null"
               },
@@ -2025,7 +2026,7 @@
             {
               "kind": "field",
               "name": "variables",
-              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
+              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\nIf the element has not yet subscribed and [`noAutoSubscribe`](#noautosubscribe) is not set, setting variables causes the element to subscribe, otherwise, setting variables causes the query to refetch.",
               "type": {
                 "type": "Variables<D, V> | null"
               },
