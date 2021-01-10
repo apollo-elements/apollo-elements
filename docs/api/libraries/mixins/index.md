@@ -1,3 +1,8 @@
+---
+layout: api-index
+package: '@apollo-elements/mixins'
+---
+
 # Web Component Libraries >> Class Mixins || 10
 
 These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/) give you all the features you need to connect your components to your Apollo cache without imposing a specific component library.
@@ -27,10 +32,10 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
 import { HelloQuery } from './Hello.query.graphql';
 
-const tpl = document.createElement('template');
-tpl.innerHTML = `
-  <span id="hello"></span>
-`;
+const template = document.createElement('template');
+      template.innerHTML = `
+        <span id="hello"></span>
+      `;
 
 class HelloQueryElement extends ApolloQueryMixin(HTMLElement)<typeof HelloQuery> {
   query = HelloQuery;
@@ -47,7 +52,7 @@ class HelloQueryElement extends ApolloQueryMixin(HTMLElement)<typeof HelloQuery>
   constructor() {
     super();
     this.attachShadow({ mode: 'open' })
-      .append(tpl.content.cloneNode(true));
+      .append(template.content.cloneNode(true));
   }
 
   render(data = this.data) {
