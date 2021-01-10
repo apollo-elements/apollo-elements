@@ -100,6 +100,10 @@ function getHeadings(module) {
   }).filter(([, v]) => !!v).map(([k]) => k);
 }
 
+function sortByProp(list = [], prop = '') {
+  return list.sort((a, b) => (a[prop]??'').localeCompare((b[prop]??'')));
+}
+
 export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addPairedShortcode('markdown', markdown);
 
@@ -133,6 +137,8 @@ export function customElementsManifest(eleventyConfig, options) {
 
   eleventyConfig.addFilter('getTypeString', getTypeString);
   eleventyConfig.addFilter('getHeadings', getHeadings);
+
+  eleventyConfig.addFilter('sortByProp', sortByProp);
 
   eleventyConfig.addPlugin(manifestModuleImports, options.imports);
   eleventyConfig.addPlugin(externalTypeLinks, options.types);

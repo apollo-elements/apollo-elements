@@ -14,12 +14,12 @@
 {% if fields.length %}
   {% block beforeProperties %}{% endblock %}
   {{ linkHeading('Properties', level=2) }}
-  {% for property in fields %}
+  {% for property in (fields | sortByProp('name')) %}
     {% if not property.inheritedFrom %}
       {% include "./property.njk" %}
     {% endif %}
   {% endfor %}
-  {% for property in fields %}
+  {% for property in (fields | sortByProp('name')) %}
     {% if property.inheritedFrom %}
       {% include "./property.njk" %}
     {% endif %}
@@ -29,12 +29,12 @@
 
 {% if methods.length %}
   {{ linkHeading('Methods', level=2) }}
-  {% for method in methods %}
+  {% for method in (methods | sortByProp('name')) %}
     {% if not method.inheritedFrom %}
       {% include "./method.njk" %}
     {% endif %}
   {% endfor %}
-  {% for method in methods %}
+  {% for method in (methods | sortByProp('name')) %}
     {% if method.inheritedFrom %}
       {% include "./method.njk" %}
     {% endif %}
@@ -43,7 +43,7 @@
 
 {% if slots.length %}
   {{ linkHeading('Slots', level=2) }}
-  {% for slot in slots %}
+  {% for slot in (slots | sortByProp('name')) %}
     {% include "./slot.njk" %}
   {% endfor %}
 {% endif %}
@@ -58,7 +58,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for cssPart in cssParts %}
+      {% for cssPart in (cssParts | sortByProp('name')) %}
         <tr>
           <td>{{ cssPart.name }}</td>
           <td>{{ cssPart.description }}</td>
@@ -82,7 +82,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for cssProp in cssProperties %}
+      {% for cssProp in (cssProperties | sortByProp('name')) %}
         <tr>
           <td>{{ cssProp.name }}</td>
           <td>{{ codeBlock(cssProp.defaultValue, lang="css") }}</td>
@@ -107,7 +107,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for event in events %}
+      {% for event in (events | sortByProp('name')) %}
         <tr>
           <td>{{ event.name }}</td>
           <td>{{ codeBlock(event.type.type) }}</td>
