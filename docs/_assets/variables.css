@@ -63,6 +63,8 @@
   --wcd-snippet-button-background: var(--code-button);
   --wcd-snippet-button-focus-background: var(--code-button-focus-background);
   --wcd-snippet-button-focus-color: var(--code-button-focus-color);
+  --wcd-snippet-outer-background-color: var(--page-background);
+  --wcd-snippet-focus-border-color: var(--primary-color);
 
   /* markdown */
   --markdown-blockquote-color: var(--light-blue-900);

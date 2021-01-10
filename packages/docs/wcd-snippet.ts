@@ -3,11 +3,12 @@ template.innerHTML = `
   <style>
   :host {
     display: block;
+    box-sizing: border-box;
     position: relative;
     width: 100%;
     height: auto;
-    border-radius: var(--wcd-snippet-border-radius, 6px);
-    overflow: hidden;
+
+    --_-button-focus-background: hsla(0 100% 0% / 0.75);
   }
 
   iframe {
@@ -16,8 +17,22 @@ template.innerHTML = `
     overflow: hidden;
   }
 
+  #snippet,
+  iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--wcd-snippet-border-radius, 6px);
+  }
+
   #snippet {
-    display: contents;
+    display: block;
+  }
+
+  #snippet,
+  button {
+    border: 1px solid var(--wcd-snippet-border-color, transparent);
+    transition: border-color 0.2s ease-in-out;
+    will-change: border-color;
   }
 
   :host([live]) iframe {
@@ -31,35 +46,53 @@ template.innerHTML = `
     display: none;
   }
 
+  :host(:not([live]):focus-within) #snippet,
+  :host(:not([live]):hover) #snippet {
+    border-color: var(--wcd-snippet-focus-border-color, black);
+  }
+
   button {
-    color: inherit;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    background: var(--wcd-snippet-button-background, hsla(0 100% 100% / 0.9));
+    border-bottom-right-radius: 6px;
     border-top-left-radius: 6px;
-    padding: 9px 16px;
-    border: none;
+    color: inherit;
     cursor: pointer;
     display: block;
     font-size: 16px;
-    background: var(--wcd-snippet-button-background, hsla(0 100% 100% / 0.9));
     outline: none;
-    transition: color, background 0.1s ease;
+    padding: 9px 16px;
+    position: absolute;
+    bottom: 0;
+    right: -2px;
+    transition:
+      border-color 0.2s ease-in-out,
+      background 0.1s ease,
+      color 0.1s ease;
+  }
+
+  :host(:not([live]):focus-within) button,
+  :host(:not([live]):hover) button {
+    border-top-color: var(--wcd-snippet-focus-border-color, black);
+    border-left-color: var(--wcd-snippet-focus-border-color, black);
+    border-bottom-color: var(--wcd-snippet-outer-background-color, white);
+    border-right-color: var(--wcd-snippet-outer-background-color, white);
   }
 
   button:focus,
   button:hover {
     color: var(--wcd-snippet-button-focus-color, hsla(0 100% 100% / 0.75));
-    background: var(--wcd-snippet-button-focus-background, hsla(0 100% 0% / 0.75));
+    background: var(--wcd-snippet-button-focus-background, var(--_-button-focus-background));
+    border-bottom-color: var(--wcd-snippet-button-focus-background, var(--_-button-focus-background)) !important;
+    border-right-color: var(--wcd-snippet-button-focus-background, var(--_-button-focus-background)) !important;
   }
 
   </style>
 
   <div id="snippet"><slot></slot></div>
 
-  <iframe part="iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+  <iframe part="iframe" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
 
-  <button part="button">Live Demo</button>
+  <button part="button">▶️ Live Demo</button>
 `;
 
 class WcdSnippet extends HTMLElement {
