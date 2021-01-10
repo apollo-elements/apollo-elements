@@ -1,10 +1,39 @@
 [build]
   publish = "_site/"
 
+[[plugins]]
+  package = "netlify-plugin-a11y"
 
+    # all inputs are optional, we just show you the defaults below
+    [plugins.inputs]
+
+    resultMode = "warn" # is "error" by default
+
+# Redirects from typedoc site
+[[redirects]]
+  from = "/modules/_apollo_elements_fast.html"
+  to = "/api/libraries/fast/"
+[[redirects]]
+  from = "/modules/_apollo_elements_gluon.html"
+  to = "/api/libraries/gluon/"
 [[redirects]]
   from = "/modules/_apollo_elements_haunted.html"
   to = "/api/libraries/haunted/"
+[[redirects]]
+  from = "/modules/_apollo_elements_hybrids.html"
+  to = "/api/libraries/hybrids/"
+[[redirects]]
+  from = "/modules/_apollo_elements_lib.html"
+  to = "/api/libraries/lib/"
+[[redirects]]
+  from = "/modules/_apollo_elements_lit-apollo.html"
+  to = "/api/libraries/lit-apollo/"
+[[redirects]]
+  from = "/modules/_apollo_elements_mixins.html"
+  to = "/api/libraries/mixins/"
+[[redirects]]
+  from = "/modules/_apollo_elements_polymer.html"
+  to = "/api/libraries/polymer/"
 [[redirects]]
   from = "/modules/_apollo_elements_components.html"
   to = "/api/components/"
@@ -30,10 +59,121 @@
   from = "/pages/using%20apollo/queries"
   to = "/guides/building-apps/queries/"
 
-[[plugins]]
-package = "netlify-plugin-a11y"
-
-  # all inputs are optional, we just show you the defaults below
-  [plugins.inputs]
-
-  resultMode = "warn" # is "error" by default
+# fixes annoying errors from @netlify/plugin-no-more-404
+[[redirects]]
+  from = "_includes/api/"
+  to = "/"
+[[redirects]]
+  from = "_includes/api-index/"
+  to = "/"
+[[redirects]]
+  from = "_includes/home/"
+  to = "/"
+[[redirects]]
+  from = "_includes/with-sidebar/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/content-footer/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/footer/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/head/"
+  to = "/"
+[[redirects]]
+  from = "api/types/ApolloQueryResult/"
+  to = "/"
+[[redirects]]
+  from = "api/types/ClientHybridsFactoryOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/FetchMoreParams/"
+  to = "/"
+[[redirects]]
+  from = "api/types/FetchResult/"
+  to = "/"
+[[redirects]]
+  from = "api/types/MutationHookOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/MutationHookResult/"
+  to = "/"
+[[redirects]]
+  from = "api/types/MutationHybridsFactoryOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/MutationOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/OptimisticResponseType/"
+  to = "/"
+[[redirects]]
+  from = "api/types/QueryHookOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/QueryHybridsFactoryOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/QueryOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/QueryResult/"
+  to = "/"
+[[redirects]]
+  from = "api/types/SubscriptionDataOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/SubscriptionHookOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/SubscriptionHybridsFactoryOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/SubscriptionOptions/"
+  to = "/"
+[[redirects]]
+  from = "api/types/SubscriptionResult/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/class/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/exports/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/function/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/get-manifest/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/macros/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/method/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/mixin/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/parameter/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/property/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/custom-elements-manifest/slot/"
+  to = "/"
+[[redirects]]
+  from = "_includes/blog-overview/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/blog-content-footer/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/post-snippet/"
+  to = "/"
+[[redirects]]
+  from = "_includes/partials/pageJs/"
+  to = "/"
