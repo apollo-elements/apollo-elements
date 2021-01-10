@@ -29,3 +29,11 @@
 [[redirects]]
   from = "/pages/using%20apollo/queries"
   to = "/guides/building-apps/queries/"
+
+[[plugins]]
+package = "netlify-plugin-a11y"
+
+  # all inputs are optional, we just show you the defaults below
+  [plugins.inputs]
+
+  resultMode = "warn" # is "error" by default

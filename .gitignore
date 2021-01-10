@@ -1,25 +1,21 @@
 node_modules
 coverage
+
+.netlify
 .nyc_output
 .npmrc
+
 forever*.log
 analysis.json
 lerna-debug.log
 package-lock.json
-*.tgz
-
 yarn-error.log
-
-*.draft.md
-
-docs/_data/cems
+*.tgz
 
 packages/*/*.js
 packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
-
-packages/*/docs/*.yml
 
 packages/test-helpers/schema.ts
 packages/components/README.md
@@ -46,3 +42,8 @@ docs/_merged_assets/
 docs/_merged_includes/
 _site-dev
 _site
+
+## Apollo Elements docs ignores
+docs/_data/cems
+*.draft.md
+packages/*/docs/*.yml
