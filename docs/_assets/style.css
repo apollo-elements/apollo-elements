@@ -48,6 +48,10 @@ main :defined {
   }
 }
 
+table tr:nth-of-type(even) code {
+  background: var(--markdown-table-row-odd-background-color);
+}
+
 table code[class*="language-"],
 table pre[class*="language-"] {
   margin: 0;

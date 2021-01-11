@@ -110,15 +110,12 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addFilter('split', split);
 
   eleventyConfig.addFilter('hackToInsertHeadings', (nodes = [], { key = '', module = {} } = {}) => (
-    nodes.map(entry => (!entry?.data?.module || !entry.templateContent?.html) ? entry : ({
+    nodes.map(entry => (!entry?.data?.module || !entry.templateContent) ? entry : ({
       ...entry,
-      templateContent: {
-        ...entry.templateContent,
-        html: entry.templateContent.html +
-          getHeadings(module)
-            .map(heading => `<h2 id="${heading.toLowerCase()}">${heading}</h2>`)
-            .join('\n'),
-      },
+      templateContent: entry.templateContent +
+        getHeadings(module)
+          .map(heading => `<h2 id="${heading.toLowerCase()}">${heading}</h2>`)
+          .join('\n'),
     }))
   ));
 
