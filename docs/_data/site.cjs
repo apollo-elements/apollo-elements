@@ -1,6 +1,6 @@
 module.exports = async function siteConfig() {
   return {
-    analytics: 'G-3H2TDNQDBR', 
+    analytics: 'G-3H2TDNQDBR',
     dir: 'ltr',
     lang: 'en',
     name: 'Apollo Elements',
@@ -13,6 +13,10 @@ module.exports = async function siteConfig() {
       {
         name: 'Discord',
         url: 'https://discord.gg/2FgMbKf'
+      },
+      {
+        name: 'Telegram',
+        url: 'https://t.me/apolloelements'
       }
     ],
     gitSiteUrl: 'https://github.com/apollo-elements/apollo-elements',
