@@ -27,7 +27,7 @@
 
 {% block main %}
   <main class="markdown-body">
-    <img class="page-logo" src="{{ '_assets/logo.svg' | asset | url }}" alt="{{ site.title }} Logo"/>
+    <img class="page-logo" src="{{ '_assets/logo.svg' | asset | url }}" alt="{{ site.title }} Logo" width="35vw" height="35vw"/>
 
     {% if rocketLaunch.homeLayout === 'background' %}
       <img class="page-background" src="{{ '_assets/home-background.svg' | asset | url }}" role="presentation"/>
@@ -68,7 +68,7 @@
         <li>
           <a href="./api/libraries/{{ library.lib }}/">
             <figure>
-              <img src="{{ logourl }}" alt=""/>
+              <img src="{{ logourl }}" alt="" width="100px" height="100px"/>
               <figcaption>{{ library.name }}</figcaption>
             </figure>
           </a>
