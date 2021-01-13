@@ -1,7 +1,7 @@
-const RESET = '\x1b[0m';
-const BRIGHT = '\x1b[1m';
+import { bold, blue } from 'chalk';
+const TITLE = blue('Apollo Elements');
 
-export default `${BRIGHT}
+export default bold(`
 
                                     @@@@@@@@@
                                 @@@@@@@@@@@@@@@@@
@@ -35,6 +35,5 @@ export default `${BRIGHT}
                                 @@@@@@@@@@@@@@@@@
                                     @@@@@@@@@
 
-                                  Apollo Elements
-${RESET}
-`;
+                                  ${TITLE}
+`);

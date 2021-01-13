@@ -16,7 +16,7 @@ export default {
   appIndex: 'index.html',
   rootDir: '.',
   mimeTypes: {
-    'src/components/**/*.graphql': 'js',
+    'src/**/*.graphql': 'js',
     'src/components/**/*.css': 'js',
     'src/style.css': 'css',
   },

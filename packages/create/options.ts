@@ -15,6 +15,7 @@ export type Operation = 'query' | 'mutation' | 'subscription';
 
 export interface ComponentOptions extends BaseOptions {
   name: string;
+  operationName: string;
   subdir?: string;
   type: Operation;
   sharedCssPath?: string;

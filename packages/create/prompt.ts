@@ -126,6 +126,11 @@ export async function prompt(): Promise<void> {
         type: 'string',
         description: 'Custom element tag name',
       })
+      .option('operationName', {
+        alias: 'o',
+        type: 'string',
+        description: 'GraphQL Operation name',
+      })
       .option('subdir', {
         alias: 'd',
         type: 'string',
@@ -171,31 +176,38 @@ export async function prompt(): Promise<void> {
         return true;
     });
 
-  if (argv._.includes('app'))
-    return await promptApp(argv).then(app);
-  else if (argv._.includes('component'))
-    return await promptComponent(argv).then(component);
-  else {
-    console.log(BANNER);
+  try {
+    if (argv._.includes('app'))
+      return await promptApp(argv).then(app);
+    else if (argv._.includes('component'))
+      return await promptComponent(argv).then(component);
+    else {
+      console.log(BANNER);
 
-    const { generate } = await prompts({
-      name: 'generate',
-      message: 'What would you like to generate?',
-      type: 'select',
-      choices: [{
-        title: 'App',
-        value: 'app',
-        description: 'Scaffold an app project',
-      }, {
-        title: 'Component',
-        value: 'component',
-        description: 'Scaffold a component for an existing app',
-      }],
-    });
+      const { generate } = await prompts({
+        name: 'generate',
+        message: 'What would you like to generate?',
+        type: 'select',
+        choices: [{
+          title: 'App',
+          value: 'app',
+          description: 'Scaffold an app project',
+        }, {
+          title: 'Component',
+          value: 'component',
+          description: 'Scaffold a component for an existing app',
+        }],
+      });
 
-    switch (generate) {
-      case 'app': return await promptApp(argv).then(app);
-      case 'component': return await promptComponent(argv).then(component);
+      switch (generate) {
+        case 'app': return await promptApp(argv).then(app);
+        case 'component': return await promptComponent(argv).then(component);
+      }
     }
+  } catch (error) {
+    if (error.command.includes('build:codegen'))
+      return;
+    else
+      console.error(error);
   }
 }
