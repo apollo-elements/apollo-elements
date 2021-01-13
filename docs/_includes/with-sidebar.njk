@@ -13,7 +13,7 @@
 {% endblock bodyTag %}
 
 {% block sidebar %}
-  {% set html = content.html %}
+  {% set html = content %}
   <rocket-drawer id="sidebar">
     <nav slot="content" id="sidebar-nav">
       {% include 'partials/logoLink.njk' %}
@@ -34,7 +34,7 @@
   <main class="markdown-body">
     {% include 'partials/addTitleHeadline.njk' %}
 
-    {{ content.html | safe }}
+    {{ content | safe }}
 
     {% include 'partials/previousNext.njk' %}
     {% include 'partials/content-footer.njk' %}
