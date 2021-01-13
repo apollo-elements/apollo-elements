@@ -1,6 +1,6 @@
 import type { ComponentOptions, Operation } from './options';
 
-import { capital, pascal } from 'case';
+import { capital, pascal, camel } from 'case';
 
 import { promisify } from 'util';
 import { join, relative } from 'path';
@@ -9,6 +9,8 @@ import mkdirp from 'mkdirp';
 
 import { codegen } from './codegen';
 import { processTemplate, readFile, writeFile } from './files';
+
+import { green, greenBright } from 'chalk';
 import prompts from 'prompts';
 
 type InterpolationKeys =
@@ -98,7 +100,7 @@ const getCssArray =
   memoize((options: ComponentOptions): string =>
     `[${getCSSImport(options) ? 'shared, ' : ''}style]` );
 
-const getUnprefixedTagName =
+export const getUnprefixedTagName =
   memoize((options: ComponentOptions): string =>
     options
       .name
@@ -108,6 +110,7 @@ const getUnprefixedTagName =
 
 const getOperation =
   memoize((options: ComponentOptions): string =>
+    options.operationName ??
     pascal(getUnprefixedTagName(options)));
 
 const getOperationName =
@@ -165,7 +168,7 @@ const getCSSImport =
 const getDefaultOperationNames =
   memoize((operationName: string): Record<Operation, string> =>
     ({
-      mutation: `Update${operationName}`,
+      mutation: `${operationName}`,
       query: operationName,
       subscription: operationName,
     }));
@@ -173,7 +176,7 @@ const getDefaultOperationNames =
 const getDefaultVariables =
   memoize((operationName: string): Partial<Record<Operation, string>> =>
     ({
-      mutation: `($input: Update${operationName}Input!)`,
+      mutation: `($input: ${operationName}Input!)`,
     }));
 
 const getFieldArgs =
@@ -192,14 +195,14 @@ const getFields =
     ({
       subscription: DEFAULT_SUBSCRIPTION_FIELDS,
       query: DEFAULT_QUERY_FIELDS,
-      mutation: `update${getOperation(options)}${getFieldArgs(options)} {\n\t\tid\n\t}`,
+      mutation: `${camel(getOperation(options))}${getFieldArgs(options)} {\n\t\tid\n\t}`,
     })[options.type]);
 
 const getOperationFields =
   memoize((options: ComponentOptions): string =>
     options.fields ?? getFields(options));
 
-const getOperationFileName =
+export const getOperationFileName =
   memoize((options: ComponentOptions): string =>
     `${getOperation(options)}.${options.type}.graphql`);
 
@@ -269,23 +272,22 @@ async function writeComponentFile(key: FileKey, options: ComponentOptions) {
   const OUTPUT =
     processTemplate(await getTemplate(key), getInterpolations(options));
 
-  console.log(`Writing ${relative(cwd, PATH)}`);
-
   await writeFile(PATH, OUTPUT, 'utf-8');
+  console.log(`\tWrote ${green(relative(cwd, PATH))}`);
 }
 
 async function writeComponent(options: ComponentOptions) {
   if (!await shouldWriteToDir(options))
     return;
 
-  console.log(`\nCreating ${options.name} in ${getComponentPathFromCWD(options)}\n`);
+  console.log(`\nCreating ${green(options.name)} in ${getComponentPathFromCWD(options)}\n`);
 
   await mkdirp(getComponentAbsPath(options));
 
   for (const key of Object.keys(FileKey) as FileKey[])
     await writeComponentFile(key, options);
 
-  console.log('\nDone!');
+  console.log(`\n${greenBright('Done!')}`);
 }
 
 /**

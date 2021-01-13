@@ -9,6 +9,8 @@ import style from './<%= UNPREFIXED %>.css';<%= CSS_IMPORT %>
 
 import <%= OPERATION_NAME %> from './<%= OPERATION_FILE_NAME %>';
 
+declare global { interface HTMLElementTagNameMap { '<%= TAG_NAME %>': <%= CLASS_NAME %> } }
+
 @customElement('<%= TAG_NAME %>')
 export class <%= CLASS_NAME %> extends <%= BASE_CLASS %><Data, Variables> {
   static readonly is = '<%= TAG_NAME %>';

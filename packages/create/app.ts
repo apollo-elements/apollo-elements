@@ -11,6 +11,8 @@ import execa from 'execa';
 import { codegen } from './codegen';
 import { readFile, processTemplate, writeFile } from './files';
 
+import { cyan, greenBright } from 'chalk';
+
 const cwd = process.cwd();
 
 const ncp = promisify(NCP.ncp);
@@ -21,7 +23,7 @@ const rename = promisify(fs.rename);
  * Copy the file structure from `template`, and rename the `__gitignore` file
  */
 async function initFiles(options: AppOptions) {
-  console.log('\nScaffolding App Files...\n');
+  console.log(`\n${cyan('Scaffolding App Files')}...\n`);
   const templatePath = path.resolve(__dirname, 'template/app');
   await ncp(templatePath, cwd);
   await rename(path.join(cwd, '__gitignore'), path.join(cwd, '.gitignore'));
@@ -45,7 +47,7 @@ async function initFiles(options: AppOptions) {
   for (const key of Object.keys(FILE_NAMES))
     await write(key as keyof typeof FILE_NAMES);
 
-  console.log('\nDone!');
+  console.log(greenBright('\nDone!'));
 }
 
 /**

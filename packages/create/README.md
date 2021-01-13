@@ -115,7 +115,7 @@ npm init @apollo-elements -- \
     --subdir user \
     --schema-path '#schema' \
     --shared-css-path '#components/shared.css' \
-    --operation-params '$input: UpdateProfileInput!' \
+    --variables '$input: UpdateProfileInput!' \
     --fields 'updateProfile(input: $input) { id }' \
     --skip-codegen
     --yes
