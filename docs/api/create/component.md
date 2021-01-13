@@ -6,27 +6,30 @@ socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,
 Generate an Apollo Element
 
 ## Example
+
 ```bash copy
 npm init @apollo-elements -- \
   component \
     --type mutation \
     --name x-user-profile \
+    --operation-name UpdateProfile
+    --variables '$input: UpdateProfileInput!' \
+    --fields 'updateProfile(input: $input) { id }' \
     --subdir user \
     --schema-path '#schema' \
     --shared-css-path '#components/shared.css' \
-    --operation-params '$input: UpdateProfileInput!' \
-    --fields 'updateProfile(input: $input) { id }' \
     --skip-codegen
     --yes
 ```
 
 ## Options
-| Flag | Description | type | default |
-|-----|-----|-----|-----|
+
+| Flag | Description | Type | Default |
+| ---- | ----------- | ---- | ------- |
 | `--help`             | Show help | boolean |
 | `--version`          | Show version number | boolean |
-| `--pkg-manager`      | Preferred package manager | `npm` or `yarn` | `npm` |
-| `--type`, `-t`       | Element type | `query`&vert;`mutation`&vert;or `subscription` | `query` |
+| `--pkg-manager`      | Preferred package manager | `npm`&vert;`yarn` | `npm` |
+| `--type`, `-t`       | Element type | `query`&vert;`mutation`&vert; `subscription` | `query` |
 | `--name`, `-n`       | Custom element tag name | string |
 | `--subdir`, `-d`     | Optional subdir under src/components | string |
 | `--yes`, `-y`        | Optional subdir under src/components | boolean | false |

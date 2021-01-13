@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "es2020",
+    "declaration": true,
+    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "moduleResolution": "Node",
+    "downlevelIteration": true,
+    "lib": [
+      "DOM.iterable",
+      "DOM",
+      "es2015.iterable",
+      "es2020",
+      "es5",
+      "es6",
+      "ScriptHost"
+    ]
+  }
+}

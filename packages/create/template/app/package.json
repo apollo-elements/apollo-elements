@@ -17,9 +17,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@apollo-elements/lit-apollo": "^3.x || ^3.0.0-alpha.0",
-    "@apollo-elements/mixins": "^3.x || ^3.0.0-alpha.0",
-    "@apollo/client": "^3.x || ^3.0.0-alpha.0",
+    "@apollo-elements/components": "^1.x",
+    "@apollo-elements/lit-apollo": "^3.x",
+    "@apollo-elements/mixins": "^3.x",
+    "@apollo/client": "^3.x",
     "pwa-helpers": "^0.9"
   },
   "devDependencies": {

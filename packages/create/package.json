@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/create",
-  "version": "1.3.0",
+  "version": "1.4.0-alpha.0",
   "description": "Scaffold apps and components with GraphQL and LitElement",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
@@ -8,7 +8,7 @@
   "main": "./index.js",
   "typings": ".index.d.ts",
   "bin": {
-    "create-app": "./index.js"
+    "create-app": "index.js"
   },
   "keywords": [
     "generator",
@@ -42,7 +42,9 @@
     "directory": "packages/create"
   },
   "dependencies": {
+    "@graphql-codegen/cli": "^1.20.0",
     "case": "^1.6.3",
+    "chalk": "^4.1.0",
     "execa": "^5.0.0",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
