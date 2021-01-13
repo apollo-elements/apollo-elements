@@ -12,7 +12,7 @@
 {% block main %}
   <main class="markdown-body">
     {% include 'partials/addTitleHeadline.njk' %}
-    {{ content.html | safe }}
+    {{ content | safe }}
     <div class="articles">
       {% for post in posts %}
         {% if post.data.published %}

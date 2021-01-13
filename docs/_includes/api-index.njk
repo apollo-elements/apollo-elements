@@ -9,7 +9,7 @@
 {% block main %}
   <main class="markdown-body">
     {% include 'partials/addTitleHeadline.njk' %}
-    {{ content.html | safe }}
+    {{ content | safe }}
 
     <header id="package-header">
       <h2><code>{{ package }}</code></h2>
