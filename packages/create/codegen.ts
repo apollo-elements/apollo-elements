@@ -4,7 +4,7 @@ import { loadConfig } from 'graphql-config';
 import { BaseOptions, ComponentOptions } from './options';
 import { join } from 'path';
 import { getOperationFileName, getUnprefixedTagName } from './component';
-import { blue, cyan, yellow, red } from 'chalk';
+import { blue, cyan, yellow, red, greenBright } from 'chalk';
 
 const cwd = process.cwd();
 
@@ -28,17 +28,18 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
   if (options.skipCodegen) return;
   console.log(`\n${cyan('Generating types from schema')}...\n`);
   try {
-    const filepath = join(cwd, './.graphqlrc.yml');
-    const config = await loadConfig({ filepath });
-    if (!config)
-      throw new Error('Could not find GraphQL config');
-    const { config: generateConfig, codegen } = config.projects.default.extensions;
-    return await generate({
-      ...generateConfig,
-      generates: codegen.generates,
-      cwd,
-      silent: true,
-    });
+    const pmCommand = options.pkgManager === 'npm' ? ['run'] : [];
+
+    const args = [
+      ...pmCommand,
+      'build:codegen',
+      '--',
+      '--errors-only',
+    ];
+
+    await execa(options.pkgManager, args, { cwd, all: true });
+
+    console.log(greenBright('Done!'));
   } catch (error) {
     if (error.name === 'ListrError') {
       console.log(`${red('ERROR:')} Codegen did not succeed.\n`);
@@ -48,6 +49,7 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
         isComponentOptions(options) ? blue(getFailedFilename(options)) : 'the operation definition';
       console.log(`${yellow('WARNING:')} Codegen did not succeed. Do the generated GraphQL operations match your schema?`);
       console.log(`         Check ${filename}`);
+      console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '));
     }
   }
 }
