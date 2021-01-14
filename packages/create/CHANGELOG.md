@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.3.0...@apollo-elements/create@1.4.0) (2021-01-14)
+
+
+### Bug Fixes
+
+* **create:** better error messages for code gen failures ([d745fa9](https://github.com/apollo-elements/apollo-elements/commit/d745fa9881c9228914e1d6e0abf213b6b8214561))
+* **create:** change app template ([2f42c2a](https://github.com/apollo-elements/apollo-elements/commit/2f42c2ae45a77d616b74379b190e510a841890ee))
+* **create:** static type policies ([313b654](https://github.com/apollo-elements/apollo-elements/commit/313b6542cff191428ed4227b0606a1404879410b))
+
+
+### Features
+
+* **create:** add --operation-name flag ([5875b8f](https://github.com/apollo-elements/apollo-elements/commit/5875b8fbd43fadfacadc68a4500713a65e5cffde))
+
+
+
+
+
 # [1.3.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/create@1.3.0-alpha.0...@apollo-elements/create@1.3.0) (2021-01-04)
 
 

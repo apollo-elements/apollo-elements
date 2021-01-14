@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/fast@1.2.2...@apollo-elements/fast@1.2.3) (2021-01-14)
+
+**Note:** Version bump only for package @apollo-elements/fast
+
+
+
+
+
 ## [1.2.2](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/fast@1.2.1...@apollo-elements/fast@1.2.2) (2021-01-07)
 
 
