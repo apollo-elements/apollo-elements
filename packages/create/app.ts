@@ -28,8 +28,10 @@ async function initFiles(options: AppOptions) {
   await ncp(templatePath, cwd);
   await rename(path.join(cwd, '__gitignore'), path.join(cwd, '.gitignore'));
 
+  const GRAPHQL_URI = options.uri;
+
   const interpolations = {
-    GRAPHQL_URI: options.uri,
+    GRAPHQL_URI,
   };
 
   const FILE_NAMES = {
