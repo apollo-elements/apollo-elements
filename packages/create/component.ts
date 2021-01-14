@@ -70,6 +70,9 @@ __schema {
 const DEFAULT_SUBSCRIPTION_FIELDS = DEFAULT_QUERY_FIELDS;
 
 function memoize<T extends(...args: any[]) => unknown>(fn: T): T {
+  if (!fn)
+    throw new Error('Trying to memoize non-function');
+
   const cache = new Map<unknown, unknown>();
 
   const memoized =
