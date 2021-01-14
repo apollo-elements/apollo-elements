@@ -11,9 +11,9 @@
   --cyan-900: #006064;
   --deep-orange-200: #ffab91;
   --deep-orange-600: #f4511e;
+  --deep-orange-900: #bf360c;
   --deep-orange-a400: #ff3d00;
   --deep-orange-a700: #dd2c00;
-  --deep-orange-900: #bf360c;
   --grey-100: #f5f5f5;
   --grey-200: #eee;
   --grey-50: #fafafa;
@@ -34,6 +34,8 @@
   --purple-a200: #e040fb;
   --purple-a400: #d500f9;
   --purple-a700: #a0f;
+  --red-400: #ef5350;
+  --red-900: #b71c1c;
   --teal-700: #00796b;
   --teal-900: #004d40;
 
@@ -120,6 +122,11 @@
     --rocket-search-hover-background-color: var(--near-black);
     --rocket-search-input-border-color: var(--page-background);
     --rocket-search-input-overlay-border-color: var(--page-background);
+
+    /* widgets */
+    --inline-notification-danger-background-color: #b71c1c44; /* red 900 */
+    --inline-notification-danger-heading-color: var(--red-900);
+    --inline-notification-tip-background-color: #004d4044; /* teal 900 */
 
     /* markdown */
     --markdown-blockquote-color: var(--blue-100);
