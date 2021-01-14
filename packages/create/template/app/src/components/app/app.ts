@@ -1,7 +1,5 @@
 import { ApolloQuery, customElement, html, TemplateResult } from '@apollo-elements/lit-apollo';
 
-import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
-
 import type {
   AppQueryData as Data,
   AppQueryVariables as Variables,
@@ -11,31 +9,19 @@ import AppQuery from './App.query.graphql';
 import style from './app.css';
 import shared from '../shared.css';
 
-import { locationVar } from '../../router';
-
 @customElement('apollo-app')
-export class ApolloApp extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+export class ApolloApp extends ApolloQuery<Data, Variables> {
   static readonly is = 'apollo-app';
 
   static readonly style = [shared, style];
 
   query = AppQuery;
 
-  typePolicies = {
-    Query: {
-      fields: {
-        location(): Location {
-          return locationVar();
-        },
-      },
-    },
-  }
-
   render(): TemplateResult {
     return html`
       <dl>
         <dt>Pathname</dt>
-        <dd>${this.data?.location?.href ?? 'unknown'}</dd>
+        <dd>${this.data?.location?.pathname ?? '/'}</dd>
       </dl>
     `;
   }
