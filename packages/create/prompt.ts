@@ -199,9 +199,18 @@ export async function prompt(): Promise<void> {
         }],
       });
 
+      const commandAppendedArgv: typeof argv = {
+        ...argv,
+        _: [generate, ...argv._ ?? []],
+      };
+
       switch (generate) {
-        case 'app': return await promptApp(argv).then(app);
-        case 'component': return await promptComponent(argv).then(component);
+        case 'app':
+          return await promptApp(commandAppendedArgv)
+            .then(app);
+        case 'component':
+          return await promptComponent(commandAppendedArgv)
+            .then(component);
       }
     }
   } catch (error) {
