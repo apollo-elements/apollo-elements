@@ -130,6 +130,7 @@ const config = {
         'wcd-snippet': importSpecifier,
         'type-doc': importSpecifier,
         'codesandbox-button': '@power-elements/codesandbox-button',
+        'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
       },
     });
     /* end auto-import web components */
