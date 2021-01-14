@@ -22,7 +22,7 @@ export async function promptApp(options: PromptOptions<AppOptions>): Promise<App
       type: () => options?.uri == null ? 'text' : null,
       name: 'uri',
       message: 'What is the URI to your GraphQL endpoint?',
-      initial: options?.uri ?? 'https://api.spacex.land/graphql',
+      initial: options?.uri ?? '/graphql',
     }, {
       type: () => options?.yes == null ? 'confirm' : null,
       name: 'yes',

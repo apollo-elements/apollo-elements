@@ -33,8 +33,10 @@ export class ApolloApp extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
 
   render(): TemplateResult {
     return html`
-      <h1>Apollo Elements App</h1>
-      <p>Latest launch was ${this.data?.launchLatest?.missionName ?? '...'}</p>
+      <dl>
+        <dt>Pathname</dt>
+        <dd>${this.data?.location?.href ?? 'unknown'}</dd>
+      </dl>
     `;
   }
 }
