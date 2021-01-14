@@ -45,6 +45,26 @@ function getCLIArgs(options: BaseOptions): string[] {
   ].filter(isString);
 }
 
+function logNameError(options: BaseOptions, error: any): void {
+  console.log(`${red('ERROR:')} Code generation failed.`);
+  const uri = isAppOptions(options) ? cyan(options.uri) : 'the specified URI';
+  console.log(`       Is your graphql server running at ${uri}?`);
+  console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '), '\n');
+}
+
+function logListrError(options: BaseOptions, error: any): void {
+  console.log(`${red('ERROR:')} Code generation failed.`);
+  console.log(`\n${red('ORIGINAL ERROR:')}\n`);
+  error.errors.forEach((e: Error) => console.log(e.message));
+}
+
+function logError(options: BaseOptions, error: any): void {
+  const filename = getFilename(options);
+  console.log(`${yellow('WARNING:')} Code generation failed. Do the generated GraphQL operations match your schema?`);
+  console.log(`         Check ${filename}`);
+  console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '));
+}
+
 /**
  * Run GraphQL codegen to develop an initial TypeScript schema
  */
@@ -55,20 +75,11 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
     await execa(options.pkgManager, getCLIArgs(options), { cwd, all: true });
     console.log(greenBright('Done!'));
   } catch (error) {
-    if (error?.stdout.includes('Cannot read property \'name\' of undefined')) {
-      console.log(`${red('ERROR:')} Code generation failed.`);
-      const uri = isAppOptions(options) ? cyan(options.uri) : 'the specified URI';
-      console.log(`       Is your graphql server running at ${uri}?`);
-      console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '), '\n');
-    } else if (error?.name === 'ListrError') {
-      console.log(`${red('ERROR:')} Code generation failed.`);
-      console.log(`\n${red('ORIGINAL ERROR:')}\n`);
-      error.errors.forEach((e: Error) => console.log(e.message));
-    } else {
-      const filename = getFilename(options);
-      console.log(`${yellow('WARNING:')} Code generation failed. Do the generated GraphQL operations match your schema?`);
-      console.log(`         Check ${filename}`);
-      console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '));
-    }
+    if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
+      logNameError(options, error);
+    else if (error?.name === 'ListrError')
+      logListrError(options, error);
+    else
+      logError(options, error);
   }
 }
