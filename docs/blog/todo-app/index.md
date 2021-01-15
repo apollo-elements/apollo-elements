@@ -1,6 +1,5 @@
 ---
-title: Writing a To-Do App with GraphQL and Web Components
-description: Learn how to write a To-Do list app with Apollo Elements and GraphQL. Use declarative HTML and JavaScript components and built-in web platform standards.
+description: Learn how to write a To-Do list app with Apollo Elements and GraphQL. Use declarative, standards-based components to write maintainable, future-proof code.
 tags:
   - graphql
   - webcomponents
@@ -13,6 +12,8 @@ date: 2021-01-15
 updated: Last Modified
 ---
 
+# Writing a To-Do App with GraphQL and Web Components
+
 To-Do apps are *de rigueur* when it comes to demonstrating web app tech stacks. Writing one lets you see how the stack handles <abbr title="create, read, update, delete">CRUD</abbr> operations, giving you a feel for how it would handle larger, more complex apps. In this post, we'll learn how to write a to-do app using [Apollo Elements](https://apolloelements.dev), the GraphQL web component library.
 
 ## The Plan
@@ -20,7 +21,7 @@ To-Do apps are *de rigueur* when it comes to demonstrating web app tech stacks. 
 The typical to-do app has a backend which contains the authoritative database of to-dos, and a frontend which displays the list and exposes UI for operations like adding, editing, or deleting to-dos. We'll build our 'frontend' out of a single GraphQL query and some GraphQL mutations.
 
 ### Non-Goals
-For the purposes of this blog post, we're focusing solely on the frontend side, so a proper backend server and database is out of scope. Instead, we'll implement a fake 'backend' that uses localStorage to persist our todo list. We're still going to write GraphQL resolver functions, though, so we could copy parts of our mocked backend into server running on NodeJS and with some small modifications it would still work.
+For the purposes of this blog post, we're focusing solely on the frontend side, so a proper backend server and database is out of scope. Instead, we'll implement a fake 'backend' that uses localStorage to persist our todo list. We're still going to write GraphQL resolver functions, though, so we could copy parts of our mocked backend into a server running on NodeJS and with some small modifications it would still work.
 
 We also won't be doing any fancy footwork like pagination or advanced cache management. We're assuming a short todo list that fits on one screen.
 
@@ -500,7 +501,7 @@ onCompleted(): void {
 
 Don't forget to import our dependencies, including the new component, in `src/main.ts`:
 
-```ts
+```ts copy
 import '@material/mwc-button';
 import '@material/mwc-checkbox';
 import '@material/mwc-formfield';
