@@ -11,6 +11,16 @@
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
         },
         {
+          "name": "data",
+          "description": "data",
+          "type": "unknown"
+        },
+        {
+          "name": "variables",
+          "description": "Operation variables",
+          "type": "unknown"
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
@@ -18,22 +28,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "Operation variables",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -79,24 +79,14 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "A GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
           "description": "Latest data",
-          "type": "Data<D> | null"
+          "type": "unknown"
         },
         {
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
-          "type": "Variables<D, V> | null"
+          "type": "unknown"
         },
         {
           "name": "error",
@@ -114,17 +104,17 @@
           "type": "boolean"
         },
         {
-          "name": "renderRoot"
-        }
-      ],
-      "events": [
-        {
-          "name": "apollo-element-connected",
-          "description": "when the element connects to the dom"
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
         },
         {
-          "name": "apollo-element-disconnected",
-          "description": "when the element disconnects from the dom"
+          "name": "document",
+          "description": "A GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "renderRoot"
         }
       ]
     },
@@ -145,24 +135,14 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
           "description": "data",
-          "type": "Data<D> | null"
+          "type": "unknown"
         },
         {
           "name": "variables",
           "description": "Operation variables",
-          "type": "Variables<D, V> | null"
+          "type": "unknown"
         },
         {
           "name": "error",
@@ -178,6 +158,19 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "renderRoot"
         }
       ],
       "events": [
@@ -241,6 +234,16 @@
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
         },
         {
+          "name": "data",
+          "description": "Latest mutation data.",
+          "type": "Data<D> | null"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+          "type": "Variables<D, V> | null"
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
@@ -248,22 +251,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "Latest mutation data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -358,18 +351,8 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
-          "description": "Latest mutation data",
+          "description": "Latest mutation data.",
           "type": "Data<D> | null"
         },
         {
@@ -392,6 +375,19 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "default": "\"\""
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "renderRoot"
         }
       ],
       "events": [
@@ -471,18 +467,8 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
-          "description": "Latest mutation data",
+          "description": "Latest mutation data.",
           "type": "Data<D> | null"
         },
         {
@@ -506,6 +492,16 @@
           "description": "Whether a request is in flight.",
           "type": "boolean",
           "default": "\"\""
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         }
       ],
       "events": [
@@ -598,8 +594,23 @@
           "type": "boolean"
         },
         {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
+        },
+        {
           "name": "documentType",
-          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
+          "type": "\"query\""
+        },
+        {
+          "name": "data",
+          "description": "Latest query data.",
+          "type": "Data<D> | null"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.",
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "client",
@@ -609,22 +620,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "The latest query data.",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -667,73 +668,64 @@
       "description": "🚀 `ApolloQuery`\n\nCustom element base class that connects to your Apollo cache.\n\nSee [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events",
       "properties": [
         {
-          "name": "refetchQueries",
-          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
-        },
-        {
           "name": "query",
-          "description": "A GraphQL document containing a single query.",
           "type": "DocumentNode | ComponentDocument<D> | null"
         },
         {
           "name": "fetchPolicy",
-          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
-          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
-        },
-        {
-          "name": "nextFetchPolicy",
-          "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
           "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "partial",
-          "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
           "type": "boolean | undefined"
         },
         {
           "name": "partialRefetch",
-          "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
           "type": "boolean | undefined"
+        },
+        {
+          "name": "refetchQueries",
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "returnPartialData",
-          "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
           "type": "boolean | undefined"
         },
         {
+          "name": "nextFetchPolicy",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        },
+        {
           "name": "networkStatus",
-          "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however.",
           "type": "NetworkStatus"
         },
         {
           "name": "observableQuery",
-          "description": "The Apollo `ObservableQuery` watching this element's query.",
           "type": "ObservableQuery<Data<D>, Variables<D, V>> | undefined"
         },
         {
           "name": "options",
-          "description": "Set to reobserve the `ObservableQuery`",
           "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null"
         },
         {
+          "name": "noAutoSubscribe",
+          "type": "boolean"
+        },
+        {
           "name": "notifyOnNetworkStatusChange",
-          "description": "Whether or not updates to the network status should trigger next on the observer of this query.",
           "type": "boolean"
         },
         {
           "name": "pollInterval",
-          "description": "The time interval (in milliseconds) on which this query should be refetched from the server.",
           "type": "number | undefined"
         },
         {
           "name": "errorPolicy",
-          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
           "type": "ErrorPolicy",
           "default": "\"none\""
         },
         {
-          "name": "noAutoSubscribe",
-          "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+          "name": "canAutoSubscribe",
           "type": "boolean"
         },
         {
@@ -748,16 +740,6 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
           "description": "The latest query data.",
           "type": "Data<D> | null"
@@ -769,28 +751,39 @@
         },
         {
           "name": "error",
-          "description": "Latest error",
+          "description": "Latest error.",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
+          "description": "Latest errors.",
           "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
-          "description": "Whether a request is in flight.",
+          "description": "Whether a request is in-flight.",
           "type": "boolean"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "document",
+          "description": "A GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "renderRoot"
         }
       ],
       "events": [
         {
-          "name": "apollo-query-result",
-          "description": "when the query resolves"
+          "name": "apollo-query-result"
         },
         {
-          "name": "apollo-error",
-          "description": "when the query rejects"
+          "name": "apollo-error"
         },
         {
           "name": "apollo-element-connected",
@@ -808,10 +801,6 @@
       "description": "🚀 `ApolloQuery`\n\nCustom element base class that connects to your Apollo cache.\n\nSee [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events",
       "properties": [
         {
-          "name": "refetchQueries",
-          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
-        },
-        {
           "name": "query",
           "description": "A GraphQL document containing a single query.",
           "type": "DocumentNode | ComponentDocument<D> | null"
@@ -819,11 +808,6 @@
         {
           "name": "fetchPolicy",
           "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
-          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
-        },
-        {
-          "name": "nextFetchPolicy",
-          "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
           "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
@@ -837,9 +821,18 @@
           "type": "boolean | undefined"
         },
         {
+          "name": "refetchQueries",
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
+        },
+        {
           "name": "returnPartialData",
           "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
           "type": "boolean | undefined"
+        },
+        {
+          "name": "nextFetchPolicy",
+          "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "networkStatus",
@@ -855,6 +848,11 @@
           "name": "options",
           "description": "Set to reobserve the `ObservableQuery`",
           "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null"
+        },
+        {
+          "name": "noAutoSubscribe",
+          "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+          "type": "boolean"
         },
         {
           "name": "notifyOnNetworkStatusChange",
@@ -873,13 +871,13 @@
           "default": "\"none\""
         },
         {
-          "name": "noAutoSubscribe",
-          "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
           "type": "boolean"
         },
         {
           "name": "documentType",
-          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
+          "type": "\"query\"",
           "default": "\"query\""
         },
         {
@@ -889,23 +887,13 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
-          "description": "The latest query data.",
+          "description": "Latest query data.",
           "type": "Data<D> | null"
         },
         {
           "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+          "description": "An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.",
           "type": "Variables<D, V> | null"
         },
         {
@@ -922,6 +910,16 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         }
       ],
       "events": [
@@ -994,8 +992,23 @@
           "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined"
         },
         {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
+        },
+        {
           "name": "documentType",
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "data",
+          "description": "Latest subscription data.",
+          "type": "Data<D> | null"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the subscription GraphQL document to that variable's value.",
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "client",
@@ -1005,22 +1018,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -1063,52 +1066,47 @@
       "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.",
       "properties": [
         {
+          "name": "subscription",
+          "type": "DocumentNode | ComponentDocument<D> | null"
+        },
+        {
           "name": "fetchPolicy",
-          "description": "Specifies the FetchPolicy to be used for this subscription.",
           "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "pollInterval",
-          "description": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
           "type": "number | undefined"
         },
         {
-          "name": "notifyOnNetworkStatusChange",
-          "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
-          "type": "boolean",
-          "default": "false"
+          "name": "noAutoSubscribe",
+          "type": "boolean"
         },
         {
           "name": "observable",
-          "description": "Observable watching this element's subscription.",
           "type": "Observable<FetchResult<Data<D>, Record<string, any>, Record<string, any>>> | undefined"
         },
         {
           "name": "observableSubscription",
-          "description": "Subscription to the observable",
           "type": "Subscription | undefined"
         },
         {
-          "name": "subscription",
-          "description": "A GraphQL document containing a single subscription.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "noAutoSubscribe",
-          "description": "If true, the element will not begin querying data until you manually call `subscribe`",
-          "type": "boolean"
-        },
-        {
-          "name": "skip",
-          "description": "If skip is true, the query will be skipped entirely",
+          "name": "notifyOnNetworkStatusChange",
           "type": "boolean",
           "default": "false"
         },
         {
           "name": "shouldResubscribe",
-          "description": "Determines if your subscription should be unsubscribed and subscribed again.",
           "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined",
           "default": "false"
+        },
+        {
+          "name": "skip",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "canAutoSubscribe",
+          "type": "boolean"
         },
         {
           "name": "documentType",
@@ -1122,9 +1120,29 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "name": "data",
+          "description": "Latest subscription data.",
+          "type": "Data<D> | null"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\n\nSetting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+          "type": "Variables<D, V> | null"
+        },
+        {
+          "name": "error",
+          "description": "Latest error.",
+          "type": "Error | ApolloError | null"
+        },
+        {
+          "name": "errors",
+          "description": "Latest errors.",
+          "type": "readonly GraphQLError[] | null"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in-flight.",
+          "type": "boolean"
         },
         {
           "name": "context",
@@ -1132,39 +1150,20 @@
           "type": "Record<string, unknown> | undefined"
         },
         {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
+          "name": "document",
+          "description": "A GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "Variables<D, V> | null"
-        },
-        {
-          "name": "error",
-          "description": "Latest error",
-          "type": "Error | ApolloError | null"
-        },
-        {
-          "name": "errors",
-          "description": "Latest errors",
-          "type": "readonly GraphQLError[] | null"
-        },
-        {
-          "name": "loading",
-          "description": "Whether a request is in flight.",
-          "type": "boolean"
+          "name": "renderRoot"
         }
       ],
       "events": [
         {
-          "name": "apollo-subscription-result",
-          "description": "when the subscription updates"
+          "name": "apollo-subscription-result"
         },
         {
-          "name": "apollo-error",
-          "description": "when the query rejects"
+          "name": "apollo-error"
         },
         {
           "name": "apollo-element-connected",
@@ -1182,6 +1181,11 @@
       "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.",
       "properties": [
         {
+          "name": "subscription",
+          "description": "A GraphQL document containing a single subscription.",
+          "type": "DocumentNode | ComponentDocument<D> | null"
+        },
+        {
           "name": "fetchPolicy",
           "description": "Specifies the FetchPolicy to be used for this subscription.",
           "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
@@ -1192,10 +1196,9 @@
           "type": "number | undefined"
         },
         {
-          "name": "notifyOnNetworkStatusChange",
-          "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
-          "type": "boolean",
-          "default": "false"
+          "name": "noAutoSubscribe",
+          "description": "If true, the element will not begin querying data until you manually call `subscribe`",
+          "type": "boolean"
         },
         {
           "name": "observable",
@@ -1208,18 +1211,8 @@
           "type": "Subscription | undefined"
         },
         {
-          "name": "subscription",
-          "description": "A GraphQL document containing a single subscription.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "noAutoSubscribe",
-          "description": "If true, the element will not begin querying data until you manually call `subscribe`",
-          "type": "boolean"
-        },
-        {
-          "name": "skip",
-          "description": "If skip is true, the query will be skipped entirely",
+          "name": "notifyOnNetworkStatusChange",
+          "description": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
           "type": "boolean",
           "default": "false"
         },
@@ -1228,6 +1221,17 @@
           "description": "Determines if your subscription should be unsubscribed and subscribed again.",
           "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined",
           "default": "false"
+        },
+        {
+          "name": "skip",
+          "description": "If skip is true, the query will be skipped entirely",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
         },
         {
           "name": "documentType",
@@ -1241,23 +1245,13 @@
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
         {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
-          "description": "data",
+          "description": "Latest subscription data.",
           "type": "Data<D> | null"
         },
         {
           "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
+          "description": "An object that maps from the name of a variable as used in the subscription GraphQL document to that variable's value.",
           "type": "Variables<D, V> | null"
         },
         {
@@ -1274,6 +1268,16 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         }
       ],
       "events": [

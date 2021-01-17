@@ -5,7 +5,11 @@ import type {
   TypePolicies,
 } from '@apollo/client/core';
 
-import type { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
+import type {
+  ApolloElementElement,
+  ApolloQueryElement,
+  ApolloSubscriptionElement,
+} from '@apollo-elements/interfaces';
 import type { ApolloElementEvent } from '@apollo-elements/mixins/apollo-element-mixin';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-client': ApolloClientElement; } }
@@ -35,7 +39,7 @@ function hasShadowRoot(node: Node): node is HTMLElement & { shadowRoot: ShadowRo
   return node instanceof HTMLElement && !!node.shadowRoot;
 }
 
-function isApolloQuery(e: EventTarget): e is ApolloQueryElement {
+function isApolloQuery(e: EventTarget): e is ApolloQueryElement|ApolloSubscriptionElement {
   // @ts-expect-error: disambiguating
   return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
 }
@@ -48,12 +52,11 @@ function claimApolloElement(
     return event.detail;
 }
 
-function isSubscribable(element: ApolloElementElement): element is ApolloQueryElement {
+function isSubscribable(
+  element: ApolloElementElement
+): element is ApolloQueryElement|ApolloSubscriptionElement {
   return (
-    isApolloQuery(element) &&
-    !!element.client &&
-    !element.noAutoSubscribe &&
-    element.shouldSubscribe()
+    isApolloQuery(element) && element.canAutoSubscribe
   );
 }
 

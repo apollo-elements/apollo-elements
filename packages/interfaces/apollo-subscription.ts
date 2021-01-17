@@ -123,6 +123,8 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
    */
   public cancel(): void
 
+  /** Flags an element that's ready and able to auto subscribe */
+  public get canAutoSubscribe(): boolean;
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying

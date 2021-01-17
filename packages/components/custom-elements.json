@@ -3,6 +3,54 @@
   "tags": [
     {
       "name": "apollo-client",
+      "path": "./apollo-client.js",
+      "attributes": [
+        {
+          "name": "uri",
+          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "type": "string | undefined"
+        },
+        {
+          "name": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+          "type": "boolean"
+        }
+      ],
+      "properties": [
+        {
+          "name": "client",
+          "description": "Reference to the `ApolloClient` instance."
+        },
+        {
+          "name": "elements",
+          "description": "List of all ApolloElements registered to this client.",
+          "type": "array"
+        },
+        {
+          "name": "typePolicies",
+          "description": "Type Policies for the client."
+        },
+        {
+          "name": "uri",
+          "attribute": "uri",
+          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "type": "string | undefined"
+        },
+        {
+          "name": "validateVariables",
+          "attribute": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+          "type": "boolean"
+        }
+      ],
+      "events": [
+        {
+          "name": "client-changed"
+        }
+      ]
+    },
+    {
+      "name": "apollo-client",
       "path": "./apollo-client.ts",
       "attributes": [
         {
@@ -77,6 +125,12 @@
           "description": "Whether the mutation was called",
           "type": "boolean",
           "default": "false"
+        },
+        {
+          "name": "loading",
+          "description": "Whether a request is in flight.",
+          "type": "boolean",
+          "default": "\"\""
         }
       ],
       "properties": [
@@ -142,6 +196,22 @@
           "default": "\"mutation\""
         },
         {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
+        },
+        {
+          "name": "variables",
+          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+          "type": "Variables<D, V> | null",
+          "default": "\"\""
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null",
@@ -151,12 +221,6 @@
           "name": "data",
           "description": "Latest mutation data",
           "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "Variables<D, V> | null",
-          "default": "\"\""
         },
         {
           "name": "error",
@@ -170,19 +234,10 @@
         },
         {
           "name": "loading",
+          "attribute": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean",
           "default": "\"\""
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
         }
       ],
       "events": [
