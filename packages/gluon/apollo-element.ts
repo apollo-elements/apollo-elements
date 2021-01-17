@@ -1,6 +1,4 @@
-import type { ApolloElementInterface, Constructor } from '@apollo-elements/interfaces';
-
-import type { OperationVariables } from '@apollo/client/core';
+import type { ApolloElementInterface } from '@apollo-elements/interfaces';
 
 import { GluonElement } from '@gluon/gluon';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
@@ -17,10 +15,15 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloElement<D = unknown, V = OperationVariables>
-  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloElementMixin(GluonElement as Constructor<GluonElement>)<D, V>
-  implements ApolloElementInterface<D, V> { }
+export class ApolloElement
+  extends ApolloElementMixin(GluonElement)
+  implements ApolloElementInterface {
+  declare context?: Record<string, unknown>;
+
+  declare variables: unknown | null;
+
+  declare data: unknown | null;
+}
 
 defineObservedProperties(ApolloElement, {
   data: null,

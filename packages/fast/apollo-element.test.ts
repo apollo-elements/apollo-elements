@@ -15,13 +15,12 @@ import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 describe('[fast] ApolloElement', function describeApolloElement() {
   it('is an instance of FASTElement', async function() {
-    type Data = { hi: 'bye' }; // that was fast :wink:
     const name = 'is-an-instance-of-f-a-s-t-element';
     @customElement({ name })
-    class Test extends ApolloElement<Data> {
+    class Test extends ApolloElement {
       declare shadowRoot: ShadowRoot;
 
-      dataChanged(oldVal: Data, newVal: Data): void {
+      dataChanged(oldVal: this['data'], newVal: this['data']): void {
         oldVal; newVal;
       }
     }
@@ -46,15 +45,6 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     expect(element.shadowRoot.textContent).to.equal('CLIENT');
   });
 
-  it('renders when data is set', async function rendersOnData() {
-    const name = 'renders-when-data-is-set';
-    const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloElement<{ foo: string }> { }
-    const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
-    expect(element).shadowDom.to.equal('bar');
-  });
-
   it('renders when error is set', async function rendersOnError() {
     const name = 'renders-when-error-is-set';
     const template = html<Test>`${x => x.error ?? 'FAIL'}`;
@@ -74,9 +64,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
   });
 });
 
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { c: 'c', d: number };
-class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
+class TypeCheck extends ApolloElement {
   typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
@@ -90,23 +78,10 @@ class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<TypeCheckVars>                       (this.variables!);
     assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
-  }
-}
-
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-class TDNTypeCheck extends ApolloElement<TDN> {
-  typeCheck() {
-    assertType<TypeCheckData>(this.data!);
-    assertType<TypeCheckVars>(this.variables!);
   }
 }

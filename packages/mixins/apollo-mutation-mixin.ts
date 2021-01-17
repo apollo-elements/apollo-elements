@@ -39,14 +39,25 @@ type MixinInstance = {
   documentType: 'mutation';
 }
 
-function ApolloMutationMixinImpl<B extends Constructor>(superclass: B): MixinInstance & B {
+function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInstance {
   class ApolloMutationElement<D, V = OperationVariables>
-    extends ApolloElementMixin(superclass)<D, V> implements ApolloMutationInterface<D, V> {
+    extends ApolloElementMixin(base)
+    implements ApolloMutationInterface<D, V> {
     static documentType = 'mutation' as const;
 
-    declare mutation: DocumentNode | ComponentDocument<D> | null;
+    /**
+     * Latest mutation data.
+     */
+    declare data: Data<D> | null;
 
+    /**
+     * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
+     *
+     * @summary Mutation variables.
+     */
     declare variables: Variables<D, V> | null;
+
+    declare mutation: DocumentNode | ComponentDocument<D> | null;
 
     declare refetchQueries: RefetchQueriesType<D> | null;
 
@@ -77,8 +88,8 @@ function ApolloMutationMixinImpl<B extends Constructor>(superclass: B): MixinIns
      */
     private mostRecentMutationId = 0;
 
-    constructor() {
-      super();
+    constructor(...a: any[]) {
+      super(...a);
       this.variables ??= null;
       this.loading ??= false;
     }

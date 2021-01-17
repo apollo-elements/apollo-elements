@@ -1,6 +1,6 @@
-import type { ApolloError, OperationVariables } from '@apollo/client/core';
+import type { ApolloError } from '@apollo/client/core';
 
-import type { Constructor, Data, GraphQLError } from '@apollo-elements/interfaces';
+import type { Constructor, GraphQLError } from '@apollo-elements/interfaces';
 
 import { LitElement, property } from 'lit-element';
 
@@ -13,14 +13,14 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  */
-export class ApolloElement<D = unknown, V = OperationVariables>
-  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloElementMixin(LitElement as Constructor<LitElement>)<D, V> {
+export class ApolloElement extends ApolloElementMixin(LitElement as Constructor<LitElement>) {
   declare context?: Record<string, unknown>;
+
+  declare variables: unknown | null;
 
   @property({ attribute: false }) client = /* c8 ignore next */ window.__APOLLO_CLIENT__ ?? null;
 
-  @property({ attribute: false }) data: Data<D> | null = null;
+  @property({ attribute: false }) data: unknown | null = null;
 
   @property({ attribute: false }) error: Error | ApolloError | null = null;
 

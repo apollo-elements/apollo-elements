@@ -1,7 +1,7 @@
 import type { OperationVariables } from '@apollo/client/core';
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { Constructor, ApolloMutationInterface } from '@apollo-elements/interfaces';
+import { ApolloMutationInterface, Constructor, Data, Variables } from '@apollo-elements/interfaces';
 import { defineObservedProperties } from './helpers/descriptor';
 
 export { html } from '@gluon/gluon';
@@ -16,9 +16,20 @@ export { html } from '@gluon/gluon';
  * @element
  */
 export class ApolloMutation<D, V = OperationVariables>
-  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
-  implements ApolloMutationInterface<D, V> { }
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
+  implements ApolloMutationInterface<D, V> {
+  /**
+   * Latest mutation data.
+   */
+  declare data: Data<D> | null;
+
+  /**
+   * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
+   *
+   * @summary Mutation variables.
+   */
+  declare variables: Variables<D, V> | null;
+}
 
 defineObservedProperties(ApolloMutation, {
   called: false,

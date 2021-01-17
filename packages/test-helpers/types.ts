@@ -9,7 +9,7 @@ export type Library =
   'mixins' |
   'polymer'
 
-export interface TestableElement<D = any, V = any> extends ApolloElementInterface<D, V> {
+export interface TestableElement extends ApolloElementInterface {
   hasRendered(): Promise<this>
   stringify(x: unknown): string;
 }

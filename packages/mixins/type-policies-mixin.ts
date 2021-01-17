@@ -1,6 +1,11 @@
 import type { TypePolicies } from '@apollo/client/core';
-import type { ApolloElementInterface, Constructor } from '@apollo-elements/interfaces';
 import type { Policies } from '@apollo/client/cache/inmemory/policies';
+import type {
+  ApolloElementInterface,
+  Constructor,
+  Data,
+  Variables,
+} from '@apollo-elements/interfaces';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
@@ -11,7 +16,9 @@ declare module '@apollo/client/cache' {
   }
 }
 
-type MixinInstance = {
+declare class MixinInstance {
+  constructor(...a: any[]);
+
   /**
    * TypePolicies for the component
    */
@@ -21,7 +28,12 @@ type MixinInstance = {
 function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(
   superclass: B
 ): MixinInstance & B {
-  class TypePoliciesElement extends superclass {
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
+  class TypePoliciesElement<D, V> extends superclass {
+    declare data: Data<D> | null;
+
+    declare variables: Variables<D, V> | null;
+
     /**
      * TypePolicies for the component
      */

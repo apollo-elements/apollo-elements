@@ -5,8 +5,6 @@ import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
 
-type Base = Constructor<PolymerApolloElement<any, any>>;
-
 /**
  * @element apollo-query
  *
@@ -42,7 +40,7 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  * @fires 'network-status-changed'
  */
 export class PolymerApolloQuery<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin(PolymerApolloElement as Base)<D, V>
+  extends ApolloQueryMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V>
   implements ApolloQueryInterface<D, V> {
   @notify networkStatus: NetworkStatus = NetworkStatus.ready;
 }

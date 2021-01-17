@@ -36,7 +36,7 @@ export type OptimisticResponseType<D, V> =
  * @fires 'apollo-error' when the mutation rejects
  */
 export declare class ApolloMutationInterface<D, V = OperationVariables>
-  extends ApolloElementInterface<D, V> {
+  extends ApolloElementInterface {
   /**
    * Latest mutation data
    */
@@ -44,6 +44,8 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
 
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
+   *
+   * @summary Mutation variables.
    */
   declare variables: Variables<D, V> | null;
 
@@ -98,6 +100,8 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
    */
   declare awaitRefetchQueries?: boolean;
 
+  constructor(...a: any[]);
+
   /**
    * Callback for when a mutation is completed.
    */
@@ -136,4 +140,8 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
 }
 
 export class ApolloMutationElement<D = unknown, V = OperationVariables>
-  extends ApolloMutationMixin(HTMLElement)<D, V> implements ApolloMutationInterface<D, V> { }
+  extends ApolloMutationMixin(HTMLElement)<D, V> implements ApolloMutationInterface<D, V> {
+    declare data: Data<D> | null;
+
+    declare variables: Variables<D, V> | null;
+}

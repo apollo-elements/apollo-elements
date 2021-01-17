@@ -1,5 +1,10 @@
 import type { OperationVariables } from '@apollo/client/core';
-import type { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/interfaces';
+import type {
+  ApolloSubscriptionInterface,
+  Constructor,
+  Data,
+  Variables,
+} from '@apollo-elements/interfaces';
 
 import { ApolloElement } from './apollo-element';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
@@ -17,6 +22,17 @@ export { html } from '@gluon/gluon';
  *
  */
 export class ApolloSubscription<D = unknown, V = OperationVariables>
-  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement<any, any>>)<D, V>
-  implements ApolloSubscriptionInterface<D, V> { }
+  extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
+  implements ApolloSubscriptionInterface<D, V> {
+  /**
+   * Latest subscription data.
+   */
+  declare data: Data<D> | null;
+
+  /**
+   * An object that maps from the name of a variable as used in the subscription GraphQL document to that variable's value.
+   *
+   * @summary Subscription variables.
+   */
+  declare variables: Variables<D, V> | null;
+}

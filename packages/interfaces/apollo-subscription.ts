@@ -50,8 +50,22 @@ export interface OnSubscriptionDataParams<TData = unknown> {
  * @fires 'apollo-subscription-result' when the subscription updates
  * @fires 'apollo-error' when the query rejects
  */
-export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
-  extends ApolloElementInterface<D, V> {
+export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariables>
+  extends ApolloElementInterface {
+  /**
+   * Latest subscription data.
+   */
+  declare data: Data<D> | null;
+
+  /**
+   * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
+   *
+   * Setting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.
+   *
+   * @summary Subscription variables.
+   */
+  declare variables: Variables<D, V> | null;
+
   /**
    * Specifies the FetchPolicy to be used for this subscription.
    */
@@ -88,11 +102,6 @@ export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
   declare noAutoSubscribe: boolean;
 
   /**
-   * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
-   */
-  declare variables: Variables<D, V> | null;
-
-  /**
    * If skip is true, the query will be skipped entirely
    */
   declare skip: boolean;
@@ -101,6 +110,8 @@ export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
    * Determines if your subscription should be unsubscribed and subscribed again.
    */
   declare shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'];
+
+  constructor(...a: any[]);
 
   /**
    * Resets the observable and subscribes.
@@ -112,16 +123,19 @@ export declare class ApolloSubscriptionInterface<D, V = OperationVariables>
    */
   public cancel(): void
 
-  /**
-   * Determines whether the element is able to automatically subscribe
-   */
-  protected canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
-  shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
+  shouldSubscribe(
+    options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+  ): boolean
+
+  /**
+   * Determines whether the element is able to automatically subscribe
+   */
+  protected canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Callback for when data is updated

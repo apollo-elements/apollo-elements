@@ -8,7 +8,7 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type { GraphQLError, ApolloMutationInterface } from '@apollo-elements/interfaces';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
@@ -33,7 +33,9 @@ class XL extends HTMLElement {}
 /**
  * Testable Mixed-in Apollo Mutation class
  */
-class TestableApolloMutation<D = any, V = any> extends ApolloMutationMixin(XL)<D, V> {
+class TestableApolloMutation<D = any, V = any>
+  extends ApolloMutationMixin(XL)<D, V>
+  implements ApolloMutationInterface<D, V> {
   static get template() {
     const template = document.createElement('template');
     template.innerHTML = /* html */`

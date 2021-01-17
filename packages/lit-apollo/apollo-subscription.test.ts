@@ -11,10 +11,16 @@ import type {
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import { defineCE, fixture, expect, html } from '@open-wc/testing';
+import {
+  defineCE,
+  fixture,
+  expect,
+  html as fhtml,
+  unsafeStatic,
+} from '@open-wc/testing';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { LitElement, TemplateResult } from 'lit-element';
+import { LitElement, TemplateResult, html } from 'lit-element';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
@@ -53,6 +59,19 @@ describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription(
       const tag = defineCE(class Sub extends TestableApolloSubscription {});
       const el = await fixture(`<${tag}></${tag}>`);
       expect(el).to.be.an.instanceOf(LitElement);
+    });
+
+    it('renders when data is set', async function rendersOnData() {
+      class Test extends ApolloSubscription<{ foo: string }> {
+        render(): TemplateResult {
+          return html`${this.data?.foo ?? 'FAIL'}`;
+        }
+      }
+
+      const tagName = defineCE(Test);
+      const tag = unsafeStatic(tagName);
+      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      expect(element).shadowDom.to.equal('bar');
     });
   });
 });

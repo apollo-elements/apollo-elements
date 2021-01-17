@@ -20,9 +20,7 @@ interface PropertyEffectOptions<C extends ApolloElementInterface> {
  *
  * @param  attr Attribute name
  */
-export function booleanAttr<C extends ApolloElementInterface>(
-  attr: string
-): PropertyDescriptor {
+export function booleanAttr<C extends ApolloElementInterface>(attr: string): PropertyDescriptor {
   return {
     configurable: true,
     enumerable: true,
@@ -46,9 +44,9 @@ export function booleanAttr<C extends ApolloElementInterface>(
  *
  * @param options Configuration for the property: it's name, initial value, and setter side-effect.
  */
-export function effect<
-  C extends ApolloElementInterface<any, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
->(options: PropertyEffectOptions<C>): PropertyDescriptor {
+export function effect<C extends ApolloElementInterface>(
+  options: PropertyEffectOptions<C>
+): PropertyDescriptor {
   const { name, init, onSet } = options;
   const privateName = `_${name}` as typeof name; // little white lies
   return {

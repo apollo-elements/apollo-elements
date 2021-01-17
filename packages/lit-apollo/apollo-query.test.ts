@@ -15,10 +15,17 @@ import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
 
-import { defineCE, fixture, expect, nextFrame } from '@open-wc/testing';
+import {
+  defineCE,
+  expect,
+  fixture,
+  html as fhtml,
+  nextFrame,
+  unsafeStatic,
+} from '@open-wc/testing';
 
 import { ApolloQuery } from './apollo-query';
-import { html, LitElement, PropertyValues } from 'lit-element';
+import { html, LitElement, PropertyValues, TemplateResult } from 'lit-element';
 import { NetworkStatus } from '@apollo/client/core';
 
 class TestableApolloQuery<D, V> extends ApolloQuery<D, V> {
@@ -58,6 +65,19 @@ describe('[lit-apollo] ApolloQuery', function() {
 
     it('produces an instance of LitElement', function() {
       expect(el).to.be.an.instanceOf(LitElement);
+    });
+
+    it('renders when data is set', async function rendersOnData() {
+      class Test extends ApolloQuery<{ foo: string }> {
+        render(): TemplateResult {
+          return html`${this.data?.foo ?? 'FAIL'}`;
+        }
+      }
+
+      const tagName = defineCE(Test);
+      const tag = unsafeStatic(tagName);
+      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      expect(element).shadowDom.to.equal('bar');
     });
   });
 });

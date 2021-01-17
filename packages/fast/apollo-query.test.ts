@@ -93,6 +93,15 @@ describe('[fast] ApolloQuery', function() {
       expect(el).to.be.an.instanceOf(FASTElement);
     });
   });
+
+  it('renders when data is set', async function rendersOnData() {
+    const name = 'renders-when-data-is-set';
+    const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
+    @customElement({ name, template }) class Test extends ApolloQuery<{ foo: 'bar' }, null> { }
+    const tag = unsafeStatic(name);
+    const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+    expect(element).shadowDom.to.equal('bar');
+  });
 });
 
 type TypeCheckData = { a: 'a', b: number };

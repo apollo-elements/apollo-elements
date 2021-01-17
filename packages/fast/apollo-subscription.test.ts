@@ -15,7 +15,14 @@ import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscrip
 
 import { Entries, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 
-import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
+import {
+  aTimeout,
+  expect,
+  fixture,
+  html as fhtml,
+  nextFrame,
+  unsafeStatic,
+} from '@open-wc/testing';
 import { FASTElement, customElement, DOM, html } from '@microsoft/fast-element';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 import { describeSubscription } from '@apollo-elements/test-helpers/subscription.test';
@@ -82,6 +89,16 @@ describe('[fast] ApolloSubscription', function() {
       class Klass extends TestableApolloSubscription { }
       const el = await fixture<Klass>(`<${name}></${name}>`);
       expect(el).to.be.an.instanceOf(FASTElement);
+    });
+
+    it('renders when data is set', async function rendersOnData() {
+      const name = 'renders-when-data-is-set';
+      const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
+      @customElement({ name, template })
+      class Test extends ApolloSubscription<{ foo: 'bar' }, null> { }
+      const tag = unsafeStatic(name);
+      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      expect(element).shadowDom.to.equal('bar');
     });
   });
 });
