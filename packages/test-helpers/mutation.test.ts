@@ -214,6 +214,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
     // hybrids and haunted don't play nice with custom attributes
     // eslint-disable-next-line no-invalid-this
     if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
+      describe('with await-refetch-queries attribute', function() {
+        let element: MutationElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'await-refetch-queries' }));
+        });
+
+        it('sets awaitRefetchQueries property', function() {
+          expect(element.awaitRefetchQueries).to.be.true;
+        });
+      });
+
       describe('with refetch-queries="A"', function() {
         let element: MutationElement;
 
@@ -223,6 +235,24 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         it('sets refetchQueries property', function() {
           expect(element.refetchQueries).to.deep.equal(['A']);
+        });
+
+        describe('changing the attribute', function() {
+          beforeEach(function() {
+            element.setAttribute('refetch-queries', 'B');
+          });
+          it('changes the property', function() {
+            expect(element.refetchQueries).to.deep.equal(['B']);
+          });
+        });
+
+        describe('unsetting the attribute', function() {
+          beforeEach(function() {
+            element.removeAttribute('refetch-queries');
+          });
+          it('unsets the property', function() {
+            expect(element.refetchQueries).to.be.null;
+          });
         });
       });
 

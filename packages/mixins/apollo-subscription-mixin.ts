@@ -122,7 +122,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
       this.initObservable(params);
 
       if (this.observableSubscription && !(params?.shouldResubscribe ?? this.shouldResubscribe))
-        return;
+        return; /* c8 ignore next */
 
       this.loading = true;
 
@@ -184,7 +184,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
      * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
      */
     private nextData(result: FetchResult<Data<D>>) {
-      const data = result.data ?? null;
+      const data = result.data ?? null; /* c8 ignore next */
       // If we got to this line without a client, it's because of user error
       const client = this.client!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
       const loading = false;

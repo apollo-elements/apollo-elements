@@ -64,7 +64,13 @@ const mocks = {
   },
 };
 
-const unmocked = makeExecutableSchema({ typeDefs });
+const unmocked = makeExecutableSchema({ typeDefs, resolvers: {
+  Subscription: {
+    async nonNullParam(_, { nonNull }) {
+      return nonNull;
+    },
+  },
+} });
 
 // @ts-expect-error: it's fine
 const schema = addMocksToSchema({ schema: unmocked, mocks });
