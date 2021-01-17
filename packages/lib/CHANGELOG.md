@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.4](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@4.0.3...@apollo-elements/lib@4.0.4) (2021-01-17)
+
+
+### Bug Fixes
+
+* data and variable types ([fb92012](https://github.com/apollo-elements/apollo-elements/commit/fb920126e2eaf87546975d40d8cab50bc64cdc27))
+
+
+
+
+
 ## [4.0.4-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/lib@4.0.3...@apollo-elements/lib@4.0.4-alpha.0) (2021-01-17)
 
 

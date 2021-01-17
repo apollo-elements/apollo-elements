@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.3.3...@apollo-elements/polymer@3.4.0) (2021-01-17)
+
+
+### Bug Fixes
+
+* data and variable types ([fb92012](https://github.com/apollo-elements/apollo-elements/commit/fb920126e2eaf87546975d40d8cab50bc64cdc27))
+
+
+### Features
+
+* add canAutoSubscribe getter ([0d8aeba](https://github.com/apollo-elements/apollo-elements/commit/0d8aeba530884384f383ad91f79b8e9e0fb73c7f))
+* add observed attributes ([5b2f348](https://github.com/apollo-elements/apollo-elements/commit/5b2f3481ea2db6b4cc507e26c5542a89bb84c74b))
+
+
+
+
+
 # [3.4.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/polymer@3.3.3...@apollo-elements/polymer@3.4.0-alpha.0) (2021-01-17)
 
 
