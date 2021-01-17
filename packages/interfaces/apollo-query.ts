@@ -168,6 +168,9 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    */
   declare noAutoSubscribe: boolean;
 
+  /** Flags an element that's ready and able to auto subscribe */
+  public get canAutoSubscribe(): boolean;
+
   constructor(...a: any[]);
 
   /**

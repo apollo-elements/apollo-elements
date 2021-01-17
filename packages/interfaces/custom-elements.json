@@ -11,6 +11,16 @@
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
         },
         {
+          "name": "data",
+          "description": "data",
+          "type": "unknown"
+        },
+        {
+          "name": "variables",
+          "description": "Operation variables",
+          "type": "unknown"
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
@@ -18,22 +28,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "Operation variables",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -72,6 +72,16 @@
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
         },
         {
+          "name": "data",
+          "description": "data",
+          "type": "unknown"
+        },
+        {
+          "name": "variables",
+          "description": "Operation variables",
+          "type": "unknown"
+        },
+        {
           "name": "client",
           "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
@@ -79,22 +89,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "Operation variables",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -173,21 +173,6 @@
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
         },
         {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null"
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
           "description": "Latest mutation data",
           "type": "Data<D> | null"
@@ -196,6 +181,21 @@
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
           "type": "Variables<D, V> | null"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
@@ -282,21 +282,6 @@
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
         },
         {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null"
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
           "name": "data",
           "description": "Latest mutation data",
           "type": "Data<D> | null"
@@ -305,6 +290,21 @@
           "name": "variables",
           "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
           "type": "Variables<D, V> | null"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
@@ -412,23 +412,13 @@
           "type": "boolean"
         },
         {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
+        },
+        {
           "name": "documentType",
-          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null"
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
+          "type": "\"query\""
         },
         {
           "name": "data",
@@ -439,6 +429,21 @@
           "name": "variables",
           "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
           "type": "Variables<D, V> | null"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
@@ -546,23 +551,13 @@
           "type": "boolean"
         },
         {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
+        },
+        {
           "name": "documentType",
-          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
-        },
-        {
-          "name": "client",
-          "description": "The Apollo Client instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null"
-        },
-        {
-          "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "context",
-          "description": "Context passed to the link execution chain.",
-          "type": "Record<string, unknown> | undefined"
+          "type": "\"query\""
         },
         {
           "name": "data",
@@ -573,6 +568,21 @@
           "name": "variables",
           "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
           "type": "Variables<D, V> | null"
+        },
+        {
+          "name": "client",
+          "description": "The Apollo Client instance.",
+          "type": "ApolloClient<NormalizedCacheObject> | null"
+        },
+        {
+          "name": "document",
+          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "context",
+          "description": "Context passed to the link execution chain.",
+          "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
@@ -660,8 +670,23 @@
           "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined"
         },
         {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
+        },
+        {
           "name": "documentType",
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "data",
+          "description": "Latest subscription data.",
+          "type": "Data<D> | null"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\n\nSetting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "client",
@@ -671,22 +696,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",
@@ -774,8 +789,23 @@
           "type": "boolean | ((options: SubscriptionDataOptions<unknown, Record<string, any>>) => boolean) | undefined"
         },
         {
+          "name": "canAutoSubscribe",
+          "description": "Flags an element that's ready and able to auto subscribe",
+          "type": "boolean"
+        },
+        {
           "name": "documentType",
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\""
+        },
+        {
+          "name": "data",
+          "description": "Latest subscription data.",
+          "type": "Data<D> | null"
+        },
+        {
+          "name": "variables",
+          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\n\nSetting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+          "type": "Variables<D, V> | null"
         },
         {
           "name": "client",
@@ -785,22 +815,12 @@
         {
           "name": "document",
           "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
+          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
           "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "data",
-          "description": "data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "variables",
-          "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.",
-          "type": "Variables<D, V> | null"
         },
         {
           "name": "error",

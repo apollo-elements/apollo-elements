@@ -36,4 +36,6 @@ export class ApolloQuery<D = unknown, V = OperationVariables>
   declare variables: Variables<D, V> | null;
 
   @attr({ converter: nullableNumberConverter }) networkStatus: NetworkStatus = NetworkStatus.ready;
+
+  @attr({ attribute: 'fetch-policy' }) fetchPolicy?: ApolloQueryInterface<D, V>['fetchPolicy'];
 }
