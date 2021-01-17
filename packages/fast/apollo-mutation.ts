@@ -57,4 +57,8 @@ export class ApolloMutation<D = unknown, V = OperationVariables>
       },
     },
   }) refetchQueries: RefetchQueriesType<D> | null = null;
+
+  @attr({ mode: 'boolean', attribute: 'await-refetch-queries' }) awaitRefetchQueries?: boolean;
+
+  @attr({ attribute: 'fetch-policy' }) fetchPolicy?: ApolloMutationInterface<D, V>['fetchPolicy'];
 }

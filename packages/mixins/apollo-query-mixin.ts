@@ -51,6 +51,14 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
     implements Omit<ApolloQueryInterface<D, V>, 'shouldSubscribe'> {
     static documentType = 'query' as const;
 
+    static get observedAttributes(): string[] {
+      return [...new Set([
+        ...super.observedAttributes ?? [],
+        'fetch-policy',
+        'next-fetch-policy',
+      ])];
+    }
+
     /**
      * The latest query data.
      */
@@ -112,6 +120,23 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
     }
 
     constructor(...a: any[]) { super(...a); }
+
+    attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+      super.attributeChangedCallback?.(name, oldVal, newVal);
+      // @ts-expect-error: ts is not tracking the static side
+      if (super.constructor?.observedAttributes?.includes?.(name))
+        return;
+
+      switch (name) {
+        case 'fetch-policy':
+          this.fetchPolicy = newVal as ApolloQueryElement<D, V>['fetchPolicy'];
+          break;
+
+        case 'next-fetch-policy':
+          this.nextFetchPolicy = newVal as ApolloQueryElement<D, V>['nextFetchPolicy'];
+          break;
+      }
+    }
 
     connectedCallback(): void {
       super.connectedCallback();

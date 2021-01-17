@@ -38,4 +38,8 @@ export class ApolloQuery<D = unknown, V = OperationVariables>
   @attr({ converter: nullableNumberConverter }) networkStatus: NetworkStatus = NetworkStatus.ready;
 
   @attr({ attribute: 'fetch-policy' }) fetchPolicy?: ApolloQueryInterface<D, V>['fetchPolicy'];
+
+  @attr({
+    attribute: 'next-fetch-policy',
+  }) nextFetchPolicy?: ApolloQueryInterface<D, V>['nextFetchPolicy'];
 }

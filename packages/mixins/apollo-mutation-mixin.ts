@@ -37,6 +37,7 @@ type MixinInstance = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D, V = Record<string, any>>(): ApolloMutationInterface<D, V>;
   documentType: 'mutation';
+  observedAttributes?: string[];
 }
 
 function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInstance {
@@ -44,6 +45,15 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
     extends ApolloElementMixin(base)
     implements ApolloMutationInterface<D, V> {
     static documentType = 'mutation' as const;
+
+    static get observedAttributes(): string[] {
+      return [...new Set([
+        ...super.observedAttributes ?? [],
+        'await-refetch-queries',
+        'fetch-policy',
+        'refetch-queries',
+      ])];
+    }
 
     /**
      * Latest mutation data.
@@ -96,6 +106,31 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     connectedCallback() {
       super.connectedCallback?.();
+    }
+
+    attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+      super.attributeChangedCallback?.(name, oldVal, newVal);
+      // @ts-expect-error: ts is not tracking the static side
+      if (super.constructor?.observedAttributes?.includes?.(name))
+        return;
+
+      switch (name) {
+        case 'await-refetch-queries':
+          this.awaitRefetchQueries =
+            this.hasAttribute('await-refetch-queries');
+          break;
+
+        case 'refetch-queries':
+          this.refetchQueries =
+            !newVal ? null : newVal
+              .split(',')
+              .map(x => x.trim());
+          break;
+
+        case 'fetch-policy':
+          this.fetchPolicy = newVal as ApolloMutationElement<D, V>['fetchPolicy'];
+          break;
+      }
     }
 
     /**

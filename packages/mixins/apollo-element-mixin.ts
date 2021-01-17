@@ -55,7 +55,9 @@ export class ApolloElementEvent<T = ApolloElementElement> extends CustomEvent<T>
 
 type MixinInstance =
   Constructor<ApolloElementInterface> &
-  Pick<typeof ApolloElementInterface, keyof typeof ApolloElementInterface>;
+  Pick<typeof ApolloElementInterface, keyof typeof ApolloElementInterface> & {
+    observedAttributes?: string[];
+  };
 
 function ApolloElementMixinImplementation<B extends Constructor>(superclass: B): MixinInstance & B {
   abstract class ApolloElement extends superclass implements Omit<ApolloElementInterface, 'mo'> {

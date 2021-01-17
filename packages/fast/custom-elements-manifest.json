@@ -988,6 +988,20 @@
               "type": {
                 "type": "boolean"
               }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "FetchPolicy"
+              }
+            },
+            {
+              "name": "next-fetch-policy",
+              "fieldName": "nextFetchPolicy",
+              "type": {
+                "type": "FetchPolicy"
+              }
             }
           ],
           "events": [
@@ -1514,6 +1528,29 @@
               "description": "when the mutation rejects",
               "type": {
                 "type": "CustomEvent<ApolloError>"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "await-refetch-queries",
+              "fieldName": "awaitRefetchQueries",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "Extract<FetchPolicy, 'no-cache'>"
+              }
+            },
+            {
+              "name": "refetch-queries",
+              "fieldName": "refetchQueries",
+              "type": {
+                "type": "string"
               }
             }
           ]
