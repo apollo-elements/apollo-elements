@@ -415,6 +415,34 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
     });
 
+    // hybrids and haunted don't play nice with custom attributes
+    // eslint-disable-next-line no-invalid-this
+    if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
+      describe('with fetch-policy="no-cache"', function() {
+        let element: QueryElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'fetch-policy="no-cache"' }));
+        });
+
+        it('sets fetchPolicy property', function() {
+          expect(element.fetchPolicy).to.equal('no-cache');
+        });
+      });
+
+      describe('with next-fetch-policy="no-cache"', function() {
+        let element: QueryElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'next-fetch-policy="no-cache"' }));
+        });
+
+        it('sets nextFetchPolicy property', function() {
+          expect(element.nextFetchPolicy).to.equal('no-cache');
+        });
+      });
+    }
+
     describe('with global client available', function() {
       let element: QueryElement | undefined;
 

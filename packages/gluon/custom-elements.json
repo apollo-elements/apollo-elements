@@ -49,6 +49,10 @@
           "name": "loading",
           "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
         }
       ],
       "events": [

@@ -7,16 +7,12 @@ import type {
   Variables,
 } from '@apollo-elements/interfaces';
 
-import { ComplexAttributeConverter, property } from 'lit-element';
+import { property } from 'lit-element/lib/decorators';
 
 import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
 import { ApolloElement } from './apollo-element';
-
-const refetchQueriesConverter: ComplexAttributeConverter = {
-  fromAttribute: splitCommasAndTrim,
-};
 
 /**
  * `ApolloMutation`
@@ -50,6 +46,12 @@ export class ApolloMutation<D, V = OperationVariables>
    * ```
    * As a property, you can pass any legal `refetchQueries` value.
    */
-  @property({ attribute: 'refetch-queries', converter: refetchQueriesConverter })
-  refetchQueries: RefetchQueriesType<D> | null = null;
+  @property({
+    attribute: 'refetch-queries',
+    converter: {
+      fromAttribute(value) {
+        return !value ? null : splitCommasAndTrim(value);
+      },
+    },
+  }) refetchQueries: RefetchQueriesType<D> | null = null;
 }

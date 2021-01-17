@@ -1044,6 +1044,20 @@
               "type": {
                 "type": "boolean"
               }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "FetchPolicy"
+              }
+            },
+            {
+              "name": "next-fetch-policy",
+              "fieldName": "nextFetchPolicy",
+              "type": {
+                "type": "FetchPolicy"
+              }
             }
           ]
         }
@@ -1555,7 +1569,30 @@
             "type": {
               "type": "Constructor<ApolloMutation>"
             }
-          }
+          },
+          "attributes": [
+            {
+              "name": "await-refetch-queries",
+              "fieldName": "awaitRefetchQueries",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "Extract<FetchPolicy, 'no-cache'>"
+              }
+            },
+            {
+              "name": "refetch-queries",
+              "fieldName": "refetchQueries",
+              "type": {
+                "type": "string"
+              }
+            }
+          ]
         }
       ],
       "exports": [

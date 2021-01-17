@@ -9,6 +9,8 @@ import type {
 import { ApolloElement } from './apollo-element';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
+import { attr } from '@microsoft/fast-element';
+
 /**
  * `ApolloSubscription`
  *
@@ -33,4 +35,8 @@ export class ApolloSubscription<D = unknown, V = OperationVariables>
    * @summary Subscription variables.
    */
   declare variables: Variables<D, V> | null;
+
+  @attr({
+    attribute: 'fetch-policy',
+  }) fetchPolicy: ApolloSubscriptionInterface<D, V>['fetchPolicy'];
 }

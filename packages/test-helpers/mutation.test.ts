@@ -211,6 +211,46 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
     });
 
+    // hybrids and haunted don't play nice with custom attributes
+    // eslint-disable-next-line no-invalid-this
+    if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
+      describe('with refetch-queries="A"', function() {
+        let element: MutationElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'refetch-queries="A"' }));
+        });
+
+        it('sets refetchQueries property', function() {
+          expect(element.refetchQueries).to.deep.equal(['A']);
+        });
+      });
+
+      describe('with fetch-policy="no-cache"', function() {
+        let element: MutationElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'fetch-policy="no-cache"' }));
+        });
+
+        it('sets fetchPolicy property', function() {
+          expect(element.fetchPolicy).to.equal('no-cache');
+        });
+      });
+
+      describe('with refetch-queries="A,   B, C  "', function() {
+        let element: MutationElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'refetch-queries="A,   B, C  "' }));
+        });
+
+        it('sets refetchQueries property', function() {
+          expect(element.refetchQueries).to.deep.equal(['A', 'B', 'C']);
+        });
+      });
+    }
+
     describe('with global client available', function() {
       let cached = window.__APOLLO_CLIENT__;
 

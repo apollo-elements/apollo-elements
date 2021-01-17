@@ -33,6 +33,10 @@
         {
           "name": "loading",
           "type": "boolean"
+        },
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
         }
       ]
     },

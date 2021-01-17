@@ -1135,6 +1135,20 @@
               "type": {
                 "type": "boolean"
               }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "FetchPolicy"
+              }
+            },
+            {
+              "name": "next-fetch-policy",
+              "fieldName": "nextFetchPolicy",
+              "type": {
+                "type": "FetchPolicy"
+              }
             }
           ]
         }
@@ -1681,6 +1695,29 @@
               "description": "Notifies that `called` changed",
               "type": {
                 "type": "PolymerChangeEvent<boolean>"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "await-refetch-queries",
+              "fieldName": "awaitRefetchQueries",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "Extract<FetchPolicy, 'no-cache'>"
+              }
+            },
+            {
+              "name": "refetch-queries",
+              "fieldName": "refetchQueries",
+              "type": {
+                "type": "string"
               }
             }
           ]
