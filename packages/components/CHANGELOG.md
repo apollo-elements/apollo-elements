@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.3...@apollo-elements/components@1.4.0-alpha.0) (2021-01-17)
+
+
+### Features
+
+* add canAutoSubscribe getter ([0c336ae](https://github.com/apollo-elements/apollo-elements/commit/0c336ae995eb530fcde884bebd5ba5f18f81e4d2))
+* add observed attributes ([43bf154](https://github.com/apollo-elements/apollo-elements/commit/43bf1544ecda358f4478d482f5c4cb0e1da60781))
+
+
+
+
+
 ## [1.3.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/components@1.3.2...@apollo-elements/components@1.3.3) (2021-01-14)
 
 **Note:** Version bump only for package @apollo-elements/components

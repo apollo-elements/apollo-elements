@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0-alpha.0](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.4.3...@apollo-elements/interfaces@1.5.0-alpha.0) (2021-01-17)
+
+
+### Bug Fixes
+
+* data and variable types ([a5c919b](https://github.com/apollo-elements/apollo-elements/commit/a5c919bed9c69fd164e8ef66c54f8413c4192a1b))
+
+
+### Features
+
+* add canAutoSubscribe getter ([0c336ae](https://github.com/apollo-elements/apollo-elements/commit/0c336ae995eb530fcde884bebd5ba5f18f81e4d2))
+* add observed attributes ([43bf154](https://github.com/apollo-elements/apollo-elements/commit/43bf1544ecda358f4478d482f5c4cb0e1da60781))
+
+
+
+
+
 ## [1.4.3](https://github.com/apollo-elements/apollo-elements/compare/@apollo-elements/interfaces@1.4.2...@apollo-elements/interfaces@1.4.3) (2021-01-14)
 
 **Note:** Version bump only for package @apollo-elements/interfaces
