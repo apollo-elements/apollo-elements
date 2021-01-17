@@ -115,6 +115,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         expect(element?.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.false;
         expect(element?.shouldResubscribe, 'shouldResubscribe').to.be.false;
         expect(element?.skip, 'skip').to.be.false;
+        expect(element?.canAutoSubscribe, 'canAutoSubscribe').to.be.false;
 
         // optional fields
         expect(element?.fetchPolicy, 'fetchPolicy').to.be.undefined;
@@ -167,6 +168,12 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         it('renders loading', async function() {
           expect(element?.shadowRoot?.getElementById('loading')?.textContent)
             .to.equal(element?.stringify(true));
+        });
+      });
+
+      describe('calling subscribe without client', function() {
+        it('throws', function() {
+          expect(() => element!.subscribe()).to.throw('No Apollo client.');
         });
       });
 
@@ -234,6 +241,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         it('creates an observable', function() {
           expect(element?.client?.subscribe).to.have.been.called;
+        });
+
+        it('can auto subscribe', function() {
+          expect(element?.canAutoSubscribe, 'canAutoSubscribe').to.be.true;
         });
 
         describe('then setting NullableParam subscription', function() {
@@ -589,7 +600,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
         });
 
-        describe('with onError and onSubscriptionData set as class methods', function() {
+        describe('with onComplete, onError, and onSubscriptionData set as class methods', function() {
           let element: SubscriptionElement | undefined;
 
           let spies: Record<string|keyof SubscriptionElement, SinonSpy> | undefined;
@@ -615,20 +626,23 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
               noAutoSubscribe = true;
 
-              onSubscriptionData(x: unknown) { x; }
+              onSubscriptionComplete(): void { null; }
 
-              onError(x: unknown) { x; }
+              onSubscriptionData(x: unknown): void { x; }
+
+              onError(x: unknown): void { x; }
             }
-
-            spies!['onSubscriptionData'] = spy(Test.prototype, 'onSubscriptionData');
-            spies!['onError'] = spy(Test.prototype, 'onError');
 
             const tag = defineCE(Test);
 
             element = await fixture<Test>(`<${tag}></${tag}>`);
+
+            spies!['onSubscriptionComplete'] = spy(element, 'onSubscriptionComplete');
+            spies!['onSubscriptionData'] = spy(element, 'onSubscriptionData');
+            spies!['onError'] = spy(element, 'onError');
           });
 
-          describe('with subscription that will resolve', function() {
+          describe('with subscription that will resolve and immediately complete', function() {
             beforeEach(function setVariables() {
               element!.variables = { nonNull: 'hola' };
             });
@@ -650,6 +664,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
               it('does not call onError', function() {
                 expect(element?.onError).to.not.have.been.called;
+              });
+
+              it('calls onSubscriptionComplete', function() {
+                expect(element?.onSubscriptionComplete).to.have.been.called;
               });
             });
           });

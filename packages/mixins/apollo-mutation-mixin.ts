@@ -48,7 +48,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     static get observedAttributes(): string[] {
       return [...new Set([
-        ...super.observedAttributes ?? [],
+        ...super.observedAttributes ?? [], /* c8 ignore next */
         'await-refetch-queries',
         'fetch-policy',
         'refetch-queries',
@@ -112,20 +112,20 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
       super.attributeChangedCallback?.(name, oldVal, newVal);
       // @ts-expect-error: ts is not tracking the static side
       if (super.constructor?.observedAttributes?.includes?.(name))
-        return;
+        return; /* c8 ignore next */
 
-      switch (name) {
+      switch (name) { /* c8 ignore next */
         case 'await-refetch-queries':
           this.awaitRefetchQueries =
             this.hasAttribute('await-refetch-queries');
-          break;
+          break; /* c8 ignore next */
 
         case 'refetch-queries':
           this.refetchQueries =
             !newVal ? null : newVal
               .split(',')
               .map(x => x.trim());
-          break;
+          break; /* c8 ignore next */
 
         case 'fetch-policy':
           this.fetchPolicy = newVal as ApolloMutationElement<D, V>['fetchPolicy'];
@@ -196,7 +196,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
       if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
         this.loading = false;
         this.error = null;
-        this.data = data ?? null;
+        this.data = data ?? null; /* c8 ignore next */
         this.errors = response.errors ?? null;
         if (data)
           this.onCompleted?.(data);

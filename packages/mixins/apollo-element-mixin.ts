@@ -109,7 +109,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
       if (!document)
         this._document = null;
       else if (!isValidGql(document))
-        throw new TypeError(`${capital((this.constructor as typeof ApolloElementInterface).documentType ?? 'document')} must be a gql-parsed DocumentNode`);
+        throw new TypeError(`${capital((this.constructor as typeof ApolloElementInterface).documentType ?? 'document')} must be a gql-parsed DocumentNode`); /* c8 ignore next */
       else {
         this._document = document;
         this._documentSetByJS = true;
