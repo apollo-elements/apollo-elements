@@ -37,16 +37,26 @@ type MixinInstance = {
   documentType: 'subscription';
 }
 
-function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): MixinInstance & B {
-  // @ts-expect-error: it is though
+function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInstance & B {
   class ApolloSubscriptionElement<D, V>
-    extends ApolloElementMixin(superclass)<D, V> implements ApolloSubscriptionInterface<D, V> {
+    extends ApolloElementMixin(base)
+    implements Omit<ApolloSubscriptionInterface<D, V>, 'canSubscribe'> {
     static documentType = 'subscription' as const;
 
     declare subscription: DocumentNode | ComponentDocument<D> | null;
 
+    /**
+     * Latest subscription data.
+     */
     declare data: Data<D> | null;
 
+    /**
+     * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
+     *
+     * Setting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.
+     *
+     * @summary Subscription variables.
+     */
     declare variables: Variables<D, V> | null;
 
     declare fetchPolicy?: FetchPolicy;
@@ -70,6 +80,16 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
     onSubscriptionComplete?(): void
 
     onError?(error: ApolloError): void
+
+    public get canAutoSubscribe() {
+      return (
+        !!this.client &&
+        !this.noAutoSubscribe &&
+        this.shouldSubscribe()
+      );
+    }
+
+    constructor(...a: any[]) { super(...a); }
 
     connectedCallback(): void {
       super.connectedCallback?.();
@@ -136,7 +156,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
      *
      * Override to prevent subscribing unless your conditions are met.
      */
-    protected shouldSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
+    shouldSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
       return (void params, true);
     }
 

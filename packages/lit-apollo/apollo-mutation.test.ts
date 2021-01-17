@@ -41,7 +41,7 @@ import type {
 import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 
 import { ApolloMutation } from './apollo-mutation';
-import { LitElement, html, Constructor } from 'lit-element';
+import { LitElement, html, Constructor, TemplateResult } from 'lit-element';
 
 import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
 
@@ -99,6 +99,19 @@ describe('[lit-apollo] ApolloMutation', function() {
       const tag = defineCE(Test);
       const element = await fixture<Test>(`<${tag}></${tag}>`);
       expect(element).to.be.an.instanceOf(LitElement);
+    });
+
+    it('renders when data is set', async function rendersOnData() {
+      class Test extends ApolloMutation<{ foo: string }> {
+        render(): TemplateResult {
+          return html`${this.data?.foo ?? 'FAIL'}`;
+        }
+      }
+
+      const tagName = defineCE(Test);
+      const tag = unsafeStatic(tagName);
+      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      expect(element).shadowDom.to.equal('bar');
     });
 
     describe('with update defined as a class method', function() {

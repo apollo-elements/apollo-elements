@@ -1,4 +1,4 @@
-import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
+import type { ApolloQueryInterface, Data, Variables } from '@apollo-elements/interfaces';
 import type { OperationVariables } from '@apollo/client/core';
 import { NetworkStatus } from '@apollo/client/core';
 
@@ -17,8 +17,19 @@ import { ApolloElement } from './apollo-element';
  *
  */
 export class ApolloQuery<D = unknown, V = OperationVariables>
-  // have to cast because of the TypeScript bug which causes the error in apollo-element-mixin
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
+  extends ApolloQueryMixin(ApolloElement)<D, V>
   implements ApolloQueryInterface<D, V> {
+  /**
+   * Latest query data.
+   */
+  declare data: Data<D> | null;
+
+  /**
+   * An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.
+   *
+   * @summary Query variables.
+   */
+  declare variables: Variables<D, V> | null;
+
   @property({ type: Number }) networkStatus = NetworkStatus.ready;
 }

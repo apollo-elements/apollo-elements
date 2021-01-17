@@ -1,10 +1,11 @@
+import type { OperationVariables } from '@apollo/client/core';
+
 import type {
   ApolloMutationInterface,
-  Constructor,
+  Data,
   RefetchQueriesType,
+  Variables,
 } from '@apollo-elements/interfaces';
-
-import type { OperationVariables } from '@apollo/client/core';
 
 import { ComplexAttributeConverter, property } from 'lit-element';
 
@@ -26,8 +27,20 @@ const refetchQueriesConverter: ComplexAttributeConverter = {
  *
  */
 export class ApolloMutation<D, V = OperationVariables>
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
+  extends ApolloMutationMixin(ApolloElement)<D, V>
   implements ApolloMutationInterface<D, V> {
+  /**
+   * Latest mutation data.
+   */
+  declare data: Data<D> | null;
+
+  /**
+   * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
+   *
+   * @summary Mutation variables.
+   */
+  declare variables: Variables<D, V> | null;
+
   @property({ type: Boolean }) called = false;
 
   /**

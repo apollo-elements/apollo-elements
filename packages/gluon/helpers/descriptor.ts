@@ -5,14 +5,14 @@ import type { ApolloElement } from '../apollo-element';
 
 import { effect } from '@apollo-elements/lib/descriptors';
 
-type NonFunctionPropertyNames<T extends ApolloElement<any, any>> = {
+type NonFunctionPropertyNames<T extends ApolloElement> = {
   [K in keyof T]: T[K] extends (...args: any[]) => unknown ? never : K;
 }[keyof Omit<T, keyof HTMLElement>];
 
-type ObservableProperties<T extends ApolloElement<any, any>> =
+type ObservableProperties<T extends ApolloElement> =
   Record<NonFunctionPropertyNames<T>, T[NonFunctionPropertyNames<T>]>
 
-export function defineObservedProperties<C extends Constructor<ApolloElement<any, any>>>(
+export function defineObservedProperties<C extends Constructor<ApolloElement>>(
   Class: C,
   properties: Partial<ObservableProperties<InstanceType<C>>>
 ): void {

@@ -34,7 +34,10 @@ export type FetchMoreParams<D, V> =
  * @fires 'apollo-error' when the query rejects
  */
 export declare class ApolloQueryInterface<D, V = OperationVariables>
-  extends ApolloElementInterface<D, V> {
+  extends ApolloElementInterface
+  implements ApolloQueryInterface<D, V> {
+  static documentType: 'query';
+
   /**
    * The latest query data.
    */
@@ -165,6 +168,8 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    */
   declare noAutoSubscribe: boolean;
 
+  constructor(...a: any[]);
+
   /**
    * Optional callback for when a query is completed.
    */
@@ -184,10 +189,11 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
-   * @protected
    * @override
    */
-  shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
+  shouldSubscribe(
+    options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+  ): boolean
 
   /**
    * Resets the observableQuery and subscribes.
@@ -243,4 +249,5 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
 }
 
 export class ApolloQueryElement<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin(HTMLElement)<D, V> { }
+  extends ApolloQueryMixin(HTMLElement)<D, V> {
+}

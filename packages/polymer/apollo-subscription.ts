@@ -3,8 +3,6 @@ import type { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './apollo-element';
 
-type Base = Constructor<PolymerApolloElement<any, any>>;
-
 /**
  * @element apollo-subscription
  *
@@ -37,7 +35,7 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  * @fires 'loading-changed'
  */
 export class PolymerApolloSubscription<D = unknown, V = OperationVariables>
-  extends ApolloSubscriptionMixin(PolymerApolloElement as Base)<D, V>
+  extends ApolloSubscriptionMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V>
   implements ApolloSubscriptionInterface<D, V> { }
 
 customElements.define('apollo-subscription', PolymerApolloSubscription);

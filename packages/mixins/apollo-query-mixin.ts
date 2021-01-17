@@ -42,17 +42,30 @@ declare global {
 type MixinInstance = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D = unknown, V = Record<string, any>>(...a: any[]): ApolloQueryInterface<D, V>;
-  documentType: 'query';
+  documentType: 'query',
 }
 
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstance & B {
   class ApolloQueryElement<D = unknown, V = OperationVariables>
-    extends ApolloElementMixin(superclass)<D, V> implements ApolloQueryInterface<D, V> {
+    extends ApolloElementMixin(superclass)
+    implements Omit<ApolloQueryInterface<D, V>, 'shouldSubscribe'> {
     static documentType = 'query' as const;
 
-    declare query: DocumentNode | ComponentDocument<D> | null;
+    /**
+     * The latest query data.
+     */
+    declare data: Data<D> | null;
 
+    /**
+     * An object map from variable name to variable value, where the variables are used within the GraphQL query.
+     *
+     * Setting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.
+     *
+     * @summary Query variables.
+     */
     declare variables: Variables<D, V> | null;
+
+    declare query: DocumentNode | ComponentDocument<D> | null;
 
     declare fetchPolicy?: FetchPolicy;
 
@@ -89,6 +102,16 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
 
     /** @private */
     __networkStatus = NetworkStatus.ready;
+
+    public get canAutoSubscribe() {
+      return (
+        !!this.client &&
+        !this.noAutoSubscribe &&
+        this.shouldSubscribe()
+      );
+    }
+
+    constructor(...a: any[]) { super(...a); }
 
     connectedCallback(): void {
       super.connectedCallback();
@@ -138,7 +161,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * Determines whether the element should attempt to automatically subscribe i.e. begin querying
      *
      * Override to prevent subscribing unless your conditions are met.
-     * @protected
      */
     shouldSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean {
       return (void options, true);

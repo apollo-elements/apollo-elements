@@ -3,17 +3,14 @@ import type {
   ApolloError,
   DocumentNode,
   NormalizedCacheObject,
-  OperationVariables,
+  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type {
   ApolloElementElement,
   ApolloElementInterface,
-  ComponentDocument,
   Constructor,
-  Data,
   GraphQLError,
-  Variables,
 } from '@apollo-elements/interfaces';
 
 import { gql } from '@apollo/client/core';
@@ -56,30 +53,24 @@ export class ApolloElementEvent<T = ApolloElementElement> extends CustomEvent<T>
   }
 }
 
-type MixinInstance = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new <D = unknown, V = Record<string, any>>(...a: any[]): ApolloElementInterface<D, V>;
-  documentType: 'document' | 'query' | 'mutation' | 'subscription';
-}
+type MixinInstance =
+  Constructor<ApolloElementInterface> &
+  Pick<typeof ApolloElementInterface, keyof typeof ApolloElementInterface>;
 
 function ApolloElementMixinImplementation<B extends Constructor>(superclass: B): MixinInstance & B {
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
-  class ApolloElement<
-    D = unknown,
-    V = OperationVariables
-  > extends superclass implements ApolloElementInterface<D, V> {
+  abstract class ApolloElement extends superclass implements Omit<ApolloElementInterface, 'mo'> {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
     /** The Apollo Client instance. */
     client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
     /** Latest data */
-    declare data: Data<D> | null;
+    declare abstract data: unknown | null;
 
     /**
      * An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.
      */
-    declare variables: Variables<D, V> | null;
+    declare abstract variables: unknown | null;
 
     /** Latest error. */
     declare error: Error | ApolloError | null;
@@ -93,11 +84,11 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     /** Context passed to the link execution chain. */
     declare context?: Record<string, unknown>;
 
-    private _document: DocumentNode | ComponentDocument<D> | null = null;
+    private _document: this['document'] = null;
 
     private _documentSetByJS = false;
 
-    private _variables: Variables<D, V> | null = null;
+    private _variables: this['variables'] = null;
 
     private _variablesSetByJS = false;
 
@@ -107,7 +98,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
      * A GraphQL document containing a single query, mutation, or subscription.
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
-    get document(): DocumentNode | ComponentDocument<D> | null {
+    get document(): DocumentNode | TypedDocumentNode | null {
       return this._document ?? this.getDOMGraphQLDocument();
     }
 
@@ -124,6 +115,8 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
           this.documentChanged?.(document);
       }
     }
+
+    constructor(...a: any[]) { super(...a); }
 
     connectedCallback(): void {
       super.connectedCallback?.();
@@ -149,13 +142,13 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
      * Lifecycle callback that reacts to changes in the GraphQL document.
      * @param document The GraphQL document.
      */
-    protected documentChanged?(document: DocumentNode | ComponentDocument<D> | null): void
+    protected documentChanged?(document: this['document']): void
 
     /**
      * Lifecycle callback that reacts to changes in the operation variables.
      * @param variables The variables.
      */
-    protected variablesChanged?(variables: Variables<D, V> | null): void
+    protected variablesChanged?(variables: this['variables']): void
 
     private onDOMMutation(records: MutationRecord[]): void {
       const isGQLScriptChanged = (record: MutationRecord) =>
@@ -176,7 +169,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     /**
      * Get a GraphQL DocumentNode from the element's GraphQL script child
      */
-    protected getDOMGraphQLDocument(): DocumentNode | ComponentDocument<D> | null {
+    protected getDOMGraphQLDocument(): this['document'] {
       const script = this.querySelector<HTMLScriptElement>(SCRIPT_SELECTOR);
       const text = script?.innerText;
       if (!text)
@@ -184,7 +177,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
       else {
         try {
           // admittedly, we have to trust the user here.
-          return gql(stripHTMLComments(text)) as DocumentNode | ComponentDocument<D>; /* c8 ignore next */ // covered
+          return gql(stripHTMLComments(text)) as this['document']; /* c8 ignore next */ // covered
         } catch (err) {
           this.error = err;
           return null;
@@ -195,7 +188,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     /**
      * Gets operation variables from the element's JSON script child
      */
-    protected getDOMVariables(): Variables<D, V> | null {
+    protected getDOMVariables(): this['variables'] {
       const script = this.querySelector<HTMLScriptElement>('script[type="application/json"]');
       if (!script) return null; /* c8 ignore next */ // covered
       try {
@@ -215,15 +208,15 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
       name: 'variables',
       init: null,
       onSet(variables: unknown) {
-        // @ts-ignore: This is essentially a class accessor, I'm working around some TS limitations
+        // @ts-expect-error: This is essentially a class accessor, I'm working around some TS limitations
         if (this.mo) // element is connected
-        // @ts-ignore: This is essentially a class accessor, I'm working around some TS limitations
+        // @ts-expect-error: This is essentially a class accessor, I'm working around some TS limitations
           this.variablesChanged?.(variables);
       },
     }),
   });
 
-  // @ts-expect-error: Actually, it is.
+  // @ts-expect-error: let's pretend it is
   return ApolloElement;
 }
 

@@ -14,9 +14,7 @@ import {
   teardownClient,
 } from '@apollo-elements/test-helpers';
 
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { var: string };
-class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
+class TypeCheck extends ApolloElement {
   typeCheck() {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
@@ -30,12 +28,7 @@ class TypeCheck extends ApolloElement<TypeCheckData, TypeCheckVars> {
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<TypeCheckVars>                       (this.variables!);
     assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
@@ -131,19 +124,6 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
     element.client = { test: 'CLIENT' };
     await element.updateComplete;
     expect(element.shadowRoot.textContent).to.equal('CLIENT');
-  });
-
-  it('renders when data is set', async function rendersOnData() {
-    class Test extends ApolloElement<{ foo: string }> {
-      render(): TemplateResult {
-        return html`${this.data?.foo ?? 'FAIL'}`;
-      }
-    }
-
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
-    expect(element).shadowDom.to.equal('bar');
   });
 
   it('renders when error is set', async function rendersOnError() {

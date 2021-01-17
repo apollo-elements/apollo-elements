@@ -4,8 +4,6 @@ import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mix
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
 
-type Base = Constructor<PolymerApolloElement<any, any>>;
-
 /**
  * @element apollo-mutation
  *
@@ -41,7 +39,7 @@ type Base = Constructor<PolymerApolloElement<any, any>>;
  * @fires 'called-changed'
  */
 export class PolymerApolloMutation<D = unknown, V = OperationVariables>
-  extends ApolloMutationMixin(PolymerApolloElement as Base)<D, V>
+  extends ApolloMutationMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V>
   implements ApolloMutationInterface<D, V> {
   @notify called = false;
 }

@@ -22,7 +22,14 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import { fixture, expect, nextFrame, aTimeout } from '@open-wc/testing';
+import {
+  aTimeout,
+  expect,
+  fixture,
+  html as fhtml,
+  nextFrame,
+  unsafeStatic,
+} from '@open-wc/testing';
 
 import {
   setupClient,
@@ -115,6 +122,16 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       expect(el).to.be.an.instanceOf(FASTElement);
     });
 
+    it('renders when data is set', async function rendersOnData() {
+      const name = 'renders-when-data-is-set';
+      const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
+      @customElement({ name, template })
+      class Test extends ApolloMutation<{ foo: 'bar' }, null> { }
+      const tag = unsafeStatic(name);
+      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      expect(element).shadowDom.to.equal('bar');
+    });
+
     describe('refetchQueries', function() {
       let element: Test;
 
@@ -194,6 +211,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
+    assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
