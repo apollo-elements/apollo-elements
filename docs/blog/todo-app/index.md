@@ -360,7 +360,7 @@ Let's define a [query component](/guides/building-apps/queries/) to display our 
 Use the [Apollo Elements generator](/api/create/component/) to scaffold a component:
 
 ```bash copy
-npm init @apollo-elements \
+npm init @apollo-elements -- \
     component \
   --name todo-list \
   --type query \
@@ -441,7 +441,7 @@ Now we'll move on to the next step and implement our first mutation in the `<tod
 Our first mutation component will be `<todo-add>`, which lets the user add a new item to the list. Fire up the old component generator to scaffold the files.
 
 ```bash copy
-npm init @apollo-elements \
+npm init @apollo-elements -- \
     component \
   --name todo-add \
   --type mutation \
@@ -572,7 +572,7 @@ Nice! Two requirements down, two to go:
 The `<todo-edit>` element will do most of the heavy lifting in our app, so it will be the most involved of all our components, both in terms of it's template and it's methods. By now you should know the drill: fire up the good old generator to scaffold the files:
 
 ```bash copy
-npm init @apollo-elements \
+npm init @apollo-elements -- \
     component \
   --name todo-edit \
   --type mutation \
