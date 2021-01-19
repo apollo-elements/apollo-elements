@@ -1,7 +1,6 @@
 import type {
   ApolloError,
   DocumentNode,
-  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   Observable,
