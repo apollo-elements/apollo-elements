@@ -11,8 +11,9 @@
   {% markdown %}{{ declaration.summary | safe }}{% endmarkdown %}
 {% endif %}
 
+{% block beforeProperties %}{% endblock %}
+
 {% if fields.length %}
-  {% block beforeProperties %}{% endblock %}
   {{ linkHeading('Properties', level=2) }}
   {% for property in (fields | sortByProp('name')) %}
     {% if not property.inheritedFrom %}

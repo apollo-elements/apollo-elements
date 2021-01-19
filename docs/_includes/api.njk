@@ -14,7 +14,7 @@
       <rocket-navigation>
         {{
           collections[section]
-          | hackToInsertHeadings(module=moduleData)
+          | hackToInsertHeadings(module=moduleData, package=package)
           | rocketNav
           | rocketNavToHtml(listItemClass="menu-item", activeListItemClass="current", activeKey=eleventyNavigation.key)
           | safe

@@ -21,7 +21,7 @@ If both a JSON script child and a JavaScript property are present, JavaScript ta
 
 ## `shouldSubscribe`
 
-Called synchronously before all automatic attempts to subscribe. If it returns true, the element will subscribe and begin fetching. Returns `true` by default, Override to [prevent automatic subscription](../#preventing-automatic-subscription).
+Called synchronously before all automatic attempts to subscribe. If it returns true, the element will subscribe and begin fetching. Returns `true` by default, Override to [prevent automatic subscription](/guides/building-apps/queries/#preventing-automatic-subscription).
 
 ## `subscribe`
 
