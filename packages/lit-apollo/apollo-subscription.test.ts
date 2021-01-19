@@ -1,6 +1,7 @@
 import type {
   ApolloClient,
   DocumentNode,
+  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   Observable,
@@ -21,6 +22,7 @@ import {
 
 import { ApolloSubscription } from './apollo-subscription';
 import { LitElement, TemplateResult, html } from 'lit-element';
+import { property } from 'lit-element/lib/decorators';
 import { assertType, isApolloError } from '@apollo-elements/test-helpers';
 
 import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
@@ -73,6 +75,27 @@ describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription(
       const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
+
+    describe('with a class that defines observedAttributes with decorator', function() {
+      class Test extends ApolloSubscription<unknown, unknown> {
+        @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
+      }
+
+      let element: Test;
+
+      beforeEach(async function subclass() {
+        const tagName = defineCE(Test);
+        element = await fixture<Test>(`<${tagName}></${tagName}>`);
+      });
+
+      it('preserves decorator behaviour', async function() {
+        element.xA = 2;
+        await element.updateComplete;
+        expect(element.getAttribute('x-a')).to.equal('2');
+        element.setAttribute('x-a', '1');
+        expect(element.xA).to.equal(1);
+      });
+    });
   });
 });
 
@@ -103,6 +126,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     // ApolloSubscriptionInterface
     assertType<DocumentNode>                          (this.subscription!);
     assertType<TypeCheckVars>                         (this.variables!);
+    assertType<ErrorPolicy>                           (this.errorPolicy!);
     assertType<FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange!);

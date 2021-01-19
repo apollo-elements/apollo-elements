@@ -36,7 +36,7 @@ describe('[hybrids] client factory', function() {
       });
     });
 
-    describe('with null first argument an no options', function() {
+    describe('with null first argument and no options', function() {
       beforeEach(async function() {
         const tag = getTag();
         define<ApolloElementElement>(tag, {

@@ -25,9 +25,11 @@ export function client<D = unknown, V = OperationVariables>(
     connect(host) {
       applyPrototype(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);
 
+      /* c8 ignore start */ // covered
       const useGlobal = options?.useGlobal ?? true;
 
-      const fallback = useGlobal ? window.__APOLLO_CLIENT__ : null; /* c8 ignore next */ // this is definitely covered
+      const fallback = useGlobal ? window.__APOLLO_CLIENT__ : null;
+      /* c8 ignore stop */
 
       host.client = client ?? fallback ?? null;
 

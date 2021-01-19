@@ -9,13 +9,13 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type { ApolloQueryInterface, GraphQLError } from '@apollo-elements/interfaces';
 
 import type { Constructor, Entries } from '@apollo-elements/interfaces';
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { nextFrame } from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import 'sinon-chai';
 
@@ -101,12 +101,50 @@ const setupFunction = setupQueryClass(TestableApolloQuery);
 
 describe('[mixins] ApolloQueryMixin', function() {
   describeQuery({ setupFunction, class: TestableApolloQuery });
+  describe('when base does not define observedAttributes', function() {
+    class TestBase extends HTMLElement { }
+    let element: TestBase & ApolloQueryInterface<unknown, unknown>;
+    beforeEach(async function() {
+      const tag = defineCE(ApolloQueryMixin(TestBase));
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+    it('defines observedAttributes', function() {
+      // @ts-expect-error: ts doesn't track constructor type;
+      expect(element.constructor.observedAttributes).to.deep.equal([
+        'error-policy',
+        'fetch-policy',
+        'next-fetch-policy',
+      ]);
+    });
+  });
+
+  describe('when base defines observedAttributes', function() {
+    class TestBase extends HTMLElement {
+      static get observedAttributes() {
+        return ['a'];
+      }
+    }
+    let element: TestBase & ApolloQueryInterface<unknown, unknown>;
+    beforeEach(async function() {
+      const tag = defineCE(ApolloQueryMixin(TestBase));
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+    it('defines observedAttributes', function() {
+      // @ts-expect-error: ts doesn't track constructor type;
+      expect(element.constructor.observedAttributes).to.deep.equal([
+        'a',
+        'error-policy',
+        'fetch-policy',
+        'next-fetch-policy',
+      ]);
+    });
+  });
 });
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 
-class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
+export class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
   variables = { d: 'd' as const, e: 0 };
 
   typeCheck() {
@@ -134,8 +172,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
 
     // ApolloQueryInterface
     assertType<DocumentNode>                        (this.query!);
-    assertType<ErrorPolicy>                         (this.errorPolicy);
-    assertType<string>                              (this.errorPolicy);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
     assertType<FetchPolicy>                         (this.fetchPolicy!);
@@ -160,7 +197,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
 }
 
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-class TDNTypeCheck extends ApolloQueryMixin(HTMLElement)<TDN> {
+export class TDNTypeCheck extends ApolloQueryMixin(HTMLElement)<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
@@ -194,18 +231,18 @@ if (runChecks) {
   assertType<number>(inheritor.childProp);
 }
 
-class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+export class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables() {
     return { hey: 'yo' as const };
   }
 }
 
-class TypeCheckField extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+export class TypeCheckField extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
   variables = { hey: 'yo' as const };
 }
 
-class TypeCheckFieldBad extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+export class TypeCheckFieldBad extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
   // @ts-expect-error: passes type check;
   variables = { hey: 'hey' };
 }

@@ -130,7 +130,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     // ApolloQueryInterface
     assertType<DocumentNode>                        (this.query!);
     assertType<TypeCheckVars>                       (this.variables!);
-    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);

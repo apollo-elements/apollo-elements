@@ -1,4 +1,4 @@
-import type { ApolloError } from '@apollo/client/core';
+import type { ApolloError, ErrorPolicy } from '@apollo/client/core';
 
 import type { Constructor, GraphQLError } from '@apollo-elements/interfaces';
 
@@ -25,6 +25,10 @@ export class ApolloElement extends ApolloElementMixin(LitElement as Constructor<
   @property({ attribute: false }) error: Error | ApolloError | null = null;
 
   @property({ attribute: false }) errors: readonly GraphQLError[] | null = null;
+
+  @property({ attribute: 'error-policy' }) errorPolicy?: ErrorPolicy;
+
+  @property({ attribute: 'fetch-policy' }) fetchPolicy?: string;
 
   @property({ type: Boolean, reflect: true }) loading = false;
 }

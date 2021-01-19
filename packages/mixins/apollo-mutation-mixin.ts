@@ -1,7 +1,6 @@
 import type {
   ApolloError,
   DocumentNode,
-  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   MutationOptions,
@@ -47,12 +46,11 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
     static documentType = 'mutation' as const;
 
     static get observedAttributes(): string[] {
-      return [...new Set([
-        ...super.observedAttributes ?? [], /* c8 ignore next */
+      return [
+        ...(super.observedAttributes ?? []), /* c8 ignore next */
         'await-refetch-queries',
-        'fetch-policy',
         'refetch-queries',
-      ])];
+      ];
     }
 
     /**
@@ -76,8 +74,6 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
     declare context?: Record<string, unknown>;
 
     declare optimisticResponse?: OptimisticResponseType<D, V>;
-
-    declare errorPolicy?: ErrorPolicy;
 
     declare fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
 
@@ -104,15 +100,13 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
       this.loading ??= false;
     }
 
-    connectedCallback() {
-      super.connectedCallback?.();
-    }
-
     attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);
+      /* c8 ignore start */
       // @ts-expect-error: ts is not tracking the static side
-      if (super.constructor?.observedAttributes?.includes?.(name))
-        return; /* c8 ignore next */
+      if ((super.constructor?.observedAttributes ?? []).includes(name))
+        return;
+      /* c8 ignore stop */
 
       switch (name) { /* c8 ignore next */
         case 'await-refetch-queries':
@@ -126,11 +120,11 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
               .split(',')
               .map(x => x.trim());
           break; /* c8 ignore next */
-
-        case 'fetch-policy':
-          this.fetchPolicy = newVal as ApolloMutationElement<D, V>['fetchPolicy'];
-          break;
       }
+    }
+
+    connectedCallback() {
+      super.connectedCallback?.();
     }
 
     /**
@@ -141,8 +135,9 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
     ): Promise<FetchResult<Data<D>>> {
       if (!this.client)
         throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
-
       const options: MutationOptions<Data<D>, Variables<D, V>> = {
+        // all covered
+        /* c8 ignore start */
         // It's better to let Apollo client throw this error
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         mutation: params?.mutation ?? this.mutation!,
@@ -155,6 +150,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
         refetchQueries: params?.refetchQueries ?? this.refetchQueries ?? undefined,
         update: params?.update ?? this.updater,
         variables: params?.variables ?? this.variables ?? undefined,
+        /* c8 ignore stop */
       };
 
       const mutationId = this.generateMutationId();

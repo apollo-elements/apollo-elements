@@ -2,6 +2,7 @@ import type {
   ApolloClient,
   ApolloError,
   DocumentNode,
+  ErrorPolicy,
   NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client/core';
@@ -63,28 +64,45 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
   abstract class ApolloElement extends superclass implements Omit<ApolloElementInterface, 'mo'> {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
-    /** The Apollo Client instance. */
+    static get observedAttributes(): string[] {
+      // @ts-expect-error: it might not, but it might
+      const superAttrs = super.observedAttributes ?? []; /* c8 ignore next */ // it's covered
+      return [
+        ...(superAttrs),
+        'error-policy',
+        'fetch-policy',
+      ];
+    }
+
+    /** @summary The Apollo Client instance. */
     client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
-    /** Latest data */
+    /** @summary Latest data */
     declare abstract data: unknown | null;
 
     /**
+     * @summary Operation variables.
      * An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.
      */
     declare abstract variables: unknown | null;
 
-    /** Latest error. */
+    /** @summary Fetch Policy for the operation. */
+    declare abstract fetchPolicy?: string;
+
+    /** @summary Latest error. */
     declare error: Error | ApolloError | null;
 
-    /** Latest errors. */
+    /** @summary Latest errors. */
     declare errors: readonly GraphQLError[] | null;
 
-    /** Whether a request is in-flight. */
+    /** @summary Whether a request is in-flight. */
     declare loading: boolean;
 
-    /** Context passed to the link execution chain. */
+    /** @summary Context passed to the link execution chain. */
     declare context?: Record<string, unknown>;
+
+    /** @summary Error Policy for the operation. */
+    declare errorPolicy?: ErrorPolicy;
 
     private _document: this['document'] = null;
 
@@ -97,28 +115,45 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     protected mo?: MutationObserver;
 
     /**
+     * @summary Operation document.
      * A GraphQL document containing a single query, mutation, or subscription.
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
     get document(): DocumentNode | TypedDocumentNode | null {
-      return this._document ?? this.getDOMGraphQLDocument();
+      return this._document ?? this.getDOMGraphQLDocument(); /* c8 ignore next */ // it's covered
     }
 
     set document(document) {
       this._documentSetByJS = false;
       if (!document)
-        this._document = null;
+        this._document = null; /* c8 ignore next */ // it's covered
       else if (!isValidGql(document))
         throw new TypeError(`${capital((this.constructor as typeof ApolloElementInterface).documentType ?? 'document')} must be a gql-parsed DocumentNode`); /* c8 ignore next */
       else {
         this._document = document;
         this._documentSetByJS = true;
         if (this.mo) // `isConnected` is unreliable in this case
-          this.documentChanged?.(document);
+          this.documentChanged?.(document); /* c8 ignore next */ // it's covered
       }
     }
 
     constructor(...a: any[]) { super(...a); }
+
+    attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+      super.attributeChangedCallback?.(name, oldVal, newVal);
+      // @ts-expect-error: ts is not tracking the static side
+      if (super.constructor?.observedAttributes?.includes?.(name))
+        return; /* c8 ignore next */
+
+      switch (name) { /* c8 ignore next */
+        case 'error-policy':
+          this.errorPolicy = newVal as ErrorPolicy;
+          break;/* c8 ignore next */
+        case 'fetch-policy':
+          this.fetchPolicy = newVal as this['fetchPolicy'];
+          break;
+      }
+    }
 
     connectedCallback(): void {
       super.connectedCallback?.();

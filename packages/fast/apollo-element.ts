@@ -3,6 +3,7 @@ import type { GraphQLError } from '@apollo-elements/interfaces';
 import type {
   ApolloClient,
   ApolloError,
+  ErrorPolicy,
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
@@ -31,6 +32,8 @@ export class ApolloElement extends ApolloElementMixin(FASTElement) {
   @observable error: ApolloError | Error | null = null;
 
   @observable errors: readonly GraphQLError[] | null = null;
+
+  @attr({ attribute: 'error-policy' }) errorPolicy?: ErrorPolicy;
 
   @attr({ mode: 'boolean' }) loading = false;
 }

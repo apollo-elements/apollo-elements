@@ -148,11 +148,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         expect(element.variables, 'variables').to.be.null;
 
         // defined fields
-        expect(element.errorPolicy, 'errorPolicy').to.equal('none');
         expect(element.networkStatus, 'networkStatus').to.equal(NetworkStatus.ready);
         expect(element.noAutoSubscribe, 'noAuthSubscribe').to.be.false;
 
         // optional fields
+        expect(element.errorPolicy, 'errorPolicy').to.be.undefined;
         expect(element.fetchPolicy, 'fetchPolicy').to.be.undefined;
         expect(element.nextFetchPolicy, 'nextFetchPolicy').to.be.undefined;
         expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
@@ -418,7 +418,30 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
     // hybrids and haunted don't play nice with custom attributes
     // eslint-disable-next-line no-invalid-this
     if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
-      describe('with fetch-policy="no-cache"', function() {
+      describe('with error-policy attribute set', function() {
+        let element: QueryElement;
+
+        beforeEach(async function() {
+          ({ element } = await setupFunction({ attributes: 'error-policy="all"' }));
+        });
+
+        it('sets errorPolicy property', function() {
+          expect(element.errorPolicy).to.equal('all');
+        });
+
+        describe('then updating error-policy attribute', function() {
+          beforeEach(function() {
+            element.setAttribute('error-policy', 'ignore');
+          });
+
+          it('updates errorPolicy property', function() {
+            expect(element.errorPolicy).to.equal('ignore');
+          });
+        });
+      });
+
+
+      describe('with fetch-policy attribute set', function() {
         let element: QueryElement;
 
         beforeEach(async function() {
@@ -428,9 +451,19 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         it('sets fetchPolicy property', function() {
           expect(element.fetchPolicy).to.equal('no-cache');
         });
+
+        describe('then updating fetch-policy attribute', function() {
+          beforeEach(function() {
+            element.setAttribute('fetch-policy', 'network-only');
+          });
+
+          it('updates fetchPolicy property', function() {
+            expect(element.fetchPolicy).to.equal('network-only');
+          });
+        });
       });
 
-      describe('with next-fetch-policy="no-cache"', function() {
+      describe('with next-fetch-policy attribute set', function() {
         let element: QueryElement;
 
         beforeEach(async function() {
@@ -439,6 +472,16 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         it('sets nextFetchPolicy property', function() {
           expect(element.nextFetchPolicy).to.equal('no-cache');
+        });
+
+        describe('then updating next-fetch-policy attribute', function() {
+          beforeEach(function() {
+            element.setAttribute('next-fetch-policy', 'network-only');
+          });
+
+          it('updates nextFetchPolicy property', function() {
+            expect(element.nextFetchPolicy).to.equal('network-only');
+          });
         });
       });
     }
@@ -478,6 +521,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         beforeEach(function() {
           spies!['client.subscribe'] = spy(element!.client!, 'subscribe');
           spies!['client.query'] = spy(element!.client!, 'query');
+          spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
         });
 
         it('uses the global client', async function() {
@@ -501,6 +545,16 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           it('sets options', function() {
             expect(element?.options).to.deep.equal({ errorPolicy: 'none' });
+          });
+
+          describe('then nullifying options property', function() {
+            beforeEach(function() {
+              element!.options = null;
+            });
+
+            it('sets options', function() {
+              expect(element?.options).to.be.null;
+            });
           });
         });
 
@@ -531,6 +585,67 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
                 expect(element?.subscribe).to.not.have.been.called;
               });
             });
+          });
+        });
+
+        describe('subscribe({ query })', async function() {
+          beforeEach(function() {
+            element?.subscribe({ query: NullableParamQuery });
+          });
+
+          it('calls client query', function() {
+            expect(element?.client?.watchQuery).to.have.been
+              .calledWithMatch(match({ query: NullableParamQuery }));
+          });
+
+          it('sets observableQuery', function() {
+            expect(element?.observableQuery).to.be.ok;
+          });
+        });
+
+        describe('subscribe({ query, context })', async function() {
+          const context = {};
+          beforeEach(function() {
+            element?.subscribe({ query: NullableParamQuery, context });
+          });
+
+          it('calls client watchQuery', function() {
+            expect(element?.client?.watchQuery).to.have.been
+              .calledWithMatch(match({ query: NullableParamQuery, context }));
+          });
+        });
+
+        describe('subscribe({ query, errorPolicy })', async function() {
+          const errorPolicy = 'ignore';
+          beforeEach(function() {
+            element?.subscribe({ query: NullableParamQuery, errorPolicy });
+          });
+          it('calls client watchQuery', function() {
+            expect(element?.client?.watchQuery).to.have.been
+              .calledWithMatch(match({ query: NullableParamQuery, errorPolicy }));
+          });
+        });
+
+        describe('subscribe({ query, fetchPolicy })', async function() {
+          const fetchPolicy = 'no-cache';
+          beforeEach(function() {
+            element?.subscribe({ query: NullableParamQuery, fetchPolicy });
+          });
+
+          it('calls client watchQuery', function() {
+            expect(element?.client?.watchQuery).to.have.been
+              .calledWithMatch(match({ query: NullableParamQuery, fetchPolicy }));
+          });
+        });
+
+        describe('subscribe({ query, variables })', async function() {
+          const variables: NullableParamQueryVariables = { nullable: 'params' };
+          beforeEach(function() {
+            element?.subscribe({ query: NullableParamQuery, variables });
+          });
+          it('calls client watchQuery', function() {
+            expect(element?.client?.watchQuery).to.have.been
+              .calledWithMatch(match({ query: NullableParamQuery, variables }));
           });
         });
 
@@ -697,6 +812,116 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               expect(element?.data).to.equal(result!.data);
             });
           });
+
+          describe('with element context set', function() {
+            const elContext = {};
+
+            beforeEach(function() {
+              element!.context = elContext;
+            });
+
+            describe('fetchMore()', async function() {
+              beforeEach(function spyObservableQueryFetchMore() {
+                spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
+              });
+
+              beforeEach(function() {
+                element?.fetchMore();
+              });
+
+              it('calls observableQuery fetchMore', function() {
+                expect(element?.observableQuery?.fetchMore).to.have.been
+                  .calledWithMatch(match({ context: elContext }));
+              });
+            });
+
+            describe('fetchMore({ context })', async function() {
+              const context = {};
+              beforeEach(function spyObservableQueryFetchMore() {
+                spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
+              });
+
+              beforeEach(function() {
+                element?.fetchMore({ context });
+              });
+
+              it('calls observableQuery fetchMore', function() {
+                expect(element?.observableQuery?.fetchMore).to.have.been
+                  .calledWithMatch(match({ context }));
+              });
+            });
+          });
+
+          describe('fetchMore({ context })', async function() {
+            const context = {};
+            beforeEach(function spyObservableQueryFetchMore() {
+              spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
+            });
+
+            beforeEach(function() {
+              element?.fetchMore({ context });
+            });
+
+            it('calls observableQuery fetchMore', function() {
+              expect(element?.observableQuery?.fetchMore).to.have.been
+                .calledWithMatch(match({ context }));
+            });
+          });
+
+          describe('with element variables set', function() {
+            const elVariables: NullableParamQueryVariables = { nullable: 'element' };
+
+            beforeEach(function() {
+              element!.variables = elVariables;
+            });
+
+            describe('fetchMore()', async function() {
+              beforeEach(function spyObservableQueryFetchMore() {
+                spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
+              });
+
+              beforeEach(function() {
+                element?.fetchMore();
+              });
+
+              it('calls observableQuery fetchMore', function() {
+                expect(element?.observableQuery?.fetchMore).to.have.been
+                  .calledWithMatch(match({ variables: elVariables }));
+              });
+            });
+
+            describe('fetchMore({ variables })', async function() {
+              const variables: NullableParamQueryVariables = { nullable: 'specific' };
+              beforeEach(function spyObservableQueryFetchMore() {
+                spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
+              });
+
+              beforeEach(function() {
+                element?.fetchMore({ variables });
+              });
+
+              it('calls observableQuery fetchMore', function() {
+                expect(element?.observableQuery?.fetchMore).to.have.been
+                  .calledWithMatch(match({ variables }));
+              });
+            });
+          });
+
+          describe('fetchMore({ variables })', async function() {
+            const variables = {};
+            beforeEach(function spyObservableQueryFetchMore() {
+              spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
+            });
+
+            beforeEach(function() {
+              element?.fetchMore({ variables });
+            });
+
+            it('calls observableQuery fetchMore', function() {
+              expect(element?.observableQuery?.fetchMore).to.have.been
+                .calledWithMatch(match({ variables }));
+            });
+          });
         });
 
         describe('setting variables', function() {
@@ -842,13 +1067,19 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       describe('with no-auto-subscribe attribute set', function() {
         let element: QueryElement | undefined;
 
-        let spies: Record<keyof QueryElement, SinonSpy> | undefined;
+        let spies: Record<string|keyof QueryElement, SinonSpy> | undefined;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
             spy: ['subscribe'],
             attributes: 'no-auto-subscribe',
           }));
+        });
+
+        beforeEach(function() {
+          spies!['client.subscribe'] = spy(element!.client!, 'subscribe');
+          spies!['client.query'] = spy(element!.client!, 'query');
+          spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
         });
 
         afterEach(restoreSpies(() => spies));
@@ -869,6 +1100,148 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           it('does not call subscribe', async function noAutoSubscribe() {
             expect(element?.subscribe).to.not.have.been.called;
+          });
+        });
+
+        describe('setting NullableParam query', function() {
+          beforeEach(function setQuery() {
+            element!.query = NullableParamQuery;
+          });
+
+          describe('with element context set', function() {
+            const elContext = {};
+
+            beforeEach(function() {
+              element!.context = elContext;
+            });
+
+            describe('subscribe()', async function() {
+              beforeEach(function() {
+                element?.subscribe();
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ context: elContext }));
+              });
+            });
+
+            describe('subscribe({ context })', async function() {
+              const context = {};
+              beforeEach(function() {
+                element?.subscribe({ context });
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ context }));
+              });
+            });
+
+            describe('subscribe({ context })', async function() {
+              const context = {};
+              beforeEach(function() {
+                element?.subscribe({ context });
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ context }));
+              });
+            });
+          });
+
+          describe('with element errorPolicy set', function() {
+            const elErrorPolicy = 'ignore';
+
+            beforeEach(function() {
+              element!.errorPolicy = elErrorPolicy;
+            });
+
+            describe('subscribe()', async function() {
+              beforeEach(function() {
+                element?.subscribe();
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ errorPolicy: elErrorPolicy }));
+              });
+            });
+
+            describe('subscribe({ errorPolicy })', async function() {
+              const errorPolicy = 'all';
+              beforeEach(function() {
+                element?.subscribe({ errorPolicy });
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ errorPolicy }));
+              });
+            });
+          });
+
+          describe('with element fetchPolicy set', function() {
+            const elFetchPolicy = 'no-cache';
+
+            beforeEach(function() {
+              element!.fetchPolicy = elFetchPolicy;
+            });
+
+            describe('subscribe()', async function() {
+              beforeEach(function() {
+                element?.subscribe();
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ fetchPolicy: elFetchPolicy }));
+              });
+            });
+
+            describe('subscribe({ fetchPolicy })', async function() {
+              const fetchPolicy = 'network-only';
+              beforeEach(function() {
+                element?.subscribe({ fetchPolicy });
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ fetchPolicy }));
+              });
+            });
+          });
+
+          describe('with element variables set', function() {
+            const elVariables: NullableParamQueryVariables = { nullable: 'element' };
+
+            beforeEach(function() {
+              element!.variables = elVariables;
+            });
+
+            describe('subscribe()', async function() {
+              beforeEach(function() {
+                element?.subscribe();
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ variables: elVariables }));
+              });
+            });
+
+            describe('subscribe({ variables })', async function() {
+              const variables: NullableParamQueryVariables = { nullable: 'specific' };
+              beforeEach(function() {
+                element?.subscribe({ variables });
+              });
+
+              it('calls client watchQuery', function() {
+                expect(element?.client?.watchQuery).to.have.been
+                  .calledWithMatch(match({ variables }));
+              });
+            });
           });
         });
 

@@ -132,7 +132,7 @@
         {
           "kind": "function",
           "name": "hasAllVariables",
-          "summary": "Checks whether an operation includes all its non-nullable variables\n\n```haskell\nhasAllVariables :: Operation -> Bool\n```",
+          "description": "Checks whether an operation includes all its non-nullable variables.\nNote that this can't check properties of Input types defined in schema, only top-level variables.\n\n```haskell\nhasAllVariables :: Operation -> Bool\n```",
           "return": {
             "description": "Whether the operation has all it's required variables.",
             "type": {

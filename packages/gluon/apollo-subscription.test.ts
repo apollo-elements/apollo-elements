@@ -1,6 +1,7 @@
 import type {
   ApolloClient,
   DocumentNode,
+  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
@@ -87,6 +88,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<DocumentNode>                          (this.subscription!);
     assertType<TypeCheckVars>                         (this.variables!);
     assertType<FetchPolicy>                           (this.fetchPolicy!);
+    assertType<ErrorPolicy>                           (this.errorPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
     assertType<number>                                (this.pollInterval!);

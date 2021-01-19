@@ -202,6 +202,20 @@
             },
             {
               "kind": "field",
+              "name": "fetchPolicy",
+              "optional": true,
+              "summary": "Specifies the `FetchPolicy` to be used for this operation.",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementInterface",
+                "package": "@apollo-elements/interfaces",
+                "module": "./apollo-element.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in-flight.",
               "type": {
@@ -334,7 +348,23 @@
             "type": {
               "type": "Constructor<ApolloElement>"
             }
-          }
+          },
+          "attributes": [
+            {
+              "name": "error-policy",
+              "fieldName": "errorPolicy",
+              "type": {
+                "type": "ErrorPolicy"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "string"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -1063,6 +1093,13 @@
               }
             },
             {
+              "name": "error-policy",
+              "fieldName": "errorPolicy",
+              "type": {
+                "type": "ErrorPolicy"
+              }
+            },
+            {
               "name": "fetch-policy",
               "fieldName": "fetchPolicy",
               "type": {
@@ -1593,6 +1630,13 @@
               "fieldName": "awaitRefetchQueries",
               "type": {
                 "type": "boolean"
+              }
+            },
+            {
+              "name": "error-policy",
+              "fieldName": "errorPolicy",
+              "type": {
+                "type": "ErrorPolicy"
               }
             },
             {

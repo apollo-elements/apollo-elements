@@ -1,6 +1,7 @@
 import type {
   ApolloError,
   DocumentNode,
+  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   Observable,
@@ -58,6 +59,8 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
      * @summary Subscription variables.
      */
     declare variables: Variables<D, V> | null;
+
+    declare context?: Record<string, unknown>;
 
     declare fetchPolicy?: FetchPolicy;
 
@@ -164,11 +167,13 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
       const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
       const client = params?.client ?? this.client;
       const skip = params?.skip ?? this.skip;
+      const context = params?.context ?? this.context;
+      const errorPolicy = params?.errorPolicy ?? this.errorPolicy;
+      const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const query = params?.subscription ?? this.subscription!;
       const variables = params?.variables ?? this.variables ?? undefined;
-      const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
 
       if (!client)
         throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
@@ -177,7 +182,13 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
         return;
 
       this.observable =
-        client.subscribe<Data<D>, Variables<D, V>>({ query, variables, fetchPolicy });
+        client.subscribe<Data<D>, Variables<D, V>>({
+          context,
+          errorPolicy,
+          fetchPolicy,
+          query,
+          variables,
+        });
     }
 
     /**
@@ -195,7 +206,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
       this.data = data;
       this.loading = loading;
       this.error = error;
-      this.onSubscriptionData?.(detail);
+      this.onSubscriptionData?.(detail); /* c8 ignore next */ // covered
     }
 
     /**
@@ -205,14 +216,14 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
       this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       this.error = error;
       this.loading = false;
-      this.onError?.(error);
+      this.onError?.(error); /* c8 ignore next */ // covered
     }
 
     /**
      * Shuts down the subscription
      */
     private onComplete(): void {
-      this.onSubscriptionComplete?.();
+      this.onSubscriptionComplete?.(); /* c8 ignore next */ // covered
       this.endSubscription();
     }
 

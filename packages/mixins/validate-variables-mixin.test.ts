@@ -12,7 +12,7 @@ import type { DocumentNode } from '@apollo/client/core';
 
 describe('ValidateVariablesMixin', function() {
   let element: ApolloQueryInterface<unknown, unknown>;
-  function setQuery(query: DocumentNode) {
+  function setQuery(query: DocumentNode|null) {
     return function() {
       element.query = query;
     };
@@ -27,12 +27,32 @@ describe('ValidateVariablesMixin', function() {
     element = fixtureSync<Test>(`<${tag}></${tag}>`);
   });
 
+  describe('without query', function() {
+    beforeEach(setQuery(null));
+    beforeEach(() => element.document = null);
+    beforeEach(nextFrame);
+    it('does nothing', function() {
+      expect(element.data, 'data').to.not.be.ok;
+      expect(element.error, 'error').to.not.be.ok;
+    });
+    describe('calling shouldSubscribe', function() {
+      it('returns false', function() {
+        expect(element.shouldSubscribe()).to.be.false;
+      });
+    });
+  });
+
   describe('when query has no params', function() {
     beforeEach(setQuery(NoParamQuery));
     beforeEach(nextFrame);
     it('queries immediately', function() {
       expect(element.data, 'data').to.be.ok;
       expect(element.error, 'error').to.not.be.ok;
+    });
+    describe('calling shouldSubscribe', function() {
+      it('returns true', function() {
+        expect(element.shouldSubscribe()).to.be.true;
+      });
     });
   });
 
@@ -42,6 +62,11 @@ describe('ValidateVariablesMixin', function() {
     it('queries immediately', function() {
       expect(element.data, 'data').to.be.ok;
       expect(element.error, 'error').to.not.be.ok;
+    });
+    describe('calling shouldSubscribe', function() {
+      it('returns true', function() {
+        expect(element.shouldSubscribe()).to.be.true;
+      });
     });
   });
 

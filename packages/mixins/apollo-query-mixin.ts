@@ -2,7 +2,6 @@ import type {
   ApolloError,
   ApolloQueryResult,
   DocumentNode,
-  ErrorPolicy,
   FetchPolicy,
   ObservableQuery,
   OperationVariables,
@@ -52,11 +51,12 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
     static documentType = 'query' as const;
 
     static get observedAttributes(): string[] {
-      return [...new Set([
-        ...super.observedAttributes ?? [],
-        'fetch-policy',
+      return [
+        // exists on ApolloElement
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ...super.observedAttributes!,
         'next-fetch-policy',
-      ])];
+      ];
     }
 
     /**
@@ -103,8 +103,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
 
     onError?(_error: Error): void
 
-    errorPolicy: ErrorPolicy = 'none';
-
     /** @private */
     __options: Partial<WatchQueryOptions> | null = null;
 
@@ -128,10 +126,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
         return;
 
       switch (name) {
-        case 'fetch-policy':
-          this.fetchPolicy = newVal as ApolloQueryElement<D, V>['fetchPolicy'];
-          break;
-
         case 'next-fetch-policy':
           this.nextFetchPolicy = newVal as ApolloQueryElement<D, V>['nextFetchPolicy'];
           break;
@@ -199,12 +193,15 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
     ): ZenObservable.Subscription {
       const options: SubscriptionOptions<Variables<D, V>, Data<D>> = {
+        /* c8 ignore start */ // covered
         // It's better to let Apollo client throw this error
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         query: params?.query ?? this.query!,
         context: params?.context ?? this.context,
+        errorPolicy: params?.errorPolicy ?? this.errorPolicy,
         fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
         variables: params?.variables ?? this.variables ?? undefined,
+        /* c8 ignore stop */
       };
 
       if (this.observableQuery)
@@ -282,8 +279,10 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         query: params?.query ?? this.query!,
         updateQuery: params?.updateQuery,
+        /* c8 ignore start */ // covered
         variables: params?.variables ?? this.variables ?? undefined,
         context: params?.context ?? this.context,
+        /* c8 ignore stop */
       };
 
       this.loading = true;
@@ -357,7 +356,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
       this.error = error;
       this.loading = false;
-      this.onError?.(error);
+      this.onError?.(error); /* c8 ignore next */ // covered
     }
   }
 

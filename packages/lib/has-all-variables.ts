@@ -14,7 +14,7 @@ function isNonNullType<T extends { type: { kind: string } }>(x: T) {
 /** hasNonNullValue :: keyof TVariables VariableName => TVariables -> VariableName -> Boolean */
 function hasNonNullValue<T>(x: T) {
   return (prop: string): boolean =>
-    x?.[prop as keyof T] != null;
+    x?.[prop as keyof T] != null; /* c8 ignore next */ // covered
 }
 
 function isTrue(x: boolean): x is true {
@@ -34,7 +34,9 @@ function getVariableValue(x: VariableDefinitionNode) {
 }
 
 /**
- * Checks whether an operation includes all its non-nullable variables
+ * Checks whether an operation includes all its non-nullable variables.
+ * Note that this can't check properties of Input types defined in schema,
+ * only top-level variables.
  *
  * ```haskell
  * hasAllVariables :: Operation -> Bool
