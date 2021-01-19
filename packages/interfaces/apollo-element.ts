@@ -4,6 +4,7 @@ import type {
   ApolloClient,
   ApolloError,
   DocumentNode,
+  ErrorPolicy,
   NormalizedCacheObject,
   OperationVariables,
   TypedDocumentNode,
@@ -25,16 +26,17 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
 export declare abstract class ApolloElementInterface extends CustomElement {
   declare static documentType: 'document'|'query'|'mutation'|'subscription';
 
-  /** data */
+  /** @summary Latest Data. */
   abstract data: unknown | null;
 
-  /** Operation variables */
+  /** @summary Operation variables. */
   abstract variables: unknown | null;
 
-  /** The Apollo Client instance. */
+  /** @summary The Apollo Client instance. */
   declare client: ApolloClient<NormalizedCacheObject> | null;
 
   /**
+   * @summary Operation document.
    * GraphQL operation document i.e. query, subscription, or mutation.
    * Must be a parsed GraphQL DocumentNode, so use `graphql-tag`.
    * If unset, the element can derive the document from the first
@@ -42,16 +44,28 @@ export declare abstract class ApolloElementInterface extends CustomElement {
    */
   declare document: DocumentNode | TypedDocumentNode | null;
 
-  /** Context passed to the link execution chain. */
+  /** @summary Context passed to the link execution chain. */
   declare context?: Record<string, unknown>;
 
-  /** Latest error */
+  /** @summary Latest error */
   declare error: Error | ApolloError | null;
 
-  /** Latest errors */
+  /** @summary Latest errors */
   declare errors: readonly GraphQLError[] | null;
 
-  /** Whether a request is in flight. */
+  /**
+   * @summary [Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.
+   * @attr error-policy
+   */
+  declare errorPolicy?: ErrorPolicy;
+
+  /**
+   * @summary Fetch Policy for the operation.
+   * @attr fetch-policy
+   */
+  declare fetchPolicy?: string;
+
+  /** @summary Whether a request is in flight. */
   declare loading: boolean;
 
   constructor(...a: any[]);
@@ -85,9 +99,7 @@ export declare abstract class ApolloElementInterface extends CustomElement {
 
 export class ApolloElementElement<D = unknown, V = OperationVariables>
   extends ApolloElementMixin(HTMLElement) {
-    /** data */
     declare data: Data<D> | null;
 
-    /** Operation variables */
     declare variables: Variables<D, V> | null;
 }

@@ -68,6 +68,22 @@
               }
             }
           ],
+          "attributes": [
+            {
+              "name": "error-policy",
+              "fieldName": "errorPolicy",
+              "type": {
+                "type": "ErrorPolicy"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "fieldName": "fetchPolicy",
+              "type": {
+                "type": "string"
+              }
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -182,6 +198,15 @@
             },
             {
               "kind": "field",
+              "name": "fetchPolicy",
+              "optional": true,
+              "summary": "Specifies the `FetchPolicy` to be used for this operation.",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in-flight.",
               "type": {
@@ -290,6 +315,13 @@
               "fieldName": "noAutoSubscribe",
               "type": {
                 "type": "boolean"
+              }
+            },
+            {
+              "name": "error-policy",
+              "fieldName": "errorPolicy",
+              "type": {
+                "type": "ErrorPolicy"
               }
             },
             {
@@ -943,6 +975,13 @@
               "fieldName": "awaitRefetchQueries",
               "type": {
                 "type": "boolean"
+              }
+            },
+            {
+              "name": "error-policy",
+              "fieldName": "errorPolicy",
+              "type": {
+                "type": "ErrorPolicy"
               }
             },
             {

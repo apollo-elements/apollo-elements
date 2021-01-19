@@ -2,6 +2,7 @@ import type {
   ApolloClient,
   ApolloError,
   DocumentNode,
+  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
@@ -25,8 +26,10 @@ export interface SubscriptionResult<TData> {
 }
 
 export interface SubscriptionDataOptions<D = unknown, V = OperationVariables> {
+  context: Record<string, any>;
   subscription: DocumentNode | ComponentDocument<D>;
   variables?: Variables<D, V>;
+  errorPolicy?: ErrorPolicy;
   fetchPolicy?: FetchPolicy;
   shouldResubscribe?:
     | boolean

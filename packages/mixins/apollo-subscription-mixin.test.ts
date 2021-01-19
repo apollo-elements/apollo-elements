@@ -117,7 +117,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
-class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeCheckVars> {
+export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeCheckVars> {
   typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
@@ -154,7 +154,7 @@ class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeCheckVars>
   }
 }
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-class TDNTypeCheck extends TestableApolloSubscription<TDN> {
+export class TDNTypeCheck extends TestableApolloSubscription<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);

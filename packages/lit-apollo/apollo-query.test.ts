@@ -24,6 +24,8 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 
+import { property } from 'lit-element/lib/decorators';
+
 import { ApolloQuery } from './apollo-query';
 import { html, LitElement, PropertyValues, TemplateResult } from 'lit-element';
 import { NetworkStatus } from '@apollo/client/core';
@@ -79,6 +81,27 @@ describe('[lit-apollo] ApolloQuery', function() {
       const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
+
+    describe('with a class that defines observedAttributes with decorator', function() {
+      class Test extends ApolloQuery<unknown, unknown> {
+        @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
+      }
+
+      let element: Test;
+
+      beforeEach(async function subclass() {
+        const tagName = defineCE(Test);
+        element = await fixture<Test>(`<${tagName}></${tagName}>`);
+      });
+
+      it('preserves decorator behaviour', async function() {
+        element.xA = 2;
+        await element.updateComplete;
+        expect(element.getAttribute('x-a')).to.equal('2');
+        element.setAttribute('x-a', '1');
+        expect(element.xA).to.equal(1);
+      });
+    });
   });
 });
 
@@ -109,7 +132,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     // ApolloQueryInterface
     assertType<DocumentNode>                        (this.query!);
     assertType<TypeCheckVars>                       (this.variables!);
-    assertType<ErrorPolicy>                         (this.errorPolicy);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);

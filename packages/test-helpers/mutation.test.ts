@@ -368,6 +368,172 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
         });
 
+        describe('with optimisticResponse property set as object', function() {
+          const optimisticResponse = { noParam: { noParam: 'instance' } };
+          beforeEach(function() {
+            element.optimisticResponse = optimisticResponse;
+          });
+
+          beforeEach(function callMutate() {
+            element.mutate();
+          });
+
+          it('uses element\'s optimisticResponse', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ optimisticResponse }));
+          });
+
+          describe('specifying optimisticResponse', function() {
+            const optimisticResponse = { noParam: { noParam: 'specific' } };
+            beforeEach(function callMutate() {
+              element.mutate({ optimisticResponse });
+            });
+
+            it('uses specific optimisticResponse', function() {
+              expect(element.client!.mutate).to.have.been
+                .calledWithMatch(match({ optimisticResponse }));
+            });
+          });
+        });
+
+        describe('with refetchQueries property set as string[]', function() {
+          const refetchQueries = ['A'];
+          beforeEach(function() {
+            element.refetchQueries = refetchQueries;
+          });
+
+          beforeEach(function callMutate() {
+            element.mutate();
+          });
+
+          it('uses element\'s refetchQueries', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ refetchQueries }));
+          });
+
+          describe('specifying refetchQueries', function() {
+            const refetchQueries = ['B'];
+            beforeEach(function callMutate() {
+              element.mutate({ refetchQueries });
+            });
+
+            it('uses specific refetchQueries', function() {
+              expect(element.client!.mutate).to.have.been
+                .calledWithMatch(match({ refetchQueries }));
+            });
+          });
+        });
+
+        describe('with awaitRefetchQueries property set', function() {
+          beforeEach(function() {
+            element.awaitRefetchQueries = true;
+          });
+
+          beforeEach(function callMutate() {
+            element.mutate();
+          });
+
+          it('uses element\'s awaitRefetchQueries', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ awaitRefetchQueries: true }));
+          });
+
+          describe('specifying awaitRefetchQueries', function() {
+            beforeEach(function callMutate() {
+              element.mutate({ awaitRefetchQueries: false });
+            });
+
+            it('uses specific refetchQueries', function() {
+              expect(element.client!.mutate).to.have.been
+                .calledWithMatch(match({ awaitRefetchQueries: false }));
+            });
+          });
+        });
+
+        describe('with context property set', function() {
+          const context = {};
+          beforeEach(function() {
+            element.context = context;
+          });
+
+          beforeEach(function callMutate() {
+            element.mutate();
+          });
+
+          it('uses element\'s context', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ context }));
+          });
+
+          describe('specifying context', function() {
+            const context = { a: 'b' };
+            beforeEach(function callMutate() {
+              element.mutate({ context });
+            });
+
+            it('uses specific context', function() {
+              expect(element.client!.mutate).to.have.been
+                .calledWithMatch(match({ context }));
+            });
+          });
+        });
+
+        describe('with errorPolicy property set', function() {
+          const errorPolicy = 'all';
+          beforeEach(function() {
+            element.errorPolicy = errorPolicy;
+          });
+
+          beforeEach(function callMutate() {
+            element.mutate();
+          });
+
+          it('uses element\'s errorPolicy', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ errorPolicy }));
+          });
+
+          describe('specifying errorPolicy', function() {
+            const errorPolicy = 'ignore';
+            beforeEach(function callMutate() {
+              element.mutate({ errorPolicy });
+            });
+
+            it('uses specific errorPolicy', function() {
+              expect(element.client!.mutate).to.have.been
+                .calledWithMatch(match({ errorPolicy }));
+            });
+          });
+        });
+
+        describe('with fetchPolicy property set', function() {
+          const fetchPolicy = 'no-cache';
+          beforeEach(function() {
+            element.fetchPolicy = fetchPolicy;
+          });
+
+          beforeEach(function callMutate() {
+            element.mutate();
+          });
+
+          it('uses element\'s fetchPolicy', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ fetchPolicy }));
+          });
+
+          describe('specifying fetchPolicy', function() {
+            beforeEach(function callMutate() {
+              element.fetchPolicy = undefined;
+              element.mutate({ fetchPolicy });
+            });
+
+            it('uses specific fetchPolicy', function() {
+              expect(element.client!.mutate).to.have.been
+                .calledWithMatch(match({ fetchPolicy }));
+            });
+          });
+        });
+
         describe('mutate()', function() {
           beforeEach(function callMutate() {
             element.mutate();
@@ -375,9 +541,15 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('calls client.mutate with element props', function() {
             expect(element.client!.mutate).to.have.been.calledWithMatch({
+              awaitRefetchQueries: element.awaitRefetchQueries,
+              context: element.context,
+              errorPolicy: element.errorPolicy,
+              fetchPolicy: element.fetchPolicy,
               mutation: element.mutation,
-              variables: undefined,
+              optimisticResponse: element.optimisticResponse,
+              refetchQueries: element.refetchQueries ?? undefined,
               update: element.updater,
+              variables: element.variables ?? undefined,
             });
           });
 
@@ -404,8 +576,77 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('defaults to element\'s mutation', function() {
-            const { mutation } = element;
-            expect(element.client!.mutate).to.have.been.calledWith(match({ mutation }));
+            expect(element.client!.mutate).to.have.been.calledWithMatch({
+              awaitRefetchQueries: element.awaitRefetchQueries,
+              context: element.context,
+              errorPolicy: element.errorPolicy,
+              fetchPolicy: element.fetchPolicy,
+              mutation: element.mutation,
+              optimisticResponse: element.optimisticResponse,
+              refetchQueries: element.refetchQueries ?? undefined,
+              update: element.updater,
+              variables: element.variables ?? undefined,
+            });
+          });
+        });
+
+        describe('mutate({ refetchQueries })', function() {
+          const refetchQueries = ['B'];
+          beforeEach(function callMutate() {
+            element.mutate({ refetchQueries });
+          });
+
+          it('uses specific refetchQueries', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ refetchQueries }));
+          });
+        });
+
+        describe('mutate({ errorPolicy })', function() {
+          const errorPolicy = 'none';
+          beforeEach(function callMutate() {
+            element.mutate({ errorPolicy });
+          });
+
+          it('uses specific errorPolicy', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ errorPolicy }));
+          });
+        });
+
+        describe('mutate({ fetchPolicy })', function() {
+          const fetchPolicy = 'no-cache';
+          beforeEach(function callMutate() {
+            element.mutate({ fetchPolicy });
+          });
+
+          it('uses specific fetchPolicy', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ fetchPolicy }));
+          });
+        });
+
+        describe('mutate({ context })', function() {
+          const context = { a: 'a' };
+          beforeEach(function callMutate() {
+            element.mutate({ context });
+          });
+
+          it('uses specific context', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ context }));
+          });
+        });
+
+        describe('mutate({ awaitRefetchQueries })', function() {
+          const awaitRefetchQueries = true;
+          beforeEach(function callMutate() {
+            element.mutate({ awaitRefetchQueries });
+          });
+
+          it('uses specific awaitRefetchQueries', function() {
+            expect(element.client!.mutate).to.have.been
+              .calledWithMatch(match({ awaitRefetchQueries }));
           });
         });
 
@@ -420,7 +661,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('uses element\'s mutation', function() {
             expect(element.client!.mutate).to.have.been
-              .calledWithMatch(match({ mutation: element.mutation }));
+              .calledWithMatch({
+                awaitRefetchQueries: element.awaitRefetchQueries,
+                context: element.context,
+                errorPolicy: element.errorPolicy,
+                fetchPolicy: element.fetchPolicy,
+                mutation: element.mutation,
+                refetchQueries: element.refetchQueries ?? undefined,
+
+                update,
+                optimisticResponse,
+                variables,
+              });
           });
         });
 
@@ -435,7 +687,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('uses element\'s optimisticResponse', function() {
             expect(element.client!.mutate).to.have.been
-              .calledWithMatch(match({ optimisticResponse: element.optimisticResponse }));
+              .calledWithMatch({
+                awaitRefetchQueries: element.awaitRefetchQueries,
+                context: element.context,
+                errorPolicy: element.errorPolicy,
+                fetchPolicy: element.fetchPolicy,
+                optimisticResponse: element.optimisticResponse,
+                refetchQueries: element.refetchQueries ?? undefined,
+
+                mutation,
+                update,
+                variables,
+              });
           });
         });
 
@@ -450,7 +713,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('uses element\'s updater', function() {
             expect(element.client!.mutate).to.have.been
-              .calledWithMatch(match({ update: element.updater }));
+              .calledWithMatch({
+                awaitRefetchQueries: element.awaitRefetchQueries,
+                context: element.context,
+                errorPolicy: element.errorPolicy,
+                fetchPolicy: element.fetchPolicy,
+                refetchQueries: element.refetchQueries ?? undefined,
+                update: element.updater,
+
+                mutation,
+                optimisticResponse,
+                variables,
+              });
           });
         });
 
@@ -465,7 +739,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('uses element\'s variables', function() {
             expect(element.client!.mutate).to.have.been
-              .calledWithMatch(match({ variables: undefined }));
+              .calledWithMatch({
+                awaitRefetchQueries: element.awaitRefetchQueries,
+                context: element.context,
+                errorPolicy: element.errorPolicy,
+                fetchPolicy: element.fetchPolicy,
+                refetchQueries: element.refetchQueries ?? undefined,
+                variables: element.variables ?? undefined,
+
+                mutation,
+                optimisticResponse,
+                update,
+              });
           });
         });
       });

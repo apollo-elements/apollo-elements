@@ -85,12 +85,10 @@ class UseQueryHook<D = unknown, V = OperationVariables> extends ApolloHook<
     const query = this.document ?? options.query;
     const noAutoSubscribe =
       options.noAutoSubscribe ?? this.state.host.hasAttribute('no-auto-subscribe');
-    const errorPolicy = options.errorPolicy ?? 'none';
     return {
       ...this.defaults,
       ...options,
       noAutoSubscribe,
-      errorPolicy,
       query,
     };
   }

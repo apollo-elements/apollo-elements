@@ -65,7 +65,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>|null>      (this.client);
-    assertType<Record<string, unknown>|undefined>             (this.context);
+    assertType<Record<string, unknown>>                       (this.context!);
     assertType<boolean>                                       (this.loading);
     assertType<DocumentNode|null>                             (this.document);
     assertType<Error|ApolloError|null>                        (this.error);
@@ -83,21 +83,21 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<TypeCheckVars|null>                            (this.variables);
     assertType<boolean>                                       (this.called);
     assertType<boolean>                                       (this.ignoreResults!);
-    assertType<boolean|undefined>                             (this.awaitRefetchQueries);
-    assertType<ErrorPolicy|undefined>                         (this.errorPolicy);
-    assertType<string|undefined>                              (this.errorPolicy);
+    assertType<boolean>                                       (this.awaitRefetchQueries!);
+    assertType<ErrorPolicy>                                   (this.errorPolicy!);
+    assertType<string>                                        (this.errorPolicy!);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                                        (this.errorPolicy);
-    assertType<string|undefined>                              (this.fetchPolicy);
-    assertType<Extract<FetchPolicy, 'no-cache'>|undefined>    (this.fetchPolicy);
+    assertType<string>                                        (this.fetchPolicy!);
+    assertType<Extract<FetchPolicy, 'no-cache'>>              (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
       assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription|null|undefined>(this.refetchQueries);
+      assertType<RefetchQueryDescription|null>                (this.refetchQueries);
 
     if (typeof this.optimisticResponse !== 'function')
-      assertType<TypeCheckData|undefined>(this.optimisticResponse);
+      assertType<TypeCheckData>                               (this.optimisticResponse!);
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 

@@ -380,7 +380,7 @@ Object.defineProperties(ApolloMutationElement.prototype, {
     set(this: ApolloMutationElement, v: VariablesOf<ApolloMutationElement> | null) {
       this.__variables = v;
       if (this.mo) // element is connected
-        this.variablesChanged?.(v);
+        this.variablesChanged?.(v); /* c8 ignore next */ // covered
     },
 
   },

@@ -345,9 +345,8 @@
                 "type": "ErrorPolicy"
               },
               "inheritedFrom": {
-                "name": "ApolloMutation",
-                "package": "@apollo-elements/lit-apollo",
-                "module": "./apollo-mutation.js"
+                "name": "ApolloElementInterface",
+                "module": "./apollo-element.ts"
               }
             },
             {

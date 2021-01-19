@@ -3,6 +3,54 @@
   "tags": [
     {
       "name": "apollo-client",
+      "path": "./apollo-client.js",
+      "attributes": [
+        {
+          "name": "uri",
+          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "type": "string | undefined"
+        },
+        {
+          "name": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+          "type": "boolean"
+        }
+      ],
+      "properties": [
+        {
+          "name": "client",
+          "description": "Reference to the `ApolloClient` instance."
+        },
+        {
+          "name": "elements",
+          "description": "List of all ApolloElements registered to this client.",
+          "type": "array"
+        },
+        {
+          "name": "typePolicies",
+          "description": "Type Policies for the client."
+        },
+        {
+          "name": "uri",
+          "attribute": "uri",
+          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+          "type": "string | undefined"
+        },
+        {
+          "name": "validateVariables",
+          "attribute": "validate-variables",
+          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+          "type": "boolean"
+        }
+      ],
+      "events": [
+        {
+          "name": "client-changed"
+        }
+      ]
+    },
+    {
+      "name": "apollo-client",
       "path": "./apollo-client.ts",
       "attributes": [
         {
@@ -68,21 +116,33 @@
           "default": "\"\""
         },
         {
-          "name": "refetch-queries",
-          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
-        },
-        {
           "name": "called",
           "description": "Whether the mutation was called",
           "type": "boolean",
           "default": "false"
         },
         {
+          "name": "refetch-queries",
+          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
+        },
+        {
+          "name": "error-policy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
+        },
+        {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean",
           "default": "\"\""
+        },
+        {
+          "name": "await-refetch-queries"
         }
       ],
       "properties": [
@@ -99,15 +159,13 @@
           "default": "\"\""
         },
         {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
+        },
+        {
           "name": "mutation",
           "description": "The mutation.",
           "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "refetchQueries",
-          "attribute": "refetch-queries",
-          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
         },
         {
           "name": "called",
@@ -120,16 +178,6 @@
           "name": "optimisticResponse",
           "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.",
           "type": "Data<D> | ((vars: Variables<D, V>) => Data<D>) | undefined"
-        },
-        {
-          "name": "errorPolicy",
-          "description": "Specifies the ErrorPolicy to be used for this mutation.",
-          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
-        },
-        {
-          "name": "fetchPolicy",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "\"no-cache\" | undefined"
         },
         {
           "name": "awaitRefetchQueries",
@@ -149,12 +197,16 @@
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
+          "name": "refetchQueries",
+          "attribute": "refetch-queries",
+          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
+        },
+        {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
@@ -165,7 +217,6 @@
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
@@ -176,18 +227,27 @@
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
+        },
+        {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
         },
         {
           "name": "loading",
           "attribute": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean",
           "default": "\"\""
         }

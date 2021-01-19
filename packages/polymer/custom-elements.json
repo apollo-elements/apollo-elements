@@ -4,6 +4,18 @@
     {
       "name": "apollo-mutation",
       "path": "./apollo-mutation.d.ts",
+      "attributes": [
+        {
+          "name": "error-policy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
+        }
+      ],
       "properties": [
         {
           "name": "mutation",
@@ -24,16 +36,6 @@
           "name": "ignoreResults",
           "description": "If true, the returned data property will not update with the mutation result.",
           "type": "boolean | undefined"
-        },
-        {
-          "name": "errorPolicy",
-          "description": "Specifies the ErrorPolicy to be used for this mutation.",
-          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
-        },
-        {
-          "name": "fetchPolicy",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "\"no-cache\" | undefined"
         },
         {
           "name": "refetchQueries",
@@ -61,33 +63,43 @@
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
         },
         {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
+        },
+        {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
         }
       ],
       "events": [
@@ -127,6 +139,24 @@
     {
       "name": "apollo-mutation",
       "path": "./apollo-mutation.ts",
+      "attributes": [
+        {
+          "name": "error-policy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
+        },
+        {
+          "name": "await-refetch-queries"
+        },
+        {
+          "name": "refetch-queries"
+        }
+      ],
       "properties": [
         {
           "name": "mutation",
@@ -151,16 +181,6 @@
           "default": "false"
         },
         {
-          "name": "errorPolicy",
-          "description": "Specifies the ErrorPolicy to be used for this mutation.",
-          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
-        },
-        {
-          "name": "fetchPolicy",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "\"no-cache\" | undefined"
-        },
-        {
           "name": "refetchQueries",
           "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
           "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
@@ -171,13 +191,16 @@
           "type": "boolean | undefined"
         },
         {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
+        },
+        {
           "name": "documentType",
           "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
           "default": "\"mutation\""
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
@@ -194,29 +217,36 @@
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean",
           "default": "\"\""
         },
         {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "description": "Specifies the ErrorPolicy to be used for this mutation.",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this mutation.",
+          "type": "\"no-cache\" | undefined"
         }
       ],
       "events": [
@@ -256,16 +286,23 @@
     {
       "name": "apollo-query",
       "path": "./apollo-query.d.ts",
+      "attributes": [
+        {
+          "name": "error-policy",
+          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
+          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        }
+      ],
       "properties": [
         {
           "name": "query",
           "description": "A GraphQL document containing a single query.",
           "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "fetchPolicy",
-          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
-          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "nextFetchPolicy",
@@ -313,11 +350,6 @@
           "type": "number | undefined"
         },
         {
-          "name": "errorPolicy",
-          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
-          "type": "ErrorPolicy"
-        },
-        {
           "name": "noAutoSubscribe",
           "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
           "type": "boolean"
@@ -343,33 +375,43 @@
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
         },
         {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        },
+        {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
         }
       ],
       "events": [
@@ -409,16 +451,30 @@
     {
       "name": "apollo-query",
       "path": "./apollo-query.ts",
+      "attributes": [
+        {
+          "name": "error-policy",
+          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
+          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        },
+        {
+          "name": "next-fetch-policy"
+        }
+      ],
       "properties": [
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
+        },
         {
           "name": "query",
           "description": "A GraphQL document containing a single query.",
           "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "fetchPolicy",
-          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
-          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "partial",
@@ -476,12 +532,6 @@
           "type": "number | undefined"
         },
         {
-          "name": "errorPolicy",
-          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
-          "type": "ErrorPolicy",
-          "default": "\"none\""
-        },
-        {
           "name": "canAutoSubscribe",
           "description": "Flags an element that's ready and able to auto subscribe",
           "type": "boolean"
@@ -493,7 +543,6 @@
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
@@ -509,28 +558,35 @@
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean"
         },
         {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         }
       ],
       "events": [
@@ -570,12 +626,18 @@
     {
       "name": "apollo-subscription",
       "path": "./apollo-subscription.d.ts",
-      "properties": [
+      "attributes": [
         {
-          "name": "fetchPolicy",
+          "name": "error-policy",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
           "description": "Specifies the FetchPolicy to be used for this subscription.",
           "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
-        },
+        }
+      ],
+      "properties": [
         {
           "name": "pollInterval",
           "description": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
@@ -637,33 +699,42 @@
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null"
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
         },
         {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
         },
         {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this subscription.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        },
+        {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean"
+        },
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
         }
       ],
       "events": [
@@ -700,16 +771,26 @@
     {
       "name": "apollo-subscription",
       "path": "./apollo-subscription.ts",
+      "attributes": [
+        {
+          "name": "error-policy",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this subscription.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
+        }
+      ],
       "properties": [
+        {
+          "name": "observedAttributes",
+          "type": "string[] | undefined"
+        },
         {
           "name": "subscription",
           "description": "A GraphQL document containing a single subscription.",
           "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "fetchPolicy",
-          "description": "Specifies the FetchPolicy to be used for this subscription.",
-          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         },
         {
           "name": "pollInterval",
@@ -761,7 +842,6 @@
         },
         {
           "name": "client",
-          "description": "The Apollo Client instance.",
           "type": "ApolloClient<NormalizedCacheObject> | null",
           "default": "\"window.__APOLLO_CLIENT__ ?? null\""
         },
@@ -777,28 +857,34 @@
         },
         {
           "name": "error",
-          "description": "Latest error",
           "type": "Error | ApolloError | null"
         },
         {
           "name": "errors",
-          "description": "Latest errors",
           "type": "readonly GraphQLError[] | null"
         },
         {
           "name": "loading",
-          "description": "Whether a request is in flight.",
           "type": "boolean"
         },
         {
           "name": "context",
-          "description": "Context passed to the link execution chain.",
           "type": "Record<string, unknown> | undefined"
         },
         {
           "name": "document",
-          "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.\nIf unset, the element can derive the document from the first\nlight-DOM `<script type=\"application/graphql\">` child.",
           "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
+        },
+        {
+          "name": "errorPolicy",
+          "attribute": "error-policy",
+          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
+        },
+        {
+          "name": "fetchPolicy",
+          "attribute": "fetch-policy",
+          "description": "Specifies the FetchPolicy to be used for this subscription.",
+          "type": "\"cache-first\" | \"network-only\" | \"cache-only\" | \"no-cache\" | \"standby\" | undefined"
         }
       ],
       "events": [

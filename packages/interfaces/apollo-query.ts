@@ -160,7 +160,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
    * - `all`: errors are treated like data and will notify observables
    */
-  declare errorPolicy: ErrorPolicy;
+  declare errorPolicy?: ErrorPolicy;
 
   /**
    * When true, the component will not automatically subscribe to new data.

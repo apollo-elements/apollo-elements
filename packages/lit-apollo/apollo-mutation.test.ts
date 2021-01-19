@@ -42,6 +42,7 @@ import type { MutationElement } from '@apollo-elements/test-helpers/mutation.tes
 
 import { ApolloMutation } from './apollo-mutation';
 import { LitElement, html, Constructor, TemplateResult } from 'lit-element';
+import { property } from 'lit-element/lib/decorators';
 
 import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
 
@@ -172,6 +173,27 @@ describe('[lit-apollo] ApolloMutation', function() {
         it('does not reflect', function() {
           expect(element.getAttribute('refetch-queries')).to.be.null;
         });
+      });
+    });
+
+    describe('with a class that defines observedAttributes with decorator', function() {
+      class Test extends ApolloMutation<unknown, unknown> {
+        @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
+      }
+
+      let element: Test;
+
+      beforeEach(async function subclass() {
+        const tagName = defineCE(Test);
+        element = await fixture<Test>(`<${tagName}></${tagName}>`);
+      });
+
+      it('preserves decorator behaviour', async function() {
+        element.xA = 2;
+        await element.updateComplete;
+        expect(element.getAttribute('x-a')).to.equal('2');
+        element.setAttribute('x-a', '1');
+        expect(element.xA).to.equal(1);
       });
     });
   });

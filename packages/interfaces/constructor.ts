@@ -5,6 +5,8 @@
  * @noInheritDoc
  */
 export declare class CustomElement extends HTMLElement {
+  static readonly observedAttributes?: string[];
+
   /**
    * Called when one of the element's `observedAttributes` changes.
    * @param name name of the observed attribute
