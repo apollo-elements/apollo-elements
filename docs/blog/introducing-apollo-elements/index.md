@@ -15,7 +15,7 @@ socialMediaImage: https://thepracticaldev.s3.amazonaws.com/i/rk6u6o9jibsv4vo3cpg
 
 <sup dir="rtl"><abbr title="בסייעתא דשמייא">בס״ד</abbr></sup>
 
-Today I published version 0.0.1 of `apollo-elements`, a collection of packages that help you create web components connected to Apollo GraphQL<sup><a href="#note-1">1</a></sup>.
+Today I published version 0.0.1 of `apollo-elements`, a collection of packages that help you create web components connected to {% footnoteref "apollo" "Apollo Elements is a community project maintained by myself, it's not affiliated with Meteor." %}Apollo GraphQL{% endfootnoteref %}.
 
 {% github apollo-elements/apollo-elements %}
 
@@ -51,7 +51,7 @@ query UserProfilePage($userId: ID) {
 ```
 
 ## Show Me The Code
-Now, with Apollo Elements, you can get up and running building connected components. You provide a GraphQL document and a custom element class[<sup>2</sup>](#note-2) that handles templating, and you're good to go.
+Now, with Apollo Elements, you can get up and running building connected components. You provide a GraphQL document and a custom element {% footnoteref "hybrids-class" "Or in the case of hybrids, all you need is a render function." %}class{% endfootnoteref %} that handles templating, and you're good to go.
 
 ```js
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
@@ -228,7 +228,3 @@ Want to see it in action? I built a simple chat app demo that uses GraphQL subsc
 [![Lighthouse Scores: 98 (performance), 100 (accessibility), 93 (best practises), 100 (SEO), 12/12 (PWA)](https://user-images.githubusercontent.com/1466420/52176144-5c25f280-27b7-11e9-8e14-290651f98e36.png)](https://github.com/apollo-elements/apollo-elements/files/2825459/lit-apollo-subscriptions.herokuapp.com-20190203T132249.zip)
 
 So try out `apollo-elements` today!
-
-##### Footnotes
-- <a name="note-1"><sup>1</sup></a><small>Apollo Elements is a community project maintained by myself, it's not affiliated with Meteor.</small>
-- <a name="note-2"><sup>2</sup></a><small>Or in the case of hybrids, all you need is a render function.</small>

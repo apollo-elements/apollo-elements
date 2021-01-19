@@ -307,7 +307,7 @@ As we've seen query elements set their `data` property whenever the query resolv
 If you want to run other side effects, here are some options:
 
 - use your library's reactivity system, e.g. `updated` for LitElement or `dataChanged` for FAST
-- define [`onData`](./lifecycle/#onData) callback
+- define [`onData`](./lifecycle/#ondata) callback
 - listen for the `apollo-query-result` and `apollo-error` [events](./lifecycle/#events)
 - call the [`executeQuery`](/api/interfaces/query/#executequery) method and `await` it's result.
 
@@ -360,7 +360,7 @@ If you want to keep your element from automatically subscribing, you can opt out
 
 </code-tabs>
 
-Once you do, the element won't fetch any data unless you call its [`subscribe()`](/api/interfaces/query/#subscribe) or [`executeQuery()`](/api/interfaces/query/#executeQuery) methods.
+Once you do, the element won't fetch any data unless you call its [`subscribe()`](/api/interfaces/query/#subscribe) or [`executeQuery()`](/api/interfaces/query/#executequery) methods.
 
 ```js copy
 const element = document.querySelector('hello-query')

@@ -41,8 +41,9 @@ function readJSONSync(path) {
  * if it has an associated Markdown file in docs/api/types/,
  * replace the `description` field with the markdown file's contents.
  * @param  {object} table object map of typename to markdown description
+ * @param  {object} mod custom element manifest module
  */
-function replaceDescriptionUsingTables(table) {
+function replaceDescriptionUsingTables(table, mod) {
   /**
    * @param  {CEM.Descriptor} member
    * @return {CEM.Descriptor}
@@ -55,7 +56,13 @@ function replaceDescriptionUsingTables(table) {
       return member;
     else {
       console.log(`Replacing description for ${foundMemberTypeName}`);
-      const description = table[foundMemberTypeName];
+      const typeDescription = table[foundMemberTypeName];
+
+      const description = (
+          !mod.path.match(/apollo-subscription\.[jt]s/) ? typeDescription
+        : typeDescription.replace(/query/g, 'subscription')
+      );
+
       return {
         ...member,
         description,
@@ -66,6 +73,7 @@ function replaceDescriptionUsingTables(table) {
 
 function overwriteDescriptions(pathname) {
   const manifest = readJSONSync(pathname);
+
   const typeTables =
     Object.fromEntries(readdirSync(typeTablesDirURL.pathname)
       .map(filename => [
@@ -73,14 +81,14 @@ function overwriteDescriptions(pathname) {
         readFileSync(new URL(`./${filename}`, typeTablesDirURL).pathname, 'utf8'),
       ]));
 
-  const replaceDescriptionWithMarkdownTable = replaceDescriptionUsingTables(typeTables);
+  const replaceDescriptionWithMarkdownTable = mod => replaceDescriptionUsingTables(typeTables, mod);
 
-  const processClassMember = (value, key) => {
+  const processClassMember = mod => (value, key) => {
     switch (key) {
       case 'return':
-        return replaceDescriptionWithMarkdownTable(value);
+        return replaceDescriptionWithMarkdownTable(mod)(value);
       case 'parameters':
-        return value.map(replaceDescriptionWithMarkdownTable);
+        return value.map(replaceDescriptionWithMarkdownTable(mod));
       default:
         return value;
     }
@@ -91,11 +99,11 @@ function overwriteDescriptions(pathname) {
     declarations: mod.declarations?.map?.(function(declaration) {
       switch (declaration.kind) {
         case 'function':
-          return mapObjIndexed(processClassMember, declaration);
+          return mapObjIndexed(processClassMember(mod), declaration);
         case 'class':
           return {
             ...declaration,
-            members: declaration.members?.map?.(mapObjIndexed(processClassMember)),
+            members: declaration.members?.map?.(mapObjIndexed(processClassMember(mod))),
           };
         default: return declaration;
       }
