@@ -1,6 +1,3 @@
----
-socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/w_600,c_fit,co_rgb:eee,g_south_west,x_60,y_200,l_text:open sans_128_bold:Guides/w_1200,h_630,c_fill,q_auto,f_auto/w_600,c_fit,co_rgb:eee,g_south_west,x_60,y_100,l_text:open sans_78:Apollo Elements/social-template.svg
----
 # Guides || 10
 
 Apollo Elements helps you build full-scale, high-performance GraphQL frontends with state-of-the-art web technologies. Use your favourite web components base library like [lit-element](../api/libraries/lit-apollo/) or [FAST](../api/libraries/fast/); or write your components with [vanilla JS](../api/libraries/mixins/). If you're starting from scratch, use the app generator to bootstrap a project.

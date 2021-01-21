@@ -3,6 +3,7 @@ layout: api
 package: '@apollo-elements/components'
 module: './apollo-mutation.js'
 ---
+
 # Components >> apollo-mutation || 20
 
 Provides a way to declare mutations and their variables, including input components.
