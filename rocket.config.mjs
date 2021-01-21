@@ -33,13 +33,7 @@ import { cloudinary } from './packages/docs/rocket-plugins/cloudinary.mjs';
 
 import { addPlugin } from 'plugins-manager';
 
-// TODO: IMMEDIATE: move code-copy immediately to mdjs/core
-// TODO: IMMEDIATE: cem-api over to new presets
-// TODO: DEFERRED: after presets API is settled, move code-tabs, because it needs config in the preset init options
-
 const isProd = process.env.ELEVENTY_ENV === 'production';
-
-const nodeResolve = {};
 
 /** @type {import('@rocket/cli/src/types').RocketCliOptions} */
 const config = {
@@ -123,6 +117,7 @@ const config = {
     }
 
     eleventyConfig.addPlugin(addWebComponentDefinitions, {
+      quiet: true,
       singleScript: true,
       specifiers: {
         'code-copy': importSpecifier,
@@ -203,7 +198,6 @@ const config = {
       tab: ([tab]) => wrapTab(tab),
     }),
   ],
-
 };
 
 export default config;

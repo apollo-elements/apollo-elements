@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="420" viewBox="0 0 1000 420">
   <defs>
+
     <linearGradient id="social-template-b" x1="68.634%" x2="97.022%" y1="58.82%" y2="41.18%">
       <stop offset="0%"/>
       <stop offset="100%" stop-color="#4A4A4A"/>
@@ -18,10 +19,11 @@
       <stop offset="100%" stop-color="#4A4A4A"/>
     </linearGradient>
     <rect id="social-template-e" width="786" height="368" x="107" y="26" rx="29"/>
-    <radialGradient id="social-template-g" cx="50%" cy="62.859%" r="90.501%" fx="50%" fy="62.859%" gradientTransform="matrix(-.99984 .01624 -.018 -.9023 1.011 1.188)">
+    <radialGradient id="social-template-g" cx="50%" cy="62.859%" r="90.501%" fx="50%" fy="62.859%" gradientTransform="scale(-1 -.9) rotate(-1.034 -73.557 55.395)">
       <stop offset="0%" stop-color="#FFF"/>
       <stop offset="100%"/>
     </radialGradient>
+
   </defs>
   <g fill="none" fill-rule="evenodd">
     <use fill="#212121" xlink:href="#social-template-a"/>
@@ -30,12 +32,27 @@
     <use stroke="url(#social-template-d)" stroke-width="500" xlink:href="#social-template-a"/>
     <use fill="#212121" xlink:href="#social-template-e"/>
     <use fill="url(#social-template-f)" fill-opacity=".12" xlink:href="#social-template-e" style="mix-blend-mode:multiply"/>
-    <text fill="#FFF" font-family="RecursiveMonoLnr-Light, Recursive" font-size="78" font-style="italic" font-weight="300">
-      <tspan x="127" y="245">title</tspan>
+
+    <svg id="title" fill="#FFF" x="127" y="62" width="592" height="268">
+      <g font-weight="400">
+        {{ titleSVG | safe }}!
+      </g>
+    </svg>
+
+    <svg id="subtitle" fill="#FFF" x="127" y="230" width="592" height="100">
+      <g font-weight="300">
+        {{ subtitleSVG | safe }}
+      </g>
+    </svg>
+
+    <text fill="#FFF" x="127" y="354" font-family="Recursive" font-size="24" font-weight="300">
+      <tspan>
+        Apollo Elements
+        {{- (' :: ' + category) if category -}}
+        {{- (' :: ' + subcategory) if category and subcategory -}}
+      </tspan>
     </text>
-    <text fill="#FFF" font-family="RecursiveMonoLnr-Light, Recursive" font-size="24" font-style="italic" font-weight="300">
-      <tspan x="127" y="354">Apollo Elements</tspan>
-    </text>
+
     <g fill-rule="nonzero" transform="translate(739 237)">
       <path fill="#FFF" stroke="url(#social-template-g)" stroke-width="8" d="M65.6342302,-1.28748796 L104.862425,21.3356774 C111.135167,24.9532101 115,31.6398369 115,38.8768345 L115,84.1231655 C115,91.3601631 111.135167,98.0467899 104.862425,101.664323 L65.6342303,124.287488 C59.3629622,127.904171 51.6370379,127.904171 45.3657699,124.287488 L6.13757525,101.664323 C-0.135166529,98.0467899 -4,91.3601631 -4,84.1231655 L-4,38.8768345 C-4,31.6398369 -0.135166529,24.9532101 6.13757529,21.3356773 L45.3657699,-1.28748796 C51.6370379,-4.90417068 59.3629622,-4.90417068 65.6342302,-1.28748796 Z"/>
       <g fill="#000" transform="translate(8 28)">

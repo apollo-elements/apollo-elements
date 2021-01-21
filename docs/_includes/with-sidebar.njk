@@ -1,10 +1,7 @@
 {% extends 'layout.njk' %}
 
 {% block headContent %}
-  {% if generateSocialImage %}
-    {% set socialMediaImage = generateSocialImage | cloudinary(title=title, description=description, tags=tags) | url %}
-    {% set cover_image = socialMediaImage %}
-  {% endif %}
+  {% set cover_image = socialMediaImage %}
   {% include 'partials/head-content.njk' %}
 {% endblock %}
 

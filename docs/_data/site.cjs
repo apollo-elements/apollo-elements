@@ -25,33 +25,5 @@ module.exports = async function siteConfig() {
     iconColorMaskIcon: 'white',
     iconColorMsapplicationTileColor: 'black',
     iconColorThemeColor: 'black',
-    socialMediaImage: [
-      'https://res.cloudinary.com/apolloelements/image/upload',
-      [
-        'w_1200',
-        'h_630',
-        'c_fill',
-        'q_auto',
-        'f_auto',
-      ].join(','),
-      [
-        'w_600',
-        'c_fit',
-        'co_rgb:eee',
-        'g_west',
-        'x_100',
-        'l_text:open sans_64_bold:Apollo Elements',
-      ].join(','),
-      [
-        'w_600',
-        'c_fit',
-        'co_rgb:ddd',
-        'g_south_west',
-        'x_100',
-        'y_100',
-        'l_text:open sans_48:GraphQL Custom Elements'
-      ].join(','),
-      'social-template.svg',
-    ].join('/'),
   };
 };
