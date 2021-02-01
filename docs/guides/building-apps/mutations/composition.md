@@ -1,4 +1,8 @@
-# Building Apps >> Mutations >> Composing Mutations and Queries || 10
+# Building Apps >> Mutations >> Composing Mutations and Queries || 20
+
+Combining a query and mutations in the same component is a common pattern. For example, an "edit profile" page might query the existing user profile to pre-populate inputs, and issue a mutation which updates some or all of the profile fields. In cases like these, you can use the `<apollo-mutation>` component to declare your mutations inside the query component's template.
+
+## Example: Edit User Profile
 
 Say you had this query for a user profile page:
 

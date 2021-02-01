@@ -6,6 +6,19 @@ description: How to use Apollo Elements to write declarative GraphQL mutation we
 
 Mutations are how you change data in your graphql. If you think of queries as analogous to HTTP `GET` requests or SQL `READ` statements, then mutations are kind of like HTTP `POST` requests or SQL `WRITE` statements.
 
+Apollo Elements gives you three options for defining mutations in your UI. You can mix and match them, depending on your particular needs.
+
+## Imperative Mutations
+
+First, you can call the Apollo client's `mutate` method imperatively. This is good for one-off actions, or for when you want to issue a mutation programatically, i.e. not in response to a user action.
+
+```ts
+onClickSubmit() {
+  const { data, error, loading } =
+    await this.client.mutate({ mutation, variables });
+}
+```
+
 ## Mutation Components
 
 Unlike query and subscription components, mutation components don't automatically send a request to the GraphQL server. You have to call their `mutate()` method to issue the mutation, typically in response to some user input.
@@ -243,3 +256,24 @@ As such, you can only expect your component's `data` property to be truthy once 
 The key here is the `<mwc-button>` element which, on click, calls the element's `mutate()` method.
 
 See [mutation lifecycle](./lifecycle.md) for more information.
+
+## With `<apollo-mutation>`
+
+You can also declaratively define mutations using the `<apollo-mutation>` component.
+
+```html
+<apollo-mutation>
+  <script type="application/graphql">
+    mutation AddUser($name: String) {
+      addUser(name: $name) {
+        id name
+      }
+    }
+  </script>
+  <label for="username">Name</label>
+  <input id="username" slot="variable"/>
+  <button slot="trigger">Add User</button>
+</apollo-mutation>
+```
+
+Read more about declarative mutations in [using `<apollo-mutation>`](./apollo-mutation-component.md) and [composing mutations](./composition.md) or check out the [mutation component API docs](/api/components/apollo-mutation/).
