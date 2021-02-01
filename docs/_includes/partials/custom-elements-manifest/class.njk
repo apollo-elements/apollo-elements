@@ -1,5 +1,6 @@
 {% from "./macros.njk" import codeBlock, linkHeading %}
 
+{% set attributes = declaration | getAttributes %}
 {% set fields = declaration | getFields %}
 {% set methods = declaration | getMethods %}
 {% set slots = declaration | getSlots %}
@@ -12,6 +13,20 @@
 {% endif %}
 
 {% block beforeProperties %}{% endblock %}
+
+{% if attributes.length %}
+  {{ linkHeading('Attributes', level=2) }}
+  {% for attribute in (attributes | sortByProp('name')) %}
+    {% if not attribute.inheritedFrom %}
+      {% include "./attribute.njk" %}
+    {% endif %}
+  {% endfor %}
+  {% for attribute in (attributes | sortByProp('name')) %}
+    {% if attribute.inheritedFrom %}
+      {% include "./attribute.njk" %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 {% if fields.length %}
   {{ linkHeading('Properties', level=2) }}

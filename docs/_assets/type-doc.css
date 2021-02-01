@@ -36,6 +36,7 @@ type-doc[kind="return"] thead {
   clip: rect(1px, 1px, 1px, 1px);
 }
 
+type-doc[kind="attribute"] > [slot="name"] .anchor,
 type-doc[kind="property"] > [slot="name"] .anchor,
 type-doc[kind="function"] > [slot="name"] .anchor,
 type-doc[kind="method"] > [slot="name"] .anchor {
@@ -80,6 +81,7 @@ type-doc [slot="type"] pre {
   margin: 0;
 }
 
+type-doc[kind="attribute"] [slot="name"],
 type-doc[kind="property"] [slot="name"],
 type-doc[kind="property"] [slot="attribute"],
 type-doc[kind="function"] [slot="name"],
