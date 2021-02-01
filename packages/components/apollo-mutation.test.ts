@@ -48,56 +48,6 @@ import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutat
 import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
 import { OptimisticResponseType } from '@apollo-elements/interfaces';
 
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { d: 'd', e: number };
-
-function TypeCheck() {
-  const el = new ApolloMutationElement<TypeCheckData, TypeCheckVars>();
-  /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
-
-  assertType<HTMLElement>                         (el);
-
-  // ApolloElementInterface
-  assertType<ApolloClient<NormalizedCacheObject>|null>  (el.client);
-  assertType<Record<string, unknown>|undefined>         (el.context);
-  assertType<boolean>                                   (el.loading);
-  assertType<DocumentNode|null>                         (el.document);
-  assertType<ApolloError|Error|null>                    (el.error);
-  assertType<readonly GraphQLError[]|null>              (el.errors);
-  assertType<TypeCheckData>                             (el.data!);
-  assertType<string>                                    (el.error!.message);
-  assertType<'a'>                                       (el.data.a);
-  // @ts-expect-error: b as number type
-  assertType<'a'>                                       (el.data.b);
-  if (isApolloError(el.error!))
-    assertType<readonly GraphQLError[]>                 (el.error.graphQLErrors);
-
-  // ApolloMutationInterface
-  assertType<DocumentNode>                              (el.mutation!);
-  assertType<TypeCheckVars>                             (el.variables!);
-  assertType<boolean>                                   (el.called);
-  assertType<boolean>                                   (el.ignoreResults!);
-  assertType<boolean>                                   (el.awaitRefetchQueries!);
-  assertType<ErrorPolicy>                               (el.errorPolicy!);
-  assertType<string>                                    (el.errorPolicy!);
-  // @ts-expect-error: ErrorPolicy is not a number
-  assertType<number>                                    (el.errorPolicy!);
-  assertType<string>                                    (el.fetchPolicy!);
-  assertType<Extract<FetchPolicy, 'no-cache'>|undefined>(el.fetchPolicy);
-
-  if (typeof el.refetchQueries === 'function')
-    assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(el.refetchQueries);
-  else
-    assertType<RefetchQueryDescription|null|undefined>(el.refetchQueries);
-
-  if (typeof el.optimisticResponse !== 'function')
-    assertType<TypeCheckData|undefined>(el.optimisticResponse);
-  else
-    assertType<OptimisticResponseType<TypeCheckData, TypeCheckVars>>(el.optimisticResponse);
-
-  /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
-}
-
 describe('[components] <apollo-mutation>', function describeApolloMutation() {
   beforeEach(setupClient);
 
@@ -123,7 +73,25 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
   });
 
-  describe('with children in variables slots', function() {
+  describe('with single input in variable slot', function() {
+    let element: ApolloMutationElement<unknown, unknown>;
+
+    beforeEach(async function() {
+      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+        <apollo-mutation>
+          <input slot="variable" data-variable="varA" value="variable-a"/>
+        </apollo-mutation>
+      `);
+    });
+
+    it('reads variables from children', function() {
+      expect(element.variables).to.deep.equal({
+        varA: 'variable-a',
+      });
+    });
+  });
+
+  describe('with multiple inputs in variable slot', function() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
@@ -139,6 +107,27 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       expect(element.variables).to.deep.equal({
         varA: 'variable-a',
         varB: 'variable-b',
+      });
+    });
+  });
+
+  describe('with single label in variable slot', function() {
+    let element: ApolloMutationElement<unknown, unknown>;
+
+    beforeEach(async function() {
+      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+        <apollo-mutation>
+          <label slot="variable">
+            variable-a
+            <input data-variable="varA" value="variable-a"/>
+          </label>
+        </apollo-mutation>
+      `);
+    });
+
+    it('reads variables from children', function() {
+      expect(element.variables).to.deep.equal({
+        varA: 'variable-a',
       });
     });
   });
@@ -644,7 +633,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
   });
 
-  describe('with variable DOM and a button trigger', function() {
+  describe('with variable script and a button trigger', function() {
     let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
     beforeEach(async function() {
@@ -731,3 +720,53 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
   });
 });
+
+type TypeCheckData = { a: 'a', b: number };
+type TypeCheckVars = { d: 'd', e: number };
+
+function TypeCheck() {
+  const el = new ApolloMutationElement<TypeCheckData, TypeCheckVars>();
+  /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+
+  assertType<HTMLElement>                         (el);
+
+  // ApolloElementInterface
+  assertType<ApolloClient<NormalizedCacheObject>|null>  (el.client);
+  assertType<Record<string, unknown>|undefined>         (el.context);
+  assertType<boolean>                                   (el.loading);
+  assertType<DocumentNode|null>                         (el.document);
+  assertType<ApolloError|Error|null>                    (el.error);
+  assertType<readonly GraphQLError[]|null>              (el.errors);
+  assertType<TypeCheckData>                             (el.data!);
+  assertType<string>                                    (el.error!.message);
+  assertType<'a'>                                       (el.data.a);
+  // @ts-expect-error: b as number type
+  assertType<'a'>                                       (el.data.b);
+  if (isApolloError(el.error!))
+    assertType<readonly GraphQLError[]>                 (el.error.graphQLErrors);
+
+  // ApolloMutationInterface
+  assertType<DocumentNode>                              (el.mutation!);
+  assertType<TypeCheckVars>                             (el.variables!);
+  assertType<boolean>                                   (el.called);
+  assertType<boolean>                                   (el.ignoreResults!);
+  assertType<boolean>                                   (el.awaitRefetchQueries!);
+  assertType<ErrorPolicy>                               (el.errorPolicy!);
+  assertType<string>                                    (el.errorPolicy!);
+  // @ts-expect-error: ErrorPolicy is not a number
+  assertType<number>                                    (el.errorPolicy!);
+  assertType<string>                                    (el.fetchPolicy!);
+  assertType<Extract<FetchPolicy, 'no-cache'>|undefined>(el.fetchPolicy);
+
+  if (typeof el.refetchQueries === 'function')
+    assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(el.refetchQueries);
+  else
+    assertType<RefetchQueryDescription|null|undefined>(el.refetchQueries);
+
+  if (typeof el.optimisticResponse !== 'function')
+    assertType<TypeCheckData|undefined>(el.optimisticResponse);
+  else
+    assertType<OptimisticResponseType<TypeCheckData, TypeCheckVars>>(el.optimisticResponse);
+
+  /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+}
