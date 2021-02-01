@@ -13,7 +13,7 @@ const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
 const and = (p, q) => x => p(x) && q(x);
 const or = (p, q) => x => p(x) || q(x);
 const not = p => x => !p(x);
-const words = s => s.split('\w');
+const words = s => s.split(' ');
 const head = ([x]) => x;
 const getLength = x => x.length;
 const isLong = x => x >= 20;
@@ -61,10 +61,20 @@ async function createPageSocialImage(options) {
   const subtitleFont = () =>
     `300 ${subtitleFontSize}px Recursive, monospace`;
 
-  while (Textbox.measureText(getFirstWord(title), titleFont()) > width)
+  if (title.length > 45)
+    titleFontSize = 64;
+
+  function widthOfString(string, getter = titleFont) {
+    return Textbox.measureText(string, getter());
+  }
+
+  while (
+    (widthOfString(title) > (width * 4)) ||
+    (widthOfString(getFirstWord(title)) > width)
+  )
     titleFontSize = titleFontSize - 2;
 
-  while (subtitle && Textbox.measureText(subtitle, subtitleFont()) > width)
+  while (subtitle && widthOfString(subtitle, subtitleFont) > width)
     subtitleFontSize = subtitleFontSize - 2;
 
   const titleBox = new Textbox({
@@ -87,6 +97,7 @@ async function createPageSocialImage(options) {
     subcategory,
     titleSVG,
     subtitleSVG,
+    fontImport: `@import url('https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&display=swap');`,
   });
 
   const filetype = 'png';
