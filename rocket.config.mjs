@@ -29,7 +29,6 @@ import { customElementsManifest } from './packages/docs/rocket-plugins/custom-el
 import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.mjs';
 import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.mjs';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.mjs';
-import { cloudinary } from './packages/docs/rocket-plugins/cloudinary.mjs';
 
 import { addPlugin } from 'plugins-manager';
 
@@ -96,7 +95,6 @@ const config = {
     /* end custom-elements-manifest */
 
     /* start blog */
-    eleventyConfig.addFilter('cloudinary', cloudinary);
     eleventyConfig.addFilter('markdown', markdown);
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);

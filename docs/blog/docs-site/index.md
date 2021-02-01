@@ -10,8 +10,6 @@ tags:
   - rocket
   - documentation
   - 11ty
-socialMediaImage: https://res.cloudinary.com/apolloelements/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/w_600,c_fit,co_rgb:eee,g_west,x_100,l_text:open sans_64_bold:Launching a Stellar Docs Site with Rocket/w_600,c_fit,co_rgb:ddd,g_south_west,x_100,y_100,l_text:open sans_48:Apollo Elements/social-template.svg
-cover_image: https://res.cloudinary.com/apolloelements/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/w_600,c_fit,co_rgb:eee,g_west,x_100,l_text:open sans_64_bold:Launching a Stellar Docs Site with Rocket/w_600,c_fit,co_rgb:ddd,g_south_west,x_100,y_100,l_text:open sans_48:Apollo Elements/social-template.svg
 ---
 
 Apollo Elements' new docs site launches aboard the [Modern Web Rocket](https://wip-rocket.netlify.app/). It's a ground-up rewrite that puts users first and presents the best of what Apollo Elements has to offer. The new site has [live code demos](#live-demos-via-webcomponentsdev), [API tables](/api/) generated from custom elements manifest files, a new light theme, [customizable snippet browser](#code-tabs), comprehensive component lifecycle documentation for [query](/guides/building-apps/queries/lifecycle/), [mutation](/guides/building-apps/mutations/lifecycle/), and [subscription](/guides/building-apps/subscriptions/lifecycle/) elements, and more.
