@@ -13,7 +13,7 @@ import shared from '../shared.css';
 export class ApolloApp extends ApolloQuery<Data, Variables> {
   static readonly is = 'apollo-app';
 
-  static readonly style = [shared, style];
+  static readonly styles = [shared, style];
 
   query = AppQuery;
 
