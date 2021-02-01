@@ -1,5 +1,4 @@
 ---
-title: Launching a Stellar Docs Site with Rocket
 published: true
 description: How I brought Apollo Element's documentation into the space age with 11ty and the Rocket meta-framework for web components.
 date: 2020-12-29
@@ -10,7 +9,10 @@ tags:
   - rocket
   - documentation
   - 11ty
+generateSocialImage: true
 ---
+
+# Launching a Stellar Docs Site with Rocket
 
 Apollo Elements' new docs site launches aboard the [Modern Web Rocket](https://wip-rocket.netlify.app/). It's a ground-up rewrite that puts users first and presents the best of what Apollo Elements has to offer. The new site has [live code demos](#live-demos-via-webcomponentsdev), [API tables](/api/) generated from custom elements manifest files, a new light theme, [customizable snippet browser](#code-tabs), comprehensive component lifecycle documentation for [query](/guides/building-apps/queries/lifecycle/), [mutation](/guides/building-apps/mutations/lifecycle/), and [subscription](/guides/building-apps/subscriptions/lifecycle/) elements, and more.
 

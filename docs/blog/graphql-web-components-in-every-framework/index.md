@@ -1,5 +1,4 @@
 ---
-title: GraphQL Components that Work in Every Framework
 description: Apollo Elements lets you write reusable and interoperable GraphQL components once, then use them in any frontend framework or none. Share your work across teams or publish your company's web components for others to use.
 tags:
   - graphql
@@ -11,6 +10,8 @@ generateSocialImage: true
 date: 2021-01-01
 updated: Last Modified
 ---
+
+# GraphQL Components that Work in Every Framework
 
 You know how it goes. You hear about the hot new framework everyone's posting about. Sooner or later the shine fades on your lame old app's front-end stack. You start dreaming about the next project, how you'll do things differently. Or maybe you commit to The Big Rewrite™️, but it doesn't go as planned. Despairing, despondent, dejected, you wonder if there's any way to get off this churning treadmill.
 
