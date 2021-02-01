@@ -52,6 +52,10 @@ export interface OnSubscriptionDataParams<TData = unknown> {
  *
  * @fires 'apollo-subscription-result' when the subscription updates
  * @fires 'apollo-error' when the query rejects
+ *
+ * @prop {ApolloMutationInterface<D, V>['onSubscriptionData']} onSubscriptionData
+ * @prop {ApolloMutationInterface<D, V>['onSubscriptionComplete']} onSubscriptionComplete
+ * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariables>
   extends ApolloElementInterface {
@@ -71,6 +75,7 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
 
   /**
    * Specifies the FetchPolicy to be used for this subscription.
+   * @attr fetch-policy
    */
   declare fetchPolicy?: FetchPolicy;
 
@@ -101,6 +106,7 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
 
   /**
    * If true, the element will not begin querying data until you manually call `subscribe`
+   * @attr no-auto-subscribe
    */
   declare noAutoSubscribe: boolean;
 
