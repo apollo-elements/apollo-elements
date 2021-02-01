@@ -34,6 +34,10 @@ export type OptimisticResponseType<D, V> =
  *
  * @fires 'apollo-mutation-result' when the mutation resolves
  * @fires 'apollo-error' when the mutation rejects
+ *
+ * @prop {ApolloMutationInterface<D, V>['updater']} updater
+ * @prop {ApolloMutationInterface<D, V>['onCompleted']} onCompleted
+ * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare class ApolloMutationInterface<D, V = OperationVariables>
   extends ApolloElementInterface {
@@ -75,11 +79,13 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.
+   * @attr error-policy
    */
   declare errorPolicy?: ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
+   * @attr fetch-policy
    */
   declare fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
 
@@ -89,6 +95,7 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
    * Rather than writing a mutation query reducer (i.e. `updateQueries`) for this,
    * you can refetch the queries that will be affected
    * and achieve a consistent store once these queries return.
+   * @attr refetch-queries
    */
   declare refetchQueries: RefetchQueriesType<D> | null;
 
@@ -97,6 +104,7 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
    * and are not waited on before the mutation is completed (resolved).
    * Setting this to true will make sure refetched queries are completed
    * before the mutation is considered done. false by default.
+   * @attr await-refetch-queries
    */
   declare awaitRefetchQueries?: boolean;
 

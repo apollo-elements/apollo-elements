@@ -32,6 +32,9 @@ export type FetchMoreParams<D, V> =
  *
  * @fires 'apollo-query-result' when the query resolves
  * @fires 'apollo-error' when the query rejects
+ *
+ * @prop {ApolloMutationInterface<D, V>['onData']} onData
+ * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare class ApolloQueryInterface<D, V = OperationVariables>
   extends ApolloElementInterface
@@ -68,6 +71,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * - `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.
    *
    * @summary The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.
+   * @attr fetch-policy
    */
   declare fetchPolicy?: FetchPolicy;
 
@@ -84,6 +88,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * having to set options.
    *
    * @summary Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.
+   * @attr next-fetch-policy
    */
   declare nextFetchPolicy?: FetchPolicy;
 
@@ -159,12 +164,14 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
    * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
    * - `all`: errors are treated like data and will notify observables
+   * @attr error-policy
    */
   declare errorPolicy?: ErrorPolicy;
 
   /**
    * When true, the component will not automatically subscribe to new data.
    * Call the `subscribe()` method to do so.
+   * @attr no-auto-subscribe
    */
   declare noAutoSubscribe: boolean;
 
