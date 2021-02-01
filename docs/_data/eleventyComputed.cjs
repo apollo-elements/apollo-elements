@@ -92,12 +92,14 @@ async function createPageSocialImage(options) {
   const titleSVG = toHTML(titleBox.linebreak(title).render(), { space: 'svg' });
   const subtitleSVG = toHTML(subtitleBox.linebreak(subtitle).render(), { space: 'svg' });
 
+  const fontBase64 = fs.readFileSync(path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.072.woff2'), {encoding: 'base64'});
+
   const svgString = nunjucks.renderString(template, {
     category,
     subcategory,
     titleSVG,
     subtitleSVG,
-    fontImport: `@import url('https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&display=swap');`,
+    fontFace: `@font-face { font-family: "Recursive"; src: url("data:application/font-woff2;charset=utf-8;base64,${fontBase64}"); }`,
   });
 
   const filetype = 'png';
