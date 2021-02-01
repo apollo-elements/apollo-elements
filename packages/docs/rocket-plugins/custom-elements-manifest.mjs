@@ -82,7 +82,7 @@ const getSlots = declaration =>
 const getEvents = declaration =>
   declaration?.events ?? [];
 
-const getGithubURL = ({ repository: { url = '', directory = '' } = {} } = {}) =>
+const getGitHubURL = ({ repository: { url = '', directory = '' } = {} } = {}) =>
   !url ? '' : `${githubUrl(url)}${directory ? `/tree/master/${directory}` : ''}`;
 
 function getHeadings(module) {
@@ -150,7 +150,7 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addPairedShortcode('markdown', markdown);
 
   eleventyConfig.addFilter('split', split);
-  eleventyConfig.addFilter('getGithubURL', getGithubURL);
+  eleventyConfig.addFilter('getGitHubURL', getGitHubURL);
   eleventyConfig.addFilter('getModule', getModule);
 
   eleventyConfig.addFilter('getAttributes', getAttributes);
