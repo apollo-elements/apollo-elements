@@ -1,7 +1,7 @@
 ---
 title: Apollo Elements
 layout: home
-slogan: Build high-performance GraphQL web apps with Apollo Elements
+slogan: Build high-performance web apps with GraphQL and web components.
 
 callToActionItems:
   - text: Guides
