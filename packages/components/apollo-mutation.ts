@@ -216,7 +216,8 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
 
   @queryAssignedNodes('trigger') private triggerNodes!: NodeListOf<HTMLElement>;
 
-  @queryAssignedNodes('variable') private variableNodes!: NodeListOf<InputLikeElement>;
+  @queryAssignedNodes('variable')
+  private variableNodes!: NodeListOf<InputLikeElement|HTMLLabelElement>;
 
   private inFlight = false;
 
@@ -248,7 +249,8 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
    * Variable input nodes
    */
   protected get inputs(): InputLikeElement[] {
-    return [...this.variableNodes ?? []];
+    return [...this.variableNodes ?? []].map(x =>
+      x instanceof HTMLLabelElement ? x.control as InputLikeElement : x);
   }
 
   /**
