@@ -14,7 +14,7 @@
 [![View Live Demo][1]][2]
 
 [1]: https://img.shields.io/badge/Live%20Demo-WebComponents.dev-informational?style=for-the-badge
-[2]: https://webcomponents.dev/edit/n67sjuzH56J05LOLnxx0?file=src%2FSpacexLaunches.ts
+[2]: https://webcomponents.dev/edit/n67sjuzH56J05LOLnxx0/src/SpacexLaunches.ts
 
 </wcd-live>
 
