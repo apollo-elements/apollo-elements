@@ -255,7 +255,8 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
 
       try {
         const result = await this.client.query(options);
-        this.nextData(result);
+        if (result) // NB: not sure why, but sometimes this returns undefined
+          this.nextData(result);
         return result;
       } catch (error) {
         this.nextError(error);
