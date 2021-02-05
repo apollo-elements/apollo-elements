@@ -9309,6 +9309,11 @@ imurmurhash@^0.1.4:
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha1-khi5srkoojixPcT7a21XbyMUU+o=
 
+incremental-dom@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/incremental-dom/-/incremental-dom-0.7.0.tgz#b03664731bdc430035f32df7d76fa56daedee9b8"
+  integrity sha512-SBHQ6AiCmtwh7TU9hjq2CspasJe7ggGa9k+qYZft+d5Qq9v7V+07wlnRSZH5GGYjI8wn6U5p7dDua7f1bih52g==
+
 indent-string@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-2.1.0.tgz#8e2d48348742121b4a8218b7a137e9a52049dc80"
@@ -10109,6 +10114,11 @@ jest-worker@^26.2.1:
     "@types/node" "*"
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
+
+jexpr@^1.0.0-pre.1:
+  version "1.0.0-pre.1"
+  resolved "https://registry.yarnpkg.com/jexpr/-/jexpr-1.0.0-pre.1.tgz#d29a16c0cae8205251e3b1ddd94e021c29f2a04d"
+  integrity sha512-kufV0cK6dwIRk8xbQjhoXmQrzbsDkji5OSyVeb9wNkkr8HD0AFK9LTp2zZAHgcAToINAeONxML8WAnCbzSy0ag==
 
 joycon@^2.2.5:
   version "2.2.5"
@@ -14853,6 +14863,14 @@ stack-trace@0.0.x:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
   integrity sha1-VHxws0fo0ytOEI6hoqFZ5f3eGcA=
+
+stampino@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/stampino/-/stampino-0.4.0.tgz#bbdfd7c6e22fe5c8475502394f159761baa58a5c"
+  integrity sha512-cyIGTuZwCKokZMgu84jm37+qoE9pYN3cdt6F0kojeQQm7X8+BBo/eFSYcUde3/jHtq3TOJlQ+dh51+ryC8FYHQ==
+  dependencies:
+    incremental-dom "^0.7.0"
+    jexpr "^1.0.0-pre.1"
 
 static-extend@^0.1.1:
   version "0.1.2"
