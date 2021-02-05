@@ -101,8 +101,9 @@ async function createPageSocialImage(options) {
     height: 100,
   });
 
-  const titleSVG = toHTML(titleBox.linebreak(title).render(), { space: 'svg' });
-  const subtitleSVG = toHTML(subtitleBox.linebreak(subtitle).render(), { space: 'svg' });
+  const backToAngleBrackets = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  const titleSVG = toHTML(titleBox.linebreak(backToAngleBrackets(title)).render(), { space: 'svg' });
+  const subtitleSVG = toHTML(subtitleBox.linebreak(backToAngleBrackets(subtitle)).render(), { space: 'svg' });
 
   const svgString = nunjucks.renderString(template, {
     category,

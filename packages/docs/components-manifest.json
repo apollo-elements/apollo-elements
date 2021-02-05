@@ -16,11 +16,19 @@
           }
         },
         {
-          "name": "apollo-mutation",
+          "name": "apollo-query",
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "apollo-mutation",
-            "module": "./apollo-mutation.js"
+            "name": "apollo-query",
+            "module": "./apollo-query.js"
+          }
+        },
+        {
+          "name": "apollo-query",
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "apollo-query",
+            "module": "./apollo-query.js"
           }
         }
       ]
@@ -33,7 +41,7 @@
           "kind": "class",
           "name": "ApolloClientElement",
           "tagName": "apollo-client",
-          "summary": "\nProvides an ApolloClient instance to all nested ApolloElement children, even across (open) shadow boundaries.\n\n## Examples\n### Generate a simple ApolloClient instance\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### Prevent network calls when required variables are absent\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### Providing a client to a tree of Nodes\n```html\n<apollo-client id=\"client-a\">\n  <apollo-mutation>\n    <!--...-->\n  </apollo-mutation>\n</apollo-client>\n```\n\n### Nesting separate clients\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```\n",
+          "summary": "\nProvides an ApolloClient instance to all nested ApolloElement children, even across (open) shadow boundaries.\n\n## Examples\n### Generate a simple ApolloClient instance\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### Prevent network calls when required variables are absent\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### Providing a client to a tree of Nodes\n```html\n<apollo-client id=\"client-a\">\n  <apollo-query>\n    <!--...-->\n  </apollo-query>\n</apollo-client>\n```\n\n### Nesting separate clients\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```\n",
           "attributes": [
             {
               "name": "uri",
@@ -130,6 +138,71 @@
           "name": "ApolloClientElement",
           "declaration": {
             "name": "ApolloClientElement"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-query.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "tagName": "apollo-query",
+          "name": "ApolloQueryElement",
+          "summary": "Render a GraphQL query using HTML.",
+          "description": "### Example: Render a query to shadow DOM\n\n```html\n<apollo-query>\n  <script type=\"application/graphql\">\n    query MyProfile {\n      profile { name picture }\n    }\n  </script>\n  <template>\n    <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n  </template>\n</apollo-query>\n```\n\n### Example: Setting query and variables using the DOM \n```html \n<apollo-query id=\"query-element\" template=\"avatar-template\"></apollo-query> \n \n<template id=\"avatar-template\"> \n  <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/> \n</template> \n \n<script type=\"module\"> \n  import { gql } from '@apollo/client/core'; \n  const el = document.getElementById('query-element'); \n  el.query = gql` \n    query MyProfile($size: Int) { \n      profile { name picture(size: $size) } \n    } \n  `; \n  el.variables = { size: 48 }; \n</script> \n```",
+          "attributes": [
+            {
+              "name": "template",
+              "fieldName": "template",
+              "type": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "no-shadow",
+              "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "type": {
+                "type": "Boolean|string"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "template",
+              "description": "Template element for the query. Can either be a light-DOM child of the element, or referenced by ID with the `template` attribute.\n\n#### Example: Referencing a template by ID\n\n```html\n<apollo-query template=\"tpl\"></apollo-query>\n<template id=\"tpl\">\n  <p>Hi, {%raw%}{{ data.name }}{%endraw%}</p>\n</template>\n```\n",
+              "type": {
+                "type": "HTMLTemplateElement|null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "summary": "Render the template.",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "apollo-query",
+          "declaration": {
+            "name": "ApolloQueryElement"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQueryElement",
+          "declaration": {
+            "name": "ApolloQueryElement"
           }
         }
       ]

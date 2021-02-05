@@ -324,38 +324,52 @@ function interfacesToPackage(manifest, pkg) {
 
 const isMutationModule = module => module.path.includes('apollo-mutation');
 
+const isQueryModule = module => module.path.includes('apollo-query');
+
 const isClassDeclaration = declaration => declaration.kind === 'class';
 
+const getInterfaceMembers = p => manifest =>
+  manifest
+    .modules
+    .find(p)
+    .declarations
+    .find(isClassDeclaration)
+    .members;
+
+const getMutationInterfaceMembers = getInterfaceMembers(isMutationModule);
+const getQueryInterfaceMembers = getInterfaceMembers(isQueryModule);
+
+function transformComponentModule(type, module, members) {
+  return {
+    ...module,
+    declarations: module.declarations.map(declaration => !isClassDeclaration(declaration) ? declaration : ({
+      ...declaration,
+      members: [
+        ...declaration.members,
+        ...members
+          .map(m => ({
+            ...m,
+            inheritedFrom: m.inheritedFrom ?? {
+              "name": `Apollo${capitalize(type)}`,
+              "package": "@apollo-elements/lit-apollo",
+              "module": `./apollo-${type}.js`
+            },
+          })),
+      ],
+    })),
+  }
+}
+
 function interfacesToComponentsPackage(manifest, interfacesManifest) {
-  const mutationInterfaceMembers =
-    interfacesManifest
-      .modules
-      .find(isMutationModule)
-      .declarations
-      .find(isClassDeclaration)
-      .members;
+  const mutationInterfaceMembers = getMutationInterfaceMembers(interfacesManifest);
+  const queryInterfaceMembers = getQueryInterfaceMembers(interfacesManifest);
 
   return {
     ...manifest,
     modules: manifest.modules.map(module =>
-      !isMutationModule(module) ? module : ({
-      ...module,
-      declarations: module.declarations.map(declaration => !isClassDeclaration(declaration) ? declaration : ({
-        ...declaration,
-        members: [
-          ...declaration.members,
-          ...mutationInterfaceMembers
-            .map(m => ({
-              ...m,
-              inheritedFrom: m.inheritedFrom ?? {
-                "name": "ApolloMutation",
-                "package": "@apollo-elements/lit-apollo",
-                "module": "./apollo-mutation.js"
-              },
-            })),
-        ],
-      })),
-    })),
+      isMutationModule(module) ? transformComponentModule('mutation', module, mutationInterfaceMembers)
+    : isQueryModule(module) ? transformComponentModule('query', module, queryInterfaceMembers)
+    : module),
   }
 }
 
