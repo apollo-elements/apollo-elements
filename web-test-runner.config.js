@@ -12,6 +12,7 @@ const cjsIncludes = [
   '**/fast-json-stable-stringify/index.js',
   '**/graphql-tag/src/index.js',
   '**/zen-observable/**/*.js',
+  '**/incremental-dom/dist/*cjs.js',
   '**/bind-decorator/index.js',
 ];
 

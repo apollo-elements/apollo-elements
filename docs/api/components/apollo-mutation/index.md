@@ -3,9 +3,10 @@ layout: layout-api
 package: '@apollo-elements/components'
 module: './apollo-mutation.js'
 templateEngineOverride: njk,md
+description: Write declarative GraphQL mutations with &lt;apollo-mutation&gt; custom element. Write your GraphQL and variables in HTML, even use inputs to define variables. Do more with less code with Apollo Elements and web components.
 ---
 
-# Components >> apollo-mutation || 20
+# Components >> &lt;apollo-mutation&gt; || 30
 
 Provides a way to declare mutations and their variables, including input components.
 
