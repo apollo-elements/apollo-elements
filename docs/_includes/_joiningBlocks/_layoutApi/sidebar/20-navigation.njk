@@ -1,0 +1,14 @@
+<rocket-navigation>
+  {{
+    collections[section]
+    | hackToInsertHeadings(module=moduleData, package=package)
+    | rocketNav
+    | rocketNavToHtml(
+      listItemClass="menu-item",
+      activeListItemClass="current",
+      activeKey=eleventyNavigation.key
+    )
+    | safe
+  }}
+  {% include 'partials/mobile-sidebar-bottom.njk' %}
+</rocket-navigation>

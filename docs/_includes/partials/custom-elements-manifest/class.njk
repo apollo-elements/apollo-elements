@@ -8,12 +8,13 @@
 {% set cssProperties = declaration | getCssProperties %}
 {% set events = declaration | getEvents %}
 
+{% block demo %}{% endblock %}
+
 {% if declaration.summary %}
   {% markdown %}{{ declaration.summary | safe }}{% endmarkdown %}
 {% endif %}
 
-{% block beforeProperties %}{% endblock %}
-
+{% block beforeAttributes %}{% endblock %}
 {% if attributes.length %}
   {{ linkHeading('Attributes', level=2) }}
   {% for attribute in (attributes | sortByProp('name')) %}
@@ -28,6 +29,7 @@
   {% endfor %}
 {% endif %}
 
+{% block beforeProperties %}{% endblock %}
 {% if fields.length %}
   {{ linkHeading('Properties', level=2) }}
   {% for property in (fields | sortByProp('name')) %}
@@ -40,9 +42,10 @@
       {% include "./property.njk" %}
     {% endif %}
   {% endfor %}
-  {% block afterProperties %}{% endblock %}
 {% endif %}
+{% block afterProperties %}{% endblock %}
 
+{% block beforeMethods %}{% endblock %}
 {% if methods.length %}
   {{ linkHeading('Methods', level=2) }}
   {% for method in (methods | sortByProp('name')) %}
@@ -57,6 +60,7 @@
   {% endfor %}
 {% endif %}
 
+{% block beforeSlots %}{% endblock %}
 {% if slots.length %}
   {{ linkHeading('Slots', level=2) }}
   {% for slot in (slots | sortByProp('name')) %}
@@ -64,6 +68,7 @@
   {% endfor %}
 {% endif %}
 
+{% block beforeParts %}{% endblock %}
 {% if cssParts.length %}
   {{ linkHeading('CSS Shadow Parts', level=2) }}
   <table class="css-parts-table">
@@ -87,6 +92,7 @@
   </table>
 {% endif %}
 
+{% block beforeCssCustomProperties %}{% endblock %}
 {% if cssProperties.length %}
   {{ linkHeading('CSS Custom Properties', level=2) }}
   <table class="css-custom-properties-table">
@@ -112,6 +118,7 @@
   </table>
 {% endif %}
 
+{% block beforeEvents %}{% endblock %}
 {% if events.length %}
   {{ linkHeading('Events', level=2) }}
   <table class="events-table">

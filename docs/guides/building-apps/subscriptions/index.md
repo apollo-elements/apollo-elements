@@ -4,7 +4,9 @@ description: Use Apollo Elements to write high-performance realtime GraphQL subs
 
 # Building Apps >> Subscriptions || 30
 
-You can create components which use GraphQL subscriptions to update over websockets.
+Subscription components fetch data in real time via GraphQL subscriptions, which usually use websockets under the hood.
+
+## Example: Chat App
 
 Consider this query:
 

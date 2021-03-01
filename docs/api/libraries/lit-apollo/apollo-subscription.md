@@ -1,5 +1,5 @@
 ---
-layout: api
+layout: layout-api
 package: '@apollo-elements/lit-apollo'
 module: './apollo-subscription.js'
 ---

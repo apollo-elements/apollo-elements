@@ -37,7 +37,7 @@
     "analyze": "wca analyze --format json --outFile custom-elements.json",
     "test": "run-s test:*",
     "test:types": "tsc --noEmit",
-    "test:runtime": "wtr --coverage --config ../../web-test-runner.config.mjs './*.test.ts'"
+    "test:runtime": "wtr --coverage --config ../../web-test-runner.config.js './*.test.ts'"
   },
   "publishConfig": {
     "access": "public",
@@ -48,12 +48,7 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/mixins"
   },
-  "keywords": [
-    "Apollo",
-    "GraphQL",
-    "Web Components",
-    "Custom Elements"
-  ],
+  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {

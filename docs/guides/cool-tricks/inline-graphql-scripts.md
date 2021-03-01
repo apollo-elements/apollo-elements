@@ -1,6 +1,6 @@
 # Cool Tricks >> Inline GraphQL Scripts || 30
 
-<meta name="description" data-helmet
+<meta name="description" data-helmett
       content="Use Apollo Elements to write declarative GraphQL components in HTML" />
 
 You can provide a GraphQL document string in your markup by appending a

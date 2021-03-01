@@ -1,5 +1,5 @@
 ---
-layout: api
+layout: layout-api
 package: '@apollo-elements/haunted'
 module: './useMutation.js'
 ---

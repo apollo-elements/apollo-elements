@@ -3,7 +3,7 @@
 
 import visit from 'unist-util-visit';
 
-import { isPlugin } from './isPlugin.mjs';
+import { isPlugin } from './isPlugin.js';
 
 const name = 'wrap-copy';
 

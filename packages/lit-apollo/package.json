@@ -37,7 +37,7 @@
     "analyze": "wca analyze --format json --outFile custom-elements.json",
     "test": "run-s test:*",
     "test:types": "tsc --noEmit",
-    "test:runtime": "wtr --coverage --config ../../web-test-runner.config.mjs  --root-dir '../..' './*.test.ts'"
+    "test:runtime": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
   "publishConfig": {
     "access": "public",

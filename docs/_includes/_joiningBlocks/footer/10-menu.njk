@@ -1,20 +1,19 @@
-<footer id="main-footer">
-  <div id="footer-menu">
-    <div class="content-area">
-      {% for category in footer %}
-        <nav>
-          <h3>{{category.name}}</h3>
-          <ul>
-            {% for entry in category.children %}
-              <li>
-                <a href="{{entry.href | url}}">{{entry.text}}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
-      {% endfor %}
+<div id="footer-menu">
+  <div class="content-area">
+    {% for category in footer %}
+      <nav>
+        <h3>{{category.name}}</h3>
+        <ul>
+          {% for entry in category.children %}
+            <li>
+              <a href="{{entry.href | url}}">{{entry.text}}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endfor %}
 
-      <div id="footer-badges">
+    <div id="footer-badges">
         <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
           <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 120 42" width="145" version="1.0">
             <title>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</title>
@@ -53,6 +52,5 @@
           <img src="https://www.netlify.com/img/global/badges/netlify-dark.svg" alt="Deploys by Netlify" height="65px" width="100px">
         </a>
       </div>
-    </div>
   </div>
-</footer>
+</div>

@@ -1,5 +1,5 @@
 ---
-layout: api
+layout: layout-api
 package: '@apollo-elements/interfaces'
 module: './apollo-mutation.ts'
 ---

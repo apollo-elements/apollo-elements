@@ -1,0 +1,6 @@
+{%- for entry in collections.header %}
+  <a href="{{ entry.url | url }}" class="
+          {% if entry.url == page.url %} current {% endif %}
+          {% if (page.url.search(entry.url) !== -1) and (page.url !== '/') %} active {% endif %}
+        ">{{ entry.data.eleventyNavigation.key }}</a>
+{%- endfor %}

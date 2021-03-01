@@ -24,7 +24,7 @@ Learn about advanced techniques like [operation variable validation](./cool-tric
 
 {{ 'moon-landing' | icon }}
 
-<style data-helmet>
+<style data-helmett>
   .icon.moon-landing {
     display: block;
     opacity: 0.75;

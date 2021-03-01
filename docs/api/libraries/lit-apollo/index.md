@@ -1,5 +1,5 @@
 ---
-layout: api-index
+layout: layout-api-index
 package: '@apollo-elements/lit-apollo'
 ---
 # Web Component Libraries >> LitElement || 20

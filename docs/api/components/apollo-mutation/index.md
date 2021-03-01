@@ -1,7 +1,8 @@
 ---
-layout: api
+layout: layout-api
 package: '@apollo-elements/components'
 module: './apollo-mutation.js'
+templateEngineOverride: njk,md
 ---
 
 # Components >> apollo-mutation || 20
@@ -10,6 +11,7 @@ Provides a way to declare mutations and their variables, including input compone
 
 Inherits from [`ApolloMutationInterface`](/api/interfaces/mutation/)
 
+{% block demo %}
 ## Live Demo
 
 ```html wcd oxFdNcAerrfuuiOMM22M www/index.html
@@ -42,3 +44,15 @@ Inherits from [`ApolloMutationInterface`](/api/interfaces/mutation/)
   </p-card>
 </apollo-client>
 ```
+{% endblock %}
+
+{% block beforeProperties %}
+Some Markdown Before Properties
+{% endblock %}
+
+{% block beforeSlots %}
+Some Markdown Before Slots
+- slot
+- slot
+- slot
+{% endblock %}

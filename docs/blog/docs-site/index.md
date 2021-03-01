@@ -171,7 +171,7 @@ There's still more work to do. Rocket is still in pre-release, and the work done
 ## Acknowledgements
 A number of people provided invaluable feedback on the site while it was under development, among them [Justin Fagnani](https://twitter.com/justinfagnani) from the Polymer team, [Peter Siska](https://github.com/peschee) from [Inventage](https://inventage.com/), and Vignesh from [Timecampus](https://twitter.com/timecampus) provided invaluable feedback. Check out Vignesh' [blog series on GraphQL](https://medium.com/timecampus/graphql-diving-deep-c7c0abe608b2). Uri and Dotan at [The Guild](https://the-guild.dev/) provided encouragement and resources. If you're working with GraphQL, give The Guild a glance, you'll be glad you did. My collegues on the [Open Web Components](https://open-wc.org) team were instrumental, as always, to everything I accomplished here.
 
-<style data-helmet>
+<style data-helmett>
   .icon.rocket {
     float: right;
     width: 150px;

@@ -1,0 +1,27 @@
+{% extends 'layout-sidebar.njk' %}
+
+{% from "partials/custom-elements-manifest/get-manifest.njk" import manifest with context %}
+
+{% set moduleData = manifest | getModule(module) or {} %}
+
+{% set additionalHeadings = moduleData | getHeadings %}
+
+{% block sidebar %}
+  {% include 'partials/_layoutApi/sidebar.njk' %}
+{% endblock sidebar %}
+{% block content %}
+  {% include 'partials/_layoutApi/content.njk' %}
+{% endblock content %}
+
+{% block bottom %}
+  <script type="module" async>
+    if (location.hash) {
+      const anchor = document.querySelector(location.hash)
+      const doc = anchor && anchor.closest('type-doc');
+      if (doc) {
+        doc.expanded = true;
+        doc.scrollIntoView();
+      }
+    }
+  </script>
+{% endblock bottom %}

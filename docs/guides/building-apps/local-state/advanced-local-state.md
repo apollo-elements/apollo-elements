@@ -1,6 +1,6 @@
 # Building Apps >> Local State >> Advanced Local State || 20
 
-<meta name="description" data-helmet
+<meta name="description" data-helmett
       content="Advanced recipes for Apollo Elements to manage local state" />
 
 Say your app has Networks and Sites. Each network has a list of sites which belongs to it, so you define the field `isInNetwork` on `Site` which takes a network ID as a field argument. You want to develop <dfn><abbr title="Create, Read, Update, Delete">CRUD</abbr></dfn> operations for networks, and have those operations relate to the list of sites as well.

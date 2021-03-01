@@ -1,0 +1,21 @@
+{% for declaration in moduleData.declarations %}
+  {% if declaration.kind == 'class' %}
+
+    {%- block class -%}
+      {% include "partials/custom-elements-manifest/class.njk" %}
+    {%- endblock -%}
+
+  {% elif declaration.kind == 'mixin' %}
+
+    {%- block mixin -%}
+      {% include "partials/custom-elements-manifest/mixin.njk" %}
+    {%- endblock -%}
+
+  {% elif declaration.kind == 'function' %}
+
+    {%- block function -%}
+      {% include "partials/custom-elements-manifest/function.njk" %}
+    {%- endblock -%}
+
+  {% endif %}
+{% endfor %}

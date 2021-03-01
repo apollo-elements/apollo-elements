@@ -1,6 +1,7 @@
 {
   "name": "root",
   "private": true,
+  "type": "module",
   "logo": {
     "file": "./logo.png"
   },
@@ -30,7 +31,7 @@
     "prerelease:release": "lerna publish --conventional-prerelease --pre-dist-tag next",
     "prerelease:postclean": "yarn clean",
     "docs": "run-s build:codegen docs:*",
-    "docs:analyze": "node --input-type module -e \"await import('./packages/docs/rocket-plugins/copy-manifests.mjs').then(m => m.generateManifests())\"",
+    "docs:analyze": "node --input-type module -e \"await import('./packages/docs/rocket-plugins/copy-manifests.js').then(m => m.generateManifests())\"",
     "docs:rollup": "rollup -c rollup.config.docs.js",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
     "docs:copy": "cpx 'docs/_assets/**/*.{svg,png,jpg}' _site/_merged_assets/",
@@ -81,12 +82,12 @@
     "@polymer/iron-component-page": "^4.0.1",
     "@polymer/polymer": "^3.4.1",
     "@pwrs/eslint-config": "^0.0.20",
-    "@rocket/blog": "^0.2.0",
-    "@rocket/cli": "^0.4.0",
-    "@rocket/launch": "^0.3.0",
-    "@rocket/search": "^0.2.0",
+    "@rocket/blog": "^0.3.0",
+    "@rocket/cli": "^0.5.2",
+    "@rocket/launch": "^0.4.0",
+    "@rocket/search": "^0.3.0",
     "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "11.1.0",
+    "@rollup/plugin-node-resolve": "11.1.1",
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/chai": "^4.2.14",
     "@types/graphql": "^14.5.0",
@@ -95,17 +96,17 @@
     "@types/prompts": "^2.0.9",
     "@typescript-eslint/parser": "^4.14.0",
     "@web/dev-server": "^0.1.5",
-    "@web/dev-server-core": "^0.3.2",
+    "@web/dev-server-core": "^0.3.4",
     "@web/dev-server-esbuild": "^0.2.11",
     "@web/dev-server-import-maps": "^0.0.5",
     "@web/dev-server-rollup": "^0.3.2",
     "@web/rollup-plugin-copy": "^0.2.0",
-    "@web/test-runner": "^0.12.5",
-    "@web/test-runner-core": "^0.10.4",
+    "@web/test-runner": "^0.12.13",
+    "@web/test-runner-core": "^0.10.9",
     "chai": "^4.2.0",
     "commitizen": "^4.2.3",
     "cpx": "^1.5.0",
-    "custom-elements-manifest": "github:webcomponents/custom-elements-manifest",
+    "custom-elements-manifest": "^0.1.0",
     "cz-lerna-changelog": "^2.0.3",
     "dedent-tag": "^1.0.1",
     "eleventy-plugin-add-web-component-definitions": "^2.0.1",
@@ -127,7 +128,7 @@
     "hybrids": "^4.3.4",
     "jsdom": "^16.4.0",
     "lerna": "^3.22.1",
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^10.5.4",
     "lit-element": "^2.4.0",
     "lit-html": "^1.3.0",
     "markdown-it": "^12.0.4",
@@ -147,15 +148,10 @@
     "rollup-plugin-terser": "^7.0.2",
     "ts-node": "^9.1.1",
     "ts-sinon": "^2.0.1",
-    "typedoc": "^0.20.16",
+    "typedoc": "^0.20.22",
     "typescript": "^4.1.3",
     "unist-util-map": "^2.0.1",
     "web-component-analyzer": "^1.1.6"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-lerna-changelog"
-    }
   },
   "dependencies": {
     "tslib": "^2.0.3"

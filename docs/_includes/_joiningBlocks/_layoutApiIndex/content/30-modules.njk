@@ -1,0 +1,9 @@
+{% for module in manifest.modules %}
+  {% if module and module.path and (module.path == './index.js') or (module.path == './index.ts') %}
+    {% if module.exports %}
+      {%- block exports -%}
+        {{ exports(module, packageName=package, splitLines=true) }}
+      {%- endblock -%}
+    {% endif %}
+  {% endif %}
+{% endfor %}
