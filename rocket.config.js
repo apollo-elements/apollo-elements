@@ -35,7 +35,7 @@ import { addPlugin } from 'plugins-manager';
 const isProd = process.env.ELEVENTY_ENV === 'production';
 
 /** @type {import('@rocket/cli/dist-types/types/main').RocketCliOptions} */
-const config = {
+export default ({
   presets: [
     rocketLaunch(),
     rocketBlog(),
@@ -184,6 +184,4 @@ const config = {
       } }),
   ],
 
-};
-
-export default config;
+});
