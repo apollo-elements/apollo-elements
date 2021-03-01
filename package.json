@@ -151,7 +151,8 @@
     "typedoc": "^0.20.22",
     "typescript": "^4.1.3",
     "unist-util-map": "^2.0.1",
-    "web-component-analyzer": "^1.1.6"
+    "web-component-analyzer": "^1.1.6",
+    "woff2base64": "^2.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.3"
