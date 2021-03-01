@@ -1,3 +1,4 @@
+// @ts-check
 const { getComputedConfig, generateEleventyComputed } = require('@rocket/cli');
 
 const path = require('path');
@@ -8,6 +9,7 @@ const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
 const createElement = require('hastscript/svg');
 const toHTML = require('hast-util-to-html');
+const woff2base64 = require('woff2base64');
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
 const and = (p, q) => x => p(x) && q(x);
@@ -33,6 +35,8 @@ async function createPageSocialImage(options) {
     title = '',
   } = options
 
+  console.time(`Generate image ${title}`);
+
   const rocketConfig = getComputedConfig();
 
   const outputDir = path.join(rocketConfig.outputDevDir, '_merged_assets', '11ty-img');
@@ -40,6 +44,14 @@ async function createPageSocialImage(options) {
   const templatePath = path.join(rocketConfig._inputDirCwdRelative, '_assets/social-template.njk');
 
   const templateBuffer = await fs.promises.readFile(templatePath);
+
+  const fontPath = path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.072.woff2');
+  const woff2Buffer = await fs.promises.readFile(fontPath);
+  const cssFonts = woff2base64({
+    'Recursive_VF_1.072.woff2': woff2Buffer,
+  }, {
+    fontFamily: 'Recursive',
+  });
 
   let template = templateBuffer.toString();
 
@@ -92,19 +104,16 @@ async function createPageSocialImage(options) {
   const titleSVG = toHTML(titleBox.linebreak(title).render(), { space: 'svg' });
   const subtitleSVG = toHTML(subtitleBox.linebreak(subtitle).render(), { space: 'svg' });
 
-  const fontBase64 = fs.readFileSync(path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.072.woff2'), {encoding: 'base64'});
-
   const svgString = nunjucks.renderString(template, {
     category,
     subcategory,
     titleSVG,
     subtitleSVG,
-    fontFace: `@font-face { font-family: "Recursive"; src: url("data:application/font-woff2;charset=utf-8;base64,${fontBase64}"); }`,
+    fontFace: cssFonts.woff2,
   });
 
   const filetype = 'png';
 
-  console.time(`generate image ${title}`);
   const { [filetype]: [{ url }] } = await image(Buffer.from(svgString), {
     widths: [1000],
     formats: [filetype],
@@ -112,7 +121,7 @@ async function createPageSocialImage(options) {
     urlPath: '/_merged_assets/11ty-img/',
     sourceUrl: `${title}${subtitle}${category}${subcategory}`, // This is only used to generate the output filename hash
   });
-  console.timeEnd(`generate image ${title}`);
+  console.timeEnd(`Generate image ${title}`);
 
   return url;
 }
