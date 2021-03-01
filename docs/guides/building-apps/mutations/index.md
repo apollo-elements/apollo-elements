@@ -8,6 +8,10 @@ Mutations are how you change data in your graphql. If you think of queries as an
 
 Apollo Elements gives you three options for defining mutations in your UI. You can mix and match them, depending on your particular needs.
 
+1. Calling `client.mutate` [imperatively](#imperative-mutations)
+2. Making a [mutation component](#mutation-components) by extending `ApolloMutation` or by using `useMutation`
+3. Using the [`<apollo-mutation>` component](#with-apollo-mutation)
+
 ## Imperative Mutations
 
 First, you can call the Apollo client's `mutate` method imperatively. This is good for one-off actions, or for when you want to issue a mutation programatically, i.e. not in response to a user action.
