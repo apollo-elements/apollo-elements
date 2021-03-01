@@ -16,31 +16,33 @@ import graphql from '@apollo-elements/rollup-plugin-graphql';
 
 import esbuild from 'rollup-plugin-esbuild';
 
-import inclusiveLangPlugin from '@11ty/eleventy-plugin-inclusive-language';
 import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 
-import { markdown } from './packages/docs/rocket-plugins/markdown.mjs';
-import { setupWrap } from './packages/docs/rocket-plugins/wrap.mjs';
-import { githubTag } from './packages/docs/rocket-plugins/liquid/github.mjs';
-import { linkTag } from './packages/docs/rocket-plugins/liquid/link.mjs';
-import { customElementsManifest } from './packages/docs/rocket-plugins/custom-elements-manifest.mjs';
-import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.mjs';
-import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.mjs';
-import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.mjs';
+import { markdown } from './packages/docs/rocket-plugins/markdown.js';
+import { prettyJson } from './packages/docs/rocket-plugins/prettyJson.js';
+import { setupWrap } from './packages/docs/rocket-plugins/wrap.js';
+import { githubTag } from './packages/docs/rocket-plugins/liquid/github.js';
+import { linkTag } from './packages/docs/rocket-plugins/liquid/link.js';
+import { customElementsManifest } from './packages/docs/rocket-plugins/custom-elements-manifest.js';
+import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.js';
+import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
+import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
 
 import { addPlugin } from 'plugins-manager';
 
 const isProd = process.env.ELEVENTY_ENV === 'production';
 
-/** @type {import('@rocket/cli/src/types').RocketCliOptions} */
+/** @type {import('@rocket/cli/dist-types/types/main').RocketCliOptions} */
 const config = {
   presets: [
     rocketLaunch(),
     rocketBlog(),
     rocketSearch(),
   ],
+
+  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
   eleventy(eleventyConfig) {
     // eleventyConfig.addPlugin(inclusiveLangPlugin);
@@ -52,7 +54,6 @@ const config = {
     eleventyConfig.addWatchTarget('./packages/haunted/');
     eleventyConfig.addWatchTarget('./packages/hybrids/');
     eleventyConfig.addWatchTarget('./packages/lib/');
-    eleventyConfig.on('beforeBuild', generateManifests);
 
     eleventyConfig.addPlugin(customElementsManifest, {
       imports: { keepExtension: false },
@@ -92,10 +93,12 @@ const config = {
       },
     });
 
+    eleventyConfig.on('beforeBuild', generateManifests);
     /* end custom-elements-manifest */
 
     /* start blog */
     eleventyConfig.addFilter('markdown', markdown);
+    eleventyConfig.addFilter('prettyJson', prettyJson);
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);
     eleventyConfig.addFilter('icon', icon => {
@@ -122,6 +125,7 @@ const config = {
         'code-tabs': importSpecifier,
         'wcd-snippet': importSpecifier,
         'type-doc': importSpecifier,
+        'json-viewer': 'https://unpkg.com/@power-elements/json-viewer?module',
         'codesandbox-button': '@power-elements/codesandbox-button',
         'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
       },
@@ -137,7 +141,13 @@ const config = {
     eleventyConfig.addPlugin(fixNoscript);
   },
 
-  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
+  setupUnifiedPlugins: [
+    setupWrap({
+      copy: () => ({ tagName: 'code-copy' }),
+      wcd: ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
+      tab: ([tab]) => wrapTab(tab),
+    }),
+  ],
 
   devServer: {
     port: 9048,
@@ -150,27 +160,12 @@ const config = {
       '**/*.graphql': 'js',
       '**/packages/docs/*.css': 'js',
     },
-    middleware: [
-      // async (ctx, next) => {
-      //   await next();
-      //   ctx.set('Cache-Control', 'max-age=60');
-      // },
-    ],
     plugins: [
       fromRollup(graphql)(),
       fromRollup(litcss)({ include: ['**/packages/docs/*.css'] }),
       esbuildPlugin({ ts: true }),
     ],
   },
-
-  setupDevAndBuildPlugins: [
-    // addPlugin({ name: 'graphql', plugin: graphql }),
-    // addPlugin({
-    //   name: 'litcss',
-    //   plugin: litcss,
-    //   options: { include: ['**/packages/docs/*.css'] },
-    // }),
-  ],
 
   setupBuildPlugins: [
     // @ts-expect-error: going to figure this out later
@@ -189,13 +184,6 @@ const config = {
       } }),
   ],
 
-  setupUnifiedPlugins: [
-    setupWrap({
-      copy: () => ({ tagName: 'code-copy' }),
-      wcd: ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
-      tab: ([tab]) => wrapTab(tab),
-    }),
-  ],
 };
 
 export default config;

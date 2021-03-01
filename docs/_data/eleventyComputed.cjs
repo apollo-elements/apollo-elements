@@ -104,6 +104,7 @@ async function createPageSocialImage(options) {
 
   const filetype = 'png';
 
+  console.time(`generate image ${title}`);
   const { [filetype]: [{ url }] } = await image(Buffer.from(svgString), {
     widths: [1000],
     formats: [filetype],
@@ -111,14 +112,19 @@ async function createPageSocialImage(options) {
     urlPath: '/_merged_assets/11ty-img/',
     sourceUrl: `${title}${subtitle}${category}${subcategory}`, // This is only used to generate the output filename hash
   });
+  console.timeEnd(`generate image ${title}`);
 
   return url;
 }
 
+const computed = generateEleventyComputed();
+
 module.exports = {
-  ...generateEleventyComputed(),
+  ...computed,
   async socialMediaImage(data) {
-    if (data.socialMediaImage)
+    if (data.rocketConfig.createSocialMediaImages === false)
+      return;
+    else if (data.socialMediaImage)
       return data.socialMediaImage;
     else if (!data.title)
       return;

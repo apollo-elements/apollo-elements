@@ -1,12 +1,13 @@
 /* eslint-disable easy-loops/easy-loops */
 import { join } from 'path';
-import { markdown } from './markdown.mjs';
-import { externalTypeLinks } from './link-to-type.mjs';
+import { markdown } from './markdown.js';
+import { externalTypeLinks } from './link-to-type.js';
 import githubUrl from 'get-github-url';
 
 export function manifestModuleImports(eleventyConfig, globalOptions) {
   eleventyConfig.addFilter('manifestModuleImports', function(moduleData, opts = {}) {
     if (!moduleData) return '';
+
     const { path, exports } = moduleData;
     const { packageName, keepExtension, max = 100 } = { ...globalOptions, ...opts };
     const resolved = !packageName ? path : join(packageName, path);

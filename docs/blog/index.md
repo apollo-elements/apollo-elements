@@ -1,6 +1,6 @@
 ---
 title: Apollo Elements Blog
-layout: blog
+layout: layout-blog-overview
 eleventyNavigation:
   key: Blog
   order: 30

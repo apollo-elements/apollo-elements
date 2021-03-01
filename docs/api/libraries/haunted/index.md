@@ -1,5 +1,5 @@
 ---
-layout: api-index
+layout: layout-api-index
 package: '@apollo-elements/haunted'
 ---
 # Web Component Libraries >> Haunted || 40

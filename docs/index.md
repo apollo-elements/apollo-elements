@@ -1,6 +1,7 @@
 ---
 title: Apollo Elements
-layout: home
+layout: layout-home
+templateEngineOverride: njk,md
 slogan: Build high-performance web apps with GraphQL and web components.
 
 callToActionItems:
@@ -70,3 +71,34 @@ libraries:
     logo: polymer
 
 ---
+
+## Use your Favourite Web Components Library
+
+Apollo Elements comes with support for many popular web components libraries.
+Choose the one that suits your project and team, or mix-and-match.
+Components built using different libraries can easily coexist in the same app.
+
+{% include 'partials/libraries.njk' %}
+
+## Interoperable
+
+**Write GraphQL components once** and **use them everywhere** with ease.
+Elements created with Apollo Elements work in any framework or none,
+even in Angular, Preact, React, Svelte, or Vue apps.
+
+These demos all import the same Apollo Element component from NPM.
+
+{% include 'partials/frameworks.njk' %}
+
+```js script
+import '@power-elements/codesandbox-button';
+const demos = document.getElementById('demos');
+demos.addEventListener('select', loadDemo);
+function loadDemo() {
+  const sandbox = document.querySelector('#demos [selected] > *');
+  sandbox.theme =
+    document.body.getAttribute('theme') ||
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  sandbox.showDemo = true;
+}
+```

@@ -1,5 +1,5 @@
 ---
-layout: api
+layout: layout-api
 package: '@apollo-elements/hybrids'
 module: './factories/mutation.js'
 ---

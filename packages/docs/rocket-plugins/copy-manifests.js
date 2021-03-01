@@ -4,6 +4,8 @@
 
 /** @typedef {import('custom-elements-manifest/schema')} CEM */
 
+import chalk from 'chalk';
+
 import globby from 'globby';
 
 import R from 'ramda';
@@ -55,7 +57,7 @@ function replaceDescriptionUsingTables(table, mod) {
     if (!foundMemberTypeName)
       return member;
     else {
-      console.log(`Replacing description for ${foundMemberTypeName}`);
+      console.log(chalk.blue`\tReplacing description for ${chalk.bold(foundMemberTypeName)}`);
       const typeDescription = table[foundMemberTypeName];
 
       const description = (
@@ -360,7 +362,7 @@ function interfacesToComponentsPackage(manifest, interfacesManifest) {
 function writeTransformedManifest(pathname, data) {
   const content = JSON.stringify(data, null, 2);
   writeFileSync(pathname, content, 'utf-8');
-  console.log('Generated', projectPath(pathname));
+  console.log(chalk.blue`\tGenerated`, chalk.bold(projectPath(pathname)));
 }
 
 export function generateManifestsFromInterfaces() {
@@ -399,7 +401,7 @@ export function copyCustomElementManifests() {
 
       copyFileSync(pkgJsonUrl.pathname, new URL(`../../../docs/_data/cems/${name}/package.json`, import.meta.url).pathname);
 
-      console.log('Custom Elements Manifest written to', projectPath(to));
+      console.log(chalk.blue`\tCustom Elements Manifest written to`, chalk.bold(projectPath(to)));
 
       return { from, to };
     } catch (e) {
@@ -411,8 +413,24 @@ export function copyCustomElementManifests() {
   return manifests;
 }
 
+const NS_PER_SEC = 1e9;
+
+/**
+ * Logs the performance of a function
+ * @param  {string} tag  human-readable name of the op
+ * @param  {() => any} func function that does the op
+ */
+function logPerf(tag, func) {
+  const time = process.hrtime();
+  console.log(`${tag}...\n\n`);
+  func();
+  const [s, ns] = process.hrtime(time);
+  const durationNs = s * NS_PER_SEC + ns;
+  console.log(`\n\nDone in ${durationNs / NS_PER_SEC}s!\n\n`);
+}
+
 export function generateManifests() {
-  writeParameterAndReturnDescriptions();
-  generateManifestsFromInterfaces();
-  copyCustomElementManifests();
+  logPerf('Replacing type Descriptions', writeParameterAndReturnDescriptions);
+  logPerf('Generating Custom Element Manifests', generateManifestsFromInterfaces);
+  logPerf('Copying Custom Element Manifests', copyCustomElementManifests);
 }

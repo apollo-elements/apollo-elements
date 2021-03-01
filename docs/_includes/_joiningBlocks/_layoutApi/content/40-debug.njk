@@ -1,0 +1,6 @@
+{%- if debug -%}
+  <h2>moduleData</h2>
+  <json-viewer>
+    <script type="application/json">{{ moduleData | dump | safe }}</script>
+  </json-viewer>
+{%- endif -%}

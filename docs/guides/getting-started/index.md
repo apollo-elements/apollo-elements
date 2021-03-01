@@ -4,7 +4,7 @@ description: Build a high-performance GraphQL web app with Apollo Elements
 
 # Getting Started || 10
 
-<style data-helmet>
+<style data-helmett>
   #apollo-elements-cycle-diagram .entity {
     letter-spacing: -2.6px;
     fill: var(--text-color);

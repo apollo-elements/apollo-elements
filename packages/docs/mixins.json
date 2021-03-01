@@ -58,6 +58,33 @@
         "kind": "mixin",
         "name": "ValidateVariablesMixin",
         "description": "Mixin which prevents operations from fetching until their required variables are set.",
+        "members": [
+          {
+            "kind": "method",
+            "name": "shouldSubscribe",
+            "privacy": "protected",
+            "description": "Overrides the default `shouldSubscribe` predicate to prevent subscription until variables are present.",
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "type": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | <pre class=\"language-ts\"><code class=\"language-ts\">DocumentNode <span class=\"token operator\">&vert;</span> TypedDocumentNode</code></pre> | See [query](/api/interfaces/query/#query) |\n| variables | <pre class=\"language-ts\"><code class=\"language-ts\">Variables<span class=\"token operator\">&lt;</span><span class=\"token constant\">D</span><span class=\"token punctuation\">,</span> <span class=\"token constant\">V</span><span class=\"token operator\">&gt;</span> </code></pre> | See [variables](/api/interfaces/query/#variables) |\n| fetchPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">FetchPolicy</code></pre> | See [fetchPolicy](/api/interfaces/query/#fetchpolicy) |\n| errorPolicy | <pre class=\"language-ts\"><code class=\"language-ts\">ErrorPolicy</code></pre> | See [errorPolicy](/api/interfaces/query/#errorpolicy) |\n| context | <pre class=\"language-ts\"><code class=\"language-ts\">Record<span class=\"token operator\">&lt;</span><span class=\"token builtin\">string</span><span class=\"token punctuation\">,</span> <span class=\"token builtin\">unknown</span><span class=\"token operator\">&gt;</span></code></pre> | Context object passed through the link execution chain. |\n"
+              }
+            ],
+            "return": {
+              "type": {
+                "type": "boolean"
+              }
+            },
+            "inheritedFrom": {
+              "name": "ApolloQueryInterface",
+              "package": "@apollo-elements/interfaces",
+              "module": "./apollo-query.ts"
+            }
+          }
+        ],
         "parameters": [
           {
             "name": "superclass",

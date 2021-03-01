@@ -1,6 +1,6 @@
 # Building Apps >> Local State || 40
 
-<meta name="description" data-helmet
+<meta name="description" data-helmett
       content="Introductory recipes for managing local state with Apollo Elements" />
 
 Apollo Client 3 provides a number of ways to manage local state in your app.

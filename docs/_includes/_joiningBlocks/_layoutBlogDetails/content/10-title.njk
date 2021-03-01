@@ -1,0 +1,5 @@
+{% set cover = cover_image or socialMediaImage %}
+
+{% if cover %}
+  <img src="{{ cover | url }}" alt="">
+{% endif %}

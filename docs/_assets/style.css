@@ -26,10 +26,6 @@ main :defined {
   clip: rect(1px, 1px, 1px, 1px);
 }
 
-#main-header a {
-  order: 1;
-}
-
 #footer-badges img {
   width: 145px;
 }
@@ -75,4 +71,15 @@ table pre[class*="language-"] {
 
 .markdown-body details summary {
   padding-inline-start: 8px;
+}
+
+#main-header a,
+#main-header .social-link,
+#main-header rocket-search {
+  order: initial !important;
+}
+
+body[layout='layout-api'] #sidebar,
+body[layout='layout-api-index'] #sidebar {
+  display: block;
 }

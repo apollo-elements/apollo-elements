@@ -4,6 +4,7 @@
   "private": true,
   "description": "Docs for apollo-elements",
   "main": "index.js",
+  "type": "module",
   "exports": {
     ".": {
       "esbuild": "./index.ts",
@@ -31,12 +32,7 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/docs"
   },
-  "keywords": [
-    "Apollo",
-    "GraphQL",
-    "Web Components",
-    "Custom Elements"
-  ],
+  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {

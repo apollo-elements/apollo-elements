@@ -1,0 +1,10 @@
+{%- for entry in site.socialLinks %}
+	<a class="social-link" href="{{ entry.url }}" aria-label="{{ site.name }} on {{ entry.name }}" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">{{ entry.name }}</span>
+		{% if entry.image %}
+			<img src="{{ entry.image }}" alt="{{ entry.alt }}"/>
+		{% else %}
+			{{ '/_assets/brand-logos/NAME.svg' | replace("NAME", entry.name) | lower | asset | toAbsPath | inlineFilePath | safe }}
+		{% endif %}
+	</a>
+{%- endfor %}
