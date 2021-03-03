@@ -1,3 +1,4 @@
+// @ts-check
 /* eslint-env node */
 /* eslint-disable easy-loops/easy-loops */
 

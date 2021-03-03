@@ -131,12 +131,15 @@ const computed = generateEleventyComputed();
 module.exports = {
   ...computed,
   async socialMediaImage(data) {
-    if (data.rocketConfig.createSocialMediaImages === false)
+    if (
+      !data.title ||
+      data.permalink === false ||
+      process.env.SKIP_SOCIAL === 'true' ||
+      data.rocketConfig.createSocialMediaImages === false
+    )
       return;
     else if (data.socialMediaImage)
       return data.socialMediaImage;
-    else if (!data.title)
-      return;
     else {
       const { section, titleMeta } = data;
       const category = section === 'api' ? 'API' : capital(section);

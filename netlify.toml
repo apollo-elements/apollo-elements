@@ -59,6 +59,11 @@
   from = "/pages/using%20apollo/queries"
   to = "/guides/building-apps/queries/"
 
+# slides
+[[redirects]]
+  from = "decks/graphql-berlin-meetup-03-2021/*"
+  to = "/decks/graphql-berlin-meetup-03-2021/"
+
 # fixes annoying errors from @netlify/plugin-no-more-404
 [[redirects]]
   from = "_includes/api/"

@@ -56,9 +56,11 @@ function transformContent(content, outputPath, options) {
 
 export function externalTypeLinks(eleventyConfig, options) {
   eleventyConfig.addTransform('external-type-links', function(content, outputPath) {
-    return (
-        !outputPath.endsWith('.html') ? content
-      : transformContent(content, outputPath, options)
-    );
+    if (typeof outputPath !== 'string')
+      return content;
+    else if (!outputPath.endsWith('.html'))
+      return content;
+    else
+      return transformContent(content, outputPath, options);
   });
 }

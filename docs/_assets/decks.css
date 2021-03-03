@@ -1,0 +1,282 @@
+:root {
+  --background: black;
+  --text: white;
+  --error: #c22;
+  --primary: #e10098;
+  --secondary: #16dbe0;
+  --tertiary: #f7df1e;
+  --bottom-offset: 106px;
+  --mono: 0;
+  --casl: 0;
+  --wght: 300;
+  --slnt: 0;
+  --markdown-syntax-background-color: var(--background);
+}
+
+code[class*="language-"] {
+  padding: 0;
+}
+
+a.anchor {
+  display: none;
+}
+
+* {
+  font-variation-settings:
+    "wght" var(--wght),
+    "CASL" var(--casl),
+    "MONO" var(--mono),
+    "slnt" var(--slnt);
+}
+
+em {
+  --slnt: -15;
+  --casl: 1;
+}
+
+strong {
+  --wght: 600;
+}
+
+h1 { --wght: 800; }
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  --casl: 1;
+  --slnt: -8.7;
+  --wght: 600;
+}
+
+h2 {
+  line-height: 1.2;
+}
+
+h2 code {
+  line-height: 1;
+}
+
+kbd {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px;
+  margin: 0 2px;
+  width: 1em;
+  height: 1em;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+code {
+  font-family: Recursive, monospace;
+  font-feature-settings: "ss01", "ss05", "dlig";
+
+  --wght: 400;
+  --casl: 0;
+  --mono: 1;
+  --slnt: 0;
+}
+
+h1 code {
+  --wght: inherit;
+  --casl: 0.5;
+}
+
+body,
+slidem-deck {
+  font-family: 'Recursive';
+  background: var(--background);
+  color: var(--text);
+}
+
+ul {
+  padding-inline-start: 1em;
+}
+
+ul li {
+  line-height: 1.5;
+}
+
+service-worker {
+  display: none;
+}
+
+slidem-deck[loading] {
+  display: none;
+}
+
+slidem-slide {
+  background: var(--background);
+}
+
+.md[center],
+img[center] {
+  margin: 0 auto;
+  display: block;
+}
+
+img[middle][center] { margin: auto auto; }
+
+[floating] {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+[active] { z-index: 1; }
+
+[block] { display: block; }
+[flex] { display: flex; }
+[grid] { display: grid; }
+[inline] { display: inline; }
+
+[bleed] { min-height: calc(100% - var(--bottom-offset)); }
+[cover] { background-size: cover; }
+[cover][center] { background-position: center; }
+[contain] { background-size: contain; }
+[explanation] { margin: 2em; }
+[fullheight] { height: 100%; }
+[right] { float: right; }
+[large] { font-size: 100%; }
+[column] { flex-direction: column; }
+[row] { flex-direction: row; }
+[center] { align-items: center; }
+[layer-bottom] { z-index: -1; }
+
+slidem-slide[center] {
+  text-align: center;
+}
+
+[flex][center] {
+  justify-content: center;
+  align-items: center;
+}
+
+[flex] h2 {
+  align-self: flex-start;
+}
+
+slidem-slide[flex]::part(content) { display: flex; }
+slidem-slide[column]::part(content) { flex-flow: column; }
+
+slidem-slide p {
+  margin-block-start: 0.5em !important;
+  margin-block-end: 0.5em !important;
+}
+
+.md,
+json-viewer {
+  background: var(--background);
+  font-size: 32px;
+  border-radius: 0.5em;
+
+  /* color: #c5c8c6; */
+
+  /* box-shadow: 10px 10px 100px black; */
+  font-family: Recursive, monospace;
+
+  --mono: 1;
+  --wght: 350;
+}
+
+json-viewer::part(code) {
+  font-family: inherit;
+  font-variation-settings: inherit;
+
+  --wght: 350;
+}
+
+json-viewer:not(:last-child):not([bleed]),
+.md:not(:last-child):not([bleed]) {
+  margin-block-end: 1em;
+}
+
+json-viewer {
+  padding: 0.6em 1em;
+  font-size: 24px;
+}
+
+.avatar {
+  max-width: 36px;
+}
+
+.white-shadow {
+  text-shadow: 0 0 100px white;
+
+  --casl: 0.2;
+  --slnt: -12;
+  --wght: 600;
+}
+
+dl.analogy {
+  display: grid;
+  grid-template-columns: min-content auto;
+  gap: 1em;
+  align-items: end;
+}
+
+dl.analogy dt,
+dl.analogy dd {
+  display: inline-block;
+}
+
+dl.analogy dd::before {
+  content: '⇒';
+  margin-inline-end: 1em;
+}
+
+.progressive,
+slidem-slide[progressive]::part(content) {
+  position: relative;
+  margin: 0;
+}
+
+.progressive > *,
+slidem-slide[progressive] > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.progressive > :not(:first-of-type),
+slidem-slide[progressive] > :not(:first-of-type) {
+  box-shadow: none;
+}
+
+.bottom-fade {
+  overflow: hidden;
+  max-height: 900px;
+  box-shadow: inset 0 var(--neg-fade) var(--fade) var(--neg-fade) var(--background);
+
+  --fade: 150px;
+  --neg-fade: calc(-1 * var(--fade));
+}
+
+output.error {
+  font-size: 36px;
+  color: var(--error);
+}
+
+output.error pre {
+  display: block;
+  z-index: -1;
+  position: relative;
+}
+
+.author {
+  font-size: 36px;
+  margin-top: auto;
+  text-align: right;
+}
+
+.author a {
+  text-decoration: underline grey dashed;
+}
+
+pre[class*="language-"] {
+  padding: 0;
+  margin: 0;
+}

@@ -16,6 +16,8 @@ import graphql from '@apollo-elements/rollup-plugin-graphql';
 
 import esbuild from 'rollup-plugin-esbuild';
 
+import path from 'path';
+
 import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
@@ -110,6 +112,20 @@ export default ({
     });
     /* end blog */
 
+    /* start slides */
+    eleventyConfig.addFilter('dirname', pathname => pathname && path.dirname(pathname));
+    eleventyConfig.addFilter('joinPath', (pathname, ...to) => path.join(pathname, ...to));
+    eleventyConfig.addCollection('slides', function(collectionApi) {
+      return collectionApi.getFilteredByTag('slide').sort((a, b) => {
+        return (
+            a.template.inputPath < b.template.inputPath ? -1
+          : a.template.inputPath > b.template.inputPath ? 1
+          : 0
+        );
+      });
+    });
+    /* start slides */
+
     /* start auto-import web components */
     function importSpecifier(tagName) {
       return isProd ?
@@ -125,7 +141,7 @@ export default ({
         'code-tabs': importSpecifier,
         'wcd-snippet': importSpecifier,
         'type-doc': importSpecifier,
-        'json-viewer': 'https://unpkg.com/@power-elements/json-viewer?module',
+        'json-viewer': '@power-elements/json-viewer',
         'codesandbox-button': '@power-elements/codesandbox-button',
         'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
       },
@@ -146,6 +162,8 @@ export default ({
       copy: () => ({ tagName: 'code-copy' }),
       wcd: ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
       tab: ([tab]) => wrapTab(tab),
+      reveal: () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
+      center: () => ({ tagName: 'div', attributes: { center: 'true' } }),
     }),
   ],
 
@@ -173,6 +191,7 @@ export default ({
       name: 'esbuild-rollup',
       plugin: esbuild,
       options: {
+        minify: false,
         tsconfig: './packages/docs/tsconfig.json',
         include: 'packages/docs/*',
         sourceMap: true,

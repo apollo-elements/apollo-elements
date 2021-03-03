@@ -1,0 +1,14 @@
+diff --git a/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js b/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js
+index 2fbc2d6..da3ac31 100644
+--- a/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js
++++ b/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js
+@@ -16,6 +16,9 @@ const addChild = (body, child, position) => {
+ }
+ 
+ module.exports = function (options, content, outputPath) {
++  if (typeof outputPath !== 'string')
++    return content;
++    
+   if (!!options.path && !!options.specifiers) {
+     throw new Error('You may configure a path function or import specifiers, but not both')
+   }
