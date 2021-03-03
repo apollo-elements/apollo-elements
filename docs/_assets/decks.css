@@ -38,6 +38,16 @@ strong {
   --wght: 600;
 }
 
+code {
+  font-family: Recursive, monospace;
+  font-feature-settings: "ss01", "ss05", "dlig";
+
+  --wght: 400;
+  --casl: 0;
+  --mono: 1;
+  --slnt: 0;
+}
+
 h1 { --wght: 800; }
 
 h2,
@@ -67,26 +77,12 @@ kbd {
   width: 1em;
   height: 1em;
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-code {
-  font-family: Recursive, monospace;
-  font-feature-settings: "ss01", "ss05", "dlig";
-
-  --wght: 400;
-  --casl: 0;
-  --mono: 1;
-  --slnt: 0;
-}
-
-h1 code {
-  --wght: inherit;
-  --casl: 0.5;
+  line-height: 0.5;
 }
 
 body,
 slidem-deck {
-  font-family: 'Recursive';
+  font-family: 'Recursive', monospace;
   background: var(--background);
   color: var(--text);
 }
@@ -99,8 +95,8 @@ ul li {
   line-height: 1.5;
 }
 
-service-worker {
-  display: none;
+#keys-legend {
+  font-size: 24px;
 }
 
 slidem-deck[loading] {
@@ -181,6 +177,11 @@ json-viewer {
   --wght: 350;
 }
 
+json-viewer {
+  padding: 0.6em 1em;
+  font-size: 24px;
+}
+
 json-viewer::part(code) {
   font-family: inherit;
   font-variation-settings: inherit;
@@ -191,11 +192,6 @@ json-viewer::part(code) {
 json-viewer:not(:last-child):not([bleed]),
 .md:not(:last-child):not([bleed]) {
   margin-block-end: 1em;
-}
-
-json-viewer {
-  padding: 0.6em 1em;
-  font-size: 24px;
 }
 
 .avatar {

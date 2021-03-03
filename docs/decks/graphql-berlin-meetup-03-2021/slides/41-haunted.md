@@ -1,28 +1,13 @@
 ---
 name: haunted
+attrs: fade-in
 ---
 
-## haunted: hooks API for web components
+## `haunted`: Hooks for web components
 
 <div class="progressive">
 
 ```typescript
-
-
-
-
-
-  return html`
-      <p id="friends">
-        ${friends.map(friend => `${name} 💗 ${friend.name}`)}
-      </p>
-  `;
-
-
-
-```
-
-```typescript reveal
 import { useQuery, html, component } from '@apollo-elements/haunted';
 
 function PersonElement() {

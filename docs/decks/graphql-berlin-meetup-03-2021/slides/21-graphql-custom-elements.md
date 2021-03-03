@@ -1,6 +1,6 @@
 ---
 name: graphql-custom-elements
-attrs: center fit
+attrs: center fit slide-in
 ---
 
 What if we wrote custom elements that used GraphQL?

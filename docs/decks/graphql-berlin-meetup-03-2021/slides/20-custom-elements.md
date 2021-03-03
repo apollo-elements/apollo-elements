@@ -14,6 +14,7 @@ class PersonElement extends HTMLElement {
 
 
 
+
 }
 
 
@@ -23,9 +24,10 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this
-      .attachShadow({ mode: 'open' })
-      .textContent = this.getAttribute('emoji');
+    this.attachShadow({ mode: 'open' }).innerHtml = `
+      <span id="emoji">${this.getAttribute('emoji')}</span>
+      <p id="friends"></p>
+    `;
   }
 }
 
@@ -36,9 +38,24 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this
-      .attachShadow({ mode: 'open' })
-      .textContent = this.getAttribute('emoji');
+    this.attachShadow({ mode: 'open' }).innerHtml = `
+      <span id="emoji">${this.getAttribute('emoji')}</span>
+      <p id="friends"></p>
+    `;
+  }
+}
+
+// TODO: use <template> for performance
+```
+
+```js reveal
+class PersonElement extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }).innerHtml = `
+      <span id="emoji">${this.getAttribute('emoji')}</span>
+      <p id="friends"></p>
+    `;
   }
 }
 
@@ -55,6 +72,7 @@ customElements.define('person-element', PersonElement);
 <p>Every web component is an HTML Element.</p>
 
 <p>And you get to define how it behaves.</p>
+
 
 
 ```

@@ -24,8 +24,6 @@
     </noscript>
 
   {% block main %}
-
-
     <slidem-deck id="deck"
                  transition="{{ transition or 'slide-in slide-out' }}"
                  itemscope
@@ -52,6 +50,9 @@
       {% endfor %}
 
     </slidem-deck>
+    {% for blockName, blockPath in _joiningBlocks._layoutDeck.content %}
+      {% include blockPath %}
+    {% endfor %}
   {% endblock main %}
 
   {% include 'partials/bottom.njk' %}

@@ -50,55 +50,8 @@ frameworkDemos:
   {%- endfor -%}
 </code-tabs>
 
-<style data-helmett>
-#demos {
-  --code-tabs-min-height: 505px;
-  transform: scale(calc(1 / 0.682861));
-  width: 68%;
-  top: 20vh;
-  left: 20vw;
-}
-
-#demos #default-tab {
-  display: grid;
-  grid-template-columns: min-content max-content;
-  justify-content: center;
-  height: var(--code-tabs-min-height);
-  gap: 20px;
-  align-items: center;
-}
-
-#demos #default-tab svg {
-  fill: currentColor;
-  width: 100px;
-  transform: rotate(30deg);
-}
-
-#demos #default-tab p {
-  font-size: 48px;
-}
-
-#demos code-tab[selected] {
-  height: var(--code-tabs-min-height, 505px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-codesandbox-button[show-demo] {
-  flex: 1;
-}
-</style>
-
-<script type="module">
-import '@power-elements/codesandbox-button';
-document
-  .getElementById('demos')
-  .addEventListener('select', function loadDemo() {
-    const sandbox = document.querySelector('#demos [selected] > *');
-    sandbox.theme =
-      document.body.getAttribute('theme') ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    sandbox.showDemo = true;
-  });
-</script>
+{%- for demo in frameworkDemos -%}
+  <link data-helmet rel="preconnect" href="https://{{demo.sandboxId}}.csb.app">
+  <link data-helmet rel="preload" href="https://{{demo.sandboxId}}.csb.app" as="document">
+  <link data-helmet rel="preload" href="https://codesandbox.io/embed/{{ demo.sandboxId }}?fontSize=14&hidenavigation=0&module={{demo.module}}&theme=dark" as="document">
+{%- endfor -%}

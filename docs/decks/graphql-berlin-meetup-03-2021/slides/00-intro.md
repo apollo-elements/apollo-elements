@@ -15,10 +15,10 @@ attrs: slide-out center
 
 <p center>Data-Driven Components that Use the Platform</p>
 
-<aside center font-size="5vw">
+<small id="keys-legend" center font-size="5vw">
 
 (Space, <kbd>H</kbd><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd> or <kbd>→</kbd><kbd>←</kbd> Keys to Navigate)
 
 (<kbd>F</kbd> for Fullscreen)
 
-</aside>
+</small>

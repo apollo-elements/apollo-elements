@@ -1,5 +1,6 @@
 ---
 name: queries
+attrs: fade-out
 ---
 
 ## lit-apollo
