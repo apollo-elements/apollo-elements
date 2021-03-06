@@ -112,41 +112,6 @@ function sortByProp(list = [], prop = '') {
  * @property  {String} package custom element manifest package name
  */
 
-/**
- * Appends fake headings to HTML for the purpose of deriving nav headings.
- * These fake headings don't end up in the final HTML, but they do get
- * passed to the function which checks for all headings then defines the navigation tree.
- *
- * @param  {Array}  [nodes=[]] 11ty Navigation nodes
- * @param  {HackOptions} options
- * @return {Array}
- */
-function hackToInsertHeadings(nodes = [], options) {
-  return nodes.map(entry => {
-    if (
-         !entry.templateContent
-      || !entry.data // something fucky happened
-      || !entry.data.module // not an API page
-      || entry.data.package !== options.package
-      || entry.data.module !== options.module.path // not the current API page
-    )
-      return entry;
-    else {
-
-      const headings = getHeadings(options.module);
-
-      const extraHTML =
-        headings.map(heading => `<h2 id="${heading.toLowerCase()}">${heading}</h2>`)
-          .join('\n')
-
-      const templateContent =
-        entry.templateContent + '\n' + extraHTML;
-
-      return ({ ...entry, templateContent });
-    }
-  })
-}
-
 export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addPairedShortcode('markdown', markdown);
 
@@ -162,7 +127,6 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addFilter('getFields', getFields);
   eleventyConfig.addFilter('getMethods', getMethods);
   eleventyConfig.addFilter('getSlots', getSlots);
-  eleventyConfig.addFilter('hackToInsertHeadings', hackToInsertHeadings);
 
   eleventyConfig.addFilter('getTypeString', getTypeString);
   eleventyConfig.addFilter('getHeadings', getHeadings);
