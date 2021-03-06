@@ -6,11 +6,17 @@
 
 {% set additionalHeadings = moduleData | getHeadings %}
 
-{% block sidebar %}
-  {% include 'partials/_layoutApi/sidebar.njk' %}
-{% endblock sidebar %}
 {% block content %}
-  {% include 'partials/_layoutApi/content.njk' %}
+  <main class="markdown-body">
+    {% if layout == 'layout-api-index' %}
+      {% set block = _joiningBlocks._layoutApiIndex.content %}
+    {% elif layout == 'layout-api' %}
+      {% set block = _joiningBlocks._layoutApi.content %}
+    {% endif %}
+    {% for blockName, blockPath in block %}
+      {% include blockPath %}
+    {% endfor %}
+  </main>
 {% endblock content %}
 
 {% block bottom %}
