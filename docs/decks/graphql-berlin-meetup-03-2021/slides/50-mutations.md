@@ -7,6 +7,10 @@ name: mutations
 <img id="radical-dude" alt="" src="images/tmnt-steve-from-nyc.jpg"/>
 
 <style>
+[name=mutations] h2[center][fit] {
+  text-shadow: 2vh 2vw 2vw black;
+}
+
 #radical-dude {
   z-index: -1;
   position: fixed;
