@@ -1,11 +1,11 @@
+{{site.socialLinks|log}}
 {%- for entry in site.socialLinks %}
-	{% set slug = entry.name | lower %}
-	{% set indieAuth = slug == 'twitter' or slug == 'github' %}
-	{% set logoPath = '/_assets/brand-logos/' + slug + '.svg' | asset | toAbsPath %}
+	{% set slug = (entry.name | lower) %}
+	{% set logoPath = ('/_assets/brand-logos/' + slug + '.svg') | asset | toAbsPath %}
 	<a class="social-link"
 			href="{{ entry.url }}"
 			aria-label="{{ site.name }} on {{ entry.name }}"
-			rel="{{ 'me' if indieAuth else 'noopener noreferrer' }}"
+			rel="{{ 'me' if (slug == 'twitter' or slug == 'github') else 'noopener noreferrer' }}"
 			target="_blank">
 		<span class="sr-only">{{ entry.name }}</span>
 		{% if entry.image %}
