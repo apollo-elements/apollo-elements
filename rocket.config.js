@@ -31,6 +31,7 @@ import { customElementsManifest } from './packages/docs/rocket-plugins/custom-el
 import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.js';
 import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
+import { getWebmentionsForUrl } from './packages/docs/rocket-plugins/webmentions.js';
 
 import { addPlugin } from 'plugins-manager';
 
@@ -101,9 +102,11 @@ export default ({
     /* start blog */
     eleventyConfig.addFilter('markdown', markdown);
     eleventyConfig.addFilter('prettyJson', prettyJson);
+    eleventyConfig.addFilter('uniUrlFilter', x => encodeURI(x));
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);
-    eleventyConfig.addFilter('icon', icon => {
+    eleventyConfig.addFilter('getWebmentionsForUrl', getWebmentionsForUrl);
+    eleventyConfig.addFilter('icon', function icon(icon) {
       const path = `/_assets/icons/${icon}.svg`;
       const asset = eleventyConfig.getFilter('asset');
       const toAbsPath = eleventyConfig.getFilter('toAbsPath');

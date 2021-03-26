@@ -148,6 +148,7 @@
     "rollup-plugin-esbuild": "^2.6.1",
     "rollup-plugin-lit-css": "^2.1.0",
     "rollup-plugin-terser": "^7.0.2",
+    "sanitize-html": "^2.3.3",
     "slidem": "^1.2.8",
     "ts-node": "^9.1.1",
     "ts-sinon": "^2.0.1",
