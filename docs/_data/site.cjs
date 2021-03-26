@@ -11,6 +11,10 @@ module.exports = async function siteConfig() {
         url: 'https://github.com/apollo-elements/apollo-elements',
       },
       {
+        name: 'Twitter',
+        url: 'https://twitter.com/ApolloElements',
+      },
+      {
         name: 'Discord',
         url: 'https://discord.gg/2FgMbKf'
       },
