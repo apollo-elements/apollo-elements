@@ -1,4 +1,3 @@
-{{site.socialLinks|log}}
 {%- for entry in site.socialLinks %}
 	{% set slug = (entry.name | lower) %}
 	{% set logoPath = ('/_assets/brand-logos/' + slug + '.svg') | asset | toAbsPath %}
