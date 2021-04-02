@@ -69,7 +69,7 @@ const config = {
 
   plugins: [
     graphql(),
-    commonjs({ include: cjsIncludes }),
+    commonjs({ include: cjsIncludes, ignoreDynamicRequires: false }),
     esbuildPlugin({ ts: true }),
   ],
 };
