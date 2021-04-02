@@ -1,7 +1,7 @@
 import type { ApolloElementInterface } from '@apollo-elements/interfaces/apollo-element';
 import type { DocumentNode } from '@apollo/client/core';
 
-interface PropertyEffectOptions<C extends ApolloElementInterface> {
+interface PropertyEffectOptions<C extends HTMLElement> {
   /** Name of the property. */
   name: keyof C,
   /** The property's initial value. */
@@ -44,7 +44,7 @@ export function booleanAttr<C extends ApolloElementInterface>(attr: string): Pro
  *
  * @param options Configuration for the property: it's name, initial value, and setter side-effect.
  */
-export function effect<C extends ApolloElementInterface>(
+export function effect<C extends HTMLElement>(
   options: PropertyEffectOptions<C>
 ): PropertyDescriptor {
   const { name, init, onSet } = options;

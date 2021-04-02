@@ -14,13 +14,12 @@ import { StampinoElement, property } from './stampino-element';
 declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryElement } }
 
 export type ApolloQueryModel<D, V> = Pick<ApolloQueryElement<D, V>,
+  | 'data'
+  | 'error'
   | 'errors'
   | 'loading'
   | 'networkStatus'
-> & {
-  data: Data<D>|unknown;
-  error: Error|unknown;
-};
+>;
 
 /**
  * @element apollo-query
@@ -77,9 +76,7 @@ export class ApolloQueryElement<D = unknown, V = OperationVariables>
   @property({ reflect: true, init: NetworkStatus.ready }) networkStatus = NetworkStatus.ready;
 
   protected get model(): ApolloQueryModel<D, V> {
-    const { errors, loading, networkStatus } = this;
-    const data = this.data ?? {};
-    const error = this.error ?? {};
+    const { data, error, errors, loading, networkStatus } = this;
     return { data, error, errors, loading, networkStatus };
   }
 
