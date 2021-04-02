@@ -120,7 +120,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
 
     it('creates a query-result div', function() {
-      expect(element.querySelector('.query-result')).to.be.ok;
+      expect(element.querySelector('.output')).to.be.ok;
     });
 
     it('renders to the light DOM', function() {
@@ -281,7 +281,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
           <template>
             <p>{{ data.me.name }}</p>
             <ul>
-              <template type="repeat" repeat="{{ data.friends }}">
+              <template type="repeat" repeat="{{ data.friends || [] }}">
                 <li data-id$="{{ item.id }}"
                     data-index$="{{ index }}">{{ item.name }}</li>
               </template>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types */
 import type { RenderOptions } from 'stampino';
 import { render } from 'stampino';
 import { effect } from '@apollo-elements/lib/descriptors';
@@ -13,18 +14,37 @@ interface PropertyOptions {
  *
  * @attr {Boolean|string} 'no-shadow' - When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.
  */
-export class StampinoElement extends HTMLElement {
+export class StampinoElement<Model extends object = any> extends HTMLElement {
   private static isQueryable(node: Node): node is (ShadowRoot|Document) {
     return 'getElementById' in node;
   }
 
-  /** The Node that this element will render its template to. */
-  private declare renderRoot: ShadowRoot|HTMLElement;
-
   declare renderOptions: RenderOptions;
 
-  protected get model(): StampinoElement|unknown {
-    return this;
+  #extras: Partial<Model>|null = null;
+
+  public get extras(): Partial<Model>|null {
+    return this.#extras;
+  }
+
+  public set extras(extras: Partial<Model>|null) {
+    this.#extras = extras;
+    this.render();
+  }
+
+  /** The Node that this element will render its template to. */
+  protected declare renderRoot: ShadowRoot|HTMLElement;
+
+  #model: Model|null = null;
+
+  protected get model(): StampinoElement|Model {
+    return this.#model ?? this;
+  }
+
+  protected set model(x: StampinoElement|Model) {
+    if (x instanceof StampinoElement)
+      return;
+    this.#model = x;
   }
 
   /**
@@ -43,60 +63,85 @@ export class StampinoElement extends HTMLElement {
    */
   get template(): HTMLTemplateElement | null {
     if (!this.hasAttribute('template'))
-      return this.querySelector('template');
-    else {
-      const id = this.getAttribute('template');
-      if (!id)
-        return null;
-      const root = this.getRootNode();
-      // TODO: nested / breadcrumb slots pattern a la <stripe-elements>?
-      if (!StampinoElement.isQueryable(root))
-        return null; // weird case, but this satisfies TS
-      const maybeTemplate = root.getElementById(id);
-      if (!(maybeTemplate instanceof HTMLTemplateElement))
-        return null;
-      else
-        return maybeTemplate;
-    }
+      return this.querySelector('template'); /* c8 ignore next */
+    else
+      return this.getTemplateFromRoot();
   }
 
   constructor() {
     super();
     this.createRenderRoot();
+  }
+
+  connectedCallback(): void {
     this.render();
   }
 
-  private createRenderRoot(): ShadowRoot|HTMLElement {
+  private getElementByIdFromRoot(id: string|null): HTMLElement | null {
+    // TODO: make actually private in TS 4.3
+    const root = this.getRootNode();
+    if (!id || !StampinoElement.isQueryable(root))
+      return null;
+    else
+      return root.getElementById(id);
+  }
+
+  private getTemplateFromRoot(): HTMLTemplateElement | null {
+    // TODO: make actually private in TS 4.3
+    const maybeTemplate =
+      this.getElementByIdFromRoot(this.getAttribute('template'));
+    if (maybeTemplate instanceof HTMLTemplateElement)
+      return maybeTemplate;
+    else
+      return null;
+  }
+
+  protected createRenderRoot(): ShadowRoot|HTMLElement {
     if (!this.hasAttribute('no-shadow'))
       this.renderRoot = this.attachShadow({ mode: 'open' });
     else {
       this.renderRoot = this.appendChild(document.createElement('div'));
-      this.renderRoot.classList.add(this.getAttribute('no-shadow') || 'query-result');
+      this.renderRoot.classList.add(this.getAttribute('no-shadow') || 'output');
     }
     return this.renderRoot;
   }
 
   /**
-   * Call to render the element's template using the query result.
+   * Call to render the element's template using the model.
    * Rendering is synchronous and incremental.
    *
    * @summary Render the element's template with its model.
    */
   public render(): void {
-    const { template, renderRoot, model, renderOptions } = this;
-    if (!template || !renderRoot)
-      return;
-    else
-      render(template, renderRoot, model, renderOptions);
+    if (this.template && this.renderRoot) {
+      const { extras, model } = this;
+      render(
+        this.template,
+        this.renderRoot,
+        { ...model, ...extras },
+        this.renderOptions
+      );
+    }
   }
 
   /** `querySelector` within the render root. */
-  public $(selector: string): Element|null {
+  public $<E extends Element = Element>(selector: string): E | null
+
+  public $<K extends keyof SVGElementTagNameMap>(selector: K): SVGElementTagNameMap[K] | null;
+
+  public $<K extends keyof HTMLElementTagNameMap>(selector: K): HTMLElementTagNameMap[K] | null {
     return this.renderRoot.querySelector(selector);
   }
 
   /** `querySelectorAll` within the render root. */
-  public $$(selector: string): NodeList {
+
+  public $$<E extends Element = Element>(selector: string): NodeListOf<E>;
+
+  public $$<K extends keyof SVGElementTagNameMap>(selector: K): NodeListOf<SVGElementTagNameMap[K]>;
+
+  public $$<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): NodeListOf<HTMLElementTagNameMap[K]> {
     return this.renderRoot.querySelectorAll(selector);
   }
 }
@@ -118,9 +163,13 @@ export function property({ attribute, reflect = false, init = null }: PropertyOp
             if (value)
               this.setAttribute(attr, '');
             else
+              this.removeAttribute(attr); /* c8 ignore next */
+          } else {
+            if (value != null)
+              this.setAttribute(attr, value.toString()); /* c8 ignore next */
+            else
               this.removeAttribute(attr);
-          } else
-            this.setAttribute(attr, value.toString());
+          }
         }
         this.render();
       },
