@@ -2,7 +2,6 @@ import type {
   ApolloClient,
   DocumentNode,
   NormalizedCacheObject,
-  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
