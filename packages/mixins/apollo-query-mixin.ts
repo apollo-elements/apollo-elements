@@ -103,12 +103,6 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
 
     onError?(_error: Error): void
 
-    /** @private */
-    __options: Partial<WatchQueryOptions> | null = null;
-
-    /** @private */
-    __networkStatus = NetworkStatus.ready;
-
     public get canAutoSubscribe() {
       return (
         !!this.client &&
