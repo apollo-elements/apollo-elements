@@ -60,8 +60,8 @@
   "homepage": "https://apolloelements.dev/api/lib/",
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
-    "@apollo/client": "^3.3.6",
-    "tslib": "^2.0.3"
+    "@apollo/client": "^3.3.0",
+    "tslib": "^2.2.0"
   },
   "peerDependencies": {
     "graphql": "^15.4.0"
