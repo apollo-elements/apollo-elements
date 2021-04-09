@@ -25,7 +25,7 @@ describe('[hybrids] client factory', function() {
     describe('with no arguments', function() {
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -39,7 +39,7 @@ describe('[hybrids] client factory', function() {
     describe('with null first argument and no options', function() {
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(null),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -53,7 +53,7 @@ describe('[hybrids] client factory', function() {
     describe('with null first argument and { useGlobal: true } options', function() {
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(null, { useGlobal: true }),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -67,7 +67,7 @@ describe('[hybrids] client factory', function() {
     describe('with null first argument and { useGlobal: false } options', function() {
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(null, { useGlobal: false }),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -85,7 +85,7 @@ describe('[hybrids] client factory', function() {
     describe('with null first argument and {} options', function() {
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           // @ts-expect-error: bad input
           client: client(null, {}),
         });
@@ -101,7 +101,7 @@ describe('[hybrids] client factory', function() {
       const specific = {} as typeof window.__APOLLO_CLIENT__;
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(specific),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -120,7 +120,7 @@ describe('[hybrids] client factory', function() {
       const specific = {} as typeof window.__APOLLO_CLIENT__;
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(specific, { useGlobal: true }),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -139,7 +139,7 @@ describe('[hybrids] client factory', function() {
       const specific = {} as typeof window.__APOLLO_CLIENT__;
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           client: client(specific, { useGlobal: false }),
         });
         element = await fixture<ApolloElementElement>(`<${tag}></${tag}>`);
@@ -158,7 +158,7 @@ describe('[hybrids] client factory', function() {
       const specific = {} as typeof window.__APOLLO_CLIENT__;
       beforeEach(async function() {
         const tag = getTag();
-        define<ApolloElementElement>(tag, {
+        define<Partial<ApolloElementElement>>(tag, {
           // @ts-expect-error: bad input
           client: client(specific, { }),
         });

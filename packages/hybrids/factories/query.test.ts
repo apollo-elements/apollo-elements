@@ -1,20 +1,20 @@
 import type { SinonSpy, SinonStub } from 'sinon';
+import type { TypedDocumentNode } from '@apollo/client/core';
+
 import { assertType, Entries, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
-import { OperationVariables, TypedDocumentNode, gql } from '@apollo/client/core';
 
 import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
 
 import { aTimeout, nextFrame } from '@open-wc/testing';
 
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 
-import { ApolloQuery } from './apollo-query';
+import { query } from './query';
 
 import 'sinon-chai';
 
 import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
-import { __testing_escape_hatch__ } from './helpers/accessors';
-import { ApolloQueryElement, query } from './factories/query';
+import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 let counter = 0;
 
@@ -24,18 +24,6 @@ function getTagName(): string {
   return tagName;
 }
 
-function render<D = unknown, V = OperationVariables>(
-  host: QueryElement<D, V>
-): ReturnType<typeof html> {
-  return html`
-    <output id="data">${host.stringify(host.data)}</output>
-    <output id="error">${host.stringify(host.error)}</output>
-    <output id="errors">${host.stringify(host.errors)}</output>
-    <output id="loading">${host.stringify(host.loading)}</output>
-    <output id="networkStatus">${host.stringify(host.networkStatus)}</output>
-  `;
-}
-
 describe('[hybrids] ApolloQuery', function() {
   describeQuery({
     async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>): Promise<SetupResult<T>> {
@@ -43,15 +31,22 @@ describe('[hybrids] ApolloQuery', function() {
 
       const tag = getTagName();
 
-      const hasRendered =
-        (host: T) => async () => { await aTimeout(50); return host; };
-
-      define<T>(tag, {
-        ...ApolloQuery,
+      define<QueryElement>(tag, {
+        ...query(null),
         stringify: () => stringify,
-        hasRendered,
-        render,
-      } as Hybrids<T>);
+        hasRendered: (host: QueryElement & { render(): ShadowRoot }) => async () => {
+          await aTimeout(100);
+          host.render();
+          return host;
+        },
+        render: host => html`
+          <output id="data">${host.stringify(host.data)}</output>
+          <output id="error">${host.stringify(host.error)}</output>
+          <output id="errors">${host.stringify(host.errors)}</output>
+          <output id="loading">${host.stringify(host.loading)}</output>
+          <output id="networkStatus">${host.stringify(host.networkStatus)}</output>
+        `,
+      });
 
       const attrs = attributes ? ` ${attributes}` : '';
 
@@ -88,15 +83,14 @@ describe('[hybrids] ApolloQuery', function() {
   });
 });
 
-type TypeCheckData = { a: 'a'; b: number };
-type TypeCheckVars = { c: 'c'; d: number };
-
-const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
-  gql`query TypedQuery($c: String, $d: Int) { a b }`;
-
 function TDNTypeCheck() {
-  const Class = define<ApolloQueryElement<typeof TDN>>('typed-query', {
-    query: query(TDN),
+  type TypeCheckData = { a: 'a'; b: number };
+  type TypeCheckVars = { c: 'c'; d: number };
+
+  const TDN = {} as TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+
+  const Class = define('typed-query', {
+    ...query(TDN),
   });
 
   const instance = new Class();

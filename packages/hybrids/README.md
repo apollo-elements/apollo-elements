@@ -33,10 +33,10 @@ npm install --save @apollo-elements/hybrids
 
 > See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
-This package provides `client`, `mutation`, `query`, and `subscription` [factories](https://hybrids.js.org/#/getting-started/concepts?id=factories) that you can apply to your hybrids definitions; as well as `ApolloQuery`, `ApolloMutation`, and `ApolloSubscription` objects which you can spread in to your hybrid property descriptors.
+This package provides `client`, `mutation`, `query`, and `subscription` [factories](https://hybrids.js.org/#/getting-started/concepts?id=factories) that you can apply to your hybrids definitions.
 
 ### ❓ Queries
-Use the `client` and `query` factories to connect your element to the apollo cache:
+Use the `query` factory to connect your element to the apollo cache:
 
 <code-copy>
 
@@ -55,7 +55,7 @@ query HelloQuery($name: String) {
 <code-copy>
 
 ```ts
-import { client, query, define, html } from '@apollo-elements/hybrids';
+import { query, define, html } from '@apollo-elements/hybrids';
 import HelloQuery from './Hello.query.graphql';
 ```
 
@@ -71,15 +71,14 @@ const render = ({ data }) => html`
 `;
 
 define('hello-element', {
-  client: client(),
-  query: query(HelloQuery),
+  ...query(HelloQuery),
   render
 });
 ```
 
 </code-copy>
 
-Alternatively, you can spread in the ApolloQuery hybrid property descriptors to define a generic querying element.
+You can spread in the `ApolloQuery` hybrid property descriptors to define a generic querying element.
 
 <code-copy>
 
@@ -112,7 +111,7 @@ const render = ({ data }) => html`
 </code-copy>
 
 ### 👾 Mutations
-Like queries, you can use the `client` and `mutation` factories, or you can spread the generalized Hybrid.
+Like queries, you can use the`mutation` factory, or you can spread the generalized Hybrid.
 
 <code-copy>
 
@@ -153,8 +152,7 @@ const render = ({ data }) =>
   html`<input aria-label="Name" placeholder="Name" onkeyup="${onKeyup}"/>`;
 
 define('name-input', {
-  client: client(),
-  mutation: mutation(NameMutation),
+  ...mutation(NameMutation),
   render,
 });
 ```
@@ -162,7 +160,7 @@ define('name-input', {
 </code-copy>
 
 ### 🗞 Subscriptions
-Just like `query` and `mutation`, use the `client` and `subscription` factories, or spread in the `ApolloSubscription` Hybrid prototype to define your subscription element.
+Just like `query` and `mutation`, use `subscription` factory, or spread in the `ApolloSubscription` Hybrid prototype to define your subscription element.
 
 <code-copy>
 
@@ -181,8 +179,8 @@ subscription {
 <code-copy>
 
 ```ts
-import { mutation, define, html } from '@apollo-elements/hybrids';
-import NameMutation from './Name.mutation.graphql';
+import { subscription, define, html } from '@apollo-elements/hybrids';
+import NewsSubscription from './News.subscription.graphql';
 ```
 
 </code-copy>
@@ -197,8 +195,7 @@ const render = ({ data, error }) => error ? html`Error! ${error}` : html`
 `;
 
 define('subscribing-element', {
-  client: client(),
-  subscription: subscription(NewsSubscription),
+  ...subscription(NewsSubscription),
   render
 });
 ```
@@ -235,8 +232,7 @@ const render = ({messages}) =>
 
 
 define('messages-list', {
-  client: client(apolloClient),
-  query: query(MessagesQuery),
+  ...query(MessagesQuery),
   render,
 
   // add a 'private' property that calls `subscribeToMore` on connect

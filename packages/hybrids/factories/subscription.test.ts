@@ -1,6 +1,6 @@
 import type { SinonSpy, SinonStub } from 'sinon';
 
-import type { OperationVariables } from '@apollo/client/core';
+import type { TypedDocumentNode } from '@apollo/client/core';
 
 import {
   SetupOptions,
@@ -8,9 +8,10 @@ import {
   setupSpies,
   setupStubs,
   stringify,
+  assertType,
 } from '@apollo-elements/test-helpers';
 
-import { aTimeout, nextFrame } from '@open-wc/testing';
+import { nextFrame, aTimeout } from '@open-wc/testing';
 
 import 'sinon-chai';
 
@@ -19,10 +20,10 @@ import {
   describeSubscription,
 } from '@apollo-elements/test-helpers/subscription.test';
 
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 
-import { ApolloSubscription } from './apollo-subscription';
-import { __testing_escape_hatch__ } from './helpers/accessors';
+import { subscription } from './subscription';
+import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 let counter = 0;
 
@@ -30,16 +31,6 @@ function getTagName(): string {
   const tagName = `subscription-element-${counter}`;
   counter++;
   return tagName;
-}
-
-function render<D = unknown, V = OperationVariables>(
-  host: SubscriptionElement<D, V>
-): ReturnType<typeof html> {
-  return html`
-    <output id="data">${host.stringify(host.data)}</output>
-    <output id="error">${host.stringify(host.error)}</output>
-    <output id="loading">${host.stringify(host.loading)}</output>
-  `;
 }
 
 describe('[hybrids] ApolloSubscription', function() {
@@ -51,15 +42,20 @@ describe('[hybrids] ApolloSubscription', function() {
 
       const tag = getTagName();
 
-      const hasRendered =
-        (host: T) => async () => { await aTimeout(50); return host; };
-
-      define<T>(tag, {
-        ...ApolloSubscription,
+      define<SubscriptionElement>(tag, {
+        ...subscription(null),
         stringify: () => stringify,
-        hasRendered,
-        render,
-      } as Hybrids<T>);
+        hasRendered: (host: SubscriptionElement & { render(): ShadowRoot }) => async () => {
+          await aTimeout(100);
+          host.render();
+          return host;
+        },
+        render: ({ data, error, loading, stringify }) => html`
+          <output id="data">${stringify(data)}</output>
+          <output id="error">${stringify(error)}</output>
+          <output id="loading">${stringify(loading)}</output>
+        `,
+      });
 
       const attrs = attributes ? ` ${attributes}` : '';
 
@@ -93,3 +89,19 @@ describe('[hybrids] ApolloSubscription', function() {
     },
   });
 });
+
+function TDNTypeCheck() {
+  type TypeCheckData = { a: 'a'; b: number };
+  type TypeCheckVars = { c: 'c'; d: number };
+
+  const TDN = {} as TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+
+  const Class = define('typed-subscription', {
+    ...subscription(TDN),
+  });
+
+  const instance = new Class();
+
+  assertType<TypeCheckData>(instance.data!);
+  assertType<TypeCheckVars>(instance.variables!);
+}

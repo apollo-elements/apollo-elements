@@ -1,10 +1,13 @@
 import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
-import type { Descriptor } from 'hybrids';
+import type { ApolloMutationInterface } from '@apollo-elements/interfaces';
+import type { Hybrids } from 'hybrids';
 
 import { ApolloMutationElement } from '@apollo-elements/interfaces/apollo-mutation';
 import { applyPrototype } from '@apollo-elements/lib/prototypes';
 
 import { initDocument } from '../helpers/accessors';
+
+import { ApolloElement } from '../apollo-element';
 
 export type { ApolloMutationElement };
 
@@ -23,7 +26,6 @@ export type MutationHybridsFactoryOptions<D, V> = Pick<ApolloMutationElement<D, 
   | 'updater'
 >;
 
-
 /**
  * Hybrids property descriptor factory for GraphQL mutations.
  * Implements the [ApolloMutationElement](/api/interfaces/mutation/) interface.
@@ -33,18 +35,34 @@ export type MutationHybridsFactoryOptions<D, V> = Pick<ApolloMutationElement<D, 
  * @return Hybrids descriptor which mixes the [ApolloMutationInterface](/api/interfaces/mutation/) in on connect.
  */
 export function mutation<D = unknown, V = OperationVariables>(
-  document?: DocumentNode | TypedDocumentNode<D, V> | null,
+  document: DocumentNode | TypedDocumentNode<D, V> | null,
   options?: MutationHybridsFactoryOptions<D, V>
-): Descriptor<ApolloMutationElement<D, V>> {
+): Hybrids<ApolloMutationInterface<D, V>> {
   return {
-    connect(host, key, invalidate) {
-      applyPrototype<ApolloMutationElement<D, V>>(host, ApolloMutationElement, 'mutation');
-      return initDocument<ApolloMutationElement<D, V>>({
-        host, document, invalidate, defaults: {
-          ...options,
-          called: false,
-        },
-      });
+    ...ApolloElement as Hybrids<ApolloMutationElement<D, V>>,
+    called: {
+      observe(host, val) {
+        if (val)
+          host.setAttribute('called', '');
+        else
+          host.removeAttribute('called');
+      },
+    },
+    fetchPolicy: options?.fetchPolicy ?? undefined,
+    mutation: {
+      connect(host, _, invalidate) {
+        host.called = false;
+        applyPrototype<ApolloMutationElement<D, V>>(host, ApolloMutationElement, {
+          type: 'mutation',
+          omit: ['called'],
+        });
+
+        return initDocument<ApolloMutationElement<D, V>>({
+          host, document, invalidate, defaults: {
+            ...options,
+          },
+        });
+      },
     },
   };
 }
