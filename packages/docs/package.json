@@ -42,6 +42,6 @@
   "dependencies": {
     "@power-elements/codesandbox-button": "^0.0.8",
     "@pwrs/mixins": "^0.1.1",
-    "tslib": "^2.0.3"
+    "tslib": "^2.2.0"
   }
 }

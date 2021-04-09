@@ -1,9 +1,11 @@
 
-import markdownIt from 'markdown-it';
+import MarkdownIt from 'markdown-it';
 import prism from 'markdown-it-prism';
 
+export const markdownIt = new MarkdownIt({ html: true });
+
+markdownIt.use(prism);
+
 export function markdown(content) {
-  const md = new markdownIt({ html: true });
-  md.use(prism);
-  return md.render(content);
+  return markdownIt.render(content);
 }

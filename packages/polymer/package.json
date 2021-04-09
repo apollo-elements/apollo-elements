@@ -58,6 +58,6 @@
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/mixins": "^3.5.0",
-    "tslib": "^2.0.3"
+    "tslib": "^2.2.0"
   }
 }
