@@ -1,20 +1,22 @@
-import { OperationVariables } from '@apollo/client/core';
+import type { TypedDocumentNode } from '@apollo/client/core';
+import type { SinonSpy, SinonStub } from 'sinon';
+
 import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
-import { aTimeout, nextFrame } from '@open-wc/testing';
+import { nextFrame } from '@open-wc/testing';
 import 'sinon-chai';
 
-import { SinonSpy, SinonStub } from 'sinon';
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 
-import { ApolloMutation } from './apollo-mutation';
+import { mutation } from './mutation';
 import {
   Entries,
   SetupOptions,
   setupSpies,
   setupStubs,
   stringify,
+  assertType,
 } from '@apollo-elements/test-helpers';
-import { __testing_escape_hatch__ } from './helpers/accessors';
+import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 let counter = 0;
 
@@ -24,22 +26,6 @@ function getTagName(): string {
   return tagName;
 }
 
-function render<D = unknown, V = OperationVariables>(
-  host: MutationElement<D, V>
-): ReturnType<typeof html> {
-  const { called, data, error, errors, loading } = host;
-  return html`
-    <output id="called">${host.stringify(called)}</output>
-    <output id="data">${host.stringify(data)}</output>
-    <output id="error">${host.stringify(error)}</output>
-    <output id="errors">${host.stringify(errors)}</output>
-    <output id="loading">${host.stringify(loading)}</output>
-  `;
-}
-
-const hasRendered =
-  (host: MutationElement) => async () => { await aTimeout(50); return host; };
-
 describe('[hybrids] ApolloMutation', function() {
   describeMutation({
     async setupFunction<T extends MutationElement>(options: SetupOptions<T> = {}) {
@@ -47,12 +33,21 @@ describe('[hybrids] ApolloMutation', function() {
 
       const tag = getTagName();
 
-      define<T>(tag, {
-        ...ApolloMutation,
+      define<MutationElement>(tag, {
+        ...mutation(null),
         stringify: () => stringify,
-        hasRendered,
-        render,
-      } as Hybrids<T>);
+        hasRendered: (host: MutationElement & { render(): ShadowRoot }) => async () => {
+          host.render();
+          return host;
+        },
+        render: ({ called, data, error, errors, loading, stringify }) => html`
+          <output id="called">${stringify(called)}</output>
+          <output id="data">${stringify(data)}</output>
+          <output id="error">${stringify(error)}</output>
+          <output id="errors">${stringify(errors)}</output>
+          <output id="loading">${stringify(loading)}</output>
+        `,
+      });
 
       const attrs = attributes ? ` ${attributes}` : '';
 
@@ -95,3 +90,19 @@ describe('[hybrids] ApolloMutation', function() {
 
   });
 });
+
+function TDNTypeCheck() {
+  type TypeCheckData = { a: 'a'; b: number };
+  type TypeCheckVars = { c: 'c'; d: number };
+
+  const TDN = {} as TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+
+  const Class = define('typed-mutation', {
+    ...mutation(TDN),
+  });
+
+  const instance = new Class();
+
+  assertType<TypeCheckData>(instance.data!);
+  assertType<TypeCheckVars>(instance.variables!);
+}

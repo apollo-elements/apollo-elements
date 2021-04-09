@@ -1,8 +1,14 @@
 import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
-import type { Descriptor as Desc } from 'hybrids';
+import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
+import type { ApolloSubscriptionInterface } from '@apollo-elements/interfaces/apollo-subscription';
+import type { Hybrids } from 'hybrids';
 
 import { ApolloSubscriptionElement } from '@apollo-elements/interfaces/apollo-subscription';
 import { applyPrototype } from '@apollo-elements/lib/prototypes';
+
+import { property } from 'hybrids';
+
+import { ApolloElement } from '../apollo-element';
 
 import { initDocument } from '../helpers/accessors';
 
@@ -32,18 +38,24 @@ export type { ApolloSubscriptionElement };
  * @return Hybrids descriptor which mixes the [ApolloSubscriptionInterface](/api/interfaces/subscription/) in on connect
  */
 export function subscription<D = unknown, V = OperationVariables>(
-  document?: DocumentNode|TypedDocumentNode,
+  document: DocumentNode | TypedDocumentNode<D, V> | null,
   options?: SubscriptionHybridsFactoryOptions<D, V>
-): Desc<ApolloSubscriptionElement<D, V>> {
+): Hybrids<ApolloSubscriptionInterface<D, V>> {
   return {
-    connect(host, key, invalidate) {
-      applyPrototype(host, ApolloSubscriptionElement, 'subscription');
-      return initDocument<ApolloSubscriptionElement<D, V>>({
-        host,
-        document,
-        invalidate,
-        defaults: options,
-      });
+    ...(ApolloElement as Hybrids<ApolloSubscriptionInterface<D, V>>),
+    subscription: {
+      connect(host, _, invalidate) {
+        applyPrototype(host, ApolloSubscriptionElement, {
+          type: 'subscription',
+        });
+
+        return initDocument<ApolloSubscriptionElement<D, V>>({
+          host,
+          document,
+          invalidate,
+          defaults: options,
+        });
+      },
     },
   };
 }

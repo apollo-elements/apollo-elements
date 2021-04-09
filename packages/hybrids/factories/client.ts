@@ -1,7 +1,6 @@
 import type { ApolloClient, NormalizedCacheObject, OperationVariables } from '@apollo/client/core';
 import { Descriptor } from 'hybrids';
 
-import { hookElementIntoHybridsCache } from '../helpers/cache';
 import { applyPrototype, getDescriptor } from '@apollo-elements/lib/prototypes';
 import { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
 
@@ -17,13 +16,19 @@ interface ClientHybridsFactoryOptions {
  * @param  [options={ useGlobal: true }] Options to configure the factory.
  * @return Hybrids descriptor which mixes the [ApolloElementInterface](/api/interfaces/element/) in on connect
  */
-export function client<D = unknown, V = OperationVariables>(
+export function client<
+  D = unknown,
+  V = OperationVariables,
+  E extends ApolloElementElement<D, V> = ApolloElementElement<D, V>
+>(
   client?: ApolloClient<NormalizedCacheObject> | null,
   options?: ClientHybridsFactoryOptions
-): Descriptor<ApolloElementElement<D, V>> {
+): Descriptor<E, ApolloClient<NormalizedCacheObject> | null> {
   return {
     connect(host) {
-      applyPrototype(host, ApolloElementElement, 'client', hookElementIntoHybridsCache);
+      applyPrototype(host, ApolloElementElement, {
+        type: 'client',
+      });
 
       /* c8 ignore start */ // covered
       const useGlobal = options?.useGlobal ?? true;
