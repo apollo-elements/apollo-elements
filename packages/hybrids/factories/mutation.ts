@@ -35,7 +35,7 @@ export type MutationHybridsFactoryOptions<D, V> = Pick<ApolloMutationElement<D, 
  * @return Hybrids descriptor which mixes the [ApolloMutationInterface](/api/interfaces/mutation/) in on connect.
  */
 export function mutation<D = unknown, V = OperationVariables>(
-  document?: DocumentNode | TypedDocumentNode<D, V> | null,
+  document: DocumentNode | TypedDocumentNode<D, V> | null,
   options?: MutationHybridsFactoryOptions<D, V>
 ): Hybrids<ApolloMutationInterface<D, V>> {
   return {
