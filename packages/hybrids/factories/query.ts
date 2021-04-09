@@ -1,7 +1,11 @@
-import type { DocumentNode, OperationVariables } from '@apollo/client/core';
-import type { Descriptor } from 'hybrids';
+import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
+import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
+import type { Hybrids } from 'hybrids';
 
 import { NetworkStatus } from '@apollo/client/core';
+
+import { ApolloElement } from '../apollo-element';
+
 import { ApolloQueryElement } from '@apollo-elements/interfaces/apollo-query';
 import { applyPrototype } from '@apollo-elements/lib/prototypes';
 
@@ -27,7 +31,6 @@ export type QueryHybridsFactoryOptions<D, V> = Pick<ApolloQueryElement<D, V>,
   | 'variables'
 >;
 
-
 /**
  * Hybrids property descriptor factory for GraphQL queries.
  * Setting one will automatically trigger the query, unless `noAutoSubscribe` is set.
@@ -38,18 +41,24 @@ export type QueryHybridsFactoryOptions<D, V> = Pick<ApolloQueryElement<D, V>,
  * @return Hybrids descriptor which mixes the [ApolloQueryInterface](/api/interfaces/query/) in on connect
  */
 export function query<D = unknown, V = OperationVariables>(
-  document?: DocumentNode,
-  options?: QueryHybridsFactoryOptions<D, V>
-): Descriptor<ApolloQueryElement<D, V>> {
+  document: DocumentNode | TypedDocumentNode<D, V> | null,
+  options?: QueryHybridsFactoryOptions<D, V>,
+): Hybrids<ApolloQueryInterface<D, V>> {
   return {
-    connect(host, key, invalidate) {
-      applyPrototype(host, ApolloQueryElement, 'query');
-      return initDocument<ApolloQueryElement<D, V>>({
-        host, document, invalidate, defaults: {
-          ...options,
-          networkStatus: NetworkStatus.ready,
-        },
-      });
-    },
-  };
+    ...ApolloElement as Hybrids<ApolloQueryElement<D, V>>,
+    networkStatus: NetworkStatus.ready,
+    query: {
+      connect(host, _, invalidate) {
+        applyPrototype(host, ApolloQueryElement, {
+          type: 'query',
+        });
+
+        return initDocument<ApolloQueryElement<D, V>>({
+          host, document, invalidate, defaults: {
+            ...options,
+            networkStatus: NetworkStatus.ready,
+          },
+        });
+      },
+    } };
 }

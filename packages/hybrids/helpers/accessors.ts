@@ -1,9 +1,8 @@
 import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 import type { ApolloElementElement } from '../apollo-element';
-import type { DataOf, Entries, VariablesOf } from '@apollo-elements/interfaces';
+import type { DataOf, VariablesOf } from '@apollo-elements/interfaces';
 
 import { getDescriptor } from '@apollo-elements/lib/prototypes';
-import { hookPropertyIntoHybridsCache } from './cache';
 
 export const __testing_escape_hatch__ = Symbol('__testing_escape_hatch__');
 
@@ -21,10 +20,7 @@ interface Options<T extends ApolloElementElement> {
 export function initDocument<T extends ApolloElementElement<any, any>>(
   options: Options<T>
 ): () => void {
-  const { host, document, invalidate, defaults = {} } = options;
-
-  for (const [key, init] of Object.entries(defaults) as Entries<T>)
-    hookPropertyIntoHybridsCache({ host, key, init }); /* c8 ignore next */ // this is certaily being called
+  const { host, document, invalidate } = options;
 
   // @ts-expect-error: it's just for tests
   host?.[__testing_escape_hatch__]?.(host);

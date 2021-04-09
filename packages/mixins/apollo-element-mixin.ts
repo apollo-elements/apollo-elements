@@ -241,7 +241,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     error: writable(null),
     errors: writable(null),
     loading: writable(false),
-    variables: effect({
+    variables: effect<ApolloElement>({
       name: 'variables',
       init: null,
       onSet(variables: unknown) {
