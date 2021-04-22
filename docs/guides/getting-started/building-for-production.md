@@ -54,6 +54,13 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <p>
+    These techniques are less relevant to HTML components,
+    so check out the other tabs.
+  </p>
+  ```
+
   ```ts tab mixins
   import HelloQuery from './Hello.query.graphql';
   import style from './hello-query.css';

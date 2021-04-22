@@ -49,6 +49,55 @@ If for whatever reason you'd like to load your component files eagerly, set the 
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <apollo-client>
+    <apollo-query no-auto-subscribe>
+      <template>
+        <template type="if" if="{%raw%}{{ data }}{%endraw%}">
+          <h1>👋 {%raw%}{{ data.userSession.name }}{%endraw%}!</h1>
+          <p>
+            <span>Your last activity was</span>
+            <time>{%raw%}{{ getTime(data) }}{%endraw%}</time>
+          </p>
+        </template>
+      </template>
+    <apollo-query>
+  </apollo-client>
+
+  <script>
+    (async function() {
+      const { formatDistance } = await import('date-fns/esm');
+      const { getClient } = await import('./client');
+      const { UserSessionQuery } = await import('./UserSession.query.graphql.js');
+
+      const root = document.currentScript.getRootNode();
+      const queryEl = root.querySelector('apollo-query');
+      const clientEl = root.querySelector('apollo-client');
+
+      clientEl.client = await getClient();
+
+      queryEl.extras = {
+        getTime(data) {
+          if (!data || !data.userSession.lastActive)
+            return ''
+          else {
+            return formatDistance(
+              data.userSession.lastActive,
+              Date.now(), {
+                addSuffix: true
+            });
+          }
+        },
+      };
+
+      queryEl.query = UserSessionQuery;
+      queryEl.subscribe();
+
+    })();
+  </script>
+
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 

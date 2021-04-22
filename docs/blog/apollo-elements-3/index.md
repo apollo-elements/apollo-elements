@@ -56,7 +56,7 @@ class HelloQuery extends ApolloElement<Data, Variables> {
 
 Check out these example apps:
 
-- [leeway](https://leeway.apolloelements.dev) is a simple chat app that uses [GraphQL subscriptions](https://apolloelements.dev/guides/building-apps/subscriptions/) for real-time updates
+- [leeway](https://leeway.apolloelements.dev) is a simple chat app that uses [GraphQL subscriptions](https://apolloelements.dev/guides/usage/subscriptions/) for real-time updates
 - [launchctl](https://launchctl.apolloelements.dev) shows you information about SpaceX launches using the unofficial [spacex.land](https://api.spacex.land/graphql) API
 
 ## App Generator

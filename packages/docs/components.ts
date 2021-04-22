@@ -1,4 +1,5 @@
 export * from './code-copy';
 export * from './code-tabs';
 export * from './type-doc';
-import './wcd-snippet';
+export * from './docs-playground';
+export * from './wcd-snippet';

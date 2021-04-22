@@ -2,7 +2,7 @@
 description: Details on how to Apollo Elements GraphQL mutation components work.
 ---
 
-# Building Apps >> Mutations >> Component Lifecycle || 30
+# Interfaces >> ApolloMutation >> Component Lifecycle || 20
 
 ## `connectedCallback`
 On connecting to the DOM, the element reads it's mutation and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.

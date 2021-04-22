@@ -2,7 +2,13 @@
 subtitle: "Using <apollo-mutation> element"
 ---
 
-# Building Apps >> Mutations >> Using &lt;apollo-mutation&gt; Component || 20
+# Usage >> Mutations >> apollo-mutation Element || 10
+
+<inline-notification type="tip">
+
+This page is a HOW-TO guide. For detailed docs on the `<apollo-mutation>` element's API, see the [API docs](/api/components/apollo-mutation/)
+
+</inline-notification>
 
 This generic mutation component inherits [`ApolloMutation`](/api/interfaces/mutation/), so you can use it by assigning a mutation and some variables and calling it's `mutate()` method:
 
@@ -18,10 +24,10 @@ But it comes with some extras that let you define your operation declaratively r
 - By assigning to the `variables` DOM property
 - By adding a `<script type="application/json">` child element
 - By defining data attributes (e.g. `data-foo="bar"` for variables `{ foo: 'bar' }`)
-- By slotting in input-like elements to the `variables` slots
+- By slotting in input-like elements with `data-variable="variableName"` attributes
 - By listening for the `will-mutate` event and setting the `variables` property in the handler.
 
-And when you slot in a button-like element to the `trigger` slot, the element will mutate on click.
+And when you slot in a button-like element with a `trigger` attribute, the element will mutate on click.
 
 ## Example: Mutate on click
 
@@ -29,8 +35,8 @@ Here we use `ApolloMutation`'s HTML API to define the mutation and variables. Yo
 
 ```html copy
 <apollo-mutation data-id="post-42" input-key="input">
-  <label slot="variable">New Title <input data-variable="title"/></label>
-  <button slot="trigger">Save</button>
+  <label>New Title <input data-variable="title"/></label>
+  <button trigger>Save</button>
   <script type="application/graphql">
     mutation UpdateTitle($input: UpdateTitleInput) {
       updateTitle(input: $input) {
@@ -46,6 +52,36 @@ Here we use `ApolloMutation`'s HTML API to define the mutation and variables. Yo
 In some cases you might want to prevent a mutation, for example, if clicking the button is meant to create a new entity, but subsequently toggle it's edit state. For cases like those, listen for the `will-mutate` event and prevent it's default action to stop the mutation.
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <apollo-mutation>
+    <button trigger>Publish</button>
+    <script type="application/graphql">
+      mutation CreatePost($input: CreatePostInput) {
+        createPost(input: $input) {
+          id
+          body
+          title
+        }
+      }
+    </script>
+  </apollo-mutation>
+
+  <script>
+    document.currentScript.getRootNode()
+      .querySelector('apollo-mutation')
+      .addEventListener('will-mutate', function onWillMutate(event) {
+        onWillMutate(event) {
+          // Post exists, don't mutate.
+          // Toggle the host component's edit state instead.
+          if (new URL(location.href).searchParams.has('postId')) {
+            event.preventDefault();
+            this.querySelector('[trigger]').textContent = 'Edit';
+          }
+        }
+      });
+  </script>
+  ```
 
   ```js tab mixins
   const template = document.createElement('template');
@@ -195,10 +231,10 @@ Consider the "create post" case from above. If you want to navigate to the new p
 
 ```html copy
 <apollo-mutation href="/posts/latest/" input-key="input">
-  <label slot="variable">Title <input data-variable="title"/></label>
-  <label slot="variable">Body <textarea data-variable="body"></textarea></label>
+  <label>Title <input data-variable="title"/></label>
+  <label>Body <textarea data-variable="body"></textarea></label>
 
-  <a slot="trigger" href="/posts/latest/" tabindex="-1">
+  <a trigger href="/posts/latest/" tabindex="-1">
     <button>Create Post</button>
   </a>
 
@@ -226,3 +262,37 @@ element.addEventListener('will-navigate', event => {
   router.go(`/posts/${data.createPost.slug}`);
 });
 ```
+
+## Data Templates
+
+Templates use [stampino](https://npm.im/stampino) and [jexpr](https://npm.im/jexpr) for efficiently updating data expressions. See their respective READMEs for more information.
+
+<inline-notification type="tip">
+
+`jexpr` expressions are like handlebars, nunjucks, polymer, etc. expressions. You can do most things you can do in JavaScript using `jexpr`. Try it out for yourself on the [Stampino REPL](https://github.com/justinfagnani/stampino/issues/14)
+
+</inline-notification>
+
+```html copy
+<apollo-mutation>
+  <template>
+    <style>
+      .transparent {
+        opacity: 0;
+      }
+    </style>
+
+    <link rel="stylesheet" href="/components/user-added.css">
+
+    <output class="{%raw%}{{ data ? 'resolved' : 'transparent' }}{%endraw%}">
+      <p>You have added {%raw%}{{ data.addUser.name }}{%endraw%}.</p>
+    </output>
+  </template>
+</apollo-mutation>
+```
+
+Learn more about template expressions and bindings in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/#template-expressions)
+
+## Next Steps
+- Read the [`<apollo-mutation>` API docs](/api/components/apollo-query/)
+- Learn how to write [subscription components](/guides/usage/subscriptions/)

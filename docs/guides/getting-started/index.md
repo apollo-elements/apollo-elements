@@ -28,7 +28,7 @@ description: Build a high-performance GraphQL web app with Apollo Elements
   }
 </style>
 
-Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each component in your app reads it's data from the graph with a [query](../building-apps/queries/), and can change the state of the app with [mutations](../building-apps/mutations/) or through one of the [local state](../building-apps/local-state/) techniques.
+Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each component in your app reads it's data from the graph with a [query](../usage/queries/), and can change the state of the app with [mutations](../usage/mutations/) or through one of the [local state](../usage/local-state/) techniques.
 
 <figure>
 
@@ -36,7 +36,7 @@ Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each c
 
 <figcaption>
 
-Circular flow chart showing the essential UI loop for Apollo Elements apps: [Queries](../building-apps/queries/) fetch data from the server, render them via component templates to the DOM, where [mutation components](../building-apps/mutations/) fire in response to user events, and update the Apollo cache, which in turn notifies connected query elements.
+Circular flow chart showing the essential UI loop for Apollo Elements apps: [Queries](../usage/queries/) fetch data from the server, render them via component templates to the DOM, where [mutation components](../usage/mutations/) fire in response to user events, and update the Apollo cache, which in turn notifies connected query elements.
 
 </figcaption>
 </figure>
