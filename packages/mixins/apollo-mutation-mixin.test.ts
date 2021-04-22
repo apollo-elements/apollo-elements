@@ -122,7 +122,7 @@ describe('[mixins] ApolloMutationMixin', function() {
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
-  typeCheck() {
+  typeCheck(): void {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
@@ -168,22 +168,24 @@ export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVa
   }
 }
 
+type TCV = { hey: 'yo' }
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export class AccessorTest extends TestableApolloMutation<unknown, { hey: 'yo' }> {
+export class AccessorTest extends TestableApolloMutation<unknown, TCV> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
-  get variables() {
+  get variables(): TCV {
     return { hey: 'yo' as const };
   }
 }
 
-export class PropertyTest extends TestableApolloMutation<unknown, { hey: 'yo' }> {
+export class PropertyTest extends TestableApolloMutation<unknown, TCV> {
   variables = { hey: 'yo' as const };
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends TestableApolloMutation<TDN> {
-  typeCheck() {
+  typeCheck(): void {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
   }

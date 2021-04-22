@@ -147,7 +147,7 @@ type TypeCheckVars = { d: 'd', e: number };
 export class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
   variables = { d: 'd' as const, e: 0 };
 
-  typeCheck() {
+  typeCheck(): void {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);
@@ -198,7 +198,7 @@ export class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars>
 
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends ApolloQueryMixin(HTMLElement)<TDN> {
-  typeCheck() {
+  typeCheck(): void {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
   }
@@ -231,18 +231,20 @@ if (runChecks) {
   assertType<number>(inheritor.childProp);
 }
 
-export class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+type TCV = { hey: 'yo' };
+
+export class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, TCV> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
-  get variables() {
+  get variables(): TCV {
     return { hey: 'yo' as const };
   }
 }
 
-export class TypeCheckField extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+export class TypeCheckField extends ApolloQueryMixin(HTMLElement)<unknown, TCV> {
   variables = { hey: 'yo' as const };
 }
 
-export class TypeCheckFieldBad extends ApolloQueryMixin(HTMLElement)<unknown, { hey: 'yo' }> {
+export class TypeCheckFieldBad extends ApolloQueryMixin(HTMLElement)<unknown, TCV> {
   // @ts-expect-error: passes type check;
   variables = { hey: 'hey' };
 }

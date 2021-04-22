@@ -158,7 +158,7 @@ describe('[polymer] <apollo-subscription>', function() {
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 export class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> {
-  typeCheck() {
+  typeCheck(): void {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
     assertType<HTMLElement>                         (this);
 
@@ -195,7 +195,7 @@ export class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeChec
 
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends PolymerApolloSubscription<TDN> {
-  typeCheck() {
+  typeCheck(): void {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
   }
