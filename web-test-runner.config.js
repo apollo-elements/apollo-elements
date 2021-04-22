@@ -34,6 +34,12 @@ const config = {
 
   coverageConfig: {
     exclude: [
+      '_site/**/*',
+      '_site-dev/**/*',
+      'node_modules/**/*',
+      '.vscode/**/*',
+      'coverage/**/*',
+      '.netlify/**/*',
       'packages/**/*.test.{ts, js}',
       'packages/lib/cuid.{ts, js}',
       '**/test-helpers/**/*',
@@ -45,8 +51,10 @@ const config = {
     <html>
       <head>
       <script>
+        // @ts-ignore: https://github.com/graphql/graphql-js/pull/2409
+        globalThis.process ??= { env: '' };
         // suppress advertising
-        window.__APOLLO_DEVTOOLS_GLOBAL_HOOK__ = () => void 0;
+        globalThis.__APOLLO_DEVTOOLS_GLOBAL_HOOK__ = () => void 0;
       </script>
       </head>
       <body>
