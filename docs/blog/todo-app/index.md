@@ -355,7 +355,7 @@ Now we're ready to start writing our UI components.
 
 ## Reading Todos
 
-Let's define a [query component](/guides/building-apps/queries/) to display our list. We'll use lit-element as our web component base, so if you want to catch up or take a refresher, check out my [blog post](https://dev.to/bennypowers/lets-build-web-components-part-5-litelement-906).
+Let's define a [query component](/guides/usage/queries/) to display our list. We'll use lit-element as our web component base, so if you want to catch up or take a refresher, check out my [blog post](https://dev.to/bennypowers/lets-build-web-components-part-5-litelement-906).
 
 Use the [Apollo Elements generator](/api/create/component/) to scaffold a component:
 
@@ -473,7 +473,7 @@ import { customElement, query } from 'lit-element/lib/decorators';
 import type { TextField } from '@material/mwc-textfield';
 ```
 
-Then we'll implement `setVariables`, which will update the element's `variables` property on each keypress; and `onCompleted`, a [mutation component lifecycle callback](/guides/building-apps/mutations/lifecycle/) which fires whenever a mutation completes, which we'll use to clear the input.
+Then we'll implement `setVariables`, which will update the element's `variables` property on each keypress; and `onCompleted`, a [mutation component lifecycle callback](/api/interfaces/mutation/lifecycle/) which fires whenever a mutation completes, which we'll use to clear the input.
 
 ```ts copy
 @query('mwc-textfield') private input: TextField;
@@ -767,7 +767,7 @@ Add the following to the `<todo-edit>` template:
 </apollo-mutation>
 ```
 
-`<apollo-mutation>` is robust enough to handle even some quite advanced cases, and it pairs well with query components when you want to compose operations together in your DOM templates. See the [composing mutations](/guides/building-apps/mutations/composition/) docs for more info.
+`<apollo-mutation>` is robust enough to handle even some quite advanced cases, and it pairs well with query components when you want to compose operations together in your DOM templates. See the [composing mutations](/guides/usage/mutations/composition/) docs for more info.
 
 Now import the dependencies:
 

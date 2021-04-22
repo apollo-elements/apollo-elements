@@ -2,11 +2,11 @@
 description: How to set up Apollo Client for use with Apollo Elements
 ---
 
-# Getting Started >> Apollo Client || 10
+# Usage >> Apollo Client || 10
 
 Before your components can interact with your graph, they need to connect to an `ApolloClient` instance. The easiest and simplest way to do that is with `<apollo-client>`.
 
-## `<apollo-client>` Element
+## &lt;apollo-client&gt;
 
 Import `@apollo-elements/components/apollo-client` and set it up on your page. If you set the `uri` attribute, `<apollo-client>` will create its own client instance for you. If you use `uri`, you can also set the `validate-variables` boolean attribute to prevent the client from fetching any operation (e.g. query) that does not have all its non-nullable variables set.
 
@@ -33,56 +33,7 @@ Nested instances of `<apollo-client>` will control their own decendents
 </apollo-client>
 ```
 
-`<apollo-client>` uses the `createApolloClient` helper from `@apollo-elements/lib/create-apollo-client` under the hood:
-
-```ts copy
-import { createApolloClient } from '@apollo-elements/lib/create-apollo-client';
-
-const client = createApolloClient({
-  uri: '/graphql',
-  validateVariables: true,
-  typePolicies: {
-    User: {
-      fields: {
-        fullName(_, { readField }) {
-          return `${readField('firstName')} ${readField('lastName')}`;
-        }
-      }
-    }
-  }
-});
-```
-
-If you need more control over the client, for example to pass in type policies or to configure the links, you need to construct an instance by importing from `@apollo/client/core` (*note*: `@apollo/client` exports a bunch of react code, so if you leave off the `/core`, you might experience TypeScript compilation errors, or larger bundle sizes)
-
-```ts copy
-// fancy-apollo-client.ts
-import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, } from '@apollo/client/core';
-import { CustomLink } from './my-custom-link';
-
-const cache =
-  new InMemoryCache();
-
-// Configure with a URL to your GraphQL endpoint
-const link = ApolloLink.from([
-  new CustomLink(),
-  new HttpLink({ uri: '/graphql' }),
-])
-
-export const client =
-  new ApolloClient({ cache, link });
-```
-
-Now that your client is ready, you need a way to connect your components to it. You can use `<apollo-client>` without a `uri` attribute:
-
-```ts copy
-import { client } from './fancy-apollo-client';
-document
-  .querySelector('apollo-client#fancy-client')
-  .client = client;
-```
-
-See [`<apollo-client>` component docs](/api/components/apollo-client/) for more info and examples.
+See [`<apollo-client>` guide](./html/) for more info and examples.
 
 ## Global Client
 
@@ -100,6 +51,13 @@ If you'd prefer to avoid assigning to the `window`, you have more options...
 Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your components' classes to connect them to a specific client:
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <blink>
+  There is no equivalent of <code>ApolloClientMixin</code> for HTML,
+  so just use the <code>&lt;apollo-client&gt;</code> element.
+  </blink>
+  ```
 
   ```ts tab mixins
   import { ApolloClientMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
@@ -184,3 +142,7 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
   ```
 
 </code-tabs>
+
+## Next Steps
+- Learn more about [the `<apollo-client>` HTML element](./html/)
+- Learn how to write [query components](../queries/)

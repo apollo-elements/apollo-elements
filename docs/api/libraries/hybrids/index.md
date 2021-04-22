@@ -25,17 +25,15 @@ pnpm add @apollo-elements/hybrids
 
 </code-tabs>
 
-Import `client`, `query`, `mutation`, and `subscription` descriptor factories and corresponding object spreads you can roll into your [hybrids](https://hybrids.js.org) to make it easier to connect to your Apollo cache.
+Import `client`, `query`, `mutation`, and `subscription` descriptor factories and spread them into your [hybrids](https://hybrids.js.org) to connect them to your Apollo cache.
 
 ```ts wcd ZZG6TLZRHQ9gG6SH35Be src/Hello.ts
-import type { ApolloQueryElement } from '@apollo-elements/interfaces';
-import { client, query, define, html } from '@apollo-elements/hybrids';
+import { query, define, html } from '@apollo-elements/hybrids';
 
 import HelloQuery from './Hello.query.graphql';
 
-define<ApolloQueryElement<typeof HelloQuery>>('hello-query', {
-  client: client(),
-  query: query(HelloQuery),
+define('hello-query', {
+  ...query(HelloQuery),
   render: ({ data }) => html`
     <span id="hello">
       ${data?.hello?.greeting ?? 'hello'},

@@ -1,4 +1,4 @@
-# Building Apps >> Local State >> Advanced Local State || 20
+# Usage >> Local State >> Advanced Local State || 20
 
 <meta name="description" data-helmett
       content="Advanced recipes for Apollo Elements to manage local state" />
@@ -24,7 +24,7 @@ type Network {
 Let's start by querying for all existing sites
 
 ```graphql copy
-query CreateNetworkPageQuery {
+query AllSites {
   sites {
     id
     name
@@ -33,270 +33,39 @@ query CreateNetworkPageQuery {
 }
 ```
 
-Then we'll define a component `all-sites` which fetches and displays the list of sites.
+Then we'll define a component `all-sites` which fetches and displays the list of sites. The rendered shadow DOM for the component will look like this, using a hypothetical `<select-list>` element:
 
-<code-tabs collection="libraries" default-tab="lit">
+```html
+<select-list>
+  <select-item item-id="1" item-name="Site 1" selected></select-item>
+  <select-item item-id="2" item-name="Site 2"></select-item>
+  <select-item item-id="3" item-name="Site 3"></select-item>
+</select-list>
+```
 
-  ```ts tab mixins
+## Managing the UI State Locally
 
-  import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+The `<select-list>` element (hypothetically) fires a `select` event whenever the selected item changes, so we'll attach a listener to keep each site's local state in sync. When our user clicks on the checkboxes in the list of `<select-item>`s, we'll update that `Site`'s client-side `selected @client` field, which in turn will be read to determine whether a site's corresponding `<select-item>` component will be marked selected.
 
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
-
-  interface ItemDetail {
-    itemId: string;
-    selected: boolean;
+```js
+const fragment = gql`
+  fragment siteSelected on Site {
+    selected @client
   }
+`;
 
-  const template = document.createElement('template');
-  template.innerHTML = '<select-list></select-list>';
-
-  const itemTemplate = document.createElement('template');
-  itemTemplate.innerHTML = '<select-item></select-item>';
-
-  class SitesElement extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
-    query = SitesQuery;
-
-    #data: Data = null;
-    get data() { return this.#data; }
-    set data(value: Data) {
-      this.#data = value;
-      this.render;
+function onSelectedChanged(event) {
+  const selectListEl = event.target;
+  const itemId = selectListEl.selected.itemId;
+  client.writeFragment({
+    id: `Site:${itemId}`,
+    fragment,
+    data: {
+      selected: event.detail.selected
     }
-
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' }).append(template.content.cloneNode());
-    }
-
-    render() {
-      const sites = this.data.sites ?? [];
-      sites.forEach(site => {
-        const existing = this.shadowRoot.querySelector(`[item-id="${site.id}"]`);
-        if (existing) {
-          if (site.selected)
-            existing.setAttribute('selected', '');
-          else
-            existing.removeAttribute('selected');
-        } else {
-          const item = itemTemplate.content.cloneNode();
-          item.setAttribute('item-id', site.id);
-          item.setAttribute('item-name', site.name);
-          item.addEventListener('select', this.onSelectItem.bind(this));
-          this.shadowRoot.querySelector('select-list').append(item);
-        }
-      });
-    }
-
-    onSelectItem(event: CustomEvent<ItemDetail>) {
-      this.client.writeFragment({
-        id: `Site:${event.detail.itemId}`,
-        fragment: gql`
-          fragment siteSelected on Site {
-            selected @client
-          }
-        `,
-        data: {
-          selected: event.detail.selected
-        }
-      })
-    }
-  }
-
-  customElements.define('all-sites', SitesElement);
-  ```
-
-  ```ts tab lit
-
-  import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
-
-  interface ItemDetail {
-    itemId: string;
-    selected: boolean;
-  }
-
-  @customElement('all-sites')
-  class SitesElement extends ApolloQuery<Data, Variables> {
-    query = SitesQuery;
-
-    render() {
-      return html`
-        <select-list>
-          ${this.data.sites.map(site => html`
-          <select-item
-              item-id="${site.id}"
-              item-name="${site.name}"
-              ?selected="${site.selected}"
-              @select="${this.onSelectItem}"
-          ></select-item>
-          `)}
-        </select-list>
-      `;
-    }
-
-    onSelectItem(event: CustomEvent<ItemDetail>) {
-      this.client.writeFragment({
-        id: `Site:${event.detail.itemId}`,
-        fragment: gql`
-          fragment siteSelected on Site {
-            selected @client
-          }
-        `,
-        data: {
-          selected: event.detail.selected
-        }
-      })
-    }
-  }
-  ```
-
-  ```ts tab fast
-
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
-
-  interface ItemDetail {
-    itemId: string;
-    selected: boolean;
-  }
-
-  @customElement({
-    name: 'all-sites',
-    template: html<SitesElement>`
-      <select-list>
-        ${x => data.sites.map(site => html<SitesElement>`
-        <select-item
-            item-id="${site.id}"
-            item-name="${site.name}"
-            ?selected="${site.selected}"
-            @select="${(x, { event }) => x.onSelectItem(event)}"
-        ></select-item>
-        `)}
-      </select-list>
-    `,
   })
-  class SitesElement extends ApolloQuery<Data, Variables> {
-    query = SitesQuery;
-
-    onSelectItem(event: CustomEvent<ItemDetail>) {
-      this.client.writeFragment({
-        id: `Site:${event.detail.itemId}`,
-        fragment: gql`
-          fragment siteSelected on Site {
-            selected @client
-          }
-        `,
-        data: {
-          selected: event.detail.selected
-        }
-      })
-    }
-  }
-  ```
-
-  ```ts tab haunted
-
-  import { useQuery, component, html } from '@apollo-elements/hybrids';
-  import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
-
-  interface ItemDetail {
-    itemId: string;
-    selected: boolean;
-  }
-
-  function AllSites() {
-    const { data, client } = useQuery<Data, Variables>(SitesQuery);
-
-    function onSelectItem(event: CustomEvent<ItemDetail>) {
-      client.writeFragment({
-        id: `Site:${event.detail.itemId}`,
-        fragment: gql`
-          fragment siteSelected on Site {
-            selected @client
-          }
-        `,
-        data: {
-          selected: event.detail.selected
-        }
-      })
-    }
-
-    return html`
-      <select-list>
-        ${data.sites.map(site => html`
-        <select-item
-            item-id="${site.id}"
-            item-name="${site.name}"
-            ?selected="${site.selected}"
-            @select="${onSelectItem}"
-        ></select-item>
-        `)}
-      </select-list>
-    `,
-  }
-
-  customElements.define('all-sites', component(AllSites));
-  ```
-
-  ```ts tab hybrids
-
-  import { client, query, define, html } from '@apollo-elements/hybrids';
-  import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
-
-  function onSelectItem(
-    host: HTMLElement & ApolloQueryInterface<Data, Variables>>,
-    event: CustomEvent<{ itemId: string, selected: boolean }>
-  ) {
-    host.client.writeFragment({
-      id: `Site:${event.detail.itemId}`,
-      fragment: gql`
-        fragment siteSelected on Site {
-          selected @client
-        }
-      `,
-      data: {
-        selected: event.detail.selected
-      }
-    })
-  }
-
-  define('all-sites', {
-    client: client(window.__APOLLO_CLIENT__),
-    query: query<Data, Variables>(SitesQuery),
-    render: ({ data }) => html`
-      <select-list>
-        ${data.sites.map(site => html`
-        <select-item
-            item-id="${site.id}"
-            item-name="${site.name}"
-            selected="${site.selected}"
-            onselect="${onSelectItem}"
-        ></select-item>
-        `)}
-      </select-list>
-    `,
-  });
-  ```
-
-</code-tabs>
+}
+```
 
 ## Create Mutation Component
 
@@ -314,7 +83,7 @@ mutation CreateNetwork($sites: ID[]!) {
 }
 ```
 
-This mutation requires an input which is a list of site IDs. In order to provide that list, our user will click on the checkboxes in the list of `<select-item>`s. This in turn will write to that `Site`'s client-side `selected @client` field on `Site`, which in turn will be read to determine whether a site's corresponding `<select-item>` component will be marked selected: Whenever the user clicks on an item in the list, `onSelectItem` writes the new selected state to the cache for that Site.
+This mutation requires an input which is a list of site IDs, which we'll get from the cached local state we prepared above.
 
 <figure aria-label="Sequence Diagram for one-way data flow">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -10 669 361">
@@ -393,20 +162,94 @@ This mutation requires an input which is a list of site IDs. In order to provide
 
 Then, when the user is ready to create the Network, she clicks the `Create` button, and the component issues the mutation over the network with variables based on the currently selected sites.
 
+```js
+function onWillMutate(event) {
+  event.target.variables = {
+    sites: allSites
+      .filter(x => x.selected)
+      .map(x => x.id); // string[]
+  }
+}
+```
+
+## Final Result
+
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <apollo-query id="all-sites">
+    <script type="application/graphql">
+      query AllSites {
+        sites {
+          id
+          name
+          selected @client
+        }
+      }
+    </script>
+    <template>
+      <select-list @change="{%raw%}{{ onSelectedChanged }}{%endraw%}">
+        <template type="repeat" repeat="{%raw%}{{ data.sites }}{%endraw%}">
+          <select-item
+              item-id="{%raw%}{{ item.id }}{%endraw%}"
+              item-name="{%raw%}{{ item.name }}{%endraw%}"
+              ?selected="{%raw%}{{ item.selected }}{%endraw%}"
+          ></select-item>
+        </template>
+      </select-list>
+
+      <apollo-mutation @will-mutate="{%raw%}{{ onWillMutate }}{%endraw%}">
+        <script type="application/graphql">
+          mutation CreateNetworkMutation($sites: Site[]) {
+            createNetwork(sites: $sites)
+          }
+        </script>
+        <button trigger>Create</button>
+      </apollo-mutation>
+    </template>
+  </apollo-query>
+
+  <script type="module">
+    const allSites = document.querySelector('#all-sites');
+
+    allSites.extras = {
+      onSelectedChanged(event) {
+        const selectListEl = event.target;
+        const itemId = selectListEl.selected.itemId;
+        client.writeFragment({
+          id: `Site:${itemId}`,
+          fragment,
+          data: {
+            selected: event.detail.selected
+          }
+        })
+      },
+      onWillMutate(event) {
+        event.target.variables = {
+          sites: allSites.data.sites
+            .filter(x => x.selected)
+            .map(x => x.id);
+        }
+      }
+    }
+  </script>
+  ```
+
   ```ts tab mixins
-
-  import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-  import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
-
+  import type { WillMutateEvent } from '@apollo-elements/components';
   import type {
     SitesQueryData as Data,
     SitesQueryVariables as Variables
   } from '../../schema';
 
   import '@apollo-elements/components/apollo-mutation';
-  import type { WillMutateEvent } from '@apollo-elements/components';
+
+  import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
+  interface ItemDetail {
+    itemId: string;
+    selected: boolean;
+  }
 
   type CreateNetworkMutator =
     ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
@@ -414,19 +257,70 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
   const template = document.createElement('template');
   template.innerHTML = `
     <select-list></select-list>
-    <apollo-mutation></apollo-mutation>
+    <apollo-mutation>
+      <script type="application/graphql">
+        mutation CreateNetworkMutation($sites: Site[]) {
+          createNetwork(sites: $sites)
+        }
+      </script>
+    </apollo-mutation>
   `;
 
-  template.content.querySelector<CreateNetworkMutator>('apollo-mutation')
-    .mutation = CreateNetworkMutation;
+  const itemTemplate = document.createElement('template');
+  itemTemplate.innerHTML = '<select-item></select-item>';
 
   class SitesElement extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
-    // snip
+    query = SitesQuery;
+
+    #data: Data = null;
+    get data() { return this.#data; }
+    set data(value: Data) {
+      this.#data = value;
+      this.render;
+    }
 
     constructor() {
-      // snip
-      this.shadowRoot.querySelector('apollo-mutation')
+      super();
+      this
+        .attachShadow({ mode: 'open' })
+        .append(template.content.cloneNode());
+      this
+        .shadowRoot
+        .querySelector('apollo-mutation')
         .addEventListener('will-mutate', this.onWillMutate.bind(this));
+    }
+
+    render() {
+      const sites = this.data.sites ?? [];
+      sites.forEach(site => {
+        const existing = this.shadowRoot.querySelector(`[item-id="${site.id}"]`);
+        if (existing) {
+          if (site.selected)
+            existing.setAttribute('selected', '');
+          else
+            existing.removeAttribute('selected');
+        } else {
+          const item = itemTemplate.content.cloneNode();
+          item.setAttribute('item-id', site.id);
+          item.setAttribute('item-name', site.name);
+          item.addEventListener('select', this.onSelectedChanged.bind(this));
+          this.shadowRoot.querySelector('select-list').append(item);
+        }
+      });
+    }
+
+    onSelectedChanged(event: CustomEvent<ItemDetail>) {
+      this.client.writeFragment({
+        id: `Site:${event.detail.itemId}`,
+        fragment: gql`
+          fragment siteSelected on Site {
+            selected @client
+          }
+        `,
+        data: {
+          selected: event.detail.selected
+        }
+      })
     }
 
     onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
@@ -436,20 +330,28 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
           .map(x => x.id); // string[]
       }
     }
+  }
+
+  customElements.define('all-sites', SitesElement);
   ```
 
   ```ts tab lit
-
-  import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+  import type { WillMutateEvent } from '@apollo-elements/components';
   import type {
     SitesQueryData as Data,
     SitesQueryVariables as Variables
   } from '../../schema';
 
+  import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+
   import '@apollo-elements/components/apollo-mutation';
-  import type { WillMutateEvent } from '@apollo-elements/components';
 
   import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
+
+  interface ItemDetail {
+    itemId: string;
+    selected: boolean;
+  }
 
   type CreateNetworkMutator =
     ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
@@ -460,7 +362,16 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
 
     render() {
       return html`
-        <select-list><!-- snip --></select-list>
+        <select-list>
+          ${this.data.sites.map(site => html`
+          <select-item
+              item-id="${site.id}"
+              item-name="${site.name}"
+              ?selected="${site.selected}"
+              @select="${this.onSelectedChanged}"
+          ></select-item>
+          `)}
+        </select-list>
 
         <apollo-mutation
             .mutation="${CreateNetworkMutation}"
@@ -470,8 +381,18 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
       `;
     }
 
-    onSelectItem(event) {
-      // snip
+    onSelectedChanged(event: CustomEvent<ItemDetail>) {
+      this.client.writeFragment({
+        id: `Site:${event.detail.itemId}`,
+        fragment: gql`
+          fragment siteSelected on Site {
+            selected @client
+          }
+        `,
+        data: {
+          selected: event.detail.selected
+        }
+      })
     }
 
     onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
@@ -484,25 +405,39 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
   ```
 
   ```ts tab fast
-
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import type { WillMutateEvent } from '@apollo-elements/components';
   import type {
     SitesQueryData as Data,
     SitesQueryVariables as Variables
   } from '../../schema';
 
+  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+
   import '@apollo-elements/components/apollo-mutation';
-  import type { WillMutateEvent } from '@apollo-elements/components';
 
   import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
 
   type CreateNetworkMutator =
     ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
 
+  interface ItemDetail {
+    itemId: string;
+    selected: boolean;
+  }
+
   @customElement({
     name: 'all-sites',
     template: html<SitesElement>`
-      <select-list><!-- snip --></select-list>
+      <select-list>
+        ${x => data.sites.map(site => html<SitesElement>`
+        <select-item
+            item-id="${site.id}"
+            item-name="${site.name}"
+            ?selected="${site.selected}"
+            @select="${(x, { event }) => x.onSelectedChanged(event)}"
+        ></select-item>
+        `)}
+      </select-list>
 
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
@@ -514,8 +449,18 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
   class SitesElement extends ApolloQuery<Data, Variables> {
     query = SitesQuery;
 
-    onSelectItem(event) {
-      // snip
+    onSelectedChanged(event: CustomEvent<ItemDetail>) {
+      this.client.writeFragment({
+        id: `Site:${event.detail.itemId}`,
+        fragment: gql`
+          fragment siteSelected on Site {
+            selected @client
+          }
+        `,
+        data: {
+          selected: event.detail.selected
+        }
+      })
     }
 
     onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
@@ -529,26 +474,44 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
   ```
 
   ```ts tab haunted
-
-  import { useQuery, component, html } from '@apollo-elements/haunted';
+  import type { WillMutateEvent } from '@apollo-elements/components';
+  import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
   import type {
     SitesQueryData as Data,
     SitesQueryVariables as Variables
   } from '../../schema';
 
-  import type { WillMutateEvent } from '@apollo-elements/components';
-
   import '@apollo-elements/components/apollo-mutation';
 
-  import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
+  import { useQuery, component, html } from '@apollo-elements/haunted';
+
+  import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
+  import { SitesQuery } from './Sites.query.graphql';
 
   type CreateNetworkMutator =
     ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
 
-  function AllSites() {
-    const { data, client } = useQuery<Data, Variables>(SitesQuery);
+  interface ItemDetail {
+    itemId: string;
+    selected: boolean;
+  }
 
-    // snip...
+  function AllSites() {
+    const { data, client } = useQuery(SitesQuery);
+
+    function onSelectedChanged(event: CustomEvent<ItemDetail>) {
+      client.writeFragment({
+        id: `Site:${event.detail.itemId}`,
+        fragment: gql`
+          fragment siteSelected on Site {
+            selected @client
+          }
+        `,
+        data: {
+          selected: event.detail.selected
+        }
+      })
+    }
 
     function onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
       event.target.variables = {
@@ -559,33 +522,62 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
     }
 
     return html`
-      <select-list><!-- snip --></select-list>
+      <select-list>
+        ${data.sites.map(site => html`
+        <select-item
+            item-id="${site.id}"
+            item-name="${site.name}"
+            ?selected="${site.selected}"
+            @select="${onSelectedChanged}"
+        ></select-item>
+        `)}
+      </select-list>
 
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
           @will-mutate="${this.onWillMutate}">
         <button slot="trigger">Create</button>
       </apollo-mutation>
-    `;
+    `,
   }
+
+  customElements.define('all-sites', component(AllSites));
   ```
 
   ```ts tab hybrids
-
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
   import type { ApolloMutation } from '@apollo-elements/components';
+  import type { WillMutateEvent } from '@apollo-elements/components';
   import type {
     SitesQueryData as Data,
     SitesQueryVariables as Variables
   } from '../../schema';
 
+  import { client, query, define, html } from '@apollo-elements/hybrids';
+
   import '@apollo-elements/components/apollo-mutation';
-  import type { WillMutateEvent } from '@apollo-elements/components';
 
   import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
 
   type CreateNetworkMutator =
     ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
+
+  function onSelectedChanged(
+    host: HTMLElement & ApolloQueryInterface<Data, Variables>>,
+    event: CustomEvent<{ itemId: string, selected: boolean }>
+  ) {
+    host.client.writeFragment({
+      id: `Site:${event.detail.itemId}`,
+      fragment: gql`
+        fragment siteSelected on Site {
+          selected @client
+        }
+      `,
+      data: {
+        selected: event.detail.selected
+      }
+    })
+  }
 
   function onWillMutate(
     host: HTMLElement & ApolloQueryInterface<Data, Variables>,
@@ -602,7 +594,16 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
     client: client(window.__APOLLO_CLIENT__),
     query: query<Data, Variables>(SitesQuery),
     render: ({ data }) => html`
-      <select-list><!-- snip --></select-list>
+      <select-list>
+        ${data.sites.map(site => html`
+        <select-item
+            item-id="${site.id}"
+            item-name="${site.name}"
+            selected="${site.selected}"
+            onselect="${onSelectedChanged}"
+        ></select-item>
+        `)}
+      </select-list>
 
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
@@ -610,7 +611,7 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
         <button slot="trigger">Create</button>
       </apollo-mutation>
     `,
-  })
+  });
   ```
 
 </code-tabs>

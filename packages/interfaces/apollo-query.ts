@@ -65,6 +65,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
    * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
    * - `all`: errors are treated like data and will notify observables
+   * @summary [Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.
    * @attr error-policy
    */
   declare errorPolicy?: ErrorPolicy;

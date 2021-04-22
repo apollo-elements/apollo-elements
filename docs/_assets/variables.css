@@ -27,6 +27,9 @@
   --light-blue-900: #01579b;
   --light-green-a400: #76ff03;
   --near-black: #111;
+  --pink-200: #f48fb1;
+  --pink-400: #ec407a;
+  --pink-900: #880e4f;
   --pink-a200: #ff4081;
   --pink-a400: #f50057;
   --pink-a700: #c51162;
@@ -71,6 +74,7 @@
   /* markdown */
   --markdown-blockquote-color: var(--light-blue-900);
   --markdown-link-color: var(--pink-a700);
+  --markdown-link-decoration: var(--pink-200);
   --markdown-syntax-attr-name-color: var(--blue-900);
   --markdown-syntax-background-color: var(--grey-50);
   --markdown-syntax-boolean-color: var(--light-blue-900);
@@ -85,6 +89,22 @@
   --markdown-syntax-string-color: var(--deep-orange-a700);
   --markdown-syntax-tag-color: var(--cyan-900);
   --markdown-syntax-variable-color: var(--deep-orange-a700);
+
+  /* playground */
+  --playground-code-attribute-color: var(--markdown-syntax-attr-name-color);
+  --playground-code-atom-color: var(--markdown-syntax-keyword-color);
+  --playground-code-default-color: var(--markdown-syntax-color);
+  --playground-code-punctuation-color: var(--markdown-syntax-punctuation-color);
+  --playground-code-property-color: var(--markdown-syntax-class-name-color);
+  --playground-code-string-color: var(--markdown-syntax-string-color);
+  --playground-code-function-color: var(--markdown-syntax-function-color);
+  --playground-code-operator-color: var(--markdown-syntax-operator-color);
+  --playground-code-comment-color: var(--markdown-syntax-comment-color);
+  --playground-code-number-color: var(--markdown-syntax-number-color);
+  --playground-code-boolean-color: var(--markdown-syntax-boolean-color);
+  --playground-code-tag-color: var(--markdown-syntax-tag-color);
+  --playground-code-variable-color: var(--markdown-syntax-variable-color);
+  --playground-code-background-color: var(--markdown-syntax-background-color);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -131,6 +151,7 @@
     /* markdown */
     --markdown-blockquote-color: var(--blue-100);
     --markdown-link-color: var(--pink-a200);
+    --markdown-link-decoration: var(--pink-900);
     --markdown-code-background-color: var(--grey-900);
     --markdown-octicon-link: white;
     --markdown-pre-background-color: var(--grey-900);
@@ -201,6 +222,7 @@ body[theme="dark"] {
   --markdown-syntax-background-color: var(--grey-900);
   --markdown-pre-background-color: var(--grey-900);
   --markdown-link-color: var(--pink-a200);
+  --markdown-link-decoration: var(--pink-900);
   --markdown-blockquote-color: var(--blue-100);
   --markdown-table-background-color: var(--grey-900);
   --markdown-table-border-color: var(--markdown-table-background-color);

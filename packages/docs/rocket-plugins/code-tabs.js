@@ -5,12 +5,13 @@ const identify = x => [
 ];
 
 const PACKAGES = new Map([
+  { id: 'html', label: 'HTML', iconHref: '/_merged_assets/library-logos/html5.svg', synonyms: ['lit-apollo'] },
   { id: 'lit', label: 'LitElement', iconHref: '/_merged_assets/library-logos/lit.svg', synonyms: ['lit-apollo'] },
   { id: 'fast', label: 'FAST', iconHref: '/_merged_assets/library-logos/fast.svg' },
-  { id: 'gluon', label: 'Gluon', iconHref: '/_merged_assets/library-logos/html5.svg' },
+  { id: 'gluon', label: 'Gluon', iconHref: '/_merged_assets/library-logos/js.svg' },
   { id: 'haunted', label: 'Haunted', iconHref: '/_merged_assets/library-logos/haunted.svg' },
   { id: 'hybrids', label: 'Hybrids', iconHref: '/_merged_assets/library-logos/hybrids.svg' },
-  { id: 'vanilla', label: 'Vanilla', iconHref: '/_merged_assets/library-logos/html5.svg', synonyms: ['mixins', 'html'] },
+  { id: 'vanilla', label: 'Vanilla', iconHref: '/_merged_assets/library-logos/js.svg', synonyms: ['mixins'] },
   { id: 'polymer', label: 'Polymer', iconHref: '/_merged_assets/library-logos/polymer.svg' },
 ].flatMap(identify));
 

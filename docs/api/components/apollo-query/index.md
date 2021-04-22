@@ -5,11 +5,15 @@ templateEngineOverride: njk,md
 module: './apollo-query.js'
 ---
 
-# Components >> apollo-query || 20
+# Components >> &lt;apollo-query&gt; || 30
 
 `<apollo-query>` lets you query GraphQL without writing any JavaScript. Import the custom element then write your template, query, and variables in HTML. The element class inherits from [`ApolloQueryInterface`](/api/interfaces/query/)
 
-Templates use [jexpr](https://npm.im/jexpr) for data expressions and [stampino](https://npm.im/stampino) to update the DOM efficiently. See their respective READMEs for more information.
+<inline-notification type="tip">
+
+This page has detailed API documentation for `<apollo-query>`. See the [`<apollo-query>` HTML Element guide](/guides/usage/queries/html/) for a HOW-TO guide.
+
+</inline-notification>
 
 ## Live Demo
 

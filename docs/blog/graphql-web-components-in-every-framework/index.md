@@ -223,7 +223,7 @@ function PostContainer() {
 
 </code-tabs>
 
-You can write complex single-page apps with just Apollo Elements. Each component manages it's own internal state while using a templating system like `lit-html` or an old-school JavaScript framework to hook up properties and events, and the Apollo cache for [managing client-side state](https://apolloelements.dev/guides/building-apps/local-state/) more generally.
+You can write complex single-page apps with just Apollo Elements. Each component manages it's own internal state while using a templating system like `lit-html` or an old-school JavaScript framework to hook up properties and events, and the Apollo cache for [managing client-side state](https://apolloelements.dev/guides/usage/local-state/) more generally.
 
 ## Learn More
 Interested to learn more? Read our [getting started guide](https://apolloelements.dev/guides/) to find out how your team can bring GraphQL to your web app one web component at a time. Or if you've already started, check out the [API docs](https://apolloelements.dev/api/) for the low-down on how components work using your favourite web component library.

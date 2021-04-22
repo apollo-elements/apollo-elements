@@ -53,6 +53,22 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
+  <apollo-client>...</apollo-client>
+  <script>
+    import('./typePolicies')
+      .then(({ DetailsTypePolicies }) => {
+        document
+          .currentScript
+          .getRootNode()
+          .querySelector('apollo-client')
+          .typePolicies = DetailsTypePolicies;
+      });
+  </script>
+  ```
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixins } from '@apollo-elements/mixins';
 

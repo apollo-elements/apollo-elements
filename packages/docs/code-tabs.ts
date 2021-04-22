@@ -87,7 +87,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
         stored ? this.items.findIndex(x => x.dataset.id === stored)
       : this.defaultTab ? this.items.findIndex(x => x.dataset.id === this.defaultTab)
       : this.initialSelectedIndex
-    return index;
+    return index < 0 ? this.initialSelectedIndex : index;
   }
 
   private initCollection() {

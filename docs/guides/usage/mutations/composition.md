@@ -1,4 +1,4 @@
-# Building Apps >> Mutations >> Composing Mutations and Queries || 20
+# Usage >> Mutations >> Composing Mutations and Queries || 30
 
 Combining a query and mutations in the same component is a common pattern. For example, an "edit profile" page might query the existing user profile to pre-populate inputs, and issue a mutation which updates some or all of the profile fields. In cases like these, you can use the `<apollo-mutation>` component to declare your mutations inside the query component's template.
 
@@ -31,6 +31,46 @@ mutation UpdateProfileMutation($input: UpdateProfileInput) {
 To make it easier to write declarative mutations, you can import the `<apollo-mutation>` element from `@apollo-elements/components`, like in this example, which combines a query and a mutation into a single component:
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <apollo-query>
+    <template>
+      <h2>Profile</h2>
+
+      <dl ?hidden="{%raw%}{{ loading || !data }}{%endraw%}">
+        <dt>Name</dt>
+        <dd>{%raw%}{{ data.name }}{%endraw%}</dd>
+
+        <dt>Picture</dt>
+        <dd><img .src="{%raw%}{{ data.picture }}{%endraw%}"/></dd>
+
+        <dt>Birthday</dt>
+        <dd>{%raw%}{{ data.birthday }}{%endraw%}</dd>
+      </dl>
+
+      <form ?hidden="{%raw%}{{ !data.isMe }}{%endraw%}">
+        <h3>Edit</h3>
+        <apollo-mutation input-key="input">
+          <script type="application/graphql">
+            mutation UpdateProfileMutation($input: UpdateProfileInput) {
+              id
+              name
+              picture
+              birthday
+            }
+          </script>
+          <label>Name <input data-variable="name"></label>
+
+          <label>Picture (URL) <input data-variable="picture"></label>
+
+          <label>Birthday <input data-variable="birthday" type="date"/></label>
+
+          <button trigger>Save</button>
+        </apollo-mutation>
+      </form>
+    </template>
+  </apollo-query>
+  ```
 
   ```ts tab mixins
 

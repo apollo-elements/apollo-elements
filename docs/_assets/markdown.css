@@ -5,6 +5,16 @@
     format('woff');
 }
 
+.markdown-body :not(:defined) {
+  opacity: 0;
+}
+
+.markdown-body code-copy:not(:defined), /* code-copy is fouc-safe */
+.markdown-body :not(a):defined {
+  opacity: 1;
+  transition: opacity 0.15s ease-in;
+}
+
 .markdown-body .octicon {
   display: inline-block;
   fill: currentColor;
@@ -72,11 +82,15 @@
 .markdown-body a {
   color: var(--markdown-link-color, #0366d6);
   background-color: transparent;
-  text-decoration: none;
+  text-decoration: underline 1px solid var(--markdown-link-decoration);
+  transition-property: text-decoration-thickness, text-decoration-skip-ink;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
 }
 
 .markdown-body a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 4px;
+  text-decoration-skip-ink: none;
 }
 
 .markdown-body a:active,

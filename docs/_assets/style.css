@@ -11,16 +11,6 @@ main { counter-reset: footnotes; }
   font-size: 0.8rem;
 }
 
-main :not(:defined) {
-  opacity: 0;
-}
-
-main code-copy:not(:defined), /* code-copy is fouc-safe */
-main :defined {
-  opacity: 1;
-  transition: opacity 0.15s ease-in;
-}
-
 .visually-hidden {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);

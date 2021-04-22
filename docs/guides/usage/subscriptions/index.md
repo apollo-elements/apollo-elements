@@ -2,7 +2,7 @@
 description: Use Apollo Elements to write high-performance realtime GraphQL subscription components
 ---
 
-# Building Apps >> Subscriptions || 30
+# Usage >> Subscriptions || 40
 
 Subscription components fetch data in real time via GraphQL subscriptions, which usually use websockets under the hood.
 
@@ -40,6 +40,10 @@ Let's define a component which performs the following tasks:
 We'll accomplish this by calling `subscribeToMore` on our element once it's connected to the DOM, passing in an `updateQuery` function to define the merge for new data:
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  Nothing to see here yet. Try another tab.
+  ```
 
   ```js tab mixins
   updateQuery(prev, { subscriptionData }) {
@@ -136,6 +140,10 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
 Alternatively, we could create on a separate component to handle fetching the subscription side. In this example, `<chat-subscription>` has its `subscription` property passed in from the parent, rather than defined statically, as one normally would. This could be useful in cases where `<chat-subscription>` can update a variety of different queries.
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  Nothing to see here yet. Try another tab.
+  ```
 
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -446,3 +454,8 @@ Alternatively, we could create on a separate component to handle fetching the su
 </code-tabs>
 
 See this simple chat-app demo which demonstrates building custom elements which subscribe to a GraphQL server over websockets: [`#leeway`](https://leeway.apolloelements.dev)
+
+## Next Steps
+
+Dive into the [`ApolloSubscription` API](/api/interfaces/subscription/) and [component lifecycle](/api/interfaces/subscription/lifecycle/)
+or continue on to the [managing local state guide](/guides/usage/local-state/).

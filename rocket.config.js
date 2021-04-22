@@ -32,8 +32,9 @@ import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests
 import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
 import { getWebmentionsForUrl } from './packages/docs/rocket-plugins/webmentions.js';
+import { icon } from './packages/docs/rocket-plugins/icon.js';
 
-import { addPlugin } from 'plugins-manager';
+import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 
 const isProd = process.env.ELEVENTY_ENV === 'production';
 
@@ -106,13 +107,7 @@ export default ({
     eleventyConfig.addLiquidTag('github', githubTag);
     eleventyConfig.addLiquidTag('link', linkTag);
     eleventyConfig.addFilter('getWebmentionsForUrl', getWebmentionsForUrl);
-    eleventyConfig.addFilter('icon', function icon(icon) {
-      const path = `/_assets/icons/${icon}.svg`;
-      const asset = eleventyConfig.getFilter('asset');
-      const toAbsPath = eleventyConfig.getFilter('toAbsPath');
-      const inlineFilePath = eleventyConfig.getFilter('inlineFilePath');
-      return inlineFilePath(toAbsPath(asset(path)));
-    });
+    eleventyConfig.addFilter('icon', icon(eleventyConfig));
     /* end blog */
 
     /* start slides */
@@ -147,6 +142,7 @@ export default ({
         'json-viewer': '@power-elements/json-viewer',
         'codesandbox-button': '@power-elements/codesandbox-button',
         'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
+        'docs-playground': importSpecifier,
       },
     });
     /* end auto-import web components */
@@ -167,6 +163,7 @@ export default ({
       tab: ([tab]) => wrapTab(tab),
       reveal: () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
       center: () => ({ tagName: 'div', attributes: { center: 'true' } }),
+      playground: ([id]) => ({ tagName: 'docs-playground', attributes: { id } }),
     }),
   ],
 
@@ -204,6 +201,9 @@ export default ({
           '.graphql': 'ts',
         },
       } }),
+    adjustPluginOptions('import-meta-assets', {
+      exclude: '**/node_modules/playground-elements/*',
+    }),
   ],
 
 });

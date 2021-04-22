@@ -2,14 +2,14 @@
 description: Details on how to Apollo Elements GraphQL query components work.
 ---
 
-# Building Apps >> Queries >> Component Lifecycle || 10
+# Interfaces >> ApolloQuery >> Component Lifecycle || 20
 
 ## `connectedCallback`
 On connecting to the DOM, the element reads it's query and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
 
 ## `documentChanged`
 
-When the `query` property changes (via JavaScript assignment, or when the GraphQL script child changes) the element sets up its `ObservableQuery` and begins fetching data (unless [configured otherwise](/guides/building-apps/queries/#preventing-automatic-subscription)).
+When the `query` property changes (via JavaScript assignment, or when the GraphQL script child changes) the element sets up its `ObservableQuery` and begins fetching data (unless [configured otherwise](/guides/usage/queries/#preventing-automatic-subscription)).
 
 If both a GraphQL script child and a JavaScript property are present, JavaScript takes precedence.
 
@@ -21,7 +21,7 @@ If both a JSON script child and a JavaScript property are present, JavaScript ta
 
 ## `shouldSubscribe`
 
-Called synchronously before all automatic attempts to subscribe. If it returns true, the element will subscribe and begin fetching. Returns `true` by default, Override to [prevent automatic subscription](/guides/building-apps/queries/#preventing-automatic-subscription).
+Called synchronously before all automatic attempts to subscribe. If it returns true, the element will subscribe and begin fetching. Returns `true` by default, Override to [prevent automatic subscription](/guides/usage/queries/#preventing-automatic-subscription).
 
 ## `subscribe`
 

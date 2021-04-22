@@ -7,4 +7,4 @@ module: './apollo-query.js'
 
 `ApolloQuery` inherits from `ApolloElement` and implements the [`ApolloQueryInterface`](/api/interfaces/query/).
 
-Read the [query component guides](../../../../guides/building-apps/queries/) for examples and tips.
+Read the [query component guides](../../../../guides/usage/queries/) for examples and tips.

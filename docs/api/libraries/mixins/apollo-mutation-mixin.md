@@ -7,4 +7,4 @@ module: './apollo-mutation-mixin.js'
 
 `ApolloMutationMixins` applies `ApolloElementMixin` and the [`ApolloMutationInterface`](/api/interfaces/mutation/).
 
-Read the [mutation component guides](/guides/building-apps/mutations/) for examples and tips.
+Read the [mutation component guides](/guides/usage/mutations/) for examples and tips.

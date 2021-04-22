@@ -60,6 +60,21 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
+  <apollo-client>...</apollo-client>
+  <script>
+    import('./typePolicies')
+      .then(({ UserTypePolicies }) => {
+        document
+          .currentScript
+          .getRootNode()
+          .querySelector('apollo-client')
+          .typePolicies = UserTypePolicies;
+      });
+  </script>
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { UserTypePolicies } from './typePolicies';
@@ -179,6 +194,21 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
 And you can lazy-load that same code for use in `src/components/admin-profile/admin-profile.ts`.
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
+  <apollo-client>...</apollo-client>
+  <script>
+    import('./typePolicies')
+      .then(({ UserTypePolicies }) => {
+        document
+          .currentScript
+          .getRootNode()
+          .querySelector('apollo-client')
+          .typePolicies = UserTypePolicies;
+      });
+  </script>
+  ```
 
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
