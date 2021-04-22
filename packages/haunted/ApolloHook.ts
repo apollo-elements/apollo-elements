@@ -67,7 +67,8 @@ export abstract class ApolloHook<
   }
 
   private initHost(): void {
-    applyPrototype(this.state.host, this.componentClass, this.type);
+    const { type } = this;
+    applyPrototype(this.state.host, this.componentClass, { type });
     Object.assign(this.state.host, {
       ...this.defaults,
       ...this.optionsToProperties(),
