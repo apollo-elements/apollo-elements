@@ -2,15 +2,15 @@ import { fixture, defineCE, expect } from '@open-wc/testing';
 
 import 'sinon-chai';
 
-import { StampinoElement, property } from './stampino-element';
-import { RenderOptions, renderNode } from 'stampino';
+import { StampinoRender, property } from './stampino-render';
+import { TemplateHandlers, evaluateTemplate } from 'stampino';
 
-describe('[components] StampinoElement', function() {
+describe('[components] StampinoRender', function() {
   describe('basic instance', function() {
-    let element: StampinoElement;
+    let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag}>
           <p>light content</p>
@@ -37,11 +37,55 @@ describe('[components] StampinoElement', function() {
     });
   });
 
-  describe('with no template', function() {
-    let element: StampinoElement;
+  describe('with template having expressions and some initial data', function() {
+    let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
+      element = await fixture(`
+        <${tag}>
+          <template>
+            <span id="initial">{{ initial }}</span>
+            <span id="updated">{{ updated }}</span>
+          </template>
+        </${tag}>
+      `);
+      element.update({ initial: 'initial' });
+    });
+
+    it('renders initial data', function() {
+      expect(element.$('#initial')!.textContent, 'initial').to.equal('initial');
+      expect(element.$('#updated')!.textContent, 'updated').to.equal('');
+    });
+
+    describe('when calling update({ updated: \'updated\' })', function() {
+      beforeEach(function() {
+        element.update({ updated: 'updated' });
+      });
+
+      it('renders both initial and updated data', function() {
+        expect(element.$('#initial')!.textContent, 'initial').to.equal('initial');
+        expect(element.$('#updated')!.textContent, 'updated').to.equal('updated');
+      });
+    });
+
+    describe('when calling update({ updated: \'updated\' }, { overwrite: true })', function() {
+      beforeEach(function() {
+        element.update({ updated: 'updated' }, { overwrite: true });
+      });
+
+      it('renders only updated data', function() {
+        expect(element.$('#initial')!.textContent, 'initial').to.equal('');
+        expect(element.$('#updated')!.textContent, 'updated').to.equal('updated');
+      });
+    });
+  });
+
+  describe('with no template', function() {
+    let element: StampinoRender;
+
+    beforeEach(async function() {
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag}>
           <p>light content</p>
@@ -57,10 +101,10 @@ describe('[components] StampinoElement', function() {
   });
 
   describe('with empty template attribute', function() {
-    let element: StampinoElement;
+    let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag} template="">
           <p>light content</p>
@@ -76,7 +120,7 @@ describe('[components] StampinoElement', function() {
   });
 
   describe('with template referred by ID', function() {
-    let element: StampinoElement;
+    let element: StampinoRender;
     let template: HTMLTemplateElement;
 
     beforeEach(async function() {
@@ -84,7 +128,7 @@ describe('[components] StampinoElement', function() {
       template.id = 'the-template';
       template.innerHTML = `<p>hi</p>`;
       document.body.appendChild(template);
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag} template="the-template">
           <p>light content</p>
@@ -104,7 +148,7 @@ describe('[components] StampinoElement', function() {
   });
 
   describe('with template attribute referring to non-template', function() {
-    let element: StampinoElement;
+    let element: StampinoRender;
     let template: HTMLDivElement;
 
     beforeEach(async function() {
@@ -112,7 +156,7 @@ describe('[components] StampinoElement', function() {
       template.id = 'the-template';
       template.innerHTML = `<p>hi</p>`;
       document.body.appendChild(template);
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag} template="the-template">
           <p>light content</p>
@@ -132,10 +176,10 @@ describe('[components] StampinoElement', function() {
   });
 
   describe('with no-shadow attribute', function() {
-    let element: StampinoElement;
+    let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag} no-shadow>
           <p>light content</p>
@@ -156,10 +200,10 @@ describe('[components] StampinoElement', function() {
   });
 
   describe('with no-shadow attribute set as className', function() {
-    let element: StampinoElement;
+    let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoElement {});
+      const tag = defineCE(class extends StampinoRender {});
       element = await fixture(`
         <${tag} no-shadow="content">
           <p>light content</p>
@@ -180,18 +224,17 @@ describe('[components] StampinoElement', function() {
     });
   });
 
-  describe('with renderOptions', function() {
-    let element: StampinoElement;
+  describe('with templateHandlers', function() {
+    let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoElement {
-        renderOptions: RenderOptions = {
-          handlers: {
-            // renders a template twice
-            'echo': function(template, ...rest) {
-              renderNode(template.content, ...rest);
-              renderNode(template.content, ...rest);
-            },
+      const tag = defineCE(class extends StampinoRender {
+        templateHandlers: TemplateHandlers = {
+          'echo': (template, model, handlers, renderers) => {
+            return [
+              evaluateTemplate(template, model, handlers, renderers),
+              evaluateTemplate(template, model, handlers, renderers),
+            ];
           },
         };
       });
@@ -208,15 +251,15 @@ describe('[components] StampinoElement', function() {
       `);
     });
 
-    it('uses handlers from renderOptions', function() {
+    it('uses handlers from templateHandlers', function() {
       expect(element.querySelectorAll('p').length, 'light content').to.equal(1);
       expect(element.$$('p').length, 'total shadow content').to.equal(3);
       expect(element.$$('.doubled').length, 'doubled content').to.equal(2);
     });
   });
 
-  describe('with a observed, reflecting properties', function() {
-    class Test extends StampinoElement {
+  describe('with observed, reflecting properties', function() {
+    class Test extends StampinoRender {
       @property({ reflect: true, init: false }) reflect = false;
 
       @property({ reflect: true, init: 'string' }) string: string|null = 'string';
