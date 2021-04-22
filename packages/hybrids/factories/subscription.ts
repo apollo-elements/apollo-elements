@@ -1,12 +1,9 @@
 import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
-import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
 import type { ApolloSubscriptionInterface } from '@apollo-elements/interfaces/apollo-subscription';
 import type { Hybrids } from 'hybrids';
 
 import { ApolloSubscriptionElement } from '@apollo-elements/interfaces/apollo-subscription';
 import { applyPrototype } from '@apollo-elements/lib/prototypes';
-
-import { property } from 'hybrids';
 
 import { ApolloElement } from '../apollo-element';
 

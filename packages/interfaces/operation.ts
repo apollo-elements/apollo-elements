@@ -8,7 +8,7 @@ export type Data<D> =
   D extends TypedDocumentNode<infer TData> ? TData : D;
 
 export type Variables<D, V> =
-  D extends TypedDocumentNode<infer _D, infer _V> ? _V : V extends OperationVariables ? V : never;
+  D extends TypedDocumentNode<infer _, infer T> ? T : V extends OperationVariables ? V : never;
 
 export type DataOf<E> =
   E extends ApolloElementElement<infer D> ? D : never;
