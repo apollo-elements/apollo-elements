@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types */
-import type { RenderOptions } from 'stampino';
+import type { TemplateHandlers } from 'stampino';
 import { render } from 'stampino';
 import { effect } from '@apollo-elements/lib/descriptors';
 
@@ -14,12 +14,12 @@ interface PropertyOptions {
  *
  * @attr {Boolean|string} 'no-shadow' - When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.
  */
-export class StampinoElement<Model extends object = any> extends HTMLElement {
+export class StampinoRender<Model extends object = any> extends HTMLElement {
   private static isQueryable(node: Node): node is (ShadowRoot|Document) {
     return 'getElementById' in node;
   }
 
-  declare renderOptions: RenderOptions;
+  declare templateHandlers: TemplateHandlers;
 
   #extras: Partial<Model>|null = null;
 
@@ -37,14 +37,14 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
 
   #model: Model|null = null;
 
-  protected get model(): StampinoElement|Model {
-    return this.#model ?? this;
+  #renderProps: Model & this;
+
+  protected get model(): Model {
+    return ({ ...this.#model, ...this.#extras } as Model);
   }
 
-  protected set model(x: StampinoElement|Model) {
-    if (x instanceof StampinoElement)
-      return;
-    this.#model = x;
+  protected set model(x: Model) {
+    this.setModel(x);
   }
 
   /**
@@ -55,7 +55,7 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
    * @attr template
    * @example Referencing a template by ID
    * ```html
-   * <stampino-element template="tpl"></stampino-element>
+   * <stampino-render template="tpl"></stampino-render>
    * <template id="tpl">
    *   <p>Hi, {{ data.name }}</p>
    * </template>
@@ -70,6 +70,7 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
 
   constructor() {
     super();
+    this.#renderProps = { ...this, ...this.#model } as Model & this;
     this.createRenderRoot();
   }
 
@@ -80,7 +81,7 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
   private getElementByIdFromRoot(id: string|null): HTMLElement | null {
     // TODO: make actually private in TS 4.3
     const root = this.getRootNode();
-    if (!id || !StampinoElement.isQueryable(root))
+    if (!id || !StampinoRender.isQueryable(root))
       return null;
     else
       return root.getElementById(id);
@@ -106,6 +107,19 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
     return this.renderRoot;
   }
 
+  private setModel(x: Model) {
+    this.#model = x;
+    this.#renderProps = { ...this, ...this.#model, ...this.#extras };
+    this.render();
+  }
+
+  public update(model: Model, { overwrite = false } = { }): void {
+    if (overwrite)
+      this.setModel(model);
+    else
+      this.setModel({ ...this.model, ...model });
+  }
+
   /**
    * Call to render the element's template using the model.
    * Rendering is synchronous and incremental.
@@ -114,12 +128,11 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
    */
   public render(): void {
     if (this.template && this.renderRoot) {
-      const { extras, model } = this;
       render(
         this.template,
-        this.renderRoot,
-        { ...model, ...extras },
-        this.renderOptions
+        this.renderRoot as HTMLElement,
+        this.#renderProps,
+        this.templateHandlers
       );
     }
   }
@@ -149,7 +162,7 @@ export class StampinoElement<Model extends object = any> extends HTMLElement {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export function property({ attribute, reflect = false, init = null }: PropertyOptions = {}) {
-  return function<T extends HTMLElement & { render(): void }>(
+  return function<T extends StampinoRender & { render(): void }>(
     target: T,
     name: keyof T extends string ? keyof T : never,
   ): void {
@@ -171,7 +184,7 @@ export function property({ attribute, reflect = false, init = null }: PropertyOp
               this.removeAttribute(attr);
           }
         }
-        this.render();
+        this.update({ [name]: value });
       },
     }));
   };

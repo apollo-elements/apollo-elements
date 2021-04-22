@@ -61,6 +61,15 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   declare variables: Variables<D, V> | null;
 
   /**
+   * errorPolicy determines the level of events for errors in the execution result. The options are:
+   * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
+   * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
+   * - `all`: errors are treated like data and will notify observables
+   * @attr error-policy
+   */
+  declare errorPolicy?: ErrorPolicy;
+
+  /**
    * Determines where the client may return a result from. The options are:
    *
    * - `cache-first` (default): return result from cache, fetch from network if cached result is not available.
@@ -158,15 +167,6 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * The time interval (in milliseconds) on which this query should be refetched from the server.
    */
   declare pollInterval?: number;
-
-  /**
-   * errorPolicy determines the level of events for errors in the execution result. The options are:
-   * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
-   * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
-   * - `all`: errors are treated like data and will notify observables
-   * @attr error-policy
-   */
-  declare errorPolicy?: ErrorPolicy;
 
   /**
    * When true, the component will not automatically subscribe to new data.

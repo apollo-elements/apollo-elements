@@ -1,5 +1,5 @@
 subscription NoParamSubscription {
-  messageSent {
-    message
+  noParam {
+    noParam
   }
 }

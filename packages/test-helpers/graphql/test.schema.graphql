@@ -39,6 +39,7 @@ type Subscription {
   messageSent: Message
   nullableParam(nullable: String): Nullable
   nonNullParam(nonNull: String!): NonNull
+  noParam: NoParam
 }
 
 type Mutation {
