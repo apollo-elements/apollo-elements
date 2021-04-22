@@ -10,7 +10,7 @@ const resolve = {
   setup(build) {
     // Redirect all paths starting with "images/" to "./public/images/"
     build.onResolve({ filter: /^@apollo-elements\// }, args => {
-      const resolved = args.path.replace('@apollo-elements', `${basePath}/packages`) + '.ts';
+      const resolved = `${args.path.replace('@apollo-elements', `${basePath}/packages`)}.ts`;
       return { path: resolved };
     });
   },
@@ -24,6 +24,6 @@ esbuild.build({
   sourcemap: true,
   target: 'es2017',
   plugins: [resolve],
-}).catch(err => {
+}).catch(() => {
   process.exit(1);
 });
