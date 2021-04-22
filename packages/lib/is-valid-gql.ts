@@ -9,7 +9,7 @@ import type { DocumentNode } from '@apollo/client/core';
  * @param doc Maybe a DocumentNode
  * @return Whether the argument is a DocumentNode
  */
-export function isValidGql(doc: any): doc is DocumentNode {
+export function isValidGql(doc: unknown): doc is DocumentNode {
   return !!(
     doc &&
     typeof doc === 'object' &&
