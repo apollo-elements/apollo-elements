@@ -3092,6 +3092,11 @@
   resolved "https://registry.yarnpkg.com/@rocket/navigation/-/navigation-0.2.1.tgz#ce9c22a6a3b1eafbf531880214d82dbaa9ffe192"
   integrity sha512-MNrMM8yssg39+vpqeWn3YnqwYMQ61iucAPvGBBdXRVP26Ay3xCEKL+iZvdq/sizx63i3G+BvLpvb8lrOz6542Q==
 
+"@rocket/navigation@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@rocket/navigation/-/navigation-0.2.1.tgz#ce9c22a6a3b1eafbf531880214d82dbaa9ffe192"
+  integrity sha512-MNrMM8yssg39+vpqeWn3YnqwYMQ61iucAPvGBBdXRVP26Ay3xCEKL+iZvdq/sizx63i3G+BvLpvb8lrOz6542Q==
+
 "@rocket/search@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@rocket/search/-/search-0.3.2.tgz#19a6401f34b3b5fe8c1fd1cd66a5f7de69e4284f"
@@ -12010,6 +12015,26 @@ pkg-dir@^4.2.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
+
+playground-elements@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/playground-elements/-/playground-elements-0.8.0.tgz#5e723eda52bb34cc1678e6a5e094319c55e3e6b9"
+  integrity sha512-z5Xhg0JSJLzd5FWT3uE/nM6j3gly54I/Nbw0VVOptYd8Bk0RrjnnyEiEHbtPwR3eQsfEdCO07g0Zb/Rvc23Kdw==
+  dependencies:
+    "@material/mwc-button" "^0.20.0"
+    "@material/mwc-icon-button" "^0.20.0"
+    "@material/mwc-linear-progress" "^0.20.0"
+    "@material/mwc-list" "^0.20.0"
+    "@material/mwc-menu" "^0.20.0"
+    "@material/mwc-tab" "^0.20.0"
+    "@material/mwc-tab-bar" "^0.20.0"
+    "@material/mwc-textfield" "^0.20.0"
+    "@types/codemirror" "^0.0.108"
+    comlink "^4.3.0"
+    lit-element "^2.3.1"
+    lit-html "^1.2.1"
+    tslib "^2.0.3"
+    vscode-languageserver "^7.0.0"
 
 playground-elements@^0.8.0:
   version "0.8.0"

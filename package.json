@@ -78,6 +78,7 @@
     "@rocket/blog": "^0.3.0",
     "@rocket/cli": "^0.6.0",
     "@rocket/launch": "^0.4.0",
+    "@rocket/navigation": "^0.2.1",
     "@rocket/search": "^0.3.2",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "11.2.1",
