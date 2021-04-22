@@ -37,12 +37,11 @@ const config = {
     exclude: [
       '_site/**/*',
       '_site-dev/**/*',
-      'coverage/**/*',
       '.vscode/**/*',
       '.netlify/**/*',
+      'coverage/**/*',
       'packages/**/*.test.{ts, js}',
       'packages/lib/cuid.{ts, js}',
-      'node_modules/**/*',
       '**/node_modules/**/*',
       '**/test-helpers/**/*',
       '*__*-dev-server__*',
