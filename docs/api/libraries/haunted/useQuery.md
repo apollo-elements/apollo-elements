@@ -7,4 +7,4 @@ module: './useQuery.js'
 
 Apollo `useQuery` hook for web components. Elements that call `useQuery` inherit the [`ApolloQueryInterface`](/api/interfaces/query/).
 
-Read the [query component guides](../../../../guides/building-apps/queries/) for examples and tips.
+Read the [query component guides](../../../../guides/usage/queries/) for examples and tips.

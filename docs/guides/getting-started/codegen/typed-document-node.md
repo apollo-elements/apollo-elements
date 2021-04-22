@@ -56,6 +56,23 @@ Pass your `TypedDocumentNode` objects' type as the first type argument to your c
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```ts tab html
+  import type { ApolloQueryElement } from '@apollo-elements/components';
+
+  import { TypedQuery } from './Typed.query.graphql';
+
+  import '@apollo-elements/components';
+
+  type TypedHTMLQueryElement = ApolloQueryElement<typeof TypedQuery>;
+
+  const typedHTMLQueryElement =
+    document.querySelector<TypedHTMLQueryElement>('apollo-query');
+
+  typedHTMLQueryElement.query = TypedQuery;
+
+  type DataType = (typeof typedHTMLQueryElement)['data'];
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins';
   import { TypedQuery } from './Typed.query.graphql';

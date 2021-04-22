@@ -89,6 +89,28 @@ With this approach, you can control on a per-component basis when to subscribe.
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <p>
+    You can subclass <code>ApolloQueryElement</code>
+    to override methods.
+  </p>
+
+  <should-subscribe-query></should-subscribe-query>
+
+  <script type="module">
+  import { ApolloQueryElement } from '@apollo-elements/components/apollo-query';
+  import { routeVar } from '../variables';
+
+  customElements.define(
+    'should-subscribe-query',
+    class ShouldSubscribeQueryElement extends ApolloQueryElement {
+      shouldSubscribe() {
+        return !!(routeVar().params?.postId);
+      }
+    });
+  </script>
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
   import PostQuery from './Post.query.graphql';
@@ -174,6 +196,22 @@ With this approach, you can control on a per-component basis when to subscribe.
 The old variable-validating behaviour is still available, but you have to opt-in to get it. Import the `ValidateVariablesMixin` from [`@apollo-elements/mixins/validate-variables-mixin`](../../api/libraries/mixins/validate-variables-mixin.md) and apply it to your base class
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <p>
+    You can subclass <code>ApolloQueryElement</code>
+    to apply mixins.
+  </p>
+
+  <validated-variables-query></validated-variables-query>
+  
+  <script type="module">
+  import { ApolloQueryElement } from '@apollo-elements/components/apollo-query';
+  customElements.define(
+    'validated-variables-query',
+    class ValidatedApolloQuery extends ValidateVariablesMixin(ApolloQueryElement) {});
+  </script>
+  ```
 
   ```ts tab mixins
   import { ValidateVariablesMixin, ApolloQueryMixin } from '@apollo-elements/mixins';

@@ -24,11 +24,11 @@
           }
         },
         {
-          "name": "apollo-query",
+          "name": "apollo-mutation",
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "apollo-query",
-            "module": "./apollo-query.js"
+            "name": "apollo-mutation",
+            "module": "./apollo-mutation.js"
           }
         }
       ]
@@ -377,6 +377,34 @@
           }
         }
       ]
-    }
+    },
+    {
+          "kind": "javascript-module",
+          "path": "./apollo-subscription.js",
+          "declarations": [
+            {
+              "kind": "class",
+              "tagName": "apollo-subscription",
+              "name": "ApolloMutationElement",
+              "summary": "Render a GraphQL subscription to the DOM\n\n## Render a subscription to Shadow DOM\n```html\n<apollo-subscription>\n <script type=\"application/graphql\">\n    subscription NewMessages {\n      messageAdded { id author content }\n    }\n  </script>\n  <template>\n    <article>\n      <span class=\"author-name\">{{ data.author.name }}</span>\n      <mark-down>{{ data.content }}</mark-down>\n    </article>\n  </template>\n</apollo-subscription>\n```\n\n## Setting subscription and variables using the DOM\n```html\n<apollo-subscription id=\"subscription-element\" template=\"message-template\"></apollo-subscription>\n\n<template id=\"message-template\">\n  <article>\n    <span class=\"author-name\">{{ data.author.name }}</span>\n    <mark-down>{{ data.content }}</mark-down>\n  </article>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('subscription-element');\n  el.subscription = gql`\n    subscription NewMessages($limit: Int) {\n      messagesAdded {\n        messages { id author content }\n        hasMore\n      }\n    }\n  `;\n  el.variables = { limit: 10 };\n</script>\n```\n"
+            }
+          ],
+          "exports": [
+            {
+              "kind": "custom-element-definition",
+              "name": "apollo-mutation",
+              "declaration": {
+                "name": "ApolloMutationElement"
+              }
+            },
+            {
+              "kind": "js",
+              "name": "ApolloMutationElement",
+              "declaration": {
+                "name": "ApolloMutationElement"
+              }
+            }
+          ]
+        }
   ]
 }

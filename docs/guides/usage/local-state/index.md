@@ -1,4 +1,4 @@
-# Building Apps >> Local State || 40
+# Usage >> Local State || 50
 
 <meta name="description" data-helmett
       content="Introductory recipes for managing local state with Apollo Elements" />
@@ -42,6 +42,26 @@ query ThemeToggle {
 Let's define a custom element that displays a button to toggle the theme.
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <apollo-query>
+    <template>
+      <button @click="{%raw%}{{ toggleTheme }}{%endraw%}">
+        Change to {%raw%}{{ data.theme === 'dark' ? 'light' : 'dark' }}{%endraw%} theme
+      </button>
+    </template>
+  </apollo-query>
+
+  <script>
+    document.currentScript.getRootNode()
+      .querySelector('apollo-query')
+      .extras = {
+        toggleTheme() {
+          // TBD
+        }
+      }
+  </script>
+  ```
 
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -233,6 +253,25 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <apollo-client>
+    <apollo-query>
+      <!-- ... -->
+    </apollo-query>
+  </apollo-client>
+
+  <script>
+    import('./typePolicies')
+      .then(({ typePolicies }) => {
+        // In the case of HTML components,
+        // register type policies on the <apollo-client> element
+        document.currentScript.getRootNode()
+          .querySelector('apollo-client')
+          .typePolicies = typePolicies;
+      });
+  </script>
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { typePolicies } from './typePolicies';
@@ -322,6 +361,31 @@ All that's left is to define the `toggleTheme` function to actually update the c
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <apollo-client>
+    <apollo-query>
+      <!-- ... -->
+    </apollo-query>
+  </apollo-client>
+
+  <script>
+    {
+      const queryEl =
+        document.currentScript.getRootNode()
+          .querySelector('apollo-query')
+      queryEl.extras = {
+        toggleTheme() {
+          const theme = queryEl.data?.theme === 'light' ? 'dark' : 'light';
+          queryEl.client.writeQuery({
+            query: queryEl.query,
+            data: { theme },
+          });
+        }
+      }
+    }
+  </script>
+  ```
+
   ```ts tab mixins
   toggleTheme() {
     const theme = this.nextTheme;
@@ -404,6 +468,12 @@ Last, we'll refactor the `toggleTheme` method to directly update the value of `t
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```js tab html
+  toggleTheme() {
+    themeVar(queryEl.data?.theme === 'light' ? 'dark' : 'light');
+  }
+  ```
+
   ```ts tab mixins
   toggleTheme() {
     themeVar(this.nextTheme);
@@ -457,6 +527,13 @@ Now in order to update the theme, we need to perform two steps:
 2. Invalidate the Apollo cache's value for theme on the root query using the `evict` method on `InMemoryCache`.
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```js tab html
+  toggleTheme() {
+    localStorage.setItem('theme', queryEl.data?.theme === 'light' ? 'dark' : 'light');
+    queryEl.client.cache.evict({ fieldName: 'theme' });
+  }
+  ```
 
   ```ts tab mixins
   toggleTheme() {

@@ -7,4 +7,4 @@ module: './apollo-subscription.js'
 
 `ApolloSubscription` inherits from `ApolloElement` and implements the [`ApolloSubscriptionInterface`](/api/interfaces/subscription/).
 
-Read the [subscription component guides](../../../../guides/building-apps/subscriptions/) for examples and tips.
+Read the [subscription component guides](../../../../guides/usage/subscriptions/) for examples and tips.

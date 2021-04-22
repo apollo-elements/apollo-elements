@@ -2,7 +2,7 @@
 description: Use Apollo Elements to manage the Apollo client cache after GraphQL mutations
 ---
 
-# Building Apps >> Mutations >> Cache Management || 20
+# Usage >> Mutations >> Cache Management || 20
 
 When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `updater` property on elements that extend from `ApolloMutation`
 
@@ -19,9 +19,26 @@ mutation BlogPostMutation($content: String) {
 }
 ```
 
-And this component definition in `components/blog-post/blog-post.ts`:
+And this component definition:
 
 <code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <apollo-mutation>
+    <template>
+      <loading-overlay ?active="{%raw%}{{ loading }}{%endraw%}"></loading-overlay>
+
+      <label>New Post <textarea data-variable="content"></textarea></label>
+
+      <button ?hidden="{%raw%}{{ data }}{%endraw%}" trigger>Post!</button>
+
+      <article ?hidden="{%raw%}{{ !data }}{%endraw%}">
+        <strong>Post Succeeded!</strong>
+        <p>{%raw%}{{ data.summary }}{%endraw%}</p>
+      </article>
+    </template>
+  </apollo-mutation>
+  ```
 
   ```ts tab mixins
   import type {
@@ -298,6 +315,25 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <script>
+    document.currentScript.getRootNode()
+      .querySelector('apollo-mutation')
+      .updater = function updater(cache, result) {
+        // 1: Read the cache synchronously to get the current list of posts
+        const query = LatestPostsQuery;
+        const cached = cache.readQuery({ query: LatestPostsQuery });
+
+        // 2: Calculate the expected result of LatestPostsQuery,
+        //    considering the mutation result
+        const data = { posts: [result.data.postBlogPost, ...cached.posts] }
+
+        // 3: Perform the cache update by calling `writeQuery`
+        cache.writeQuery({ query, data });
+      };
+  </script>
+  ```
+
   ```ts tab mixins
   /**
    * update function which reads a cached query result, merges
@@ -437,55 +473,60 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <script>
+    document.currentScript.getRootNode()
+      .querySelector('apollo-mutation')
+      .optimisticResponse = variables => ({
+        postBlogPost: {
+          __typename: 'BlogPost',
+          url: '#',
+          // implementation left as an exercise to the reader
+          summary: summarize(variables.content),
+          datePosted: new Date().toISOString(),
+          content,
+        },
+      });
+  </script>
+  ```
+
   ```ts tab mixins
-  onInput(event: KeyboardEvent & { target: HTMLTextareaElement }) {
-    const content = event.target.value;
-    this.variables = { content };
-    this.optimisticResponse = {
-      postBlogPost: {
-        __typename: 'BlogPost',
-        url: '#',
-        // implementation left as an exercise to the reader
-        summary: summarize(content),
-        datePosted: new Date().toISOString(),
-        content,
-      },
-    }
-  }
+  optimisticResponse = variables => ({
+    postBlogPost: {
+      __typename: 'BlogPost',
+      url: '#',
+      // implementation left as an exercise to the reader
+      summary: summarize(variables.content),
+      datePosted: new Date().toISOString(),
+      content,
+    },
+  });
   ```
 
   ```ts tab lit
-  onInput(event: KeyboardEvent & { target: HTMLTextareaElement }) {
-    const content = event.target.value;
-    this.variables = { content };
-    this.optimisticResponse = {
-      postBlogPost: {
-        __typename: 'BlogPost',
-        url: '#',
-        // implementation left as an exercise to the reader
-        summary: summarize(content),
-        datePosted: new Date().toISOString(),
-        content,
-      },
-    }
-  }
+  optimisticResponse = variables => ({
+    postBlogPost: {
+      __typename: 'BlogPost',
+      url: '#',
+      // implementation left as an exercise to the reader
+      summary: summarize(variables.content),
+      datePosted: new Date().toISOString(),
+      content,
+    },
+  });
   ```
 
   ```ts tab fast
-  onInput(event: KeyboardEvent & { target: HTMLTextareaElement }) {
-    const content = event.target.value;
-    this.variables = { content };
-    this.optimisticResponse = {
-      postBlogPost: {
-        __typename: 'BlogPost',
-        url: '#',
-        // implementation left as an exercise to the reader
-        summary: summarize(content),
-        datePosted: new Date().toISOString(),
-        content,
-      },
-    }
-  }
+  optimisticResponse = variables => ({
+    postBlogPost: {
+      __typename: 'BlogPost',
+      url: '#',
+      // implementation left as an exercise to the reader
+      summary: summarize(variables.content),
+      datePosted: new Date().toISOString(),
+      content,
+    },
+  });
   ```
 
   ```ts tab haunted
@@ -493,22 +534,22 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
     const [datePosted, setDatePosted] = useState(new Date().toISOString());
     const [content, setContent] = useState('');
 
-    const optimistic = {
-      postBlogPost: {
-        __typename: 'BlogPost',
-        url: '#',
-        // implementation left as an exercise to the reader
-        summary: summarize(content),
-        datePosted,
-        content,
-      },
-    };
+    const optimistic = ;
 
     const [addBlogPost, { data, loading }] =
       useMutation<Data, Variables>(BlogPostMutation, {
         onCompleted: () => setContent(''),
         update,
-        optimisticResponse,
+        optimisticResponse: variables => ({
+          postBlogPost: {
+            __typename: 'BlogPost',
+            url: '#',
+            // implementation left as an exercise to the reader
+            summary: summarize(variables.content),
+            datePosted,
+            content,
+          },
+        }),
       });
 
     const variables = { content };
@@ -516,7 +557,7 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
     return html`
       <loading-overlay ?active="${loading}"></loading-overlay>
 
-      <label>New Post <textarea @input="${e => setContent(e.target.value)}"></textarea></label>
+      <label>New Post textarea @input="${e => setContent(e.target.value)}"</textarea></label>
 
       <button
           ?hidden="${!!data}"
@@ -535,23 +576,21 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   ```
 
   ```ts tab hybrids
-  function onInput(
-    host: HTMLElement & ApolloMutationInterface<Data, Variables>,
-    event: KeyboardEvent & { target: HTMLTextareaElement },
-  ) {
-    const content = event.target.value;
-    host.variables = { content };
-    host.optimisticResponse = {
-      postBlogPost: {
-        __typename: 'BlogPost',
-        url: '#',
-        // implementation left as an exercise to the reader
-        summary: summarize(content),
-        datePosted: new Date().toISOString(),
-        content,
-      },
-    }
-  }
+  define(name, {
+    client: client(window.__APOLLO_CLIENT__),
+    mutation: mutation(BlogPostMutation, {
+      optimisticResponse: variables => ({
+        postBlogPost: {
+          __typename: 'BlogPost',
+          url: '#',
+          // implementation left as an exercise to the reader
+          summary: summarize(variables.content),
+          datePosted,
+          content,
+        },
+      }),
+    }),
+  });
   ```
 
 </code-tabs>

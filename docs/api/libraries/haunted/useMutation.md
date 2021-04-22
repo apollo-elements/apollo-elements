@@ -7,7 +7,7 @@ module: './useMutation.js'
 
 Apollo `useMutation` hook for web components. Elements that call `useMutation` inherit the [`ApolloMutationInterface`](/api/interfaces/mutation/).
 
-Read the [mutation component guides](../../../../guides/building-apps/mutations/) for examples and tips.
+Read the [mutation component guides](../../../../guides/usage/mutations/) for examples and tips.
 
 ## Live Demo
 
@@ -48,4 +48,4 @@ customElements.define('add-user', component(AddUser));
 
 Elements that call `useMutation` inherit the [`ApolloMutationInterface`](/api/interfaces/query/).
 
-Read the [mutation component guides](../../../../guides/building-apps/mutations/) for examples and tips.
+Read the [mutation component guides](../../../../guides/usage/mutations/) for examples and tips.

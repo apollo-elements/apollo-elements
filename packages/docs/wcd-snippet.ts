@@ -95,7 +95,7 @@ template.innerHTML = `
   <button part="button">▶️ Live Demo</button>
 `;
 
-class WcdSnippet extends HTMLElement {
+export class WcdSnippet extends HTMLElement {
   static get observedAttributes() {
     return ['live', 'data-id', 'file'];
   }

@@ -6,7 +6,8 @@ import { copy } from '@web/rollup-plugin-copy';
 
 export default {
   input: './packages/docs/components.ts',
-  external: id=>id.startsWith('lit'),
+  external: id =>
+    id.startsWith('lit') || id.startsWith('https://'),
   output: {
     format: 'es',
     file: './packages/docs/components.js',

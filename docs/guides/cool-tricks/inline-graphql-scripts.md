@@ -10,6 +10,25 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
 <code-tabs collection="libraries" default-tab="lit">
 
+  ```html tab html
+  <apollo-query>
+    <script type="application/graphql">
+      query Greeting {
+        greeting {
+          name
+          greeting
+        }
+      }
+    </script>
+    <template>
+      <p>
+        {%raw%}{{ data.greeting || 'Hello' }}{%endraw%},
+        {%raw%}{{ data.name || 'friend' }}{%endraw%}
+      </p>
+    </template>
+  </apollo-query>
+  ```
+
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
