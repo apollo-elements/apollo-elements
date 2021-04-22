@@ -9,7 +9,7 @@ import type {
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { NetworkStatus } from '@apollo/client/core';
 
-import { StampinoElement, property } from './stampino-element';
+import { StampinoRender, property } from './stampino-render';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryElement } }
 
@@ -61,7 +61,7 @@ export type ApolloQueryModel<D, V> = Pick<ApolloQueryElement<D, V>,
  * ```
  */
 export class ApolloQueryElement<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin<Constructor<StampinoElement>>(StampinoElement)<D, V>
+  extends ApolloQueryMixin<Constructor<StampinoRender & HTMLElement>>(StampinoRender)<D, V>
   implements ApolloQueryInterface<D, V> {
   static get is(): 'apollo-query' { return 'apollo-query'; }
 

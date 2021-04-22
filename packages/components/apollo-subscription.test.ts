@@ -17,31 +17,31 @@ import 'sinon-chai';
 
 import {
   setupClient,
-  NoParamQueryData,
-  NoParamQueryVariables,
+  NoParamSubscriptionData,
+  NoParamSubscriptionVariables,
   isApolloError,
   assertType,
-  NullableParamQueryData,
-  NullableParamQueryVariables,
+  NullableParamSubscriptionData,
+  NullableParamSubscriptionVariables,
   teardownClient,
 } from '@apollo-elements/test-helpers';
 
-import './apollo-query';
+import './apollo-subscription';
 
-import { ApolloQueryElement } from './apollo-query';
+import { ApolloSubscriptionElement } from './apollo-subscription';
 
-import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
-import NullableParamQuery from '@apollo-elements/test-helpers/graphql/NullableParam.query.graphql';
+import NoParamSubscription from '@apollo-elements/test-helpers/graphql/NoParam.subscription.graphql';
+import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
 
-describe('[components] <apollo-query>', function describeApolloQuery() {
+describe('[components] <apollo-subscription>', function describeApolloSubscription() {
   beforeEach(setupClient);
 
   afterEach(teardownClient);
 
   describe('simply instantiating', function() {
-    let element: ApolloQueryElement;
+    let element: ApolloSubscriptionElement;
     beforeEach(async function() {
-      element = await fixture(html`<apollo-query></apollo-query>`);
+      element = await fixture(html`<apollo-subscription></apollo-subscription>`);
     });
 
     it('has a shadow root', function() {
@@ -54,9 +54,9 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
   });
 
   describe('with template attribute set but empty', function() {
-    let element: ApolloQueryElement;
+    let element: ApolloSubscriptionElement;
     beforeEach(async function() {
-      element = await fixture(html`<apollo-query template=""></apollo-query>`);
+      element = await fixture(html`<apollo-subscription template=""></apollo-subscription>`);
     });
 
     it('has null template', function() {
@@ -65,9 +65,9 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
   });
 
   describe('with template attribute set but no template', function() {
-    let element: ApolloQueryElement;
+    let element: ApolloSubscriptionElement;
     beforeEach(async function() {
-      element = await fixture(html`<apollo-query template="heh"></apollo-query>`);
+      element = await fixture(html`<apollo-subscription template="heh"></apollo-subscription>`);
     });
 
     it('has null template', function() {
@@ -76,10 +76,10 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
   });
 
   describe('with `no-shadow` attribute set as a string', function() {
-    let element: ApolloQueryElement;
+    let element: ApolloSubscriptionElement;
 
     beforeEach(async function() {
-      element = await fixture(html`<apollo-query no-shadow="special"></apollo-query>`);
+      element = await fixture(html`<apollo-subscription no-shadow="special"></apollo-subscription>`);
     });
 
     it('creates a special div', function() {
@@ -87,14 +87,14 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
   });
 
-  describe('with template and query DOM and `no-shadow` attribute set', function() {
-    let element: ApolloQueryElement<NoParamQueryData, NoParamQueryVariables>;
+  describe('with template and subscription DOM and `no-shadow` attribute set', function() {
+    let element: ApolloSubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-query no-shadow>
+        <apollo-subscription no-shadow>
           <script type="application/graphql">
-            query NoParamQuery {
+            subscription NoParamSubscription {
               noParam {
                 noParam
               }
@@ -105,7 +105,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
             <span id="data">{{ data.noParam.noParam }}</span>
             <span id="error">{{ error.message }}</span>
           </template>
-        </apollo-query>
+        </apollo-subscription>
       `);
     });
 
@@ -113,13 +113,13 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     beforeEach(nextFrame);
 
     it('renders', function() {
-      expect(element.$$('h1').length).to.equal(1);
-      expect(element.$$('span').length).to.equal(2);
-      expect(element.$('#data')).to.be.ok;
-      expect(element.$('#data')?.textContent).to.equal('noParam');
+      expect(element.$$('h1').length, 'h1').to.equal(1);
+      expect(element.$$('span').length, 'span').to.equal(2);
+      expect(element.$('#data'), '#data').to.be.ok;
+      expect(element.$('#data')?.textContent, '#data').to.equal('noParam');
     });
 
-    it('creates a query-result div', function() {
+    it('creates a subscription-result div', function() {
       expect(element.querySelector('.output')).to.be.ok;
     });
 
@@ -131,17 +131,17 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       expect(element.template).to.be.an.instanceof(HTMLTemplateElement);
     });
 
-    it('does not blow away query', function() {
+    it('does not blow away subscription', function() {
       expect(element.querySelector('script[type="application/graphql"]')).to.be.ok;
     });
   });
 
   describe('with `no-shadow` and `template` attributes set', function() {
-    let element: ApolloQueryElement<NoParamQueryData, NoParamQueryVariables>;
+    let element: ApolloSubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-query no-shadow template="tpl" .query="${NoParamQuery}"></apollo-query>
+        <apollo-subscription no-shadow template="tpl" .subscription="${NoParamSubscription}"></apollo-subscription>
 
         <template id="tpl">
           <h1>Template</h1>
@@ -155,10 +155,10 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     beforeEach(nextFrame);
 
     it('renders', function() {
-      expect(element.$$('h1').length).to.equal(1);
-      expect(element.$$('span').length).to.equal(2);
-      expect(element.$('#data')).to.be.ok;
-      expect(element.$('#data')?.textContent).to.equal('noParam');
+      expect(element.$$('h1').length, 'h1').to.equal(1);
+      expect(element.$$('span').length, 'span').to.equal(2);
+      expect(element.$('#data'), '#data').to.be.ok;
+      expect(element.$('#data')?.textContent, '#data').to.equal('noParam');
     });
 
     it('renders to the light DOM', function() {
@@ -170,18 +170,18 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
   });
 
-  describe('with template in DOM and a query property', function() {
-    let element: ApolloQueryElement<NoParamQueryData, NoParamQueryVariables>;
+  describe('with template in DOM and a subscription property', function() {
+    let element: ApolloSubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-query .query="${NoParamQuery}">
+        <apollo-subscription .subscription="${NoParamSubscription}">
           <template>
             <h1>Template</h1>
             <span id="data">{{ data.noParam.noParam }}</span>
             <span id="error">{{ error.message }}</span>
           </template>
-        </apollo-query>
+        </apollo-subscription>
       `);
     });
 
@@ -195,15 +195,18 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
   });
 
-  describe('with template, query, and variables in DOM', function() {
-    let element: ApolloQueryElement<NullableParamQueryData, NullableParamQueryVariables>;
+  describe('with template, subscription, and variables in DOM', function() {
+    let element: ApolloSubscriptionElement<
+      NullableParamSubscriptionData,
+      NullableParamSubscriptionVariables
+    >;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-query>
+        <apollo-subscription>
 
           <script type="application/graphql">
-            query NullableParamQuery($nullable: String) {
+            subscription NullableParamSubscription($nullable: String) {
               nullableParam(nullable: $nullable) {
                 nullable
               }
@@ -222,7 +225,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
             <span id="error">{{ error.message }}</span>
           </template>
 
-        </apollo-query>
+        </apollo-subscription>
       `);
     });
 
@@ -249,20 +252,23 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
   });
 
-  describe('when query errors', function() {
-    let element: ApolloQueryElement<NullableParamQueryData, NullableParamQueryVariables>;
+  describe('when subscription errors', function() {
+    let element: ApolloSubscriptionElement<
+      NullableParamSubscriptionData,
+      NullableParamSubscriptionVariables
+    >;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-query
-            .query="${NullableParamQuery}"
+        <apollo-subscription
+            .subscription="${NullableParamSubscription}"
             .variables="${{ nullable: 'error' }}">
           <template>
             <h1>Template</h1>
             <span id="data">{{ data.nullableParam.nullable }}</span>
             <span id="error">{{ error.message }}</span>
           </template>
-        </apollo-query>
+        </apollo-subscription>
       `);
     });
 
@@ -273,11 +279,11 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
   });
 
   describe('with a list rendering template', function() {
-    let element: ApolloQueryElement;
+    let element: ApolloSubscriptionElement;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-query>
+        <apollo-subscription>
           <template>
             <p>{{ data.me.name }}</p>
             <ul>
@@ -287,7 +293,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
               </template>
             </ul>
           </template>
-        </apollo-query>
+        </apollo-subscription>
       `);
     });
 
@@ -316,8 +322,8 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 
-function TypeCheck() {
-  const el = new ApolloQueryElement<TypeCheckData, TypeCheckVars>();
+export function TypeCheck(): void {
+  const el = new ApolloSubscriptionElement<TypeCheckData, TypeCheckVars>();
   /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
   assertType<HTMLElement>                               (el);
@@ -337,8 +343,8 @@ function TypeCheck() {
   if (isApolloError(el.error!))
     assertType<readonly GraphQLError[]>                 (el.error.graphQLErrors);
 
-  // ApolloQueryInterface
-  assertType<DocumentNode>                              (el.query!);
+  // ApolloSubscriptionInterface
+  assertType<DocumentNode>                              (el.subscription!);
   assertType<TypeCheckVars>                             (el.variables!);
   assertType<ErrorPolicy>                               (el.errorPolicy!);
   assertType<string>                                    (el.errorPolicy!);

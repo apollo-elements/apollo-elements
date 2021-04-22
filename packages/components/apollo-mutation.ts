@@ -11,7 +11,9 @@ import type {
 } from '@apollo-elements/interfaces';
 
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { StampinoElement, property } from './stampino-element';
+import { isEmpty } from '@apollo-elements/lib/helpers';
+
+import { StampinoRender, property } from './stampino-render';
 
 import {
   MutationCompletedEvent,
@@ -19,7 +21,8 @@ import {
   WillMutateEvent,
   WillNavigateEvent,
 } from './events';
-import { isEmpty } from '@apollo-elements/lib/helpers';
+
+declare global { interface HTMLElementTagNameMap { 'apollo-mutation': ApolloMutationElement } }
 
 export * from './events';
 
@@ -152,7 +155,7 @@ export class WillMutateError extends Error {}
  * ```
  */
 export class ApolloMutationElement<D = unknown, V = OperationVariables>
-  extends ApolloMutationMixin<Constructor<StampinoElement>>(StampinoElement)<D, V>
+  extends ApolloMutationMixin<Constructor<StampinoRender & HTMLElement>>(StampinoRender)<D, V>
   implements ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
