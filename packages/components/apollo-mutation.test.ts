@@ -74,7 +74,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation></apollo-mutation>
       `);
     });

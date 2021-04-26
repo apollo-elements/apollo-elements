@@ -1,15 +1,16 @@
 import type { SinonSpy, SinonStub } from 'sinon';
-import type { TypedDocumentNode } from '@apollo/client/core';
+import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
+import type { Entries } from '@apollo-elements/interfaces';
 
-import { assertType, Entries, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { assertType, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
 
 import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
 
-import { aTimeout, nextFrame } from '@open-wc/testing';
+import { aTimeout } from '@open-wc/testing';
 
-import { define, html } from 'hybrids';
+import { define, html, Hybrids, RenderFunction } from 'hybrids';
 
-import { query } from './query';
+import { query, QueryHybridsFactoryOptions } from './query';
 
 import 'sinon-chai';
 
@@ -24,6 +25,26 @@ function getTagName(): string {
   return tagName;
 }
 
+type TestableApolloQueryHybrid<T, U> = Hybrids<QueryElement<T, U> & {
+  stringify(x: unknown): string;
+  hasRendered(): Promise<QueryElement<T, U>>;
+  render?: RenderFunction<QueryElement<T, U>>;
+}>
+
+const testQuery = <T, U>(
+  doc?: DocumentNode | TypedDocumentNode<T, U> | null,
+  opts?: QueryHybridsFactoryOptions<T, U>
+): TestableApolloQueryHybrid<T, U> => ({
+    ...query<T, U>(doc, opts),
+    stringify: () => stringify,
+    hasRendered: host => async () => {
+      await aTimeout(0);
+      host.render?.(host);
+      await aTimeout(0);
+      return host;
+    },
+  });
+
 describe('[hybrids] ApolloQuery', function() {
   describeQuery({
     async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>): Promise<SetupResult<T>> {
@@ -31,14 +52,8 @@ describe('[hybrids] ApolloQuery', function() {
 
       const tag = getTagName();
 
-      define<QueryElement>(tag, {
-        ...query(null),
-        stringify: () => stringify,
-        hasRendered: (host: QueryElement & { render(): ShadowRoot }) => async () => {
-          await aTimeout(100);
-          host.render();
-          return host;
-        },
+      define(tag, {
+        ...testQuery(),
         render: host => html`
           <output id="data">${host.stringify(host.data)}</output>
           <output id="error">${host.stringify(host.error)}</output>
@@ -72,11 +87,7 @@ describe('[hybrids] ApolloQuery', function() {
       for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
         element[key] = val;
 
-      await nextFrame();
-
       element.innerHTML = innerHTML;
-
-      await nextFrame();
 
       return { element, spies, stubs };
     },
