@@ -31,7 +31,7 @@ export function booleanAttr<C extends ApolloElementInterface>(attr: string): Pro
 
     set(this: C, v: boolean) {
       if (v)
-        this.setAttribute(attr, ''); /* c8 ignore next */ // ??
+        this.setAttribute(attr, ''); /* c8 ignore next */ // covered
       else
         this.removeAttribute(attr);
     },

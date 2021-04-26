@@ -1,3 +1,10 @@
+import type {
+  NonNullableParamQueryData,
+  NonNullableParamQueryVariables,
+  NoParamQueryData,
+  NoParamQueryVariables,
+} from '@apollo-elements/test-helpers';
+
 import {
   gql,
   NormalizedCacheObject,
@@ -7,22 +14,27 @@ import {
 
 import { ApolloClient } from '@apollo/client/core';
 
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture,
+  fixtureSync,
+  html,
+  nextFrame,
+  oneEvent,
+  unsafeStatic,
+} from '@open-wc/testing';
+
 import { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
-import { fixtureSync, expect, nextFrame, oneEvent, defineCE, aTimeout } from '@open-wc/testing';
 import { ApolloClientElement } from './apollo-client';
-
-import './apollo-client';
 import { makeClient } from '@apollo-elements/test-helpers';
-import type {
-  NonNullableParamMutationData,
-  NonNullableParamMutationVariables,
-  NoParamQueryData,
-  NoParamQueryVariables,
-} from '@apollo-elements/test-helpers';
-
 import { spy, stub, SinonStub } from 'sinon';
 
+import './apollo-client';
+
 import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
+import NonNullableParamQuery from '@apollo-elements/test-helpers/graphql/NonNullableParam.query.graphql';
 
 /** @ignore */
 class ShallowElement<D = unknown, V = OperationVariables> extends ApolloElementElement<D, V> {
@@ -101,7 +113,7 @@ describe('<apollo-client>', function() {
   describe('without client', function() {
     beforeEach(async function() {
       spy(QueryElement.prototype, 'subscribe');
-      element = fixtureSync<ApolloClientElement>(/* html */`
+      element = await fixture<ApolloClientElement>(html`
         <apollo-client>
           <shallow-element></shallow-element>
           <deep-element></deep-element>
@@ -125,7 +137,7 @@ describe('<apollo-client>', function() {
       cached = window.__APOLLO_CLIENT__;
       delete window.__APOLLO_CLIENT__;
       client = makeClient();
-      element = fixtureSync<ApolloClientElement>(/* html */`
+      element = await fixture<ApolloClientElement>(html`
         <apollo-client>
           <shallow-element></shallow-element>
           <deep-element></deep-element>
@@ -271,7 +283,7 @@ describe('<apollo-client>', function() {
     beforeEach(mockFetch);
     afterEach(restoreFetch);
     it('creates a new client', async function() {
-      element = fixtureSync<ApolloClientElement>(/* html */`
+      element = fixtureSync<ApolloClientElement>(html`
         <apollo-client uri="/graphql"></apollo-client>
       `);
       const { detail } = await oneEvent(element, 'client-changed');
@@ -283,30 +295,19 @@ describe('<apollo-client>', function() {
   describe('with uri and validate-variables', function() {
     beforeEach(mockFetch);
     afterEach(restoreFetch);
+
     class ApolloQueryEl extends ApolloQueryElement<
-      NonNullableParamMutationData,
-      NonNullableParamMutationVariables
+      NonNullableParamQueryData,
+      NonNullableParamQueryVariables
     > { }
 
     const tag = defineCE(ApolloQueryEl);
+    const tagName = unsafeStatic(tag);
+
     it('creates a new client', async function() {
-      element = fixtureSync<ApolloClientElement>(/* html */`
+      element = await fixture<ApolloClientElement>(html`
         <apollo-client uri="/graphql" validate-variables>
-          <${tag}>
-            <script type="application/graphql">
-              query NonNull($nonNull: Boolean!, $nullable: Boolean) {
-                nonNull(nonNull: $nonNull, nullable: $nullable) {
-                  nonNull
-                  nullable
-                }
-              }
-            </script>
-            <script type="application/json">
-              {
-                "nullable": true
-              }
-            </script>
-          </${tag}>
+          <${tagName} .query="${NonNullableParamQuery}" .variables="${{ 'nullable': true }}"></${tagName}>
         </apollo-client>
       `);
 

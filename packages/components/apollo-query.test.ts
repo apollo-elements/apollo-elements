@@ -9,7 +9,7 @@ import {
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import { fixture, expect, nextFrame } from '@open-wc/testing';
+import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
 import { html } from 'lit-html';
 
@@ -109,8 +109,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       `);
     });
 
-    beforeEach(nextFrame);
-    beforeEach(nextFrame);
+    beforeEach(() => aTimeout(200));
 
     it('renders', function() {
       expect(element.$$('h1').length).to.equal(1);

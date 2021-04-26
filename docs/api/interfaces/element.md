@@ -5,7 +5,7 @@ module: './apollo-element.ts'
 ---
 # Interfaces >> ApolloElement || 00
 
-Common base interface for Apollo Elements. Provides the ability to read GraphQL operations from HTML (via `<script type="application/graphql">` and `<script type="application/json">` tags) as well as reactivity for `data`, `error`, `errors`, `loading`, and `variables` fields.
+Common base interface for Apollo Elements. Provides reactivity for `data`, `error`, `errors`, `loading`, and `variables` fields.
 
 ## Type Parameters
 

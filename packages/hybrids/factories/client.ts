@@ -26,9 +26,7 @@ export function client<
 ): Descriptor<E, ApolloClient<NormalizedCacheObject> | null> {
   return {
     connect(host) {
-      applyPrototype(host, ApolloElementElement, {
-        type: 'client',
-      });
+      applyPrototype(host, ApolloElementElement);
 
       /* c8 ignore start */ // covered
       const useGlobal = options?.useGlobal ?? true;

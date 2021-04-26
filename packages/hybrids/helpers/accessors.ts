@@ -17,6 +17,8 @@ interface Options<T extends ApolloElementElement> {
   defaults?: Partial<Record<keyof T, T[keyof T]>>
 }
 
+// Allow any permutation of ApolloElement, as the data and variables types are irrelevant here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function initDocument<T extends ApolloElementElement<any, any>>(
   options: Options<T>
 ): () => void {
@@ -29,8 +31,13 @@ export function initDocument<T extends ApolloElementElement<any, any>>(
 
   mo.observe(host, { characterData: true, childList: true, subtree: true });
 
+  const hasPreviousValue = !host.document && !!VALUES.get(host);
+
   // If we don't do this, `parentNode.append(host)` will not preserve the value of `document`
   host.document ??= VALUES.get(host) ?? document ?? null;
+
+  if (hasPreviousValue) // @ts-expect-error: no classes in hybrids so we'll just call the hook directly
+    host.documentChanged?.(host.document); /* c8 ignore next */
 
   getDescriptor(host).connectedCallback.value.call(host);
 

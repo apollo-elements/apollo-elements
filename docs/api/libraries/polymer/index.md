@@ -44,15 +44,10 @@ class HelloQueryElement extends PolymerElement {
   static get template() {
     return html`
       <apollo-client uri="/graphql">
-        <apollo-query data="{%raw%}{{data}}{%endraw%}" variables="[[variables]]">
-          <script type="application/graphql">
-            query HelloQuery($name: String, $greeting: String) {
-              hello(name: $name, greeting: $greeting) {
-                name
-                greeting
-              }
-            }
-          </script>
+        <apollo-query
+            data="{%raw%}{{data}}{%endraw%}"
+            query="[[query]]"
+            variables="[[variables]]">
         </apollo-query>
       </apollo-client>
 
@@ -72,6 +67,17 @@ class HelloQueryElement extends PolymerElement {
           greeting: 'Howdy',
         }),
       },
+      query: {
+        type: Object,
+        value: () => gql`
+          query HelloQuery($name: String, $greeting: String) {
+            hello(name: $name, greeting: $greeting) {
+              name
+              greeting
+            }
+          }
+        `
+      }
     };
   }
 
@@ -98,36 +104,19 @@ If you prefer, you can use Polymer's two-way binding to set an element's client 
 <apollo-query
     client="[[ownClient]]"
     data="{%raw%}{{helloData}}{%endraw%}"
+    query="[[helloQuery]]"
     variables="[[helloVariables]]">
-  <script type="application/graphql">
-    query HelloQuery($name: String, $greeting: String) {
-      hello(name: $name, greeting: $greeting) {
-        name
-        greeting
-      }
-    }
-  </script>
 </apollo-query>
 
 <apollo-query
     client="[[spacexClient]]"
     data="{%raw%}{{launchesData}}{%endraw%}"
+    query="[[launchesQuery]]"
     variables="[[launchesVariables]]">
-  <script type="application/graphql">
-    query LaunchesQuery($sort: String = "launch_date_utc"){
-      launches(sort: $sort, order: "desc") {
-        launch_date_utc
-        mission_name
-        rocket {
-          rocket_name
-        }
-      }
-    }
-  </script>
 </apollo-query>
 
 <p>
-  <span>[[getGreeting(helloData)]]</span>,
+  <span>[[getName(helloData)]]</span>,
   <span>[[getGreeting(helloData)]]</span>!
   Latest launch is
   <span>[[launchesData.launches.0.mission_name]]</span>.

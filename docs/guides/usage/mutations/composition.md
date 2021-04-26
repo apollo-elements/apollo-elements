@@ -34,21 +34,26 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
 
   ```html tab html
   <apollo-query>
+    <script type="application/graphql">
+      query User($userId: ID!) {
+        user(userId: $userId) { id isMe name birthday picture }
+      }
+    </script>
     <template>
       <h2>Profile</h2>
 
       <dl ?hidden="{%raw%}{{ loading || !data }}{%endraw%}">
         <dt>Name</dt>
-        <dd>{%raw%}{{ data.name }}{%endraw%}</dd>
+        <dd>{%raw%}{{ data.user.name }}{%endraw%}</dd>
 
         <dt>Picture</dt>
-        <dd><img .src="{%raw%}{{ data.picture }}{%endraw%}"/></dd>
+        <dd><img .src="{%raw%}{{ data.user.picture }}{%endraw%}"/></dd>
 
         <dt>Birthday</dt>
-        <dd>{%raw%}{{ data.birthday }}{%endraw%}</dd>
+        <dd>{%raw%}{{ data.user.birthday }}{%endraw%}</dd>
       </dl>
 
-      <form ?hidden="{%raw%}{{ !data.isMe }}{%endraw%}">
+      <form ?hidden="{%raw%}{{ !data.user.isMe }}{%endraw%}">
         <h3>Edit</h3>
         <apollo-mutation input-key="input">
           <script type="application/graphql">
@@ -59,11 +64,20 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
               birthday
             }
           </script>
-          <label>Name <input data-variable="name"></label>
+          <label for="name">Name</label>
+          <input id="name"
+                 data-variable="name"
+                 .value="{%raw%}{{ data.user.name }}{%endraw%}"/>
 
-          <label>Picture (URL) <input data-variable="picture"></label>
+          <label for="picture">Picture (URL)</label>
+          <input id="picture"
+                 data-variable="picture"
+                 .value="{%raw%}{{ data.user.picture }}{%endraw%}"/>
 
-          <label>Birthday <input data-variable="birthday" type="date"/></label>
+          <label for="birthday">Birthday</label>
+          <input id="birthday"
+                 data-variable="birthday" type="date"
+                 .value="{%raw%}{{ data.user.birthday }}{%endraw%}"/>
 
           <button trigger>Save</button>
         </apollo-mutation>
@@ -164,7 +178,7 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
 
   import '@apollo-elements/components/apollo-mutation';
   import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
-  import { ifDefined } from 'lit-html/directives/if-defined';
+  import { ifDefined } from 'lit/directives/if-defined.js';
 
   import ProfileQuery from './Profile.query.graphql';
   import UpdateProfileMutation from 'UpdateProfile.mutation.graphql';

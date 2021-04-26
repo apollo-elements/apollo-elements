@@ -6,7 +6,7 @@ libraries:
     logo: html5
 
   - lib: lit-apollo
-    name: LitElement
+    name: Lit
     logo: lit
 
   - lib: fast

@@ -1,10 +1,15 @@
+import type { SetupOptions } from '@apollo-elements/test-helpers';
+
+import type {
+  NullableParamSubscriptionData,
+  NullableParamSubscriptionVariables,
+} from '@apollo-elements/test-helpers/schema';
+
 import { html } from 'haunted';
 import { useSubscription } from './useSubscription';
 import { component } from 'haunted';
 
 import { TypedDocumentNode, DocumentNode, gql } from '@apollo/client/core';
-
-import type { Entries, SetupOptions } from '@apollo-elements/test-helpers';
 
 import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
 
@@ -23,12 +28,7 @@ import {
   SubscriptionElement,
 } from '@apollo-elements/test-helpers/subscription.test';
 
-import type {
-  NullableParamSubscriptionData,
-  NullableParamSubscriptionVariables,
-} from '@apollo-elements/test-helpers/schema';
-
-import { ApolloSubscriptionElement } from '@apollo-elements/interfaces';
+import { ApolloSubscriptionElement, Entries } from '@apollo-elements/interfaces';
 
 describe('[haunted] useSubscription', function() {
   const ccOrig = ApolloSubscriptionElement.prototype.connectedCallback;

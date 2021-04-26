@@ -1,4 +1,4 @@
-import { SetupFunction, SetupOptions, SetupResult } from './types';
+import { SetupFunction } from './types';
 
 import {
   expect,
@@ -21,8 +21,8 @@ import { makeClient, setupClient } from './client';
 
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
-import { gql } from '@apollo/client/core';
-import { Entries, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
+
+import { restoreSpies, waitForRender } from './helpers';
 
 export interface MutationElement<D = unknown, V = OperationVariables> extends ApolloMutationElement<D, V> {
   refetchQueries: RefetchQueriesType<D> | null;
@@ -57,38 +57,7 @@ export interface DescribeMutationComponentOptions<E extends MutationElement = Mu
   class?: Constructor<E>;
 }
 
-export function setupMutationClass<T extends MutationElement>(Klass: Constructor<T>): SetupFunction<T> {
-  return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-    class Test extends (Klass as Constructor<MutationElement>) {}
-
-    const { innerHTML = '', attributes, properties } = opts ?? {};
-
-    // for mutation components, which don't fetch on connect,
-    // and have optional instance callbacks,
-    // we must ensure spies are created *after* properties are applied
-    if (properties?.onCompleted)
-      Test.prototype.onCompleted = properties.onCompleted;
-
-    if (properties?.onError)
-      Test.prototype.onError = properties.onError;
-
-    const tag =
-      defineCE(Test);
-
-    const attrs = attributes ? ` ${attributes}` : '';
-
-    const element =
-      await fixture<B>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
-
-    const spies = setupSpies(opts?.spy, Test.prototype as B);
-    const stubs = setupStubs(opts?.stub, Test.prototype as B);
-
-    for (const [key, val] of Object.entries(properties ?? {}) as Entries<B>)
-      key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
-
-    return { element, spies, stubs };
-  };
-}
+export { setupMutationClass } from './helpers';
 
 export function describeMutation(options: DescribeMutationComponentOptions): void {
   const { setupFunction, class: Klass } = options;
@@ -169,25 +138,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         it('renders', function() {
           expect(element.shadowRoot.getElementById('called')!.textContent).to.equal('true');
-        });
-      });
-
-      describe('with NoParam mutation script child', function() {
-        let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
-
-        beforeEach(async function setupElement() {
-          ({ element } = await setupFunction<typeof element>({
-            innerHTML: `<script type="application/graphql">${NoParamMutation.loc!.source.body}</script>`,
-          }));
-        });
-
-        it('does not remove the script', function() {
-          expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-        });
-
-        it('sets the mutation property', function() {
-          expect(element.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-          expect(element.mutation).to.deep.equal(gql(NoParamMutation.loc!.source.body));
         });
       });
 

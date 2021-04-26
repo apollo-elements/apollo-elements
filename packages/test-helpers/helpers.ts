@@ -1,6 +1,18 @@
 import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
-export type { Entries } from '@apollo-elements/interfaces';
+import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
+
+import type {
+  ApolloElementInterface,
+  ApolloMutationInterface,
+  ApolloQueryInterface,
+  ApolloSubscriptionInterface,
+  Constructor,
+} from '@apollo-elements/interfaces';
+
+import type { Entries } from '@apollo-elements/interfaces';
+
+import { defineCE, fixture } from '@open-wc/testing';
 
 // 🐤 quack quack 🦆
 export function isSubscription(x: unknown): x is ZenObservable.Subscription {
@@ -72,3 +84,56 @@ export function waitForRender<T extends HTMLElement & { hasRendered:() => Promis
     await getElement()?.hasRendered();
   };
 }
+
+function setupClass<T extends TestableElement & ApolloElementInterface>(fopts?: {
+  beforeDefine?: <U extends T>(k: Constructor<U>, opts: SetupOptions<U>) => void,
+  omitKeys?: string[],
+}) {
+  return function(Klass: Constructor<T>): SetupFunction<T> {
+    return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
+      class Test extends (Klass as Constructor<TestableElement & ApolloElementInterface>) {
+        declare variables: any;
+
+        declare data: any;
+      }
+
+      const { innerHTML = '', attributes, properties } = opts ?? {};
+
+      fopts?.beforeDefine?.(Test as Constructor<B>, opts!);
+
+      const tag = defineCE(Test);
+
+      const spies = setupSpies(opts?.spy, Test.prototype as B);
+      const stubs = setupStubs(opts?.stub, Test.prototype as B);
+
+      const attrs = attributes ? ` ${attributes}` : '';
+
+      const element = await fixture<B>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
+
+      // eslint-disable-next-line easy-loops/easy-loops
+      for (const [key, val] of Object.entries(properties ?? {}) as Entries<B>) {
+        if (!(fopts?.omitKeys ?? []).includes(key as string))
+          element[key] = val;
+      }
+
+      return { element, spies, stubs };
+    };
+  };
+}
+
+export const setupApolloElementClass = setupClass();
+export const setupQueryClass = setupClass<TestableElement & ApolloQueryInterface<any, any>>();
+export const setupSubscriptionClass = setupClass<TestableElement & ApolloSubscriptionInterface<any, any>>();
+export const setupMutationClass = setupClass<TestableElement & ApolloMutationInterface<any, any>>({
+  omitKeys: ['onCompleted', 'onError'],
+  beforeDefine(Test, opts) {
+    // for mutation components, which don't fetch on connect,
+    // and have optional instance callbacks,
+    // we must ensure spies are created *after* properties are applied
+    if (opts?.properties?.onCompleted)
+      Test.prototype.onCompleted = opts?.properties.onCompleted;
+
+    if (opts?.properties?.onError)
+      Test.prototype.onError = opts?.properties.onError;
+  },
+});

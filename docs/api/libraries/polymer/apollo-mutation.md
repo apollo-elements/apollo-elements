@@ -13,18 +13,9 @@ See [ApolloMutationInterface](/api/interfaces/mutation/) for more information.
 ### Examples
 
 ```html wcd LyH1DZUe3by6bla4Nt77 src/User.js
-<apollo-mutation id="userMutation" data="{{data}}">
-  <script type="application/graphql">
-    mutation InsertUser($name: String!) {
-      insertUsers: insert_users(objects: {name: $name}) {
-        returning {
-          name
-          id
-          timestamp
-        }
-      }
-    }
-  </script>
+<apollo-mutation id="userMutation"
+    data="{{data}}"
+    mutation="[[mutation]]">
 </apollo-mutation>
 
 <p-card>

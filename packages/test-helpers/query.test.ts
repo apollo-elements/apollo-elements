@@ -1,6 +1,7 @@
-import { SetupFunction, SetupOptions, SetupResult } from './types';
+import { SetupFunction } from './types';
 
 import {
+  aTimeout,
   defineCE,
   expect,
   fixture,
@@ -9,7 +10,6 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 
-import HelloQuery from './graphql/Hello.query.graphql';
 import NoParamQuery from './graphql/NoParam.query.graphql';
 import NullableParamQuery from './graphql/NullableParam.query.graphql';
 import NonNullableParamQuery from './graphql/NonNullableParam.query.graphql';
@@ -20,7 +20,7 @@ import { gql } from '@apollo/client/core';
 
 import { ApolloQueryResult, DefaultOptions, NetworkStatus } from '@apollo/client/core';
 
-import type { ApolloQueryElement, Constructor } from '@apollo-elements/interfaces';
+import type { ApolloQueryElement, Constructor, Entries } from '@apollo-elements/interfaces';
 
 import type {
   NonNullableParamQueryData,
@@ -35,7 +35,7 @@ import { ObservableQuery } from '@apollo/client/core';
 
 import { match, spy, SinonSpy } from 'sinon';
 import { client, makeClient } from './client';
-import { Entries, isSubscription, restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
+import { isSubscription, restoreSpies, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql';
 
 type QE<D, V> = ApolloQueryElement<D, V>;
@@ -71,29 +71,7 @@ export interface DescribeQueryComponentOptions {
   class?: Constructor<QueryElement>;
 }
 
-export function setupQueryClass<T extends QueryElement>(Klass: Constructor<T>): SetupFunction<T> {
-  return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-    class Test extends (Klass as Constructor<QueryElement>) { }
-
-    const { innerHTML = '', attributes, properties } = opts ?? {};
-
-    const tag =
-      defineCE(Test);
-
-    const spies = setupSpies(opts?.spy, Test.prototype as B);
-    const stubs = setupStubs(opts?.stub, Test.prototype as B);
-
-    const attrs = attributes ? ` ${attributes}` : '';
-
-    const element =
-      await fixture<B>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
-
-    for (const [key, val] of Object.entries(properties ?? {}) as Entries<B>)
-      element[key] = val;
-
-    return { element, spies, stubs };
-  };
-}
+export { setupQueryClass } from './helpers';
 
 export function describeQuery(options: DescribeQueryComponentOptions): void {
   const { setupFunction, class: Klass } = options;
@@ -720,6 +698,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             beforeEach(waitForRender(() => element));
 
             it('calls refetch', function() {
+              element!.variables = { nullable: '✈' };
               expect(element?.refetch).to.have.been.calledWithMatch({ nullable: '✈' });
             });
           });
@@ -744,7 +723,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('then appending the element elsewhere', function() {
-            beforeEach(nextFrame);
+            beforeEach(() => aTimeout(60));
 
             beforeEach(async function() {
               document.body.append(element!);
@@ -961,105 +940,6 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           it('does not set observableQuery', function( ) {
             expect(element?.observableQuery).to.be.undefined;
-          });
-        });
-
-        describe('appending a script child with wrong type', function() {
-          beforeEach(function appendWrongTypeScript() {
-            element!.innerHTML = `<script type="app/gql">query { noParam }</script>`;
-          });
-
-          beforeEach(waitForRender(() => element));
-
-          it('does not change document', function() {
-            expect(element?.query).to.be.null;
-          });
-        });
-
-        describe('appending a script child with invalid contents', function() {
-          beforeEach(function appendBadScript() {
-            element!.innerHTML = `<script type="application/graphql">quory { # hi }</script>`;
-          });
-
-          beforeEach(waitForRender(() => element));
-
-          it('does not change document', function() {
-            expect(element?.query).to.be.null;
-          });
-
-          it('sets error', function() {
-            expect(element?.error?.message.includes('quory')).to.be.true;
-          });
-        });
-      });
-
-      describe('with a graphql script child', function() {
-        let spies: Record<keyof QueryElement, SinonSpy> | undefined;
-
-        beforeEach(async function setupElement() {
-          ({ element, spies } =
-            await setupFunction({
-              spy: ['subscribe'],
-              innerHTML: `<script type="application/graphql">${NoParamQuery.loc!.source.body}</script>`,
-            }));
-        });
-
-        beforeEach(waitForRender(() => element));
-
-        afterEach(restoreSpies(() => spies));
-
-        afterEach(function teardownElement() {
-          element?.remove();
-          element = undefined;
-        });
-
-        it('does not remove script', function() {
-          expect(element?.firstElementChild).to.be.an.instanceof(HTMLElement);
-        });
-
-        it('sets query property', function() {
-          expect(element?.query).to.deep.equal(gql(NoParamQuery.loc!.source.body));
-        });
-
-        it('calls subscribe', function() {
-          expect(element?.subscribe).to.have.been.called;
-        });
-
-        describe('changing the DOM script to HelloQuery', function() {
-          beforeEach(function changeScript() {
-            element!.innerHTML = `<script type="application/graphql">${HelloQuery.loc!.source.body}</script>`;
-          });
-
-          beforeEach(waitForRender(() => element));
-
-          it('renders', function() {
-            expect(element?.shadowRoot?.getElementById('data')?.textContent)
-              .to.equal(element?.stringify({
-                helloWorld: {
-                  __typename: 'HelloWorld',
-                  name: 'Chaver',
-                  greeting: 'Shalom',
-                },
-              }));
-          });
-
-          describe('setting the variables', function() {
-            beforeEach(function setVariables() {
-              element!.variables = { name: 'Aleichem' };
-            });
-
-            beforeEach(waitForRender(() => element));
-
-            it('rerenders', function() {
-              expect(element?.shadowRoot?.getElementById('data')?.textContent)
-                .to.equal(element!.stringify({
-                  helloWorld: {
-                    __typename: 'HelloWorld',
-                    name: 'Aleichem',
-                    greeting: 'Shalom',
-                  },
-                }));
-            });
           });
         });
       });
@@ -1760,7 +1640,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
   });
 
   if (Klass) {
-    describe('ApolloMutation subclasses', function() {
+    describe('ApolloQuery subclasses', function() {
       describe('with noAutoSubscribe set as a class field', function() {
         let element: QueryElement;
 

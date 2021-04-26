@@ -12,7 +12,14 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import { fixture, expect, aTimeout, oneEvent, nextFrame } from '@open-wc/testing';
+import {
+  aTimeout,
+  expect,
+  fixture,
+  fixtureSync,
+  nextFrame,
+  oneEvent,
+} from '@open-wc/testing';
 
 import { html } from 'lit-html';
 
@@ -57,7 +64,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation></apollo-mutation>
       `);
     });
@@ -71,7 +78,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation
             data-var-a="variable-a"
             data-var-b="variable-b"
@@ -129,7 +136,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation input-key="inputTypeName">
           <input data-variable="varA" value="variable-a"/>
           <input data-variable="varB" value="variable-b"/>
@@ -151,7 +158,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation
             input-key="inputTypeName"
             data-var-a="variable-a"
@@ -178,7 +185,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation>
           <input data-variable="varA" value="variable-a"/>
         </apollo-mutation>
@@ -196,7 +203,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation>
           <input data-variable="varA" value="variable-a"/>
           <input data-variable="varB" value="variable-b"/>
@@ -216,7 +223,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation>
           <label>
             variable-a
@@ -237,7 +244,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation data-var-b="variable-b">
           <label>
             variable-a
@@ -262,7 +269,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation
             data-var-a="variable-a"
             data-var-b="variable-b">
@@ -288,7 +295,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       const inputKey = 'inputTypeName';
 
       beforeEach(async function() {
-        element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+        element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
           <apollo-mutation
               input-key="${inputKey}"
               data-var-a="variable-a"
@@ -895,7 +902,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
 
     beforeEach(async function() {
-      element = await fixture<typeof element>(html`
+      element = fixtureSync<typeof element>(html`
         <apollo-mutation no-shadow .mutation="${NoParamMutation}">
           <button trigger>mutate</button>
           <template>

@@ -144,7 +144,7 @@ describe('[mixins] ApolloQueryMixin', function() {
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 
-export class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
+class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
   variables = { d: 'd' as const, e: 0 };
 
   typeCheck(): void {

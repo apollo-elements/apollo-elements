@@ -159,8 +159,9 @@ As such, you can only expect your component's `data` property to be truthy once 
   ```
 
   ```ts tab lit
+  import type { TemplateResult } from 'lit';
   import { ApolloMutation } from '@apollo-elements/lit-apollo/apollo-mutation';
-  import { customElement, html, TemplateResult } from 'lit-element';
+  import { customElement, html } from 'lit/decorators';
 
   import { AddUserMutation } from './AddUser.mutation.graphql';
 

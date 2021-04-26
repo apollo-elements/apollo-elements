@@ -71,24 +71,12 @@ Read more about `<apollo-query>` in the [`<apollo-query>` HTML element guide](/g
 <!-- maintain links to the old heading -->
 <a id="query-elements"></a>
 
-Apollo Elements gives you multiple options for defining your own custom query elements. Which option you choose depends on your application, your team, and your priorities. You can extend from the [lit-element](/api/libraries/lit-apollo/apollo-query/) or [FAST](/api/libraries/fast/apollo-query/) base classes, or apply the [Apollo query mixin](/api/libraries/mixins/apollo-query-mixin/) to the base class of your choice. For those who prefer a more 'functional' approach, there's the [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) or the [`query` hybrids factory](/api/libraries/hybrids/query/).
+Apollo Elements gives you multiple options for defining your own custom query elements. Which option you choose depends on your application, your team, and your priorities. You can extend from the [lit](/api/libraries/lit-apollo/apollo-query/) or [FAST](/api/libraries/fast/apollo-query/) base classes, or apply the [Apollo query mixin](/api/libraries/mixins/apollo-query-mixin/) to the base class of your choice. For those who prefer a more 'functional' approach, there's the [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) or the [`query` hybrids factory](/api/libraries/hybrids/query/).
 
-In any case, setting your element's query property or class field (or using `useQuery` or `query` factory) will automatically initiate the subscription. You can change the query via the `query` DOM property at any time to reinitialize the subscription.
+In any case, setting your element's query property or class field (or using `useQuery` or `query` factory) will automatically start the subscription. You can change the query via the `query` DOM property at any time to reinitialize the subscription.
 
 ```js copy
 document.querySelector('hello-query').query = HelloQuery;
-```
-
-Custom query elements can also take a GraphQL script child, just like `<apollo-query>`.
-
-```html copy
-<hello-query>
-  <script type="application/graphql">
-    query HelloQuery {
-      hello { name greeting }
-    }
-  </script>
-</hello-query>
 ```
 
 Apollo client ensures that the component always has the latest data by {% footnoteref "observablequery" "This is different from <a href='/guides/usage/subscriptions/'>GraphQL subscriptions</a>, which are realtime persistent streams, typically over websockets. Rather, <code>ObservableQueries</code> update the client-side state whenever the query's data changes, either because the user executed the query operation, a mutation updated the query's fields, or the Apollo cache's local state changed." %}_subscribing_{% endfootnoteref %} to the query using an [`ObservableQuery`](https://www.apollographql.com/docs/react/api/core/ObservableQuery/) object. As long as an element has access to an `ApolloClient` instance, whenever its `query` or `variables` property changes, it will automatically subscribe to (or update) its `ObservableQuery`.
@@ -226,7 +214,7 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
 
   ```ts tab haunted
   import { useQuery, component, html } from '@apollo-elements/haunted';
-  import { classMap } from 'lit-html/directives/class-map';
+  import { classMap } from 'lit/directives/class-map.js';
   import { HelloQuery } from './Hello.query.graphql';
 
   function HelloQueryElement() {
@@ -651,11 +639,11 @@ If you want your query to fire once over the network, but subsequently to only u
 If you want your component to automatically subscribe, but only if its required variables are present, see [Validating Variables](/guides/cool-tricks/validating-variables/).
 
 ## Reacting to Updates
-As we've seen query elements set their `data` property whenever the query resolves. For vanilla components, you should define a data setter that renders your DOM, and for each library (`lit-element`, `FAST`, `hybrids`, etc.), their differing reactivity systems ensure that your element renders when the data changes.
+As we've seen query elements set their `data` property whenever the query resolves. For vanilla components, you should define a data setter that renders your DOM, and for each library (`lit`, `FAST`, `hybrids`, etc.), their differing reactivity systems ensure that your element renders when the data changes.
 
 If you want to run other side effects, here are some options:
 
-- use your library's reactivity system, e.g. `updated` for LitElement or `dataChanged` for FAST
+- use your library's reactivity system, e.g. `updated` for Lit or `dataChanged` for FAST
 - define [`onData`](/api/interfaces/query/lifecycle/#ondata) callback
 - listen for the `apollo-query-result` and `apollo-error` [events](/api/interfaces/query/lifecycle/#events)
 - call the [`executeQuery`](/api/interfaces/query/#executequery) method and `await` it's result.

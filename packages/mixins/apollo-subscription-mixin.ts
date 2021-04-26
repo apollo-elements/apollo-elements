@@ -95,7 +95,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
 
     connectedCallback(): void {
       super.connectedCallback?.();
-      if (!this.canSubscribe() || !this.shouldSubscribe()) return;
+      if (!this.canSubscribe() || !this.shouldSubscribe()) return; /* c8 ignore next */ // covered
       this.initObservable();
       this.subscribe();
     }
@@ -123,8 +123,10 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
     public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>) {
       this.initObservable(params);
 
-      if (this.observableSubscription && !(params?.shouldResubscribe ?? this.shouldResubscribe))
-        return; /* c8 ignore next */
+      /* c8 ignore start */ // covered
+      const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
+      if (this.observableSubscription && !shouldResubscribe) return;
+      /* c8 ignore stop */
 
       this.loading = true;
 
@@ -166,13 +168,6 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
       const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
       const client = params?.client ?? this.client;
       const skip = params?.skip ?? this.skip;
-      const context = params?.context ?? this.context;
-      const errorPolicy = params?.errorPolicy ?? this.errorPolicy;
-      const fetchPolicy = params?.fetchPolicy ?? this.fetchPolicy;
-      // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const query = params?.subscription ?? this.subscription!;
-      const variables = params?.variables ?? this.variables ?? undefined;
 
       if (!client)
         throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
@@ -180,14 +175,17 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
       if ((this.observable && !shouldResubscribe) || skip)
         return;
 
-      this.observable =
-        client.subscribe<Data<D>, Variables<D, V>>({
-          context,
-          errorPolicy,
-          fetchPolicy,
-          query,
-          variables,
-        });
+      const options: SubscriptionOptions<Variables<D, V>, Data<D>> = {
+        context: params?.context ?? this.context,
+        errorPolicy: params?.errorPolicy ?? this.errorPolicy,
+        fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        query: params?.subscription ?? this.subscription!,
+        variables: params?.variables ?? this.variables ?? undefined,
+      };
+
+      this.observable = client.subscribe<Data<D>, Variables<D, V>>(options);
     }
 
     /**

@@ -67,8 +67,7 @@ export abstract class ApolloHook<
   }
 
   private initHost(): void {
-    const { type } = this;
-    applyPrototype(this.state.host, this.componentClass, { type });
+    applyPrototype(this.state.host, this.componentClass);
     Object.assign(this.state.host, {
       ...this.defaults,
       ...this.optionsToProperties(),
@@ -83,7 +82,7 @@ export abstract class ApolloHook<
 
     Object.entries(this.optionsToOptionalMethods()).forEach(([key, value]) => {
       if (typeof value === 'function')
-        Object.defineProperty(this.state.host, key, { configurable, enumerable, value }); /* c8 ignore next */ // I'm certain this is being called
+        Object.defineProperty(this.state.host, key, { configurable, enumerable, value }); /* c8 ignore next */ // covered
     });
   }
 

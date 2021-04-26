@@ -2,10 +2,8 @@ import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
 
-import { gql } from '@apollo/client/core';
-
-import { expect, html as fhtml } from '@open-wc/testing';
-import { defineCE, fixture, nextFrame, unsafeStatic } from '@open-wc/testing-helpers';
+import { expect, html } from '@open-wc/testing';
+import { defineCE, fixture, unsafeStatic } from '@open-wc/testing-helpers';
 import 'sinon-chai';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
@@ -22,7 +20,7 @@ class Test extends ApolloElementMixin(XL) {
 describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   it('returns an instance of the superclass', async function returnsClass() {
     const tag = unsafeStatic(defineCE(class extends Test {}));
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const element = await fixture<Test>(html`<${tag}></${tag}>`);
     expect(element).to.be.an.instanceOf(XL);
   });
 
@@ -30,13 +28,17 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     let calls = 0;
     let element: Test;
     beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {
+      const tag = unsafeStatic(defineCE(ApolloElementMixin(class extends HTMLElement {
+        data: any;
+
+        variables: any;
+
         connectedCallback(): void {
           calls++;
         }
-      }));
+      })));
 
-      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      element = await fixture<Test>(html`<${tag}></${tag}>`);
     });
 
     it('calls super.connectedCallback', async function() {
@@ -45,17 +47,30 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     });
   });
 
-  describe('when super has a connectedCallback', function() {
+  describe('when super has no connectedCallback', function() {
+    let element: Test;
+    beforeEach(function() {
+      const tag = defineCE(ApolloElementMixin(class extends HTMLElement { }));
+      element = document.createElement(tag) as Test;
+    });
+
+    it('does not throw when connected', function() {
+      expect(() => document.body.appendChild(element)).to.not.throw;
+      expect(() => element.remove()).to.not.throw;
+    });
+  });
+
+  describe('when super has a disconnectedCallback', function() {
     let calls = 0;
     let element: Test;
     beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {
+      const tag = unsafeStatic(defineCE(ApolloElementMixin(class extends HTMLElement {
         disconnectedCallback(): void {
           calls++;
         }
-      }));
+      })));
 
-      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      element = await fixture<Test>(html`<${tag}></${tag}>`);
 
       element.remove();
     });
@@ -66,23 +81,10 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     });
   });
 
-  describe('when super has no connectedCallback', function() {
-    let element: Test;
-    beforeEach(function() {
-      const tag = defineCE(class extends Test { });
-      element = document.createElement(tag) as Test;
-    });
-
-    it('does not throw when connected', function() {
-      expect(() => document.body.appendChild(element)).to.not.throw;
-      expect(() => element.remove()).to.not.throw;
-    });
-  });
-
   describe('when super has no disconnectedCallback', function() {
     let element: Test;
     beforeEach(function() {
-      const tag = defineCE(class extends Test { });
+      const tag = defineCE(ApolloElementMixin(class extends HTMLElement { }));
       element = document.createElement(tag) as Test;
     });
 
@@ -91,12 +93,98 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     });
   });
 
+  describe('when super has an attributeChangedCallback that includes "error-policy"', function() {
+    class Test extends ApolloElementMixin(class extends HTMLElement {
+      declare data: unknown | null;
+
+      declare variables: unknown | null;
+
+      static readonly observedAttributes: string[] = ['savlanut', 'error-policy'];
+
+      errorPolicy = '';
+
+      savlanut = '';
+
+      attributeChangedCallback(name: string, oldVal: string, newVal: string) {
+        if (name === 'error-policy')
+          this.errorPolicy = `_${newVal}`;
+        this[name as keyof this] = newVal as unknown as this[keyof this];
+      }
+    }) {}
+
+    let element: Test;
+
+    beforeEach(function() {
+      const tag = defineCE(class extends Test {});
+      element = document.createElement(tag) as Test;
+    });
+
+    describe('when setting an attribute observed by the subclass', function() {
+      beforeEach(function() {
+        element.setAttribute('savlanut', 'savlanut');
+      });
+
+      it('applies subclass behaviour', function() {
+        expect(element.savlanut).to.equal('savlanut');
+      });
+    });
+
+    describe('when setting the error-policy attribute', function() {
+      beforeEach(function() {
+        element.setAttribute('error-policy', 'all');
+      });
+
+      it('applies superclass behaviour', function() {
+        expect(element.errorPolicy).to.equal('_all');
+      });
+    });
+
+    describe('when setting the fetch-policy attribute', function() {
+      beforeEach(function() {
+        element.setAttribute('fetch-policy', 'no-cache');
+      });
+
+      it('applies mixin behaviour', function() {
+        expect(element.fetchPolicy).to.equal('no-cache');
+      });
+    });
+  });
+
+  describe('when super has no attributeChangedCallback', function() {
+    let element: Test;
+
+    beforeEach(function() {
+      const tag = defineCE(ApolloElementMixin(class extends HTMLElement {}));
+      element = document.createElement(tag) as Test;
+    });
+
+    describe('when setting the error-policy attribute', function() {
+      beforeEach(function() {
+        element.setAttribute('error-policy', 'all');
+      });
+
+      it('applies mixin behaviour', function() {
+        expect(element.errorPolicy).to.equal('all');
+      });
+    });
+
+    describe('when setting the fetch-policy attribute', function() {
+      beforeEach(function() {
+        element.setAttribute('fetch-policy', 'no-cache');
+      });
+
+      it('applies mixin behaviour', function() {
+        expect(element.fetchPolicy).to.equal('no-cache');
+      });
+    });
+  });
+
   it('sets default properties', async function setsDefaultProperties() {
     window.__APOLLO_CLIENT__ = client;
 
     const tag = unsafeStatic(defineCE(class extends Test {}));
 
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const element = await fixture<Test>(html`<${tag}></${tag}>`);
 
     expect(element.client, 'client').to.equal(client);
     expect(element.context, 'context').to.be.undefined;
@@ -114,7 +202,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     beforeEach(async function() {
       const tag = unsafeStatic(defineCE(class extends Test { }));
 
-      element = await fixture<Test>(fhtml`
+      element = await fixture<Test>(html`
         <${tag} .document="${NoParamQuery}"></${tag}>
       `);
     });
@@ -122,217 +210,11 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     it('sets the document property', function() {
       expect(element.document).to.deep.equal(NoParamQuery);
     });
-
-    describe('adding a script child', function() {
-      beforeEach(function() {
-        element.innerHTML = `
-          <script type="application/graphql">
-            query foo {
-              bar
-            }
-          </script>
-        `;
-      });
-
-      it('has no effect', function() {
-        expect(element.document).to.deep.equal(NoParamQuery);
-      });
-    });
-
-    describe('if document is then nullified', function() {
-      beforeEach(function() {
-        element.document = null;
-      });
-      describe('adding a script child', function() {
-        beforeEach(function() {
-          element.innerHTML = `
-          <script type="application/graphql">
-            query foo {
-              bar
-            }
-          </script>
-        `;
-        });
-
-        it('sets the document from DOM', function() {
-          expect(element.document).to.deep.equal(gql`query foo { bar }`);
-        });
-      });
-    });
-  });
-
-  describe('with query script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-
-      element = await fixture<Test>(fhtml`
-        <${tag}>
-          <script type="application/graphql">
-            query foo {
-              bar
-            }
-          </script>
-        </${tag}>
-      `);
-    });
-
-    it('sets document based on DOM', async function() {
-      expect(element.document).to.deep.equal(gql` query foo { bar } `);
-    });
-
-    describe('changing script text content', function() {
-      beforeEach(function() {
-        element.querySelector('script')!.innerText = 'query bar { foo }';
-      });
-
-      beforeEach(nextFrame);
-
-      it('gets document based on DOM', function() {
-        expect(element.document).to.deep.equal(gql` query bar { foo } `);
-      });
-    });
-  });
-
-  describe('with empty query script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test { }));
-
-      element = await fixture<Test>(fhtml`
-        <${tag}>
-          <script type="application/graphql"></script>
-        </${tag}>
-      `);
-    });
-
-    it('has null document', function() {
-      expect(element.document).to.be.null;
-    });
-  });
-
-  describe('with invalid query script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test { }));
-
-      element = await fixture<Test>(fhtml`
-        <${tag}>
-          <script type="application/graphql">haha</script>
-        </${tag}>
-      `);
-    });
-
-    it('has null document', function() {
-      expect(element.document).to.be.null;
-    });
-  });
-
-  describe('without query script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-      element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
-    });
-
-    it('has no document', function() {
-      expect(element.document).to.be.null;
-    });
-
-    describe('then appending script child', function() {
-      describe('when script is valid query', function() {
-        beforeEach(function() {
-          element.innerHTML = `<script type="application/graphql">query newQuery { new }</script>`;
-        });
-
-        beforeEach(nextFrame);
-
-        it('sets document', function() {
-          expect(element.document).to.deep.equal(gql`query newQuery { new }`);
-        });
-      });
-
-      describe('when script is invalid', function() {
-        beforeEach(function() {
-          element.innerHTML = `<script>query newQuery { new }</script>`;
-        });
-
-        beforeEach(nextFrame);
-
-        it('does not set document', async function() {
-          expect(element.document).to.be.null;
-        });
-      });
-    });
-  });
-
-  describe('with no variables script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-      element = await fixture<Test>(fhtml`
-        <${tag}></${tag}>
-      `);
-    });
-
-    it('does not set variables', function() {
-      expect(element.variables).to.be.null;
-    });
-  });
-
-  describe('with empty variables script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-      element = await fixture<Test>(fhtml`
-        <${tag}><script type="application/json"></script></${tag}>
-      `);
-    });
-
-    it('does not set variables', function() {
-      expect(element.variables).to.be.null;
-    });
-  });
-
-  describe('with invalid variables script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-      element = await fixture<Test>(fhtml`
-        <${tag}><script type="application/json">haha</script></${tag}>
-      `);
-    });
-
-    it('does not set variables', function() {
-      expect(element.variables).to.be.null;
-    });
-  });
-
-  describe('with parsable variables script child', function() {
-    let element: Test;
-
-    beforeEach(async function() {
-      const tag = unsafeStatic(defineCE(class extends Test {}));
-      element = await fixture<Test>(fhtml`
-        <${tag}><script type="application/json">{"foo":"bar"}</script></${tag}>
-      `);
-    });
-
-    it('sets variables', function() {
-      expect(element.variables).to.deep.equal({ foo: 'bar' });
-    });
   });
 });
 
 class TypeCheck extends Test {
-  typeCheck() {
+  typeCheck(): void {
     /* eslint-disable func-call-spacing, no-multi-spaces */
 
     assertType<HTMLElement>                         (this);

@@ -56,6 +56,7 @@ describe('[gluon] ApolloMutation', function() {
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
+
 class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
   typeCheck() {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */

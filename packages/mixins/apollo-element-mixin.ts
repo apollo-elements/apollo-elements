@@ -14,12 +14,10 @@ import type {
   GraphQLError,
 } from '@apollo-elements/interfaces';
 
-import { gql } from '@apollo/client/core';
-
+import { capital } from '@apollo-elements/lib/helpers';
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { effect, writable } from '@apollo-elements/lib/descriptors';
-import { stripHTMLComments } from '@apollo-elements/lib/helpers';
 
 declare global {
   interface WindowEventMap {
@@ -30,13 +28,6 @@ declare global {
     'apollo-element-disconnected': ApolloElementEvent;
     'apollo-error': CustomEvent<ApolloError>;
   }
-}
-
-const SCRIPT_SELECTOR =
-  'script[type="application/graphql"]';
-
-function capital(string: string): string {
-  return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
 
 /**
@@ -66,7 +57,7 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
 
     static get observedAttributes(): string[] {
       // @ts-expect-error: it might not, but it might
-      const superAttrs = super.observedAttributes ?? []; /* c8 ignore next */ // it's covered
+      const superAttrs = super.observedAttributes ?? []; /* c8 ignore next */ // covered
       return [
         ...(superAttrs),
         'error-policy',
@@ -104,15 +95,10 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     /** @summary Error Policy for the operation. */
     declare errorPolicy?: ErrorPolicy;
 
+    /** @summary True when the element is connected and ready to receive its GraphQL document */
+    public readyToReceiveDocument = false;
+
     private _document: this['document'] = null;
-
-    private _documentSetByJS = false;
-
-    private _variables: this['variables'] = null;
-
-    private _variablesSetByJS = false;
-
-    protected mo?: MutationObserver;
 
     /**
      * @summary Operation document.
@@ -120,59 +106,54 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
     get document(): DocumentNode | TypedDocumentNode | null {
-      return this._document ?? this.getDOMGraphQLDocument(); /* c8 ignore next */ // it's covered
+      return this._document; /* c8 ignore next */ // covered
     }
 
     set document(document) {
-      this._documentSetByJS = false;
       if (!document)
-        this._document = null; /* c8 ignore next */ // it's covered
+        this._document = null; /* c8 ignore next */ // covered
       else if (!isValidGql(document))
         throw new TypeError(`${capital((this.constructor as typeof ApolloElementInterface).documentType ?? 'document')} must be a gql-parsed DocumentNode`); /* c8 ignore next */
       else {
         this._document = document;
-        this._documentSetByJS = true;
-        if (this.mo) // `isConnected` is unreliable in this case
-          this.documentChanged?.(document); /* c8 ignore next */ // it's covered
+        if (this.readyToReceiveDocument)
+          this.documentChanged?.(document); /* c8 ignore next */ // covered
       }
     }
 
     constructor(...a: any[]) { super(...a); }
 
     attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+      /* c8 ignore start */ // manual testing showed that all cases were hit
       super.attributeChangedCallback?.(name, oldVal, newVal);
+
       // @ts-expect-error: ts is not tracking the static side
       if (super.constructor?.observedAttributes?.includes?.(name))
-        return; /* c8 ignore next */
+        return;
 
-      switch (name) { /* c8 ignore next */
+      switch (name) {
         case 'error-policy':
           this.errorPolicy = newVal as ErrorPolicy;
-          break;/* c8 ignore next */
+          break;
         case 'fetch-policy':
           this.fetchPolicy = newVal as this['fetchPolicy'];
           break;
+        default:
+          break;
       }
+      /* c8 ignore stop */
     }
 
     connectedCallback(): void {
-      super.connectedCallback?.();
-
-      this.mo = new MutationObserver(this.onDOMMutation.bind(this));
-
-      this.mo.observe(this, { characterData: true, childList: true, subtree: true });
-
-      this._document = this._document ?? this.getDOMGraphQLDocument();
-      this._variables = this._variables ?? this.getDOMVariables();
-
+      super.connectedCallback?.(); /* c8 ignore start */ // manual testing showed that both cases were hit
       this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
+      this.readyToReceiveDocument = true;
     }
 
     disconnectedCallback(): void {
       this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
       window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
-      this.mo?.disconnect();
-      super.disconnectedCallback?.();
+      super.disconnectedCallback?.(); /* c8 ignore start */ // manual testing showed that both cases were hit
     }
 
     /**
@@ -186,54 +167,6 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
      * @param variables The variables.
      */
     protected variablesChanged?(variables: this['variables']): void
-
-    private onDOMMutation(records: MutationRecord[]): void {
-      const isGQLScriptChanged = (record: MutationRecord) =>
-        [...record?.addedNodes].some(node =>
-          node === this.querySelector(SCRIPT_SELECTOR));
-
-      if (!this._documentSetByJS) {
-        this._document = this.getDOMGraphQLDocument();
-        // notify when the first script child element changes
-        if (records.some(isGQLScriptChanged))
-          this.documentChanged?.(this.document);
-      }
-
-      if (!this._variablesSetByJS)
-        this._variables = this.getDOMVariables();
-    }
-
-    /**
-     * Get a GraphQL DocumentNode from the element's GraphQL script child
-     */
-    protected getDOMGraphQLDocument(): this['document'] {
-      const script = this.querySelector<HTMLScriptElement>(SCRIPT_SELECTOR);
-      const text = script?.innerText;
-      if (!text)
-        return null; /* c8 ignore next */ // covered
-      else {
-        try {
-          // admittedly, we have to trust the user here.
-          return gql(stripHTMLComments(text)) as this['document']; /* c8 ignore next */ // covered
-        } catch (err) {
-          this.error = err;
-          return null;
-        }
-      }
-    }
-
-    /**
-     * Gets operation variables from the element's JSON script child
-     */
-    protected getDOMVariables(): this['variables'] {
-      const script = this.querySelector<HTMLScriptElement>('script[type="application/json"]');
-      if (!script) return null; /* c8 ignore next */ // covered
-      try {
-        return JSON.parse(script.innerText); /* c8 ignore next */ // covered
-      } catch {
-        return null;
-      }
-    }
   }
 
   Object.defineProperties(ApolloElement.prototype, {
@@ -245,9 +178,8 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
       name: 'variables',
       init: null,
       onSet(variables: unknown) {
-        // @ts-expect-error: This is essentially a class accessor, I'm working around some TS limitations
-        if (this.mo) // element is connected
-        // @ts-expect-error: This is essentially a class accessor, I'm working around some TS limitations
+        if (this.readyToReceiveDocument) // element is connected
+          // @ts-expect-error: This is essentially a class accessor, I'm working around some TS limitations
           this.variablesChanged?.(variables);
       },
     }),

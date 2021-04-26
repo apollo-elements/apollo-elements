@@ -41,7 +41,7 @@ export type QueryHybridsFactoryOptions<D, V> = Pick<ApolloQueryElement<D, V>,
  * @return Hybrids descriptor which mixes the [ApolloQueryInterface](/api/interfaces/query/) in on connect
  */
 export function query<D = unknown, V = OperationVariables>(
-  document: DocumentNode | TypedDocumentNode<D, V> | null,
+  document?: DocumentNode | TypedDocumentNode<D, V> | null,
   options?: QueryHybridsFactoryOptions<D, V>,
 ): Hybrids<ApolloQueryInterface<D, V>> {
   return {
@@ -49,16 +49,18 @@ export function query<D = unknown, V = OperationVariables>(
     networkStatus: NetworkStatus.ready,
     query: {
       connect(host, _, invalidate) {
-        applyPrototype(host, ApolloQueryElement, {
-          type: 'query',
-        });
+        applyPrototype(host, ApolloQueryElement);
 
         return initDocument<ApolloQueryElement<D, V>>({
-          host, document, invalidate, defaults: {
+          host,
+          invalidate,
+          document: document ?? host.document ?? null,
+          defaults: {
             ...options,
             networkStatus: NetworkStatus.ready,
           },
         });
       },
-    } };
+    },
+  };
 }

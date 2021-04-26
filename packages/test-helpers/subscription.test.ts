@@ -1,4 +1,4 @@
-import { SetupFunction, SetupOptions, SetupResult } from './types';
+import { SetupFunction } from './types';
 
 import { defineCE, expect, fixture } from '@open-wc/testing';
 
@@ -16,12 +16,11 @@ import NonNullableParamSubscription from './graphql/NonNullableParam.subscriptio
 import Observable from 'zen-observable';
 
 import {
-  NoParamSubscriptionData,
-  NoParamSubscriptionVariables,
   NullableParamSubscriptionData,
   NullableParamSubscriptionVariables,
 } from './schema';
-import { restoreSpies, setupSpies, setupStubs, waitForRender } from './helpers';
+
+import { restoreSpies, waitForRender } from './helpers';
 
 type SE<D, V> = ApolloSubscriptionElement<D, V>;
 
@@ -54,31 +53,7 @@ export interface DescribeSubscriptionComponentOptions {
   class?: Constructor<SubscriptionElement>;
 }
 
-export function setupSubscriptionClass<T extends SubscriptionElement>(Klass: Constructor<T>): SetupFunction<T> {
-  return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-    // @ts-expect-error: no time for this
-    class Test extends Klass { }
-
-    const { innerHTML = '', attributes, properties } = opts ?? {};
-
-    const tag =
-      defineCE(Test);
-
-    const spies = setupSpies(opts?.spy, Test.prototype as B);
-    const stubs = setupStubs(opts?.stub, Test.prototype as B);
-
-    const attrs = attributes ? ` ${attributes}` : '';
-
-    const element =
-      await fixture<B>(`<${tag}${attrs}>${innerHTML}</${tag}>`);
-
-    for (const [key, val] of Object.entries(properties ?? {}))
-      // @ts-expect-error: it's fine
-      element[key] = val;
-
-    return { element, spies, stubs };
-  };
-}
+export { setupSubscriptionClass } from './helpers';
 
 export function describeSubscription(options: DescribeSubscriptionComponentOptions): void {
   const { setupFunction, class: Klass } = options;
@@ -229,6 +204,154 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
       });
 
       afterEach(teardownClient);
+
+      describe('with no-auto-subscribe attribute set', function() {
+        describe('setting NoParam subscription', function() {
+          beforeEach(function setSubscription() {
+            element!.subscription = NoParamSubscription;
+          });
+
+          describe('then calling subscribe()', function() {
+            beforeEach(function() {
+              element!.subscribe();
+            });
+
+            it('calls client subscribe once', function() {
+              expect(element?.client?.subscribe).to.have.been.calledOnce;
+            });
+
+            describe('then cancelling the subscription', function() {
+              beforeEach(function() {
+                element!.cancel();
+              });
+
+              describe('then setting element\'s shouldSubscribe to false', function() {
+                beforeEach(function() {
+                  element!.shouldResubscribe = false;
+                });
+
+                describe('and calling subscribe()', function() {
+                  beforeEach(function() {
+                    element!.subscribe();
+                  });
+
+                  it('calls client subscribe again', function() {
+                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  });
+                });
+
+                describe('and calling subscribe({ shouldSubscribe: true })', function() {
+                  beforeEach(function() {
+                    element!.subscribe({ shouldResubscribe: true });
+                  });
+
+                  it('calls client subscribe again', function() {
+                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  });
+                });
+
+                describe('and calling subscribe({ shouldSubscribe: false })', function() {
+                  beforeEach(function() {
+                    element!.subscribe({ shouldResubscribe: false });
+                  });
+
+                  it('calls client subscribe again', function() {
+                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  });
+                });
+              });
+
+              describe('then setting element\'s shouldSubscribe to true', function() {
+                beforeEach(function() {
+                  element!.shouldResubscribe = true;
+                });
+
+                describe('and calling subscribe()', function() {
+                  beforeEach(function() {
+                    element!.subscribe();
+                  });
+
+                  it('calls client subscribe again', function() {
+                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  });
+                });
+
+                describe('and calling subscribe({ shouldSubscribe: true })', function() {
+                  beforeEach(function() {
+                    element!.subscribe({ shouldResubscribe: true });
+                  });
+
+                  it('calls client subscribe again', function() {
+                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  });
+                });
+
+                describe('and calling subscribe({ shouldSubscribe: false })', function() {
+                  beforeEach(function() {
+                    element!.subscribe({ shouldResubscribe: false });
+                  });
+
+                  it('calls client subscribe again', function() {
+                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  });
+                });
+              });
+            });
+
+            describe('then calling subscribe({ shouldResubscribe })', function() {
+              beforeEach(function() {
+                element!.subscribe({ shouldResubscribe: true });
+              });
+
+              it('calls client subscribe again', function() {
+                expect(element?.client?.subscribe).to.have.been.calledTwice;
+              });
+            });
+
+            describe('then setting element\'s shouldSubscribe to false', function() {
+              beforeEach(function() {
+                element!.shouldResubscribe = false;
+              });
+
+              describe('and calling subscribe({ shouldSubscribe: true })', function() {
+                beforeEach(function() {
+                  element!.subscribe({ shouldResubscribe: true });
+                });
+
+                it('calls client subscribe again', function() {
+                  expect(element?.client?.subscribe).to.have.been.calledTwice;
+                });
+              });
+            });
+
+            describe('then setting element\'s shouldSubscribe to true', function() {
+              beforeEach(function() {
+                element!.shouldResubscribe = true;
+              });
+
+              describe('and calling subscribe({ shouldSubscribe: false })', function() {
+                beforeEach(function() {
+                  element!.subscribe({ shouldResubscribe: false });
+                });
+
+                it('does not call client subscribe again', function() {
+                  expect(element?.client?.subscribe).to.have.been.calledOnce;
+                });
+              });
+
+              describe('and calling subscribe({ shouldSubscribe: true })', function() {
+                beforeEach(function() {
+                  element!.subscribe({ shouldResubscribe: true });
+                });
+
+                it('does call client subscribe again', function() {
+                  expect(element?.client?.subscribe).to.have.been.calledTwice;
+                });
+              });
+            });
+          });
+        });
+      });
 
       describe('setting NoParam subscription', function() {
         beforeEach(function setSubscription() {
@@ -453,54 +576,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           expect(result.message).to.equal('Subscription must be a gql-parsed DocumentNode');
         });
       });
-
-      describe('with NoParam subscription script child', function() {
-        let element: SubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables> | undefined;
-
-        let spies: Record<string|keyof SubscriptionElement, SinonSpy>;
-
-        beforeEach(function clientSpy() {
-          // @ts-expect-error: spy
-          window.__APOLLO_CLIENT__.subscribe?.restore?.();
-          spies ??= {} as typeof spies;
-          spies['client.subscribe'] = spy(window.__APOLLO_CLIENT__!, 'subscribe');
-        });
-
-        beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<SubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>>({
-            spy: ['subscribe'],
-            innerHTML: `
-              <script type="application/graphql">${NoParamSubscription?.loc?.source.body}</script>
-            `,
-          }));
-        });
-
-        beforeEach(waitForRender(() => element));
-
-        afterEach(restoreSpies(() => spies));
-
-        afterEach(function teardownElement() {
-          element?.remove?.();
-          element = undefined;
-        });
-
-        it('does not remove the script', function() {
-          expect(element?.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
-        });
-
-        it('sets the subscription property', function() {
-          expect(element?.subscription).to.deep.equal(gql(NoParamSubscription!.loc!.source.body));
-        });
-
-        it('calls subscribe()', function() {
-          expect(element?.client?.subscribe).to.have.been.calledOnce;
-        });
-      });
     });
   });
 
   if (Klass) {
-    describe('ApolloQuery subclasses', function() {
+    describe('ApolloSubscription subclasses', function() {
       describe('with global client available', function() {
         beforeEach(setupClient);
         afterEach(teardownClient);
@@ -520,6 +600,49 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           it('caches subscription property', function() {
             expect(element?.subscription, 'subscription').to.equal(NoParamSubscription);
+          });
+        });
+
+        describe('with shouldSubscribe overridden to return false', function() {
+          let element: SubscriptionElement | undefined;
+
+          let spies: Record<string|keyof SubscriptionElement, SinonSpy> | undefined;
+
+          beforeEach(function spyClientSubscribe() {
+            spies = {
+              'client.subscribe': spy(window.__APOLLO_CLIENT__!, 'subscribe'),
+            };
+          });
+
+          afterEach(function teardownElement() {
+            element?.remove?.();
+            element = undefined;
+          });
+
+          afterEach(restoreSpies(() => spies));
+
+          beforeEach(async function() {
+            type D = NullableParamSubscriptionData;
+            type V = NullableParamSubscriptionVariables;
+            class Test extends (Klass as Constructor<SubscriptionElement<D, V>>) {
+              subscription = NullableParamSubscription;
+
+              shouldSubscribe() {
+                return false;
+              }
+            }
+
+            const tag = defineCE(Test);
+
+            element = await fixture<Test>(`<${tag}></${tag}>`);
+          });
+
+          it('does not subscribe on connect', function() {
+            expect(element?.client?.subscribe).to.not.have.been.called;
+          });
+
+          it('does not initialize the observable', function() {
+            expect(element?.observable).to.not.be.ok;
           });
         });
 

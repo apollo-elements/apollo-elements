@@ -71,19 +71,34 @@ Define the custom element
 
 <code-copy>
 
-```js
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
+  ```js
+  import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
+  import { gql } from '@apollo/client/core';
 
-class HelloQueryElement extends ApolloQueryMixin(HTMLElement) {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.append(template.content.cloneNode(true));
+  class HelloQueryElement extends ApolloQueryMixin(HTMLElement) {
+    query = gql`
+      HelloQuery($user: ID, $greeting: String) {
+        helloWorld(user: $user) {
+          name
+          greeting
+        }
+      }
+    `;
+
+    variables = {
+      greeting: "shalom",
+      user: "haver"
+    };
+
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' });
+      this.shadowRoot.append(template.content.cloneNode(true));
+    }
   }
-}
 
-customElements.define('hello-query', HelloQueryElement);
-```
+  customElements.define('hello-query', HelloQueryElement);
+  ```
 
 </code-copy>
 
@@ -139,24 +154,13 @@ render() {
 
 And use it in HTML
 
+<code-copy>
+
 ```html
-<hello-query>
-  <script type="application/graphql">
-    query HelloQuery($user: ID, $greeting: String) {
-      helloWorld(user: $user) {
-        name
-        greeting
-      }
-    }
-  </script>
-  <script type="application/json">
-    {
-      "greeting": "shalom",
-      "user": "haver"
-    }
-  </script>
-</hello-query>
+<hello-query></hello-query>
 ```
+
+</code-copy>
 
 ### 👾 ApolloMutationMixin
 Connects a web component to apollo client and associates it with a specific GraphQL mutation. When the mutation resolves, so will the element's `data` property.
@@ -169,21 +173,57 @@ Optional mixin which connects an element to a specific `ApolloClient` instance.
 
 <code-copy>
 
-```ts
-import { client } from './specific-apollo-client';
+  ```ts
+  import { client } from './specific-apollo-client';
 
-class SpecificClientElement
-extends ApolloClientMixin(client, ApolloQueryMixin(HTMLElement)) {
-  // ... do stuff with your client
-}
-```
+  class SpecificClientElement
+  extends ApolloClientMixin(client, ApolloQueryMixin(HTMLElement)) {
+    // ... do stuff with your client
+  }
+  ```
 
 </code-copy>
 
-### ValidateVariablesMixin
+### 👩‍👦 GraphQLScriptChildMixin
+Allows users to set the element's query (or mutation, or subscription) and variables using HTML.
+
+<code-copy>
+
+  ```js
+  import { ApolloQueryMixin, GraphQLScriptChildMixin } from '@apollo-elements/mixins';
+
+  class HelloQueryElement extends ApolloQueryMixin(HTMLElement) { /* ... */ }
+
+  customElements.define('hello-query', HelloQueryElement);
+  ```
+
+  ```html
+  <hello-query>
+
+    <script type="application/graphql">
+      query HelloQuery($user: ID, $greeting: String) {
+        helloWorld(user: $user) {
+          name
+          greeting
+        }
+      }
+    </script>
+    <script type="application/json">
+      {
+        "greeting": "shalom",
+        "user": "haver"
+      }
+    </script>
+
+  </hello-query>
+  ```
+
+</code-copy>
+
+### ✅ ValidateVariablesMixin
 Optional mixin which prevents queries from automatically subscribing until their non-nullable variables are defined.
 
-### TypePoliciesMixin
+### 👮‍♂️ TypePoliciesMixin
 Optional mixin which lets you declare type policies for a component's query.
 
 ## Aren't Mixins Considered Harmful?

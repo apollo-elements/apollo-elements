@@ -18,7 +18,7 @@ export type SimpleApolloClient =
 
 const validateVariablesLink =
   new ApolloLink((operation, forward) =>
-    hasAllVariables(operation) ? forward(operation) : null); /* c8 ignore next */ // this is called
+    hasAllVariables(operation) ? forward(operation) : null); /* c8 ignore next */ // covered
 
 /**
  * Creates a simple ApolloClient

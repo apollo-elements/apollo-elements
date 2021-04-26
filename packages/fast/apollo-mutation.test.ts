@@ -10,7 +10,6 @@ import type {
 } from '@apollo/client/core';
 
 import {
-  Entries,
   NonNullableParamMutationData,
   NonNullableParamMutationVariables,
   SetupOptions,
@@ -20,7 +19,7 @@ import {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type { Entries, GraphQLError } from '@apollo-elements/interfaces';
 
 import {
   aTimeout,

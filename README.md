@@ -98,7 +98,7 @@ import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscrip
 [Read More](https://apolloelements.dev/api/libraries/mixins/)
 
 ### 🔥 lit-apollo
-These base classes extend from [`LitElement`](https://lit-element.polymer-project.org), so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
+These base classes extend from [`LitElement`](https://lit.dev), so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
 
 <code-copy>
 

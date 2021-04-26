@@ -47,7 +47,7 @@ export function isClientOperation(operation: Operation): boolean {
   const query = operation?.query;
   const definitions = query?.definitions;
 
-  if (!hasDirectives(['client'], query)) /* c8 ignore next */ // this is covered
+  if (!hasDirectives(['client'], query)) /* c8 ignore next */ // covered
     return false; /* c8 ignore next */
 
   return definitions.reduce((acc: boolean, definition) => {
