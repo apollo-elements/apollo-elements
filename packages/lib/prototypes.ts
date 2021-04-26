@@ -3,9 +3,10 @@ import { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element
 
 import { cuid } from './cuid';
 
-type Type = 'client' | 'subscription' | 'mutation' | 'query';
-
-const noop = () => void null;
+interface ApplyPrototypeOptions<T = ApolloElementElement> {
+  effects?: (host: T) => void,
+  omit?: string[],
+}
 
 const INSTANCES = new WeakMap();
 
@@ -50,10 +51,12 @@ function getPrototypeDescriptor<S extends HTMLElement>(
 function unsafeApplyPrototype<S extends HTMLElement>(
   target: S,
   source: Constructor<S>,
-  omit: string[] = [],
+  options?: ApplyPrototypeOptions
 ): PropertyDescriptorMap {
   const descriptors =
     getPrototypeDescriptor(source);
+
+  const omit = options?.omit ?? [];
 
   const omitThese: Record<keyof S, boolean> =
     omit.reduce((hash, k) => Object.assign(hash, { [k]: true }), {} as Record<keyof S, boolean>);
@@ -77,25 +80,23 @@ function unsafeApplyPrototype<S extends HTMLElement>(
 function unsafeApply<T extends ApolloElementElement>(
   host: T,
   klass: Constructor<T>,
-  type: Type,
-  omit?: string[]
+  options?: ApplyPrototypeOptions
 ): void {
   // @ts-expect-error: can't be helped.
-  host.constructor.documentType = type === 'client' ? 'document' : type; /* c8 ignore next */ // covered
+  host.constructor.documentType = klass.documentType ?? 'client'; /* c8 ignore next */ // covered
 
   DESCRIPTORS.set(host, {
     ...getElementDescriptor(host),
-    ...unsafeApplyPrototype(host, klass, omit),
+    ...unsafeApplyPrototype(host, klass, options),
   });
 }
 
 function unsafeApplyElement<T extends ApolloElementElement>(
   host: T,
-  effects: (host: T) => void
+  options?: ApplyPrototypeOptions
 ): void {
-  effects(host);
   ELEMENT_APPLIED
-    .set(host, unsafeApplyPrototype(host, ApolloElementElement));
+    .set(host, unsafeApplyPrototype(host, ApolloElementElement, options));
 }
 
 /**
@@ -103,25 +104,22 @@ function unsafeApplyElement<T extends ApolloElementElement>(
  *
  * @param  host Element to apply prototype properties to.
  * @param  klass Class whose prototype to apply to the host element.
- * @param  type Hint about what kind of class/host pair is in question.
- * @param  effects function that will run the first time this element has a class prototype mixed in via this helper.
- * @param  omit optional list of property names to omit when applying the prototype
+ * @param  options.effects function that will run the first time this element has a class prototype mixed in via this helper.
+ * @param  options.omit optional list of property names to omit when applying the prototype
  * @return Combined `PropertyDescriptorMap` for the instance.
  */
 export function applyPrototype<T extends ApolloElementElement<any, any>>( // eslint-disable-line @typescript-eslint/no-explicit-any
   host: T,
   klass: Constructor<T> | typeof ApolloElementElement,
-  options: {
-    type: Type,
-    effects?: (host: T) => void,
-    omit?: string[],
-  }
+  options?: ApplyPrototypeOptions
 ): PropertyDescriptorMap {
+  options?.effects?.(host);
+
   if (!isElementApplied(host) || klass === ApolloElementElement) /* c8 ignore next */ // covered
-    unsafeApplyElement(host, options.effects ?? noop);
+    unsafeApplyElement(host, options);
 
   if (!getDescriptor(host) || klass !== ApolloElementElement) /* c8 ignore next */ // covered
-    unsafeApply(host, klass, options.type, options.omit);
+    unsafeApply(host, klass, options);
 
   return getDescriptor(host);
 }

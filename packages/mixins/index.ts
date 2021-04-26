@@ -4,5 +4,6 @@ export { ApolloMutationMixin } from './apollo-mutation-mixin';
 export { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
 
 export { ApolloClientMixin } from './apollo-client-mixin';
+export { GraphQLScriptChildMixin } from './graphql-script-child-mixin';
 export { TypePoliciesMixin } from './type-policies-mixin';
 export { ValidateVariablesMixin } from './validate-variables-mixin';

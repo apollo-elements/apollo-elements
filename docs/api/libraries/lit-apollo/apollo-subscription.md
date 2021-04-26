@@ -3,7 +3,7 @@ layout: layout-api
 package: '@apollo-elements/lit-apollo'
 module: './apollo-subscription.js'
 ---
-# Web Component Libraries >> LitElement >> ApolloSubscription || 40
+# Web Component Libraries >> Lit >> ApolloSubscription || 40
 
 `ApolloSubscription` inherits from `ApolloElement` and implements the [`ApolloSubscriptionInterface`](/api/interfaces/subscription/).
 

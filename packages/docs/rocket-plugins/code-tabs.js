@@ -6,7 +6,7 @@ const identify = x => [
 
 const PACKAGES = new Map([
   { id: 'html', label: 'HTML', iconHref: '/_merged_assets/library-logos/html5.svg', synonyms: ['lit-apollo'] },
-  { id: 'lit', label: 'LitElement', iconHref: '/_merged_assets/library-logos/lit.svg', synonyms: ['lit-apollo'] },
+  { id: 'lit', label: 'Lit', iconHref: '/_merged_assets/library-logos/lit.svg', synonyms: ['lit-apollo'] },
   { id: 'fast', label: 'FAST', iconHref: '/_merged_assets/library-logos/fast.svg' },
   { id: 'gluon', label: 'Gluon', iconHref: '/_merged_assets/library-logos/js.svg' },
   { id: 'haunted', label: 'Haunted', iconHref: '/_merged_assets/library-logos/haunted.svg' },

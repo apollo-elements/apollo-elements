@@ -11,8 +11,7 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * @fires 'errors-changed'
  * @fires 'loading-changed'
  */
-export class PolymerApolloElement
-  extends ApolloElementMixin(HTMLElement)
+export class PolymerApolloElement extends ApolloElementMixin(HTMLElement)
   implements ApolloElementInterface {
   declare client: ApolloClient<NormalizedCacheObject>;
 

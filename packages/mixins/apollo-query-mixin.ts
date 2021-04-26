@@ -132,14 +132,14 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
     }
 
     documentChanged(query: DocumentNode | ComponentDocument<D> | null): void {
-      if (!query) return; /* c8 ignore next */ // all covered
-      if (this.canSubscribe({ query }) && this.shouldSubscribe({ query })) /* c8 ignore next */ // all covered
-        this.subscribe({ query }); /* c8 ignore next */ // all covered
+      if (!query) return; /* c8 ignore next */ // covered
+      if (this.canSubscribe({ query }) && this.shouldSubscribe({ query })) /* c8 ignore next */ // covered
+        this.subscribe({ query }); /* c8 ignore next */ // covered
     }
 
     variablesChanged(variables: Variables<D, V>): void {
       if (this.observableQuery)
-        this.refetch(variables);
+        this.refetch(variables); /* c8 ignore next */ // covered
       else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
         this.subscribe({ variables });
       else
@@ -153,7 +153,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      */
     async refetch(variables: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>> {
       if (!this.observableQuery)
-        throw new Error('Cannot refetch without an ObservableQuery');
+        throw new Error('Cannot refetch without an ObservableQuery'); /* c8 ignore next */ // covered
       return this.observableQuery.refetch(variables);
     }
 
@@ -232,7 +232,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       params?: Partial<QueryOptions<Variables<D, V>>>
     ): Promise<ApolloQueryResult<Data<D>>> {
       if (!this.client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // it's covered
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
 
       const { context, errorPolicy, fetchPolicy } = this;
 
@@ -307,7 +307,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
     ): ObservableQuery<Data<D>, Variables<D, V>> {
       if (!this.client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // it's covered
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
 
       const options: WatchQueryOptions<Variables<D, V>, Data<D>> = {
         context: this.context,
@@ -321,7 +321,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
         ...params,
         // It's better to let Apollo client throw this error
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        query: params?.query ?? this.query!, /* c8 ignore next */ // it's covered
+        query: params?.query ?? this.query!, /* c8 ignore next */ // covered
         variables: params?.variables ?? this.variables ?? undefined,
       };
 
@@ -340,7 +340,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       this.loading = result.loading;
       this.networkStatus = result.networkStatus;
       this.partial = result.partial;
-      this.onData?.(result); /* c8 ignore next */ // it's covered
+      this.onData?.(result); /* c8 ignore next */ // covered
     }
 
     /**

@@ -1795,7 +1795,7 @@
         {
           "kind": "custom-element-definition",
           "name": "apollo-mutation",
-          "description": "`<apollo-mutation>` fires Polymer-style prop-changed events when its `called`, `data`, `error`, `loading` or `networkStatus` properties change.\n\nSee [ApolloMutationInterface](/api/interfaces/mutation/) for more information.\n\n### Examples\n\n```html\n<apollo-mutation id=\"userMutation\" data=\"{{data}}\">\n  <script type=\"application/graphql\">\n    mutation User($id: ID!, $name: String, $picture: String) {\n      user(id: $id, name: $name, picture: $picture) {\n        name\n        picture\n      }\n    }\n  </script>\n</apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```\n",
+          "description": "`<apollo-mutation>` fires Polymer-style prop-changed events when its `called`, `data`, `error`, `loading` or `networkStatus` properties change.\n\nSee [ApolloMutationInterface](/api/interfaces/mutation/) for more information.\n\n### Examples\n\n```html\n<apollo-mutation id=\"userMutation\"\n    data=\"{{data}}\"\n    mutation=\"[[UserMutation]]\"\n></apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```\n",
           "declaration": {
             "name": "PolymerApolloMutation"
           }
@@ -2385,7 +2385,7 @@
         {
           "kind": "custom-element-definition",
           "name": "apollo-subscription",
-          "description": "`<apollo-subscription>` fires Polymer-style prop-changed events when its `data`, `error`, or `loading` properties change.\n\nSee [ApolloSubscriptionInterface](/api/interfaces/subscription/) for more information.\n\n### Example\n\n```html\n<apollo-subscription data=\"{{data}}\" variables=\"[[variables]]\" on-data-changed=\"toast\">\n  <script type=\"application/graphql\">\n    subscription UserJoined($id: ID!) {\n      userJoined(id: $id) {\n        name\n        picture\n      }\n    }\n  </script>\n</apollo-subscription>\n\n<paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n  <iron-image>[[data.userJoined.picture]]</iron-image>\n</paper-toast>\n```\n",
+          "description": "`<apollo-subscription>` fires Polymer-style prop-changed events when its `data`, `error`, or `loading` properties change.\n\nSee [ApolloSubscriptionInterface](/api/interfaces/subscription/) for more information.\n\n### Example\n\n```html\n<apollo-subscription\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    subscription=\"[[UserJoinedSubscription]]\"\n    on-data-changed=\"toast\"\n></apollo-subscription>\n\n<paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n  <iron-image>[[data.userJoined.picture]]</iron-image>\n</paper-toast>\n```\n",
           "declaration": {
             "name": "PolymerApolloSubscription"
           }

@@ -1,6 +1,6 @@
 import type { SinonSpy, SinonStub } from 'sinon';
 
-import type { TypedDocumentNode } from '@apollo/client/core';
+import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 
 import {
   SetupOptions,
@@ -20,9 +20,9 @@ import {
   describeSubscription,
 } from '@apollo-elements/test-helpers/subscription.test';
 
-import { define, html } from 'hybrids';
+import { define, html, RenderFunction, Hybrids } from 'hybrids';
 
-import { subscription } from './subscription';
+import { subscription, SubscriptionHybridsFactoryOptions } from './subscription';
 import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 let counter = 0;
@@ -32,6 +32,26 @@ function getTagName(): string {
   counter++;
   return tagName;
 }
+
+type TestableApolloSubscriptionHybrid<T, U> = Hybrids<SubscriptionElement<T, U> & {
+  stringify(x: unknown): string;
+  hasRendered(): Promise<SubscriptionElement<T, U>>;
+  render?: RenderFunction<SubscriptionElement<T, U>>;
+}>
+
+const testSubscription = <T, U>(
+  doc?: DocumentNode | TypedDocumentNode<T, U> | null,
+  opts?: SubscriptionHybridsFactoryOptions<T, U>
+): TestableApolloSubscriptionHybrid<T, U> => ({
+    ...subscription<T, U>(doc, opts),
+    stringify: () => stringify,
+    hasRendered: host => async () => {
+      await aTimeout(0);
+      host.render?.(host);
+      await aTimeout(0);
+      return host;
+    },
+  });
 
 describe('[hybrids] ApolloSubscription', function() {
   describeSubscription({
@@ -43,13 +63,7 @@ describe('[hybrids] ApolloSubscription', function() {
       const tag = getTagName();
 
       define<SubscriptionElement>(tag, {
-        ...subscription(null),
-        stringify: () => stringify,
-        hasRendered: (host: SubscriptionElement & { render(): ShadowRoot }) => async () => {
-          await aTimeout(100);
-          host.render();
-          return host;
-        },
+        ...testSubscription(),
         render: ({ data, error, loading, stringify }) => html`
           <output id="data">${stringify(data)}</output>
           <output id="error">${stringify(error)}</output>

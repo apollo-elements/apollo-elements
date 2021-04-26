@@ -5,7 +5,7 @@
 [![ISC License](https://img.shields.io/npm/l/@apollo-elements/lit-apollo)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
 [![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
-<strong>🚀 LitElement base classes that connect to your Apollo cache 🌜</strong>
+<strong>🚀 Lit base classes that connect to your Apollo cache 🌜</strong>
 
 <strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong>
 

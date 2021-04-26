@@ -28,14 +28,14 @@ npm install --save @apollo-elements/polymer
 ## 👩‍🚀 Usage
 > See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
-Just import the elements.
+Import the elements.
 
 <code-copy>
 
-```js
-import '@apollo-elements/polymer/apollo-query';
-import '@apollo-elements/polymer/apollo-mutation';
-```
+  ```js
+  import '@apollo-elements/polymer/apollo-query';
+  import '@apollo-elements/polymer/apollo-mutation';
+  ```
 
 </code-copy>
 
@@ -44,16 +44,11 @@ You can now use them in your polymer template:
 <code-copy>
 
 ```html
-<apollo-query data="{{data}}" variables="[[variables]]">
-  <script type="application/graphql">
-    query User($id: ID!)
-      user(id: $id) {
-        name
-        picture
-      }
-    }
-  </script>
-</apollo-query>
+<apollo-query
+    data="{{data}}"
+    variables="[[variables]]"
+    query="[[UserQuery]]"
+></apollo-query>
 
 <paper-icon-item>
   <iron-image slot="item-icon">[[data.user.picture]]</iron-image>

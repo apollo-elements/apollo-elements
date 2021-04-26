@@ -51,7 +51,7 @@ libraries:
     logo: html5
 
   - lib: lit-apollo
-    name: LitElement
+    name: Lit
     logo: lit
 
   - lib: fast
@@ -77,6 +77,17 @@ libraries:
 ```html playground query-spacex
 <apollo-client uri="https://api.spacex.land/graphql">
   <apollo-query>
+    <script type="application/graphql">
+      query LatestLaunch {
+        launchLatest {
+          id
+          date: launch_date_utc
+          links { patch: mission_patch }
+          name: mission_name
+          rocket { name: rocket_name }
+        }
+      }
+    </script>
     <template>
       <link rel="stylesheet" href="components/spacex-launch.css"/>
       <h2>Latest Launch</h2>
@@ -89,17 +100,6 @@ libraries:
         aboard   <strong>{%raw%}{{ data.launchLatest.rocket.name }}{%endraw%}</strong>
       </p>
     </template>
-    <script type="application/graphql">
-      query LatestLaunch {
-        launchLatest {
-          id
-          date: launch_date_utc
-          links { patch: mission_patch }
-          name: mission_name
-          rocket { name: rocket_name }
-        }
-      }
-    </script>
   </apollo-query>
 </apollo-client>
 ```

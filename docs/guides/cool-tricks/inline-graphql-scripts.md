@@ -3,9 +3,12 @@
 <meta name="description" data-helmett
       content="Use Apollo Elements to write declarative GraphQL components in HTML" />
 
-You can provide a GraphQL document string in your markup by appending a
-GraphQL script element to your connected element.
+You can provide a GraphQL document string in your markup. The declarative query, mutation, and subscription components all come with this built in.
+By appending or updating a GraphQL script child, the Apollo element will read it's query document.
 
+Add it to your custom components via the `graphql-script-child-mixin`.
+
+## Example
 Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
 <code-tabs collection="libraries" default-tab="lit">
@@ -30,7 +33,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
   ```
 
   ```ts tab mixins
-  import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+  import { ApolloQueryMixin, GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 
   interface Data {
     name: string;
@@ -45,7 +48,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
   template.content.querySelector('p').append(new Text(', '));
   template.content.querySelector('p').append(new Text('friend'));
 
-  class GreetMe extends ApolloQueryMixin(HTMLElement)<Data, null> {
+  class GreetMe extends GraphQLScriptChildMixin(ApolloQueryMixin(HTMLElement))<Data, null> {
     #data: Data = null;
 
     get data() {
@@ -76,6 +79,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
   ```ts tab lit
   import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+  import { GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 
   interface Data {
     name: string;
@@ -83,7 +87,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
   }
 
   @customElement('greet-me')
-  class GreetMe extends ApolloQuery<Data, null> {
+  class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<Data, null> {
     render() {
       return html`
         <p>
@@ -97,6 +101,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
   ```ts tab fast
   import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 
   interface Data {
     name: string;
@@ -109,11 +114,12 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
       ${x => x.data?.name ?? 'friend'}
     </p>
   ` })
-  class GreetMe extends ApolloQuery<Data, null> { }
+  class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<Data, null> { }
   ```
 
   ```ts tab haunted
   import { useQuery, component, html } from '@apollo-elements/haunted';
+  import { GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 
   function GreetMe() {
     const { data } = useQuery(null);
@@ -125,20 +131,42 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
     `;
   }
 
-  customElements.define('greet-me', component(GreetMe));
+  customElements.define('greet-me', GraphQLScriptChildMixin(component(GreetMe)));
   ```
 
   ```ts tab hybrids
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  // while you can't use the mixin, you can roll your own
+  import { query, define, html } from '@apollo-elements/hybrids';
+  import { gql } from '@apollo/client/core';
+
+  function matchNode(host, node) {
+    if (!(node instanceof HTMLScriptElement))
+      return; /* c8 ignore next */ // it's covered
+    if (node.matches('[type="application/graphql"]'))
+      host.document = gql(node.textContent);
+    if (node.matches('[type="application/json"]'))
+      host.variables = JSON.parse(node.textContent);
+  }
 
   define('greet-me', {
-    client: client(window.__APOLLO_CLIENT__),
-    query: query(null),
+    ...query(null),
+    _domQuery: {
+      connect(host) {
+        const mo = new MutationObserver(records => {
+          for (const { target: node, addedNodes = [] } of records) {
+            matchNode(host, node);
+            for (const added of addedNodes)
+              matchNode(host, added);
+          }
+        });
+
+        mo.observe(host, { characterData: true, childList: true, subtree: true });
+
+        return () => mo.disconnect();
+      }
+    }
     render: ({ data }) => html`
-      <p>
-        ${data?.greeting ?? 'Hello'},
-        ${data?.name ?? 'friend'}
-      </p>
+      <p>${data?.greeting ?? 'Hello'}, ${data?.name ?? 'friend'}</p>
     `
   })
   ```
@@ -158,35 +186,4 @@ You can add it to your page like so, and it will start querying.
     }
   </script>
 </greet-me>
-```
-
-## No Base Class
-
-You can use Apollo Elements without subclassing. Import [`@apollo-elements/polymer/apollo-query`](https://apolloelements.dev/api/libraries/polymer/apollo-query/) and add an `<apollo-query>` element to your page with a `<script type="application/graphql">` as its first child. The element will query as soon as it upgrades, and will fire `data-changed` or `error-changed` events. If your query has arguments, assign them to the `<apollo-query>` element's `variables` property.
-
-Despite the name, these components don't import from the Polymer library, rather they extend HTMLElement, so they won't unduly affect your bundle sizes.
-
-```html copy
-<apollo-query id="hello">
-  <script type="application/graphql">
-  query HelloQuery {
-    helloWorld {
-      name
-      greeting
-    }
-  }
-  </script>
-</apollo-query>
-
-<output id="output"></output>
-
-<script type="module">
-  import "@apollo-elements/polymer/apollo-query";
-  hello.addEventListener('data-changed', ({ detail: { value } }) => {
-    if (!value || !value.helloWorld) return;
-    const greeting = value.helloWorld.greeting || 'Hello';
-    const name = value.helloWorld.name || 'Friend';
-    output.textContent = `${greeting}, ${name}!`;
-  });
-</script>
 ```

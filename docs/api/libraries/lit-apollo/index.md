@@ -2,9 +2,9 @@
 layout: layout-api-index
 package: '@apollo-elements/lit-apollo'
 ---
-# Web Component Libraries >> LitElement || 20
+# Web Component Libraries >> Lit || 20
 
-[`lit-element`](https://lit-element.polymer-project.org) is a reactive component base class from the Polymer team at Google. It's a popular and simple choice for building any kind of web component project.
+[`lit`](https://lit.dev) combines a reactive component base class with an efficient and expressive templating system. It's a popular and simple choice for building any kind of web component project.
 
 ## Installation
 

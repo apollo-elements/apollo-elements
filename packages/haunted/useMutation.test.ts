@@ -16,13 +16,7 @@ import { html } from 'haunted';
 import { useMutation } from './useMutation';
 import { component } from 'haunted';
 
-import {
-  assertType,
-  Entries,
-  SetupOptions,
-  setupSpies,
-  setupStubs,
-} from '@apollo-elements/test-helpers';
+import { assertType, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 
 import UpdateUserMutation from '@apollo-elements/test-helpers/graphql/UpdateUser.mutation.graphql';
 
@@ -31,7 +25,7 @@ import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
 import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
 import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 
-import { ApolloMutationElement } from '@apollo-elements/interfaces';
+import { ApolloMutationElement, Entries } from '@apollo-elements/interfaces';
 
 describe('[haunted] useMutation', function() {
   const ccOrig = ApolloMutationElement.prototype.connectedCallback;

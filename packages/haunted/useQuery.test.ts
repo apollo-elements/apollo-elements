@@ -1,3 +1,5 @@
+import type { Entries } from '@apollo-elements/interfaces';
+
 import type {
   HelloQueryData,
   HelloQueryVariables,
@@ -18,16 +20,24 @@ import { html } from 'haunted';
 import { useQuery } from './useQuery';
 import { component } from 'haunted';
 
-import { assertType, Entries, restoreSpies, SetupOptions } from '@apollo-elements/test-helpers';
-import HelloQuery from '@apollo-elements/test-helpers/graphql/Hello.query.graphql';
-
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 import { ApolloQueryElement } from '@apollo-elements/interfaces';
 
-import { setupClient, setupSpies, setupStubs, teardownClient } from '@apollo-elements/test-helpers';
 import { describeQuery, QueryElement } from '@apollo-elements/test-helpers/query.test';
 
+import {
+  assertType,
+  restoreSpies,
+  setupClient,
+  SetupOptions,
+  setupSpies,
+  setupStubs,
+  teardownClient,
+} from '@apollo-elements/test-helpers';
+
 import { spy, SinonSpy, SinonStub } from 'sinon';
+
+import HelloQuery from '@apollo-elements/test-helpers/graphql/Hello.query.graphql';
 
 const ccOrig = ApolloQueryElement.prototype.connectedCallback;
 

@@ -26,7 +26,7 @@ export interface SubscriptionResult<TData> {
 }
 
 export interface SubscriptionDataOptions<D = unknown, V = OperationVariables> {
-  context: Record<string, any>;
+  context: SubscriptionOptions<V, D>['context'];
   subscription: DocumentNode | ComponentDocument<D>;
   variables?: Variables<D, V>;
   errorPolicy?: ErrorPolicy;
