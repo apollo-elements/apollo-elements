@@ -7,7 +7,7 @@ Apollo Elements consists of multiple web-component packages, a core of shared in
 Whatever your preference for how to build web components, there's a flavour of Apollo Elements for you and your team. You can even mix-and-match in the same project, thanks to the common interface of HTML and the DOM.
 
 - [Class Mixins](./libraries/mixins/): Vanilla JS class mixins
-- [LitElement](./libraries/lit-apollo/): Perhaps the most popular web-component base class
+- [Lit](./libraries/lit-apollo/): Perhaps the most popular web-component library
 - [FAST](./libraries/fast/): Microsoft's new entry into the field
 - [Haunted](./libraries/haunted/): The React hooks API, but web components
 - [Hybrids](./libraries/hybrids/): A unique chimera of object-oriented and functional styles

@@ -16,16 +16,10 @@ import { notify } from './notify-decorator';
  * @example
  *
  * ```html
- * <apollo-mutation id="userMutation" data="{{data}}">
- *   <script type="application/graphql">
- *     mutation User($id: ID!, $name: String, $picture: String) {
- *       user(id: $id, name: $name, picture: $picture) {
- *         name
- *         picture
- *       }
- *     }
- *   </script>
- * </apollo-mutation>
+ * <apollo-mutation id="userMutation"
+ *     data="{{data}}"
+ *     mutation="[[UserMutation]]"
+ * ></apollo-mutation>
  *
  * <paper-input label="Name" value="{{name}}"></paper-input>
  * <paper-input label="Picture URL" value="{{picture}}"></paper-input>

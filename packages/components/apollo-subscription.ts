@@ -6,6 +6,7 @@ import type {
   GraphQLError,
 } from '@apollo-elements/interfaces';
 
+import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 import { NetworkStatus } from '@apollo/client/core';
 
@@ -73,9 +74,12 @@ export type ApolloSubscriptionModel<D, V> = Pick<ApolloSubscriptionElement<D, V>
  * </script>
  * ```
  */
-export class ApolloSubscriptionElement<D = unknown, V = OperationVariables>
-  extends ApolloSubscriptionMixin<Constructor<StampinoRender>>(StampinoRender)<D, V>
-  implements ApolloSubscriptionInterface<D, V> {
+export class ApolloSubscriptionElement<D = unknown, V = OperationVariables> extends
+  GraphQLScriptChildMixin(
+    ApolloSubscriptionMixin<Constructor<StampinoRender>>(
+      StampinoRender
+    )
+  )<D, V> implements ApolloSubscriptionInterface<D, V> {
   static get is(): 'apollo-subscription' { return 'apollo-subscription'; }
 
   @property() data: Data<D>|null = null;

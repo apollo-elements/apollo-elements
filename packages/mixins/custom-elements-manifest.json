@@ -2228,6 +2228,76 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./index.js",
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElementMixin",
+          "declaration": {
+            "name": "ApolloElementMixin",
+            "module": "./apollo-element-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQueryMixin",
+          "declaration": {
+            "name": "ApolloQueryMixin",
+            "module": "./apollo-query-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutationMixin",
+          "declaration": {
+            "name": "ApolloMutationMixin",
+            "module": "./apollo-mutation-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscriptionMixin",
+          "declaration": {
+            "name": "ApolloSubscriptionMixin",
+            "module": "./apollo-subscription-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloClientMixin",
+          "declaration": {
+            "name": "ApolloClientMixin",
+            "module": "./apollo-client-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GraphQLScriptChildMixin",
+          "declaration": {
+            "name": "GraphQLScriptChildMixin",
+            "module": "./graphql-script-child-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TypePoliciesMixin",
+          "declaration": {
+            "name": "TypePoliciesMixin",
+            "module": "./type-policies-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ValidateVariablesMixin",
+          "declaration": {
+            "name": "ValidateVariablesMixin",
+            "module": "./validate-variables-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./apollo-client-mixin.js",
       "declarations": [
         {
@@ -2272,6 +2342,64 @@
           "name": "ApolloClientMixin",
           "declaration": {
             "name": "ApolloClientMixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./graphql-script-child-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "name": "GraphQLScriptChildMixin",
+          "description": "`GraphQLScriptChildMixin`",
+          "summary": "Allows elements to read their GraphQL document and variables from HTML.",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getDOMGraphQLDocument",
+              "privacy": "protected",
+              "summary": "Get a GraphQL DocumentNode from the element's GraphQL script child",
+              "return": {
+                "type": {
+                  "type": "this['document']"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDOMVariables",
+              "privacy": "protected",
+              "summary": "Gets operation variables from the element's JSON script child",
+              "return": {
+                "type": {
+                  "type": "this['variables']"
+                }
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "type": "Constructor<ApolloElementElement>"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "type": "Constructor<ApolloElementElement> & Constructor<{\n  getDOMGraphQLDocument(): InstanceType<B>['document'];\n  getDOMVariables(): InstanceType<B>['variables'];\n}>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GraphQLScriptChildMixin",
+          "declaration": {
+            "name": "GraphQLScriptChildMixin"
           }
         }
       ]

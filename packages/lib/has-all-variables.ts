@@ -53,7 +53,7 @@ export function hasAllVariables(operation: Partial<Operation>): boolean {
       ?.filter(isNonNullType)
       ?.map(getVariableValue)
       ?.map(hasNonNullValue(operation.variables))
-      ?.every(isTrue) ?? false; /* c8 ignore next */ // this is covered
+      ?.every(isTrue) ?? false; /* c8 ignore next */ // covered
   } catch {
     return false;
   }

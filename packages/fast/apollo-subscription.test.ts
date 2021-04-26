@@ -9,11 +9,11 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type { Entries, GraphQLError } from '@apollo-elements/interfaces';
 
 import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
 
-import { Entries, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
 
 import {
   aTimeout,

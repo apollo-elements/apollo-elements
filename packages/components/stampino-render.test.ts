@@ -1,4 +1,4 @@
-import { fixture, defineCE, expect } from '@open-wc/testing';
+import { fixture, defineCE, expect, html, unsafeStatic } from '@open-wc/testing';
 
 import 'sinon-chai';
 
@@ -238,6 +238,7 @@ describe('[components] StampinoRender', function() {
           },
         };
       });
+
       element = await fixture(`
         <${tag}>
           <p>light content</p>
@@ -255,6 +256,114 @@ describe('[components] StampinoRender', function() {
       expect(element.querySelectorAll('p').length, 'light content').to.equal(1);
       expect(element.$$('p').length, 'total shadow content').to.equal(3);
       expect(element.$$('.doubled').length, 'doubled content').to.equal(2);
+    });
+  });
+
+  describe('with extras', function() {
+    let element: StampinoRender;
+
+    beforeEach(async function() {
+      const def = defineCE(class extends StampinoRender { });
+
+      const tag = unsafeStatic(def);
+
+      element = await fixture(html`
+        <${tag} .extras="${{
+          methodOnExtras(x = 0) {
+            return x + 1;
+          },
+        }}">
+          <template>
+            <output>{{ methodOnExtras(propOnModel) }}</output>
+          </template>
+        </${tag}>
+      `);
+    });
+
+    it('gets extras', function() {
+      expect(element.extras?.methodOnExtras(1)).to.equal(2);
+    });
+
+    it('renders nothing in output', function() {
+      expect(element.$('output')!.innerHTML).to.equal('1');
+    });
+
+    describe('then calling update', function() {
+      beforeEach(function() {
+        element.update({ propOnModel: 1 });
+      });
+
+      it('renders a number in output', function() {
+        expect(element.$('output')!.innerHTML).to.equal('2');
+      });
+    });
+  });
+
+  describe('extending to use `model` prop', function() {
+    let element: StampinoRender & { m: any };
+
+    beforeEach(async function() {
+      const tag = defineCE(class extends StampinoRender {
+        get m() { return this.model; }
+
+        set m(v) { this.model = v; }
+      });
+
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+
+    it('gets initial model', function() {
+      expect(element.m).to.be.empty;
+    });
+
+    describe('calling update', function() {
+      beforeEach(function() {
+        element.update({ a: 1 });
+      });
+
+      it('gets updated model', function() {
+        expect(element.m.a).to.equal(1);
+      });
+
+      describe('calling update(x, { overwrite: true })', function() {
+        beforeEach(function() {
+          element.update({ b: 2 }, { overwrite: true });
+        });
+        it('resets model', function() {
+          expect(element.m.a).to.not.be.ok;
+          expect(element.m.b).to.equal(2);
+        });
+      });
+
+      describe('calling update(x, { overwrite: false })', function() {
+        beforeEach(function() {
+          element.update({ b: 2 }, { overwrite: false });
+        });
+        it('merges model', function() {
+          expect(element.m.a).to.equal(1);
+          expect(element.m.b).to.equal(2);
+        });
+      });
+      describe('setting extras', function() {
+        beforeEach(function() {
+          element.extras = {
+            inc(x: number) { return x + 1; },
+          };
+        });
+
+        it('gets updated model', function() {
+          expect(element.m.inc(element.m.a)).to.equal(2);
+        });
+      });
+
+      describe('setting m', function() {
+        beforeEach(function() {
+          element.m = { c: 2 };
+        });
+        it('updates model', function() {
+          expect(element.m).to.deep.equal({ c: 2 });
+        });
+      });
     });
   });
 

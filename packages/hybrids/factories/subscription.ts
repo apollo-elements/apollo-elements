@@ -35,21 +35,19 @@ export type { ApolloSubscriptionElement };
  * @return Hybrids descriptor which mixes the [ApolloSubscriptionInterface](/api/interfaces/subscription/) in on connect
  */
 export function subscription<D = unknown, V = OperationVariables>(
-  document: DocumentNode | TypedDocumentNode<D, V> | null,
+  document?: DocumentNode | TypedDocumentNode<D, V> | null,
   options?: SubscriptionHybridsFactoryOptions<D, V>
 ): Hybrids<ApolloSubscriptionInterface<D, V>> {
   return {
     ...(ApolloElement as Hybrids<ApolloSubscriptionInterface<D, V>>),
     subscription: {
       connect(host, _, invalidate) {
-        applyPrototype(host, ApolloSubscriptionElement, {
-          type: 'subscription',
-        });
+        applyPrototype(host, ApolloSubscriptionElement);
 
         return initDocument<ApolloSubscriptionElement<D, V>>({
           host,
-          document,
           invalidate,
+          document: document ?? null,
           defaults: options,
         });
       },

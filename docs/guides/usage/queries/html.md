@@ -48,7 +48,7 @@ What that means is you can define the element's dynamic template using good-old 
 `jexpr` expressions are like handlebars, nunjucks, polymer, etc. expressions. You can do most things you can do in JavaScript using `jexpr`. Read more at the [jexpr README](https://github.com/justinfagnani/jexpr) or try it out for yourself on the [Stampino REPL](https://github.com/justinfagnani/stampino/issues/14)
 
 ## Template Bindings
-Template bindings follow similar conventions to [lit-html](https://lit-html.polymer-project.org/guide/template-reference#binding-types). You can bind to nodes or element children, attributes, DOM properties, or even event listeners.
+Template bindings follow similar conventions to [lit-html](https://lit.dev/guide/template-reference#binding-types). You can bind to nodes or element children, attributes, DOM properties, or even event listeners.
 
 ### Content Binding
 Bind to element content by adding an expression as a child of the element.
@@ -129,7 +129,7 @@ You can set the `templateHanders` property on an `<apollo-query>` element to cus
 
 <script>
 (async function() {
-  import('lit-html').then(({ html }) => {
+  import('lit').then(({ html }) => {
     document.currentScript.getRootNode()
       .querySelector('apollo-query')
       .templateHandlers = {

@@ -7,6 +7,7 @@ import type {
 } from '@apollo-elements/interfaces';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 import { NetworkStatus } from '@apollo/client/core';
 
 import { StampinoRender, property } from './stampino-render';
@@ -60,9 +61,12 @@ export type ApolloQueryModel<D, V> = Pick<ApolloQueryElement<D, V>,
  * </script>
  * ```
  */
-export class ApolloQueryElement<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin<Constructor<StampinoRender & HTMLElement>>(StampinoRender)<D, V>
-  implements ApolloQueryInterface<D, V> {
+export class ApolloQueryElement<D = unknown, V = OperationVariables> extends
+  GraphQLScriptChildMixin(
+    ApolloQueryMixin<Constructor<StampinoRender & HTMLElement>>(
+      StampinoRender
+    )
+  )<D, V> implements ApolloQueryInterface<D, V> {
   static get is(): 'apollo-query' { return 'apollo-query'; }
 
   @property() data: Data<D>|null = null;

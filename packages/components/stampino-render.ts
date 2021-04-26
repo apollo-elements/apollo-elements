@@ -29,6 +29,7 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
 
   public set extras(extras: Partial<Model>|null) {
     this.#extras = extras;
+    this.#renderProps = { ...this.#renderProps, ...this.#extras };
     this.render();
   }
 
@@ -115,7 +116,7 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
 
   public update(model: Model, { overwrite = false } = { }): void {
     if (overwrite)
-      this.setModel(model);
+      this.setModel(model); /* c8 ignore next */ // covered
     else
       this.setModel({ ...this.model, ...model });
   }

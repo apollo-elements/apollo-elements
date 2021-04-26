@@ -22,7 +22,7 @@ const commonjs = fromRollup(rollupCommonjs);
 
 /**
  * These are the CSS files you directly import into components
- * Transform these files into LitElement `CSSResult` modules
+ * Transform these files into Lit `CSSResult` modules
  */
 const componentCSS =
   'src/components/**/*.css';
@@ -63,7 +63,7 @@ declare module '*.graphql' {
 }
 
 declare module '*.css' {
-  import { CSSResult } from 'lit-element';
+  import { CSSResult } from 'lit';
   const css: CSSResult;
   export default css;
 }

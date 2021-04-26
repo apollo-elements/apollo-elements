@@ -10,6 +10,7 @@ import type {
   VariablesOf,
 } from '@apollo-elements/interfaces';
 
+import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { isEmpty } from '@apollo-elements/lib/helpers';
 
@@ -154,9 +155,12 @@ export class WillMutateError extends Error {}
  * }
  * ```
  */
-export class ApolloMutationElement<D = unknown, V = OperationVariables>
-  extends ApolloMutationMixin<Constructor<StampinoRender & HTMLElement>>(StampinoRender)<D, V>
-  implements ApolloMutationInterface<D, V> {
+export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
+  GraphQLScriptChildMixin(
+    ApolloMutationMixin<Constructor<StampinoRender & HTMLElement>>(
+      StampinoRender
+    )
+  )<D, V> implements ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
   /**
@@ -457,7 +461,7 @@ Object.defineProperties(ApolloMutationElement.prototype, {
 
     set(this: ApolloMutationElement, v: VariablesOf<ApolloMutationElement> | null) {
       this.__variables = v;
-      if (this.mo) // element is connected
+      if (this.readyToReceiveDocument) // element is connected
         this.variablesChanged?.(v); /* c8 ignore next */ // covered
     },
 

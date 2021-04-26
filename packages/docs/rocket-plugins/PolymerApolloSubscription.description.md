@@ -5,16 +5,12 @@ See [ApolloSubscriptionInterface](/api/interfaces/subscription/) for more inform
 ### Example
 
 ```html
-<apollo-subscription data="{{data}}" variables="[[variables]]" on-data-changed="toast">
-  <script type="application/graphql">
-    subscription UserJoined($id: ID!) {
-      userJoined(id: $id) {
-        name
-        picture
-      }
-    }
-  </script>
-</apollo-subscription>
+<apollo-subscription
+    data="{{data}}"
+    variables="[[variables]]"
+    subscription="[[UserJoinedSubscription]]"
+    on-data-changed="toast"
+></apollo-subscription>
 
 <paper-toast duration="5000" text="A wild [[data.userJoined.name]] approaches!">
   <iron-image>[[data.userJoined.picture]]</iron-image>
