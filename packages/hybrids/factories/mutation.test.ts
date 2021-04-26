@@ -1,15 +1,15 @@
-import type { TypedDocumentNode } from '@apollo/client/core';
+import type { Entries } from '@apollo-elements/interfaces';
+import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 import type { SinonSpy, SinonStub } from 'sinon';
 
 import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
-import { nextFrame } from '@open-wc/testing';
+import { aTimeout, nextFrame } from '@open-wc/testing';
 import 'sinon-chai';
 
-import { define, html } from 'hybrids';
+import { define, html, RenderFunction, Hybrids } from 'hybrids';
 
-import { mutation } from './mutation';
+import { mutation, MutationHybridsFactoryOptions } from './mutation';
 import {
-  Entries,
   SetupOptions,
   setupSpies,
   setupStubs,
@@ -26,6 +26,26 @@ function getTagName(): string {
   return tagName;
 }
 
+type TestableApolloMutationHybrid<T, U> = Hybrids<MutationElement<T, U> & {
+  stringify(x: unknown): string;
+  hasRendered(): Promise<MutationElement<T, U>>;
+  render?: RenderFunction<MutationElement<T, U>>;
+}>
+
+const testMutation = <T, U>(
+  doc?: DocumentNode | TypedDocumentNode<T, U> | null,
+  opts?: MutationHybridsFactoryOptions<T, U>
+): TestableApolloMutationHybrid<T, U> => ({
+    ...mutation<T, U>(doc, opts),
+    stringify: () => stringify,
+    hasRendered: host => async () => {
+      await aTimeout(0);
+      host.render?.(host);
+      await aTimeout(0);
+      return host;
+    },
+  });
+
 describe('[hybrids] ApolloMutation', function() {
   describeMutation({
     async setupFunction<T extends MutationElement>(options: SetupOptions<T> = {}) {
@@ -34,12 +54,7 @@ describe('[hybrids] ApolloMutation', function() {
       const tag = getTagName();
 
       define<MutationElement>(tag, {
-        ...mutation(null),
-        stringify: () => stringify,
-        hasRendered: (host: MutationElement & { render(): ShadowRoot }) => async () => {
-          host.render();
-          return host;
-        },
+        ...testMutation(),
         render: ({ called, data, error, errors, loading, stringify }) => html`
           <output id="called">${stringify(called)}</output>
           <output id="data">${stringify(data)}</output>
@@ -47,6 +62,7 @@ describe('[hybrids] ApolloMutation', function() {
           <output id="errors">${stringify(errors)}</output>
           <output id="loading">${stringify(loading)}</output>
         `,
+
       });
 
       const attrs = attributes ? ` ${attributes}` : '';
