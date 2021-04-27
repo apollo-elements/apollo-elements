@@ -3092,11 +3092,6 @@
   resolved "https://registry.yarnpkg.com/@rocket/navigation/-/navigation-0.2.1.tgz#ce9c22a6a3b1eafbf531880214d82dbaa9ffe192"
   integrity sha512-MNrMM8yssg39+vpqeWn3YnqwYMQ61iucAPvGBBdXRVP26Ay3xCEKL+iZvdq/sizx63i3G+BvLpvb8lrOz6542Q==
 
-"@rocket/navigation@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@rocket/navigation/-/navigation-0.2.1.tgz#ce9c22a6a3b1eafbf531880214d82dbaa9ffe192"
-  integrity sha512-MNrMM8yssg39+vpqeWn3YnqwYMQ61iucAPvGBBdXRVP26Ay3xCEKL+iZvdq/sizx63i3G+BvLpvb8lrOz6542Q==
-
 "@rocket/search@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@rocket/search/-/search-0.3.2.tgz#19a6401f34b3b5fe8c1fd1cd66a5f7de69e4284f"
@@ -9260,13 +9255,6 @@ is-hexadecimal@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/is-hexadecimal/-/is-hexadecimal-1.0.4.tgz#cc35c97588da4bd49a8eedd6bc4082d44dcb23a7"
   integrity sha512-gyPJuv83bHMpocVYoqof5VDiZveEoGoFL8m3BXNb2VW8Xs+rz9kqO8LOQ5DH6EsuvilT1ApazU0pyl+ytbPtlw==
-
-is-lower-case@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/is-lower-case/-/is-lower-case-2.0.2.tgz#1c0884d3012c841556243483aa5d522f47396d2a"
-  integrity sha512-bVcMJy4X5Og6VZfdOZstSexlEy20Sr0k/p/b2IlQJlfdKAQuMpiv5w2Ccxb8sKdRUNAG1PnHVHjFSdRDVS6NlQ==
-  dependencies:
-    tslib "^2.0.3"
 
 is-lower-case@^2.0.1:
   version "2.0.2"
