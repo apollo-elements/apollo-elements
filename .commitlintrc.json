@@ -1,6 +1,9 @@
 {
   "extends": [
     "@commitlint/config-conventional",
-    "@commitlint/config-lerna-scopes"
-  ]
+  ],
+  "plugins": ['workspace-scopes'],
+  "rules": {
+    "scope-enum": [2, "always", []]
+  }
 }
