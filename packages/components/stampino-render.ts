@@ -38,7 +38,7 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
 
   #model: Model|null = null;
 
-  #renderProps: Model & this;
+  #renderProps: Model;
 
   protected get model(): Model {
     return ({ ...this.#model, ...this.#extras } as Model);
@@ -71,7 +71,8 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
 
   constructor() {
     super();
-    this.#renderProps = { ...this, ...this.#model } as Model & this;
+    // @ts-expect-error: should be fine;
+    this.#renderProps = { ...this.#model, ...this.#extras };
     this.createRenderRoot();
   }
 
@@ -110,7 +111,7 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
 
   private setModel(x: Model) {
     this.#model = x;
-    this.#renderProps = { ...this, ...this.#model, ...this.#extras };
+    this.#renderProps = { ...this.#model, ...this.#extras };
     this.render();
   }
 
@@ -132,7 +133,7 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
       render(
         this.template,
         this.renderRoot as HTMLElement,
-        this.#renderProps,
+        { ...this.#renderProps, host: this },
         this.templateHandlers
       );
     }
