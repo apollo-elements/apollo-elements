@@ -1,0 +1,6 @@
+mutation InputParamMutation($input: ABInput!) {
+  inputParam(input: $input) {
+    a
+    b
+  }
+}

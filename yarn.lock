@@ -1489,6 +1489,52 @@
     yaml "^1.10.0"
     yargs "^16.1.1"
 
+"@graphql-codegen/cli@^1.21.3":
+  version "1.21.3"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-1.21.3.tgz#3506c5d019c6995be1927bd4d9c67a739fafe5e6"
+  integrity sha512-jwg0mKhseg0QI4/T4IQcttTBCZgnahiTWqnYWIK+E8nrbXCE9o2hxvaYin/Kq9+5oFtxDePED56cjVs/ESRw6g==
+  dependencies:
+    "@graphql-codegen/core" "1.17.9"
+    "@graphql-codegen/plugin-helpers" "^1.18.4"
+    "@graphql-tools/apollo-engine-loader" "^6"
+    "@graphql-tools/code-file-loader" "^6"
+    "@graphql-tools/git-loader" "^6"
+    "@graphql-tools/github-loader" "^6"
+    "@graphql-tools/graphql-file-loader" "^6"
+    "@graphql-tools/json-file-loader" "^6"
+    "@graphql-tools/load" "^6"
+    "@graphql-tools/prisma-loader" "^6"
+    "@graphql-tools/url-loader" "^6"
+    "@graphql-tools/utils" "^7.0.0"
+    ansi-escapes "^4.3.1"
+    chalk "^4.1.0"
+    change-case-all "1.0.12"
+    chokidar "^3.4.3"
+    common-tags "^1.8.0"
+    cosmiconfig "^7.0.0"
+    debounce "^1.2.0"
+    dependency-graph "^0.11.0"
+    detect-indent "^6.0.0"
+    glob "^7.1.6"
+    graphql-config "^3.2.0"
+    indent-string "^4.0.0"
+    inquirer "^7.3.3"
+    is-glob "^4.0.1"
+    json-to-pretty-yaml "^1.2.2"
+    latest-version "5.1.0"
+    listr "^0.14.3"
+    listr-update-renderer "^0.5.0"
+    log-symbols "^4.0.0"
+    minimatch "^3.0.4"
+    mkdirp "^1.0.4"
+    string-env-interpolation "^1.0.1"
+    ts-log "^2.2.3"
+    tslib "~2.1.0"
+    valid-url "^1.0.9"
+    wrap-ansi "^7.0.0"
+    yaml "^1.10.0"
+    yargs "^16.1.1"
+
 "@graphql-codegen/core@1.17.9":
   version "1.17.9"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-1.17.9.tgz#c03e71018ff04d26f5139a2d90a32b31d3bb2b43"
@@ -3624,6 +3670,11 @@
   dependencies:
     "@types/estree" "*"
 
+"@types/trusted-types@^1.0.1":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-1.0.6.tgz#569b8a08121d3203398290d602d84d73c8dcf5da"
+  integrity sha512-230RC8sFeHoT6sSUlRO6a8cAnclO06eeiq1QDfiv2FGCLWFvvERWgwIQD4FWqD9A69BN7Lzee4OXwoMVnnsWDw==
+
 "@types/uglify-js@*":
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.13.0.tgz#1cad8df1fb0b143c5aba08de5712ea9d1ff71124"
@@ -3770,6 +3821,14 @@
     "@typescript-eslint/types" "4.21.0"
     eslint-visitor-keys "^2.0.0"
 
+"@typescript-eslint/visitor-keys@4.20.0":
+  version "4.20.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-4.20.0.tgz#1e84db034da13f208325e6bfc995c3b75f7dbd62"
+  integrity sha512-NXKRM3oOVQL8yNFDNCZuieRIwZ5UtjNLYtmMx2PacEAGmbaEYtGgVHUHVyZvU/0rYZcizdrWjDo+WBtRPSgq+A==
+  dependencies:
+    "@typescript-eslint/types" "4.20.0"
+    eslint-visitor-keys "^2.0.0"
+
 "@ungap/event-target@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@ungap/event-target/-/event-target-0.2.2.tgz#6543122625a0a793c5fa265f45717cd096b0fb7c"
@@ -3790,6 +3849,54 @@
     semver "^7.3.4"
 
 "@web/dev-server-core@^0.3.0", "@web/dev-server-core@^0.3.2", "@web/dev-server-core@^0.3.3", "@web/dev-server-core@^0.3.6", "@web/dev-server-core@^0.3.8":
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/@web/dev-server-core/-/dev-server-core-0.3.8.tgz#63035c28b051ec5f18742814a85736b9a7d78ba5"
+  integrity sha512-Qbo2ZVUopmjEP8ZDc8v0N/nTW9LbmycuC+uoTwp62PfHfqSN9RgXGzuGMmp5sBPRXi/E1oi1GQ+lMoDWXLjKYA==
+  dependencies:
+    "@types/koa" "^2.11.6"
+    "@types/ws" "^7.4.0"
+    "@web/parse5-utils" "^1.2.0"
+    chokidar "^3.4.3"
+    clone "^2.1.2"
+    es-module-lexer "^0.4.0"
+    get-stream "^6.0.0"
+    is-stream "^2.0.0"
+    isbinaryfile "^4.0.6"
+    koa "^2.13.0"
+    koa-etag "^4.0.0"
+    koa-send "^5.0.1"
+    koa-static "^5.0.0"
+    lru-cache "^6.0.0"
+    mime-types "^2.1.27"
+    parse5 "^6.0.1"
+    picomatch "^2.2.2"
+    ws "^7.4.2"
+
+"@web/dev-server-core@^0.3.11":
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/@web/dev-server-core/-/dev-server-core-0.3.11.tgz#0bd7ea3d59fbe7155832140969d5f7fe5200114e"
+  integrity sha512-6CXO4eoW7UIicXFWDP3pocwVliyiTFqqqGg+DN4xexBLiP9sWH4WYb57RwKEnd9/K+DjWbSu0D0tvjVzcftUIw==
+  dependencies:
+    "@types/koa" "^2.11.6"
+    "@types/ws" "^7.4.0"
+    "@web/parse5-utils" "^1.2.0"
+    chokidar "^3.4.3"
+    clone "^2.1.2"
+    es-module-lexer "^0.4.0"
+    get-stream "^6.0.0"
+    is-stream "^2.0.0"
+    isbinaryfile "^4.0.6"
+    koa "^2.13.0"
+    koa-etag "^4.0.0"
+    koa-send "^5.0.1"
+    koa-static "^5.0.0"
+    lru-cache "^6.0.0"
+    mime-types "^2.1.27"
+    parse5 "^6.0.1"
+    picomatch "^2.2.2"
+    ws "^7.4.2"
+
+"@web/dev-server-core@^0.3.8":
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/@web/dev-server-core/-/dev-server-core-0.3.8.tgz#63035c28b051ec5f18742814a85736b9a7d78ba5"
   integrity sha512-Qbo2ZVUopmjEP8ZDc8v0N/nTW9LbmycuC+uoTwp62PfHfqSN9RgXGzuGMmp5sBPRXi/E1oi1GQ+lMoDWXLjKYA==
@@ -5130,6 +5237,18 @@ chai-dom@^1.8.1:
   integrity sha512-UXSbhcGVBWv/5qVqbJY/giTDRyo3wKapUsWluEuVvxcJLFXkyf8l4D2PTd6trzrmca6WWnGdpaFkYdl1P0WjtA==
 
 chai@^4.2.0, chai@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.4.tgz#b55e655b31e1eac7099be4c08c21964fce2e6c49"
+  integrity sha512-yS5H68VYOCtN1cjfwumDSuzn/9c+yza4f3reKXlE5rUg7SFcCEy90gJvydNgOYtblyf4Zi6jIWRnXOgErta0KA==
+  dependencies:
+    assertion-error "^1.1.0"
+    check-error "^1.0.2"
+    deep-eql "^3.0.1"
+    get-func-name "^2.0.0"
+    pathval "^1.1.1"
+    type-detect "^4.0.5"
+
+chai@^4.3.4:
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.4.tgz#b55e655b31e1eac7099be4c08c21964fce2e6c49"
   integrity sha512-yS5H68VYOCtN1cjfwumDSuzn/9c+yza4f3reKXlE5rUg7SFcCEy90gJvydNgOYtblyf4Zi6jIWRnXOgErta0KA==
@@ -9144,6 +9263,13 @@ is-lower-case@^2.0.1:
   dependencies:
     tslib "^2.0.3"
 
+is-lower-case@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/is-lower-case/-/is-lower-case-2.0.2.tgz#1c0884d3012c841556243483aa5d522f47396d2a"
+  integrity sha512-bVcMJy4X5Og6VZfdOZstSexlEy20Sr0k/p/b2IlQJlfdKAQuMpiv5w2Ccxb8sKdRUNAG1PnHVHjFSdRDVS6NlQ==
+  dependencies:
+    tslib "^2.0.3"
+
 is-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-module/-/is-module-1.0.0.tgz#3258fb69f78c14d5b815d664336b4cffb6441591"
@@ -12984,6 +13110,13 @@ rollup@^2.45.1:
   optionalDependencies:
     fsevents "~2.3.1"
 
+rollup@^2.44.0:
+  version "2.44.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.44.0.tgz#8da324d1c4fd12beef9ae6e12f4068265b6d95eb"
+  integrity sha512-rGSF4pLwvuaH/x4nAS+zP6UNn5YUDWf/TeEU5IoXSZKBbKRNTCI3qMnYXKZgrC0D2KzS2baiOZt1OlqhMu5rnQ==
+  optionalDependencies:
+    fsevents "~2.3.1"
+
 rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
@@ -13363,6 +13496,11 @@ sinon-chai@^3.3.0:
   resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.6.0.tgz#25bd59a37ef8990245e085a40f1f79d6bf023b7a"
   integrity sha512-bk2h+0xyKnmvazAnc7HE5esttqmCerSMcBtuB2PS2T4tG6x8woXAxZeJaOJWD+8reXHngnXn0RtIbfEW9OTHFg==
 
+sinon-chai@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.6.0.tgz#25bd59a37ef8990245e085a40f1f79d6bf023b7a"
+  integrity sha512-bk2h+0xyKnmvazAnc7HE5esttqmCerSMcBtuB2PS2T4tG6x8woXAxZeJaOJWD+8reXHngnXn0RtIbfEW9OTHFg==
+
 sinon@^9.0.3:
   version "9.2.4"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-9.2.4.tgz#e55af4d3b174a4443a8762fa8421c2976683752b"
@@ -13645,6 +13783,13 @@ sponge-case@^1.0.0:
   dependencies:
     tslib "^2.0.3"
 
+sponge-case@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/sponge-case/-/sponge-case-1.0.1.tgz#260833b86453883d974f84854cdb63aecc5aef4c"
+  integrity sha512-dblb9Et4DAtiZ5YSUZHLl4XhH4uK80GhAZrVXdN4O2P4gQ40Wa5UIOPUHlA/nFd2PLblBZWUioLMMAVrgpoYcA==
+  dependencies:
+    tslib "^2.0.3"
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
@@ -13678,13 +13823,13 @@ stampino@^0.6.1:
     jexpr "^1.0.0-pre.2"
     lit-html "^2.0.0-pre.7"
 
-stampino@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/stampino/-/stampino-0.4.0.tgz#bbdfd7c6e22fe5c8475502394f159761baa58a5c"
-  integrity sha512-cyIGTuZwCKokZMgu84jm37+qoE9pYN3cdt6F0kojeQQm7X8+BBo/eFSYcUde3/jHtq3TOJlQ+dh51+ryC8FYHQ==
+stampino@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/stampino/-/stampino-0.6.1.tgz#8ebbf1c85fc98d75ee03dff6b4ca4e3e44642d04"
+  integrity sha512-NXrKMupWDEIoPwdrcRnc4TpukfEEsaynxlfmIDpqHNPJVB2Yx5xSJIMHpKYNhp30y7pmc8EPb2l27idGkNex+A==
   dependencies:
-    incremental-dom "^0.7.0"
-    jexpr "^1.0.0-pre.1"
+    jexpr "^1.0.0-pre.2"
+    lit-html "^2.0.0-pre.7"
 
 static-extend@^0.1.1:
   version "0.1.2"

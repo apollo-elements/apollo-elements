@@ -247,30 +247,30 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
    */
   resolveURL?(data: Data<D>): string | Promise<string>;
 
-  private inFlight = false;
+  private inFlightTrigger: HTMLElement | null = null;
 
   protected __variables: Variables<D, V> | null = null;
 
   /**
-   * Slotted trigger node
+   * Slotted trigger nodes
    */
-  protected get trigger(): HTMLElement | null {
-    return this.querySelector<HTMLElement>('[trigger]');
+  protected get triggers(): NodeListOf<HTMLElement> {
+    return this.querySelectorAll('[trigger]');
   }
 
   /**
    * If the slotted trigger node is a button, the trigger
    * If the slotted trigger node is a link with a button as it's first child, the button
    */
-  protected get button(): ButtonLikeElement | null {
+  protected get buttons(): ButtonLikeElement[] {
     const { isButton, isLink } = ApolloMutationElement;
-    if (isButton(this.trigger))
-      return this.trigger;
-    else if (isLink(this.trigger) && isButton(this.trigger.firstElementChild))
-      /* c8 ignore next 3 */
-      return this.trigger.firstElementChild;
-    else
-      return null;
+    return Array.from(this.triggers, x => {
+      if (isLink(x) && isButton(x.firstElementChild))
+        /* c8 ignore next 3 */
+        return x.firstElementChild;
+      else
+        return null;
+    }).filter(isButton);
   }
 
   /**
@@ -280,11 +280,15 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
     return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
+  protected get link(): HTMLAnchorElement | null {
+    return this.querySelector('a[trigger]');
+  }
+
   /**
    * The `href` attribute of the link trigger
    */
   protected get href(): string|undefined {
-    const link = ApolloMutationElement.isLink(this.trigger) ? this.trigger : null;
+    const { link } = this;
     return link?.href;
   }
 
@@ -295,7 +299,7 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
 
   constructor() {
     super();
-    this.onClick = this.onClick.bind(this);
+    this.onTriggerEvent = this.onTriggerEvent.bind(this);
     this.onSlotchange();
   }
 
@@ -323,10 +327,11 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
   private onLightDomMutation(records: MutationRecord[]) {
     /* eslint-disable easy-loops/easy-loops */
     for (const record of records) {
-      for (const node of record.removedNodes) {
-        this.listeners.delete(node as HTMLElement);
+      for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
+        const eventType = node.getAttribute('trigger') || 'click';
+        this.listeners.delete(node);
         if (node.isConnected && !this.contains(node))
-          node.removeEventListener('click', this.onClick);
+          node.removeEventListener(eventType, this.onTriggerEvent);
       }
 
       added:
@@ -359,27 +364,28 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
   }
 
   private onSlotchange(): void {
-    if (this.button)
-      this.addClickListener(this.button);
-    else if (this.trigger)
-      this.addClickListener(this.trigger);
+    for (const button of this.buttons)
+      this.addTriggerListener(button);
+    for (const trigger of this.triggers)
+      this.addTriggerListener(trigger);
   }
 
-  private addClickListener(element: HTMLElement) {
+  private addTriggerListener(element: HTMLElement) {
+    const eventType = element.getAttribute('trigger') || 'click';
     if (!this.listeners.get(element)) {
-      element.addEventListener('click', this.onClick);
+      element.addEventListener(eventType, this.onTriggerEvent);
       this.listeners.set(element, true);
     }
   }
 
-  private willMutate(): void {
+  private willMutate(trigger: HTMLElement): void {
     if (!this.dispatchEvent(new WillMutateEvent<D, V>(this)))
       throw new WillMutateError('mutation was canceled');
 
-    this.inFlight = true;
+    this.inFlightTrigger = trigger;
 
-    if (this.button)
-      this.button.disabled = true;
+    for (const button of this.buttons)
+      button.disabled = true;
 
     for (const input of this.inputs)
       input.disabled = true;
@@ -398,21 +404,22 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
   }
 
   private didMutate(): void {
-    this.inFlight = false;
-    if (this.button)
-      this.button.disabled = false;
+    this.inFlightTrigger = null;
+
+    for (const button of this.buttons)
+      button.disabled = false;
 
     for (const input of this.inputs)
       input.disabled = false;
   }
 
-  private async onClick(event: Event): Promise<void> {
+  private async onTriggerEvent(event: Event): Promise<void> {
     event.preventDefault();
-    if (this.inFlight)
+    if (this.inFlightTrigger)
       return;
 
     try {
-      this.willMutate();
+      this.willMutate(event.target as HTMLElement);
     } catch (e) {
       return;
     }
@@ -422,10 +429,11 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
 
   /** @private */
   onCompleted(data: Data<D>): void {
+    const triggeringElement = this.inFlightTrigger;
     this.didMutate();
     this.dispatchEvent(new MutationCompletedEvent<D, V>(this));
 
-    if (ApolloMutationElement.isLink(this.trigger))
+    if (ApolloMutationElement.isLink(triggeringElement))
       this.willNavigate(data);
   }
 

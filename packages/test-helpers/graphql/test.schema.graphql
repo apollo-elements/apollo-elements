@@ -44,9 +44,20 @@ type Subscription {
 
 type Mutation {
   sendMessage(user: String, message: String): Message
+  inputParam(input: ABInput): AB
   nonNullableParam(nonNull: String!): NonNull
   nullableParam(nullable: String): Nullable
   noParam: NoParam
   reset: [Message]
   updateUser(username: String!, haircolor: String!): User
+}
+
+input ABInput {
+  a: String
+  b: String
+}
+
+type AB {
+  a: String
+  b: String
 }

@@ -871,11 +871,6 @@
             {
               "name": "template",
               "fieldName": "template",
-              "inheritedFrom": {
-                "name": "StampinoElement",
-                "package": "@apollo-elements/components",
-                "module": "./stampino-element.js"
-              },
               "type": {
                 "type": "string"
               }
@@ -883,11 +878,6 @@
             {
               "name": "no-shadow",
               "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
-              "inheritedFrom": {
-                "name": "StampinoElement",
-                "package": "@apollo-elements/components",
-                "module": "./stampino-element.js"
-              },
               "type": {
                 "type": "Boolean|string"
               }
@@ -897,12 +887,7 @@
             {
               "kind": "field",
               "name": "template",
-              "description": "Template element for the query. Can either be a light-DOM child of the element, or referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)\n\n#### Example: Referencing a template by ID\n\n```html\n<apollo-query template=\"tpl\"></apollo-query>\n<template id=\"tpl\">\n  <p>Hi, {%raw%}{{ data.name }}{%endraw%}</p>\n</template>\n```\n",
-              "inheritedFrom": {
-                "name": "StampinoElement",
-                "package": "@apollo-elements/components",
-                "module": "./stampino-element.js"
-              },
+              "description": "Template element for the query. Can either be a light-DOM child of the element, or referenced by ID with the `template` attribute.\n\n#### Example: Referencing a template by ID\n\n```html\n<apollo-query template=\"tpl\"></apollo-query>\n<template id=\"tpl\">\n  <p>Hi, {%raw%}{{ data.name }}{%endraw%}</p>\n</template>\n```\n",
               "type": {
                 "type": "HTMLTemplateElement|null"
               }
@@ -910,46 +895,10 @@
             {
               "kind": "method",
               "name": "render",
-              "summary": "Render the template with the query result.",
-              "description": "Call to render the element's template using the query result.\n\nTemplates can access `data`, `error`, `errors`, `loading`, and `networkStatus` properties.\nRendering is synchronous and incremental.",
-              "inheritedFrom": {
-                "name": "StampinoElement",
-                "package": "@apollo-elements/components",
-                "module": "./stampino-element.js"
-              },
+              "summary": "Render the template.",
               "return": {
                 "type": {
                   "type": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "$",
-              "summary": "`querySelector` within the render root.",
-              "inheritedFrom": {
-                "name": "StampinoElement",
-                "package": "@apollo-elements/components",
-                "module": "./stampino-element.js"
-              },
-              "return": {
-                "type": {
-                  "type": "Element|void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "$$",
-              "summary": "`querySelectorAll` within the render root.",
-              "inheritedFrom": {
-                "name": "StampinoElement",
-                "package": "@apollo-elements/components",
-                "module": "./stampino-element.js"
-              },
-              "return": {
-                "type": {
-                  "type": "Element|void"
                 }
               }
             },
