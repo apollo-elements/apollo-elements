@@ -1,6 +1,18 @@
-import {
+import type {
+  NoParamMutationData,
+  NoParamMutationVariables,
+  InputParamMutationData,
+  InputParamMutationVariables,
+  NullableParamMutationData,
+  NullableParamMutationVariables,
+} from '@apollo-elements/test-helpers';
+
+import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
+
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
+import type {
   ApolloClient,
-  ApolloError,
   DocumentNode,
   ErrorPolicy,
   FetchPolicy,
@@ -8,9 +20,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import { ApolloError } from '@apollo/client/core';
 
 import {
   aTimeout,
@@ -21,6 +31,9 @@ import {
   oneEvent,
 } from '@open-wc/testing';
 
+import { sendKeys } from '@web/test-runner-commands';
+
+
 import { html } from 'lit-html';
 
 import { spy, SinonSpy, stub, SinonStub } from 'sinon';
@@ -28,13 +41,9 @@ import { spy, SinonSpy, stub, SinonStub } from 'sinon';
 import 'sinon-chai';
 
 import {
-  setupClient,
-  NoParamMutationData,
-  NoParamMutationVariables,
-  isApolloError,
   assertType,
-  NullableParamMutationData,
-  NullableParamMutationVariables,
+  isApolloError,
+  setupClient,
   teardownClient,
 } from '@apollo-elements/test-helpers';
 
@@ -51,6 +60,7 @@ import {
   MutationErrorEvent,
 } from './events';
 
+import InputParamMutation from '@apollo-elements/test-helpers/graphql/InputParam.mutation.graphql';
 import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
 import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
 import { OptimisticResponseType } from '@apollo-elements/interfaces';
@@ -64,7 +74,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation></apollo-mutation>
       `);
     });
@@ -836,6 +846,109 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         it('uses set variables instead of input variables', function() {
           expect(element.data!.nullableParam!.nullable).to.equal('manual');
         });
+      });
+    });
+  });
+
+  describe('with multiple variable inputs that trigger on change', function() {
+    let element: ApolloMutationElement<InputParamMutationData, InputParamMutationVariables>;
+
+    beforeEach(async function() {
+      element = await fixture<typeof element>(html`
+        <apollo-mutation input-key="input" .mutation="${InputParamMutation}">
+          <input data-variable="a" value="a" trigger="change"/>
+          <input data-variable="b" value="b" trigger="change"/>
+          <button trigger>Save</button>
+        </apollo-mutation>
+      `);
+    });
+
+    describe('typing in the first input', function() {
+      let input: HTMLInputElement;
+      let button: HTMLButtonElement;
+      let event: MutationCompletedEvent<typeof element>;
+
+      beforeEach(async function() {
+        input = element.querySelector('input[data-variable="a"]')!;
+        setTimeout(async function() {
+          input.focus();
+          sendKeys({ type: 'hello' });
+          input.blur();
+          expect(input.disabled).to.be.true;
+        });
+
+        // @ts-expect-error: oneEvent doesn't type based on event
+        event = await oneEvent(element, MutationCompletedEvent.type);
+      });
+
+      it('toggles input disabled property', async function() {
+        expect(event.detail.element).to.equal(element);
+        expect(event.detail.data).to.equal(element.data);
+        expect(input.disabled).to.be.false;
+      });
+
+      it('uses input variables', function() {
+        expect(element.data!.inputParam!.a).to.equal('hello');
+        expect(element.data!.inputParam!.b).to.equal('input');
+      });
+    });
+
+    describe('typing in the second input', function() {
+      let input: HTMLInputElement;
+      let button: HTMLButtonElement;
+      let event: MutationCompletedEvent<typeof element>;
+
+      beforeEach(async function() {
+        input = element.querySelector('input[data-variable="b"]')!;
+        setTimeout(async function() {
+          input.focus();
+          sendKeys({ type: 'hello' });
+          input.blur();
+          expect(input.disabled).to.be.true;
+        });
+
+        // @ts-expect-error: oneEvent doesn't type based on event
+        event = await oneEvent(element, MutationCompletedEvent.type);
+      });
+
+      it('toggles input disabled property', async function() {
+        expect(event.detail.element).to.equal(element);
+        expect(event.detail.data).to.equal(element.data);
+        expect(input.disabled).to.be.false;
+      });
+
+      it('uses input variables', function() {
+        expect(element.data!.inputParam!.a).to.equal('input');
+        expect(element.data!.inputParam!.b).to.equal('hello');
+      });
+    });
+
+    describe('clicking the button', function() {
+      let input: HTMLInputElement;
+      let button: HTMLButtonElement;
+      let event: MutationCompletedEvent<typeof element>;
+
+      beforeEach(async function() {
+        input = element.querySelector('input')!;
+        button = element.querySelector('button')!;
+        setTimeout(async function() {
+          button.click();
+          expect(input.disabled).to.be.true;
+        });
+
+        // @ts-expect-error: oneEvent doesn't type based on event
+        event = await oneEvent(element, MutationCompletedEvent.type);
+      });
+
+      it('toggles input disabled property', async function() {
+        expect(event.detail.element).to.equal(element);
+        expect(event.detail.data).to.equal(element.data);
+        expect(input.disabled).to.be.false;
+      });
+
+      it('uses input variables', function() {
+        expect(element.data!.inputParam!.a).to.equal('input');
+        expect(element.data!.inputParam!.b).to.equal('input');
       });
     });
   });
