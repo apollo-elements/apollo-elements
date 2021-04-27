@@ -16,19 +16,19 @@
           }
         },
         {
-          "name": "apollo-query",
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "apollo-query",
-            "module": "./apollo-query.js"
-          }
-        },
-        {
           "name": "apollo-mutation",
           "kind": "custom-element-definition",
           "declaration": {
             "name": "apollo-mutation",
             "module": "./apollo-mutation.js"
+          }
+        },
+        {
+          "name": "apollo-query",
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "apollo-query",
+            "module": "./apollo-query.js"
           }
         }
       ]
