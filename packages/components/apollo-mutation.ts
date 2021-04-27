@@ -50,6 +50,12 @@ interface InputLikeElement extends HTMLElement {
 /** @ignore */
 export class WillMutateError extends Error {}
 
+const inheritor = GraphQLScriptChildMixin(
+  ApolloMutationMixin<Constructor<StampinoRender & HTMLElement>>(
+    StampinoRender
+  )
+);
+
 /**
  * Simple Mutation component that takes a button or link-wrapped button as it's trigger.
  * When loading, it disables the button.
@@ -155,12 +161,9 @@ export class WillMutateError extends Error {}
  * }
  * ```
  */
-export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
-  GraphQLScriptChildMixin(
-    ApolloMutationMixin<Constructor<StampinoRender & HTMLElement>>(
-      StampinoRender
-    )
-  )<D, V> implements ApolloMutationInterface<D, V> {
+export class ApolloMutationElement<D = unknown, V = OperationVariables>
+  extends inheritor<D, V>
+  implements ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
   /**
@@ -168,7 +171,7 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
    * @param node
    */
   private static isButton(node: Element|null): node is ButtonLikeElement {
-    return node?.tagName !== 'A';
+    return !!node && node.tagName !== 'A';
   }
 
   private static isLink(node: Element|null): node is HTMLAnchorElement {
@@ -185,7 +188,32 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
     return node instanceof HTMLElement && node.hasAttribute('trigger');
   }
 
-  static get observedAttributes(): string[] { return ['input-key']; }
+  private static debounce(f: () => void, timeout: number): () => void {
+    let timer: number;
+    return () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(() => { f(); }, timeout);
+    };
+  }
+
+  static get observedAttributes(): string[] {
+    return [
+      'debounce',
+      'input-key',
+    ];
+  }
+
+  attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+    super.attributeChangedCallback?.(name, oldVal, newVal);
+    switch (name) {
+      case 'debounce': {
+        if (newVal == null)
+          this.debounce = newVal;
+        else
+          this.debounce = parseInt(newVal);
+      }
+    }
+  }
 
   /**
    * When set, variable data attributes will be packed into an
@@ -219,6 +247,28 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
 
   @property({ reflect: true, init: false }) loading = false;
 
+  // eslint-disable-next-line no-invalid-this
+  private doMutate = (): void => void (this.mutate().catch(() => void 0));
+
+  private declare debouncedMutate: () => void;
+
+  #debounce: number | null = null;
+
+  get debounce(): number | null {
+    return this.#debounce;
+  }
+
+  set debounce(val: number|null) {
+    this.#debounce = val;
+    if (val == null) {
+      this.removeAttribute('debounce');
+      this.debouncedMutate = this.doMutate;
+    } else {
+      this.setAttribute('debounce', val.toString());
+      this.debouncedMutate = ApolloMutationElement.debounce(this.doMutate, val);
+    }
+  }
+
   /**
    * Define this function to determine the URL to navigate to after a mutation.
    * Function can be synchronous or async.
@@ -243,9 +293,10 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
    * </script>
    * ```
    * @param data mutation data
+   * @param trigger the trigger element which triggered this mutation
    * @returns url to navigate to
    */
-  resolveURL?(data: Data<D>): string | Promise<string>;
+  resolveURL?(data: Data<D>, trigger: HTMLElement): string | Promise<string>;
 
   private inFlightTrigger: HTMLElement | null = null;
 
@@ -269,7 +320,7 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
         /* c8 ignore next 3 */
         return x.firstElementChild;
       else
-        return null;
+        return x;
     }).filter(isButton);
   }
 
@@ -280,18 +331,6 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
     return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
-  protected get link(): HTMLAnchorElement | null {
-    return this.querySelector('a[trigger]');
-  }
-
-  /**
-   * The `href` attribute of the link trigger
-   */
-  protected get href(): string|undefined {
-    const { link } = this;
-    return link?.href;
-  }
-
   protected get model(): ApolloMutationModel<D, V> {
     const { called, data, error, errors, loading } = this;
     return { called, data, error, errors, loading };
@@ -299,13 +338,14 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
 
   constructor() {
     super();
+    this.debouncedMutate ??= this.doMutate;
     this.onTriggerEvent = this.onTriggerEvent.bind(this);
     this.onSlotchange();
   }
 
   declare private __buttonMO?: MutationObserver;
 
-  private listeners = new WeakMap<HTMLElement, boolean>();
+  private listeners = new WeakMap<HTMLElement, string>();
 
   protected createRenderRoot(): ShadowRoot|HTMLElement {
     this.renderRoot = super.createRenderRoot();
@@ -328,18 +368,15 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
     /* eslint-disable easy-loops/easy-loops */
     for (const record of records) {
       for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
-        const eventType = node.getAttribute('trigger') || 'click';
+        if (!this.listeners.has(node))
+          return;
+        node.removeEventListener(this.listeners.get(node)!, this.onTriggerEvent);
         this.listeners.delete(node);
-        if (node.isConnected && !this.contains(node))
-          node.removeEventListener(eventType, this.onTriggerEvent);
       }
 
-      added:
       for (const node of record.addedNodes) {
-        if (ApolloMutationElement.isTriggerNode(node)) {
-          this.onSlotchange();
-          break added;
-        }
+        if (ApolloMutationElement.isTriggerNode(node))
+          this.addTriggerListener(node);
       }
     }
     /* eslint-enable easy-loops/easy-loops */
@@ -371,10 +408,17 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
   }
 
   private addTriggerListener(element: HTMLElement) {
-    const eventType = element.getAttribute('trigger') || 'click';
-    if (!this.listeners.get(element)) {
-      element.addEventListener(eventType, this.onTriggerEvent);
-      this.listeners.set(element, true);
+    const eventType = element?.getAttribute?.('trigger') || 'click';
+
+    if (
+      !this.listeners.has(element) &&
+      element.hasAttribute('trigger') ||
+      !element.closest('[trigger]')
+    ) {
+      element.addEventListener(eventType, this.onTriggerEvent, {
+        passive: element.hasAttribute('passive'),
+      });
+      this.listeners.set(element, eventType);
     }
   }
 
@@ -391,14 +435,16 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
       input.disabled = true;
   }
 
-  private async willNavigate(data: Data<D>): Promise<void> {
-    if (!this.dispatchEvent(new WillNavigateEvent<D, V>(this)))
+  private async willNavigate(data: Data<D>, triggeringElement: HTMLElement): Promise<void> {
+    if (!this.dispatchEvent(new WillNavigateEvent(this)))
       return;
 
+    const href = triggeringElement.closest<HTMLAnchorElement>('a[trigger]')?.href;
+
     const url =
-        typeof this.resolveURL !== 'function' ? this.href
+        typeof this.resolveURL !== 'function' ? href
         // If we get here without `data`, it's due to user error
-      : await this.resolveURL(this.data!); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      : await this.resolveURL(this.data!, triggeringElement); // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
     history.replaceState(data, WillNavigateEvent.type, url);
   }
@@ -413,8 +459,9 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
       input.disabled = false;
   }
 
-  private async onTriggerEvent(event: Event): Promise<void> {
+  private onTriggerEvent(event: Event): void {
     event.preventDefault();
+
     if (this.inFlightTrigger)
       return;
 
@@ -424,17 +471,16 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables> extends
       return;
     }
 
-    await this.mutate().catch(() => void null);
+    this.debouncedMutate();
   }
 
   /** @private */
   onCompleted(data: Data<D>): void {
-    const triggeringElement = this.inFlightTrigger;
+    const trigger = this.inFlightTrigger;
     this.didMutate();
     this.dispatchEvent(new MutationCompletedEvent<D, V>(this));
-
-    if (ApolloMutationElement.isLink(triggeringElement))
-      this.willNavigate(data);
+    if (ApolloMutationElement.isLink(trigger) || trigger?.closest?.('a[trigger]'))
+      this.willNavigate(data, trigger);
   }
 
   /** @private */

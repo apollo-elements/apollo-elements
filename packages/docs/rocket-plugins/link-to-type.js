@@ -1,7 +1,7 @@
 import visit from 'unist-util-visit';
 
-import h from 'hastscript';
-import map from 'unist-util-map';
+import { h } from 'hastscript';
+import { map } from 'unist-util-map';
 import Parse5 from 'parse5';
 import toHast from 'hast-util-from-parse5';
 import toHtml from 'hast-util-to-html';

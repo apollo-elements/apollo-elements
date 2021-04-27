@@ -3,7 +3,8 @@ import type { InMemoryCacheConfig, NormalizedCacheObject } from '@apollo/client/
 import type {
   HelloQueryVariables,
   HelloWorld,
-  Input,
+  AB,
+  ABInput,
   NonNull,
   NonNullableParamQueryVariables,
   NoParam,
@@ -64,8 +65,11 @@ const mocks = {
     };
   },
 
-  Input(_: any, { input }: Input): Input {
-    return input;
+  AB(_: any, { input }: { input: ABInput }): AB {
+    return {
+      a: input.a || 'a',
+      b: input.b || 'b',
+    };
   },
 };
 
