@@ -1,6 +1,7 @@
 // @ts-check
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
+import { sendKeysPlugin } from '@web/test-runner-commands/plugins';
 
 import _commonjs from '@rollup/plugin-commonjs';
 import _graphql from '@apollo-elements/rollup-plugin-graphql';
@@ -71,6 +72,7 @@ const config = {
     graphql(),
     commonjs({ include: cjsIncludes, ignoreDynamicRequires: false }),
     esbuildPlugin({ ts: true }),
+    sendKeysPlugin(),
   ],
 };
 

@@ -33,7 +33,6 @@ import {
 
 import { sendKeys } from '@web/test-runner-commands';
 
-
 import { html } from 'lit-html';
 
 import { spy, SinonSpy, stub, SinonStub } from 'sinon';
@@ -459,8 +458,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       it('destroys trigger', function() {
-        // @ts-expect-error: coverage...
-        expect(element.button).to.be.null;
+        // @ts-expect-error: doing it for the coverage
+        expect(element.buttons.length).to.equal(0);
       });
     });
   });
@@ -647,7 +646,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
         setTimeout(async function() {
           button!.click();
-          expect(button!.disabled).to.be.true;
+          expect(button!.disabled, 'button disabled').to.be.true;
         });
 
         const event = await oneEvent(element, MutationCompletedEvent.type);
@@ -681,6 +680,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         it('does not navigate', async function() {
           const button = element.querySelector('button');
           const { type } = WillNavigateEvent;
+
           element.addEventListener(type, function(event) {
             event.preventDefault();
             expect(event.detail.element).to.equal(element);
@@ -688,7 +688,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           button!.click();
 
-          await aTimeout(10);
+          await aTimeout(100);
 
           expect(replaceStateStub).to.not.have.been.called;
         });
@@ -697,6 +697,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       describe('when will-mutate event is canceled', function() {
         it('does not mutate', async function() {
           const { type } = WillMutateEvent;
+
           element.addEventListener(type, function(event) {
             event.preventDefault();
             expect(event.detail.element).to.equal(element);
@@ -733,9 +734,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       beforeEach(async function() {
         input = element.querySelector('input')!;
         button = element.querySelector('button')!;
+
         setTimeout(async function() {
           button.click();
-          expect(input.disabled).to.be.true;
+          expect(input.disabled, 'input disabled').to.be.true;
         });
 
         // @ts-expect-error: oneEvent doesn't type based on event
@@ -765,6 +767,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       beforeEach(async function() {
         input = element.querySelector('input')!;
         button = element.querySelector('button')!;
+
         setTimeout(async function() {
           button.click();
           expect(input.disabled).to.be.true;
@@ -856,8 +859,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
         <apollo-mutation input-key="input" .mutation="${InputParamMutation}">
-          <input data-variable="a" value="a" trigger="change"/>
-          <input data-variable="b" value="b" trigger="change"/>
+          <input data-variable="a" trigger="change"/>
+          <input data-variable="b" trigger="change"/>
           <button trigger>Save</button>
         </apollo-mutation>
       `);
@@ -872,8 +875,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         input = element.querySelector('input[data-variable="a"]')!;
         setTimeout(async function() {
           input.focus();
-          sendKeys({ type: 'hello' });
+          await sendKeys({ type: 'hello' });
           input.blur();
+
           expect(input.disabled).to.be.true;
         });
 
@@ -889,7 +893,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
       it('uses input variables', function() {
         expect(element.data!.inputParam!.a).to.equal('hello');
-        expect(element.data!.inputParam!.b).to.equal('input');
+        expect(element.data!.inputParam!.b).to.equal('b');
       });
     });
 
@@ -902,8 +906,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         input = element.querySelector('input[data-variable="b"]')!;
         setTimeout(async function() {
           input.focus();
-          sendKeys({ type: 'hello' });
+          await sendKeys({ type: 'hello' });
           input.blur();
+
           expect(input.disabled).to.be.true;
         });
 
@@ -918,7 +923,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       it('uses input variables', function() {
-        expect(element.data!.inputParam!.a).to.equal('input');
+        expect(element.data!.inputParam!.a).to.equal('a');
         expect(element.data!.inputParam!.b).to.equal('hello');
       });
     });
@@ -931,6 +936,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       beforeEach(async function() {
         input = element.querySelector('input')!;
         button = element.querySelector('button')!;
+
         setTimeout(async function() {
           button.click();
           expect(input.disabled).to.be.true;
@@ -947,8 +953,74 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
 
       it('uses input variables', function() {
-        expect(element.data!.inputParam!.a).to.equal('input');
-        expect(element.data!.inputParam!.b).to.equal('input');
+        expect(element.data!.inputParam!.a).to.equal('a');
+        expect(element.data!.inputParam!.b).to.equal('b');
+      });
+    });
+  });
+
+  describe('with multiple variable inputs that trigger on keyup', function() {
+    let element: ApolloMutationElement<InputParamMutationData, InputParamMutationVariables>;
+
+    beforeEach(async function() {
+      element = await fixture<typeof element>(html`
+        <apollo-mutation input-key="input" .mutation="${InputParamMutation}">
+          <input data-variable="a" trigger="keyup"/>
+          <input data-variable="b" trigger="keyup"/>
+        </apollo-mutation>
+      `);
+    });
+
+    describe('setting debounce to 500', function() {
+      let mutateSpy: SinonSpy;
+
+      beforeEach(function() {
+        element.debounce = 500;
+        mutateSpy = spy(element, 'mutate');
+      });
+
+      afterEach(function() {
+        mutateSpy.restore();
+      });
+
+      it('reflects to attr', function() {
+        expect(element.getAttribute('debounce')).to.equal('500');
+      });
+
+      describe('then typing in first input', function() {
+        beforeEach(async function() {
+          element.querySelector('input')!.focus();
+          await sendKeys({ type: 'מה ידידות מנוחתיך את שבת המלכה' });
+        });
+
+        beforeEach(() => aTimeout(1000));
+
+        it('only mutates once', function() {
+          expect(element.mutate).to.have.been.calledOnce;
+        });
+      });
+
+      describe('then removing attribute', function() {
+        beforeEach(function() {
+          element.removeAttribute('debounce');
+        });
+
+        it('unsets property', function() {
+          expect(element.debounce).to.be.null;
+        });
+
+        describe('then typing in first input', function() {
+          beforeEach(async function() {
+            element.querySelector('input')!.focus();
+            await sendKeys({ type: 'מה ידידות מנוחתיך את שבת המלכה' });
+          });
+
+          beforeEach(() => aTimeout(1000));
+
+          it('only mutates once', function() {
+            expect(mutateSpy.callCount).to.be.greaterThan(1);
+          });
+        });
       });
     });
   });
@@ -1017,7 +1089,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     beforeEach(async function() {
       element = fixtureSync<typeof element>(html`
         <apollo-mutation no-shadow .mutation="${NoParamMutation}">
-          <button trigger>mutate</button>
+          <button id="trigger" trigger>mutate</button>
           <template>
             <span class="{{ data.noParam.noParam || 'no-data' }}"></span>
           </template>
@@ -1032,7 +1104,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         expect(element.$('.noParam')).to.not.be.ok;
         expect(element.$('.no-data')).to.be.ok;
         expect(
-          element.querySelector('.output')!.contains(element.$('.no-data'))
+          element.querySelector('.output')!.contains(element.$('.no-data')),
+          'output has rendered'
         ).to.be.true;
       });
     });
@@ -1050,8 +1123,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
     });
 
-    describe('then cheekily moving the trigger', function() {
-      let onClickSpy: SinonSpy;
+    describe('when cheekily moving the trigger', function() {
+      let mutateSpy: SinonSpy;
       let movedTrigger: HTMLButtonElement;
       let newTrigger: HTMLButtonElement;
 
@@ -1061,26 +1134,29 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         node.classList.add('haha');
         document.body.append(node);
         node.append(movedTrigger);
-        onClickSpy = spy(element, 'onClick' as keyof typeof element);
+        mutateSpy = spy(element, 'mutate');
       });
 
       afterEach(function() {
         document.querySelector('haha')?.remove?.();
-        onClickSpy.restore?.();
+        mutateSpy.restore?.();
       });
 
-      describe('when clicking the moved trigger', function() {
+      describe('then clicking the moved trigger', function() {
+        beforeEach(nextFrame);
+
         beforeEach(function() {
           movedTrigger.click();
         });
         it('does not mutate', function() {
-          expect(onClickSpy).to.not.have.been.called;
+          expect(mutateSpy).to.not.have.been.called;
         });
       });
 
       describe('then adding a new trigger', function() {
         beforeEach(function() {
           newTrigger = document.createElement('button');
+          newTrigger.id = 'new-trigger';
           newTrigger.setAttribute('trigger', '');
           element.appendChild(newTrigger);
         });
@@ -1091,7 +1167,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
             newTrigger.click();
           });
           it('mutates', function() {
-            expect(onClickSpy).to.have.been.called;
+            expect(mutateSpy).to.have.been.called;
           });
         });
       });

@@ -47,6 +47,59 @@ Here we use `ApolloMutation`'s HTML API to define the mutation and variables. Yo
 </apollo-mutation>
 ```
 
+## Example: Mutate on keyup
+
+The `trigger` attribute can be a boolean attribute (with no value), in which case the element will trigger a mutation when it is clicked (or tapped, etc). If you set a value to the `trigger` attribute, that will be the event that triggers the mutation.
+
+For example, set the `trigger` attribute to `keyup` on multiple variable inputs, you can mutate on keypress. If you do set the element to mutate on keyup, you might also want to [debounce](https://www.freecodecamp.org/news/javascript-debounce-example/) the mutation calls. Set the `debounce` attribute on the mutation element to define the debounce timeout in milliseconds.
+
+The following example will update the user with id "007" once every 500 milliseconds, starting the last time the user performed a 'keyup' (i.e. raised their finger) while focussed on one of the inputs.
+
+```html
+<apollo-mutation data-user-id="007" debounce="500">
+  <script type="application/graphql">
+    mutation UpdateUser($userId: ID!, $name: String, $age: Int) {
+      updateUser(userId: $userId, name: $name, age: $age) {
+        name
+        age
+      }
+    }
+  </script>
+  <label>Name: <input data-variable="name" trigger="keyup"/></label>
+  <label>Age:  <input data-variable="age" trigger="keyup" type="number"/></label>
+</apollo-mutation>
+```
+
+## Data Templates
+
+Templates use [stampino](https://npm.im/stampino) and [jexpr](https://npm.im/jexpr) for efficiently updating data expressions. See their respective READMEs for more information.
+
+<inline-notification type="tip">
+
+`jexpr` expressions are like handlebars, nunjucks, polymer, etc. expressions. You can do most things you can do in JavaScript using `jexpr`. Try it out for yourself on the [Stampino REPL](https://github.com/justinfagnani/stampino/issues/14)
+
+</inline-notification>
+
+```html copy
+<apollo-mutation>
+  <template>
+    <style>
+      .transparent {
+        opacity: 0;
+      }
+    </style>
+
+    <link rel="stylesheet" href="/components/user-added.css">
+
+    <output class="{%raw%}{{ data ? 'resolved' : 'transparent' }}{%endraw%}">
+      <p>You have added {%raw%}{{ data.addUser.name }}{%endraw%}.</p>
+    </output>
+  </template>
+</apollo-mutation>
+```
+
+Learn more about template expressions and bindings in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/#template-expressions)
+
 ## Example: Conditionally Mutating
 
 In some cases you might want to prevent a mutation, for example, if clicking the button is meant to create a new entity, but subsequently toggle it's edit state. For cases like those, listen for the `will-mutate` event and prevent it's default action to stop the mutation.
@@ -262,36 +315,6 @@ element.addEventListener('will-navigate', event => {
   router.go(`/posts/${data.createPost.slug}`);
 });
 ```
-
-## Data Templates
-
-Templates use [stampino](https://npm.im/stampino) and [jexpr](https://npm.im/jexpr) for efficiently updating data expressions. See their respective READMEs for more information.
-
-<inline-notification type="tip">
-
-`jexpr` expressions are like handlebars, nunjucks, polymer, etc. expressions. You can do most things you can do in JavaScript using `jexpr`. Try it out for yourself on the [Stampino REPL](https://github.com/justinfagnani/stampino/issues/14)
-
-</inline-notification>
-
-```html copy
-<apollo-mutation>
-  <template>
-    <style>
-      .transparent {
-        opacity: 0;
-      }
-    </style>
-
-    <link rel="stylesheet" href="/components/user-added.css">
-
-    <output class="{%raw%}{{ data ? 'resolved' : 'transparent' }}{%endraw%}">
-      <p>You have added {%raw%}{{ data.addUser.name }}{%endraw%}.</p>
-    </output>
-  </template>
-</apollo-mutation>
-```
-
-Learn more about template expressions and bindings in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/#template-expressions)
 
 ## Next Steps
 - Read the [`<apollo-mutation>` API docs](/api/components/apollo-query/)
