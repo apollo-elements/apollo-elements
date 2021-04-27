@@ -7,7 +7,6 @@ const image = require('@11ty/eleventy-img');
 const nunjucks = require('nunjucks');
 const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
-const createElement = require('hastscript/svg');
 const toHTML = require('hast-util-to-html');
 const woff2base64 = require('woff2base64');
 
@@ -57,8 +56,10 @@ async function createPageSocialImage(options) {
 
   const width = 592;
 
+  const {s} = await import('hastscript');
+  
   const boxOpts = {
-    createElement,
+    createElement: s,
     valign: 'center',
     width,
   };
