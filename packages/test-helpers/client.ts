@@ -3,6 +3,7 @@ import type { InMemoryCacheConfig, NormalizedCacheObject } from '@apollo/client/
 import type {
   HelloQueryVariables,
   HelloWorld,
+  Input,
   NonNull,
   NonNullableParamQueryVariables,
   NoParam,
@@ -61,6 +62,10 @@ const mocks = {
       haircolor,
       nickname: `${haircolor} ${username}`,
     };
+  },
+
+  Input(_: any, { input }: Input): Input {
+    return input;
   },
 };
 
