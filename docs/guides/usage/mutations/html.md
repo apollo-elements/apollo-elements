@@ -145,11 +145,9 @@ In some cases you might want to prevent a mutation, for example, if clicking the
   `;
 
   class PostsDashboard extends HTMLElement {
-    @property({ type: String }) postId;
-
-    @property({ type: Boolean }) editing = false;
-
     $(selector) { return this.shadowRoot.querySelector(selector); }
+
+    editing = false;
 
     #postId;
     get postId() { return this.#postId; }

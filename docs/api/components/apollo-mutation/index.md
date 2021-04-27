@@ -48,12 +48,7 @@ Inherits from [`ApolloMutationInterface`](/api/interfaces/mutation/)
 {% endblock %}
 
 {% block beforeProperties %}
-Some Markdown Before Properties
 {% endblock %}
 
 {% block beforeSlots %}
-Some Markdown Before Slots
-- slot
-- slot
-- slot
 {% endblock %}
