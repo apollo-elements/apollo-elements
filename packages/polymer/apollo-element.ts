@@ -5,6 +5,8 @@ import { notify, PolymerChangeEvent } from './notify-decorator';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
 /**
+ * See [ApolloElementInterface](/api/interfaces/element/) for more information.
+ *
  * @fires 'data-changed'
  * @fires 'variables-changed'
  * @fires 'error-changed'
