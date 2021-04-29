@@ -4,10 +4,11 @@ on:
   pull_request:
     branches:
       - master
+      - next
 
 jobs:
   lint:
-    name: 'Lint'
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +18,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
-    name: 'Unit Tests'
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +44,7 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
   build:
-    name: 'Build Dry-Run'
+    name: Build Dry-Run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -58,7 +59,7 @@ jobs:
         run: yarn build
 
   docs:
-    name: 'Build and Check Docs'
+    name: Build and Check Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
