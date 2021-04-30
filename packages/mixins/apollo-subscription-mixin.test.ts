@@ -11,30 +11,28 @@ import type {
 import type { Entries } from '@apollo-elements/interfaces';
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import {
-  defineCE, expect, fixture,
-  html as fhtml, nextFrame, unsafeStatic,
-} from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import 'sinon-chai';
+import { html as h, unsafeStatic } from 'lit/static-html.js';
+
+import { effect } from '@apollo-elements/lib/descriptors';
 
 import { Observable } from '@apollo/client/core';
 
+import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
+
 import {
+  assertType,
+  isApolloError,
   setupClient,
   teardownClient,
-  isApolloError,
-  assertType,
-} from '@apollo-elements/test-helpers';
-
-import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
+} from '@apollo-elements/test';
 
 import {
   describeSubscription,
   setupSubscriptionClass,
   SubscriptionElement,
-} from '@apollo-elements/test-helpers/subscription.test';
-import { effect } from '@apollo-elements/lib/descriptors';
+} from '@apollo-elements/test/subscription.test';
 
 class TestableApolloSubscription<D = unknown, V = OperationVariables>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V>
@@ -108,7 +106,7 @@ describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscription
 
     it('returns an instance of the superclass', async function returnsClass() {
       const tag = unsafeStatic(defineCE(class extends TestableApolloSubscription {}));
-      const element = await fixture<TestableApolloSubscription>(fhtml`<${tag}></${tag}>`);
+      const element = await fixture<TestableApolloSubscription>(h`<${tag}></${tag}>`);
 
       expect(element).to.be.an.instanceOf(HTMLElement);
     });

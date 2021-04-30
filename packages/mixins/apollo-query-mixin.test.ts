@@ -1,3 +1,7 @@
+import type { QueryElement } from '@apollo-elements/test/query.test';
+import type { ApolloQueryInterface, GraphQLError } from '@apollo-elements/interfaces';
+import type { Constructor, Entries } from '@apollo-elements/interfaces';
+
 import type {
   ApolloClient,
   DocumentNode,
@@ -9,26 +13,19 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import type { ApolloQueryInterface, GraphQLError } from '@apollo-elements/interfaces';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import type { Constructor, Entries } from '@apollo-elements/interfaces';
+import { assertType, isApolloError } from '@apollo-elements/test';
+
+import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
+
+import { effect } from '@apollo-elements/lib/descriptors';
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
-
-import 'sinon-chai';
-
 import { ObservableQuery } from '@apollo/client/core';
 
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
-
 import { ApolloQueryMixin } from './apollo-query-mixin';
-
-import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
-
-import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
-import { effect } from '@apollo-elements/lib/descriptors';
 
 class XL extends HTMLElement {}
 

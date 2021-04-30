@@ -12,7 +12,7 @@ import type {
 
 import type { Entries, GraphQLError } from '@apollo-elements/interfaces';
 
-import type { SetupOptions } from '@apollo-elements/test-helpers';
+import type { SetupOptions } from '@apollo-elements/test';
 
 import {
   fixture,
@@ -27,8 +27,8 @@ import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client/core';
 
-import { assertType, isApolloError, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
-import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
+import { assertType, isApolloError, setupSpies, setupStubs } from '@apollo-elements/test';
+import { QueryElement, describeQuery } from '@apollo-elements/test/query.test';
 
 const template = html<TestableApolloQuery>`
   <output id="data">${x => x.stringify(x.data)}</output>

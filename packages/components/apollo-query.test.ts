@@ -1,3 +1,12 @@
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
+import type {
+  NoParamQueryData,
+  NoParamQueryVariables,
+  NullableParamQueryData,
+  NullableParamQueryVariables,
+} from '@apollo-elements/test';
+
 import {
   ApolloClient,
   ApolloError,
@@ -7,31 +16,23 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
 import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
-import { html } from 'lit-html';
-
-import 'sinon-chai';
+import { html } from 'lit/static-html.js';
 
 import {
   setupClient,
-  NoParamQueryData,
-  NoParamQueryVariables,
   isApolloError,
   assertType,
-  NullableParamQueryData,
-  NullableParamQueryVariables,
   teardownClient,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import './apollo-query';
 
 import { ApolloQueryElement } from './apollo-query';
 
-import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
-import NullableParamQuery from '@apollo-elements/test-helpers/graphql/NullableParam.query.graphql';
+import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
+import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
 
 describe('[components] <apollo-query>', function describeApolloQuery() {
   beforeEach(setupClient);

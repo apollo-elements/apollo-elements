@@ -3,7 +3,7 @@ import type { Entries } from '@apollo-elements/interfaces';
 import type {
   HelloQueryData,
   HelloQueryVariables,
-} from '@apollo-elements/test-helpers/schema';
+} from '@apollo-elements/test/schema';
 
 import type {
   ApolloClient,
@@ -23,7 +23,7 @@ import { component } from 'haunted';
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 import { ApolloQueryElement } from '@apollo-elements/interfaces';
 
-import { describeQuery, QueryElement } from '@apollo-elements/test-helpers/query.test';
+import { describeQuery, QueryElement } from '@apollo-elements/test/query.test';
 
 import {
   assertType,
@@ -33,11 +33,11 @@ import {
   setupSpies,
   setupStubs,
   teardownClient,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import { spy, SinonSpy, SinonStub } from 'sinon';
 
-import HelloQuery from '@apollo-elements/test-helpers/graphql/Hello.query.graphql';
+import HelloQuery from '@apollo-elements/test/graphql/Hello.query.graphql';
 
 const ccOrig = ApolloQueryElement.prototype.connectedCallback;
 

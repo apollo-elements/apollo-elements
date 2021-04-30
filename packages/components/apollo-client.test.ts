@@ -3,7 +3,7 @@ import type {
   NonNullableParamQueryVariables,
   NoParamQueryData,
   NoParamQueryVariables,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import {
   gql,
@@ -20,21 +20,21 @@ import {
   expect,
   fixture,
   fixtureSync,
-  html,
   nextFrame,
   oneEvent,
-  unsafeStatic,
 } from '@open-wc/testing';
+
+import { html, unsafeStatic } from 'lit/static-html.js';
 
 import { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
 import { ApolloClientElement } from './apollo-client';
-import { makeClient } from '@apollo-elements/test-helpers';
+import { makeClient } from '@apollo-elements/test';
 import { spy, stub, SinonStub } from 'sinon';
 
 import './apollo-client';
 
-import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
-import NonNullableParamQuery from '@apollo-elements/test-helpers/graphql/NonNullableParam.query.graphql';
+import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
+import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
 /** @ignore */
 class ShallowElement<D = unknown, V = OperationVariables> extends ApolloElementElement<D, V> {

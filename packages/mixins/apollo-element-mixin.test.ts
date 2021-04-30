@@ -2,13 +2,16 @@ import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
 
-import { expect, html } from '@open-wc/testing';
-import { defineCE, fixture, unsafeStatic } from '@open-wc/testing-helpers';
-import 'sinon-chai';
+import { html, unsafeStatic } from 'lit/static-html.js';
+
+import { expect } from '@open-wc/testing';
+
+import { defineCE, fixture } from '@open-wc/testing';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { client, assertType, isApolloError } from '@apollo-elements/test-helpers';
-import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
+import { client, assertType, isApolloError } from '@apollo-elements/test';
+
+import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
 
 class XL extends HTMLElement {}
 class Test extends ApolloElementMixin(XL) {

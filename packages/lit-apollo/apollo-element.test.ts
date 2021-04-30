@@ -17,7 +17,7 @@ import {
   isApolloError,
   setupClient,
   teardownClient,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 class TypeCheck extends ApolloElement {
   typeCheck() {

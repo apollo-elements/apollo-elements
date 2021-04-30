@@ -1,4 +1,4 @@
-import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
+import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
 
 import type {
   ApolloClient,
@@ -12,19 +12,19 @@ import type {
 
 import { fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
-import { setupClient, teardownClient } from '../test-helpers/client';
+import { setupClient, teardownClient } from '../test/client';
 
 import {
   describeSubscription,
   setupSubscriptionClass,
-} from '@apollo-elements/test-helpers/subscription.test';
+} from '@apollo-elements/test/subscription.test';
 
 import { PolymerApolloSubscription } from './apollo-subscription';
 import { GraphQLError } from 'graphql';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test';
 import { html, PolymerElement } from '@polymer/polymer';
 
-import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
+import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
 
 import './apollo-subscription';
 

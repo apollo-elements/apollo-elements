@@ -52,10 +52,10 @@ extensions:
           - typescript-operations
 
         documents:
-          - packages/test-helpers/*.query.graphql
-          - packages/test-helpers/*.mutation.graphql
-          - packages/test-helpers/*.subscription.graphql
-          - packages/test-helpers/*.fragment.graphql
+          - src/components/*.query.graphql
+          - src/components/*.mutation.graphql
+          - src/components/*.subscription.graphql
+          - src/components/*.fragment.graphql
 
 ```
 

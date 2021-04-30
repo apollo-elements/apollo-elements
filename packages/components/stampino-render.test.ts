@@ -1,6 +1,6 @@
-import { fixture, defineCE, expect, html, unsafeStatic } from '@open-wc/testing';
+import { fixture, defineCE, expect } from '@open-wc/testing';
 
-import 'sinon-chai';
+import { html, unsafeStatic } from 'lit/static-html.js';
 
 import { StampinoRender, property } from './stampino-render';
 import { TemplateHandlers, evaluateTemplate } from 'stampino';
@@ -285,7 +285,7 @@ describe('[components] StampinoRender', function() {
     });
 
     it('renders nothing in output', function() {
-      expect(element.$('output')!.innerHTML).to.equal('1');
+      expect(element.$('output')).lightDom.to.equal('1');
     });
 
     describe('then calling update', function() {
@@ -294,7 +294,7 @@ describe('[components] StampinoRender', function() {
       });
 
       it('renders a number in output', function() {
-        expect(element.$('output')!.innerHTML).to.equal('2');
+        expect(element.$('output')).lightDom.to.equal('2');
       });
     });
   });

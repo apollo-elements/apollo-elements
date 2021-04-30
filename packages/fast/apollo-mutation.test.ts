@@ -15,7 +15,7 @@ import {
   SetupOptions,
   setupSpies,
   setupStubs,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
@@ -25,24 +25,22 @@ import {
   aTimeout,
   expect,
   fixture,
-  html as fhtml,
   nextFrame,
-  unsafeStatic,
 } from '@open-wc/testing';
+
+import { html as h, unsafeStatic } from 'lit/static-html.js';
 
 import {
   setupClient,
   teardownClient,
   isApolloError,
   assertType,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import { ApolloMutation } from './apollo-mutation';
 import { FASTElement, html, customElement, DOM } from '@microsoft/fast-element';
 
-import { MutationElement, describeMutation } from '@apollo-elements/test-helpers/mutation.test';
-
-import 'sinon-chai';
+import { MutationElement, describeMutation } from '@apollo-elements/test/mutation.test';
 
 const template = html<TestableApolloMutation>`
   <output id="called">${x => x.stringify(x.called)}</output>
@@ -127,7 +125,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       @customElement({ name, template })
       class Test extends ApolloMutation<{ foo: 'bar' }, null> { }
       const tag = unsafeStatic(name);
-      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
 

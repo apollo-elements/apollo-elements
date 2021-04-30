@@ -22,7 +22,7 @@ import {
   teardownClient,
   assertType,
   isApolloError,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import './apollo-query';
 
@@ -30,10 +30,10 @@ import { PolymerApolloQuery } from './apollo-query';
 
 import { PolymerElement, html } from '@polymer/polymer';
 
-import NullableParamQuery from '@apollo-elements/test-helpers/graphql/NullableParam.query.graphql';
+import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
 
-import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
-import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
+import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
+import type { QueryElement } from '@apollo-elements/test/query.test';
 
 class TestableApolloQuery<D, V>
   extends PolymerApolloQuery<D, V>

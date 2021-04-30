@@ -2,9 +2,9 @@ import type { SinonSpy, SinonStub } from 'sinon';
 import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 import type { Entries } from '@apollo-elements/interfaces';
 
-import { assertType, SetupOptions, SetupResult } from '@apollo-elements/test-helpers';
+import { assertType, SetupOptions, SetupResult } from '@apollo-elements/test';
 
-import { setupSpies, setupStubs, stringify } from '@apollo-elements/test-helpers';
+import { setupSpies, setupStubs, stringify } from '@apollo-elements/test';
 
 import { aTimeout } from '@open-wc/testing';
 
@@ -12,9 +12,7 @@ import { define, html, Hybrids, RenderFunction } from 'hybrids';
 
 import { query, QueryHybridsFactoryOptions } from './query';
 
-import 'sinon-chai';
-
-import { QueryElement, describeQuery } from '@apollo-elements/test-helpers/query.test';
+import { QueryElement, describeQuery } from '@apollo-elements/test/query.test';
 import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 let counter = 0;
