@@ -260,12 +260,16 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
 
   set debounce(val: number|null) {
     this.#debounce = val;
-    if (val == null) {
-      this.removeAttribute('debounce');
+
+    if (val === null) {
       this.debouncedMutate = this.doMutate;
+      if (this.hasAttribute('debounce'))
+        this.removeAttribute('debounce');
     } else {
-      this.setAttribute('debounce', val.toString());
+      const newAttr = val.toString();
       this.debouncedMutate = ApolloMutationElement.debounce(this.doMutate, val);
+      if (this.getAttribute('debounce') !== newAttr)
+        this.setAttribute('debounce', newAttr);
     }
   }
 
