@@ -11,9 +11,9 @@ import type {
 
 import type { Entries, GraphQLError } from '@apollo-elements/interfaces';
 
-import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
+import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
 
-import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test';
 
 import {
   aTimeout,
@@ -24,8 +24,8 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import { FASTElement, customElement, DOM, html } from '@microsoft/fast-element';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
-import { describeSubscription } from '@apollo-elements/test-helpers/subscription.test';
+import { assertType, isApolloError } from '@apollo-elements/test';
+import { describeSubscription } from '@apollo-elements/test/subscription.test';
 
 import { ApolloSubscription } from './apollo-subscription';
 

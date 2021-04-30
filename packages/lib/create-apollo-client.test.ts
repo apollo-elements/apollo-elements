@@ -1,14 +1,15 @@
+import type {
+  NonNullableParamQueryData,
+  NonNullableParamQueryVariables,
+} from '@apollo-elements/test';
+
 import { createApolloClient } from './create-apollo-client';
 
 import { expect } from '@open-wc/testing';
 
-import NonNullableParamQuery from '@apollo-elements/test-helpers/graphql/NonNullableParam.query.graphql';
-
-import type {
-  NonNullableParamQueryData, NonNullableParamQueryVariables,
-} from '@apollo-elements/test-helpers';
-
 import { stub } from 'sinon';
+
+import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
 function mockApiResponse<T>(body: T = {} as T) {
   return new Response(JSON.stringify(body), {

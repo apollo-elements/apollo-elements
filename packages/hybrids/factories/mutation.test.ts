@@ -1,21 +1,15 @@
 import type { Entries } from '@apollo-elements/interfaces';
 import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 import type { SinonSpy, SinonStub } from 'sinon';
+import type { SetupOptions } from '@apollo-elements/test';
 
-import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
 import { aTimeout, nextFrame } from '@open-wc/testing';
-import 'sinon-chai';
-
+import { describeMutation, MutationElement } from '@apollo-elements/test/mutation.test';
 import { define, html, RenderFunction, Hybrids } from 'hybrids';
+import { assertType, setupSpies, setupStubs, stringify } from '@apollo-elements/test';
 
 import { mutation, MutationHybridsFactoryOptions } from './mutation';
-import {
-  SetupOptions,
-  setupSpies,
-  setupStubs,
-  stringify,
-  assertType,
-} from '@apollo-elements/test-helpers';
+
 import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 let counter = 0;

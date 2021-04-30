@@ -25,7 +25,7 @@ import {
   setupMutationClass,
   setupSubscriptionClass,
   isApolloError,
-} from '@apollo-elements/test-helpers/helpers';
+} from '@apollo-elements/test/helpers';
 
 import {
   ApolloElementElement,
@@ -34,10 +34,10 @@ import {
   ApolloSubscriptionElement,
 } from '@apollo-elements/interfaces';
 
-import HelloQuery from '@apollo-elements/test-helpers/graphql/Hello.query.graphql';
-import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
-import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
-import NoParamSubscription from '@apollo-elements/test-helpers/graphql/NoParam.subscription.graphql';
+import HelloQuery from '@apollo-elements/test/graphql/Hello.query.graphql';
+import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
+import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
+import NoParamSubscription from '@apollo-elements/test/graphql/NoParam.subscription.graphql';
 
 import { gql } from '@apollo/client/core';
 
@@ -47,18 +47,11 @@ import {
   setupClient,
   teardownClient,
   waitForRender,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
-import {
-  defineCE,
-  expect,
-  fixture,
-  html as fhtml,
-  nextFrame,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import 'sinon-chai';
+import { html as h, unsafeStatic } from 'lit/static-html.js';
 
 import { GraphQLScriptChildMixin } from './graphql-script-child-mixin';
 
@@ -103,7 +96,7 @@ describe('GraphQLScriptChildMixin', function() {
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
-        element = await fixture(fhtml`<${tag}></${tag}>`);
+        element = await fixture(h`<${tag}></${tag}>`);
       });
 
       it('has no document', function() {
@@ -189,7 +182,7 @@ describe('GraphQLScriptChildMixin', function() {
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test { }));
 
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}>
             <script type="application/graphql"></script>
           </${tag}>
@@ -207,7 +200,7 @@ describe('GraphQLScriptChildMixin', function() {
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test { }));
 
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}>
             <script type="application/graphql">haha</script>
           </${tag}>
@@ -225,7 +218,7 @@ describe('GraphQLScriptChildMixin', function() {
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
 
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}>
             <script type="application/graphql">{ daf { amud } }</script>
           </${tag}>
@@ -266,7 +259,7 @@ describe('GraphQLScriptChildMixin', function() {
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}></${tag}>
         `);
       });
@@ -296,7 +289,7 @@ describe('GraphQLScriptChildMixin', function() {
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}><script type="application/json"></script></${tag}>
         `);
       });
@@ -323,7 +316,7 @@ describe('GraphQLScriptChildMixin', function() {
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}><script type="application/json">haha</script></${tag}>
         `);
       });
@@ -338,7 +331,7 @@ describe('GraphQLScriptChildMixin', function() {
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {}));
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}><script type="application/json">{"foo":"bar"}</script></${tag}>
         `);
       });
@@ -359,7 +352,7 @@ describe('GraphQLScriptChildMixin', function() {
             calls++;
           }
         }));
-        element = await fixture<Test>(fhtml`
+        element = await fixture<Test>(h`
           <${tag}>
             <script type="application/graphql">{ foo { bar } }</script>
             <script type="application/json">{"foo":"bar"}</script>

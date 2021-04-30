@@ -1,7 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { ApolloElementElement } from '@apollo-elements/interfaces';
 import { cuid } from '@apollo-elements/lib/cuid';
-import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
+import { setupClient, teardownClient } from '@apollo-elements/test';
 import { define } from 'hybrids';
 import { client } from './client';
 

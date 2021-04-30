@@ -2,28 +2,18 @@ import type { SinonSpy, SinonStub } from 'sinon';
 
 import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 
-import {
-  SetupOptions,
-  SetupResult,
-  setupSpies,
-  setupStubs,
-  stringify,
-  assertType,
-} from '@apollo-elements/test-helpers';
+import type { SetupOptions, SetupResult } from '@apollo-elements/test';
 
+import { assertType, setupSpies, setupStubs, stringify } from '@apollo-elements/test';
+import { define, html, RenderFunction, Hybrids } from 'hybrids';
 import { nextFrame, aTimeout } from '@open-wc/testing';
-
-import 'sinon-chai';
+import { subscription, SubscriptionHybridsFactoryOptions } from './subscription';
+import { __testing_escape_hatch__ } from '../helpers/accessors';
 
 import {
   SubscriptionElement,
   describeSubscription,
-} from '@apollo-elements/test-helpers/subscription.test';
-
-import { define, html, RenderFunction, Hybrids } from 'hybrids';
-
-import { subscription, SubscriptionHybridsFactoryOptions } from './subscription';
-import { __testing_escape_hatch__ } from '../helpers/accessors';
+} from '@apollo-elements/test/subscription.test';
 
 let counter = 0;
 

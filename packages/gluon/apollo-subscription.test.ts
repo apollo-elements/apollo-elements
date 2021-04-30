@@ -17,13 +17,13 @@ import { html } from 'lit-html';
 import { nextFrame } from '@open-wc/testing';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
 import {
   describeSubscription,
   setupSubscriptionClass,
   SubscriptionElement,
-} from '@apollo-elements/test-helpers/subscription.test';
+} from '@apollo-elements/test/subscription.test';
 
 import { GluonElement } from '@gluon/gluon';
 

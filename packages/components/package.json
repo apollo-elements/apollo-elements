@@ -65,7 +65,7 @@
     "@apollo-elements/lib": "^4.0.4",
     "@apollo-elements/mixins": "^3.5.0",
     "@apollo/client": "^3.3.0",
-    "stampino": "^0.6.1",
+    "stampino": "^0.6.2",
     "tslib": "^2.2.0"
   }
 }

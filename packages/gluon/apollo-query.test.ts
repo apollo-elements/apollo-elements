@@ -9,19 +9,19 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import type { QueryElement } from '@apollo-elements/test-helpers/query.test';
+import type { QueryElement } from '@apollo-elements/test/query.test';
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
 import { ApolloQuery } from './apollo-query';
 
 import { html } from 'lit-html';
 
-import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
+import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 

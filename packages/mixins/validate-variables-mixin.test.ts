@@ -1,12 +1,12 @@
 import { defineCE, expect, fixtureSync, nextFrame } from '@open-wc/testing';
 import { ValidateVariablesMixin } from './validate-variables-mixin';
 import { ApolloQueryMixin } from './apollo-query-mixin';
-import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
+import { setupClient, teardownClient } from '@apollo-elements/test';
 import { ApolloQueryInterface } from '@apollo-elements/interfaces';
 
-import NoParamQuery from '@apollo-elements/test-helpers/graphql/NoParam.query.graphql';
-import NullableParamQuery from '@apollo-elements/test-helpers/graphql/NullableParam.query.graphql';
-import NonNullableParamQuery from '@apollo-elements/test-helpers/graphql/NonNullableParam.query.graphql';
+import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
+import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
+import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
 import type { DocumentNode } from '@apollo/client/core';
 

@@ -27,7 +27,7 @@ const config = {
   rootDir: '../..',
 
   files: [
-    'packages/!(test-helpers)/**/*.test.ts',
+    'packages/!(test)/**/*.test.ts',
   ],
 
   mimeTypes: {
@@ -44,7 +44,7 @@ const config = {
       'packages/**/*.test.{ts, js}',
       'packages/lib/cuid.{ts, js}',
       '**/node_modules/**/*',
-      '**/test-helpers/**/*',
+      '**/test/**/*',
       '*__*-dev-server__*',
     ],
   },

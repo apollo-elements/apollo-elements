@@ -1,7 +1,7 @@
 import type {
   UpdateUserMutationData,
   UpdateUserMutationVariables,
-} from '@apollo-elements/test-helpers/schema';
+} from '@apollo-elements/test/schema';
 
 import type {
   ApolloClient,
@@ -16,14 +16,14 @@ import { html } from 'haunted';
 import { useMutation } from './useMutation';
 import { component } from 'haunted';
 
-import { assertType, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test-helpers';
+import { assertType, SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test';
 
-import UpdateUserMutation from '@apollo-elements/test-helpers/graphql/UpdateUser.mutation.graphql';
+import UpdateUserMutation from '@apollo-elements/test/graphql/UpdateUser.mutation.graphql';
 
 import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
 
-import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
-import { describeMutation, MutationElement } from '@apollo-elements/test-helpers/mutation.test';
+import { setupClient, teardownClient } from '@apollo-elements/test';
+import { describeMutation, MutationElement } from '@apollo-elements/test/mutation.test';
 
 import { ApolloMutationElement, Entries } from '@apollo-elements/interfaces';
 
