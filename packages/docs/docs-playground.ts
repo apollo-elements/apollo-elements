@@ -216,6 +216,8 @@ ${content}
   async connectedCallback() {
     const content = this.textContent.trim();
     const config = DocsPlayground.tryParse(`[type="playground-config"][for="${this.id}"]`);
+    const pathname = new URL('/_assets/_static/apollo-elements.js', location.origin).toString();
+    console.log(pathname);
     this.playgroundIde.config = {
       ...config,
       files: {
@@ -224,7 +226,7 @@ ${content}
           content: DocsPlayground.makePreview(content),
         },
         'apollo-elements.js': {
-          content: await fetch('/_assets/_static/apollo-elements.js').then(x => x.text()),
+          content: await fetch(pathname).then(x => x.text()),
           hidden: true,
         },
         ...config.files,
@@ -232,15 +234,14 @@ ${content}
     }
   }
 
-  show() {
+  async show() {
     this.setAttribute('loading', '');
     this.button.disabled = true;
-    this.addEventListener('loaded-playground-elements', () => {
-      this.removeAttribute('loading');
-      this.setAttribute("show", '');
-      this.button.disabled = false;
-    }, { once: true });
-    this.dispatchEvent(new CustomEvent('request-load-playground-elements', { bubbles: true }));
+    const IMPORT_URL = 'https://cdn.skypack.dev/playground-elements@0.9.2';
+    await import(IMPORT_URL);
+    this.setAttribute("show", '');
+    this.button.disabled = false;
+
   }
 
   load() {

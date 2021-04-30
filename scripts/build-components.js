@@ -22,8 +22,20 @@ esbuild.build({
   minify: true,
   outfile: 'docs/_assets/_static/apollo-elements.js',
   sourcemap: true,
-  target: 'es2017',
+  target: 'es2020',
   plugins: [resolve],
+}).catch(() => {
+  process.exit(1);
+});
+
+esbuild.build({
+  external: ['https://*'],
+  entryPoints: ['packages/docs/docs-playground.ts'],
+  bundle: true,
+  minify: true,
+  outfile: 'docs/_assets/_static/docs-playground.js',
+  sourcemap: true,
+  target: 'es2020',
 }).catch(() => {
   process.exit(1);
 });

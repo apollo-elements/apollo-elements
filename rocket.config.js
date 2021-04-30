@@ -142,7 +142,7 @@ export default ({
         'json-viewer': '@power-elements/json-viewer',
         'codesandbox-button': '@power-elements/codesandbox-button',
         'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
-        'docs-playground': importSpecifier,
+        'docs-playground': '/_assets/_static/docs-playground.js',
       },
     });
     /* end auto-import web components */
