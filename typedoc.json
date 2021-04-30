@@ -10,7 +10,7 @@
   "exclude": [
     "./docs",
     "./packages/create/template",
-    "./packages/test-helpers",
+    "./packages/test",
     "./packages/docs",
     "./declaration.d.ts",
     "**/*+(index|.spec|.test|.e2e).ts",

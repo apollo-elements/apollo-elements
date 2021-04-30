@@ -1,3 +1,12 @@
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
+import type {
+  NoParamSubscriptionData,
+  NoParamSubscriptionVariables,
+  NullableParamSubscriptionData,
+  NullableParamSubscriptionVariables,
+} from '@apollo-elements/test';
+
 import {
   ApolloClient,
   ApolloError,
@@ -7,31 +16,23 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
 import { fixture, expect, nextFrame } from '@open-wc/testing';
 
-import { html } from 'lit-html';
-
-import 'sinon-chai';
+import { html } from 'lit/static-html.js';
 
 import {
   setupClient,
-  NoParamSubscriptionData,
-  NoParamSubscriptionVariables,
   isApolloError,
   assertType,
-  NullableParamSubscriptionData,
-  NullableParamSubscriptionVariables,
   teardownClient,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import './apollo-subscription';
 
 import { ApolloSubscriptionElement } from './apollo-subscription';
 
-import NoParamSubscription from '@apollo-elements/test-helpers/graphql/NoParam.subscription.graphql';
-import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
+import NoParamSubscription from '@apollo-elements/test/graphql/NoParam.subscription.graphql';
+import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
 
 describe('[components] <apollo-subscription>', function describeApolloSubscription() {
   beforeEach(setupClient);

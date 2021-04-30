@@ -13,12 +13,12 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
+import type { MutationElement } from '@apollo-elements/test/mutation.test';
 
 import { ApolloMutation } from './apollo-mutation';
 
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
-import { describeMutation, setupMutationClass } from '@apollo-elements/test-helpers/mutation.test';
+import { assertType, isApolloError } from '@apollo-elements/test';
+import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 import { html } from 'lit-html';
 import { nextFrame } from '@open-wc/testing';
 import { GluonElement } from '@gluon/gluon';

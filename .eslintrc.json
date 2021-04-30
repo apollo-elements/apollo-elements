@@ -18,7 +18,7 @@
   },
   "overrides": [
     {
-      "files": ["packages/**/*.test.ts", "packages/test-helpers/**/*.ts"],
+      "files": ["packages/**/*.test.ts", "packages/test/**/*.ts"],
       "rules": {
         "@typescript-eslint/no-unused-vars": [
           "warn",

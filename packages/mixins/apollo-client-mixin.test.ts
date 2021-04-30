@@ -3,7 +3,7 @@ import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@a
 import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { ApolloClientMixin } from './apollo-client-mixin';
 
-import { assertType } from '@apollo-elements/test-helpers';
+import { assertType } from '@apollo-elements/test';
 
 describe('ApolloClientMixin', function() {
   let element: ApolloElementElement;

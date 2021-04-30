@@ -12,23 +12,21 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError, ApolloMutationInterface, Entries } from '@apollo-elements/interfaces';
 
-import { assertType } from '@apollo-elements/test-helpers';
+import type { Constructor } from 'lit-element';
+
+import { expect, nextFrame, defineCE, fixture } from '@open-wc/testing';
+
+import { assertType } from '@apollo-elements/test';
+
+import { ApolloMutationMixin } from './apollo-mutation-mixin';
+import { isApolloError } from '@apollo/client/core';
+import { effect } from '@apollo-elements/lib/descriptors';
 
 import {
   describeMutation,
   MutationElement,
   setupMutationClass,
-} from '@apollo-elements/test-helpers/mutation.test';
-
-import { ApolloMutationMixin } from './apollo-mutation-mixin';
-
-import { isApolloError } from '@apollo/client/core';
-import { expect, nextFrame, defineCE, fixture } from '@open-wc/testing';
-
-import 'sinon-chai';
-
-import { Constructor } from 'lit-element';
-import { effect } from '@apollo-elements/lib/descriptors';
+} from '@apollo-elements/test/mutation.test';
 
 class XL extends HTMLElement {}
 

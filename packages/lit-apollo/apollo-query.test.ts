@@ -11,9 +11,9 @@ import type {
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
-import { describeQuery, setupQueryClass } from '@apollo-elements/test-helpers/query.test';
+import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
 import {
   defineCE,

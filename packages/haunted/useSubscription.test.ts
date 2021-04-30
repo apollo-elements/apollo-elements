@@ -1,9 +1,9 @@
-import type { SetupOptions } from '@apollo-elements/test-helpers';
+import type { SetupOptions } from '@apollo-elements/test';
 
 import type {
   NullableParamSubscriptionData,
   NullableParamSubscriptionVariables,
-} from '@apollo-elements/test-helpers/schema';
+} from '@apollo-elements/test/schema';
 
 import { html } from 'haunted';
 import { useSubscription } from './useSubscription';
@@ -11,7 +11,7 @@ import { component } from 'haunted';
 
 import { TypedDocumentNode, DocumentNode, gql } from '@apollo/client/core';
 
-import NullableParamSubscription from '@apollo-elements/test-helpers/graphql/NullableParam.subscription.graphql';
+import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
@@ -21,12 +21,12 @@ import {
   setupStubs,
   teardownClient,
   assertType,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import {
   describeSubscription,
   SubscriptionElement,
-} from '@apollo-elements/test-helpers/subscription.test';
+} from '@apollo-elements/test/subscription.test';
 
 import { ApolloSubscriptionElement, Entries } from '@apollo-elements/interfaces';
 

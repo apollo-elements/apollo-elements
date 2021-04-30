@@ -10,7 +10,7 @@ import { expect, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
 
 import { ApolloElement } from './apollo-element';
 import { customElement, DOM, FASTElement, html } from '@microsoft/fast-element';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
 describe('[fast] ApolloElement', function describeApolloElement() {
   it('is an instance of FASTElement', async function() {

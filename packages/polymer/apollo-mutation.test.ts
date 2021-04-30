@@ -23,10 +23,10 @@ import {
   NullableParamMutationVariables,
   setupClient,
   teardownClient,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
-import { setupMutationClass, describeMutation } from '@apollo-elements/test-helpers/mutation.test';
-import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
+import { setupMutationClass, describeMutation } from '@apollo-elements/test/mutation.test';
+import type { MutationElement } from '@apollo-elements/test/mutation.test';
 
 import { GraphQLError } from 'graphql';
 
@@ -36,7 +36,7 @@ import { PolymerApolloMutation } from './apollo-mutation';
 
 import { PolymerElement, html } from '@polymer/polymer';
 
-import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
+import NullableParamMutation from '@apollo-elements/test/graphql/NullableParam.mutation.graphql';
 
 class TestableApolloMutation<D, V>
   extends PolymerApolloMutation<D, V>

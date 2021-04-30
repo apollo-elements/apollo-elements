@@ -1,3 +1,9 @@
+import type { MutationElement } from '@apollo-elements/test/mutation.test';
+
+import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
+
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import type {
   ApolloClient,
   DocumentNode,
@@ -8,45 +14,32 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
-import {
-  defineCE,
-  unsafeStatic,
-  fixture,
-  expect,
-  html as fhtml,
-  nextFrame,
-} from '@open-wc/testing';
-
-import { spy, SinonSpy } from 'sinon';
-
-import 'sinon-chai';
-
-import {
-  setupClient,
-  teardownClient,
-  isApolloError,
-  assertType,
-} from '@apollo-elements/test-helpers';
-
 import type {
   NoParamMutationData,
   NonNullableParamMutationData,
   NonNullableParamMutationVariables,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
-import type { MutationElement } from '@apollo-elements/test-helpers/mutation.test';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+
+import { html as h, unsafeStatic } from 'lit/static-html.js';
+
+import { spy, SinonSpy } from 'sinon';
+
+import {
+  assertType,
+  isApolloError,
+  setupClient,
+  teardownClient,
+} from '@apollo-elements/test';
 
 import { ApolloMutation } from './apollo-mutation';
 import { LitElement, html, Constructor, TemplateResult } from 'lit-element';
 import { property } from 'lit-element/lib/decorators';
 
-import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
+import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
 
-import { describeMutation, setupMutationClass } from '@apollo-elements/test-helpers/mutation.test';
+import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 
 class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements MutationElement<D, V> {
   declare shadowRoot: ShadowRoot;
@@ -111,7 +104,7 @@ describe('[lit-apollo] ApolloMutation', function() {
 
       const tagName = defineCE(Test);
       const tag = unsafeStatic(tagName);
-      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
 
@@ -163,7 +156,7 @@ describe('[lit-apollo] ApolloMutation', function() {
         const refetchQueries = ['QueryA', 'QueryB', 'QueryC', 'QueryD'];
         beforeEach(async function() {
           const tag = unsafeStatic(defineCE(class extends Test { }));
-          element = await fixture<Test>(fhtml`<${tag} .refetchQueries="${refetchQueries}"></${tag}>`);
+          element = await fixture<Test>(h`<${tag} .refetchQueries="${refetchQueries}"></${tag}>`);
         });
 
         it('sets the property as an array of query names', function() {

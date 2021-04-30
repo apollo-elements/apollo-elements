@@ -2,7 +2,7 @@
 import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { TypePoliciesMixin } from './type-policies-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { setupClient, teardownClient } from '@apollo-elements/test-helpers';
+import { setupClient, teardownClient } from '@apollo-elements/test';
 import { gql } from '@apollo/client/core';
 
 describe('TypePoliciesMixin', function() {

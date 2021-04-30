@@ -1,3 +1,9 @@
+import type { SinonSpy, SinonStub } from 'sinon';
+
+import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
+
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import type {
   NoParamMutationData,
   NoParamMutationVariables,
@@ -5,11 +11,7 @@ import type {
   InputParamMutationVariables,
   NullableParamMutationData,
   NullableParamMutationVariables,
-} from '@apollo-elements/test-helpers';
-
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
-import type { GraphQLError } from '@apollo-elements/interfaces';
+} from '@apollo-elements/test';
 
 import type {
   ApolloClient,
@@ -31,20 +33,18 @@ import {
   oneEvent,
 } from '@open-wc/testing';
 
+import { html } from 'lit/static-html.js';
+
 import { sendKeys } from '@web/test-runner-commands';
 
-import { html } from 'lit-html';
-
-import { spy, SinonSpy, stub, SinonStub } from 'sinon';
-
-import 'sinon-chai';
+import { spy, stub } from 'sinon';
 
 import {
   assertType,
   isApolloError,
   setupClient,
   teardownClient,
-} from '@apollo-elements/test-helpers';
+} from '@apollo-elements/test';
 
 import './apollo-mutation';
 
@@ -59,9 +59,9 @@ import {
   MutationErrorEvent,
 } from './events';
 
-import InputParamMutation from '@apollo-elements/test-helpers/graphql/InputParam.mutation.graphql';
-import NoParamMutation from '@apollo-elements/test-helpers/graphql/NoParam.mutation.graphql';
-import NullableParamMutation from '@apollo-elements/test-helpers/graphql/NullableParam.mutation.graphql';
+import InputParamMutation from '@apollo-elements/test/graphql/InputParam.mutation.graphql';
+import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
+import NullableParamMutation from '@apollo-elements/test/graphql/NullableParam.mutation.graphql';
 import { OptimisticResponseType } from '@apollo-elements/interfaces';
 
 describe('[components] <apollo-mutation>', function describeApolloMutation() {
@@ -73,7 +73,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation></apollo-mutation>
       `);
     });
@@ -87,7 +87,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement<unknown, unknown>;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
         <apollo-mutation
             data-var-a="variable-a"
             data-var-b="variable-b"

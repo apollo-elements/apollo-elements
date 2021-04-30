@@ -23,13 +23,13 @@ import {
 import { ApolloSubscription } from './apollo-subscription';
 import { LitElement, TemplateResult, html } from 'lit-element';
 import { property } from 'lit-element/lib/decorators';
-import { assertType, isApolloError } from '@apollo-elements/test-helpers';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
-import type { SubscriptionElement } from '@apollo-elements/test-helpers/subscription.test';
+import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
 import {
   describeSubscription,
   setupSubscriptionClass,
-} from '@apollo-elements/test-helpers/subscription.test';
+} from '@apollo-elements/test/subscription.test';
 
 class TestableApolloSubscription<D = unknown, V = OperationVariables>
   extends ApolloSubscription<D, V>
