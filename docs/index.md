@@ -81,23 +81,23 @@ libraries:
       query LatestLaunch {
         launchLatest {
           id
-          date: launch_date_utc
-          links { patch: mission_patch }
-          name: mission_name
-          rocket { name: rocket_name }
+          launch_date_utc
+          links { mission_patch }
+          mission_name
+          rocket { rocket_name }
         }
       }
     </script>
     <template>
       <link rel="stylesheet" href="components/spacex-launch.css"/>
       <h2>Latest Launch</h2>
-      <img src="{%raw%}{{ data.launchLatest.links.patch }}{%endraw%}"
+      <img .src="{%raw%}{{ data.launchLatest.links.mission_patch }}{%endraw%}"
            alt="mission patch"/>
       <p>
         Mission {%raw%}{{ data.launchLatest.id }}{%endraw%},
-                 <strong>{%raw%}{{ data.launchLatest.name }}{%endraw%}</strong>
-        Launched <time>{%raw%}{{ data.launchLatest.date }}{%endraw%}</time>
-        aboard   <strong>{%raw%}{{ data.launchLatest.rocket.name }}{%endraw%}</strong>
+                 <strong>{%raw%}{{ data.launchLatest.mission_name }}{%endraw%}</strong>
+        Launched <time>{%raw%}{{ data.launchLatest.launch_date_utc }}{%endraw%}</time>
+        aboard   <strong>{%raw%}{{ data.launchLatest.rocket.rocket_name }}{%endraw%}</strong>
       </p>
     </template>
   </apollo-query>
@@ -136,19 +136,6 @@ function loadDemo() {
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   sandbox.showDemo = true;
 }
-document.querySelector('docs-playground')
-  .addEventListener('request-load-playground-elements', async function(event) {
-    await import('https://cdn.skypack.dev/playground-elements@^0.8.0/');
-
-    const promises = []
-    if (!customElements.get('mwc-tab-bar'))
-      promises.push(import('@material/mwc-tab-bar'));
-    if (!customElements.get('mwc-icon-button'))
-      promises.push(import('@material/mwc-icon-button'));
-    console.log(await Promise.allSettled(promises));
-
-    event.target.dispatchEvent(new CustomEvent('loaded-playground-elements'));
-  })
 ```
 
 <script type="playground-config" data-helmet for="query-spacex">
