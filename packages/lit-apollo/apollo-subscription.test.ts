@@ -1,3 +1,7 @@
+import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
+
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import type {
   ApolloClient,
   DocumentNode,
@@ -10,22 +14,15 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import { defineCE, expect, fixture } from '@open-wc/testing';
 
-import {
-  defineCE,
-  fixture,
-  expect,
-  html as fhtml,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { html as h, unsafeStatic } from 'lit/static-html.js';
 
 import { ApolloSubscription } from './apollo-subscription';
-import { LitElement, TemplateResult, html } from 'lit-element';
-import { property } from 'lit-element/lib/decorators';
+import { LitElement, TemplateResult, html } from 'lit';
+import { property } from 'lit/decorators.js';
 import { assertType, isApolloError } from '@apollo-elements/test';
 
-import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
 import {
   describeSubscription,
   setupSubscriptionClass,
@@ -72,7 +69,7 @@ describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription(
 
       const tagName = defineCE(Test);
       const tag = unsafeStatic(tagName);
-      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
 

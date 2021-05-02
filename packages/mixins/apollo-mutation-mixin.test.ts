@@ -12,7 +12,7 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError, ApolloMutationInterface, Entries } from '@apollo-elements/interfaces';
 
-import type { Constructor } from 'lit-element';
+import type { Constructor } from '@apollo-elements/interfaces';
 
 import { expect, nextFrame, defineCE, fixture } from '@open-wc/testing';
 

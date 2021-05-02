@@ -96,7 +96,62 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
     });
   });
 
-  describe('when super has an attributeChangedCallback that includes "error-policy"', function() {
+  describe('when super has an attributeChangedCallback that handles unrelated attrs', function() {
+    class Test extends ApolloElementMixin(class extends HTMLElement {
+      declare data: unknown | null;
+
+      declare variables: unknown | null;
+
+      static readonly observedAttributes: string[] = ['savlanut'];
+
+      errorPolicy = '';
+
+      savlanut = '';
+
+      attributeChangedCallback(name: string, oldVal: string, newVal: string) {
+        this[name as keyof this] = newVal as unknown as this[keyof this];
+      }
+    }) {}
+
+    let element: Test;
+
+    beforeEach(function() {
+      const tag = defineCE(class extends Test {});
+      element = document.createElement(tag) as Test;
+    });
+
+    describe('when setting an attribute observed by the subclass', function() {
+      beforeEach(function() {
+        element.setAttribute('savlanut', 'savlanut');
+      });
+
+      it('applies subclass behaviour', function() {
+        expect(element.savlanut).to.equal('savlanut');
+      });
+    });
+
+    describe('when setting the error-policy attribute', function() {
+      beforeEach(function() {
+        element.setAttribute('error-policy', 'all');
+      });
+
+      it('applies superclass behaviour', function() {
+        expect(element.errorPolicy).to.equal('all');
+      });
+    });
+
+    describe('when setting the fetch-policy attribute', function() {
+      beforeEach(function() {
+        element.setAttribute('fetch-policy', 'no-cache');
+      });
+
+      it('applies mixin behaviour', function() {
+        expect(element.fetchPolicy).to.equal('no-cache');
+      });
+    });
+  });
+
+  describe('when super has an attributeChangedCallback that handles "error-policy"', function() {
     class Test extends ApolloElementMixin(class extends HTMLElement {
       declare data: unknown | null;
 

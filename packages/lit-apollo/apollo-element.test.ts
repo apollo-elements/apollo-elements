@@ -6,11 +6,13 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import { expect, defineCE, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
+import { expect, defineCE, fixture } from '@open-wc/testing';
+
+import { html as h, unsafeStatic } from 'lit/static-html.js';
 
 import { ApolloElement } from './apollo-element';
 
-import { TemplateResult, html, LitElement } from 'lit-element';
+import { html, LitElement, TemplateResult } from 'lit';
 
 import {
   assertType,
@@ -18,29 +20,6 @@ import {
   setupClient,
   teardownClient,
 } from '@apollo-elements/test';
-
-class TypeCheck extends ApolloElement {
-  typeCheck() {
-    /* eslint-disable func-call-spacing, no-multi-spaces */
-
-    assertType<HTMLElement>                         (this);
-    assertType<LitElement>                          (this);
-
-    // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
-    assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
-    assertType<string>                              (this.error.message);
-    if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
-
-    /* eslint-enable func-call-spacing, no-multi-spaces */
-  }
-}
 
 describe('[lit-apollo] ApolloElement', function describeApolloElement() {
   describe('with a global client', function() {
@@ -109,9 +88,8 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
       }
     }
 
-    const tagName = defineCE(Test);
-    const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const tag = defineCE(Test);
+    const element = await fixture<Test>(`<${tag}></${tag}>`);
     expect(element).to.be.an.instanceOf(LitElement);
   });
 
@@ -125,7 +103,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
       }
     }
     const tag = unsafeStatic(defineCE(Test));
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const element = await fixture<Test>(h`<${tag}></${tag}>`);
     // @ts-expect-error: just testing assignment and rendering
     element.client = { test: 'CLIENT' };
     await element.updateComplete;
@@ -139,7 +117,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag} .error="${'error'}"></${tag}>`);
+    const element = await fixture<Test>(h`<${tag} .error="${'error'}"></${tag}>`);
     expect(element).shadowDom.to.equal('error');
   });
 
@@ -150,7 +128,30 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
     const tagName = defineCE(Test);
     const tag = unsafeStatic(tagName);
-    const element = await fixture<Test>(fhtml`<${tag} .loading="${true}"></${tag}>`);
+    const element = await fixture<Test>(h`<${tag} .loading="${true}"></${tag}>`);
     expect(element).shadowDom.to.equal('LOADING');
   });
 });
+
+class TypeCheck extends ApolloElement {
+  typeCheck() {
+    /* eslint-disable func-call-spacing, no-multi-spaces */
+
+    assertType<HTMLElement>                         (this);
+    assertType<LitElement>                          (this);
+
+    // ApolloElementInterface
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>             (this.context!);
+    assertType<boolean>                             (this.loading);
+    assertType<DocumentNode>                        (this.document!);
+    assertType<Error>                               (this.error!);
+    assertType<ErrorPolicy>                         (this.errorPolicy!);
+    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<string>                              (this.error.message);
+    if (isApolloError(this.error))
+      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+
+    /* eslint-enable func-call-spacing, no-multi-spaces */
+  }
+}

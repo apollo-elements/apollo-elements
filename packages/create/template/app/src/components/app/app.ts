@@ -1,4 +1,6 @@
-import { ApolloQuery, customElement, html, TemplateResult } from '@apollo-elements/lit-apollo';
+import { ApolloQuery, html, TemplateResult } from '@apollo-elements/lit-apollo';
+
+import { customElement } from 'lit/decorators.js';
 
 import type {
   AppQueryData as Data,

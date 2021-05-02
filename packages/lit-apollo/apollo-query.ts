@@ -1,8 +1,9 @@
 import type { ApolloQueryInterface, Data, Variables } from '@apollo-elements/interfaces';
 import type { OperationVariables } from '@apollo/client/core';
+
 import { NetworkStatus } from '@apollo/client/core';
 
-import { property } from 'lit-element';
+import { property } from 'lit/decorators.js';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 

@@ -4,7 +4,7 @@ import { defineCE, expect, fixture } from '@open-wc/testing';
 
 import type { ApolloSubscriptionElement, Constructor } from '@apollo-elements/interfaces';
 
-import { gql } from '@apollo/client/core';
+import { gql, ApolloClient, InMemoryCache } from '@apollo/client/core';
 
 import { spy, SinonSpy } from 'sinon';
 import { makeClient, setupClient, teardownClient } from './client';
@@ -94,7 +94,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         // optional fields
         expect(element?.fetchPolicy, 'fetchPolicy').to.be.undefined;
-        expect(element?.observable, 'observableQuery').to.be.undefined;
+        expect(element?.observable, 'observableSubscription').to.be.undefined;
         expect(element?.onError, 'onError').to.be.undefined;
         expect(element?.onSubscriptionComplete, 'onSubscriptionComplete').to.be.undefined;
         expect(element?.onSubscriptionData, 'onSubscriptionData').to.be.undefined;
@@ -149,6 +149,28 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
       describe('calling subscribe without client', function() {
         it('throws', function() {
           expect(() => element!.subscribe()).to.throw('No Apollo client.');
+        });
+
+        describe('subscribe({ subscription, client })', async function() {
+          let client: ApolloClient<any>|undefined;
+
+          beforeEach(function() {
+            client = new ApolloClient({ cache: new InMemoryCache() });
+            spy(client, 'subscribe');
+            element?.subscribe({ client, subscription: NullableParamSubscription });
+          });
+
+          afterEach(function() {
+            (client?.subscribe as SinonSpy).restore();
+            client = undefined;
+            delete window.__APOLLO_CLIENT__;
+          });
+
+          it('calls client subscribe', function() {
+            expect(client?.subscribe).to.have.been.calledWithMatch({
+              query: NullableParamSubscription,
+            });
+          });
         });
       });
 
@@ -206,12 +228,12 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
       afterEach(teardownClient);
 
       describe('with no-auto-subscribe attribute set', function() {
-        describe('setting NoParam subscription', function() {
+        describe('after setting NoParam subscription', function() {
           beforeEach(function setSubscription() {
             element!.subscription = NoParamSubscription;
           });
 
-          describe('then calling subscribe()', function() {
+          describe('subscribe()', function() {
             beforeEach(function() {
               element!.subscribe();
             });
@@ -351,6 +373,286 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
           });
         });
+
+        describe('and shouldResubscribe set', function() {
+          beforeEach(function() {
+            element!.shouldResubscribe = true;
+          });
+
+          describe('subscribe({ subscription })', async function() {
+            beforeEach(function() {
+              element?.subscribe({ subscription: NullableParamSubscription });
+            });
+
+            it('calls client subscribe', function() {
+              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                query: NullableParamSubscription,
+              });
+            });
+
+            it('sets observableSubscription', function() {
+              expect(element?.observableSubscription).to.be.ok;
+            });
+          });
+
+          describe('with element.skip true', function() {
+            beforeEach(function() {
+              element!.skip = true;
+            });
+
+            describe('subscribe()', async function() {
+              beforeEach(function() {
+                element!.subscribe();
+              });
+
+              it('does not call client subscribe', function() {
+                expect(element?.client?.subscribe).to.not.have.been.called;
+              });
+
+              it('does not set observableSubscription', function() {
+                expect(element?.observableSubscription).to.not.be.ok;
+              });
+            });
+
+            describe('subscribe({ subscription, skip: false })', async function() {
+              beforeEach(function() {
+                element!.subscribe({
+                  subscription: NullableParamSubscription,
+                  skip: false,
+                });
+              });
+
+              it('calls client subscribe', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                });
+              });
+
+              it('does not set observableSubscription', function() {
+                expect(element?.observableSubscription).to.be.ok;
+              });
+            });
+          });
+
+          describe('subscribe({ subscription, client })', async function() {
+            let client: ApolloClient<any>|undefined;
+
+            beforeEach(function() {
+              client = new ApolloClient({ cache: new InMemoryCache() });
+              spy(client, 'subscribe');
+            });
+
+            afterEach(function() {
+              (client?.subscribe as SinonSpy).restore();
+              client = undefined;
+            });
+
+            beforeEach(function() {
+              element?.subscribe({ client, subscription: NullableParamSubscription });
+            });
+
+            it('calls client subscribe', function() {
+              expect(client?.subscribe).to.have.been.calledWithMatch({
+                query: NullableParamSubscription,
+              });
+            });
+
+            it('does not call element client subscribe', function() {
+              expect(element?.client?.subscribe).to.not.have.been.called;
+            });
+
+            it('sets observableSubscription', function() {
+              expect(element?.observableSubscription).to.be.ok;
+            });
+          });
+
+          describe('with element context', function() {
+            const context = {};
+
+            beforeEach(function() {
+              element!.context = context;
+            });
+
+            describe('subscribe({ subscription })', function() {
+              beforeEach(function() {
+                element?.subscribe({ subscription: NullableParamSubscription });
+              });
+
+              it('calls client subscribe with element context', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  context,
+                });
+              });
+            });
+
+            describe('subscribe({ subscription, context })', async function() {
+              const context = {};
+
+              beforeEach(function() {
+                element?.subscribe({ subscription: NullableParamSubscription, context });
+              });
+
+              it('calls client subscribe with context param', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  context,
+                });
+              });
+            });
+          });
+
+          describe('subscribe({ subscription, context })', async function() {
+            const context = {};
+
+            beforeEach(function() {
+              element?.subscribe({ subscription: NullableParamSubscription, context });
+            });
+
+            it('calls client subscribe with context', function() {
+              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                query: NullableParamSubscription,
+                context,
+              });
+            });
+          });
+
+          describe('with element errorPolicy', function() {
+            beforeEach(function() {
+              element!.errorPolicy = 'none';
+            });
+
+            describe('subscribe({ subscription })', async function() {
+              beforeEach(function() {
+                element?.subscribe({ subscription: NullableParamSubscription });
+              });
+              it('calls client subscribe with element errorPolicy', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  errorPolicy: 'none',
+                });
+              });
+            });
+
+            describe('subscribe({ subscription, errorPolicy })', async function() {
+              beforeEach(function() {
+                element?.subscribe({ subscription: NullableParamSubscription, errorPolicy: 'all' });
+              });
+              it('calls client subscribe with params errorPolicy', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  errorPolicy: 'all',
+                });
+              });
+            });
+          });
+
+          describe('subscribe({ subscription, errorPolicy })', async function() {
+            const errorPolicy = 'ignore';
+            beforeEach(function() {
+              element?.subscribe({ subscription: NullableParamSubscription, errorPolicy });
+            });
+            it('calls client subscribe', function() {
+              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                query: NullableParamSubscription,
+                errorPolicy,
+              });
+            });
+          });
+
+          describe('with element fetchPolicy', function() {
+            beforeEach(function() {
+              element!.fetchPolicy = 'cache-first';
+            });
+
+            describe('subscribe({ subscription })', async function() {
+              beforeEach(function() {
+                element?.subscribe({ subscription: NullableParamSubscription });
+              });
+              it('calls client subscribe with element fetchPolicy', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  fetchPolicy: 'cache-first',
+                });
+              });
+            });
+
+            describe('subscribe({ subscription, fetchPolicy })', async function() {
+              beforeEach(function() {
+                element?.subscribe({
+                  subscription: NullableParamSubscription,
+                  fetchPolicy: 'network-only',
+                });
+              });
+              it('calls client subscribe with params fetchPolicy', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  fetchPolicy: 'network-only',
+                });
+              });
+            });
+          });
+
+          describe('subscribe({ subscription, fetchPolicy })', async function() {
+            const fetchPolicy = 'no-cache';
+            beforeEach(function() {
+              element?.subscribe({ subscription: NullableParamSubscription, fetchPolicy });
+            });
+
+            it('calls client subscribe', function() {
+              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                query: NullableParamSubscription,
+                fetchPolicy,
+              });
+            });
+          });
+
+          describe('subscribe({ subscription, variables })', async function() {
+            const variables: NullableParamSubscriptionVariables = { nullable: 'params' };
+            beforeEach(function() {
+              element?.subscribe({ subscription: NullableParamSubscription, variables });
+            });
+            it('calls client subscribe', function() {
+              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                query: NullableParamSubscription,
+                variables,
+              });
+            });
+          });
+
+          describe('with element variables', function() {
+            beforeEach(function() {
+              element!.variables = { nullable: 'with' };
+            });
+
+            describe('subscribe({ subscription })', async function() {
+              beforeEach(function() {
+                element?.subscribe({ subscription: NullableParamSubscription });
+              });
+              it('calls client subscribe with element variables', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  variables: { nullable: 'with' },
+                });
+              });
+            });
+
+            describe('subscribe({ subscription, variables })', async function() {
+              beforeEach(function() {
+                element?.subscribe({
+                  subscription: NullableParamSubscription,
+                  variables: { nullable: 'else' },
+                });
+              });
+              it('calls client subscribe with params variables', function() {
+                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                  query: NullableParamSubscription,
+                  variables: { nullable: 'else' },
+                });
+              });
+            });
+          });
+        });
       });
 
       describe('setting NoParam subscription', function() {
@@ -478,8 +780,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe with element subscription', function() {
-              const { subscription: query } = element!;
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ query });
+              const { subscription } = element!;
+              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                query: subscription,
+              });
             });
 
             it('calls client subscribe with specified FetchPolicy', function() {
