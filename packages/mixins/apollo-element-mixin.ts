@@ -51,15 +51,15 @@ type MixinInstance =
     observedAttributes?: string[];
   };
 
-function ApolloElementMixinImplementation<B extends Constructor>(superclass: B): MixinInstance & B {
-  abstract class ApolloElement extends superclass implements Omit<ApolloElementInterface, 'mo'> {
+function ApolloElementMixinImplementation<B extends Constructor & {
+  observedAttributes?: string[]
+}>(superclass: B): MixinInstance & B {
+  abstract class ApolloElement extends superclass {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
     static get observedAttributes(): string[] {
-      // @ts-expect-error: it might not, but it might
-      const superAttrs = super.observedAttributes ?? []; /* c8 ignore next */ // covered
       return [
-        ...(superAttrs),
+        ...super.observedAttributes ?? [], /* c8 ignore next */ // covered
         'error-policy',
         'fetch-policy',
       ];
@@ -124,23 +124,18 @@ function ApolloElementMixinImplementation<B extends Constructor>(superclass: B):
     constructor(...a: any[]) { super(...a); }
 
     attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
-      /* c8 ignore start */ // manual testing showed that all cases were hit
-      super.attributeChangedCallback?.(name, oldVal, newVal);
-
-      // @ts-expect-error: ts is not tracking the static side
-      if (super.constructor?.observedAttributes?.includes?.(name))
-        return;
-
+      type ThisPolicy = `${'error'|'fetch'}Policy`;
+      /* c8 ignore start */ // covered
       switch (name) {
         case 'error-policy':
-          this.errorPolicy = newVal as ErrorPolicy;
-          break;
-        case 'fetch-policy':
-          this.fetchPolicy = newVal as this['fetchPolicy'];
-          break;
-        default:
-          break;
+        case 'fetch-policy': {
+          const prop =
+            name.replace(/-(.)/g, (_, g1) => g1.toUpperCase()) as ThisPolicy;
+          if (this[prop] !== newVal)
+            this[prop] = newVal as this['errorPolicy'];
+        }
       }
+      super.attributeChangedCallback?.(name, oldVal, newVal);
       /* c8 ignore stop */
     }
 

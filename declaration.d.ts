@@ -6,7 +6,7 @@ declare module '*.graphql' {
 
 
 declare module '*.css' {
-  import { CSSResult } from 'lit-element';
+  import { CSSResult } from 'lit';
   const css: CSSResult;
   export default css;
 }
@@ -20,5 +20,5 @@ declare module '@gluon/gluon' {
     render(options?: { sync: boolean }): Promise<void>
   }
 
-  export { html, render } from 'lit-html';
+  export { html, render } from 'lit';
 }

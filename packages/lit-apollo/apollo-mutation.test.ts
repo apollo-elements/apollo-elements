@@ -1,3 +1,5 @@
+import type { Constructor } from '@apollo-elements/interfaces';
+
 import type { MutationElement } from '@apollo-elements/test/mutation.test';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
@@ -34,8 +36,9 @@ import {
 } from '@apollo-elements/test';
 
 import { ApolloMutation } from './apollo-mutation';
-import { LitElement, html, Constructor, TemplateResult } from 'lit-element';
-import { property } from 'lit-element/lib/decorators';
+import { LitElement, html, TemplateResult } from 'lit';
+
+import { property } from 'lit/decorators.js';
 
 import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
 

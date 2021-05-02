@@ -64,8 +64,7 @@
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/mixins": "^3.5.0",
-    "lit-element": "^2",
-    "lit-html": "^1.4.0",
+    "lit": "^2.0.0-rc.1",
     "tslib": "^2.2.0"
   }
 }

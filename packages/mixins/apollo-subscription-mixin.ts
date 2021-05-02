@@ -165,6 +165,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
     }
 
     private initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void {
+      /* c8 ignore start */ // covered
       const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
       const client = params?.client ?? this.client;
       const skip = params?.skip ?? this.skip;
@@ -184,6 +185,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
         query: params?.subscription ?? this.subscription!,
         variables: params?.variables ?? this.variables ?? undefined,
       };
+      /* c8 ignore stop */ // covered
 
       this.observable = client.subscribe<Data<D>, Variables<D, V>>(options);
     }

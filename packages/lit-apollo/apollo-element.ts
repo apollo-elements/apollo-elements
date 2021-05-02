@@ -2,9 +2,11 @@ import type { ApolloError, ErrorPolicy } from '@apollo/client/core';
 
 import type { Constructor, GraphQLError } from '@apollo-elements/interfaces';
 
-import { LitElement, property } from 'lit-element';
+import { LitElement } from 'lit';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
+
+import { property } from 'lit/decorators.js';
 
 /**
  * `ApolloElement`
