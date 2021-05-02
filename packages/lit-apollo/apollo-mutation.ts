@@ -7,7 +7,7 @@ import type {
   Variables,
 } from '@apollo-elements/interfaces';
 
-import { property } from 'lit-element/lib/decorators';
+import { property } from 'lit/decorators.js';
 
 import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';

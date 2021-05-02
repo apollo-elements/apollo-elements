@@ -1,16 +1,7 @@
-import { Item, SelectMixin } from '@pwrs/mixins/select/select-mixin';
-import {
-  LitElement,
-  customElement,
-  html,
-  TemplateResult,
-  PropertyValues,
-  property,
-  internalProperty,
-  queryAll,
-} from 'lit-element';
-
-import { ifDefined } from "lit-html/directives/if-defined";
+import { SelectMixin } from '@pwrs/mixins/select/select-mixin';
+import { html, LitElement, PropertyValues, TemplateResult } from 'lit';
+import { customElement, property, queryAll, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import ButtonStyles from './button.css';
 import TabsStyles from './tabs.css';
@@ -38,7 +29,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
 
   static readonly styles = [ButtonStyles, TabsStyles];
 
-  @internalProperty() labels = new Map<string, Tab>();
+  @state() labels = new Map<string, Tab>();
 
   @queryAll('[role="tab"]') tabs: NodeListOf<HTMLButtonElement>;
 

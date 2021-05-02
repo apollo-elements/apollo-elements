@@ -170,7 +170,7 @@ export default ({
   devServer: {
     port: 9048,
     nodeResolve: {
-      exportConditions: ['default', 'esbuild', 'import'],
+      exportConditions: ['default', 'development', 'esbuild', 'import'],
       extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
     },
     mimeTypes: {

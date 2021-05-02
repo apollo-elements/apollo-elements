@@ -1,3 +1,5 @@
+import type { LitElement } from 'lit';
+
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
 import type {
@@ -612,7 +614,6 @@ describe('GraphQLScriptChildMixin', function() {
   });
 });
 
-import type { LitElement } from 'lit-element';
 import {
   ApolloElement as LitApolloElement,
   ApolloQuery as LitApolloQuery,

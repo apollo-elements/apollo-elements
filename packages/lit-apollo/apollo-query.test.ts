@@ -1,3 +1,7 @@
+import type { PropertyValues, TemplateResult } from 'lit';
+
+import type { GraphQLError } from '@apollo-elements/interfaces';
+
 import type {
   ApolloClient,
   DocumentNode,
@@ -9,25 +13,18 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
 import { assertType, isApolloError } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-import {
-  defineCE,
-  expect,
-  fixture,
-  html as fhtml,
-  nextFrame,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { property } from 'lit-element/lib/decorators';
+import { property } from 'lit/decorators.js';
+
+import { html, unsafeStatic } from 'lit/static-html.js';
 
 import { ApolloQuery } from './apollo-query';
-import { html, LitElement, PropertyValues, TemplateResult } from 'lit-element';
+import { LitElement } from 'lit';
 import { NetworkStatus } from '@apollo/client/core';
 
 class TestableApolloQuery<D, V> extends ApolloQuery<D, V> {
@@ -78,7 +75,7 @@ describe('[lit-apollo] ApolloQuery', function() {
 
       const tagName = defineCE(Test);
       const tag = unsafeStatic(tagName);
-      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      const element = await fixture<Test>(html`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
 
@@ -97,9 +94,9 @@ describe('[lit-apollo] ApolloQuery', function() {
       it('preserves decorator behaviour', async function() {
         element.xA = 2;
         await element.updateComplete;
-        expect(element.getAttribute('x-a')).to.equal('2');
+        expect(element.getAttribute('x-a'), 'setting property').to.equal('2');
         element.setAttribute('x-a', '1');
-        expect(element.xA).to.equal(1);
+        expect(element.xA, 'setting attribute').to.equal(1);
       });
     });
   });

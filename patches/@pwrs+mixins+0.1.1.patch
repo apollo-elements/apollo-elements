@@ -1,0 +1,41 @@
+diff --git a/node_modules/@pwrs/mixins/select/select-mixin.ts b/node_modules/@pwrs/mixins/select/select-mixin.ts
+index ddff56b..e59249e 100644
+--- a/node_modules/@pwrs/mixins/select/select-mixin.ts
++++ b/node_modules/@pwrs/mixins/select/select-mixin.ts
+@@ -1,6 +1,7 @@
+-import type { Constructor, PropertyValues, LitElement } from 'lit-element';
++import type { PropertyValues, ReactiveElement } from 'lit';
++
+ import { dedupeMixin } from '@open-wc/dedupe-mixin'
+-import { property, query } from 'lit-element';
++import { property, query } from 'lit/decorators.js';
+ 
+ import { propOr } from '../lib/propOr';
+ import { not } from '../lib/logic';
+@@ -14,6 +15,8 @@ import { elem } from '../lib/pointfree';
+ 
+ type SlotchangeEvent = Event & { target: HTMLSlotElement };
+ 
++type Constructor<T = {}> = { new (...args:any[]): T }
++
+ export interface Item extends HTMLElement {
+   itemIndex: number;
+ }
+@@ -22,7 +25,7 @@ export interface SelectMixinElementClassType {
+   allowedChildren: string[]|RegExp;
+ }
+ 
+-export interface SelectMixinElement extends LitElement {
++export interface SelectMixinElement extends ReactiveElement {
+   itemsMutationObserver: MutationObserver;
+ 
+   _items: Item[];
+@@ -250,7 +253,7 @@ const SelectedIndexConverter = {
+ }
+ 
+ export const SelectMixin = dedupeMixin(
+-  function SelectMixin<TBase extends Constructor<LitElement>>(superclass: TBase): TBase & Constructor<SelectMixinElement & FireMixinElement> & SelectMixinElementClassType {
++  function SelectMixin<TBase extends Constructor<ReactiveElement>>(superclass: TBase): TBase & Constructor<SelectMixinElement & FireMixinElement> & SelectMixinElementClassType {
+   /**
+     * Provides methods and properties for a selecting element.
+     *

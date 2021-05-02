@@ -1,4 +1,5 @@
-import { <%= BASE_CLASS %>, html, customElement, TemplateResult } from '@apollo-elements/lit-apollo';
+import { <%= BASE_CLASS %>, html, TemplateResult } from '@apollo-elements/lit-apollo';
+import { customElement } from 'lit/decorators.js';
 
 import type {
   <%= OPERATION_DATA_TYPE %>Data as Data,

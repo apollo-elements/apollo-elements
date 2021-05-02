@@ -1,4 +1,5 @@
-import { customElement, html, internalProperty, LitElement } from 'lit-element'
+import { html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 
 import ButtonStyles from './button.css';
 import CopyStyles from './copy.css';
@@ -11,7 +12,7 @@ export class CodeCopy extends LitElement {
 
   static readonly styles = [ButtonStyles, CopyStyles];
 
-  @internalProperty() copyButtonText = 'Copy';
+  @state() copyButtonText = 'Copy';
 
   render() {
     return html`

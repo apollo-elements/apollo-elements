@@ -217,7 +217,6 @@ ${content}
     const content = this.textContent.trim();
     const config = DocsPlayground.tryParse(`[type="playground-config"][for="${this.id}"]`);
     const pathname = new URL('/_assets/_static/apollo-elements.js', location.origin).toString();
-    console.log(pathname);
     this.playgroundIde.config = {
       ...config,
       files: {
