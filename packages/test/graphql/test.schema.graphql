@@ -27,12 +27,17 @@ type User {
   nickname: String
 }
 
+type Paged {
+  pages: [Int]
+}
+
 type Query {
   messages: [Message]
   nonNullParam(nonNull: String!): NonNull
   nullableParam(nullable: String): Nullable
   noParam: NoParam
   helloWorld(name: String, greeting: String): HelloWorld
+  pages(offset: Int, limit: Int): [Int]
 }
 
 type Subscription {

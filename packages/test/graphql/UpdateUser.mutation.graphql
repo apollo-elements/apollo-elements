@@ -1,4 +1,4 @@
-mutation UpdateUser($username: String!, $haircolor: String!) {
+mutation UpdateUserMutation($username: String!, $haircolor: String!) {
   updateUser(username: $username, haircolor: $haircolor) {
     nickname
   }

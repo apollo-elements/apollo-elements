@@ -1,18 +1,6 @@
 import type { InMemoryCacheConfig, NormalizedCacheObject } from '@apollo/client/core';
 
-import type {
-  HelloQueryVariables,
-  HelloWorld,
-  AB,
-  ABInput,
-  NonNull,
-  NonNullableParamQueryVariables,
-  NoParam,
-  Nullable,
-  NullableParamQueryVariables,
-  UpdateUserMutationVariables,
-  User,
-} from './schema';
+import type * as S from './schema';
 
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 
@@ -29,60 +17,82 @@ declare global {
   }
 }
 
-const typeDefs = TestSchema.loc!.source.body;
+const unmocked = makeExecutableSchema({
+  typeDefs: TestSchema.loc!.source.body,
+  resolvers: {
+    Subscription: {
 
-const mocks = {
-  NonNull(_: any, { nonNull }: NonNullableParamQueryVariables): NonNull {
-    if (nonNull === 'error')
-      throw new Error(nonNull);
-    else
-      return { nonNull };
-  },
+      async nonNullParam(_, { nonNull }) {
+        return nonNull;
+      },
 
-  Nullable(_: any, { nullable }: NullableParamQueryVariables): Nullable {
-    if (nullable === 'error')
-      throw new Error(nullable);
-    else
-      return { nullable };
-  },
+    },
 
-  NoParam(): NoParam {
-    return { noParam: 'noParam' };
-  },
+    Query: {
 
-  HelloWorld(_: any, { name, greeting }: HelloQueryVariables): HelloWorld {
-    return {
-      name: name ?? 'Chaver',
-      greeting: greeting ?? 'Shalom',
-    };
-  },
+      pages(_: any, { offset, limit }: S.PaginatedQueryVariables) {
+        return Array.from({ length: limit ?? 10 }, (_, i) => i + 1 + (offset ?? 0));
+      },
 
-  User(_: any, { username, haircolor }: UpdateUserMutationVariables): User {
-    return {
-      username,
-      haircolor,
-      nickname: `${haircolor} ${username}`,
-    };
-  },
-
-  AB(_: any, { input }: { input: ABInput }): AB {
-    return {
-      a: input.a || 'a',
-      b: input.b || 'b',
-    };
-  },
-};
-
-const unmocked = makeExecutableSchema({ typeDefs, resolvers: {
-  Subscription: {
-    async nonNullParam(_, { nonNull }) {
-      return nonNull;
     },
   },
-} });
+});
 
-// @ts-expect-error: it's fine
-const schema = addMocksToSchema({ schema: unmocked, mocks });
+let MESSAGES = 0;
+
+export function resetMessages(): void {
+  MESSAGES = 0;
+}
+
+const schema = addMocksToSchema({
+  schema: unmocked,
+  preserveResolvers: true,
+  mocks: {
+    Message() {
+      return { message: `Message ${++MESSAGES}` };
+    },
+
+    NonNull(_: any, { nonNull }): S.NonNull {
+      if (nonNull === 'error')
+        throw new Error(nonNull);
+      else
+        return { nonNull };
+    },
+
+    Nullable(_: any, { nullable }: S.NullableParamQueryVariables): S.Nullable {
+      if (nullable === 'error')
+        throw new Error(nullable);
+      else
+        return { nullable };
+    },
+
+    NoParam(): S.NoParam {
+      return { noParam: 'noParam' };
+    },
+
+    HelloWorld(_: any, { name, greeting }: S.HelloQueryVariables): S.HelloWorld {
+      if (name === 'error')
+        throw new Error('Bad name');
+      else
+        return { name: name ?? 'Chaver', greeting: greeting ?? 'Shalom' };
+    },
+
+    User(_: any, { username, haircolor }): S.User {
+      return {
+        username,
+        haircolor,
+        nickname: `${haircolor} ${username}`,
+      };
+    },
+
+    AB(_: any, { input }): S.AB {
+      return {
+        a: input.a || 'a',
+        b: input.b || 'b',
+      };
+    },
+  },
+});
 
 export function setupClient(): void {
   window.__APOLLO_CLIENT__ = makeClient();
@@ -96,20 +106,37 @@ export function makeClient(): ApolloClient<NormalizedCacheObject> {
   // Create the Apollo Client
   return new ApolloClient({
     connectToDevTools: false,
-    cache: new InMemoryCache({
-      // prevent warnings when testing mutations
-      typePolicies: {
-        NoParam: {
-          keyFields: ['noParam'],
-        },
-      },
-    }),
     link: new SchemaLink({ schema }),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'network-only',
       },
     },
+    cache: new InMemoryCache({
+      // prevent warnings when testing mutations
+      typePolicies: {
+        NoParam: {
+          keyFields: ['noParam'],
+        },
+        Query: {
+          fields: {
+            messages: {
+              keyArgs: false,
+              merge(p = [], n) {
+                return [...p, ...n];
+              },
+            },
+
+            pages: {
+              keyArgs: false,
+              merge(p = [], n) {
+                return [...p, ...n];
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 }
 
