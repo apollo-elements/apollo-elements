@@ -2,7 +2,7 @@ import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apoll
 import type { ApolloElementElement } from './apollo-element';
 
 export type ComponentDocument<D> =
-  D extends TypedDocumentNode ? D : DocumentNode;
+  D extends TypedDocumentNode ? D : DocumentNode
 
 export type Data<D> =
   D extends TypedDocumentNode<infer TData> ? TData : D;

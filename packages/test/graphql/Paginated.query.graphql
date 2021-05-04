@@ -1,0 +1,3 @@
+query PaginatedQuery($offset: Int = 0, $limit: Int = 10) {
+  pages(offset: $offset, limit: $limit)
+}
