@@ -1,4 +1,4 @@
-subscription MessageSent {
+subscription MessageSentSubscription {
   messageSent {
     message
   }

@@ -10,6 +10,7 @@ extensions:
       namingConvention: keep
       noSchemaStitching: true
       operationResultSuffix: Data
+      documentVariableSuffix: ''
       optionalResolveType: true
       useIndexSignature: true
 
