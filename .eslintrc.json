@@ -14,7 +14,9 @@
       "argsIgnorePattern": "^_",
       "varsIgnorePattern": "^_",
       "ignoreRestSiblings": true
-    }]
+    }],
+    "no-invalid-this": "off",
+    "@typescript-eslint/no-invalid-this": ["error"]
   },
   "overrides": [
     {

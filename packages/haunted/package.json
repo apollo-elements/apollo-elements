@@ -60,7 +60,7 @@
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/lib": "^4.0.4",
     "@apollo-elements/mixins": "^3.5.0",
-    "haunted": "^4.7.1",
+    "haunted": "^4.8.0",
     "tslib": "^2.2.0"
   },
   "devDependencies": {

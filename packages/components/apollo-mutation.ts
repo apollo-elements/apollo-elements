@@ -247,7 +247,6 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
 
   @property({ reflect: true, init: false }) loading = false;
 
-  // eslint-disable-next-line no-invalid-this
   private doMutate = (): void => void (this.mutate().catch(() => void 0));
 
   private declare debouncedMutate: () => void;

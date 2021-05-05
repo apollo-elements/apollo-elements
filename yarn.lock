@@ -2968,10 +2968,10 @@
   resolved "https://registry.yarnpkg.com/@power-elements/json-viewer/-/json-viewer-2.1.1.tgz#f65a4c9bffb4aae2c4eaa8acc1c74cc38f0aac82"
   integrity sha512-uQWqhlc1huWMnYycf5ltgU1hStancWyMt7g8bJ0jCZ3QrOlZmHWUdPt55i4I6L7bDKJLbO1J6oB+O4QWj4Nlew==
 
-"@pwrs/eslint-config@^0.0.20":
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/@pwrs/eslint-config/-/eslint-config-0.0.20.tgz#600dd084e7d6058d3a3635fae3f554cbfaf57373"
-  integrity sha512-svYytb5D/Soo7w+DFc/OySmT5lUMEym8B3LcT64AofrayYh2y3Et5Ykj/IoWnZ9kzgouW2ZN07yRc/yrixGUmw==
+"@pwrs/eslint-config@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@pwrs/eslint-config/-/eslint-config-0.0.21.tgz#12b4cb3c91eb63fcd2e2b675c556516b8754c464"
+  integrity sha512-ulp8BCnjRmhvzfr9wGovs3kMJHDOLqlt+GBpqGKFstQi8gxjgq/ytTj3PHv8Jmvs6e9mu8Z++DU4lFG9PlTIJw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.8.1"
     "@typescript-eslint/parser" "^4.8.1"
@@ -8644,10 +8644,10 @@ hastscript@^7.0.0:
     property-information "^6.0.0"
     space-separated-tokens "^2.0.0"
 
-haunted@^4.7.1:
-  version "4.7.1"
-  resolved "https://registry.yarnpkg.com/haunted/-/haunted-4.7.1.tgz#7b16791745cd217846988c58ab08abfce6e9db24"
-  integrity sha512-bUQGPlKIAR1Ou22tjF4YgRaNaUHdeJx6T1x06h3iC7yvreHMpodO3/ixchEAU3QK1e4SjzvaFA0of0m9jiE4Kg==
+haunted@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/haunted/-/haunted-4.8.0.tgz#09316d5d8f2e712a68687d3f605f696edcc82ea2"
+  integrity sha512-hLlUojolbdSLkC0y1kB324TulzUS4Ie7yNqmcYgv0pYtsFTqiBRgJ0+oqwMCIex52HkgcsgxFPKLUAzR6FQWWw==
   dependencies:
     lit-html "^1.0.0"
 
