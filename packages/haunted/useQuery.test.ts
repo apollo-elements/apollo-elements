@@ -28,12 +28,12 @@ import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-
 import { spy, SinonSpy } from 'sinon';
 
 describe('[haunted] useQuery', function() {
-  describe('README usage', function() {
-    describe('with global client', function() {
-      beforeEach(setupClient);
+  describe('with global client', function() {
+    beforeEach(setupClient);
 
-      afterEach(teardownClient);
+    afterEach(teardownClient);
 
+    describe('README usage', function() {
       describe('with HelloQuery and a jaunty little template', function() {
         let element: HTMLElement;
 
@@ -107,337 +107,337 @@ describe('[haunted] useQuery', function() {
           });
         });
       });
+    });
 
-      describe('with NullableParamQuery', function() {
-        let element: HTMLElement;
+    describe('with NullableParamQuery', function() {
+      let element: HTMLElement;
 
-        const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
+      const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
-        const onError = spy();
-        const onData = spy();
+      const onError = spy();
+      const onData = spy();
 
-        afterEach(() => onError.resetHistory());
-        afterEach(() => onData.resetHistory());
+      afterEach(() => onError.resetHistory());
+      afterEach(() => onData.resetHistory());
 
-        beforeEach(async function define() {
-          function Hello() {
-            const { data, error, executeQuery } = useQuery(NullableParamQuery, {
-              onData, onError,
-            });
-
-            return html`
-              <p id="data">${data?.nullableParam?.nullable}</p>
-              <p id="error">${error?.message}</p>
-              <button id="executeQuery" @click="${() => executeQuery({ variables: { nullable: 'kloom' } }).catch(() => 0)}"></button>
-              <button id="errorQuery" @click="${() => executeQuery({ variables: { nullable: 'error' } }).catch(() => 0)}"></button>
-            `;
-          }
-
-          const tag = defineCE(component(Hello));
-
-          element = await fixture(`<${tag}></${tag}>`);
-        });
-
-        it('calls onData', function() {
-          expect(onData).to.have.been.called;
-        });
-
-        describe('on error', function() {
-          beforeEach(function() {
-            $('#errorQuery')!.click();
+      beforeEach(async function define() {
+        function Hello() {
+          const { data, error, executeQuery } = useQuery(NullableParamQuery, {
+            onData, onError,
           });
 
-          beforeEach(nextFrame);
+          return html`
+            <p id="data">${data?.nullableParam?.nullable}</p>
+            <p id="error">${error?.message}</p>
+            <button id="executeQuery" @click="${() => executeQuery({ variables: { nullable: 'kloom' } }).catch(() => 0)}"></button>
+            <button id="errorQuery" @click="${() => executeQuery({ variables: { nullable: 'error' } }).catch(() => 0)}"></button>
+          `;
+        }
 
-          it('renders the error', function() {
-            expect(element).shadowDom.to.equal(`
-              <p id="data">Hello World</p>
-              <p id="error">error</p>
-              <button id="executeQuery"></button>
-              <button id="errorQuery"></button>
-            `);
-          });
+        const tag = defineCE(component(Hello));
 
-          it('calls onError', function() {
-            expect(onError).to.have.been.called;
-          });
-        });
+        element = await fixture(`<${tag}></${tag}>`);
       });
 
-      describe('fetchMore', function() {
-        let element: HTMLElement;
+      it('calls onData', function() {
+        expect(onData).to.have.been.called;
+      });
 
-        const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
-
-        const onError = spy();
-        const onData = spy();
-
-        afterEach(() => onError.resetHistory());
-        afterEach(() => onData.resetHistory());
-
-        beforeEach(async function define() {
-          function Hello() {
-            const [offset, setOffset] = useState(0);
-
-            const { data, fetchMore } = useQuery(PaginatedQuery, {
-              onData,
-              onError,
-              variables: {
-                offset,
-              },
-            });
-
-            return html`
-              <p id="data">${data?.pages?.join?.(',')}</p>
-              <button id="fetchMore" @click="${async (event: Event & { target: HTMLButtonElement }) => {
-                const variables = { offset: offset + 10 };
-                setOffset(variables.offset);
-                await fetchMore({ variables }).catch(() => 0);
-                element.dispatchEvent(new CustomEvent('updated'));
-              }}"></button>
-            `;
-          }
-
-          const tag = defineCE(component(Hello));
-
-          element = await fixture(`<${tag}></${tag}>`);
+      describe('on error', function() {
+        beforeEach(function() {
+          $('#errorQuery')!.click();
         });
 
         beforeEach(nextFrame);
 
-        it('renders initial data', function() {
+        it('renders the error', function() {
           expect(element).shadowDom.to.equal(`
-            <p id="data">1,2,3,4,5,6,7,8,9,10</p>
-            <button id="fetchMore"></button>
+            <p id="data">Hello World</p>
+            <p id="error">error</p>
+            <button id="executeQuery"></button>
+            <button id="errorQuery"></button>
           `);
         });
 
-        describe('calling fetchMore', function() {
-          beforeEach(function() {
-            $('#fetchMore')!.click();
-          });
-
-          beforeEach(nextFrame);
-
-          it('renders next page', function() {
-            expect(element).shadowDom.to.equal(`
-              <p id="data">1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</p>
-              <button id="fetchMore"></button>
-            `);
-          });
+        it('calls onError', function() {
+          expect(onError).to.have.been.called;
         });
       });
+    });
 
-      describe('subscribeToMore', function() {
-        let element: HTMLElement;
+    describe('fetchMore', function() {
+      let element: HTMLElement;
 
-        const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
+      const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
-        const onError = spy();
-        const onData = spy();
+      const onError = spy();
+      const onData = spy();
 
-        afterEach(() => onError.resetHistory());
-        afterEach(() => onData.resetHistory());
-        afterEach(resetMessages);
+      afterEach(() => onError.resetHistory());
+      afterEach(() => onData.resetHistory());
 
-        beforeEach(async function define() {
-          function Hello() {
-            const { data, subscribeToMore } = useQuery(MessagesQuery);
+      beforeEach(async function define() {
+        function Hello() {
+          const [offset, setOffset] = useState(0);
 
-            const onClickSubscribeToMore = () => subscribeToMore({
-              document: MessageSentSubscription,
-              updateQuery: (_, n) => ({ messages: [n.subscriptionData.data.messageSent!] }),
-            });
+          const { data, fetchMore } = useQuery(PaginatedQuery, {
+            onData,
+            onError,
+            variables: {
+              offset,
+            },
+          });
 
-            const messages = data?.messages ?? [];
-            return html`
-              <button id="subscribeToMore" @click="${onClickSubscribeToMore}"></button>
-              <ol>${messages.map(x => html`<li>${x!.message}</li>`)}</ol>
-            `;
-          }
+          return html`
+            <p id="data">${data?.pages?.join?.(',')}</p>
+            <button id="fetchMore" @click="${async (event: Event & { target: HTMLButtonElement }) => {
+              const variables = { offset: offset + 10 };
+              setOffset(variables.offset);
+              await fetchMore({ variables }).catch(() => 0);
+              element.dispatchEvent(new CustomEvent('updated'));
+            }}"></button>
+          `;
+        }
 
-          const tag = defineCE(component(Hello));
+        const tag = defineCE(component(Hello));
 
-          element = await fixture(`<${tag}></${tag}>`);
+        element = await fixture(`<${tag}></${tag}>`);
+      });
+
+      beforeEach(nextFrame);
+
+      it('renders initial data', function() {
+        expect(element).shadowDom.to.equal(`
+          <p id="data">1,2,3,4,5,6,7,8,9,10</p>
+          <button id="fetchMore"></button>
+        `);
+      });
+
+      describe('calling fetchMore', function() {
+        beforeEach(function() {
+          $('#fetchMore')!.click();
         });
 
         beforeEach(nextFrame);
 
-        it('renders initial data', function() {
+        it('renders next page', function() {
+          expect(element).shadowDom.to.equal(`
+            <p id="data">1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</p>
+            <button id="fetchMore"></button>
+          `);
+        });
+      });
+    });
+
+    describe('subscribeToMore', function() {
+      let element: HTMLElement;
+
+      const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
+
+      const onError = spy();
+      const onData = spy();
+
+      afterEach(() => onError.resetHistory());
+      afterEach(() => onData.resetHistory());
+      afterEach(resetMessages);
+
+      beforeEach(async function define() {
+        function Hello() {
+          const { data, subscribeToMore } = useQuery(MessagesQuery);
+
+          const onClickSubscribeToMore = () => subscribeToMore({
+            document: MessageSentSubscription,
+            updateQuery: (_, n) => ({ messages: [n.subscriptionData.data.messageSent!] }),
+          });
+
+          const messages = data?.messages ?? [];
+          return html`
+            <button id="subscribeToMore" @click="${onClickSubscribeToMore}"></button>
+            <ol>${messages.map(x => html`<li>${x!.message}</li>`)}</ol>
+          `;
+        }
+
+        const tag = defineCE(component(Hello));
+
+        element = await fixture(`<${tag}></${tag}>`);
+      });
+
+      beforeEach(nextFrame);
+
+      it('renders initial data', function() {
+        expect(element).shadowDom.to.equal(`
+          <button id="subscribeToMore"></button>
+          <ol>
+            <li>Message 1</li>
+            <li>Message 2</li>
+          </ol>
+        `);
+      });
+
+      describe('calling subscribeToMore', function() {
+        beforeEach(function() {
+          $('#subscribeToMore')!.click();
+        });
+
+        beforeEach(nextFrame);
+
+        it('renders subscription', function() {
           expect(element).shadowDom.to.equal(`
             <button id="subscribeToMore"></button>
             <ol>
               <li>Message 1</li>
               <li>Message 2</li>
+              <li>Message 3</li>
+              <li>Message 4</li>
+              <li>Message 5</li>
             </ol>
           `);
         });
+      });
+    });
 
-        describe('calling subscribeToMore', function() {
-          beforeEach(function() {
-            $('#subscribeToMore')!.click();
-          });
+    describe('without variables', function() {
+      let element: HTMLElement;
 
-          beforeEach(nextFrame);
+      const onInput =
+        (setter: (s: string) => void) =>
+          (event: Event & { target: HTMLInputElement }) =>
+            setter(event.target.value);
 
-          it('renders subscription', function() {
-            expect(element).shadowDom.to.equal(`
-              <button id="subscribeToMore"></button>
-              <ol>
-                <li>Message 1</li>
-                <li>Message 2</li>
-                <li>Message 3</li>
-                <li>Message 4</li>
-                <li>Message 5</li>
-              </ol>
-            `);
-          });
-        });
+      const $ = (id: string) =>
+        element.shadowRoot!.querySelector<HTMLInputElement>(`#${id}`);
+
+      beforeEach(async function define() {
+        function Hello() {
+          const [name, setName] = useState('');
+          const [greeting, setGreeting] = useState('');
+
+          const variables = name && greeting ? { name, greeting } : undefined;
+
+          const { data, error, loading, options, refetch } = useQuery(HelloQuery, { variables });
+
+          if (variables !== options?.variables)
+            refetch(variables);
+
+          return html`
+            <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
+            <article id="error" ?hidden="${!error}">
+              <h2>😢 Such Sad, Very Error! 😰</h2>
+              <pre><code>${error?.message}</code></pre>
+            </article>
+            <p>${data?.helloWorld!.greeting ?? 'Hello'}, ${data?.helloWorld!.name ?? 'Friend'}!</p>
+            <input id="name" @input="${onInput(setName)}"/>
+            <input id="greeting" @input="${onInput(setGreeting)}"/>
+          `;
+        }
+
+        const tag = defineCE(component(Hello));
+
+        element = await fixture(`<${tag}></${tag}>`);
       });
 
-      describe('without variables', function() {
-        let element: HTMLElement;
+      it('renders data', function() {
+        expect(element).shadowDom.to.equal(`
+          <what-spin-such-loader></what-spin-such-loader>
+          <article id="error" hidden>
+            <h2>😢 Such Sad, Very Error! 😰</h2>
+            <pre><code></code></pre>
+          </article>
+          <p>Shalom, Chaver!</p>
+          <input id="name"/>
+          <input id="greeting"/>
+        `);
+      });
 
-        const onInput =
-          (setter: (s: string) => void) =>
-            (event: Event & { target: HTMLInputElement }) =>
-              setter(event.target.value);
-
-        const $ = (id: string) =>
-          element.shadowRoot!.querySelector<HTMLInputElement>(`#${id}`);
-
-        beforeEach(async function define() {
-          function Hello() {
-            const [name, setName] = useState('');
-            const [greeting, setGreeting] = useState('');
-
-            const variables = name && greeting ? { name, greeting } : undefined;
-
-            const { data, error, loading, options, refetch } = useQuery(HelloQuery, { variables });
-
-            if (variables !== options?.variables)
-              refetch(variables);
-
-            return html`
-              <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
-              <article id="error" ?hidden="${!error}">
-                <h2>😢 Such Sad, Very Error! 😰</h2>
-                <pre><code>${error?.message}</code></pre>
-              </article>
-              <p>${data?.helloWorld!.greeting ?? 'Hello'}, ${data?.helloWorld!.name ?? 'Friend'}!</p>
-              <input id="name" @input="${onInput(setName)}"/>
-              <input id="greeting" @input="${onInput(setGreeting)}"/>
-            `;
-          }
-
-          const tag = defineCE(component(Hello));
-
-          element = await fixture(`<${tag}></${tag}>`);
+      describe('when setting variables', function() {
+        beforeEach(async function() {
+          $('name')!.focus();
+          await sendKeys({ type: 'Pardner' });
+          $('greeting')!.focus();
+          await sendKeys({ type: 'Howdy' });
+          $('greeting')!.blur();
         });
 
-        it('renders data', function() {
+        beforeEach(nextFrame);
+
+        it('refetches', function() {
           expect(element).shadowDom.to.equal(`
             <what-spin-such-loader></what-spin-such-loader>
             <article id="error" hidden>
               <h2>😢 Such Sad, Very Error! 😰</h2>
               <pre><code></code></pre>
             </article>
-            <p>Shalom, Chaver!</p>
+            <p>Howdy, Pardner!</p>
             <input id="name"/>
             <input id="greeting"/>
           `);
         });
+      });
+    });
 
-        describe('when setting variables', function() {
-          beforeEach(async function() {
-            $('name')!.focus();
-            await sendKeys({ type: 'Pardner' });
-            $('greeting')!.focus();
-            await sendKeys({ type: 'Howdy' });
-            $('greeting')!.blur();
+    describe('with variables', function() {
+      let element: HTMLElement;
+
+      beforeEach(async function define() {
+        function Hello() {
+          const { data } = useQuery(HelloQuery, {
+            variables: {
+              greeting: 'How\'s it going',
+              name: 'Dude',
+            },
           });
 
-          beforeEach(nextFrame);
+          return html`
+            <p>${data?.helloWorld?.greeting}, ${data?.helloWorld?.name}!</p>
+          `;
+        }
 
-          it('refetches', function() {
-            expect(element).shadowDom.to.equal(`
-              <what-spin-such-loader></what-spin-such-loader>
-              <article id="error" hidden>
-                <h2>😢 Such Sad, Very Error! 😰</h2>
-                <pre><code></code></pre>
-              </article>
-              <p>Howdy, Pardner!</p>
-              <input id="name"/>
-              <input id="greeting"/>
-            `);
-          });
-        });
+        const tag = defineCE(component(Hello));
+
+        element = await fixture(`<${tag}></${tag}>`);
       });
 
-      describe('with variables', function() {
-        let element: HTMLElement;
+      beforeEach(nextFrame);
 
-        beforeEach(async function define() {
-          function Hello() {
-            const { data } = useQuery(HelloQuery, {
-              variables: {
-                greeting: 'How\'s it going',
-                name: 'Dude',
-              },
-            });
+      it('renders data', function() {
+        expect(element).shadowDom.to.equal(`
+          <p>How's it going, Dude!</p>
+        `);
+      });
+    });
 
-            return html`
-              <p>${data?.helloWorld?.greeting}, ${data?.helloWorld?.name}!</p>
-            `;
-          }
+    describe('with shouldSubscribe set as contant false', function() {
+      let element: HTMLElement;
 
-          const tag = defineCE(component(Hello));
+      beforeEach(async function define() {
+        function Component() {
+          const c = useQuery(HelloQuery, { shouldSubscribe: () => false });
+          return html`
+            <output>${c.data?.helloWorld?.greeting}</output>
+            <button @click=${() => c.subscribe()}></button>
+          `;
+        }
 
-          element = await fixture(`<${tag}></${tag}>`);
+        const tag = defineCE(component(Component));
+
+        element = await fixture(`<${tag}></${tag}>`);
+      });
+
+      beforeEach(() => aTimeout(100));
+
+      it('does not subscribe', function() {
+        expect(element).shadowDom.to.not.contain('Shalom');
+      });
+
+      describe('then calling subscribe', function() {
+        beforeEach(function() {
+          element.shadowRoot!.querySelector('button')!.click();
         });
 
         beforeEach(nextFrame);
 
-        it('renders data', function() {
-          expect(element).shadowDom.to.equal(`
-            <p>How's it going, Dude!</p>
-          `);
-        });
-      });
-
-      describe('with shouldSubscribe set as contant false', function() {
-        let element: HTMLElement;
-
-        beforeEach(async function define() {
-          function Component() {
-            const c = useQuery(HelloQuery, { shouldSubscribe: () => false });
-            return html`
-              <output>${c.data?.helloWorld?.greeting}</output>
-              <button @click=${() => c.subscribe()}></button>
-            `;
-          }
-
-          const tag = defineCE(component(Component));
-
-          element = await fixture(`<${tag}></${tag}>`);
-        });
-
-        beforeEach(() => aTimeout(100));
-
-        it('does not subscribe', function() {
-          expect(element).shadowDom.to.not.contain('Shalom');
-        });
-
-        describe('then calling subscribe', function() {
-          beforeEach(function() {
-            element.shadowRoot!.querySelector('button')!.click();
-          });
-
-          beforeEach(nextFrame);
-
-          it('gets data', function() {
-            expect(element.shadowRoot!.textContent).to.contain('Shalom');
-          });
+        it('gets data', function() {
+          expect(element.shadowRoot!.textContent).to.contain('Shalom');
         });
       });
     });

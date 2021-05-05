@@ -23,14 +23,8 @@ export const update = Symbol('update');
 export class ApolloControllerEvent extends Event {
   static declare type: `apollo-controller-${'disconnected'|'connected'}`;
 
-  constructor(
-    public controller: ApolloController,
-    public host: ReactiveControllerHost & EventTarget,
-  ) {
-    super(ApolloControllerConnectedEvent.type, {
-      bubbles: true,
-      composed: true,
-    });
+  constructor(public controller: ApolloController) {
+    super(ApolloControllerConnectedEvent.type, { bubbles: true, composed: true });
   }
 }
 
@@ -50,7 +44,7 @@ export abstract class ApolloController<
 
   client?: ApolloClient<NormalizedCacheObject>;
 
-  data?: Data<D>;
+  data?: Data<D> | null;
 
   error?: ApolloError | null;
 
@@ -66,14 +60,14 @@ export abstract class ApolloController<
 
   set document(document: DocumentNode | ComponentDocument<D> | undefined) {
     this.#document = document;
-    this.documentChanged?.(document);
+    this.documentChanged?.(document);/* c8 ignore next */
   }
 
   get variables(): Variables<D, V> | undefined { return this.#variables; }
 
   set variables(variables: Variables<D, V> | undefined) {
     this.#variables = variables;
-    this.variablesChanged?.(variables);
+    this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
   protected abstract documentChanged?(document?: DocumentNode | ComponentDocument<D>): void
@@ -91,10 +85,8 @@ export abstract class ApolloController<
   }
 
   hostConnected(): void {
-    if (this.host instanceof EventTarget) {
-      const event = new ApolloControllerConnectedEvent(this, this.host);
-      this.host.dispatchEvent(event);
-    }
+    const event = new ApolloControllerConnectedEvent(this);
+    (this.host as unknown as EventTarget).dispatchEvent?.(event); /* c8 ignore next */
   }
 
   [update](): void {
@@ -102,9 +94,7 @@ export abstract class ApolloController<
   }
 
   hostDisconnected(): void {
-    if (this.host instanceof EventTarget) {
-      const event = new ApolloControllerDisconnectedEvent(this, this.host);
-      this.host.dispatchEvent(event);
-    }
+    const event = new ApolloControllerDisconnectedEvent(this);
+    dispatchEvent(event);
   }
 }
