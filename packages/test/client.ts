@@ -73,6 +73,8 @@ const schema = addMocksToSchema({
     HelloWorld(_: any, { name, greeting }: S.HelloQueryVariables): S.HelloWorld {
       if (name === 'error')
         throw new Error('Bad name');
+      else if (name === 'partial')
+        return { greeting: greeting ?? 'Shalom' };
       else
         return { name: name ?? 'Chaver', greeting: greeting ?? 'Shalom' };
     },
