@@ -1,8 +1,8 @@
+import type { ApolloSubscriptionElement, Constructor } from '@apollo-elements/interfaces';
+
 import { SetupFunction } from './types';
 
-import { defineCE, expect, fixture } from '@open-wc/testing';
-
-import type { ApolloSubscriptionElement, Constructor } from '@apollo-elements/interfaces';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { gql, ApolloClient, InMemoryCache } from '@apollo/client/core';
 
@@ -1083,6 +1083,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             describe('when subscription resolves', function() {
+              beforeEach(nextFrame);
               beforeEach(waitForRender(() => element));
 
               it('calls onSubscriptionData', function() {
