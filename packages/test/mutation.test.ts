@@ -162,7 +162,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
     });
 
     // hybrids and haunted don't play nice with custom attributes
-    // eslint-disable-next-line no-invalid-this
+    // eslint-disable-next-line @typescript-eslint/no-invalid-this
     if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
       describe('with await-refetch-queries attribute', function() {
         let element: MutationElement;

@@ -76,7 +76,7 @@
     "@polymer/iron-component-page": "^4.0.1",
     "@polymer/polymer": "^3.4.1",
     "@power-elements/json-viewer": "^2.1.1",
-    "@pwrs/eslint-config": "^0.0.20",
+    "@pwrs/eslint-config": "^0.0.21",
     "@rocket/blog": "^0.3.0",
     "@rocket/cli": "^0.6.3",
     "@rocket/launch": "^0.4.2",

@@ -30,8 +30,7 @@ function isInMemoryCache(
 
 function isApolloElement(element: Node): element is ApolloElementElement {
   return element instanceof HTMLElement && (
-    // @ts-expect-error: it's fine
-    DOCUMENT_TYPES.includes(element.constructor.documentType)
+    DOCUMENT_TYPES.includes((element.constructor as typeof ApolloElementElement).documentType)
   );
 }
 
@@ -39,9 +38,9 @@ function hasShadowRoot(node: Node): node is HTMLElement & { shadowRoot: ShadowRo
   return node instanceof HTMLElement && !!node.shadowRoot;
 }
 
+const keys = (['shouldSubscribe', 'subscribe'] as unknown as (keyof EventTarget)[]);
 function isApolloQuery(e: EventTarget): e is ApolloQueryElement|ApolloSubscriptionElement {
-  // @ts-expect-error: disambiguating
-  return typeof e.shouldSubscribe === 'function' && typeof e.subscribe === 'function';
+  return keys.every(k => typeof e[k] === 'function');
 }
 
 function claimApolloElement(

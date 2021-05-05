@@ -1,3 +1,5 @@
+import type { ApolloQueryElement, Constructor, Entries } from '@apollo-elements/interfaces';
+
 import { SetupFunction } from './types';
 
 import {
@@ -6,30 +8,15 @@ import {
   expect,
   fixture,
   nextFrame,
-  html,
-  unsafeStatic,
 } from '@open-wc/testing';
-
-import NoParamQuery from './graphql/NoParam.query.graphql';
-import NullableParamQuery from './graphql/NullableParam.query.graphql';
-import NonNullableParamQuery from './graphql/NonNullableParam.query.graphql';
-
-import NoParamSubscription from './graphql/NoParam.subscription.graphql';
 
 import { gql } from '@apollo/client/core';
 
 import { ApolloQueryResult, DefaultOptions, NetworkStatus } from '@apollo/client/core';
 
-import type { ApolloQueryElement, Constructor, Entries } from '@apollo-elements/interfaces';
+import { html, unsafeStatic } from 'lit/static-html';
 
-import type {
-  NonNullableParamQueryData,
-  NonNullableParamQueryVariables,
-  NoParamQueryData,
-  NoParamQueryVariables,
-  NullableParamQueryData,
-  NullableParamQueryVariables,
-} from './schema';
+import * as S from './schema';
 
 import { ObservableQuery } from '@apollo/client/core';
 
@@ -280,7 +267,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('subscribe({ query })', function() {
           it('throws', function() {
-            expect(() => element?.subscribe({ query: NullableParamQuery }))
+            expect(() => element?.subscribe({ query: S.NullableParamQuery }))
               .to.throw('No Apollo client');
           });
         });
@@ -299,7 +286,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('executeQuery({ query })', function() {
           it('throws', async function() {
             try {
-              await element?.executeQuery({ query: NullableParamQuery });
+              await element?.executeQuery({ query: S.NullableParamQuery });
               expect.fail('did not throw');
             } catch (error) {
               expect(error.message).to.match(/^No Apollo client/);
@@ -315,14 +302,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('watchQuery({ query })', function() {
           it('throws', function() {
-            expect(() => element?.watchQuery({ query: NullableParamQuery })).to.throw('No Apollo client');
+            expect(() => element?.watchQuery({ query: S.NullableParamQuery })).to.throw('No Apollo client');
           });
         });
       });
 
       describe('setting NullableParam query', function() {
         beforeEach(function setNullableParamQuery() {
-          element!.query = NullableParamQuery;
+          element!.query = S.NullableParamQuery;
         });
 
         beforeEach(waitForRender(() => element));
@@ -357,7 +344,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('executeQuery({ query })', function() {
           it('throws', async function() {
             try {
-              await element?.executeQuery({ query: NonNullableParamQuery });
+              await element?.executeQuery({ query: S.NonNullableParamQuery });
               expect.fail('did not throw');
             } catch (error) {
               expect(error.message).to.match(/^No Apollo client/);
@@ -373,7 +360,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('watchQuery({ query })', function() {
           it('throws', function() {
-            expect(() => element?.watchQuery({ query: NonNullableParamQuery })).to.throw('No Apollo client');
+            expect(() => element?.watchQuery({ query: S.NonNullableParamQuery })).to.throw('No Apollo client');
           });
         });
       });
@@ -394,7 +381,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
     });
 
     // hybrids and haunted don't play nice with custom attributes
-    // eslint-disable-next-line no-invalid-this
+    // eslint-disable-next-line @typescript-eslint/no-invalid-this
     if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
       describe('with error-policy attribute set', function() {
         let element: QueryElement;
@@ -543,7 +530,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           describe('setting NullableParam query', function() {
             beforeEach(function setNullableParamQuery() {
-              element!.query = NullableParamQuery;
+              element!.query = S.NullableParamQuery;
             });
 
             beforeEach(waitForRender(() => element));
@@ -568,12 +555,12 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('subscribe({ query })', async function() {
           beforeEach(function() {
-            element?.subscribe({ query: NullableParamQuery });
+            element?.subscribe({ query: S.NullableParamQuery });
           });
 
           it('calls client query', function() {
             expect(element?.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: NullableParamQuery }));
+              .calledWithMatch(match({ query: S.NullableParamQuery }));
           });
 
           it('sets observableQuery', function() {
@@ -584,46 +571,46 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('subscribe({ query, context })', async function() {
           const context = {};
           beforeEach(function() {
-            element?.subscribe({ query: NullableParamQuery, context });
+            element?.subscribe({ query: S.NullableParamQuery, context });
           });
 
           it('calls client watchQuery', function() {
             expect(element?.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: NullableParamQuery, context }));
+              .calledWithMatch(match({ query: S.NullableParamQuery, context }));
           });
         });
 
         describe('subscribe({ query, errorPolicy })', async function() {
           const errorPolicy = 'ignore';
           beforeEach(function() {
-            element?.subscribe({ query: NullableParamQuery, errorPolicy });
+            element?.subscribe({ query: S.NullableParamQuery, errorPolicy });
           });
           it('calls client watchQuery', function() {
             expect(element?.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: NullableParamQuery, errorPolicy }));
+              .calledWithMatch(match({ query: S.NullableParamQuery, errorPolicy }));
           });
         });
 
         describe('subscribe({ query, fetchPolicy })', async function() {
           const fetchPolicy = 'no-cache';
           beforeEach(function() {
-            element?.subscribe({ query: NullableParamQuery, fetchPolicy });
+            element?.subscribe({ query: S.NullableParamQuery, fetchPolicy });
           });
 
           it('calls client watchQuery', function() {
             expect(element?.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: NullableParamQuery, fetchPolicy }));
+              .calledWithMatch(match({ query: S.NullableParamQuery, fetchPolicy }));
           });
         });
 
         describe('subscribe({ query, variables })', async function() {
-          const variables: NullableParamQueryVariables = { nullable: 'params' };
+          const variables: S.NullableParamQueryVariables = { nullable: 'params' };
           beforeEach(function() {
-            element?.subscribe({ query: NullableParamQuery, variables });
+            element?.subscribe({ query: S.NullableParamQuery, variables });
           });
           it('calls client watchQuery', function() {
             expect(element?.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: NullableParamQuery, variables }));
+              .calledWithMatch(match({ query: S.NullableParamQuery, variables }));
           });
         });
 
@@ -642,11 +629,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           let result: ApolloQueryResult<any> | void;
 
           beforeEach(async function() {
-            result = await element?.executeQuery({ query: NullableParamQuery });
+            result = await element?.executeQuery({ query: S.NullableParamQuery });
           });
 
           it('calls client query', function() {
-            expect(element?.client?.query).to.have.been.calledWith(match({ query: NullableParamQuery }));
+            expect(element?.client?.query).to.have.been.calledWith(match({ query: S.NullableParamQuery }));
           });
 
           it('returns a result', function() {
@@ -663,13 +650,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('watchQuery({ query })', function() {
           it('does not throw', function() {
-            expect(() => element?.watchQuery({ query: NullableParamQuery })).to.not.throw();
+            expect(() => element?.watchQuery({ query: S.NullableParamQuery })).to.not.throw();
           });
         });
 
         describe('setting NullableParam query', function() {
           beforeEach(function setNullableParamQuery() {
-            element!.query = NullableParamQuery;
+            element!.query = S.NullableParamQuery;
           });
 
           it('calls subscribe', async function() {
@@ -679,14 +666,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           describe('then setting options', function() {
             beforeEach(function() {
               spies!['observableQuery.setOptions'] = spy(element!.observableQuery!, 'setOptions');
-              element!.options = { errorPolicy: 'none', query: NoParamQuery };
+              element!.options = { errorPolicy: 'none', query: S.NoParamQuery };
             });
 
             afterEach(restoreSpies(() => spies));
 
             it('calls observableQuery.subscribe when there is a query', async function() {
               expect(element?.observableQuery?.setOptions)
-                .to.have.been.calledWith({ errorPolicy: 'none', query: NoParamQuery });
+                .to.have.been.calledWith({ errorPolicy: 'none', query: S.NoParamQuery });
             });
           });
 
@@ -756,7 +743,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             it('calls client query', function() {
-              expect(element?.client?.query).to.have.been.calledWith(match({ query: NullableParamQuery }));
+              expect(element?.client?.query).to.have.been.calledWith(match({ query: S.NullableParamQuery }));
             });
 
             it('returns a result', function() {
@@ -769,18 +756,18 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('executeQuery({ query })', function() {
-            let result: ApolloQueryResult<NoParamQueryData> | undefined;
+            let result: ApolloQueryResult<S.NoParamQueryData> | undefined;
 
             beforeEach(function() {
               expect(element?.data).to.be.null;
             });
 
             beforeEach(async function() {
-              result = (await element?.executeQuery({ query: NoParamQuery }) || undefined);
+              result = (await element?.executeQuery({ query: S.NoParamQuery }) || undefined);
             });
 
             it('calls client query', function() {
-              expect(element?.client?.query).to.have.been.calledWith(match({ query: NoParamQuery }));
+              expect(element?.client?.query).to.have.been.calledWith(match({ query: S.NoParamQuery }));
             });
 
             it('returns a result', function() {
@@ -848,7 +835,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('with element variables set', function() {
-            const elVariables: NullableParamQueryVariables = { nullable: 'element' };
+            const elVariables: S.NullableParamQueryVariables = { nullable: 'element' };
 
             beforeEach(function() {
               element!.variables = elVariables;
@@ -870,7 +857,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             describe('fetchMore({ variables })', async function() {
-              const variables: NullableParamQueryVariables = { nullable: 'specific' };
+              const variables: S.NullableParamQueryVariables = { nullable: 'specific' };
               beforeEach(function spyObservableQueryFetchMore() {
                 spies!['observableQuery.fetchMore'] = spy(element!.observableQuery!, 'fetchMore');
               });
@@ -975,7 +962,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('setting a valid query', function() {
           beforeEach(function setQuery() {
-            element!.query = NoParamQuery;
+            element!.query = S.NoParamQuery;
           });
 
           it('does not call subscribe', async function noAutoSubscribe() {
@@ -985,7 +972,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('setting NullableParam query', function() {
           beforeEach(function setQuery() {
-            element!.query = NullableParamQuery;
+            element!.query = S.NullableParamQuery;
           });
 
           describe('with element context set', function() {
@@ -1094,7 +1081,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('with element variables set', function() {
-            const elVariables: NullableParamQueryVariables = { nullable: 'element' };
+            const elVariables: S.NullableParamQueryVariables = { nullable: 'element' };
 
             beforeEach(function() {
               element!.variables = elVariables;
@@ -1112,7 +1099,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             describe('subscribe({ variables })', async function() {
-              const variables: NullableParamQueryVariables = { nullable: 'specific' };
+              const variables: S.NullableParamQueryVariables = { nullable: 'specific' };
               beforeEach(function() {
                 element?.subscribe({ variables });
               });
@@ -1137,8 +1124,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NoParams query', function() {
-        type Data = NoParamQueryData;
-        type Variables = NoParamQueryVariables;
+        type Data = S.NoParamQueryData;
+        type Variables = S.NoParamQueryVariables;
 
         let element: QueryElement<Data, Variables> | undefined;
 
@@ -1163,7 +1150,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           ({ element, spies } = await setupFunction<QueryElement<Data, Variables>>({
             spy: ['refetch'],
             properties: {
-              query: NoParamQuery,
+              query: S.NoParamQuery,
             },
           }));
         });
@@ -1194,7 +1181,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('executeQuery()', function() {
-          const query = NoParamQuery;
+          const query = S.NoParamQuery;
 
           beforeEach(function spyClientQuery() {
             spies!['client.query'] = spy(element!.client!, 'query');
@@ -1210,7 +1197,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('executeQuery({ query })', function() {
-          const query = NullableParamQuery;
+          const query = S.NullableParamQuery;
 
           beforeEach(function spyClientQuery() {
             spies!['client.query'] = spy(element!.client!, 'query');
@@ -1282,7 +1269,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             spies!['observableQuery.subscribeToMore'] = spy(element!.observableQuery!, 'subscribeToMore');
           });
 
-          const args = { document: NoParamSubscription, updateQuery: (x: any) => x };
+          const args = { document: S.NoParamSubscription, updateQuery: (x: any) => x };
 
           let result: (() => void) | void;
 
@@ -1384,14 +1371,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           beforeEach(function callWatchQuery() {
             element!.variables = {};
-            result = element!.watchQuery({ query: NullableParamQuery });
+            result = element!.watchQuery({ query: S.NullableParamQuery });
             return result;
           });
 
           it('uses element instance variables', function() {
             const { variables } = element!;
             expect(element!.client!.watchQuery)
-              .to.have.been.calledWith(match({ query: NullableParamQuery, variables }));
+              .to.have.been.calledWith(match({ query: S.NullableParamQuery, variables }));
           });
         });
 
@@ -1434,8 +1421,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NullableParams query', function() {
-        type Data = NullableParamQueryData;
-        type Variables = NullableParamQueryVariables;
+        type Data = S.NullableParamQueryData;
+        type Variables = S.NullableParamQueryVariables;
 
         let element: QueryElement<Data, Variables> | undefined;
 
@@ -1445,7 +1432,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           ({ element, spies } = await setupFunction<QueryElement<Data, Variables>>({
             spy: ['refetch'],
             properties: {
-              query: NullableParamQuery,
+              query: S.NullableParamQuery,
             },
           }));
         });
@@ -1550,18 +1537,18 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           beforeEach(function executeQuery() {
-            return element!.executeQuery({ query: NoParamQuery });
+            return element!.executeQuery({ query: S.NoParamQuery });
           });
 
           it('defaults to element variables', async function() {
             const { variables } = element!;
             expect(element!.client!.query)
-              .to.have.been.calledWithMatch(match({ variables, query: NoParamQuery }));
+              .to.have.been.calledWithMatch(match({ variables, query: S.NoParamQuery }));
           });
         });
 
         describe('executeQuery({ variables })', function() {
-          const variables: NullableParamQueryVariables = { nullable: 'WHOOPIE' };
+          const variables: S.NullableParamQueryVariables = { nullable: 'WHOOPIE' };
           beforeEach(function spyClientQuery() {
             spies!['client.query'] = spy(element!.client!, 'query');
           });
@@ -1582,8 +1569,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NonNullableParams query', function() {
-        type Data = NonNullableParamQueryData;
-        type Variables = NonNullableParamQueryVariables;
+        type Data = S.NonNullableParamQueryData;
+        type Variables = S.NonNullableParamQueryVariables;
 
         let element: QueryElement<Data, Variables> | undefined;
 
@@ -1593,7 +1580,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           ({ element, spies } = await setupFunction<QueryElement<Data, Variables>>({
             spy: ['refetch', 'watchQuery'],
             properties: {
-              query: NonNullableParamQuery,
+              query: S.NonNullableParamQuery,
             },
           }));
         });
@@ -1686,7 +1673,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('setting a valid query', function() {
           beforeEach(function setQuery() {
-            element.query = NoParamQuery;
+            element.query = S.NoParamQuery;
           });
 
           it('does not call subscribe', function() {
@@ -1696,8 +1683,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NoParams query set as a class field', function() {
-        type Data = NoParamQueryData;
-        type Variables = NoParamQueryVariables;
+        type Data = S.NoParamQueryData;
+        type Variables = S.NoParamQueryVariables;
 
         let element: QueryElement<Data, Variables>;
 
@@ -1712,7 +1699,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
 
-            query = NoParamQuery;
+            query = S.NoParamQuery;
           }
 
           const tag = unsafeStatic(defineCE(Test));
@@ -1729,7 +1716,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         it('sets the query property', async function() {
-          expect(element.query).to.equal(NoParamQuery);
+          expect(element.query).to.equal(S.NoParamQuery);
         });
 
         it('initializes an observableQuery', function() {
@@ -1753,8 +1740,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NullableParams query and variables set as class fields', function() {
-        type Data = NullableParamQueryData;
-        type Variables = NullableParamQueryVariables;
+        type Data = S.NullableParamQueryData;
+        type Variables = S.NullableParamQueryVariables;
 
         let element: QueryElement<Data, Variables>;
 
@@ -1769,7 +1756,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
 
-            query = NullableParamQuery;
+            query = S.NullableParamQuery;
 
             variables = { nullable: 'nullable' };
           }
@@ -1799,8 +1786,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe(`with NonNullableParams query and sufficient variables set as a class fields`, function() {
-        type Data = NonNullableParamQueryData;
-        type Variables = NonNullableParamQueryVariables;
+        type Data = S.NonNullableParamQueryData;
+        type Variables = S.NonNullableParamQueryVariables;
 
         let element: QueryElement<Data, Variables>;
 
@@ -1816,7 +1803,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
 
-            query = NonNullableParamQuery;
+            query = S.NonNullableParamQuery;
 
             variables = { nonNull: 'nonNull' };
           }
@@ -1861,8 +1848,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe(`with NonNullableParams query and insufficient variables set as a class fields`, function() {
-        type Data = NonNullableParamQueryData;
-        type Variables = NonNullableParamQueryVariables;
+        type Data = S.NonNullableParamQueryData;
+        type Variables = S.NonNullableParamQueryVariables;
 
         let element: QueryElement<Data, Variables>;
 
@@ -1878,7 +1865,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           class Test extends (Klass as Constructor<typeof element>) {
             client = makeClient();
 
-            query = NonNullableParamQuery;
+            query = S.NonNullableParamQuery;
 
             // @ts-expect-error: test bad input
             variables = { nonNull: null };
@@ -1925,8 +1912,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with fetchPolicy set as a class field', function() {
-        type Data = NoParamQueryData;
-        type Variables = NoParamQueryVariables;
+        type Data = S.NoParamQueryData;
+        type Variables = S.NoParamQueryVariables;
 
         let element: QueryElement<Data, Variables>;
 
@@ -1939,7 +1926,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           class Test extends (Klass as Constructor<typeof element>) {
             client = client;
 
-            query = NoParamQuery;
+            query = S.NoParamQuery;
 
             fetchPolicy = fetchPolicy;
 
@@ -1973,8 +1960,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       describe('with onData and onError methods defined in the class body', function() {
         describe(`with NonNullableParams query`, function() {
-          type Data = NonNullableParamQueryData;
-          type Variables = NonNullableParamQueryVariables;
+          type Data = S.NonNullableParamQueryData;
+          type Variables = S.NonNullableParamQueryVariables;
 
           let element: QueryElement<Data, Variables>;
 
@@ -1984,7 +1971,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             class Test extends (Klass as Constructor<QueryElement<Data, Variables>>) {
               client = client;
 
-              query = NonNullableParamQuery;
+              query = S.NonNullableParamQuery;
 
               noAutoSubscribe = true;
 
