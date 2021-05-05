@@ -1,0 +1,461 @@
+diff --git a/node_modules/haunted/.DS_Store b/node_modules/haunted/.DS_Store
+new file mode 100644
+index 0000000..941aad8
+Binary files /dev/null and b/node_modules/haunted/.DS_Store differ
+diff --git a/node_modules/haunted/haunted.js b/node_modules/haunted/haunted.js
+index 0508097..a1c0e35 100644
+--- a/node_modules/haunted/haunted.js
++++ b/node_modules/haunted/haunted.js
+@@ -171,6 +171,7 @@ function makeComponent(render) {
+         }
+         function reflectiveProp(initialValue) {
+             let value = initialValue;
++            let isSetup = false;
+             return Object.freeze({
+                 enumerable: true,
+                 configurable: true,
+@@ -178,6 +179,10 @@ function makeComponent(render) {
+                     return value;
+                 },
+                 set(newValue) {
++                    // Avoid scheduling update when prop value hasn't changed
++                    if (isSetup && value === newValue)
++                        return;
++                    isSetup = true;
+                     value = newValue;
+                     this._scheduler.update();
+                 }
+@@ -317,7 +322,7 @@ const useContext = hook(class extends Hook {
+             cancelable: true,
+             composed: true,
+         }));
+-        const { unsubscribe, value } = detail;
++        const { unsubscribe = null, value } = detail;
+         this.value = unsubscribe ? value : Context.defaultValue;
+         this._unsubscribe = unsubscribe;
+     }
+@@ -423,6 +428,89 @@ const useState = hook(class extends Hook {
+     }
+ });
+ 
++const microtask = Promise.resolve();
++/**
++ * An implementation of ReactiveControllerHost that is driven by Haunted hooks
++ * and `useController()`.
++ */
++class HauntedControllerHost {
++    constructor(count, kick) {
++        this.count = count;
++        this.kick = kick;
++        this._controllers = [];
++        this._updatePending = true;
++        this._updateCompletePromise = new Promise(res => {
++            this._resolveUpdate = res;
++        });
++    }
++    addController(controller) {
++        this._controllers.push(controller);
++    }
++    removeController(controller) {
++        // Note, if the indexOf is -1, the >>> will flip the sign which makes the
++        // splice do nothing.
++        this._controllers && this._controllers.splice(this._controllers.indexOf(controller) >>> 0, 1);
++    }
++    requestUpdate() {
++        if (!this._updatePending) {
++            this._updatePending = true;
++            microtask.then(() => this.kick(this.count + 1));
++        }
++    }
++    get updateComplete() {
++        return this._updateCompletePromise;
++    }
++    connected() {
++        this._controllers.forEach(c => c.hostConnected && c.hostConnected());
++    }
++    disconnected() {
++        this._controllers.forEach(c => c.hostDisconnected && c.hostDisconnected());
++    }
++    update() {
++        this._controllers.forEach(c => c.hostUpdate && c.hostUpdate());
++    }
++    updated() {
++        this._updatePending = false;
++        const resolve = this._resolveUpdate;
++        // Create a new updateComplete Promise for the next update,
++        // before resolving the current one.
++        this._updateCompletePromise = new Promise(res => {
++            this._resolveUpdate = res;
++        });
++        this._controllers.forEach(c => c.hostUpdated && c.hostUpdated());
++        resolve(this._updatePending);
++    }
++}
++/**
++ * Creates and stores a stateful ReactiveController instance and provides it
++ * with a ReactiveControllerHost that drives the controller lifecycle.
++ *
++ * Use this hook to convert a ReactiveController into a Haunted hook.
++ *
++ * @param createController A function that creates a controller instance. This
++ * function is given a HauntedControllerHost to pass to the controller. The
++ * create function is only called once per component.
++ */
++function useController(createController) {
++    const [count, kick] = useState(0);
++    const [host] = useState(() => {
++        const host = new HauntedControllerHost(count, kick);
++        const controller = createController(host);
++        host.primaryController = controller;
++        host.connected();
++        return host;
++    });
++    // We use useLayoutEffect because we need updated() called synchronously
++    // after rendering.
++    useLayoutEffect(() => host.updated());
++    // Returning a cleanup function simulates hostDisconnected timing. An empty
++    // deps array tells Haunted to only call this once: on mount with the cleanup
++    // called on unmount.
++    useLayoutEffect(() => () => host.disconnected(), []);
++    host.update();
++    return host.primaryController;
++}
++
+ const useReducer = hook(class extends Hook {
+     constructor(id, state, _, initialState, init) {
+         super(id, state);
+@@ -517,4 +605,4 @@ const { component, createContext } = haunted({ render });
+ const virtual = makeVirtual();
+ 
+ export default haunted;
+-export { BaseScheduler, Hook, State, component, createContext, hook, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, virtual };
++export { BaseScheduler, Hook, State, component, createContext, hook, useCallback, useContext, useController, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, virtual };
+diff --git a/node_modules/haunted/lib/component.js b/node_modules/haunted/lib/component.js
+index bad7010..b7d2768 100644
+--- a/node_modules/haunted/lib/component.js
++++ b/node_modules/haunted/lib/component.js
+@@ -44,6 +44,7 @@ function makeComponent(render) {
+         ;
+         function reflectiveProp(initialValue) {
+             let value = initialValue;
++            let isSetup = false;
+             return Object.freeze({
+                 enumerable: true,
+                 configurable: true,
+@@ -51,6 +52,10 @@ function makeComponent(render) {
+                     return value;
+                 },
+                 set(newValue) {
++                    // Avoid scheduling update when prop value hasn't changed
++                    if (isSetup && value === newValue)
++                        return;
++                    isSetup = true;
+                     value = newValue;
+                     this._scheduler.update();
+                 }
+diff --git a/node_modules/haunted/lib/core.d.ts b/node_modules/haunted/lib/core.d.ts
+index ed77abd..ba3ba1e 100644
+--- a/node_modules/haunted/lib/core.d.ts
++++ b/node_modules/haunted/lib/core.d.ts
+@@ -11,6 +11,7 @@ declare function haunted({ render }: Options): {
+ };
+ export { haunted as default, Options, GenericRenderer, RenderFunction };
+ export { useCallback } from './use-callback';
++export { useController } from './use-controller';
+ export { useEffect } from './use-effect';
+ export { useLayoutEffect } from './use-layout-effect';
+ export { useState } from './use-state';
+diff --git a/node_modules/haunted/lib/core.js b/node_modules/haunted/lib/core.js
+index 220ec95..088e24f 100644
+--- a/node_modules/haunted/lib/core.js
++++ b/node_modules/haunted/lib/core.js
+@@ -7,6 +7,7 @@ function haunted({ render }) {
+ }
+ export { haunted as default };
+ export { useCallback } from './use-callback';
++export { useController } from './use-controller';
+ export { useEffect } from './use-effect';
+ export { useLayoutEffect } from './use-layout-effect';
+ export { useState } from './use-state';
+diff --git a/node_modules/haunted/lib/create-context.d.ts b/node_modules/haunted/lib/create-context.d.ts
+index 29a109f..a37dc6b 100644
+--- a/node_modules/haunted/lib/create-context.d.ts
++++ b/node_modules/haunted/lib/create-context.d.ts
+@@ -14,7 +14,7 @@ interface ContextDetail<T> {
+     Context: Context<T>;
+     callback: (value: T) => void;
+     value: T;
+-    unsubscribe: (this: Context<T>) => void;
++    unsubscribe?: (this: Context<T>) => void;
+ }
+ declare function makeContext(component: ComponentCreator): Creator;
+ export { makeContext, Creator as ContextCreator, Context, ContextDetail };
+diff --git a/node_modules/haunted/lib/use-context.js b/node_modules/haunted/lib/use-context.js
+index a1a7317..02a443e 100644
+--- a/node_modules/haunted/lib/use-context.js
++++ b/node_modules/haunted/lib/use-context.js
+@@ -40,7 +40,7 @@ const useContext = hook(class extends Hook {
+             cancelable: true,
+             composed: true,
+         }));
+-        const { unsubscribe, value } = detail;
++        const { unsubscribe = null, value } = detail;
+         this.value = unsubscribe ? value : Context.defaultValue;
+         this._unsubscribe = unsubscribe;
+     }
+diff --git a/node_modules/haunted/lib/use-controller.d.ts b/node_modules/haunted/lib/use-controller.d.ts
+new file mode 100644
+index 0000000..330d04e
+--- /dev/null
++++ b/node_modules/haunted/lib/use-controller.d.ts
+@@ -0,0 +1,12 @@
++import { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
++/**
++ * Creates and stores a stateful ReactiveController instance and provides it
++ * with a ReactiveControllerHost that drives the controller lifecycle.
++ *
++ * Use this hook to convert a ReactiveController into a Haunted hook.
++ *
++ * @param createController A function that creates a controller instance. This
++ * function is given a HauntedControllerHost to pass to the controller. The
++ * create function is only called once per component.
++ */
++export declare function useController<C extends ReactiveController>(createController: (host: ReactiveControllerHost) => C): C;
+diff --git a/node_modules/haunted/lib/use-controller.js b/node_modules/haunted/lib/use-controller.js
+new file mode 100644
+index 0000000..b5332af
+--- /dev/null
++++ b/node_modules/haunted/lib/use-controller.js
+@@ -0,0 +1,84 @@
++import { useLayoutEffect } from './use-layout-effect.js';
++import { useState } from './use-state.js';
++const microtask = Promise.resolve();
++/**
++ * An implementation of ReactiveControllerHost that is driven by Haunted hooks
++ * and `useController()`.
++ */
++class HauntedControllerHost {
++    constructor(count, kick) {
++        this.count = count;
++        this.kick = kick;
++        this._controllers = [];
++        this._updatePending = true;
++        this._updateCompletePromise = new Promise(res => {
++            this._resolveUpdate = res;
++        });
++    }
++    addController(controller) {
++        this._controllers.push(controller);
++    }
++    removeController(controller) {
++        // Note, if the indexOf is -1, the >>> will flip the sign which makes the
++        // splice do nothing.
++        this._controllers && this._controllers.splice(this._controllers.indexOf(controller) >>> 0, 1);
++    }
++    requestUpdate() {
++        if (!this._updatePending) {
++            this._updatePending = true;
++            microtask.then(() => this.kick(this.count + 1));
++        }
++    }
++    get updateComplete() {
++        return this._updateCompletePromise;
++    }
++    connected() {
++        this._controllers.forEach(c => c.hostConnected && c.hostConnected());
++    }
++    disconnected() {
++        this._controllers.forEach(c => c.hostDisconnected && c.hostDisconnected());
++    }
++    update() {
++        this._controllers.forEach(c => c.hostUpdate && c.hostUpdate());
++    }
++    updated() {
++        this._updatePending = false;
++        const resolve = this._resolveUpdate;
++        // Create a new updateComplete Promise for the next update,
++        // before resolving the current one.
++        this._updateCompletePromise = new Promise(res => {
++            this._resolveUpdate = res;
++        });
++        this._controllers.forEach(c => c.hostUpdated && c.hostUpdated());
++        resolve(this._updatePending);
++    }
++}
++/**
++ * Creates and stores a stateful ReactiveController instance and provides it
++ * with a ReactiveControllerHost that drives the controller lifecycle.
++ *
++ * Use this hook to convert a ReactiveController into a Haunted hook.
++ *
++ * @param createController A function that creates a controller instance. This
++ * function is given a HauntedControllerHost to pass to the controller. The
++ * create function is only called once per component.
++ */
++export function useController(createController) {
++    const [count, kick] = useState(0);
++    const [host] = useState(() => {
++        const host = new HauntedControllerHost(count, kick);
++        const controller = createController(host);
++        host.primaryController = controller;
++        host.connected();
++        return host;
++    });
++    // We use useLayoutEffect because we need updated() called synchronously
++    // after rendering.
++    useLayoutEffect(() => host.updated());
++    // Returning a cleanup function simulates hostDisconnected timing. An empty
++    // deps array tells Haunted to only call this once: on mount with the cleanup
++    // called on unmount.
++    useLayoutEffect(() => () => host.disconnected(), []);
++    host.update();
++    return host.primaryController;
++}
+diff --git a/node_modules/haunted/lib/use-state.d.ts b/node_modules/haunted/lib/use-state.d.ts
+index 98bb40f..8545c4f 100644
+--- a/node_modules/haunted/lib/use-state.d.ts
++++ b/node_modules/haunted/lib/use-state.d.ts
+@@ -1,4 +1,4 @@
+ declare type NewState<T> = T | ((previousState?: T) => T);
+ declare type StateUpdater<T> = (value: NewState<T>) => void;
+-declare const useState: <T>(initialValue: T) => readonly [T, StateUpdater<T>];
++declare const useState: <T>(initialValue: T) => readonly [T extends (...args: any[]) => infer R ? R : T, StateUpdater<T extends (...args: any[]) => infer S ? S : T>];
+ export { useState };
+diff --git a/node_modules/haunted/lib/use-state.js b/node_modules/haunted/lib/use-state.js
+index dad0000..3f13a6a 100644
+--- a/node_modules/haunted/lib/use-state.js
++++ b/node_modules/haunted/lib/use-state.js
+@@ -24,4 +24,5 @@ const useState = hook(class extends Hook {
+         this.args = Object.freeze([value, this.updater]);
+     }
+ });
++;
+ export { useState };
+diff --git a/node_modules/haunted/web.js b/node_modules/haunted/web.js
+index 02ca646..3e038ab 100644
+--- a/node_modules/haunted/web.js
++++ b/node_modules/haunted/web.js
+@@ -171,6 +171,7 @@ function makeComponent(render) {
+         }
+         function reflectiveProp(initialValue) {
+             let value = initialValue;
++            let isSetup = false;
+             return Object.freeze({
+                 enumerable: true,
+                 configurable: true,
+@@ -178,6 +179,10 @@ function makeComponent(render) {
+                     return value;
+                 },
+                 set(newValue) {
++                    // Avoid scheduling update when prop value hasn't changed
++                    if (isSetup && value === newValue)
++                        return;
++                    isSetup = true;
+                     value = newValue;
+                     this._scheduler.update();
+                 }
+@@ -317,7 +322,7 @@ const useContext = hook(class extends Hook {
+             cancelable: true,
+             composed: true,
+         }));
+-        const { unsubscribe, value } = detail;
++        const { unsubscribe = null, value } = detail;
+         this.value = unsubscribe ? value : Context.defaultValue;
+         this._unsubscribe = unsubscribe;
+     }
+@@ -423,6 +428,89 @@ const useState = hook(class extends Hook {
+     }
+ });
+ 
++const microtask = Promise.resolve();
++/**
++ * An implementation of ReactiveControllerHost that is driven by Haunted hooks
++ * and `useController()`.
++ */
++class HauntedControllerHost {
++    constructor(count, kick) {
++        this.count = count;
++        this.kick = kick;
++        this._controllers = [];
++        this._updatePending = true;
++        this._updateCompletePromise = new Promise(res => {
++            this._resolveUpdate = res;
++        });
++    }
++    addController(controller) {
++        this._controllers.push(controller);
++    }
++    removeController(controller) {
++        // Note, if the indexOf is -1, the >>> will flip the sign which makes the
++        // splice do nothing.
++        this._controllers && this._controllers.splice(this._controllers.indexOf(controller) >>> 0, 1);
++    }
++    requestUpdate() {
++        if (!this._updatePending) {
++            this._updatePending = true;
++            microtask.then(() => this.kick(this.count + 1));
++        }
++    }
++    get updateComplete() {
++        return this._updateCompletePromise;
++    }
++    connected() {
++        this._controllers.forEach(c => c.hostConnected && c.hostConnected());
++    }
++    disconnected() {
++        this._controllers.forEach(c => c.hostDisconnected && c.hostDisconnected());
++    }
++    update() {
++        this._controllers.forEach(c => c.hostUpdate && c.hostUpdate());
++    }
++    updated() {
++        this._updatePending = false;
++        const resolve = this._resolveUpdate;
++        // Create a new updateComplete Promise for the next update,
++        // before resolving the current one.
++        this._updateCompletePromise = new Promise(res => {
++            this._resolveUpdate = res;
++        });
++        this._controllers.forEach(c => c.hostUpdated && c.hostUpdated());
++        resolve(this._updatePending);
++    }
++}
++/**
++ * Creates and stores a stateful ReactiveController instance and provides it
++ * with a ReactiveControllerHost that drives the controller lifecycle.
++ *
++ * Use this hook to convert a ReactiveController into a Haunted hook.
++ *
++ * @param createController A function that creates a controller instance. This
++ * function is given a HauntedControllerHost to pass to the controller. The
++ * create function is only called once per component.
++ */
++function useController(createController) {
++    const [count, kick] = useState(0);
++    const [host] = useState(() => {
++        const host = new HauntedControllerHost(count, kick);
++        const controller = createController(host);
++        host.primaryController = controller;
++        host.connected();
++        return host;
++    });
++    // We use useLayoutEffect because we need updated() called synchronously
++    // after rendering.
++    useLayoutEffect(() => host.updated());
++    // Returning a cleanup function simulates hostDisconnected timing. An empty
++    // deps array tells Haunted to only call this once: on mount with the cleanup
++    // called on unmount.
++    useLayoutEffect(() => () => host.disconnected(), []);
++    host.update();
++    return host.primaryController;
++}
++
+ const useReducer = hook(class extends Hook {
+     constructor(id, state, _, initialState, init) {
+         super(id, state);
+@@ -517,4 +605,4 @@ const { component, createContext } = haunted({ render });
+ const virtual = makeVirtual();
+ 
+ export default haunted;
+-export { BaseScheduler, Hook, State, component, createContext, hook, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, virtual };
++export { BaseScheduler, Hook, State, component, createContext, hook, useCallback, useContext, useController, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState, virtual };

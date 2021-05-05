@@ -1,43 +1,18 @@
-import type { Entries } from '@apollo-elements/interfaces';
+import type { ResultOf, VariablesOf } from '@graphql-typed-document-node/core';
 
-import type { ResultOf } from '@graphql-typed-document-node/core';
+import type { ApolloError, TypedDocumentNode } from '@apollo/client/core';
 
-import {
-  HelloQuery,
-  NullableParamQuery,
-  NullableParamQuery,
-  PaginatedQuery,
-  MessagesQuery,
-  MessageSentSubscription,
-} from '@apollo-elements/test/schema';
-
-import type {
-  ApolloClient,
-  ApolloError,
-  DocumentNode,
-  NetworkStatus,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-} from '@apollo/client/core';
-
-import { gql } from '@apollo/client/core';
+import * as S from '@apollo-elements/test/schema';
 
 import { ReactiveElement } from 'lit';
 
-import {
-  ApolloQueryController,
-  ApolloQueryControllerOptions,
-} from './apollo-query-controller';
+import { ApolloQueryController } from './apollo-query-controller';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { html, unsafeStatic } from 'lit/static-html';
+import { resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { sendKeys } from '@web/test-runner-commands';
-
-import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
-
-import { match, spy, SinonSpy } from 'sinon';
+import { spy, SinonSpy } from 'sinon';
 
 /* eslint-disable no-invalid-this */
 describe('[core] ApolloQueryController', function() {
@@ -64,11 +39,11 @@ describe('[core] ApolloQueryController', function() {
       }
 
       describe('setting shouldSubscribe to constant false', function() {
-        let element: MirroringHost<typeof NullableParamQuery>;
+        let element: MirroringHost<typeof S.NullableParamQuery>;
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof NullableParamQuery> {
-            query = new ApolloQueryController(this, NullableParamQuery, {
+          class HelloQueryHost extends MirroringHost<typeof S.NullableParamQuery> {
+            query = new ApolloQueryController(this, S.NullableParamQuery, {
               shouldSubscribe: () => false,
               onData: spy(),
               onError: spy(),
@@ -85,8 +60,10 @@ describe('[core] ApolloQueryController', function() {
         });
 
         describe('setting query', function() {
-          beforeEach(function() { element.query.query = HelloQuery; });
-          it('sets document', function() { expect(element.query.document).to.equal(HelloQuery); });
+          beforeEach(function() { element.query.query = S.HelloQuery; });
+          it('sets document', function() {
+            expect(element.query.document).to.equal(S.HelloQuery);
+          });
           describe('then calling subscribe', function() {
             beforeEach(() => element.query.subscribe());
             beforeEach(nextFrame);
@@ -116,7 +93,7 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with HelloQuery', function() {
-        let element: MirroringHost<typeof HelloQuery>;
+        let element: MirroringHost<typeof S.HelloQuery>;
 
         const handler = spy();
 
@@ -134,8 +111,8 @@ describe('[core] ApolloQueryController', function() {
         });
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof HelloQuery> {
-            query = new ApolloQueryController(this, HelloQuery, {
+          class HelloQueryHost extends MirroringHost<typeof S.HelloQuery> {
+            query = new ApolloQueryController(this, S.HelloQuery, {
               onData: spy(),
             });
 
@@ -301,7 +278,7 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with PaginatedQuery', function() {
-        let element: MirroringHost<typeof PaginatedQuery>;
+        let element: MirroringHost<typeof S.PaginatedQuery>;
 
         const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
@@ -312,16 +289,16 @@ describe('[core] ApolloQueryController', function() {
         afterEach(() => onData.resetHistory());
 
         beforeEach(async function define() {
-          class PaginatedQueryHost extends MirroringHost<typeof PaginatedQuery> {
+          class PaginatedQueryHost extends MirroringHost<typeof S.PaginatedQuery> {
             declare shadowRoot: ShadowRoot;
 
             $(id: string) { return this.shadowRoot.getElementById(id); }
 
-            query = new ApolloQueryController(this, PaginatedQuery, {
+            query = new ApolloQueryController(this, S.PaginatedQuery, {
               onData: spy(data => { this.$('data')!.innerText = data.pages.join(','); }),
               onError: spy(),
-              variables: { offset: 0 },
-            });
+              variables: { offset: 0 } as VariablesOf<typeof S.PaginatedQuery>,
+            })
 
             constructor() {
               super();
@@ -378,12 +355,12 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with MessagesQuery', function() {
-        let element: MirroringHost<typeof MessagesQuery>;
+        let element: MirroringHost<typeof S.MessagesQuery>;
 
         afterEach(resetMessages);
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof MessagesQuery> {
+          class HelloQueryHost extends MirroringHost<typeof S.MessagesQuery> {
             declare shadowRoot: ShadowRoot;
 
             constructor() {
@@ -391,14 +368,14 @@ describe('[core] ApolloQueryController', function() {
               this.attachShadow({ mode: 'open' });
             }
 
-            query = new ApolloQueryController(this, MessagesQuery, {
+            query = new ApolloQueryController(this, S.MessagesQuery, {
               onData: data => {
                 this.shadowRoot.innerHTML =
                   `<ol>${data.messages!.map(x => `<li>${x!.message}</li>`).join('')}</ol>`;
               },
             });
 
-            data?: ResultOf<typeof MessagesQuery>;
+            data?: ResultOf<typeof S.MessagesQuery>;
           }
 
           const tag = defineCE(HelloQueryHost);
@@ -420,7 +397,7 @@ describe('[core] ApolloQueryController', function() {
         describe('calling subscribeToMore', function() {
           beforeEach(function() {
             element.query.subscribeToMore({
-              document: MessageSentSubscription,
+              document: S.MessageSentSubscription,
               updateQuery: (_, n) => ({ messages: [n.subscriptionData.data.messageSent!] }),
             });
           });

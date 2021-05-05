@@ -1,4 +1,10 @@
-import type { Entries } from '@apollo-elements/interfaces';
+import type {
+  ApolloClient,
+  ApolloError,
+  NetworkStatus,
+  NormalizedCacheObject,
+  TypedDocumentNode,
+} from '@apollo/client/core';
 
 import {
   HelloQuery,
@@ -7,14 +13,6 @@ import {
   MessagesQuery,
   MessageSentSubscription,
 } from '@apollo-elements/test/schema';
-
-import type {
-  ApolloClient,
-  ApolloError,
-  NetworkStatus,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-} from '@apollo/client/core';
 
 import { gql } from '@apollo/client/core';
 
@@ -251,9 +249,10 @@ describe('[haunted] useQuery', function() {
               updateQuery: (_, n) => ({ messages: [n.subscriptionData.data.messageSent!] }),
             });
 
+            const messages = data?.messages ?? [];
             return html`
               <button id="subscribeToMore" @click="${onClickSubscribeToMore}"></button>
-              <ol>${data?.messages?.map?.(x => html`<li>${x?.message}</li>`)}</ol>
+              <ol>${messages.map(x => html`<li>${x!.message}</li>`)}</ol>
             `;
           }
 
@@ -414,7 +413,7 @@ describe('[haunted] useQuery', function() {
             const c = useQuery(HelloQuery, { shouldSubscribe: () => false });
             return html`
               <output>${c.data?.helloWorld?.greeting}</output>
-              button @click="${() => c.subscribe()}"</button>
+              <button @click=${() => c.subscribe()}></button>
             `;
           }
 
@@ -431,7 +430,7 @@ describe('[haunted] useQuery', function() {
 
         describe('then calling subscribe', function() {
           beforeEach(function() {
-            element.querySelector('button')?.click?.();
+            element.shadowRoot!.querySelector('button')!.click();
           });
 
           beforeEach(nextFrame);
