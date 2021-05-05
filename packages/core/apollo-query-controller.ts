@@ -21,16 +21,15 @@ import type {
 
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
+import type { VariablesOf } from '@graphql-typed-document-node/core';
+
 import { NetworkStatus } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions, update } from './apollo-controller';
 
 import { bound } from '@apollo-elements/lib/bound';
 
-export interface ApolloQueryControllerOptions<
-  D = unknown,
-  V = OperationVariables
-> extends ApolloControllerOptions<D, V>,
+export interface ApolloQueryControllerOptions<D, V> extends ApolloControllerOptions<D, V>,
           Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>,
   fetchPolicy?: FetchPolicy;
@@ -41,8 +40,8 @@ export interface ApolloQueryControllerOptions<
 }
 
 export class ApolloQueryController<
-  D = any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  V = OperationVariables
+  D extends DocumentNode,
+  V = D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables,
 > extends ApolloController<D, V> implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
@@ -60,7 +59,7 @@ export class ApolloQueryController<
 
   constructor(
     host: ReactiveControllerHost,
-    query?: D extends TypedDocumentNode ? D : DocumentNode,
+    query?: D,
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
