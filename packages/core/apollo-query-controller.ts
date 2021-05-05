@@ -49,6 +49,11 @@ export class ApolloQueryController<
 
   declare options?: ApolloQueryControllerOptions<D, V>;
 
+  declare data?: Data<D> | null;
+
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  declare variables: Variables<D, V> | undefined;
+
   networkStatus = NetworkStatus.ready;
 
   partial = false;
@@ -107,6 +112,59 @@ export class ApolloQueryController<
   }
 
   /**
+   * Creates an instance of ObservableQuery with the options provided by the element.
+   * - `context` Context to be passed to link execution chain
+   * - `errorPolicy` Specifies the ErrorPolicy to be used for this query
+   * - `fetchPolicy` Specifies the FetchPolicy to be used for this query
+   * - `fetchResults` Whether or not to fetch results
+   * - `metadata` Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.
+   * - `notifyOnNetworkStatusChange` Whether or not updates to the network status should trigger next on the observer of this query
+   * - `pollInterval` The time interval (in milliseconds) on which this query should be refetched from the server.
+   * - `query` A GraphQL document that consists of a single query to be sent down to the server.
+   * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
+   */
+  @bound private watchQuery(
+    params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
+  ): ObservableQuery<Data<D>, Variables<D, V>> {
+    if (!this.client)
+      throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
+
+    return this.client.watchQuery({
+      // It's better to let Apollo client throw this error
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      query: this.query!,
+      variables: this.variables,
+      context: this.options?.context,
+      errorPolicy: this.options?.errorPolicy,
+      fetchPolicy: this.options?.fetchPolicy,
+      notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
+      partialRefetch: this.options?.partialRefetch,
+      pollInterval: this.options?.pollInterval,
+      returnPartialData: this.options?.returnPartialData,
+      nextFetchPolicy: this.options?.nextFetchPolicy,
+      ...params,
+    });
+  }
+
+  private nextData(result: ApolloQueryResult<Data<D>>): void {
+    this.data = result.data;
+    this.error = result.error;
+    this.errors = result.errors;
+    this.loading = result.loading;
+    this.networkStatus = result.networkStatus;
+    this.partial = result.partial ?? false;
+    this.options?.onData?.(result.data);
+    this[update]();
+  }
+
+  private nextError(error: ApolloError): void {
+    this.error = error;
+    this.loading = false;
+    this.options?.onError?.(error);
+    this[update]();
+  }
+
+  /**
    * Determines whether the element should attempt to automatically subscribe i.e. begin querying
    *
    * Override to prevent subscribing unless your conditions are met.
@@ -131,24 +189,25 @@ export class ApolloQueryController<
    * @param params options for controlling how the subscription subscribes
    */
   @bound public subscribe(
-    params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+    params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
   ): ZenObservable.Subscription {
-    const options: SubscriptionOptions<Variables<D, V>, Data<D>> = {
-      /* c8 ignore start */ // covered
-      // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      query: params?.query ?? this.document!,
-      context: params?.context ?? this.options?.context,
-      errorPolicy: params?.errorPolicy ?? this.options?.errorPolicy,
-      fetchPolicy: params?.fetchPolicy ?? this.options?.fetchPolicy,
-      variables: params?.variables ?? this.variables ?? undefined,
-      /* c8 ignore stop */
-    };
-
     if (this.observableQuery)
       this.observableQuery.stopPolling(); /* c8 ignore next */ // covered
 
-    this.observableQuery = this.watchQuery(options);
+    this.observableQuery = this.watchQuery({
+      // It's better to let Apollo client throw this error
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      query: this.query!,
+      variables: this.variables,
+      context: this.options?.context,
+      errorPolicy: this.options?.errorPolicy,
+      fetchPolicy: this.options?.fetchPolicy,
+      pollInterval: this.options?.pollInterval,
+      notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
+      returnPartialData: this.options?.returnPartialData,
+      partialRefetch: this.options?.partialRefetch,
+      ...params,
+    });
 
     this.loading = true;
     this[update]();
@@ -182,24 +241,23 @@ export class ApolloQueryController<
     if (!this.client)
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
 
-    const { context, errorPolicy, fetchPolicy } = this.options ?? {};
-
-    const options: QueryOptions<Variables<D, V>> = {
-      context,
-      errorPolicy,
-      fetchPolicy,
-      ...params,
-      // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      query: params?.query ?? this.document!,
-      variables: params?.variables ?? this.variables ?? undefined,
-    };
-
     this.loading = true;
     this[update]();
 
     try {
-      const result = await this.client.query(options);
+      const result = await this.client.query({
+        // It's better to let Apollo client throw this error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        query: this.query!,
+        variables: this.variables,
+        context: this.options?.context,
+        errorPolicy: this.options?.errorPolicy,
+        fetchPolicy: this.options?.fetchPolicy,
+        notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
+        partialRefetch: this.options?.partialRefetch,
+        returnPartialData: this.options?.returnPartialData,
+        ...params,
+      });
       if (result) // NB: not sure why, but sometimes this returns undefined
         this.nextData(result);
       return result;
@@ -222,68 +280,29 @@ export class ApolloQueryController<
   @bound public async fetchMore(
     params?: Partial<FetchMoreParams<D, V>>
   ): Promise<ApolloQueryResult<Data<D>>> {
-    const options: typeof params = {
-      // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      query: params?.query ?? this.document!,
-      updateQuery: params?.updateQuery,
-      /* c8 ignore start */ // covered
-      variables: params?.variables ?? this.variables ?? undefined,
-      context: params?.context ?? this.options?.context,
-      /* c8 ignore stop */
-    };
-
     this.loading = true;
     this[update]();
 
-    this.observableQuery ??=
-      this.watchQuery(options as WatchQueryOptions<Variables<D, V>, Data<V>>);
+    const options = {
+      // It's better to let Apollo client throw this error
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      query: this.query!,
+      context: this.options?.context,
+      variables: this.variables,
+      ...params,
+    };
 
-    return this.observableQuery?.fetchMore(options).then(x => {
+    return (
+      this.observableQuery ??= this.watchQuery(
+        options as WatchQueryOptions<Variables<D, V>, Data<D>>
+      )
+    ).fetchMore(options).then(x => {
       this.loading = false;
       this[update]();
       return x;
     });
   }
 
-  /**
-   * Creates an instance of ObservableQuery with the options provided by the element.
-   * - `context` Context to be passed to link execution chain
-   * - `errorPolicy` Specifies the ErrorPolicy to be used for this query
-   * - `fetchPolicy` Specifies the FetchPolicy to be used for this query
-   * - `fetchResults` Whether or not to fetch results
-   * - `metadata` Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.
-   * - `notifyOnNetworkStatusChange` Whether or not updates to the network status should trigger next on the observer of this query
-   * - `pollInterval` The time interval (in milliseconds) on which this query should be refetched from the server.
-   * - `query` A GraphQL document that consists of a single query to be sent down to the server.
-   * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
-   */
-  @bound public watchQuery(
-    params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ObservableQuery<Data<D>, Variables<D, V>> {
-    if (!this.client)
-      throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
-
-    const options: WatchQueryOptions<Variables<D, V>, Data<D>> = {
-      context: this.options?.context,
-      errorPolicy: this.options?.errorPolicy,
-      fetchPolicy: this.options?.fetchPolicy,
-      notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
-      partialRefetch: this.options?.partialRefetch,
-      pollInterval: this.options?.pollInterval,
-      returnPartialData: this.options?.returnPartialData,
-      nextFetchPolicy: this.options?.nextFetchPolicy,
-      ...params,
-      // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      query: params?.query ?? this.document!, /* c8 ignore next */ // covered
-      variables: params?.variables ?? this.variables ?? undefined,
-    };
-
-    return this.client.watchQuery(options);
-  }
-
-  /* eslint-disable no-invalid-this */
   @bound public startPolling(ms: number): void {
     this.pollingInterval = window.setInterval(() => {
       this.refetch();
@@ -292,24 +311,5 @@ export class ApolloQueryController<
 
   @bound public stopPolling(): void {
     clearInterval(this.pollingInterval);
-  }
-  /* eslint-enable no-invalid-this */
-
-  private nextData(result: ApolloQueryResult<Data<D>>): void {
-    this.data = result.data;
-    this.error = result.error;
-    this.errors = result.errors;
-    this.loading = result.loading;
-    this.networkStatus = result.networkStatus;
-    this.partial = result.partial ?? false;
-    this.options?.onData?.(result.data);
-    this[update]();
-  }
-
-  private nextError(error: ApolloError): void {
-    this.error = error;
-    this.loading = false;
-    this.options?.onError?.(error);
-    this[update]();
   }
 }
