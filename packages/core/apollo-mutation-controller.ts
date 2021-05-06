@@ -75,7 +75,7 @@ export class ApolloMutationController<
     mutation?: D,
     options?: ApolloMutationControllerOptions<D, V>
   ) {
-    super(host, options ?? {});
+    super(host, options);
     this.init(mutation);
   }
 
@@ -93,6 +93,7 @@ export class ApolloMutationController<
     this.called = true;
     this.error = null;
     this.data = undefined;
+    this[update]();
 
     return this.client.mutate<Data<D>, Variables<D, V>>({
       // It's better to let Apollo client throw this error

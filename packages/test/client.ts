@@ -8,6 +8,8 @@ import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { addMocksToSchema } from '@graphql-tools/mock';
 
+import { aTimeout } from '@open-wc/testing';
+
 import TestSchema from './graphql/test.schema.graphql';
 
 declare global {
@@ -26,6 +28,18 @@ const unmocked = makeExecutableSchema({
         return nonNull;
       },
 
+      async noParam() {
+        await aTimeout(20);
+        return { noParam: 'noParam' };
+      },
+
+      async nullableParam(_: any, { nullable }: S.NullableParamQueryVariables) {
+        await aTimeout(20);
+        if (nullable === 'error')
+          throw new Error(nullable);
+        else
+          return { nullable };
+      },
     },
 
     Query: {
@@ -100,7 +114,12 @@ export function setupClient(): void {
   window.__APOLLO_CLIENT__ = makeClient();
 }
 
+function resetMocks() {
+  resetMessages();
+}
+
 export function teardownClient(): void {
+  resetMocks();
   window.__APOLLO_CLIENT__ = undefined;
 }
 

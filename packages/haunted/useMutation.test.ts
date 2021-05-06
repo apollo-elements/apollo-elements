@@ -5,14 +5,14 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
+import * as S from '@apollo-elements/test/schema';
+
 import { gql } from '@apollo/client/core';
 import { html } from 'haunted';
 import { useMutation } from './useMutation';
 import { component } from 'haunted';
 
 import { assertType } from '@apollo-elements/test';
-
-import * as S from '@apollo-elements/test/schema';
 
 import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
 

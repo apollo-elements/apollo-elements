@@ -38,7 +38,7 @@ npm install --save @apollo-elements/haunted
 
 > See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
-This package provides `useApolloClient`, `useMutation`, `useQuery`, and `useSubscription` [hooks](https://github.com/matthewp/haunted).
+This package provides `useMutation`, `useQuery`, and `useSubscription` [hooks](https://github.com/matthewp/haunted).
 
 ### ❓ Queries
 Query data with the `useQuery` hook.
@@ -71,18 +71,11 @@ Next, we'll define our UI component with the `useQuery` hook. Import the hook an
 ```ts
 import { useQuery, component, html } from '@apollo-elements/haunted';
 
-import HelloQuery from './Hello.query.graphql';
-
-import type { ApolloQueryElement } from '@apollo-elements/haunted';
-
-import type {
-  HelloQueryData as Data,
-  HelloQueryVariables as Variables
-} from '../codegen/schema';
+import { HelloQuery } from './Hello.query.graphql';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'hello-query': ApolloQueryElement<Data, Variables>;
+    'hello-query': HTMLElement
   }
 }
 ```
@@ -97,7 +90,7 @@ Then define your component's template function.
 
 ```ts
 function Hello() {
-  const { data, error, loading } = useQuery<Data, Variables>(HelloQuery);
+  const { data, error, loading } = useQuery(HelloQuery);
 
   const greeting = data?.helloWorld.greeting ?? 'Hello';
   const name = data?.helloWorld.name ?? 'Friend';
@@ -144,16 +137,11 @@ Then import `useMutation` and the `haunted` API along with your data types.
 ```ts
 import { useMutation, useState, component, html } from '@apollo-elements/haunted';
 
-import type { ApolloMutationElement } from '@apollo-elements/haunted';
-
-import type {
-  UpdateUserMutationData as Data,
-  UpdateUserMutationVariables as Variables,
-} from '../codegen/schema';
+import { UpdateUserMutation } from './UpdateUser.mutation.graphql';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'update-user': ApolloMutationElement<Data, Variables>;
+    'update-user': HTMLElement;
   }
 }
 ```
@@ -170,7 +158,7 @@ Then to define your component's template function.
 function UpdateUser() {
   const [username, setUsername] = useState('');
   const [haircolor, setHaircolor] = useState('Black');
-  const [updateUser, { data }] = useMutation<Data, Variables>(UpdateUserMutation);
+  const [updateUser, { data }] = useMutation(UpdateUserMutation);
 
   const variables = { username, haircolor };
 
@@ -226,16 +214,11 @@ subscription NewsFlash {
 ```ts
 import { useSubscription, component, html } from '@apollo-elements/haunted';
 
-import type { ApolloSubscriptionElement } from '@apollo-elements/haunted';
-
-import type {
-  NewsFlashData as Data,
-  NewsFlashVariables as Variables,
-} from '../codegen/schema';
+import { NewsFlashSubscription } from './NewsFlash.subscription.graphql';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'news-flash': ApolloSubscriptionElement<Data, Variables>
+    'news-flash': HTMLElement;
   }
 }
 ```
@@ -246,7 +229,7 @@ declare global {
 
 ```ts
 function NewsFlash() {
-  const { data } = useSubscription<Data, Variables>(NewsFlashSubscription);
+  const { data } = useSubscription(NewsFlashSubscription);
 
   return html`
     Latest News: ${data.news}
