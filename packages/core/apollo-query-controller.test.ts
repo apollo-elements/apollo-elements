@@ -70,7 +70,7 @@ describe('[core] ApolloQueryController', function() {
         expect(element.query.data, 'data').to.be.undefined;
         expect(element.query.error, 'error').to.be.undefined;
         expect(element.query.errors, 'errors').to.be.undefined;
-        expect(element.query.options, 'options').to.be.undefined;
+        expect(element.query.options, 'options').to.be.empty;
         expect(element.query.query, 'query').to.be.undefined;
         expect(element.query.variables, 'variables').to.be.undefined;
 
@@ -463,9 +463,9 @@ describe('[core] ApolloQueryController', function() {
           watchQuerySpy.restore();
         });
 
-        describe('with null options', function() {
+        describe('with empty options', function() {
           beforeEach(function() {
-            delete element.query.options;
+            element.query.options = {};
           });
 
           describe('executeQuery({ variables })', function() {

@@ -6,13 +6,7 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import {
-  HelloQuery,
-  NullableParamQuery,
-  PaginatedQuery,
-  MessagesQuery,
-  MessageSentSubscription,
-} from '@apollo-elements/test/schema';
+import * as S from '@apollo-elements/test/schema';
 
 import { gql } from '@apollo/client/core';
 
@@ -45,7 +39,7 @@ describe('[haunted] useQuery', function() {
 
         beforeEach(async function define() {
           function Hello() {
-            const c = useQuery(HelloQuery);
+            const c = useQuery(S.HelloQuery);
 
             refetchSpy ??= spy(c, 'refetch');
 
@@ -122,7 +116,7 @@ describe('[haunted] useQuery', function() {
 
       beforeEach(async function define() {
         function Hello() {
-          const { data, error, executeQuery } = useQuery(NullableParamQuery, {
+          const { data, error, executeQuery } = useQuery(S.NullableParamQuery, {
             onData, onError,
           });
 
@@ -180,7 +174,7 @@ describe('[haunted] useQuery', function() {
         function Hello() {
           const [offset, setOffset] = useState(0);
 
-          const { data, fetchMore } = useQuery(PaginatedQuery, {
+          const { data, fetchMore } = useQuery(S.PaginatedQuery, {
             onData,
             onError,
             variables: {
@@ -190,7 +184,7 @@ describe('[haunted] useQuery', function() {
 
           return html`
             <p id="data">${data?.pages?.join?.(',')}</p>
-            <button id="fetchMore" @click="${async (event: Event & { target: HTMLButtonElement }) => {
+            <button id="fetchMore" @click="${async () => {
               const variables = { offset: offset + 10 };
               setOffset(variables.offset);
               await fetchMore({ variables }).catch(() => 0);
@@ -243,10 +237,10 @@ describe('[haunted] useQuery', function() {
 
       beforeEach(async function define() {
         function Hello() {
-          const { data, subscribeToMore } = useQuery(MessagesQuery);
+          const { data, subscribeToMore } = useQuery(S.MessagesQuery);
 
           const onClickSubscribeToMore = () => subscribeToMore({
-            document: MessageSentSubscription,
+            document: S.MessageSentSubscription,
             updateQuery: (_, n) => ({ messages: [n.subscriptionData.data.messageSent!] }),
           });
 
@@ -314,7 +308,7 @@ describe('[haunted] useQuery', function() {
 
           const variables = name && greeting ? { name, greeting } : undefined;
 
-          const { data, error, loading, options, refetch } = useQuery(HelloQuery, { variables });
+          const { data, error, loading, options, refetch } = useQuery(S.HelloQuery, { variables });
 
           if (variables !== options?.variables)
             refetch(variables);
@@ -380,7 +374,7 @@ describe('[haunted] useQuery', function() {
 
       beforeEach(async function define() {
         function Hello() {
-          const { data } = useQuery(HelloQuery, {
+          const { data } = useQuery(S.HelloQuery, {
             variables: {
               greeting: 'How\'s it going',
               name: 'Dude',
@@ -411,7 +405,7 @@ describe('[haunted] useQuery', function() {
 
       beforeEach(async function define() {
         function Component() {
-          const c = useQuery(HelloQuery, { shouldSubscribe: () => false });
+          const c = useQuery(S.HelloQuery, { shouldSubscribe: () => false });
           return html`
             <output>${c.data?.helloWorld?.greeting}</output>
             <button @click=${() => c.subscribe()}></button>
