@@ -47,7 +47,7 @@ export class ApolloQueryController<
 
   private pollingInterval?: number;
 
-  declare options?: ApolloQueryControllerOptions<D, V>;
+  declare options: ApolloQueryControllerOptions<D, V>;
 
   declare data?: Data<D> | null;
 
@@ -84,7 +84,7 @@ export class ApolloQueryController<
   ): boolean {
     /* c8 ignore next 4 */
     return (
-      !(this.options?.noAutoSubscribe ?? false) &&
+      !(this.options.noAutoSubscribe ?? false) &&
       !!this.client &&
       !!(options?.query ?? this.document)
     );
@@ -94,7 +94,7 @@ export class ApolloQueryController<
     if (
       !!query &&
       this.canSubscribe({ query }) &&
-      (this.options?.shouldSubscribe?.({ query }) ?? true)
+      (this.options.shouldSubscribe?.({ query }) ?? true)
     ) /* c8 ignore next */ // covered
       this.subscribe({ query }); /* c8 ignore next */ // covered
   }
@@ -104,7 +104,7 @@ export class ApolloQueryController<
       this.refetch(variables); /* c8 ignore next */ // covered
     else if (
       this.canSubscribe({ variables }) &&
-      (this.options?.shouldSubscribe?.({ variables }) ?? true)
+      (this.options.shouldSubscribe?.({ variables }) ?? true)
     )
       this.subscribe({ variables });
     else
@@ -134,14 +134,14 @@ export class ApolloQueryController<
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       query: this.query!,
       variables: this.variables,
-      context: this.options?.context,
-      errorPolicy: this.options?.errorPolicy,
-      fetchPolicy: this.options?.fetchPolicy,
-      notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
-      partialRefetch: this.options?.partialRefetch,
-      pollInterval: this.options?.pollInterval,
-      returnPartialData: this.options?.returnPartialData,
-      nextFetchPolicy: this.options?.nextFetchPolicy,
+      context: this.options.context,
+      errorPolicy: this.options.errorPolicy,
+      fetchPolicy: this.options.fetchPolicy,
+      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+      partialRefetch: this.options.partialRefetch,
+      pollInterval: this.options.pollInterval,
+      returnPartialData: this.options.returnPartialData,
+      nextFetchPolicy: this.options.nextFetchPolicy,
       ...params,
     });
   }
@@ -153,25 +153,16 @@ export class ApolloQueryController<
     this.loading = result.loading;
     this.networkStatus = result.networkStatus;
     this.partial = result.partial ?? false;
-    this.options?.onData?.(result.data);
+    this.options.onData?.(result.data);
     this[update]();
   }
 
   private nextError(error: ApolloError): void {
     this.error = error;
     this.loading = false;
-    this.options?.onError?.(error);
+    this.options.onError?.(error);
     this[update]();
   }
-
-  /**
-   * Determines whether the element should attempt to automatically subscribe i.e. begin querying
-   *
-   * Override to prevent subscribing unless your conditions are met.
-   */
-  public shouldSubscribe?(
-    options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
-  ): boolean;
 
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
@@ -199,13 +190,13 @@ export class ApolloQueryController<
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       query: this.query!,
       variables: this.variables,
-      context: this.options?.context,
-      errorPolicy: this.options?.errorPolicy,
-      fetchPolicy: this.options?.fetchPolicy,
-      pollInterval: this.options?.pollInterval,
-      notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
-      returnPartialData: this.options?.returnPartialData,
-      partialRefetch: this.options?.partialRefetch,
+      context: this.options.context,
+      errorPolicy: this.options.errorPolicy,
+      fetchPolicy: this.options.fetchPolicy,
+      pollInterval: this.options.pollInterval,
+      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+      returnPartialData: this.options.returnPartialData,
+      partialRefetch: this.options.partialRefetch,
       ...params,
     });
 
@@ -250,12 +241,12 @@ export class ApolloQueryController<
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         query: this.query!,
         variables: this.variables,
-        context: this.options?.context,
-        errorPolicy: this.options?.errorPolicy,
-        fetchPolicy: this.options?.fetchPolicy,
-        notifyOnNetworkStatusChange: this.options?.notifyOnNetworkStatusChange,
-        partialRefetch: this.options?.partialRefetch,
-        returnPartialData: this.options?.returnPartialData,
+        context: this.options.context,
+        errorPolicy: this.options.errorPolicy,
+        fetchPolicy: this.options.fetchPolicy,
+        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+        partialRefetch: this.options.partialRefetch,
+        returnPartialData: this.options.returnPartialData,
         ...params,
       });
       if (result) // NB: not sure why, but sometimes this returns undefined
@@ -287,7 +278,7 @@ export class ApolloQueryController<
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       query: this.query!,
-      context: this.options?.context,
+      context: this.options.context,
       variables: this.variables,
       ...params,
     };

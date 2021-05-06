@@ -40,6 +40,8 @@ export abstract class ApolloController<
   D = unknown,
   V = OperationVariables,
 > implements ReactiveController {
+  declare options: ApolloControllerOptions<D, V>;
+
   called = true;
 
   client?: ApolloClient<NormalizedCacheObject>;
@@ -74,8 +76,9 @@ export abstract class ApolloController<
 
   protected abstract variablesChanged?(variables?: Variables<D, V>): void
 
-  constructor(public host: ReactiveControllerHost, public options?: ApolloControllerOptions<D, V>) {
-    this.client = this.options?.client ?? window.__APOLLO_CLIENT__;
+  constructor(public host: ReactiveControllerHost, options?: ApolloControllerOptions<D, V>) {
+    this.options = options ?? {};
+    this.client = this.options.client ?? window.__APOLLO_CLIENT__;
     host.addController?.(this);
   }
 
