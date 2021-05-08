@@ -13,7 +13,6 @@ import type {
   ApolloError,
   ApolloQueryResult,
   DocumentNode,
-  FetchPolicy,
   ObservableQuery,
   QueryOptions,
   SubscribeToMoreOptions,
@@ -27,10 +26,10 @@ import { ApolloController, ApolloControllerOptions, update } from './apollo-cont
 
 import { bound } from '@apollo-elements/lib/bound';
 
-export interface ApolloQueryControllerOptions<D, V> extends ApolloControllerOptions<D, V>,
-          Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
+export interface ApolloQueryControllerOptions<D, V> extends
+    ApolloControllerOptions<D, V>,
+    Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>,
-  fetchPolicy?: FetchPolicy;
   noAutoSubscribe?: boolean;
   shouldSubscribe?: (options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>) => boolean;
   onData?: (data: Data<D>) => void;
@@ -243,7 +242,9 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
         variables: this.variables,
         context: this.options.context,
         errorPolicy: this.options.errorPolicy,
-        fetchPolicy: this.options.fetchPolicy,
+        fetchPolicy:
+            this.options.fetchPolicy === 'cache-and-network' ? undefined
+          : this.options.fetchPolicy,
         notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
         partialRefetch: this.options.partialRefetch,
         returnPartialData: this.options.returnPartialData,

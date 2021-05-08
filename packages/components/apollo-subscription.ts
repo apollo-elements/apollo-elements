@@ -73,39 +73,77 @@ export class ApolloSubscriptionElement<D extends MaybeTDN = any, V = MaybeVariab
 
   controller = new ApolloSubscriptionController<D, V>(this, undefined);
 
+  /** @summary Flags an element that's ready and able to auto subscribe */
   get canAutoSubscribe(): boolean { return this.controller?.canAutoSubscribe ?? false; }
 
+  /**
+   * @summary A GraphQL document containing a single subscription.
+   */
   @controlled() @state() subscription: null | ComponentDocument<D> = null;
 
+  /** @summary Context passed to the link execution chain. */
   @controlled() @state() context?: Record<string, any>;
 
+  /**
+   * @summary If true, the element will not begin querying data until you manually call `subscribe`
+   * @attr no-auto-subscribe
+   */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'no-auto-subscribe' })
   noAutoSubscribe = false;
 
+  /**
+   * @summary Whether or not updates to the network status should trigger next on the observer of this subscription.
+   */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'notify-on-network-status-change' })
   notifyOnNetworkStatusChange = false;
 
+  /**
+   * @summary Determines if your subscription should be unsubscribed and subscribed again.
+   */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'should-resubscribe' })
   shouldResubscribe = false;
 
+  /**
+   * @summary If true, the query will be skipped entirely
+   */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'skip' }) skip = false;
 
+  /**
+   * @summary Error policy for the subscription
+   */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
   errorPolicy?: this['controller']['options']['errorPolicy'];
 
+  /**
+   * @summary Specifies the FetchPolicy to be used for this subscription.
+   * @attr fetch-policy
+   */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
   fetchPolicy?: this['controller']['options']['fetchPolicy'];
 
+  /**
+   * @summary The time interval (in milliseconds) on which this subscription should be refetched from the server.
+   */
+  @controlled({ path: 'options' })
+  @property({ type: Number, attribute: 'poll-interval' })
+  pollInterval?: number;
+
+  /**
+   * @summary Resets the observable and subscribes.
+   */
   subscribe(...args: Parameters<this['controller']['subscribe']>): void {
     return this.controller.subscribe(...args);
   }
 
+  /**
+   * @summary Cancels and clears the subscription
+   */
   cancel(): void {
     return this.controller.cancel();
   }

@@ -12,6 +12,7 @@ import type {
   SubscribeToMoreOptions,
   SubscriptionOptions,
   WatchQueryOptions,
+  WatchQueryFetchPolicy,
 } from '@apollo/client/core';
 
 import type { ComponentDocument, Data, Variables } from './operation';
@@ -42,12 +43,12 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   static documentType: 'query';
 
   /**
-   * The latest query data.
+   * @summary The latest query data.
    */
   declare data: Data<D> | null;
 
   /**
-   * A GraphQL document containing a single query.
+   * @summary A GraphQL document containing a single query.
    */
   declare query: DocumentNode | ComponentDocument<D> | null;
 
@@ -83,7 +84,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * @summary The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.
    * @attr fetch-policy
    */
-  declare fetchPolicy?: FetchPolicy;
+  declare fetchPolicy?: WatchQueryFetchPolicy;
 
   /**
    * When someone chooses cache-and-network or network-only as their
@@ -100,7 +101,13 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * @summary Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.
    * @attr next-fetch-policy
    */
-  declare nextFetchPolicy?: FetchPolicy;
+  declare nextFetchPolicy?: (
+    WatchQueryFetchPolicy |
+    ((
+      this: WatchQueryOptions<Variables<D, V>, Data<D>>,
+      lastFetchPolicy: WatchQueryFetchPolicy
+    ) => WatchQueryFetchPolicy)
+  );
 
   /**
    * If data was read from the cache with missing fields,
@@ -160,12 +167,12 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   declare options: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null;
 
   /**
-   * Whether or not updates to the network status should trigger next on the observer of this query.
+   * @summary Whether or not updates to the network status should trigger next on the observer of this query.
    */
   declare notifyOnNetworkStatusChange?: boolean;
 
   /**
-   * The time interval (in milliseconds) on which this query should be refetched from the server.
+   * @summary The time interval (in milliseconds) on which this query should be refetched from the server.
    */
   declare pollInterval?: number;
 
@@ -176,7 +183,7 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    */
   declare noAutoSubscribe: boolean;
 
-  /** Flags an element that's ready and able to auto subscribe */
+  /** @summary Flags an element that's ready and able to auto subscribe */
   public get canAutoSubscribe(): boolean;
 
   constructor(...a: any[]);
