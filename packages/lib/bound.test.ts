@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { bound } from './bound';
 
 import { expect } from '@open-wc/testing';
@@ -6,7 +7,7 @@ describe('@bound', function() {
     it('throws', function() {
       expect(() => {
         // @ts-expect-error: testing the error
-        @bound class TypeCheck {}
+        @bound class Class {}
       }).to.throw('Only methods can be decorated with @bound. <Class> is not a method!');
     });
   });
@@ -14,7 +15,7 @@ describe('@bound', function() {
     it('throws', function() {
       expect(() => {
         // @ts-expect-error: testing the error
-        class TypeCheck { @bound x: number; }
+        class Class { @bound x: number; }
       }).to.throw('Only methods can be decorated with @bound. <x> is not a method!');
     });
   });

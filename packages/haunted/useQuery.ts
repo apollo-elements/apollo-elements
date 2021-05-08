@@ -1,4 +1,4 @@
-import type { DocumentNode } from '@apollo/client/core';
+import type { ComponentDocument, MaybeTDN, MaybeVariables } from '@apollo-elements/interfaces';
 
 import { useController } from 'haunted/lib/use-controller';
 
@@ -7,8 +7,8 @@ import {
   ApolloQueryControllerOptions,
 } from '@apollo-elements/core/apollo-query-controller';
 
-export function useQuery<D extends DocumentNode, V>(
-  query: D,
+export function useQuery<D extends MaybeTDN = any, V = MaybeVariables<D>>(
+  query: ComponentDocument<D>,
   options?: ApolloQueryControllerOptions<D, V>
 ): ApolloQueryController<D, V> {
   return useController(host => new ApolloQueryController<D, V>(host, query, options));
