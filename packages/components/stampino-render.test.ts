@@ -1,8 +1,8 @@
-import { fixture, defineCE, expect } from '@open-wc/testing';
+import { fixture, defineCE, expect, nextFrame } from '@open-wc/testing';
 
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { property } from 'lit/decorators.js';
 
-import { StampinoRender, property } from './stampino-render';
+import { StampinoRender } from './stampino-render';
 import { TemplateHandlers, evaluateTemplate } from 'stampino';
 
 describe('[components] StampinoRender', function() {
@@ -22,6 +22,7 @@ describe('[components] StampinoRender', function() {
     });
 
     it('renders to shadow DOM', function() {
+      expect(element.shadowRoot?.mode).to.equal('open');
       expect(element.template).to.be.an.instanceof(HTMLTemplateElement);
       expect(element.querySelectorAll('p').length).to.equal(1);
       expect(element.shadowRoot!.querySelectorAll('p').length).to.equal(1);
@@ -41,43 +42,20 @@ describe('[components] StampinoRender', function() {
     let element: StampinoRender;
 
     beforeEach(async function() {
-      const tag = defineCE(class extends StampinoRender {});
+      const tag = defineCE(class extends StampinoRender {
+        initial = 'initial';
+      });
       element = await fixture(`
         <${tag}>
           <template>
             <span id="initial">{{ initial }}</span>
-            <span id="updated">{{ updated }}</span>
           </template>
         </${tag}>
       `);
-      element.update({ initial: 'initial' });
     });
 
     it('renders initial data', function() {
       expect(element.$('#initial')!.textContent, 'initial').to.equal('initial');
-      expect(element.$('#updated')!.textContent, 'updated').to.equal('');
-    });
-
-    describe('when calling update({ updated: \'updated\' })', function() {
-      beforeEach(function() {
-        element.update({ updated: 'updated' });
-      });
-
-      it('renders both initial and updated data', function() {
-        expect(element.$('#initial')!.textContent, 'initial').to.equal('initial');
-        expect(element.$('#updated')!.textContent, 'updated').to.equal('updated');
-      });
-    });
-
-    describe('when calling update({ updated: \'updated\' }, { overwrite: true })', function() {
-      beforeEach(function() {
-        element.update({ updated: 'updated' }, { overwrite: true });
-      });
-
-      it('renders only updated data', function() {
-        expect(element.$('#initial')!.textContent, 'initial').to.equal('');
-        expect(element.$('#updated')!.textContent, 'updated').to.equal('updated');
-      });
     });
   });
 
@@ -259,119 +237,11 @@ describe('[components] StampinoRender', function() {
     });
   });
 
-  describe('with extras', function() {
-    let element: StampinoRender;
-
-    beforeEach(async function() {
-      const def = defineCE(class extends StampinoRender { });
-
-      const tag = unsafeStatic(def);
-
-      element = await fixture(html`
-        <${tag} .extras="${{
-          methodOnExtras(x = 0) {
-            return x + 1;
-          },
-        }}">
-          <template>
-            <output>{{ methodOnExtras(propOnModel) }}</output>
-          </template>
-        </${tag}>
-      `);
-    });
-
-    it('gets extras', function() {
-      expect(element.extras?.methodOnExtras(1)).to.equal(2);
-    });
-
-    it('renders nothing in output', function() {
-      expect(element.$('output')).lightDom.to.equal('1');
-    });
-
-    describe('then calling update', function() {
-      beforeEach(function() {
-        element.update({ propOnModel: 1 });
-      });
-
-      it('renders a number in output', function() {
-        expect(element.$('output')).lightDom.to.equal('2');
-      });
-    });
-  });
-
-  describe('extending to use `model` prop', function() {
-    let element: StampinoRender & { m: any };
-
-    beforeEach(async function() {
-      const tag = defineCE(class extends StampinoRender {
-        get m() { return this.model; }
-
-        set m(v) { this.model = v; }
-      });
-
-      element = await fixture(`<${tag}></${tag}>`);
-    });
-
-    it('gets initial model', function() {
-      expect(element.m).to.be.empty;
-    });
-
-    describe('calling update', function() {
-      beforeEach(function() {
-        element.update({ a: 1 });
-      });
-
-      it('gets updated model', function() {
-        expect(element.m.a).to.equal(1);
-      });
-
-      describe('calling update(x, { overwrite: true })', function() {
-        beforeEach(function() {
-          element.update({ b: 2 }, { overwrite: true });
-        });
-        it('resets model', function() {
-          expect(element.m.a).to.not.be.ok;
-          expect(element.m.b).to.equal(2);
-        });
-      });
-
-      describe('calling update(x, { overwrite: false })', function() {
-        beforeEach(function() {
-          element.update({ b: 2 }, { overwrite: false });
-        });
-        it('merges model', function() {
-          expect(element.m.a).to.equal(1);
-          expect(element.m.b).to.equal(2);
-        });
-      });
-      describe('setting extras', function() {
-        beforeEach(function() {
-          element.extras = {
-            inc(x: number) { return x + 1; },
-          };
-        });
-
-        it('gets updated model', function() {
-          expect(element.m.inc(element.m.a)).to.equal(2);
-        });
-      });
-
-      describe('setting m', function() {
-        beforeEach(function() {
-          element.m = { c: 2 };
-        });
-        it('updates model', function() {
-          expect(element.m).to.deep.equal({ c: 2 });
-        });
-      });
-    });
-  });
-
   describe('with observed, reflecting properties', function() {
     class Test extends StampinoRender {
-      @property({ reflect: true, init: false }) reflect = false;
+      @property({ type: Boolean, reflect: true }) reflect = false;
 
-      @property({ reflect: true, init: 'string' }) string: string|null = 'string';
+      @property({ reflect: true }) string: string|null = 'string';
     }
 
     let element: Test;
@@ -396,6 +266,8 @@ describe('[components] StampinoRender', function() {
         element.reflect = true;
       });
 
+      beforeEach(nextFrame);
+
       it('sets the attribute', function() {
         expect(element.hasAttribute('reflect')).to.be.true;
       });
@@ -409,7 +281,9 @@ describe('[components] StampinoRender', function() {
           element.reflect = false;
         });
 
-        it('sets the attribute', function() {
+        beforeEach(nextFrame);
+
+        it('unsets the attribute', function() {
           expect(element.hasAttribute('reflect')).to.be.false;
         });
 
@@ -424,6 +298,8 @@ describe('[components] StampinoRender', function() {
         element.string = 'set';
       });
 
+      beforeEach(nextFrame);
+
       it('sets the attribute', function() {
         expect(element.getAttribute('string')).to.equal('set');
       });
@@ -437,11 +313,13 @@ describe('[components] StampinoRender', function() {
           element.string = null;
         });
 
-        it('sets the attribute', function() {
+        beforeEach(nextFrame);
+
+        it('unsets the attribute', function() {
           expect(element.hasAttribute('string')).to.be.false;
         });
 
-        it.skip('renders the template', function() {
+        it('renders the template', function() {
           expect(element.$('.string')!.textContent).to.equal('');
         });
       });

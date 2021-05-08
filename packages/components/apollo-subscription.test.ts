@@ -1,11 +1,6 @@
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import type {
-  NoParamSubscriptionData,
-  NoParamSubscriptionVariables,
-  NullableParamSubscriptionData,
-  NullableParamSubscriptionVariables,
-} from '@apollo-elements/test';
+import * as S from '@apollo-elements/test/schema';
 
 import {
   ApolloClient,
@@ -16,7 +11,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import { fixture, expect, nextFrame } from '@open-wc/testing';
+import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
 import { html } from 'lit/static-html.js';
 
@@ -50,7 +45,37 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
     });
 
     it('doesn\'t render anything', function() {
-      expect(element.shadowRoot!.children).to.be.empty;
+      expect(element).shadowDom.to.equal('');
+    });
+  });
+
+  describe('with "no-auto-subscribe" attribute', function() {
+    let element: ApolloSubscriptionElement;
+    beforeEach(async function() {
+      element = await fixture(html`
+        <apollo-subscription no-auto-subscribe>
+          <template>{{ data.noParam.noParam }}</template>
+        </apollo-subscription>
+      `);
+    });
+    beforeEach(nextFrame);
+    it('sets noAutoSubscribe', function() {
+      expect(element.noAutoSubscribe, 'element').to.be.true;
+      expect(element.controller.options.noAutoSubscribe, 'options').to.be.true;
+    });
+    describe('setting subscription', function() {
+      beforeEach(() => element.subscription = S.NoParamSubscription);
+      beforeEach(() => aTimeout(50));
+      it('doesn\'t render anything', function() {
+        expect(element).shadowDom.to.equal('');
+      });
+      describe('then calling subscribe()', function() {
+        beforeEach(() => element.subscribe());
+        beforeEach(() => aTimeout(50));
+        it('renders data', function() {
+          expect(element).shadowDom.to.equal('noParam');
+        });
+      });
     });
   });
 
@@ -89,7 +114,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with template and subscription DOM and `no-shadow` attribute set', function() {
-    let element: ApolloSubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>;
+    let element: ApolloSubscriptionElement<typeof NoParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -110,8 +135,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
-    beforeEach(nextFrame);
-    beforeEach(nextFrame);
+    beforeEach(() => aTimeout(50));
 
     it('renders', function() {
       expect(element.$$('h1').length, 'h1').to.equal(1);
@@ -138,7 +162,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with `no-shadow` and `template` attributes set', function() {
-    let element: ApolloSubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>;
+    let element: ApolloSubscriptionElement<typeof NoParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -152,8 +176,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
-    beforeEach(nextFrame);
-    beforeEach(nextFrame);
+    beforeEach(() => aTimeout(50));
 
     it('renders', function() {
       expect(element.$$('h1').length, 'h1').to.equal(1);
@@ -172,7 +195,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with template in DOM and a subscription property', function() {
-    let element: ApolloSubscriptionElement<NoParamSubscriptionData, NoParamSubscriptionVariables>;
+    let element: ApolloSubscriptionElement<typeof NoParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -186,7 +209,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
-    beforeEach(nextFrame);
+    beforeEach(() => aTimeout(50));
 
     it('renders', function() {
       expect(element.$$('h1').length).to.equal(1);
@@ -197,10 +220,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with template, subscription, and variables in DOM', function() {
-    let element: ApolloSubscriptionElement<
-      NullableParamSubscriptionData,
-      NullableParamSubscriptionVariables
-    >;
+    let element: ApolloSubscriptionElement<typeof S.NullableParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -230,7 +250,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
-    beforeEach(nextFrame);
+    beforeEach(() => aTimeout(50));
 
     it('renders', function() {
       expect(element.$$('h1').length).to.equal(1);
@@ -244,7 +264,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
         element.variables = { nullable: 'set by js' };
       });
 
-      beforeEach(nextFrame);
+      beforeEach(() => aTimeout(50));
 
       it('rerenders', function() {
         expect(element.$('#data')).to.be.ok;
@@ -254,10 +274,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('when subscription errors', function() {
-    let element: ApolloSubscriptionElement<
-      NullableParamSubscriptionData,
-      NullableParamSubscriptionVariables
-    >;
+    let element: ApolloSubscriptionElement<typeof S.NullableParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -298,23 +315,30 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
-    describe('setting data', function() {
-      beforeEach(function() {
-        element.data = {
-          me: { name: 'ME' },
-          friends: [
-            { id: 'friend-a', name: 'A' },
-            { id: 'friend-b', name: 'B' },
-            { id: 'friend-c', name: 'C' },
-          ],
-        };
-      });
-
-      beforeEach(nextFrame);
-
-      it('renders the list', function() {
-        expect(element.$$('li').length).to.equal(3);
-        expect(element.shadowRoot!.textContent!.replace(/\s+/g, ' ').trim()).to.equal('ME A B C');
+    describe('cancelling', function() {
+      beforeEach(() => element.cancel());
+      describe('then setting data', function() {
+        beforeEach(function() {
+          element.data = {
+            me: { name: 'ME' },
+            friends: [
+              { id: 'friend-a', name: 'A' },
+              { id: 'friend-b', name: 'B' },
+              { id: 'friend-c', name: 'C' },
+            ],
+          };
+        });
+        beforeEach(nextFrame);
+        it('renders the list', function() {
+          expect(element).shadowDom.to.equal(`
+            <p>ME</p>
+            <ul>
+              <li data-id="friend-a" data-index="0">A</li>
+              <li data-id="friend-b" data-index="1">B</li>
+              <li data-id="friend-c" data-index="2">C</li>
+            </ul>
+          `);
+        });
       });
     });
   });

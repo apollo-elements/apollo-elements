@@ -1,52 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types */
 import type { TemplateHandlers } from 'stampino';
+import { ReactiveElement, PropertyValues } from '@lit/reactive-element';
 import { render } from 'stampino';
-import { effect } from '@apollo-elements/lib/descriptors';
-
-interface PropertyOptions {
-  attribute?: string,
-  reflect?: boolean,
-  init?: any
-}
+import { bound } from '@apollo-elements/lib/bound';
 
 /**
  * @element
  *
  * @attr {Boolean|string} 'no-shadow' - When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.
  */
-export class StampinoRender<Model extends object = any> extends HTMLElement {
+export class StampinoRender extends ReactiveElement {
   private static isQueryable(node: Node): node is (ShadowRoot|Document) {
     return 'getElementById' in node;
   }
 
   declare templateHandlers: TemplateHandlers;
-
-  #extras: Partial<Model>|null = null;
-
-  public get extras(): Partial<Model>|null {
-    return this.#extras;
-  }
-
-  public set extras(extras: Partial<Model>|null) {
-    this.#extras = extras;
-    this.#renderProps = { ...this.#renderProps, ...this.#extras };
-    this.render();
-  }
-
-  /** The Node that this element will render its template to. */
-  protected declare renderRoot: ShadowRoot|HTMLElement;
-
-  #model: Model|null = null;
-
-  #renderProps: Model;
-
-  protected get model(): Model {
-    return ({ ...this.#model, ...this.#extras } as Model);
-  }
-
-  protected set model(x: Model) {
-    this.setModel(x);
-  }
 
   /**
    * Template element to render. Can either be a light-DOM child of the element,
@@ -69,14 +37,18 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
       return this.getTemplateFromRoot();
   }
 
-  constructor() {
-    super();
-    // @ts-expect-error: should be fine;
-    this.#renderProps = { ...this.#model, ...this.#extras };
-    this.createRenderRoot();
+  protected createRenderRoot(): ShadowRoot|HTMLElement {
+    if (!this.hasAttribute('no-shadow'))
+      return this.attachShadow({ mode: 'open' }); /* c8 ignore next */
+    else {
+      const root = this.appendChild(document.createElement('div'));
+      root.classList.add(this.getAttribute('no-shadow') || 'output');
+      return root;
+    }
   }
 
-  connectedCallback(): void {
+  protected update(changed: PropertyValues<this>): void {
+    super.update(changed);
     this.render();
   }
 
@@ -99,41 +71,18 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
       return null;
   }
 
-  protected createRenderRoot(): ShadowRoot|HTMLElement {
-    if (!this.hasAttribute('no-shadow'))
-      this.renderRoot = this.attachShadow({ mode: 'open' });
-    else {
-      this.renderRoot = this.appendChild(document.createElement('div'));
-      this.renderRoot.classList.add(this.getAttribute('no-shadow') || 'output');
-    }
-    return this.renderRoot;
-  }
-
-  private setModel(x: Model) {
-    this.#model = x;
-    this.#renderProps = { ...this.#model, ...this.#extras };
-    this.render();
-  }
-
-  public update(model: Model, { overwrite = false } = { }): void {
-    if (overwrite)
-      this.setModel(model); /* c8 ignore next */ // covered
-    else
-      this.setModel({ ...this.model, ...model });
-  }
-
   /**
    * Call to render the element's template using the model.
    * Rendering is synchronous and incremental.
    *
    * @summary Render the element's template with its model.
    */
-  public render(): void {
+  @bound public render(): void {
     if (this.template && this.renderRoot) {
       render(
         this.template,
         this.renderRoot as HTMLElement,
-        { ...this.#renderProps, host: this },
+        this,
         this.templateHandlers
       );
     }
@@ -159,35 +108,4 @@ export class StampinoRender<Model extends object = any> extends HTMLElement {
   ): NodeListOf<HTMLElementTagNameMap[K]> {
     return this.renderRoot.querySelectorAll(selector);
   }
-}
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export function property({ attribute, reflect = false, init = null }: PropertyOptions = {}) {
-  return function<T extends StampinoRender & { render(): void }>(
-    target: T,
-    name: keyof T extends string ? keyof T : never,
-  ): void {
-    Object.defineProperty(target, name, effect<T>({
-      name,
-      init,
-      onSet(value: any) {
-        const attr = attribute ?? name;
-        if (reflect) {
-          if (typeof value === 'boolean') {
-            if (value)
-              this.setAttribute(attr, '');
-            else
-              this.removeAttribute(attr); /* c8 ignore next */
-          } else {
-            if (value != null)
-              this.setAttribute(attr, value.toString()); /* c8 ignore next */
-            else
-              this.removeAttribute(attr);
-          }
-        }
-        this.update({ [name]: value });
-      },
-    }));
-  };
 }
