@@ -6,7 +6,7 @@ describe('@bound', function() {
     it('throws', function() {
       expect(() => {
         // @ts-expect-error: testing the error
-        @bound class Class {}
+        @bound class TypeCheck {}
       }).to.throw('Only methods can be decorated with @bound. <Class> is not a method!');
     });
   });
@@ -14,7 +14,7 @@ describe('@bound', function() {
     it('throws', function() {
       expect(() => {
         // @ts-expect-error: testing the error
-        class Class { @bound x: number; }
+        class TypeCheck { @bound x: number; }
       }).to.throw('Only methods can be decorated with @bound. <x> is not a method!');
     });
   });

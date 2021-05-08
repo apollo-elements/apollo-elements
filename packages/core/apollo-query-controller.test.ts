@@ -1,4 +1,4 @@
-import type { TypedDocumentNode, ResultOf, VariablesOf } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode, ResultOf } from '@graphql-typed-document-node/core';
 
 import * as S from '@apollo-elements/test/schema';
 
@@ -696,8 +696,6 @@ describe('[core] ApolloQueryController', function() {
 
       describe('with PaginatedQuery', function() {
         let element: MirroringHost<typeof S.PaginatedQuery>;
-
-        const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
         const onError = spy();
         const onData = spy();

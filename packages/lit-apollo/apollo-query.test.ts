@@ -17,7 +17,7 @@ import { assertType, isApolloError } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { property } from 'lit/decorators.js';
 
