@@ -1,40 +1,41 @@
-import type { ApolloError, OperationVariables } from '@apollo/client/core';
-
-import type { Constructor } from '@apollo-elements/interfaces';
-
+import type { OperationVariables } from '@apollo/client/core';
 import type {
   ApolloMutationInterface,
+  ComponentDocument,
+  RefetchQueriesType,
   Data,
-  GraphQLError,
+  OptimisticResponseType,
   Variables,
-  VariablesOf,
+  MaybeTDN,
 } from '@apollo-elements/interfaces';
+import type { TypedDocumentNode, VariablesOf } from '@graphql-typed-document-node/core';
+import type { PropertyValues } from 'lit';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
-import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
+
+import { ApolloElement } from './apollo-element';
+
+import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
+
+import { customElement, state, property } from '@lit/reactive-element/decorators.js';
+
+import * as E from './events';
+
 import { isEmpty } from '@apollo-elements/lib/helpers';
 
-import { StampinoRender, property } from './stampino-render';
-
-import {
-  MutationCompletedEvent,
-  MutationErrorEvent,
-  WillMutateEvent,
-  WillNavigateEvent,
-} from './events';
+import { bound } from '@apollo-elements/lib/bound';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-mutation': ApolloMutationElement } }
 
-export * from './events';
+type P<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
+  ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
+  ? Parameters<ApolloMutationController<D, V>[K]>
+  : never
 
-export type ApolloMutationModel<D, V> = Pick<ApolloMutationElement<D, V>,
-  | 'called'
-  | 'data'
-  | 'error'
-  | 'errors'
-  | 'loading'
->;
-
+type R<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
+  ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
+  ? ReturnType<ApolloMutationController<D, V>[K]>
+  : never
 
 /** @noInheritDoc */
 interface ButtonLikeElement extends HTMLElement {
@@ -50,11 +51,6 @@ interface InputLikeElement extends HTMLElement {
 /** @ignore */
 export class WillMutateError extends Error {}
 
-const inheritor = GraphQLScriptChildMixin(
-  ApolloMutationMixin<Constructor<StampinoRender & HTMLElement>>(
-    StampinoRender
-  )
-);
 
 /**
  * Simple Mutation component that takes a button or link-wrapped button as it's trigger.
@@ -161,8 +157,12 @@ const inheritor = GraphQLScriptChildMixin(
  * }
  * ```
  */
-export class ApolloMutationElement<D = unknown, V = OperationVariables>
-  extends inheritor<D, V>
+@customElement('apollo-mutation')
+export class ApolloMutationElement<
+  D extends MaybeTDN = any,
+  V = D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables
+> extends
+  GraphQLScriptChildMixin(ApolloElement)<D, V>
   implements ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
@@ -196,24 +196,20 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
     };
   }
 
-  static get observedAttributes(): string[] {
-    return [
-      'debounce',
-      'input-key',
-    ];
-  }
+  controller = new ApolloMutationController<D, V>(this, undefined, {
+    onCompleted: data => {
+      const trigger = this.inFlightTrigger;
+      this.didMutate();
+      this.dispatchEvent(new E.MutationCompletedEvent<D, V>(this));
+      if (ApolloMutationElement.isLink(trigger) || trigger?.closest?.('a[trigger]'))
+        this.willNavigate(data, trigger);
+    },
 
-  attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
-    super.attributeChangedCallback?.(name, oldVal, newVal);
-    switch (name) {
-      case 'debounce': {
-        if (newVal == null)
-          this.debounce = newVal;
-        else
-          this.debounce = parseInt(newVal);
-      }
-    }
-  }
+    onError: () => {
+      this.didMutate();
+      this.dispatchEvent(new E.MutationErrorEvent<D, V>(this));
+    },
+  });
 
   /**
    * When set, variable data attributes will be packed into an
@@ -228,49 +224,43 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
    * </script>
    * ```
    */
-  get inputKey(): string|null {
-    return this.getAttribute('input-key');
-  }
+  @property({ attribute: 'input-key', reflect: true }) inputKey: string|null = null;
 
-  set inputKey(key: string|null) {
-    if (!key)
-      this.removeAttribute('input-key');
-    else if (this.getAttribute('input-key') !== key)
-      this.setAttribute('input-key', key);
-  }
+  @property({ type: Number, reflect: true }) debounce: number | null = null;
 
-  @property() data: Data<D>|null = null;
+  @property({ type: Boolean, controlled: true, reflect: true }) called = false;
 
-  @property() error: Error|ApolloError|null = null;
+  @state({ controlled: true }) mutation: null | ComponentDocument<D> = null;
 
-  @property() errors: readonly GraphQLError[] = [];
+  @state({ controlled: true }) context?: Record<string, unknown>;
 
-  @property({ reflect: true, init: false }) loading = false;
+  @state({ controlled: 'options' }) optimisticResponse?: OptimisticResponseType<D, V>;
 
-  private doMutate = (): void => void (this.mutate().catch(() => void 0));
+  @state({ controlled: true }) variables: Variables<D, V> | null = null;
 
-  private declare debouncedMutate: () => void;
+  @property({ controlled: 'options', attribute: 'ignore-results', type: Boolean })
+  ignoreResults = false;
 
-  #debounce: number | null = null;
+  @property({ controlled: 'options', attribute: 'await-refetch-queries', type: Boolean })
+  awaitRefetchQueries = false;
 
-  get debounce(): number | null {
-    return this.#debounce;
-  }
+  @property({ controlled: 'options', attribute: 'error-policy' })
+  errorPolicy?: this['controller']['options']['errorPolicy'];
 
-  set debounce(val: number|null) {
-    this.#debounce = val;
+  @property({ controlled: 'options', attribute: 'fetch-policy' })
+  fetchPolicy?: this['controller']['options']['fetchPolicy'];
 
-    if (val === null) {
-      this.debouncedMutate = this.doMutate;
-      if (this.hasAttribute('debounce'))
-        this.removeAttribute('debounce');
-    } else {
-      const newAttr = val.toString();
-      this.debouncedMutate = ApolloMutationElement.debounce(this.doMutate, val);
-      if (this.getAttribute('debounce') !== newAttr)
-        this.setAttribute('debounce', newAttr);
-    }
-  }
+  @property({
+    controlled: 'options',
+    attribute: 'refetch-queries',
+    converter: {
+      fromAttribute(newVal) {
+        return !newVal ? null : newVal
+          .split(',')
+          .map(x => x.trim());
+      },
+    },
+  }) refetchQueries: RefetchQueriesType<D> | null = null;
 
   /**
    * Define this function to determine the URL to navigate to after a mutation.
@@ -303,8 +293,6 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
 
   private inFlightTrigger: HTMLElement | null = null;
 
-  protected __variables: Variables<D, V> | null = null;
-
   /**
    * Slotted trigger nodes
    */
@@ -334,47 +322,62 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
     return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
-  protected get model(): ApolloMutationModel<D, V> {
-    const { called, data, error, errors, loading } = this;
-    return { called, data, error, errors, loading };
-  }
+  private doMutate = (): void => void (this.controller.mutate().catch(() => void 0));
+
+  private debouncedMutate = this.doMutate;
+
+  #buttonMO?: MutationObserver;
+
+  #listeners = new WeakMap<HTMLElement, string>();
 
   constructor() {
     super();
-    this.debouncedMutate ??= this.doMutate;
-    this.onTriggerEvent = this.onTriggerEvent.bind(this);
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const el = this;
+    Object.defineProperty(this.controller, 'variables', {
+      get(): Variables<D, V> | null {
+        if (this.__variables)
+          return this.__variables;
+        else
+          return el.getVariablesFromInputs() ?? el.getDOMVariables() as Variables<D, V>;
+      },
+
+      set(v: Variables<D, V> | null) {
+        this.__variables = v ?? undefined;
+      },
+    });
+
     this.onSlotchange();
   }
 
-  declare private __buttonMO?: MutationObserver;
-
-  private listeners = new WeakMap<HTMLElement, string>();
+  update(changed: PropertyValues<this>): void {
+    if (changed.has('debounce')) {
+      this.debouncedMutate =
+          this.debounce == null ? this.doMutate
+        : ApolloMutationElement.debounce(this.doMutate, this.debounce);
+    }
+    super.update(changed);
+  }
 
   protected createRenderRoot(): ShadowRoot|HTMLElement {
-    this.renderRoot = super.createRenderRoot();
-    if (!this.hasAttribute('no-shadow')) {
-      this.renderRoot.append(document.createElement('slot'));
-      // The shadow case guarantees that slot exists
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.$('slot')!.addEventListener('slotchange', () => this.onSlotchange());
-    } else {
-      (this.renderRoot as HTMLDivElement)
-        .classList
-        .add(this.getAttribute('no-shadow') || 'output');
-      this.__buttonMO = new MutationObserver(records => this.onLightDomMutation(records));
-      this.__buttonMO.observe(this, { childList: true, attributes: false, characterData: false });
-    }
-    return this.renderRoot;
+    if (this.hasAttribute('no-shadow')) {
+      const root = this.appendChild(document.createElement('div'));
+      root.classList.add(this.getAttribute('no-shadow') || 'output');
+      this.#buttonMO = new MutationObserver(records => this.onLightDomMutation(records));
+      this.#buttonMO.observe(this, { childList: true, attributes: false, characterData: false });
+      return root;
+    } else
+      return super.createRenderRoot();
   }
 
   private onLightDomMutation(records: MutationRecord[]) {
     /* eslint-disable easy-loops/easy-loops */
     for (const record of records) {
       for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
-        if (!this.listeners.has(node))
-          return;
-        node.removeEventListener(this.listeners.get(node)!, this.onTriggerEvent);
-        this.listeners.delete(node);
+        const type = this.#listeners.get(node);
+        if (type == null) return;
+        node.removeEventListener(type, this.onTriggerEvent);
+        this.#listeners.delete(node);
       }
 
       for (const node of record.addedNodes) {
@@ -414,19 +417,19 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
     const eventType = element?.getAttribute?.('trigger') || 'click';
 
     if (
-      !this.listeners.has(element) &&
+      !this.#listeners.has(element) &&
       element.hasAttribute('trigger') ||
       !element.closest('[trigger]')
     ) {
       element.addEventListener(eventType, this.onTriggerEvent, {
         passive: element.hasAttribute('passive'),
       });
-      this.listeners.set(element, eventType);
+      this.#listeners.set(element, eventType);
     }
   }
 
   private willMutate(trigger: HTMLElement): void {
-    if (!this.dispatchEvent(new WillMutateEvent<D, V>(this)))
+    if (!this.dispatchEvent(new E.WillMutateEvent<D, V>(this)))
       throw new WillMutateError('mutation was canceled');
 
     this.inFlightTrigger = trigger;
@@ -438,8 +441,11 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
       input.disabled = true;
   }
 
-  private async willNavigate(data: Data<D>, triggeringElement: HTMLElement): Promise<void> {
-    if (!this.dispatchEvent(new WillNavigateEvent(this)))
+  private async willNavigate(
+    data: Data<D>|null|undefined,
+    triggeringElement: HTMLElement
+  ): Promise<void> {
+    if (!this.dispatchEvent(new E.WillNavigateEvent(this)))
       return;
 
     const href = triggeringElement.closest<HTMLAnchorElement>('a[trigger]')?.href;
@@ -449,7 +455,7 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
         // If we get here without `data`, it's due to user error
       : await this.resolveURL(this.data!, triggeringElement); // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
-    history.replaceState(data, WillNavigateEvent.type, url);
+    history.replaceState(data, E.WillNavigateEvent.type, url);
   }
 
   private didMutate(): void {
@@ -462,7 +468,7 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
       input.disabled = false;
   }
 
-  private onTriggerEvent(event: Event): void {
+  @bound private onTriggerEvent(event: Event): void {
     event.preventDefault();
 
     if (this.inFlightTrigger)
@@ -477,52 +483,7 @@ export class ApolloMutationElement<D = unknown, V = OperationVariables>
     this.debouncedMutate();
   }
 
-  /** @private */
-  onCompleted(data: Data<D>): void {
-    const trigger = this.inFlightTrigger;
-    this.didMutate();
-    this.dispatchEvent(new MutationCompletedEvent<D, V>(this));
-    if (ApolloMutationElement.isLink(trigger) || trigger?.closest?.('a[trigger]'))
-      this.willNavigate(data, trigger);
-  }
-
-  /** @private */
-  onError(): void {
-    this.didMutate();
-    this.dispatchEvent(new MutationErrorEvent<D, V>(this));
-  }
-
-  /**
-   * Call to render the element's template using the mutation result.
-   * Templates can access `called`, `data`, `error`, `errors`, and `loading` properties.
-   * Rendering is synchronous and incremental.
-   *
-   * @summary Render the template with the query result.
-   */
-  public render(): void {
-    super.render();
+  public mutate(params?: P<D, V, 'mutate'>[0]): R<D, V, 'mutate'> {
+    return this.controller.mutate(params);
   }
 }
-
-Object.defineProperties(ApolloMutationElement.prototype, {
-  variables: {
-    configurable: true,
-    enumerable: true,
-
-    get(this: ApolloMutationElement): VariablesOf<ApolloMutationElement> | null {
-      if (this.__variables)
-        return this.__variables;
-      else
-        return this.getVariablesFromInputs() ?? this.getDOMVariables();
-    },
-
-    set(this: ApolloMutationElement, v: VariablesOf<ApolloMutationElement> | null) {
-      this.__variables = v;
-      if (this.readyToReceiveDocument) // element is connected
-        this.variablesChanged?.(v); /* c8 ignore next */ // covered
-    },
-
-  },
-});
-
-customElements.define(ApolloMutationElement.is, ApolloMutationElement);

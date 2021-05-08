@@ -1,30 +1,21 @@
-import type { ApolloError, OperationVariables } from '@apollo/client/core';
 import type {
   ApolloSubscriptionInterface,
-  Constructor,
-  Data,
-  GraphQLError,
+  ComponentDocument,
+  MaybeTDN,
+  MaybeVariables,
 } from '@apollo-elements/interfaces';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
-import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
-import { NetworkStatus } from '@apollo/client/core';
 
-import { StampinoRender, property } from './stampino-render';
+import { ApolloElement } from './apollo-element';
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'apollo-subscription': ApolloSubscriptionElement
-  }
-}
+import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
 
-export type ApolloSubscriptionModel<D, V> = Pick<ApolloSubscriptionElement<D, V>,
-  | 'data'
-  | 'error'
-  | 'errors'
-  | 'loading'
-  | 'networkStatus'
->;
+import { customElement, state, property } from '@lit/reactive-element/decorators.js';
+
+declare global { interface HTMLElementTagNameMap {
+  'apollo-subscription': ApolloSubscriptionElement
+} }
 
 /**
  * @element apollo-subscription
@@ -74,39 +65,44 @@ export type ApolloSubscriptionModel<D, V> = Pick<ApolloSubscriptionElement<D, V>
  * </script>
  * ```
  */
-export class ApolloSubscriptionElement<D = unknown, V = OperationVariables> extends
-  GraphQLScriptChildMixin(
-    ApolloSubscriptionMixin<Constructor<StampinoRender>>(
-      StampinoRender
-    )
-  )<D, V> implements ApolloSubscriptionInterface<D, V> {
-  static get is(): 'apollo-subscription' { return 'apollo-subscription'; }
+@customElement('apollo-subscription')
+export class ApolloSubscriptionElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V>
+  implements Omit<ApolloSubscriptionInterface<D, V>, 'nextError'|'nextData'> {
+  static readonly is = 'apollo-subscription';
 
-  @property() data: Data<D>|null = null;
+  controller = new ApolloSubscriptionController<D, V>(this, undefined);
 
-  @property() error: Error|ApolloError|null = null;
+  get canAutoSubscribe(): boolean { return this.controller?.canAutoSubscribe ?? false; }
 
-  @property() errors: readonly GraphQLError[] = [];
+  @state({ controlled: true }) subscription: null | ComponentDocument<D> = null;
 
-  @property({ reflect: true, init: false }) loading = false;
+  @state({ controlled: true }) context?: Record<string, any>;
 
-  @property({ reflect: true, init: NetworkStatus.ready }) networkStatus = NetworkStatus.ready;
+  @property({ controlled: 'options', type: Boolean, attribute: 'no-auto-subscribe' })
+  noAutoSubscribe = false;
 
-  protected get model(): ApolloSubscriptionModel<D, V> {
-    const { data, error, errors, loading, networkStatus } = this;
-    return { data, error, errors, loading, networkStatus };
+  @property({ controlled: 'options', type: Boolean, attribute: 'notify-on-network-status-change' })
+  notifyOnNetworkStatusChange = false;
+
+  @property({ controlled: 'options', type: Boolean, attribute: 'should-resubscribe' })
+  shouldResubscribe = false;
+
+  @property({ controlled: 'options', type: Boolean, attribute: 'skip' }) skip = false;
+
+  @property({ controlled: 'options', attribute: 'error-policy' })
+  errorPolicy?: this['controller']['options']['errorPolicy'];
+
+  @property({ controlled: 'options', attribute: 'fetch-policy' })
+  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+
+  subscribe(...args: Parameters<this['controller']['subscribe']>): void {
+    return this.controller.subscribe(...args);
   }
 
-  /**
-   * Call to render the element's template using the subscription result.
-   * Templates can access `data`, `error`, `errors`, `loading`, and `networkStatus` properties.
-   * Rendering is synchronous and incremental.
-   *
-   * @summary Render the template with the subscription result.
-   */
-  public render(): void {
-    super.render();
+  cancel(): void {
+    return this.controller.cancel();
   }
+
+  shouldSubscribe?(options?: Partial<this['controller']['options']>): boolean;
 }
-
-customElements.define(ApolloSubscriptionElement.is, ApolloSubscriptionElement);

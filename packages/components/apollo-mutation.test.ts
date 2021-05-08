@@ -2,16 +2,7 @@ import type { SinonSpy, SinonStub } from 'sinon';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
-import type {
-  NoParamMutationData,
-  NoParamMutationVariables,
-  InputParamMutationData,
-  InputParamMutationVariables,
-  NullableParamMutationData,
-  NullableParamMutationVariables,
-} from '@apollo-elements/test';
+import type { GraphQLError, OptimisticResponseType } from '@apollo-elements/interfaces';
 
 import type {
   ApolloClient,
@@ -21,6 +12,8 @@ import type {
   FetchResult,
   NormalizedCacheObject,
 } from '@apollo/client/core';
+
+import * as S from '@apollo-elements/test';
 
 import { ApolloError } from '@apollo/client/core';
 
@@ -35,9 +28,7 @@ import {
 
 import { html } from 'lit/static-html.js';
 
-import { sendKeys } from '@web/test-runner-commands';
-
-import { spy, stub } from 'sinon';
+import { match, spy, stub } from 'sinon';
 
 import {
   assertType,
@@ -59,10 +50,6 @@ import {
   MutationErrorEvent,
 } from './events';
 
-import InputParamMutation from '@apollo-elements/test/graphql/InputParam.mutation.graphql';
-import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
-import NullableParamMutation from '@apollo-elements/test/graphql/NullableParam.mutation.graphql';
-import { OptimisticResponseType } from '@apollo-elements/interfaces';
 
 describe('[components] <apollo-mutation>', function describeApolloMutation() {
   beforeEach(setupClient);
@@ -70,10 +57,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   afterEach(teardownClient);
 
   describe('with no variables in DOM', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = await fixture<ApolloMutationElement>(html`
         <apollo-mutation></apollo-mutation>
       `);
     });
@@ -81,19 +68,74 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     it('does not set variables', function() {
       expect(element.variables).to.be.null;
     });
+
+    describe('calling mutate({ mutation, variables })', function() {
+      beforeEach(() => spy(element.controller, 'mutate'));
+      afterEach(() => (element.controller.mutate as SinonSpy).restore?.());
+      beforeEach(() => element.mutate({
+        mutation: S.NullableParamMutation,
+        variables: { nullable: 'nul' },
+      }));
+      it('calls controller mutate', function() {
+        expect(element.controller.mutate).to.have.been.calledWithMatch({
+          mutation: S.NullableParamMutation,
+          variables: { nullable: 'nul' },
+        });
+      });
+    });
+  });
+
+  describe('with refetch-queries attr', function() {
+    let element: ApolloMutationElement;
+
+    beforeEach(async function() {
+      element = await fixture<ApolloMutationElement>(html`
+        <apollo-mutation refetch-queries="A, B,C  ,   D  ,E"></apollo-mutation>
+      `);
+    });
+
+    beforeEach(nextFrame);
+
+    it('sets refetchQueries', function() {
+      expect(element.refetchQueries)
+        .to.deep.equal(['A', 'B', 'C', 'D', 'E'])
+        .and.to.deep.equal(element.controller.options.refetchQueries);
+    });
+
+    describe('then removing attribute', function() {
+      beforeEach(() => element.removeAttribute('refetch-queries'));
+      beforeEach(nextFrame);
+      it('unsets the property', function() {
+        expect(element.refetchQueries).to.be.null;
+      });
+    });
+
+    describe('calling mutate({ mutation })', function() {
+      beforeEach(() => spy(element.controller.client!, 'mutate'));
+      afterEach(() => (element.controller.client!.mutate as SinonSpy).restore?.());
+      beforeEach(() => element.mutate({ mutation: S.NullableParamMutation }));
+      it('calls client mutate', function() {
+        expect(element.controller.client!.mutate).to.have.been.calledWith(match({
+          mutation: S.NullableParamMutation,
+          refetchQueries: ['A', 'B', 'C', 'D', 'E'],
+        }));
+      });
+    });
   });
 
   describe('with variables as data attributes', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+      element = await fixture<ApolloMutationElement>(html`
         <apollo-mutation
             data-var-a="variable-a"
             data-var-b="variable-b"
         ></apollo-mutation>
       `);
     });
+
+    beforeEach(nextFrame);
 
     it('reads variables from dataset', function() {
       expect(element.variables).to.deep.equal({
@@ -104,9 +146,12 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('setting inputKey', function() {
       const inputKey = 'inputTypeName';
+
       beforeEach(function() {
         element.inputKey = inputKey;
       });
+
+      beforeEach(nextFrame);
 
       it('wraps variables in object with input key', function() {
         expect(element.variables).to.deep.equal({
@@ -125,6 +170,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         beforeEach(function() {
           element.removeAttribute('input-key');
         });
+
+        beforeEach(nextFrame);
+
         it('unsets inputKey', function() {
           expect(element.inputKey).to.be.null;
         });
@@ -134,6 +182,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         beforeEach(function() {
           element.setAttribute('input-key', inputKey);
         });
+
+        beforeEach(nextFrame);
+
         it('has no effect', function() {
           expect(element.inputKey).to.equal(inputKey);
         });
@@ -142,10 +193,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with children for variables', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement>(html`
         <apollo-mutation input-key="inputTypeName">
           <input data-variable="varA" value="variable-a"/>
           <input data-variable="varB" value="variable-b"/>
@@ -163,38 +214,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
   });
 
-  describe('with variables as data attributes and children for variables', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
-
-    beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
-        <apollo-mutation
-            input-key="inputTypeName"
-            data-var-a="variable-a"
-            data-var-b="variable-b">
-          <input data-variable="varC" value="variable-c"/>
-          <input data-variable="varD" value="variable-d"/>
-        </apollo-mutation>
-      `);
-    });
-
-    it('reads variables from children', function() {
-      expect(element.variables).to.deep.equal({
-        inputTypeName: {
-          varA: 'variable-a',
-          varB: 'variable-b',
-          varC: 'variable-c',
-          varD: 'variable-d',
-        },
-      });
-    });
-  });
-
   describe('with single input variable', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement>(html`
         <apollo-mutation>
           <input data-variable="varA" value="variable-a"/>
         </apollo-mutation>
@@ -209,10 +233,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with multiple input variables', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement>(html`
         <apollo-mutation>
           <input data-variable="varA" value="variable-a"/>
           <input data-variable="varB" value="variable-b"/>
@@ -229,10 +253,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with single labeled variable', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement>(html`
         <apollo-mutation>
           <label>
             variable-a
@@ -250,10 +274,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with mixed attribute, input, and labeled variables', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement>(html`
         <apollo-mutation data-var-b="variable-b">
           <label>
             variable-a
@@ -275,10 +299,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with variables as data attributes and children variables', function() {
-    let element: ApolloMutationElement<unknown, unknown>;
+    let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+      element = fixtureSync<ApolloMutationElement>(html`
         <apollo-mutation
             data-var-a="variable-a"
             data-var-b="variable-b">
@@ -300,11 +324,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
   describe('with an input key', function() {
     describe('with variables as data attributes', function() {
-      let element: ApolloMutationElement<unknown, unknown>;
+      let element: ApolloMutationElement;
       const inputKey = 'inputTypeName';
 
       beforeEach(async function() {
-        element = fixtureSync<ApolloMutationElement<unknown, unknown>>(html`
+        element = fixtureSync<ApolloMutationElement>(html`
           <apollo-mutation
               input-key="${inputKey}"
               data-var-a="variable-a"
@@ -326,6 +350,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         beforeEach(function() {
           element.inputKey = null;
         });
+        beforeEach(nextFrame);
         it('removes the input-key attribute', function() {
           expect(element.hasAttribute('input-key')).to.be.false;
         });
@@ -342,10 +367,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('with children for variables', function() {
-      let element: ApolloMutationElement<unknown, unknown>;
+      let element: ApolloMutationElement;
 
       beforeEach(async function() {
-        element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+        element = await fixture<ApolloMutationElement>(html`
           <apollo-mutation input-key="inputTypeName">
             <input data-variable="varA" value="variable-a"/>
             <input data-variable="varB" value="variable-b"/>
@@ -364,10 +389,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('with variables as data attributes and children for variables', function() {
-      let element: ApolloMutationElement<unknown, unknown>;
+      let element: ApolloMutationElement;
 
       beforeEach(async function() {
-        element = await fixture<ApolloMutationElement<unknown, unknown>>(html`
+        element = await fixture<ApolloMutationElement>(html`
           <apollo-mutation
               input-key="inputTypeName"
               data-var-a="variable-a"
@@ -392,11 +417,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with a button trigger', function() {
-    let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NoParamMutation}">
+        <apollo-mutation .mutation="${S.NoParamMutation}">
           <button trigger>mutate</button>
         </apollo-mutation>
       `);
@@ -413,7 +438,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('clicking the button', function() {
       it('mutates', async function() {
-        expect(element.data).to.be.null;
+        expect(element.data).to.not.be.ok;
         clickButton();
         await aTimeout(10);
         expect(element.data).to.be.ok;
@@ -447,7 +472,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           await aTimeout(10);
 
-          expect(element.data).to.be.null;
+          expect(element.data).to.not.be.ok;
         });
       });
     });
@@ -465,13 +490,13 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with a link trigger', function() {
-    let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
     let replaceStateStub: SinonStub;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NoParamMutation}">
+        <apollo-mutation .mutation="${S.NoParamMutation}">
           <a href="#foo" trigger>do it.</a>
         </apollo-mutation>
       `);
@@ -487,7 +512,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('clicking the link', function() {
       it('mutates', async function() {
-        expect(element.data).to.be.null;
+        expect(element.data).to.not.be.ok;
         element.querySelector<HTMLButtonElement>('[trigger]')!.click();
         await aTimeout(10);
         expect(element.data).to.be.ok;
@@ -563,7 +588,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           await aTimeout(10);
 
-          expect(element.data).to.be.null;
+          expect(element.data).to.not.be.ok;
         });
       });
     });
@@ -582,13 +607,13 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with a link trigger that wraps a button', function() {
-    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
     let replaceStateStub: SinonStub;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NullableParamMutation}">
+        <apollo-mutation .mutation="${S.NullableParamMutation}">
           <a href="#foo" trigger>
             <button>do it</button>
           </a>
@@ -605,11 +630,16 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('when element has `resolveURL` property', function() {
       beforeEach(function() {
         element.resolveURL =
-          ({ nullableParam }: NullableParamMutationData): string => `/nullable/${nullableParam!.nullable}/`;
+          (data: S.NullableParamMutationData): string =>
+            `/nullable/${data?.nullableParam?.nullable}/`;
         element.setAttribute('data-nullable', 'special');
       });
 
+      beforeEach(nextFrame);
+
       describe('clicking the button', function() {
+        beforeEach(() => spy(element.controller.client!, 'mutate'));
+        afterEach(() => (element.controller.client!.mutate as SinonSpy).restore?.());
         beforeEach(async function() {
           const button = element.querySelector('button');
           button!.click();
@@ -617,6 +647,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         });
 
         it('navigates to the resolved URL', function() {
+          expect(element.controller.client!.mutate).to.have.been.calledWithMatch({
+            variables: {
+              nullable: 'special',
+            },
+          });
           expect(replaceStateStub)
             .to.have.been.calledWith(element.data, 'will-navigate', '/nullable/special/');
         });
@@ -626,7 +661,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('clicking the link', function() {
       it('mutates', async function() {
         const button = element.querySelector('button');
-        expect(element.data).to.be.null;
+        expect(element.data).to.not.be.ok;
         button!.click();
         await aTimeout(10);
         expect(element.data).to.be.ok;
@@ -707,18 +742,18 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           await aTimeout(10);
 
-          expect(element.data).to.be.null;
+          expect(element.data).to.not.be.ok;
         });
       });
     });
   });
 
   describe('with variable inputs and a button trigger', function() {
-    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NullableParamMutation}">
+        <apollo-mutation .mutation="${S.NullableParamMutation}">
           <input data-variable="nullable" value="input">
           <input data-vrible="nullable" value="fail">
           <button trigger>Do It</button>
@@ -729,7 +764,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('clicking the button', function() {
       let input: HTMLInputElement;
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent<typeof element>;
+      let event: MutationCompletedEvent;
 
       beforeEach(async function() {
         input = element.querySelector('input')!;
@@ -758,7 +793,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('setting variables property', function() {
       let input: HTMLInputElement;
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent<typeof element>;
+      let event: MutationCompletedEvent;
 
       beforeEach(function() {
         element.variables = { nullable: 'manual' };
@@ -792,11 +827,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with variable script and a button trigger', function() {
-    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NullableParamMutation}">
+        <apollo-mutation .mutation="${S.NullableParamMutation}">
           <button trigger>Do It</button>
           <script type="application/json">
             { "nullable": "DOM" }
@@ -824,7 +859,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('setting variables property', function() {
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent<typeof element>;
+      let event: MutationCompletedEvent;
 
       beforeEach(function() {
         element.variables = { nullable: 'manual' };
@@ -854,11 +889,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with multiple variable inputs that trigger on change', function() {
-    let element: ApolloMutationElement<InputParamMutationData, InputParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.InputParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation input-key="input" .mutation="${InputParamMutation}">
+        <apollo-mutation input-key="input" .mutation="${S.InputParamMutation}">
           <input data-variable="a" trigger="change"/>
           <input data-variable="b" trigger="change"/>
           <button trigger>Save</button>
@@ -868,17 +903,16 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('typing in the first input', function() {
       let input: HTMLInputElement;
-      let button: HTMLButtonElement;
-      let event: MutationCompletedEvent<typeof element>;
+      let event: MutationCompletedEvent;
+      let disabledAfterTyping: boolean;
 
       beforeEach(async function() {
         input = element.querySelector('input[data-variable="a"]')!;
-        setTimeout(async function() {
-          input.focus();
-          await sendKeys({ type: 'hello' });
-          input.blur();
 
-          expect(input.disabled).to.be.true;
+        setTimeout(async function() {
+          input.value = 'hello';
+          input.dispatchEvent(new Event('change'));
+          disabledAfterTyping = input.disabled;
         });
 
         // @ts-expect-error: oneEvent doesn't type based on event
@@ -888,7 +922,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('toggles input disabled property', async function() {
         expect(event.detail.element).to.equal(element);
         expect(event.detail.data).to.equal(element.data);
-        expect(input.disabled).to.be.false;
+        expect(input.disabled).to.be.false.and.to.not.equal(disabledAfterTyping);
       });
 
       it('uses input variables', function() {
@@ -899,17 +933,18 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('typing in the second input', function() {
       let input: HTMLInputElement;
-      let button: HTMLButtonElement;
-      let event: MutationCompletedEvent<typeof element>;
+      let event: MutationCompletedEvent;
+      let disabledAfterTyping: boolean;
+
+      beforeEach(nextFrame);
 
       beforeEach(async function() {
         input = element.querySelector('input[data-variable="b"]')!;
-        setTimeout(async function() {
-          input.focus();
-          await sendKeys({ type: 'hello' });
-          input.blur();
 
-          expect(input.disabled).to.be.true;
+        setTimeout(function() {
+          input.value = 'hello';
+          input.dispatchEvent(new Event('change'));
+          disabledAfterTyping = input.disabled;
         });
 
         // @ts-expect-error: oneEvent doesn't type based on event
@@ -919,7 +954,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('toggles input disabled property', async function() {
         expect(event.detail.element).to.equal(element);
         expect(event.detail.data).to.equal(element.data);
-        expect(input.disabled).to.be.false;
+        expect(input.disabled).to.be.false.and.to.not.equal(disabledAfterTyping);
       });
 
       it('uses input variables', function() {
@@ -931,7 +966,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('clicking the button', function() {
       let input: HTMLInputElement;
       let button: HTMLButtonElement;
-      let event: MutationCompletedEvent<typeof element>;
+      let event: MutationCompletedEvent;
 
       beforeEach(async function() {
         input = element.querySelector('input')!;
@@ -960,11 +995,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with multiple variable inputs that trigger on keyup', function() {
-    let element: ApolloMutationElement<InputParamMutationData, InputParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.InputParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation input-key="input" .mutation="${InputParamMutation}">
+        <apollo-mutation input-key="input" .mutation="${S.InputParamMutation}">
           <input data-variable="a" trigger="keyup"/>
           <input data-variable="b" trigger="keyup"/>
         </apollo-mutation>
@@ -972,16 +1007,14 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('setting debounce to 500', function() {
-      let mutateSpy: SinonSpy;
+      beforeEach(() => spy(element.controller, 'mutate'));
+      afterEach(() => (element.controller.mutate as SinonSpy).restore?.());
 
       beforeEach(function() {
         element.debounce = 500;
-        mutateSpy = spy(element, 'mutate');
       });
 
-      afterEach(function() {
-        mutateSpy.restore();
-      });
+      beforeEach(nextFrame);
 
       it('reflects to attr', function() {
         expect(element.getAttribute('debounce')).to.equal('500');
@@ -989,14 +1022,26 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
       describe('then typing in first input', function() {
         beforeEach(async function() {
-          element.querySelector('input')!.focus();
-          await sendKeys({ type: 'מה ידידות מנוחתיך את שבת המלכה' });
+          const input = element.querySelector('input')!;
+          input.dispatchEvent(new Event('keyup'));
+          await nextFrame();
+          input.dispatchEvent(new Event('keyup'));
+          await nextFrame();
+          input.dispatchEvent(new Event('keyup'));
+          await nextFrame();
+          input.dispatchEvent(new Event('keyup'));
+          await nextFrame();
+          input.dispatchEvent(new Event('keyup'));
+          await nextFrame();
+          input.dispatchEvent(new Event('keyup'));
+          await nextFrame();
+          input.dispatchEvent(new Event('keyup'));
         });
 
         beforeEach(() => aTimeout(1000));
 
         it('only mutates once', function() {
-          expect(element.mutate).to.have.been.calledOnce;
+          expect(element.controller.mutate).to.have.been.calledOnce;
         });
       });
 
@@ -1005,20 +1050,34 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           element.removeAttribute('debounce');
         });
 
+        beforeEach(nextFrame);
+
         it('unsets property', function() {
           expect(element.debounce).to.be.null;
         });
 
         describe('then typing in first input', function() {
           beforeEach(async function() {
-            element.querySelector('input')!.focus();
-            await sendKeys({ type: 'מה ידידות מנוחתיך את שבת המלכה' });
+            const input = element.querySelector('input')!;
+            input.dispatchEvent(new Event('keyup'));
+            await nextFrame();
+            input.dispatchEvent(new Event('keyup'));
+            await nextFrame();
+            input.dispatchEvent(new Event('keyup'));
+            await nextFrame();
+            input.dispatchEvent(new Event('keyup'));
+            await nextFrame();
+            input.dispatchEvent(new Event('keyup'));
+            await nextFrame();
+            input.dispatchEvent(new Event('keyup'));
+            await nextFrame();
+            input.dispatchEvent(new Event('keyup'));
           });
 
           beforeEach(() => aTimeout(1000));
 
-          it('only mutates once', function() {
-            expect(mutateSpy.callCount).to.be.greaterThan(1);
+          it('mutates many times', function() {
+            expect((element.controller.mutate as SinonSpy).callCount).to.be.greaterThan(1);
           });
         });
       });
@@ -1026,11 +1085,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('when mutation errors', function() {
-    let element: ApolloMutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NullableParamMutation}" data-nullable="error">
+        <apollo-mutation .mutation="${S.NullableParamMutation}" data-nullable="error">
           <button trigger>Do It</button>
         </apollo-mutation>
       `);
@@ -1047,11 +1106,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with a template and a mutation', function() {
-    let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
-        <apollo-mutation .mutation="${NoParamMutation}">
+        <apollo-mutation .mutation="${S.NoParamMutation}">
           <button trigger>mutate</button>
           <template>
             <span class="{{ data.noParam.noParam || 'no-data' }}"></span>
@@ -1062,9 +1121,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('before mutating', function() {
       it('renders null data to shadow root', function() {
-        expect(element.shadowRoot).to.be.an.instanceof(ShadowRoot);
-        expect(element.$('.noParam')).to.not.be.ok;
-        expect(element.$('.no-data')).to.be.ok;
+        expect(element).shadowDom.to.equal('<span class="no-data"></span>');
       });
     });
 
@@ -1076,19 +1133,17 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         await oneEvent(element, 'mutation-completed');
       });
       it('renders data to shadow root', function() {
-        expect(element.shadowRoot).to.be.an.instanceof(ShadowRoot);
-        expect(element.$('.noParam')).to.be.ok;
-        expect(element.$('.no-data')).to.not.be.ok;
+        expect(element).shadowDom.to.equal('<span class="noParam"></span>');
       });
     });
   });
 
   describe('with no-shadow attribute set, a template, and a mutation', function() {
-    let element: ApolloMutationElement<NoParamMutationData, NoParamMutationVariables>;
+    let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
     beforeEach(async function() {
       element = fixtureSync<typeof element>(html`
-        <apollo-mutation no-shadow .mutation="${NoParamMutation}">
+        <apollo-mutation no-shadow .mutation="${S.NoParamMutation}">
           <button id="trigger" trigger>mutate</button>
           <template>
             <span class="{{ data.noParam.noParam || 'no-data' }}"></span>
@@ -1100,13 +1155,13 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('before mutating', function() {
       it('renders null data to light children', function() {
         expect(element.shadowRoot).to.be.null;
-        expect(element.querySelector('.output')).to.be.ok;
-        expect(element.$('.noParam')).to.not.be.ok;
-        expect(element.$('.no-data')).to.be.ok;
-        expect(
-          element.querySelector('.output')!.contains(element.$('.no-data')),
-          'output has rendered'
-        ).to.be.true;
+        expect(element).lightDom.to.equal(`
+          <button id="trigger" trigger>mutate</button>
+          <template></template>
+          <div class="output">
+            <span class="no-data"></span>
+          </div>
+        `);
       });
     });
 
@@ -1118,15 +1173,22 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         await oneEvent(element, 'mutation-completed');
       });
       it('renders data to shadow root', function() {
-        expect(element.querySelector('.noParam')).to.be.ok;
-        expect(element.querySelector('.no-data')).to.not.be.ok;
+        expect(element).lightDom.to.equal(`
+          <button id="trigger" trigger>mutate</button>
+          <template></template>
+          <div class="output">
+            <span class="noParam"></span>
+          </div>
+        `);
       });
     });
 
     describe('when cheekily moving the trigger', function() {
-      let mutateSpy: SinonSpy;
       let movedTrigger: HTMLButtonElement;
       let newTrigger: HTMLButtonElement;
+
+      beforeEach(() => spy(element.controller, 'mutate'));
+      afterEach(() => (element.controller.mutate as SinonSpy).restore?.());
 
       beforeEach(function() {
         const node = document.createElement('div');
@@ -1134,12 +1196,12 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         node.classList.add('haha');
         document.body.append(node);
         node.append(movedTrigger);
-        mutateSpy = spy(element, 'mutate');
       });
+
+      beforeEach(nextFrame);
 
       afterEach(function() {
         document.querySelector('haha')?.remove?.();
-        mutateSpy.restore?.();
       });
 
       describe('then clicking the moved trigger', function() {
@@ -1149,7 +1211,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           movedTrigger.click();
         });
         it('does not mutate', function() {
-          expect(mutateSpy).to.not.have.been.called;
+          expect(element.controller.mutate).to.not.have.been.called;
         });
       });
 
@@ -1161,13 +1223,15 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           element.appendChild(newTrigger);
         });
 
+        beforeEach(nextFrame);
+
         describe('when clicking the new trigger', function() {
-          beforeEach(nextFrame);
           beforeEach(function() {
             newTrigger.click();
           });
+          beforeEach(nextFrame);
           it('mutates', function() {
-            expect(mutateSpy).to.have.been.called;
+            expect(element.controller.mutate).to.have.been.called;
           });
         });
       });

@@ -1,4 +1,4 @@
-import { Data, Variables } from '@apollo-elements/interfaces/operation';
+import type { Data, Variables, MaybeTDN } from '@apollo-elements/interfaces/operation';
 import type { ApolloError, DocumentNode } from '@apollo/client/core';
 import type { ApolloMutationElement } from './apollo-mutation';
 
@@ -9,7 +9,7 @@ export type MutationEventType = (
   | 'will-navigate'
 );
 
-export interface MutationEventDetail<D, V> {
+export interface MutationEventDetail<D extends MaybeTDN, V> {
   data?: Data<D> | null;
   error?: Error | ApolloError | null;
   variables?: Variables<D, V> | null;
@@ -17,7 +17,7 @@ export interface MutationEventDetail<D, V> {
   mutation: DocumentNode | null;
 }
 
-export class MutationEvent<D, V> extends CustomEvent<MutationEventDetail<D, V>> {
+export class MutationEvent<D extends MaybeTDN, V> extends CustomEvent<MutationEventDetail<D, V>> {
   declare type: MutationEventType;
 
   declare detail: MutationEventDetail<D, V>;
@@ -40,7 +40,7 @@ export class MutationEvent<D, V> extends CustomEvent<MutationEventDetail<D, V>> 
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillMutateEvent<D = any, V = any> extends MutationEvent<D, V> {
+export class WillMutateEvent<D extends MaybeTDN = any, V = any> extends MutationEvent<D, V> {
   static type: 'will-mutate' = 'will-mutate';
 
   constructor(element: ApolloMutationElement<D, V>) {
@@ -62,7 +62,7 @@ export class WillMutateEvent<D = any, V = any> extends MutationEvent<D, V> {
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class MutationCompletedEvent<D = any, V = any> extends MutationEvent<D, V> {
+export class MutationCompletedEvent<D extends MaybeTDN = any, V = any> extends MutationEvent<D, V> {
   static type: 'mutation-completed' = 'mutation-completed';
 
   constructor(element: ApolloMutationElement<D, V>) {
@@ -84,7 +84,7 @@ export class MutationCompletedEvent<D = any, V = any> extends MutationEvent<D, V
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillNavigateEvent<D = any, V = any> extends MutationEvent<D, V> {
+export class WillNavigateEvent<D extends MaybeTDN = any, V = any> extends MutationEvent<D, V> {
   static type: 'will-navigate' = 'will-navigate'
 
   constructor(element: ApolloMutationElement<D, V>) {
@@ -106,7 +106,7 @@ export class WillNavigateEvent<D = any, V = any> extends MutationEvent<D, V> {
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class MutationErrorEvent<D = any, V = any> extends MutationEvent<D, V> {
+export class MutationErrorEvent<D extends MaybeTDN = any, V = any> extends MutationEvent<D, V> {
   static type: 'mutation-error' = 'mutation-error';
 
   constructor(element: ApolloMutationElement<D, V>) {
