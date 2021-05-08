@@ -16,12 +16,12 @@ import type { SetupOptions } from '@apollo-elements/test';
 
 import {
   fixture,
-  unsafeStatic,
   expect,
-  html as fhtml,
   nextFrame,
   aTimeout,
 } from '@open-wc/testing';
+
+import { unsafeStatic, html as h } from 'lit/static-html.js';
 
 import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
@@ -89,7 +89,7 @@ describe('[fast] ApolloQuery', function() {
       @customElement({ name })
       class Test extends ApolloQuery<unknown, unknown> { }
       const tag = unsafeStatic(name);
-      const el = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+      const el = await fixture<Test>(h`<${tag}></${tag}>`);
       expect(el).to.be.an.instanceOf(FASTElement);
     });
   });
@@ -99,7 +99,7 @@ describe('[fast] ApolloQuery', function() {
     const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
     @customElement({ name, template }) class Test extends ApolloQuery<{ foo: 'bar' }, null> { }
     const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+    const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
     expect(element).shadowDom.to.equal('bar');
   });
 });

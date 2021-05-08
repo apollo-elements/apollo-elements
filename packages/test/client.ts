@@ -50,7 +50,7 @@ const unmocked = makeExecutableSchema({
 
       pages(_: any, { offset, limit }: S.PaginatedQueryVariables) {
         if (typeof limit === 'number' && limit >= 100)
-          throw new Error('rate limited')
+          throw new Error('rate limited');
         return Array.from({ length: limit ?? 10 }, (_, i) => i + 1 + (offset ?? 0));
       },
 

@@ -15,7 +15,6 @@ import type {
   ComponentDocument,
   Constructor,
   Data,
-  MaybeTDN,
   OptimisticResponseType,
   RefetchQueriesType,
   Variables,
