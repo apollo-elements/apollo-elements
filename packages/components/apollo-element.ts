@@ -1,7 +1,5 @@
 import type { PropertyDeclaration } from 'lit';
 
-import type { TypedDocumentNode, VariablesOf } from '@graphql-typed-document-node/core';
-
 import type { ApolloController } from '@apollo-elements/core';
 
 import type {
