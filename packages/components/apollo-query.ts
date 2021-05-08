@@ -4,7 +4,7 @@ import type * as I from '@apollo-elements/interfaces';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement, controlled } from './apollo-element';
 
 import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
@@ -76,21 +76,25 @@ export class ApolloQueryElement<D extends I.MaybeTDN = any, V = I.MaybeVariables
   controller = new ApolloQueryController<D, V>(this);
 
   get canAutoSubscribe(): boolean { return this.controller?.canAutoSubscribe ?? false; }
-  @state({ controlled: true }) options = {};
-  @state({ controlled: true }) networkStatus = NetworkStatus.ready;
-  @state({ controlled: true }) query: null | I.ComponentDocument<D> = null;
-  @state({ controlled: true }) context?: Record<string, any>;
+  @controlled() @state() options = {};
+  @controlled() @state() networkStatus = NetworkStatus.ready;
+  @controlled() @state() query: null | I.ComponentDocument<D> = null;
+  @controlled() @state() context?: Record<string, any>;
 
-  @property({ controlled: 'options', type: Boolean, attribute: 'no-auto-subscribe' })
+  @controlled({ path: 'options' })
+  @property({ type: Boolean, attribute: 'no-auto-subscribe' })
   noAutoSubscribe = false;
 
-  @property({ controlled: 'options', type: Boolean, attribute: 'notify-on-network-status-change' })
+  @controlled({ path: 'options' })
+  @property({ type: Boolean, attribute: 'notify-on-network-status-change' })
   notifyOnNetworkStatusChange = false;
 
-  @property({ controlled: 'options', attribute: 'error-policy' })
+  @controlled({ path: 'options' })
+  @property({ attribute: 'error-policy' })
   errorPolicy?: this['controller']['options']['errorPolicy'];
 
-  @property({ controlled: 'options', attribute: 'fetch-policy' })
+  @controlled({ path: 'options' })
+  @property({ attribute: 'fetch-policy' })
   fetchPolicy?: this['controller']['options']['fetchPolicy'];
 
   /**
