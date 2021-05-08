@@ -27,7 +27,10 @@ export interface ControlledPropertyDeclaration extends PropertyDeclaration {
 }
 
 export function controlled({ path }: { path?: 'options' } = {}) {
-  return function(proto: ApolloElement<any, any>, name: string|symbol): void {
+  return function<T extends ApolloElement<any, any>>(
+    proto: T,
+    name: typeof path extends keyof T ? keyof T[typeof path] : keyof T
+  ): void {
     return (proto.constructor as typeof ApolloElement).createProperty(name as string, {
       // @ts-expect-error: I know it's protected
       ...(proto.constructor as typeof ApolloElement).getPropertyOptions(name),
@@ -67,13 +70,30 @@ export class ApolloElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
     super.createProperty(name, { ...options });
   }
 
+  /** @summary The Apollo Client instance. */
   @controlled({ path: 'options' })
-  @state() client: ApolloClient<NormalizedCacheObject> | null = null;
+  @state()
+  client: ApolloClient<NormalizedCacheObject> | null = null;
 
+  /** @summary Whether a request is in flight. */
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;
+
+  /** @summary Latest Data. */
   @controlled() @state() data: Data<D>|null = null;
+
+  /**
+   * @summary Operation document.
+   * GraphQL operation document i.e. query, subscription, or mutation.
+   * Must be a parsed GraphQL `DocumentNode`
+   */
   @controlled() @state() document: ComponentDocument<D>|null = null;
+
+  /** @summary Latest error */
   @controlled() @state() error: Error|ApolloError|null = null;
+
+  /** @summary Latest errors */
   @controlled() @state() errors: readonly GraphQLError[] = [];
+
+  /** @summary Operation variables. */
   @controlled() @state() variables: Variables<D, V>|null = null;
 }

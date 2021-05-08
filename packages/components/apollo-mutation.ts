@@ -1,15 +1,17 @@
-import type { OperationVariables } from '@apollo/client/core';
 import type {
   ApolloMutationInterface,
   ComponentDocument,
-  RefetchQueriesType,
   Data,
-  OptimisticResponseType,
-  Variables,
   MaybeTDN,
+  MaybeVariables,
+  OptimisticResponseType,
+  RefetchQueriesType,
+  Variables,
 } from '@apollo-elements/interfaces';
-import type { TypedDocumentNode, VariablesOf } from '@graphql-typed-document-node/core';
+
 import type { PropertyValues } from 'lit';
+
+import type { MutationUpdaterFn } from '@apollo/client/core';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
@@ -19,11 +21,11 @@ import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
-import * as E from './events';
-
 import { isEmpty } from '@apollo-elements/lib/helpers';
 
 import { bound } from '@apollo-elements/lib/bound';
+
+import * as E from './events';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-mutation': ApolloMutationElement } }
 
@@ -158,17 +160,12 @@ export class WillMutateError extends Error {}
  * ```
  */
 @customElement('apollo-mutation')
-export class ApolloMutationElement<
-  D extends MaybeTDN = any,
-  V = D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables
-> extends
-  GraphQLScriptChildMixin(ApolloElement)<D, V>
-  implements ApolloMutationInterface<D, V> {
+export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V> implements ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
   /**
    * False when the element is a link.
-   * @param node
    */
   private static isButton(node: Element|null): node is ButtonLikeElement {
     return !!node && node.tagName !== 'A';
@@ -194,6 +191,45 @@ export class ApolloMutationElement<
       clearTimeout(timer);
       timer = window.setTimeout(() => { f(); }, timeout);
     };
+  }
+
+  private inFlightTrigger: HTMLElement | null = null;
+
+  private doMutate = (): void => void (this.controller.mutate().catch(() => void 0));
+
+  private debouncedMutate = this.doMutate;
+
+  #buttonMO?: MutationObserver;
+
+  #listeners = new WeakMap<HTMLElement, string>();
+
+  /**
+   * Slotted trigger nodes
+   */
+  protected get triggers(): NodeListOf<HTMLElement> {
+    return this.querySelectorAll('[trigger]');
+  }
+
+  /**
+   * If the slotted trigger node is a button, the trigger
+   * If the slotted trigger node is a link with a button as it's first child, the button
+   */
+  protected get buttons(): ButtonLikeElement[] {
+    const { isButton, isLink } = ApolloMutationElement;
+    return Array.from(this.triggers, x => {
+      if (isLink(x) && isButton(x.firstElementChild))
+        /* c8 ignore next 3 */
+        return x.firstElementChild;
+      else
+        return x;
+    }).filter(isButton);
+  }
+
+  /**
+   * Variable input nodes
+   */
+  protected get inputs(): InputLikeElement[] {
+    return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
   controller = new ApolloMutationController<D, V>(this, undefined, {
@@ -223,32 +259,87 @@ export class ApolloMutationElement<
    *   console.log(b.variables) // { input: { variable: 'var' } }
    * </script>
    * ```
+   * @summary key to wrap variables in e.g. `input`.
    */
   @property({ attribute: 'input-key', reflect: true }) inputKey: string|null = null;
+
+  /**
+   * @summary Optional number of milliseconds to wait between calls
+   */
   @property({ type: Number, reflect: true }) debounce: number | null = null;
 
+  /**
+   * @summary Whether the mutation was called
+   */
   @controlled() @property({ type: Boolean, reflect: true }) called = false;
+
+  /** @summary The mutation. */
   @controlled() @state() mutation: null | ComponentDocument<D> = null;
+
+  /** @summary Context passed to the link execution chain. */
   @controlled() @state() context?: Record<string, unknown>;
+
+  /**
+   * An object that represents the result of this mutation that
+   * will be optimistically stored before the server has actually returned a
+   * result.
+   *
+   * This is most often used for optimistic UI, where we want to be able to see
+   * the result of a mutation immediately, and update the UI later if any errors
+   * appear.
+   */
   @controlled({ path: 'options' }) @state() optimisticResponse?: OptimisticResponseType<D, V>;
+
+
+  /**
+   * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
+   *
+   * @summary Mutation variables.
+   */
   @controlled() @state() variables: Variables<D, V> | null = null;
 
+  /**
+   * @summary If true, the returned data property will not update with the mutation result.
+   */
   @controlled({ path: 'options' })
   @property({ attribute: 'ignore-results', type: Boolean })
   ignoreResults = false;
 
+  /**
+   * Queries refetched as part of refetchQueries are handled asynchronously,
+   * and are not waited on before the mutation is completed (resolved).
+   * Setting this to true will make sure refetched queries are completed
+   * before the mutation is considered done. false by default.
+   * @attr await-refetch-queries
+   */
   @controlled({ path: 'options' })
   @property({ attribute: 'await-refetch-queries', type: Boolean })
   awaitRefetchQueries = false;
 
+  /**
+   * Specifies the ErrorPolicy to be used for this mutation.
+   * @attr error-policy
+   */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
   errorPolicy?: this['controller']['options']['errorPolicy'];
 
+  /**
+   * Specifies the FetchPolicy to be used for this mutation.
+   * @attr fetch-policy
+   */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
   fetchPolicy?: this['controller']['options']['fetchPolicy'];
 
+  /**
+   * A list of query names which will be refetched once this mutation has returned.
+   * This is often used if you have a set of queries which may be affected by a mutation and will have to update.
+   * Rather than writing a mutation query reducer (i.e. `updateQueries`) for this,
+   * you can refetch the queries that will be affected
+   * and achieve a consistent store once these queries return.
+   * @attr refetch-queries
+   */
   @controlled({ path: 'options' })
   @property({
     attribute: 'refetch-queries',
@@ -290,45 +381,6 @@ export class ApolloMutationElement<
    */
   resolveURL?(data: Data<D>, trigger: HTMLElement): string | Promise<string>;
 
-  private inFlightTrigger: HTMLElement | null = null;
-
-  /**
-   * Slotted trigger nodes
-   */
-  protected get triggers(): NodeListOf<HTMLElement> {
-    return this.querySelectorAll('[trigger]');
-  }
-
-  /**
-   * If the slotted trigger node is a button, the trigger
-   * If the slotted trigger node is a link with a button as it's first child, the button
-   */
-  protected get buttons(): ButtonLikeElement[] {
-    const { isButton, isLink } = ApolloMutationElement;
-    return Array.from(this.triggers, x => {
-      if (isLink(x) && isButton(x.firstElementChild))
-        /* c8 ignore next 3 */
-        return x.firstElementChild;
-      else
-        return x;
-    }).filter(isButton);
-  }
-
-  /**
-   * Variable input nodes
-   */
-  protected get inputs(): InputLikeElement[] {
-    return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
-  }
-
-  private doMutate = (): void => void (this.controller.mutate().catch(() => void 0));
-
-  private debouncedMutate = this.doMutate;
-
-  #buttonMO?: MutationObserver;
-
-  #listeners = new WeakMap<HTMLElement, string>();
-
   constructor() {
     super();
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -349,26 +401,6 @@ export class ApolloMutationElement<
     this.onSlotchange();
   }
 
-  update(changed: PropertyValues<this>): void {
-    if (changed.has('debounce')) {
-      this.debouncedMutate =
-          this.debounce == null ? this.doMutate
-        : ApolloMutationElement.debounce(this.doMutate, this.debounce);
-    }
-    super.update(changed);
-  }
-
-  protected createRenderRoot(): ShadowRoot|HTMLElement {
-    if (this.hasAttribute('no-shadow')) {
-      const root = this.appendChild(document.createElement('div'));
-      root.classList.add(this.getAttribute('no-shadow') || 'output');
-      this.#buttonMO = new MutationObserver(records => this.onLightDomMutation(records));
-      this.#buttonMO.observe(this, { childList: true, attributes: false, characterData: false });
-      return root;
-    } else
-      return super.createRenderRoot();
-  }
-
   private onLightDomMutation(records: MutationRecord[]) {
     /* eslint-disable easy-loops/easy-loops */
     for (const record of records) {
@@ -385,24 +417,6 @@ export class ApolloMutationElement<
       }
     }
     /* eslint-enable easy-loops/easy-loops */
-  }
-
-  /**
-   * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
-   */
-  protected getVariablesFromInputs(): Variables<D, V> | null {
-    if (isEmpty(this.dataset) && isEmpty(this.inputs))
-      return null;
-
-    const input = {
-      ...this.dataset,
-      ...this.inputs.reduce(ApolloMutationElement.toVariables, {}),
-    };
-
-    if (this.inputKey)
-      return { [this.inputKey]: input } as unknown as Variables<D, V>;
-    else
-      return input as Variables<D, V>;
   }
 
   private onSlotchange(): void {
@@ -482,7 +496,63 @@ export class ApolloMutationElement<
     this.debouncedMutate();
   }
 
+  protected createRenderRoot(): ShadowRoot|HTMLElement {
+    if (this.hasAttribute('no-shadow')) {
+      const root = this.appendChild(document.createElement('div'));
+      root.classList.add(this.getAttribute('no-shadow') || 'output');
+      this.#buttonMO = new MutationObserver(records => this.onLightDomMutation(records));
+      this.#buttonMO.observe(this, { childList: true, attributes: false, characterData: false });
+      return root;
+    } else
+      return super.createRenderRoot();
+  }
+
+  /**
+   * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
+   */
+  protected getVariablesFromInputs(): Variables<D, V> | null {
+    if (isEmpty(this.dataset) && isEmpty(this.inputs))
+      return null;
+
+    const input = {
+      ...this.dataset,
+      ...this.inputs.reduce(ApolloMutationElement.toVariables, {}),
+    };
+
+    if (this.inputKey)
+      return { [this.inputKey]: input } as unknown as Variables<D, V>;
+    else
+      return input as Variables<D, V>;
+  }
+
+  update(changed: PropertyValues<this>): void {
+    if (changed.has('debounce')) {
+      this.debouncedMutate =
+          this.debounce == null ? this.doMutate
+        : ApolloMutationElement.debounce(this.doMutate, this.debounce);
+    }
+    super.update(changed);
+  }
+
+  /**
+   * A function which updates the apollo cache when the query responds.
+   * This function will be called twice over the lifecycle of a mutation.
+   * Once at the very beginning if an optimisticResponse was provided.
+   * The writes created from the optimistic data will be rolled back before
+   * the second time this function is called which is when the mutation has
+   * succesfully resolved. At that point update will be called with the actual
+   * mutation result and those writes will not be rolled back.
+   *
+   * The reason a DataProxy is provided instead of the user calling the methods
+   * directly on ApolloClient is that all of the writes are batched together at
+   * the end of the update, and it allows for writes generated by optimistic
+   * data to be rolled back.
+   */
+  public updater?(
+    ...params: Parameters<MutationUpdaterFn<Data<D>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>>>;
+
   public mutate(params?: P<D, V, 'mutate'>[0]): R<D, V, 'mutate'> {
-    return this.controller.mutate(params);
+    return this.controller.mutate({ ...params, update: this.updater });
   }
 }
