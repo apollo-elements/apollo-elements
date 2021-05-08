@@ -1,4 +1,4 @@
-import type { DocumentNode } from '@apollo/client/core';
+import type { ComponentDocument, MaybeTDN, MaybeVariables } from '@apollo-elements/interfaces';
 
 import { useController } from 'haunted/lib/use-controller';
 
@@ -7,8 +7,8 @@ import {
   ApolloSubscriptionControllerOptions,
 } from '@apollo-elements/core/apollo-subscription-controller';
 
-export function useSubscription<D extends DocumentNode, V>(
-  query: D,
+export function useSubscription<D extends MaybeTDN, V = MaybeVariables<D>>(
+  query: ComponentDocument<D>,
   options?: ApolloSubscriptionControllerOptions<D, V>
 ): ApolloSubscriptionController<D, V> {
   return useController(host => new ApolloSubscriptionController<D, V>(host, query, options));
