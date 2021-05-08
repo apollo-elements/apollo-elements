@@ -14,7 +14,7 @@ import { gql } from '@apollo/client/core';
 
 import { ApolloQueryResult, DefaultOptions, NetworkStatus } from '@apollo/client/core';
 
-import { html, unsafeStatic } from 'lit/static-html';
+import { html, unsafeStatic } from 'lit/static-html.js';
 
 import * as S from './schema';
 

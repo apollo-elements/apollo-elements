@@ -10,7 +10,7 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import { fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
+import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
 import { setupClient, teardownClient } from '../test/client';
 
@@ -147,6 +147,8 @@ describe('[polymer] <apollo-subscription>', function() {
         const tag = defineCE(WrapperElement);
         wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
       });
+
+      beforeEach(() => aTimeout(50));
 
       it('binds data up into parent component', async function() {
         expect(wrapper.shadowRoot.textContent).to.contain('🤡');

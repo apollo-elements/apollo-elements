@@ -23,7 +23,7 @@ describe('[core] ApolloQueryController', function() {
 
         data?: unknown;
 
-        error?: ApolloError|null;
+        error?: Error|ApolloError|null;
 
         loading?: boolean;
 
@@ -66,13 +66,13 @@ describe('[core] ApolloQueryController', function() {
       it('has default properties', function() {
         /* eslint-disable max-len */
         // fields
-        expect(element.query.client, 'client').to.be.undefined;
-        expect(element.query.data, 'data').to.be.undefined;
-        expect(element.query.error, 'error').to.be.undefined;
-        expect(element.query.errors, 'errors').to.be.undefined;
+        expect(element.query.client, 'client').to.not.be.ok;
+        expect(element.query.data, 'data').to.not.be.ok;
+        expect(element.query.error, 'error').to.not.be.ok;
+        expect(element.query.errors, 'errors').to.be.empty;
         expect(element.query.options, 'options').to.be.empty;
-        expect(element.query.query, 'query').to.be.undefined;
-        expect(element.query.variables, 'variables').to.be.undefined;
+        expect(element.query.query, 'query').to.not.be.ok;
+        expect(element.query.variables, 'variables').to.not.be.ok;
 
         // defined fields
         expect(element.query.networkStatus, 'networkStatus').to.equal(NetworkStatus.ready);
@@ -226,7 +226,8 @@ describe('[core] ApolloQueryController', function() {
         });
 
         describe('setting query', function() {
-          beforeEach(function() { element.query.query = S.HelloQuery; });
+          // @ts-expect-error: wrong query document!
+          beforeEach(() => element.query.query = S.HelloQuery);
           it('sets document', function() {
             expect(element.query.document).to.equal(S.HelloQuery);
           });
@@ -414,7 +415,7 @@ describe('[core] ApolloQueryController', function() {
         it('sets data, error, and loading', function() {
           expect(element.query.data, 'data')
             .to.equal(element.data)
-            .and.to.not.be.undefined;
+            .and.to.be.ok;
           expect(element.query.data?.helloWorld?.greeting, 'data.helloWorld.greeting')
             .to.equal('Shalom');
           expect(element.query.loading, 'loading')
@@ -422,7 +423,7 @@ describe('[core] ApolloQueryController', function() {
             .and.to.be.false;
           expect(element.query.error, 'error')
             .to.equal(element.error)
-            .and.to.be.undefined;
+            .and.to.not.be.ok;
         });
 
         it('calls onData', function() {
@@ -710,26 +711,18 @@ describe('[core] ApolloQueryController', function() {
 
             $(id: string) { return this.shadowRoot.getElementById(id); }
 
+            // @ts-expect-error: this should work ? try after updating deps
             query = new ApolloQueryController(this, S.PaginatedQuery, {
               onData: spy(data => { this.$('data')!.innerText = data.pages.join(','); }),
               onError: spy(),
-              variables: { offset: 0 } as VariablesOf<typeof S.PaginatedQuery>,
+              variables: { offset: 0 },
             })
 
             constructor() {
               super();
               this.attachShadow({ mode: 'open' }).innerHTML = `
                 <p id="data"></p>
-                <button id="fetchMore"></button>
               `;
-
-              this.$('fetchMore')!.addEventListener('click', async () => {
-                await this.query.fetchMore({
-                  variables: {
-                    offset: (this.query?.variables?.offset ?? 0) + 10,
-                  },
-                }).catch(() => 0);
-              });
             }
           }
 
@@ -748,12 +741,14 @@ describe('[core] ApolloQueryController', function() {
         it('renders initial data', function() {
           expect(element).shadowDom.to.equal(`
             <p id="data">1,2,3,4,5,6,7,8,9,10</p>
-            <button id="fetchMore"></button>
           `);
         });
 
         describe('calling fetchMore', function() {
-          beforeEach(function() { $('#fetchMore')!.click(); });
+          beforeEach(async () => element.query.fetchMore({
+            variables: { offset: (element.query?.variables?.offset ?? 0) + 10 },
+          }).catch(() => 0));
+
           beforeEach(nextFrame);
 
           it('calls onData again', function() {
@@ -764,7 +759,6 @@ describe('[core] ApolloQueryController', function() {
           it('renders next page', function() {
             expect(element).shadowDom.to.equal(`
               <p id="data">1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</p>
-              <button id="fetchMore"></button>
             `);
           });
         });
