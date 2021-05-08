@@ -13,7 +13,7 @@ import type { PropertyValues } from 'lit';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement, controlled } from './apollo-element';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
@@ -225,33 +225,32 @@ export class ApolloMutationElement<
    * ```
    */
   @property({ attribute: 'input-key', reflect: true }) inputKey: string|null = null;
-
   @property({ type: Number, reflect: true }) debounce: number | null = null;
 
-  @property({ type: Boolean, controlled: true, reflect: true }) called = false;
+  @controlled() @property({ type: Boolean, reflect: true }) called = false;
+  @controlled() @state() mutation: null | ComponentDocument<D> = null;
+  @controlled() @state() context?: Record<string, unknown>;
+  @controlled({ path: 'options' }) @state() optimisticResponse?: OptimisticResponseType<D, V>;
+  @controlled() @state() variables: Variables<D, V> | null = null;
 
-  @state({ controlled: true }) mutation: null | ComponentDocument<D> = null;
-
-  @state({ controlled: true }) context?: Record<string, unknown>;
-
-  @state({ controlled: 'options' }) optimisticResponse?: OptimisticResponseType<D, V>;
-
-  @state({ controlled: true }) variables: Variables<D, V> | null = null;
-
-  @property({ controlled: 'options', attribute: 'ignore-results', type: Boolean })
+  @controlled({ path: 'options' })
+  @property({ attribute: 'ignore-results', type: Boolean })
   ignoreResults = false;
 
-  @property({ controlled: 'options', attribute: 'await-refetch-queries', type: Boolean })
+  @controlled({ path: 'options' })
+  @property({ attribute: 'await-refetch-queries', type: Boolean })
   awaitRefetchQueries = false;
 
-  @property({ controlled: 'options', attribute: 'error-policy' })
+  @controlled({ path: 'options' })
+  @property({ attribute: 'error-policy' })
   errorPolicy?: this['controller']['options']['errorPolicy'];
 
-  @property({ controlled: 'options', attribute: 'fetch-policy' })
+  @controlled({ path: 'options' })
+  @property({ attribute: 'fetch-policy' })
   fetchPolicy?: this['controller']['options']['fetchPolicy'];
 
+  @controlled({ path: 'options' })
   @property({
-    controlled: 'options',
     attribute: 'refetch-queries',
     converter: {
       fromAttribute(newVal) {

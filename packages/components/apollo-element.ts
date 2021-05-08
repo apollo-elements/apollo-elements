@@ -20,19 +20,20 @@ import type {
 
 import { StampinoRender } from './stampino-render';
 
-import { property, state, InternalPropertyDeclaration } from '@lit/reactive-element/decorators.js';
+import { property, state } from '@lit/reactive-element/decorators.js';
 
-declare module '@lit/reactive-element' {
-  export interface PropertyDeclaration {
-    controlled?: boolean|string;
-  }
+export interface ControlledPropertyDeclaration extends PropertyDeclaration {
+  controlled?: boolean|string;
 }
 
-declare module '@lit/reactive-element/decorators.js' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  export interface InternalPropertyDeclaration<Type = unknown> {
-    controlled?: boolean|string;
-  }
+export function controlled({ path }: { path?: 'options' } = {}) {
+  return function(proto: ApolloElement<any, any>, name: string|symbol): void {
+    return (proto.constructor as typeof ApolloElement).createProperty(name as string, {
+      // @ts-expect-error: I know it's protected
+      ...(proto.constructor as typeof ApolloElement).getPropertyOptions(name),
+      controlled: path ?? true,
+    });
+  };
 }
 
 export class ApolloElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
@@ -41,10 +42,8 @@ export class ApolloElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
 
   readyToReceiveDocument = false;
 
-  static createProperty(
-    name: string,
-    { controlled, ...options }: PropertyDeclaration|InternalPropertyDeclaration
-  ): void {
+  static createProperty(name: string, opts: ControlledPropertyDeclaration): void {
+    const { controlled, ...options } = opts;
     if (controlled) {
       Object.defineProperty(this.prototype, name, {
         get() {
@@ -68,11 +67,13 @@ export class ApolloElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
     super.createProperty(name, { ...options });
   }
 
-  @property({ reflect: true, controlled: true, type: Boolean }) loading = false;
-  @state({ controlled: 'options' }) client: ApolloClient<NormalizedCacheObject> | null = null;
-  @state({ controlled: true }) data: Data<D>|null = null;
-  @state({ controlled: true }) document: ComponentDocument<D>|null = null;
-  @state({ controlled: true }) error: Error|ApolloError|null = null;
-  @state({ controlled: true }) errors: readonly GraphQLError[] = [];
-  @state({ controlled: true }) variables: Variables<D, V>|null = null;
+  @controlled({ path: 'options' })
+  @state() client: ApolloClient<NormalizedCacheObject> | null = null;
+
+  @controlled() @property({ reflect: true, type: Boolean }) loading = false;
+  @controlled() @state() data: Data<D>|null = null;
+  @controlled() @state() document: ComponentDocument<D>|null = null;
+  @controlled() @state() error: Error|ApolloError|null = null;
+  @controlled() @state() errors: readonly GraphQLError[] = [];
+  @controlled() @state() variables: Variables<D, V>|null = null;
 }
