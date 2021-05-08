@@ -35,7 +35,7 @@ describe('[haunted] useSubscription', function() {
   });
 
   describe('without options', function() {
-    let options: ApolloSubscriptionController<any>['options'];
+    let options: ApolloSubscriptionController<typeof S.NullableParamSubscription>['options'];
 
     beforeEach(async function define() {
       function Component() {
@@ -59,7 +59,7 @@ describe('[haunted] useSubscription', function() {
   describe('with shouldSubscribe set to constant false', function() {
     let element: HTMLElement;
 
-    let doSubscribe: ApolloSubscriptionController<any>['subscribe'];
+    let doSubscribe: ApolloSubscriptionController<typeof S.NullableParamSubscription>['subscribe'];
 
     beforeEach(async function define() {
       function Component() {
