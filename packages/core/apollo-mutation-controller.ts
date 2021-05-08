@@ -1,4 +1,7 @@
 import type {
+  MaybeTDN,
+  MaybeVariables,
+  ComponentDocument,
   Data,
   OptimisticResponseType,
   RefetchQueriesType,
@@ -13,13 +16,9 @@ import type {
   FetchResult,
   MutationOptions,
   MutationUpdaterFn,
-  OperationVariables,
-  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-
-import type { VariablesOf } from '@graphql-typed-document-node/core';
 
 import { ApolloController, ApolloControllerOptions, update } from './apollo-controller';
 
@@ -44,19 +43,12 @@ export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerO
   ignoreResults?: boolean,
 }
 
-export class ApolloMutationController<
-  D extends DocumentNode,
-  V = D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables,
-> extends ApolloController<D, V> implements ReactiveController {
+export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariables<D>>
+  extends ApolloController<D, V> implements ReactiveController {
   /**
    * The ID number of the most recent mutation since the element was instantiated.
    */
   private mostRecentMutationId = 0;
-
-  declare data?: Data<D> | null;
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  declare variables: Variables<D, V> | undefined;
 
   declare options: ApolloMutationControllerOptions<D, V>;
 
@@ -72,7 +64,7 @@ export class ApolloMutationController<
 
   constructor(
     host: ReactiveControllerHost,
-    mutation?: D,
+    mutation?: ComponentDocument<D>,
     options?: ApolloMutationControllerOptions<D, V>
   ) {
     super(host, options);
@@ -92,7 +84,7 @@ export class ApolloMutationController<
     this.loading = true;
     this.called = true;
     this.error = null;
-    this.data = undefined;
+    this.data = null;
     this[update]();
 
     return this.client.mutate<Data<D>, Variables<D, V>>({
@@ -141,7 +133,7 @@ export class ApolloMutationController<
       this.loading = false;
       if (!this.options.ignoreResults) {
         this.error = null;
-        this.data = data;
+        this.data = data ?? null;
         this.errors = response.errors;
         this.options.onCompleted?.(data); /* c8 ignore next */
       }
@@ -156,7 +148,7 @@ export class ApolloMutationController<
   private onMutationError(mutationId: number, error: ApolloError): never {
     if (this.isMostRecentMutation(mutationId)) {
       this.loading = false;
-      this.data = undefined;
+      this.data = null;
       this.error = error;
     }
     this.options.onError?.(error);

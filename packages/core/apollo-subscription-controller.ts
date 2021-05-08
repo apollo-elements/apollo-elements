@@ -1,8 +1,12 @@
+import type { ReactiveController, ReactiveControllerHost } from 'lit';
+
 import type {
   ComponentDocument,
   Data,
-  Variables,
+  MaybeTDN,
+  MaybeVariables,
   SubscriptionDataOptions,
+  Variables,
 } from '@apollo-elements/interfaces';
 
 import type {
@@ -13,15 +17,9 @@ import type {
   FetchResult,
   NormalizedCacheObject,
   Observable,
-  OperationVariables,
   SubscriptionOptions,
-  TypedDocumentNode,
   WatchQueryOptions,
 } from '@apollo/client/core';
-
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-
-import type { VariablesOf } from '@graphql-typed-document-node/core';
 
 import { ApolloController, ApolloControllerOptions, update } from './apollo-controller';
 
@@ -43,30 +41,14 @@ export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControl
   onError?: (error: ApolloError) => void;
 }
 
-export class ApolloSubscriptionController<
-  D extends DocumentNode,
-  V = D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables,
-> extends ApolloController<D, V> implements ReactiveController {
+export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVariables<D>>
+  extends ApolloController<D, V>
+  implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
 
   private observableSubscription?: ZenObservable.Subscription;
 
   declare options: ApolloSubscriptionControllerOptions<D, V>;
-
-  /**
-   * Latest subscription data.
-   */
-  declare data?: Data<D>;
-
-  /**
-   * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
-   *
-   * Setting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.
-   *
-   * @summary Subscription variables.
-   */
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  declare variables: Variables<D, V> | undefined;
 
   get subscription(): this['document'] { return this.document; }
 
@@ -74,7 +56,7 @@ export class ApolloSubscriptionController<
 
   constructor(
     host: ReactiveControllerHost,
-    subscription?: D,
+    subscription?: ComponentDocument<D>,
     options?: ApolloSubscriptionControllerOptions<D, V>
   ) {
     super(host, options);
@@ -94,9 +76,9 @@ export class ApolloSubscriptionController<
   ): boolean {
     /* c8 ignore next 4 */
     return (
-      !(this.options.noAutoSubscribe ?? false) &&
+      !this.options.noAutoSubscribe &&
       !!this.client &&
-      !!(options?.query ?? this.document)
+      !!(options?.query ?? this.subscription)
     );
   }
 
@@ -117,7 +99,7 @@ export class ApolloSubscriptionController<
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      query: this.subscription!,
+      query: this.subscription! as DocumentNode,
       variables: this.variables,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
@@ -132,16 +114,17 @@ export class ApolloSubscriptionController<
   private nextData(result: FetchResult<Data<D>>) {
     const { data = null, errors } = result;
     // If we got to this line without a client, it's because of user error
-    const client = this.client!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const client = this.client!;
     const loading = false;
     const subscriptionData = { data, loading, error: null };
     const detail = { client, subscriptionData };
-    this.data = data ?? undefined;/* c8 ignore next */ // just to satisfy onData interface
-    this.loading = loading;
-    this.error = undefined;
+    this.data = data;
+    this.error = null;
     this.errors = errors;
-    this.options.onData?.(detail); /* c8 ignore next */ // covered
-    this[update]();
+    this.loading = loading;
+    this.options.onData?.(detail);
+    this[update]({ data, error: undefined, errors, loading });
   }
 
   /**
@@ -151,7 +134,7 @@ export class ApolloSubscriptionController<
     this.error = error;
     this.loading = false;
     this.options.onError?.(error); /* c8 ignore next */ // covered
-    this[update]();
+    this[update]({ error: this.error, loading: this.loading });
   }
 
   /**
@@ -183,6 +166,15 @@ export class ApolloSubscriptionController<
       this.subscribe();
   }
 
+  /** Flags an element that's ready and able to auto-subscribe */
+  public get canAutoSubscribe(): boolean {
+    return (
+      !!this.client &&
+      !this.options.noAutoSubscribe &&
+      (this.options?.shouldSubscribe?.() ?? true)
+    );
+  }
+
   @bound public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void {
     this.initObservable(params);
 
@@ -192,7 +184,7 @@ export class ApolloSubscriptionController<
     /* c8 ignore stop */
 
     this.loading = true;
-    this[update]();
+    this[update]({ loading: this.loading });
 
     this.observableSubscription =
       this.observable?.subscribe({

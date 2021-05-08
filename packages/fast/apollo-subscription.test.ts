@@ -15,14 +15,10 @@ import type { SubscriptionElement } from '@apollo-elements/test/subscription.tes
 
 import { SetupOptions, setupSpies, setupStubs } from '@apollo-elements/test';
 
-import {
-  aTimeout,
-  expect,
-  fixture,
-  html as fhtml,
-  nextFrame,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
+
+import { html as h, unsafeStatic } from 'lit/static-html.js';
+
 import { FASTElement, customElement, DOM, html } from '@microsoft/fast-element';
 import { assertType, isApolloError } from '@apollo-elements/test';
 import { describeSubscription } from '@apollo-elements/test/subscription.test';
@@ -97,7 +93,7 @@ describe('[fast] ApolloSubscription', function() {
       @customElement({ name, template })
       class Test extends ApolloSubscription<{ foo: 'bar' }, null> { }
       const tag = unsafeStatic(name);
-      const element = await fixture<Test>(fhtml`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
+      const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
     });
   });

@@ -1,6 +1,11 @@
 import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
 import type { ApolloElementElement } from './apollo-element';
 
+export type MaybeTDN = (TypedDocumentNode|Record<string, unknown>);
+
+export type MaybeVariables<D> =
+  D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables;
+
 export type ComponentDocument<D> =
   D extends TypedDocumentNode ? D : DocumentNode
 

@@ -40,11 +40,17 @@ const unmocked = makeExecutableSchema({
         else
           return { nullable };
       },
+
+      pageAdded() {
+        return 11;
+      },
     },
 
     Query: {
 
       pages(_: any, { offset, limit }: S.PaginatedQueryVariables) {
+        if (typeof limit === 'number' && limit >= 100)
+          throw new Error('rate limited')
         return Array.from({ length: limit ?? 10 }, (_, i) => i + 1 + (offset ?? 0));
       },
 

@@ -65,13 +65,13 @@ describe('[core] ApolloSubscriptionController', function() {
       it('has default properties', function() {
         /* eslint-disable max-len */
         // fields
-        expect(element.subscription.client, 'client').to.be.undefined;
-        expect(element.subscription.data, 'data').to.be.undefined;
-        expect(element.subscription.error, 'error').to.be.undefined;
-        expect(element.subscription.errors, 'errors').to.be.undefined;
+        expect(element.subscription.client, 'client').to.not.be.ok;
+        expect(element.subscription.data, 'data').to.not.be.ok;
+        expect(element.subscription.error, 'error').to.not.be.ok;
+        expect(element.subscription.errors, 'errors').to.be.empty;
         expect(element.subscription.options, 'options').to.be.empty;
-        expect(element.subscription.subscription, 'query').to.be.undefined;
-        expect(element.subscription.variables, 'variables').to.be.undefined;
+        expect(element.subscription.subscription, 'query').to.not.be.ok;
+        expect(element.subscription.variables, 'variables').to.not.be.ok;
         /* eslint-enable max-len */
       });
 
@@ -609,7 +609,7 @@ describe('[core] ApolloSubscriptionController', function() {
             .and.to.be.false;
           expect(element.subscription.error, 'error')
             .to.equal(element.error)
-            .and.to.be.undefined;
+            .and.to.not.be.ok;
         });
 
         it('calls onData', function() {

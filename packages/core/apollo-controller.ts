@@ -1,21 +1,28 @@
+import type { ReactiveController, ReactiveControllerHost } from 'lit';
+
 import type {
   ApolloClient,
   ApolloError,
   ApolloQueryResult,
   DocumentNode,
   NormalizedCacheObject,
-  OperationVariables,
 } from '@apollo/client/core';
 
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-
-import type { ComponentDocument, Data, Variables } from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/interfaces';
 
 export type ApolloControllerHost = HTMLElement & ReactiveControllerHost;
 
 export interface ApolloControllerOptions<D, V> {
   client?: ApolloClient<NormalizedCacheObject>;
   variables?: Variables<D, V>;
+  /** Host update callback */
+  [update]?(properties?: Record<string, unknown>): void;
 }
 
 export const update = Symbol('update');
@@ -36,32 +43,31 @@ export class ApolloControllerDisconnectedEvent extends ApolloControllerEvent {
   static type = 'apollo-controller-disconnected' as const;
 }
 
-export abstract class ApolloController<
-  D = unknown,
-  V = OperationVariables,
-> implements ReactiveController {
+export abstract class ApolloController<D extends MaybeTDN = any, V = MaybeVariables<D>>
+implements ReactiveController {
   declare options: ApolloControllerOptions<D, V>;
 
   called = true;
 
   client?: ApolloClient<NormalizedCacheObject>;
 
-  data?: Data<D> | null;
+  data: Data<D> | null = null;
 
-  error?: ApolloError | null;
+  error: ApolloError | null = null;
 
-  errors?: ApolloQueryResult<D>['errors'];
+  errors: ApolloQueryResult<D>['errors'] = [];
 
   loading = false;
 
-  #document?: DocumentNode | ComponentDocument<D>;
+  #document?: ComponentDocument<D>;
 
   #variables?: Variables<D, V>;
 
-  get document(): DocumentNode | ComponentDocument<D> | undefined { return this.#document; }
+  get document(): ComponentDocument<D> | undefined { return this.#document; }
 
-  set document(document: DocumentNode | ComponentDocument<D> | undefined) {
+  set document(document: ComponentDocument<D> | undefined) {
     this.#document = document;
+    this.options[update]?.({ document });
     this.documentChanged?.(document);/* c8 ignore next */
   }
 
@@ -69,6 +75,7 @@ export abstract class ApolloController<
 
   set variables(variables: Variables<D, V> | undefined) {
     this.#variables = variables;
+    this.options[update]?.({ variables });
     this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
@@ -82,7 +89,7 @@ export abstract class ApolloController<
     host.addController?.(this);
   }
 
-  init<Doc extends DocumentNode>(document?: Doc): void {
+  init(document?: ComponentDocument<D>): void {
     this.document = document;
     this.variables = this.options?.variables;
   }
@@ -92,8 +99,9 @@ export abstract class ApolloController<
     (this.host as unknown as EventTarget).dispatchEvent?.(event); /* c8 ignore next */
   }
 
-  [update](): void {
+  [update](properties?: Record<string, unknown>): void {
     this.host.requestUpdate();
+    this.options[update]?.(properties);
   }
 
   hostDisconnected(): void {

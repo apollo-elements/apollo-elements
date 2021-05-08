@@ -578,7 +578,7 @@ describe('[haunted] useSubscription', function() {
           .and.to.be.false;
         expect(element.subscription.error, 'error')
           .to.equal(element.subscription.error)
-          .and.to.be.undefined;
+          .and.to.not.be.ok;
       });
 
       it('calls onData', function() {

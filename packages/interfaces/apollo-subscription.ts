@@ -139,7 +139,7 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
-  shouldSubscribe(
+  shouldSubscribe?(
     options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
   ): boolean
 
