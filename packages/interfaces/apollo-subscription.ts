@@ -74,18 +74,18 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
   declare variables: Variables<D, V> | null;
 
   /**
-   * Specifies the FetchPolicy to be used for this subscription.
+   * @summary Specifies the FetchPolicy to be used for this subscription.
    * @attr fetch-policy
    */
   declare fetchPolicy?: FetchPolicy;
 
   /**
-   * The time interval (in milliseconds) on which this subscription should be refetched from the server.
+   * @summary The time interval (in milliseconds) on which this subscription should be refetched from the server.
    */
   declare pollInterval?: number;
 
   /**
-   * Whether or not updates to the network status should trigger next on the observer of this subscription.
+   * @summary Whether or not updates to the network status should trigger next on the observer of this subscription.
    */
   declare notifyOnNetworkStatusChange: boolean;
 
@@ -100,39 +100,39 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
   declare observableSubscription?: ZenObservable.Subscription;
 
   /**
-   * A GraphQL document containing a single subscription.
+   * @summary A GraphQL document containing a single subscription.
    */
   declare subscription: DocumentNode | ComponentDocument<D> | null;
 
   /**
-   * If true, the element will not begin querying data until you manually call `subscribe`
+   * @summary If true, the element will not begin querying data until you manually call `subscribe`
    * @attr no-auto-subscribe
    */
   declare noAutoSubscribe: boolean;
 
   /**
-   * If skip is true, the query will be skipped entirely
+   * @summary If true, the query will be skipped entirely
    */
   declare skip: boolean;
 
   /**
-   * Determines if your subscription should be unsubscribed and subscribed again.
+   * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
   declare shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'];
 
   constructor(...a: any[]);
 
   /**
-   * Resets the observable and subscribes.
+   * @summary Resets the observable and subscribes.
    */
   public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void
 
   /**
-   * Cancels and clears the subscription
+   * @summary Cancels and clears the subscription
    */
   public cancel(): void
 
-  /** Flags an element that's ready and able to auto subscribe */
+  /** @summary Flags an element that's ready and able to auto subscribe */
   public get canAutoSubscribe(): boolean;
 
   /**

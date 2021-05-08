@@ -53,7 +53,7 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
    */
   declare variables: Variables<D, V> | null;
 
-  /** The mutation. */
+  /** @summary The mutation. */
   declare mutation: DocumentNode | ComponentDocument<D> | null;
 
   /**
@@ -68,12 +68,12 @@ export declare class ApolloMutationInterface<D, V = OperationVariables>
   declare optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
-   * Whether the mutation was called
+   * @summary Whether the mutation was called
    */
   declare called: boolean;
 
   /**
-   * If true, the returned data property will not update with the mutation result.
+   * @summary If true, the returned data property will not update with the mutation result.
    */
   declare ignoreResults?: boolean;
 
