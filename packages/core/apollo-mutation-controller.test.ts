@@ -99,7 +99,7 @@ describe('[core] ApolloMutationController', function() {
 
         data?: Data<D> | null;
 
-        error?: ApolloError|null;
+        error?: Error|ApolloError|null;
 
         loading?: boolean;
 
@@ -144,6 +144,7 @@ describe('[core] ApolloMutationController', function() {
           describe('set mutation', function() {
             beforeEach(() => element.mutation.documentChanged = spy());
             beforeEach(() => element.mutation.variables = { nullable: '' });
+            // @ts-expect-error: wrong mutation document!
             beforeEach(() => element.mutation.mutation = S.UpdateUserMutation);
             it('sets document', function() {
               expect(element.mutation.document).to.equal(S.UpdateUserMutation);
@@ -157,7 +158,7 @@ describe('[core] ApolloMutationController', function() {
 
         describe('get variables', function() {
           it('returns variables', function() {
-            expect(element.mutation.variables).to.be.undefined;
+            expect(element.mutation.variables).to.not.be.ok;
           });
           describe('set variables', function() {
             beforeEach(() => element.mutation.variablesChanged = spy());
@@ -230,7 +231,7 @@ describe('[core] ApolloMutationController', function() {
                 expect(element.mutation.loading).to.be.false;
               });
               it('does not set data', function() {
-                expect(element.data).to.be.undefined;
+                expect(element.data).to.not.be.ok;
               });
               it('does not call onCompleted', function() {
                 expect(element.mutation.options.onCompleted).to.not.have.been.called;
@@ -450,7 +451,7 @@ describe('[core] ApolloMutationController', function() {
               .catch(e => err = e));
           beforeEach(nextFrame);
           it('unsets data', function() {
-            expect(element.data).to.be.undefined;
+            expect(element.data).to.not.be.ok;
           });
           it('does not call onCompleted', function() {
             expect(element.mutation.options.onCompleted).to.not.have.been.called;

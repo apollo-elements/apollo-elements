@@ -2,7 +2,7 @@ import type { ApolloSubscriptionElement, Constructor } from '@apollo-elements/in
 
 import { SetupFunction } from './types';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { gql, ApolloClient, InMemoryCache } from '@apollo/client/core';
 
@@ -678,6 +678,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           beforeEach(waitForRender(() => element));
+          beforeEach(() => aTimeout(50));
 
           it('renders second subscription', async function() {
             expect(element?.shadowRoot?.textContent).to.not.contain('messageSent');
@@ -690,6 +691,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             beforeEach(waitForRender(() => element));
+            beforeEach(() => aTimeout(50));
 
             it('renders new variables', async function() {
               expect(element?.shadowRoot?.textContent).to.contain('quux');
@@ -713,6 +715,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           expect(element?.subscribe).to.have.been.called;
         });
 
+        beforeEach(() => aTimeout(50));
+
         it('renders data', function() {
           expect(element?.shadowRoot?.getElementById('data')?.textContent)
             .to.equal(element?.stringify({
@@ -733,6 +737,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           it('creates a new observable', function() {
             expect(element?.client?.subscribe).to.have.been.calledTwice;
           });
+
+          beforeEach(() => aTimeout(50));
 
           it('renders the new data', function() {
             expect(element?.shadowRoot?.getElementById('data')?.textContent)

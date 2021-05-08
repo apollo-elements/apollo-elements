@@ -1,7 +1,11 @@
+import type { ReactiveController, ReactiveControllerHost } from 'lit';
+
 import type {
   ComponentDocument,
   Data,
   FetchMoreParams,
+  MaybeTDN,
+  MaybeVariables,
   Variables,
 } from '@apollo-elements/interfaces';
 
@@ -11,17 +15,11 @@ import type {
   DocumentNode,
   FetchPolicy,
   ObservableQuery,
-  OperationVariables,
   QueryOptions,
   SubscribeToMoreOptions,
   SubscriptionOptions,
-  TypedDocumentNode,
   WatchQueryOptions,
 } from '@apollo/client/core';
-
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-
-import type { VariablesOf } from '@graphql-typed-document-node/core';
 
 import { NetworkStatus } from '@apollo/client/core';
 
@@ -39,20 +37,13 @@ export interface ApolloQueryControllerOptions<D, V> extends ApolloControllerOpti
   onError?: (error: ApolloError) => void;
 }
 
-export class ApolloQueryController<
-  D extends DocumentNode,
-  V = D extends TypedDocumentNode ? VariablesOf<D> : OperationVariables,
-> extends ApolloController<D, V> implements ReactiveController {
+export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<D>>
+  extends ApolloController<D, V> implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
   private pollingInterval?: number;
 
   declare options: ApolloQueryControllerOptions<D, V>;
-
-  declare data?: Data<D> | null;
-
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
-  declare variables: Variables<D, V> | undefined;
 
   networkStatus = NetworkStatus.ready;
 
@@ -64,7 +55,7 @@ export class ApolloQueryController<
 
   constructor(
     host: ReactiveControllerHost,
-    query?: D,
+    query?: ComponentDocument<D>,
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
@@ -148,7 +139,7 @@ export class ApolloQueryController<
 
   private nextData(result: ApolloQueryResult<Data<D>>): void {
     this.data = result.data;
-    this.error = result.error;
+    this.error = result.error ?? null;
     this.errors = result.errors;
     this.loading = result.loading;
     this.networkStatus = result.networkStatus;
@@ -162,6 +153,15 @@ export class ApolloQueryController<
     this.loading = false;
     this.options.onError?.(error);
     this[update]();
+  }
+
+  /** Flags an element that's ready and able to auto-subscribe */
+  public get canAutoSubscribe(): boolean {
+    return (
+      !!this.client &&
+      !this.options.noAutoSubscribe &&
+      (this.options?.shouldSubscribe?.() ?? true)
+    );
   }
 
   /**
