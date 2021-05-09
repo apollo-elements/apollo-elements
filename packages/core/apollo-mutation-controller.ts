@@ -10,7 +10,6 @@ import type {
 
 import type {
   ApolloError,
-  DocumentNode,
   ErrorPolicy,
   FetchPolicy,
   FetchResult,
@@ -54,7 +53,7 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
 
   called = false;
 
-  documentChanged?(document: DocumentNode): void
+  documentChanged?(document?: ComponentDocument<D> | null): void
 
   variablesChanged?(variables: Variables<D, V>): void
 
@@ -64,11 +63,11 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
 
   constructor(
     host: ReactiveControllerHost,
-    mutation?: ComponentDocument<D>,
+    mutation?: ComponentDocument<D> | null,
     options?: ApolloMutationControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(mutation);
+    this.init(mutation ?? null);
   }
 
   /**

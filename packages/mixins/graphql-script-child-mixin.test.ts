@@ -7,6 +7,7 @@ import type {
   DocumentNode,
   ErrorPolicy,
   FetchPolicy,
+  WatchQueryFetchPolicy,
   FetchResult,
   NetworkStatus,
   NormalizedCacheObject,
@@ -688,10 +689,10 @@ async function TypeCheck() {
       assertType<ErrorPolicy>                         (this.errorPolicy!);
       // @ts-expect-error: ErrorPolicy is not a number
       assertType<number>                              (this.errorPolicy);
-      assertType<FetchPolicy>                         (this.fetchPolicy!);
+      assertType<WatchQueryFetchPolicy>               (this.fetchPolicy!);
       assertType<string>                              (this.fetchPolicy);
-      assertType<FetchPolicy>                         (this.nextFetchPolicy!);
-      assertType<string>                              (this.nextFetchPolicy);
+      if (typeof this.nextFetchPolicy !== 'function')
+        assertType<WatchQueryFetchPolicy>             (this.nextFetchPolicy!);
       assertType<NetworkStatus>                       (this.networkStatus);
       assertType<number>                              (this.networkStatus);
       // @ts-expect-error: NetworkStatus is not a string

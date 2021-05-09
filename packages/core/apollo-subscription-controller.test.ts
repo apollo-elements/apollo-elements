@@ -19,7 +19,8 @@ import { spy, SinonSpy } from 'sinon';
 describe('[core] ApolloSubscriptionController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
     class MirroringHost<D extends TypedDocumentNode> extends ReactiveElement {
-      subscription!: ApolloSubscriptionController<D>;
+      declare subscription: ApolloSubscriptionController<D>;
+
       data?: this['subscription']['data'];
       error?: this['subscription']['error'];
       errors?: this['subscription']['errors'];

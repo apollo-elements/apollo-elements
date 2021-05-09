@@ -68,7 +68,7 @@ type PrivateKeys = 'nextError'|'nextData'|'watchQuery'|'shouldSubscribe';
  * ```
  */
 @customElement('apollo-query')
-export class ApolloQueryElement<D extends I.MaybeTDN = any, V = I.MaybeVariables<D>> extends
+export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends
   GraphQLScriptChildMixin(ApolloElement)<D, V>
   implements Omit<I.ApolloQueryInterface<D, V>, PrivateKeys> {
   static readonly is = 'apollo-query';
@@ -76,7 +76,7 @@ export class ApolloQueryElement<D extends I.MaybeTDN = any, V = I.MaybeVariables
   controller = new ApolloQueryController<D, V>(this);
 
   /** @summary Flags an element that's ready and able to auto subscribe */
-  get canAutoSubscribe(): boolean { return this.controller?.canAutoSubscribe ?? false; }
+  @controlled({ readonly: true }) @state() canAutoSubscribe = false;
 
   @controlled() @state() options = {};
 
@@ -107,7 +107,7 @@ export class ApolloQueryElement<D extends I.MaybeTDN = any, V = I.MaybeVariables
   @controlled() @state() query: null | I.ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
-  @controlled() @state() context?: Record<string, any>;
+  @controlled({ path: 'options' }) @state() context?: Record<string, any>;
 
   /**
    * If data was read from the cache with missing fields,

@@ -58,7 +58,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(query);
+    this.init(query ?? null);
   }
 
   hostConnected(): void {
@@ -80,7 +80,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     );
   }
 
-  protected documentChanged(query?: DocumentNode | ComponentDocument<D>): void {
+  protected documentChanged(query?: ComponentDocument<D>|null): void {
     if (
       !!query &&
       this.canSubscribe({ query }) &&

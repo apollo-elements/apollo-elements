@@ -1,15 +1,6 @@
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import * as S from '@apollo-elements/test/schema';
 
-import * as S from '@apollo-elements/test';
-
-import {
-  ApolloClient,
-  ApolloError,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+import * as C from '@apollo/client/core';
 
 import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
@@ -17,12 +8,7 @@ import { spy, SinonSpy } from 'sinon';
 
 import { html } from 'lit/static-html.js';
 
-import {
-  setupClient,
-  isApolloError,
-  assertType,
-  teardownClient,
-} from '@apollo-elements/test';
+import { setupClient, teardownClient } from '@apollo-elements/test';
 
 import './apollo-query';
 
@@ -45,6 +31,201 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
 
     it('doesn\'t render anything', function() {
       expect(element).shadowDom.to.equal('');
+    });
+
+    describe('setting fetch-policy attr', function() {
+      it('cache-and-network', async function() {
+        element.setAttribute('fetch-policy', 'cache-and-network');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'cache-and-network').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('cache-first', async function() {
+        element.setAttribute('fetch-policy', 'cache-first');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'cache-first').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('cache-only', async function() {
+        element.setAttribute('fetch-policy', 'cache-only');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'cache-only').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('network-only', async function() {
+        element.setAttribute('fetch-policy', 'network-only');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'network-only').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('no-cache', async function() {
+        element.setAttribute('fetch-policy', 'no-cache');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'no-cache').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('standby', async function() {
+        element.setAttribute('fetch-policy', 'standby');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'standby').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('forwards an illegal value', async function() {
+        element.setAttribute('fetch-policy', 'shmoo');
+        await element.updateComplete;
+        // @ts-expect-error: test for bad value
+        expect(element.fetchPolicy === 'shmoo').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+    });
+
+    describe('setting error-policy attr', function() {
+      it('all', async function() {
+        element.setAttribute('error-policy', 'all');
+        await element.updateComplete;
+        expect(element.errorPolicy === 'all').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+      it('none', async function() {
+        element.setAttribute('error-policy', 'none');
+        await element.updateComplete;
+        expect(element.errorPolicy === 'none').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+      it('ignore', async function() {
+        element.setAttribute('error-policy', 'ignore');
+        await element.updateComplete;
+        expect(element.errorPolicy === 'ignore').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+      it('forwards an illegal value', async function() {
+        element.setAttribute('error-policy', 'shmoo');
+        await element.updateComplete;
+        // @ts-expect-error: test for bad value
+        expect(element.errorPolicy === 'shmoo').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+    });
+
+    describe('setting context', function() {
+      it('as empty object', async function() {
+        element.context = {};
+        await element.updateComplete;
+        expect(element.controller.options.context).to.be.ok.and.to.be.empty;
+      });
+      it('as non-empty object', async function() {
+        element.context = { a: 'b' };
+        await element.updateComplete;
+        expect(element.controller.options.context).to.deep.equal({ a: 'b' });
+      });
+      it('as illegal non-object', async function() {
+        // @ts-expect-error: test bad value
+        element.context = 1;
+        await element.updateComplete;
+        expect(element.controller.options.context).to.equal(1);
+      });
+    });
+
+    describe('setting client', function() {
+      it('as global client', async function() {
+        element.client = window.__APOLLO_CLIENT__!;
+        await element.updateComplete;
+        expect(element.controller.options.client).to.equal(window.__APOLLO_CLIENT__);
+      });
+      it('as new client', async function() {
+        const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
+        element.client = client;
+        await element.updateComplete;
+        expect(element.controller.options.client).to.equal(client);
+      });
+      it('as illegal value', async function() {
+        // @ts-expect-error: test bad value
+        element.client = 1;
+        await element.updateComplete;
+        expect(element.controller.options.client).to.equal(1);
+      });
+    });
+
+    describe('setting loading', function() {
+      it('as true', async function() {
+        element.loading = true;
+        await element.updateComplete;
+        expect(element.controller.loading).to.equal(true);
+      });
+      it('as false', async function() {
+        element.loading = false;
+        await element.updateComplete;
+        expect(element.controller.loading).to.equal(false);
+      });
+      it('as illegal value', async function() {
+        // @ts-expect-error: test bad value
+        element.loading = 1;
+        await element.updateComplete;
+        expect(element.controller.loading).to.equal(1);
+      });
+    });
+
+    describe('setting query', function() {
+      it('as DocumentNode', async function() {
+        const query = C.gql`{ nullable }`;
+        element.query = query;
+        await element.updateComplete;
+        expect(element.controller.query)
+          .to.equal(query)
+          .and.to.equal(element.controller.document);
+      });
+      it('as TypedDocumentNode', async function() {
+        const query = C.gql`{ nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
+        element.query = query;
+        await element.updateComplete;
+        expect(element.controller.query).to.equal(query);
+        const l = element as unknown as ApolloQueryElement<typeof query>;
+        l.data = { a: 'b' };
+        // @ts-expect-error: can't assign bad data type
+        l.data = { b: 'c' };
+        // @ts-expect-error: can't assign bad variables type
+        l.variables = { b: 'c' };
+      });
+      it('as illegal value', async function() {
+        expect(() => {
+          // @ts-expect-error: can't assign bad variables type
+          element.query = 1;
+        }).to.throw(/Query must be a parsed GraphQL document./);
+        await element.updateComplete;
+        expect(element.query)
+          .to.be.null.and
+          .to.equal(element.document).and
+          .to.equal(element.controller.query).and
+          .to.equal(element.controller.document);
+      });
+    });
+
+    describe('setting error', function() {
+      it('as ApolloError', async function() {
+        const error = new C.ApolloError({ });
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+      it('as Error', async function() {
+        const error = new Error();
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+      it('as null', async function() {
+        const error = null;
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+      it('as illegal value', async function() {
+        const error = 0;
+        // @ts-expect-error: test bad value
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
     });
   });
 
@@ -70,6 +251,21 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         beforeEach(nextFrame);
         it('doesn\'t render anything', function() {
           expect(element).shadowDom.to.equal('');
+        });
+        describe('then setting illegal variables', function() {
+          // @ts-expect-error: bad input
+          beforeEach(() => element.variables = { boop: 'snoot', offset: 'offset' });
+          beforeEach(nextFrame);
+          describe('then calling subscribe()', function() {
+            beforeEach(() => element.subscribe());
+            beforeEach(nextFrame);
+            it('doesn\'t render anything', function() {
+              expect(element).shadowDom.to.equal('');
+            });
+            it('sets error', function() {
+              expect(element.error?.message).to.equal(`Variable "$offset" got invalid value "offset"; Int cannot represent non-integer value: "offset"`);
+            });
+          });
         });
         describe('then setting variables', function() {
           beforeEach(() => element.variables = { offset: 0 });
@@ -437,39 +633,3 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
   });
 });
-
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { d: 'd', e: number };
-
-function TypeCheck() {
-  const el = new ApolloQueryElement<TypeCheckData, TypeCheckVars>();
-  /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
-
-  assertType<HTMLElement>                               (el);
-
-  // ApolloElementInterface
-  assertType<ApolloClient<NormalizedCacheObject>|null>  (el.client);
-  assertType<Record<string, unknown>|undefined>         (el.context);
-  assertType<boolean>                                   (el.loading);
-  assertType<DocumentNode|null>                         (el.document);
-  assertType<ApolloError|Error|null>                    (el.error);
-  assertType<readonly GraphQLError[]|null>              (el.errors);
-  assertType<TypeCheckData>                             (el.data!);
-  assertType<string>                                    (el.error!.message);
-  assertType<'a'>                                       (el.data.a);
-  // @ts-expect-error: b as number type
-  assertType<'a'>                                       (el.data.b);
-  if (isApolloError(el.error!))
-    assertType<readonly GraphQLError[]>                 (el.error.graphQLErrors);
-
-  // ApolloQueryInterface
-  assertType<DocumentNode>                              (el.query!);
-  assertType<TypeCheckVars>                             (el.variables!);
-  assertType<ErrorPolicy>                               (el.errorPolicy!);
-  assertType<string>                                    (el.errorPolicy!);
-  // @ts-expect-error: ErrorPolicy is not a number
-  assertType<number>                                    (el.errorPolicy!);
-  assertType<FetchPolicy>                               (el.fetchPolicy!);
-
-  /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
-}

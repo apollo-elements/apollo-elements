@@ -66,7 +66,7 @@ declare global { interface HTMLElementTagNameMap {
  * ```
  */
 @customElement('apollo-subscription')
-export class ApolloSubscriptionElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
+export class ApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V>
   implements Omit<ApolloSubscriptionInterface<D, V>, 'nextError'|'nextData'> {
   static readonly is = 'apollo-subscription';
@@ -82,7 +82,7 @@ export class ApolloSubscriptionElement<D extends MaybeTDN = any, V = MaybeVariab
   @controlled() @state() subscription: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
-  @controlled() @state() context?: Record<string, any>;
+  @controlled({ path: 'options' }) @state() context?: Record<string, any>;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`
