@@ -50,21 +50,21 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
 
   declare options: ApolloSubscriptionControllerOptions<D, V>;
 
-  get subscription(): this['document'] { return this.document; }
+  get subscription(): ComponentDocument<D> | null { return this.document; }
 
-  set subscription(document: this['document']) { this.document = document; }
+  set subscription(document: ComponentDocument<D> | null) { this.document = document; }
 
   constructor(
     host: ReactiveControllerHost,
-    subscription?: ComponentDocument<D>,
+    subscription?: ComponentDocument<D> | null,
     options?: ApolloSubscriptionControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(subscription);
+    this.init(subscription ?? null);
   }
 
   hostConnected(): void {
-    this.documentChanged(this.subscription);
+    this.documentChanged(this.subscription ?? null);
     super.hostConnected?.();
   }
 
@@ -153,9 +153,9 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     }
   }
 
-  protected documentChanged(document?: DocumentNode | ComponentDocument<D>): void {
+  protected documentChanged(document?: ComponentDocument<D> | null): void {
     this.cancel();
-    const query = document;
+    const query = document ?? undefined;
     if (this.canSubscribe({ query }) && (this.options.shouldSubscribe?.({ query }) ?? true))
       this.subscribe();
   }

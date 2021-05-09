@@ -18,6 +18,8 @@ import type {
 
 export type ApolloControllerHost = HTMLElement & ReactiveControllerHost;
 
+import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
+
 export interface ApolloControllerOptions<D, V> {
   client?: ApolloClient<NormalizedCacheObject>;
   variables?: Variables<D, V>;
@@ -59,27 +61,34 @@ implements ReactiveController {
 
   loading = false;
 
-  #document?: ComponentDocument<D>;
+  #document: ComponentDocument<D> | null = null;
 
   #variables?: Variables<D, V>;
 
-  get document(): ComponentDocument<D> | undefined { return this.#document; }
+  get document(): ComponentDocument<D> | null { return this.#document; }
 
-  set document(document: ComponentDocument<D> | undefined) {
-    this.#document = document;
-    this.options[update]?.({ document });
-    this.documentChanged?.(document);/* c8 ignore next */
+  set document(document: ComponentDocument<D> | null) {
+    if (!document)
+      this.#document = null;
+    else if (!isValidGql(document)) {
+      const name = (this.constructor.name).replace(/Apollo(\w+)Controller/, '$1') || 'Document';
+      throw new TypeError(`${name} must be a parsed GraphQL document.`);
+    } else {
+      this.#document = document;
+      this.options[update]?.({ document });
+      this.documentChanged?.(document);/* c8 ignore next */
+    }
   }
 
-  get variables(): Variables<D, V> | undefined { return this.#variables; }
+  get variables(): this['options']['variables'] { return this.#variables; }
 
-  set variables(variables: Variables<D, V> | undefined) {
+  set variables(variables: this['options']['variables']) {
     this.#variables = variables;
     this.options[update]?.({ variables });
     this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
-  protected abstract documentChanged?(document?: DocumentNode | ComponentDocument<D>): void
+  protected abstract documentChanged?(document?: ComponentDocument<D>|null): void
 
   protected abstract variablesChanged?(variables?: Variables<D, V>): void
 
@@ -89,7 +98,7 @@ implements ReactiveController {
     host.addController?.(this);
   }
 
-  init(document?: ComponentDocument<D>): void {
+  init(document: ComponentDocument<D> | null): void {
     this.document = document;
     this.variables = this.options?.variables;
   }

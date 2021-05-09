@@ -92,12 +92,12 @@ describe('[core] ApolloMutationController', function() {
     afterEach(teardownClient);
 
     describe('on a ReactiveElement that mirrors props', function() {
-      class MirroringHost<D extends TypedDocumentNode> extends ReactiveElement {
-        mutation!: ApolloMutationController<D>;
+      class MirroringHost extends ReactiveElement {
+        declare mutation: ApolloMutationController<any, any>;
 
         called = false;
 
-        data?: Data<D> | null;
+        data?: this['mutation']['data'];
 
         error?: Error|ApolloError|null;
 
@@ -112,20 +112,19 @@ describe('[core] ApolloMutationController', function() {
       }
 
       describe('with NullableParamMutation', function() {
-        let element: MirroringHost<typeof S.NullableParamMutation>;
+        let element: NullableParamMutationHost;
+
+        class NullableParamMutationHost extends MirroringHost {
+          declare shadowRoot: ShadowRoot;
+
+          mutation = new ApolloMutationController(this, S.NullableParamMutation, {
+            onCompleted: spy(),
+            onError: spy(),
+          });
+        }
 
         beforeEach(async function define() {
-          class NullableParamMutationHost extends MirroringHost<typeof S.NullableParamMutation> {
-            declare shadowRoot: ShadowRoot;
-
-            mutation = new ApolloMutationController(this, S.NullableParamMutation, {
-              onCompleted: spy(),
-              onError: spy(),
-            });
-          }
-
-          const tag = defineCE(NullableParamMutationHost);
-
+          const tag = defineCE(class extends NullableParamMutationHost {});
           element = await fixture(`<${tag}></${tag}>`);
         });
 

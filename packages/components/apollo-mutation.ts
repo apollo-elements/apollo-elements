@@ -1,13 +1,4 @@
-import type {
-  ApolloMutationInterface,
-  ComponentDocument,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  OptimisticResponseType,
-  RefetchQueriesType,
-  Variables,
-} from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type { PropertyValues } from 'lit';
 
@@ -29,12 +20,12 @@ import * as E from './events';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-mutation': ApolloMutationElement } }
 
-type P<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
+type P<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
   ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
   ? Parameters<ApolloMutationController<D, V>[K]>
   : never
 
-type R<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
+type R<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
   ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
   ? ReturnType<ApolloMutationController<D, V>[K]>
   : never
@@ -160,8 +151,8 @@ export class WillMutateError extends Error {}
  * ```
  */
 @customElement('apollo-mutation')
-export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
-  extends GraphQLScriptChildMixin(ApolloElement)<D, V> implements ApolloMutationInterface<D, V> {
+export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V> implements I.ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
   /**
@@ -232,7 +223,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
     return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
-  controller = new ApolloMutationController<D, V>(this, undefined, {
+  controller = new ApolloMutationController<D, V>(this, null, {
     onCompleted: data => {
       const trigger = this.inFlightTrigger;
       this.didMutate();
@@ -274,10 +265,10 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
   @controlled() @property({ type: Boolean, reflect: true }) called = false;
 
   /** @summary The mutation. */
-  @controlled() @state() mutation: null | ComponentDocument<D> = null;
+  @controlled() @state() mutation: null | I.ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
-  @controlled() @state() context?: Record<string, unknown>;
+  @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;
 
   /**
    * An object that represents the result of this mutation that
@@ -288,7 +279,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
    * the result of a mutation immediately, and update the UI later if any errors
    * appear.
    */
-  @controlled({ path: 'options' }) @state() optimisticResponse?: OptimisticResponseType<D, V>;
+  @controlled({ path: 'options' }) @state() optimisticResponse?: I.OptimisticResponseType<D, V>;
 
 
   /**
@@ -296,7 +287,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
    *
    * @summary Mutation variables.
    */
-  @controlled() @state() variables: Variables<D, V> | null = null;
+  @controlled() @state() variables: I.Variables<D, V> | null = null;
 
   /**
    * @summary If true, the returned data property will not update with the mutation result.
@@ -350,7 +341,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
           .map(x => x.trim());
       },
     },
-  }) refetchQueries: RefetchQueriesType<D> | null = null;
+  }) refetchQueries: I.RefetchQueriesType<D> | null = null;
 
   /**
    * Define this function to determine the URL to navigate to after a mutation.
@@ -379,21 +370,21 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
    * @param trigger the trigger element which triggered this mutation
    * @returns url to navigate to
    */
-  resolveURL?(data: Data<D>, trigger: HTMLElement): string | Promise<string>;
+  resolveURL?(data: I.Data<D>, trigger: HTMLElement): string | Promise<string>;
 
   constructor() {
     super();
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const el = this;
     Object.defineProperty(this.controller, 'variables', {
-      get(): Variables<D, V> | null {
+      get(): I.Variables<D, V> | null {
         if (this.__variables)
           return this.__variables;
         else
-          return el.getVariablesFromInputs() ?? el.getDOMVariables() as Variables<D, V>;
+          return el.getVariablesFromInputs() ?? el.getDOMVariables() as I.Variables<D, V>;
       },
 
-      set(v: Variables<D, V> | null) {
+      set(v: I.Variables<D, V> | null) {
         this.__variables = v ?? undefined;
       },
     });
@@ -406,7 +397,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
     for (const record of records) {
       for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
         const type = this.#listeners.get(node);
-        if (type == null) return;
+        if (type == null) return; /* c8 ignore next */
         node.removeEventListener(type, this.onTriggerEvent);
         this.#listeners.delete(node);
       }
@@ -455,7 +446,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
   }
 
   private async willNavigate(
-    data: Data<D>|null|undefined,
+    data: I.Data<D>|null|undefined,
     triggeringElement: HTMLElement
   ): Promise<void> {
     if (!this.dispatchEvent(new E.WillNavigateEvent(this)))
@@ -510,7 +501,7 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
   /**
    * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
    */
-  protected getVariablesFromInputs(): Variables<D, V> | null {
+  protected getVariablesFromInputs(): I.Variables<D, V> | null {
     if (isEmpty(this.dataset) && isEmpty(this.inputs))
       return null;
 
@@ -520,9 +511,9 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
     };
 
     if (this.inputKey)
-      return { [this.inputKey]: input } as unknown as Variables<D, V>;
+      return { [this.inputKey]: input } as unknown as I.Variables<D, V>;
     else
-      return input as Variables<D, V>;
+      return input as I.Variables<D, V>;
   }
 
   update(changed: PropertyValues<this>): void {
@@ -549,8 +540,8 @@ export class ApolloMutationElement<D extends MaybeTDN = any, V = MaybeVariables<
    * data to be rolled back.
    */
   public updater?(
-    ...params: Parameters<MutationUpdaterFn<Data<D>>>
-  ): ReturnType<MutationUpdaterFn<Data<D>>>;
+    ...params: Parameters<MutationUpdaterFn<I.Data<D>>>
+  ): ReturnType<MutationUpdaterFn<I.Data<D>>>;
 
   public mutate(params?: P<D, V, 'mutate'>[0]): R<D, V, 'mutate'> {
     return this.controller.mutate({ ...params, update: this.updater });

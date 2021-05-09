@@ -4,14 +4,7 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError, OptimisticResponseType } from '@apollo-elements/interfaces';
 
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+import * as C from '@apollo/client/core';
 
 import * as S from '@apollo-elements/test';
 
@@ -56,6 +49,275 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
   afterEach(teardownClient);
 
+  describe('simply instantiating', function() {
+    let element: ApolloMutationElement;
+    beforeEach(async function() {
+      element = await fixture(html`<apollo-mutation></apollo-mutation>`);
+    });
+
+    it('has a shadow root', function() {
+      expect(element.shadowRoot).to.be.ok;
+    });
+
+    it('doesn\'t render anything', function() {
+      expect(element).shadowDom.to.equal('');
+    });
+
+    it('has called: false', function() {
+      expect(element.called).to.be.false;
+    });
+
+    describe('setting fetch-policy attr', function() {
+      it('cache-and-network', async function() {
+        element.setAttribute('fetch-policy', 'no-cache');
+        await element.updateComplete;
+        expect(element.fetchPolicy === 'no-cache').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+      it('forwards an illegal value', async function() {
+        element.setAttribute('fetch-policy', 'network-only');
+        await element.updateComplete;
+        // @ts-expect-error: test for bad value
+        expect(element.fetchPolicy === 'network-only').to.be.true;
+        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+      });
+    });
+
+    describe('setting error-policy attr', function() {
+      it('all', async function() {
+        element.setAttribute('error-policy', 'all');
+        await element.updateComplete;
+        expect(element.errorPolicy === 'all').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+      it('none', async function() {
+        element.setAttribute('error-policy', 'none');
+        await element.updateComplete;
+        expect(element.errorPolicy === 'none').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+      it('ignore', async function() {
+        element.setAttribute('error-policy', 'ignore');
+        await element.updateComplete;
+        expect(element.errorPolicy === 'ignore').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+      it('forwards an illegal value', async function() {
+        element.setAttribute('error-policy', 'shmoo');
+        await element.updateComplete;
+        // @ts-expect-error: test for bad value
+        expect(element.errorPolicy === 'shmoo').to.be.true;
+        expect(element.errorPolicy).to.equal(element.controller.options.errorPolicy);
+      });
+    });
+
+    describe('setting context', function() {
+      it('as empty object', async function() {
+        element.context = {};
+        await element.updateComplete;
+        expect(element.controller.options.context)
+          .to.be.ok
+          .to.equal(element.context).and
+          .and.to.be.empty;
+      });
+      it('as non-empty object', async function() {
+        element.context = { a: 'b' };
+        await element.updateComplete;
+        expect(element.controller.options.context)
+          .to.equal(element.context).and
+          .to.deep.equal({ a: 'b' });
+      });
+      it('as illegal non-object', async function() {
+        // @ts-expect-error: test bad value
+        element.context = 1;
+        await element.updateComplete;
+        expect(element.controller.options.context).to.equal(1);
+      });
+    });
+
+    describe('setting client', function() {
+      it('as global client', async function() {
+        element.client = window.__APOLLO_CLIENT__!;
+        await element.updateComplete;
+        expect(element.controller.options.client).to.equal(window.__APOLLO_CLIENT__);
+      });
+      it('as new client', async function() {
+        const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
+        element.client = client;
+        await element.updateComplete;
+        expect(element.controller.options.client).to.equal(client);
+      });
+      it('as illegal value', async function() {
+        // @ts-expect-error: test bad value
+        element.client = 1;
+        await element.updateComplete;
+        expect(element.controller.options.client).to.equal(1);
+      });
+    });
+
+    describe('setting ignoreResults', function() {
+      it('as true', async function() {
+        element.ignoreResults = true;
+        await element.updateComplete;
+        expect(element.controller.options.ignoreResults).to.equal(true);
+      });
+      it('as false', async function() {
+        element.ignoreResults = false;
+        await element.updateComplete;
+        expect(element.controller.options.ignoreResults).to.equal(false);
+      });
+      it('as illegal value', async function() {
+        // @ts-expect-error: test bad value
+        element.ignoreResults = 1;
+        await element.updateComplete;
+        expect(element.controller.options.ignoreResults).to.equal(1);
+      });
+    });
+
+    describe('setting awaitRefetchQueries', function() {
+      it('as true', async function() {
+        element.awaitRefetchQueries = true;
+        await element.updateComplete;
+        expect(element.controller.options.awaitRefetchQueries).to.equal(true);
+      });
+      it('as false', async function() {
+        element.awaitRefetchQueries = false;
+        await element.updateComplete;
+        expect(element.controller.options.awaitRefetchQueries).to.equal(false);
+      });
+      it('as illegal value', async function() {
+        // @ts-expect-error: test bad value
+        element.awaitRefetchQueries = 1;
+        await element.updateComplete;
+        expect(element.controller.options.awaitRefetchQueries).to.equal(1);
+      });
+    });
+
+    describe('setting loading', function() {
+      it('as true', async function() {
+        element.loading = true;
+        await element.updateComplete;
+        expect(element.controller.loading).to.equal(true);
+      });
+      it('as false', async function() {
+        element.loading = false;
+        await element.updateComplete;
+        expect(element.controller.loading).to.equal(false);
+      });
+      it('as illegal value', async function() {
+        // @ts-expect-error: test bad value
+        element.loading = 1;
+        await element.updateComplete;
+        expect(element.controller.loading).to.equal(1);
+      });
+    });
+
+    describe('setting mutation', function() {
+      it('as DocumentNode', async function() {
+        const mutation = C.gql`mutation { nullable }`;
+        element.mutation = mutation;
+        await element.updateComplete;
+        expect(element.controller.mutation)
+          .to.equal(mutation)
+          .and.to.equal(element.controller.document);
+      });
+      it('as TypedDocumentNode', async function() {
+        const mutation = C.gql`mutation { nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
+        element.mutation = mutation;
+        await element.updateComplete;
+        expect(element.controller.mutation).to.equal(mutation);
+        const l = element as unknown as ApolloMutationElement<typeof mutation>;
+        l.data = { a: 'b' };
+        // @ts-expect-error: can't assign bad data type
+        l.data = { b: 'c' };
+        // @ts-expect-error: can't assign bad variables type
+        l.variables = { b: 'c' };
+      });
+      it('as illegal value', async function() {
+        expect(() => {
+          // @ts-expect-error: can't assign bad variables type
+          element.mutation = 1;
+        }).to.throw(/Mutation must be a parsed GraphQL document./);
+        await element.updateComplete;
+        expect(element.mutation)
+          .to.be.null.and
+          .to.equal(element.document).and
+          .to.equal(element.controller.mutation).and
+          .to.equal(element.controller.document);
+      });
+    });
+
+    describe('setting error', function() {
+      it('as ApolloError', async function() {
+        const error = new C.ApolloError({ });
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+      it('as Error', async function() {
+        const error = new Error();
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+      it('as null', async function() {
+        const error = null;
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+      it('as illegal value', async function() {
+        const error = 0;
+        // @ts-expect-error: test bad value
+        element.error = error;
+        await element.updateComplete;
+        expect(element.controller.error).to.equal(error);
+      });
+    });
+
+    describe('setting optimisticResponse', function() {
+      let l: ApolloMutationElement<typeof S.UpdateUserMutation>;
+      beforeEach(() => l = element as unknown as typeof l);
+      it('as Object', async function() {
+        const optimisticResponse = {
+          updateUser: {
+            username: 'bob',
+            haircolor: 'red',
+            nickname: 'red bob',
+          },
+        };
+        l.optimisticResponse = optimisticResponse;
+        await l.updateComplete;
+        expect(l.controller.options.optimisticResponse).to.equal(optimisticResponse);
+      });
+      it('as function', async function() {
+        const optimisticResponse = (vars: typeof l['variables']) => ({
+          updateUser: {
+            username: vars?.username,
+            haircolor: vars?.haircolor,
+            nickname: `${vars?.haircolor} ${vars?.username}`,
+          },
+        });
+        l.optimisticResponse = optimisticResponse;
+        await l.updateComplete;
+        expect(l.controller.options.optimisticResponse).to.equal(optimisticResponse);
+      });
+      it('as undefined', async function() {
+        const optimisticResponse = undefined;
+        l.optimisticResponse = optimisticResponse;
+        await l.updateComplete;
+        expect(l.controller.options.optimisticResponse).to.equal(optimisticResponse);
+      });
+      it('as illegal value', async function() {
+        const optimisticResponse = 0;
+        // @ts-expect-error: test bad value
+        l.optimisticResponse = optimisticResponse;
+        await l.updateComplete;
+        expect(l.controller.options.optimisticResponse).to.equal(optimisticResponse);
+      });
+    });
+  });
+
   describe('with no variables in DOM', function() {
     let element: ApolloMutationElement;
 
@@ -82,6 +344,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           variables: { nullable: 'nul' },
         });
       });
+      it('sets called', function() {
+        expect(element.called).to.be.true;
+      });
     });
   });
 
@@ -100,6 +365,19 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       expect(element.refetchQueries)
         .to.deep.equal(['A', 'B', 'C', 'D', 'E'])
         .and.to.deep.equal(element.controller.options.refetchQueries);
+      element.refetchQueries = ['a', 'b'];
+      element.refetchQueries = result => ['a', {
+        query: C.gql`{}` as C.TypedDocumentNode<{ i: number }, {
+          data: number,
+          context: Record<string, unknown>,
+          errors: string[]
+        }>,
+        variables: {
+          data: result.data?.i,
+          context: result.context,
+          errors: result.errors!.map(x => x.message),
+        },
+      }];
     });
 
     describe('then removing attribute', function() {
@@ -1238,53 +1516,3 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
   });
 });
-
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { d: 'd', e: number };
-
-function TypeCheck() {
-  const el = new ApolloMutationElement<TypeCheckData, TypeCheckVars>();
-  /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
-
-  assertType<HTMLElement>                         (el);
-
-  // ApolloElementInterface
-  assertType<ApolloClient<NormalizedCacheObject>|null>  (el.client);
-  assertType<Record<string, unknown>|undefined>         (el.context);
-  assertType<boolean>                                   (el.loading);
-  assertType<DocumentNode|null>                         (el.document);
-  assertType<ApolloError|Error|null>                    (el.error);
-  assertType<readonly GraphQLError[]|null>              (el.errors);
-  assertType<TypeCheckData>                             (el.data!);
-  assertType<string>                                    (el.error!.message);
-  assertType<'a'>                                       (el.data.a);
-  // @ts-expect-error: b as number type
-  assertType<'a'>                                       (el.data.b);
-  if (isApolloError(el.error!))
-    assertType<readonly GraphQLError[]>                 (el.error.graphQLErrors);
-
-  // ApolloMutationInterface
-  assertType<DocumentNode>                              (el.mutation!);
-  assertType<TypeCheckVars>                             (el.variables!);
-  assertType<boolean>                                   (el.called);
-  assertType<boolean>                                   (el.ignoreResults!);
-  assertType<boolean>                                   (el.awaitRefetchQueries!);
-  assertType<ErrorPolicy>                               (el.errorPolicy!);
-  assertType<string>                                    (el.errorPolicy!);
-  // @ts-expect-error: ErrorPolicy is not a number
-  assertType<number>                                    (el.errorPolicy!);
-  assertType<string>                                    (el.fetchPolicy!);
-  assertType<Extract<FetchPolicy, 'no-cache'>|undefined>(el.fetchPolicy);
-
-  if (typeof el.refetchQueries === 'function')
-    assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(el.refetchQueries);
-  else
-    assertType<RefetchQueryDescription|null|undefined>(el.refetchQueries);
-
-  if (typeof el.optimisticResponse !== 'function')
-    assertType<TypeCheckData|undefined>(el.optimisticResponse);
-  else
-    assertType<OptimisticResponseType<TypeCheckData, TypeCheckVars>>(el.optimisticResponse);
-
-  /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
-}
