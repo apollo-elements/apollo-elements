@@ -24,9 +24,10 @@ import { property, state } from '@lit/reactive-element/decorators.js';
 
 export interface ControlledPropertyDeclaration extends PropertyDeclaration {
   controlled?: boolean|string;
+  readonly?: boolean;
 }
 
-export function controlled({ path }: { path?: 'options' } = {}) {
+export function controlled({ path, readonly }: { path?: 'options', readonly?: boolean } = {}) {
   return function<T extends ApolloElement<any, any>>(
     proto: T,
     name: typeof path extends keyof T ? keyof T[typeof path] : keyof T
@@ -35,6 +36,7 @@ export function controlled({ path }: { path?: 'options' } = {}) {
       // @ts-expect-error: I know it's protected
       ...(proto.constructor as typeof ApolloElement).getPropertyOptions(name),
       controlled: path ?? true,
+      readonly,
     });
   };
 }
@@ -46,7 +48,7 @@ export class ApolloElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
   readyToReceiveDocument = false;
 
   static createProperty(name: string, opts: ControlledPropertyDeclaration): void {
-    const { controlled, ...options } = opts;
+    const { controlled, readonly, ...options } = opts;
     if (controlled) {
       Object.defineProperty(this.prototype, name, {
         get() {
@@ -56,14 +58,16 @@ export class ApolloElement<D extends MaybeTDN = any, V = MaybeVariables<D>>
             return this.controller[name];
         },
 
-        set(value) {
-          if (!this.controller) return;
-          const old = this[name];
-          if (typeof controlled === 'string')
-            this.controller[controlled][name] = value;
-          else
-            this.controller[name] = value;
-          this.requestUpdate(name, old);
+        ...!readonly && {
+          set(value) {
+            if (!this.controller) return;
+            const old = this[name];
+            if (typeof controlled === 'string')
+              this.controller[controlled][name] = value;
+            else
+              this.controller[name] = value;
+            this.requestUpdate(name, old);
+          },
         },
       });
     }
