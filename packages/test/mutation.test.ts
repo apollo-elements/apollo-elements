@@ -1,9 +1,11 @@
 import { SetupFunction } from './types';
 
 import {
+  aTimeout,
   expect,
   defineCE,
   fixture,
+  nextFrame,
 } from '@open-wc/testing';
 
 import type { ApolloMutationElement, Constructor, RefetchQueriesType } from '@apollo-elements/interfaces';
@@ -80,8 +82,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         // defined fields
         expect(element.called, 'called').to.be.false;
         expect(element.ignoreResults, 'ignoreResults').to.be.false;
-        // @ts-expect-error: tsk tsk testing private properties
-        expect(element.mostRecentMutationId, 'mostRecentMutationId').to.equal(0);
 
         // optional fields
         expect(element.awaitRefetchQueries, 'awaitRefetchQueries').to.be.undefined;
@@ -93,52 +93,52 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         expect(element.updater, 'updater').to.be.undefined;
       });
 
-      it('caches observed properties', function() {
+      it('caches observed properties', async function() {
         const client = makeClient();
         element.client = client;
-        expect(element.client, 'client').to.equal(client);
+        await element.updateComplete;
+        expect(element.client, 'client')
+          .to.equal(client).and
+          .to.equal(element.controller.client);
 
         element.client = null;
-        expect(element.client, 'client').to.be.null;
-
-        element.called = true;
-        expect(element.called, 'called').to.be.true;
-
-        element.called = false;
-        expect(element.called, 'called').to.be.false;
+        await element.updateComplete;
+        expect(element.client, 'client')
+          .to.be.null.and
+          .to.equal(element.controller.client);
 
         const data = { data: 'data' };
         element.data = data;
-        expect(element.data, 'data').to.equal(data);
+        expect(element.data, 'data')
+          .to.equal(data).and
+          .to.equal(element.controller.data);
 
         element.data = null;
-        expect(element.data, 'data').to.be.null;
+        expect(element.data, 'data')
+          .to.be.null.and
+          .to.equal(element.controller.data);
 
         try {
           element.error = new Error('error');
-          expect(element.error.message, 'error').to.equal('error');
+          expect(element.error.message, 'error')
+            .to.equal('error').and
+            .to.equal(element.controller.error?.message);
         } catch { null; }
 
         element.error = null;
-        expect(element.error, 'error').to.be.null;
+        expect(element.error, 'error')
+          .to.be.null.and
+          .to.equal(element.controller.error);
 
         element.loading = true;
-        expect(element.loading, 'loading').to.be.true;
+        expect(element.loading, 'loading')
+          .to.be.true.and
+          .to.equal(element.controller.loading);
 
         element.loading = false;
-        expect(element.loading, 'loading').to.be.false;
-      });
-
-      describe('setting called', function() {
-        beforeEach(function setCalled() {
-          element.called = !element.called;
-        });
-
-        beforeEach(waitForRender(() => element));
-
-        it('renders', function() {
-          expect(element.shadowRoot.getElementById('called')!.textContent).to.equal('true');
-        });
+        expect(element.loading, 'loading')
+          .to.be.false.and
+          .to.equal(element.controller.loading);
       });
 
       describe('setting mutation with NoParam mutation', function() {
@@ -155,7 +155,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         it('throws an error', async function badMutation() {
           // @ts-expect-error: i'm testing the error handler
           expect(() => element.mutation = 'foo').to
-            .throw('Mutation must be a gql-parsed DocumentNode');
+            .throw('Mutation must be a parsed GraphQL document.');
           expect(element.mutation).to.not.be.ok;
         });
       });
@@ -301,21 +301,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         it('sets the mutation property', function() {
           expect(element.mutation).to.equal(NoParamMutation);
-        });
-
-        describe('with context property set', function() {
-          beforeEach(function setContext() {
-            element.context = { the: 'context' };
-          });
-
-          beforeEach(function callMutate() {
-            element.mutate();
-          });
-
-          it('uses element\'s context', function() {
-            expect(element.client!.mutate).to.have.been
-              .calledWithMatch(match({ context: { the: 'context' } }));
-          });
         });
 
         describe('with optimisticResponse property set as object', function() {
@@ -500,22 +485,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               refetchQueries: element.refetchQueries ?? undefined,
               update: element.updater,
               variables: element.variables ?? undefined,
-            });
-          });
-
-          it('sets mostRecentMutationId', function() {
-            // @ts-expect-error: tsk tsk testing private properties
-            expect(element.mostRecentMutationId).to.equal(1);
-          });
-
-          describe('then calling again', function() {
-            beforeEach(function callMutate() {
-              element.mutate();
-            });
-
-            it('sets mostRecentMutationId', function() {
-              // @ts-expect-error: tsk tsk testing private properties
-              expect(element.mostRecentMutationId).to.equal(2);
             });
           });
         });
@@ -712,11 +681,10 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction<typeof element>({
-            spy: ['onCompleted', 'onError'],
             properties: {
               mutation: NullableParamMutation,
-              onCompleted: () => void null,
-              onError: () => void null,
+              onCompleted: spy(),
+              onError: spy(),
             },
           }));
         });
@@ -734,21 +702,26 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         afterEach(restoreSpies(() => spies));
 
         describe('when mutation resolves', function() {
+          let loading: boolean|undefined;
           beforeEach(async function callMutate() {
-            await element.mutate();
+            const p = element.mutate();
+            ({ loading } = element);
+            await p;
           });
 
-          beforeEach(waitForRender(() => element));
+          afterEach(() => loading = undefined);
+
+          beforeEach(() => element.updateComplete);
+
+          beforeEach(nextFrame);
 
           it('calls onCompleted with data', function() {
             expect(element.onCompleted).to.have.been
               .calledWithMatch({ nullableParam: match({ nullable: 'Hello World' }) });
           });
 
-          it('sets loading', async function() {
-            const p = element.mutate();
-            expect(element.loading).to.be.true;
-            await p;
+          it('sets loading', function() {
+            expect(loading).to.be.true;
             expect(element.loading).to.be.false;
           });
 
@@ -776,7 +749,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('sets errors', function() {
-            expect(element.errors).to.be.null;
+            expect(element.errors).to.be.empty;
           });
         });
 
@@ -805,13 +778,48 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           it('sets data, error, errors, and loading', function() {
             expect(element.data, 'data').to.be.null;
             expect(element.error, 'error').to.equal(error);
-            expect(element.errors, 'errors').to.be.null;
+            expect(element.errors, 'errors').to.be.empty;
             expect(element.loading, 'loading').to.be.false;
           });
 
           it('renders error', function() {
             expect(element.shadowRoot.getElementById('error')?.textContent)
               .to.equal(element.stringify(error));
+          });
+        });
+
+        describe('mutate()', function() {
+          beforeEach(() => element.mutate());
+
+          it('calls onCompleted with result', function() {
+            expect(element.onCompleted)
+              .to.have.been.calledOnce
+              .and
+              .to.have.been.calledWith(match({
+                nullableParam: {
+                  __typename: 'Nullable',
+                  nullable: 'Hello World',
+                },
+              }));
+          });
+
+          describe('then calling again', function() {
+            beforeEach(() => aTimeout(50));
+            beforeEach(() => element.mutate({
+              variables: {
+                nullable: 'second',
+              },
+            }));
+
+            it('calls onCompleted with result', function() {
+              expect(element.onCompleted)
+                .to.have.been.calledTwice.and
+                .to.have.been.calledWithMatch({
+                  nullableParam: {
+                    nullable: 'second',
+                  },
+                });
+            });
           });
         });
       });
@@ -855,6 +863,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               element = await fixture<Test>(`<${tag}></${tag}>`);
             });
 
+            beforeEach(() => element.updateComplete);
+
             beforeEach(function spyMethods() {
               spies = {
                 onError: spy(element, 'onError'),
@@ -876,13 +886,16 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             });
 
             describe('when mutation resolves', function() {
-              beforeEach(async function callMutate() {
-                await element.mutate();
-              });
+              beforeEach(() => element.mutate());
 
               it('calls onCompleted with data', function() {
-                expect(element.onCompleted).to.have.been
-                  .calledWithMatch({ nullableParam: match({ nullable: 'Hello World' }) });
+                expect(element.onCompleted)
+                  .to.have.been.calledOnce
+                  .and.to.have.been.calledWithMatch({
+                    nullableParam: {
+                      nullable: 'Hello World',
+                    },
+                  });
               });
 
               it('sets loading', async function() {

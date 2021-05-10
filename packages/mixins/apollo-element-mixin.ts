@@ -7,17 +7,17 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type {
-  ApolloElementElement,
-  ApolloElementInterface,
-  Constructor,
-  GraphQLError,
-} from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
+
+import type { ApolloController } from '@apollo-elements/core';
+
+import type { ReactiveControllerHost } from '@lit/reactive-element';
+
+import { ControllerHostMixin, controlled } from './controller-host-mixin';
 
 import { capital } from '@apollo-elements/lib/helpers';
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { effect, writable } from '@apollo-elements/lib/descriptors';
 
 declare global {
   interface WindowEventMap {
@@ -33,7 +33,7 @@ declare global {
 /**
  * Fired when an element connects to or disconnects from the DOM
  */
-export class ApolloElementEvent<T = ApolloElementElement> extends CustomEvent<T> {
+export class ApolloElementEvent<T = I.ApolloElementElement> extends CustomEvent<T> {
   declare type: 'apollo-element-connected'|'apollo-element-disconnected';
 
   constructor(type: 'apollo-element-connected'|'apollo-element-disconnected', detail: T) {
@@ -45,16 +45,19 @@ export class ApolloElementEvent<T = ApolloElementElement> extends CustomEvent<T>
   }
 }
 
-type MixinInstance =
-  Constructor<ApolloElementInterface> &
-  Pick<typeof ApolloElementInterface, keyof typeof ApolloElementInterface> & {
-    observedAttributes?: string[];
-  };
+type MixinInstance<B extends I.Constructor> = B & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
+    I.ApolloElementInterface<D, V> & ReactiveControllerHost;
+  documentType: 'mutation'|'query'|'subscription';
+  observedAttributes?: string[];
+}
 
-function ApolloElementMixinImplementation<B extends Constructor & {
-  observedAttributes?: string[]
-}>(superclass: B): MixinInstance & B {
-  abstract class ApolloElement extends superclass {
+function ApolloElementMixinImplementation<B extends I.Constructor>(
+  superclass: B
+): MixinInstance<B> {
+  class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+    extends ControllerHostMixin(superclass) {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
     static get observedAttributes(): string[] {
@@ -66,34 +69,42 @@ function ApolloElementMixinImplementation<B extends Constructor & {
     }
 
     /** @summary The Apollo Client instance. */
+    @controlled()
     client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
+    declare controller: ApolloController;
+
     /** @summary Latest data */
-    declare abstract data: unknown | null;
+    @controlled() data: I.Data<D> | null = null;
 
     /**
      * @summary Operation variables.
      * An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.
      */
-    declare abstract variables: unknown | null;
-
-    /** @summary Fetch Policy for the operation. */
-    declare abstract fetchPolicy?: string;
+    @controlled({
+      onSet(this: ApolloElement, variables: I.Variables<D, V>) {
+        if (this.readyToReceiveDocument)
+          this.variablesChanged?.(variables);
+      },
+    }) variables: I.Variables<D, V> | null = null;
 
     /** @summary Latest error. */
-    declare error: Error | ApolloError | null;
+    @controlled() error: Error | ApolloError | null = null;
 
     /** @summary Latest errors. */
-    declare errors: readonly GraphQLError[] | null;
+    @controlled() errors: readonly I.GraphQLError[] = [];
 
     /** @summary Whether a request is in-flight. */
-    declare loading: boolean;
+    @controlled() loading = false;
+
+    /** @summary Fetch Policy for the operation. */
+    @controlled({ path: 'options' }) fetchPolicy?: string;
 
     /** @summary Context passed to the link execution chain. */
-    declare context?: Record<string, unknown>;
+    @controlled({ path: 'options' }) context?: Record<string, unknown>;
 
     /** @summary Error Policy for the operation. */
-    declare errorPolicy?: ErrorPolicy;
+    @controlled({ path: 'options' }) errorPolicy?: ErrorPolicy;
 
     /** @summary True when the element is connected and ready to receive its GraphQL document */
     public readyToReceiveDocument = false;
@@ -112,16 +123,20 @@ function ApolloElementMixinImplementation<B extends Constructor & {
     set document(document) {
       if (!document)
         this._document = null; /* c8 ignore next */ // covered
-      else if (!isValidGql(document))
-        throw new TypeError(`${capital((this.constructor as typeof ApolloElementInterface).documentType ?? 'document')} must be a gql-parsed DocumentNode`); /* c8 ignore next */
-      else {
+      else if (!isValidGql(document)) {
+        const name = capital((this.constructor as typeof ApolloElement).documentType ?? 'document');
+        throw new TypeError(`${name} must be a parsed GraphQL document`); /* c8 ignore next */
+      } else {
         this._document = document;
         if (this.readyToReceiveDocument)
           this.documentChanged?.(document); /* c8 ignore next */ // covered
       }
     }
 
-    constructor(...a: any[]) { super(...a); }
+    constructor(...a: any[]) {
+      super(...a);
+      this.requestUpdate();
+    }
 
     attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       type ThisPolicy = `${'error'|'fetch'}Policy`;
@@ -163,22 +178,6 @@ function ApolloElementMixinImplementation<B extends Constructor & {
      */
     protected variablesChanged?(variables: this['variables']): void
   }
-
-  Object.defineProperties(ApolloElement.prototype, {
-    data: writable(null),
-    error: writable(null),
-    errors: writable(null),
-    loading: writable(false),
-    variables: effect<ApolloElement>({
-      name: 'variables',
-      init: null,
-      onSet(variables: unknown) {
-        if (this.readyToReceiveDocument) // element is connected
-          // @ts-expect-error: This is essentially a class accessor, I'm working around some TS limitations
-          this.variablesChanged?.(variables);
-      },
-    }),
-  });
 
   // @ts-expect-error: let's pretend it is
   return ApolloElement;

@@ -12,7 +12,6 @@ import type {
 import type {
   ApolloError,
   ApolloQueryResult,
-  DocumentNode,
   ObservableQuery,
   QueryOptions,
   SubscribeToMoreOptions,
@@ -48,13 +47,15 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
 
   partial = false;
 
-  get query(): this['document'] { return this.document; }
+  #hasDisconnected = false;
 
-  set query(document: this['document']) { this.document = document; }
+  get query(): ComponentDocument<D> | null { return this.document; }
+
+  set query(document: ComponentDocument<D> | null) { this.document = document; }
 
   constructor(
     host: ReactiveControllerHost,
-    query?: ComponentDocument<D>,
+    query?: ComponentDocument<D>|null,
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
@@ -62,8 +63,14 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
   }
 
   hostConnected(): void {
-    this.documentChanged(this.query);
-    super.hostConnected?.();
+    super.hostConnected();
+    if (this.#hasDisconnected && this.observableQuery)
+      this.observableQuery.reobserve();
+  }
+
+  hostDisconnected(): void {
+    this.#hasDisconnected = true;
+    super.hostDisconnected();
   }
 
   /**
@@ -84,21 +91,20 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     if (
       !!query &&
       this.canSubscribe({ query }) &&
-      (this.options.shouldSubscribe?.({ query }) ?? true)
-    ) /* c8 ignore next */ // covered
+      (this.options.shouldSubscribe?.({ query }) ?? true) &&
+      !this.observableQuery
+    )
       this.subscribe({ query }); /* c8 ignore next */ // covered
   }
 
   protected variablesChanged(variables?: Variables<D, V>): void {
-    if (this.observableQuery && variables)
-      this.refetch(variables); /* c8 ignore next */ // covered
+    if (this.observableQuery)
+      this.refetch(variables);
     else if (
       this.canSubscribe({ variables }) &&
       (this.options.shouldSubscribe?.({ variables }) ?? true)
     )
       this.subscribe({ variables });
-    else
-      return;
   }
 
   /**
@@ -123,7 +129,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       query: this.query!,
-      variables: this.variables,
+      variables: this.variables ?? undefined,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
@@ -139,7 +145,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
   private nextData(result: ApolloQueryResult<Data<D>>): void {
     this.data = result.data;
     this.error = result.error ?? null;
-    this.errors = result.errors;
+    this.errors = result.errors ?? [];
     this.loading = result.loading;
     this.networkStatus = result.networkStatus;
     this.partial = result.partial ?? false;
@@ -188,7 +194,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       query: this.query!,
-      variables: this.variables,
+      variables: this.variables ?? undefined,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
@@ -228,13 +234,13 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
   @bound public async executeQuery(
     params?: Partial<QueryOptions<Variables<D, V>>>
   ): Promise<ApolloQueryResult<Data<D>>> {
-    if (!this.client)
-      throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
-
-    this.loading = true;
-    this[update]();
-
     try {
+      if (!this.client)
+        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
+
+      this.loading = true;
+      this[update]();
+
       const result = await this.client.query({
         // It's better to let Apollo client throw this error
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -288,7 +294,10 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       this.observableQuery ??= this.watchQuery(
         options as WatchQueryOptions<Variables<D, V>, Data<D>>
       )
-    ).fetchMore(options).then(x => {
+    ).fetchMore({
+      ...options,
+      variables: options.variables ?? undefined,
+    }).then(x => {
       this.loading = false;
       this[update]();
       return x;

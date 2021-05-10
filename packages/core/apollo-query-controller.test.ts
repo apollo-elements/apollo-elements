@@ -427,7 +427,12 @@ describe('[core] ApolloQueryController', function() {
         });
 
         it('calls onData', function() {
-          expect(element.query.options!.onData).to.have.callCount(3);
+          expect(element.query.options!.onData).to.have.been.calledOnceWith(match({
+            helloWorld: {
+              name: 'Chaver',
+              greeting: 'Shalom',
+            },
+          }));
         });
 
         describe('setting query variables', function() {
@@ -441,7 +446,7 @@ describe('[core] ApolloQueryController', function() {
           beforeEach(nextFrame);
 
           it('refetches', function() {
-            expect(element.query.options!.onData).to.have.callCount(4);
+            expect(element.query.options!.onData).to.have.been.calledTwice;
             expect(element.data).to.deep.equal({
               helloWorld: {
                 __typename: 'HelloWorld',
@@ -603,7 +608,7 @@ describe('[core] ApolloQueryController', function() {
           });
 
           it('refetches and updates state', function() {
-            expect(element.query.options!.onData).to.have.callCount(4);
+            expect(element.query.options!.onData).to.have.calledTwice;
             expect(element.query.data).to.deep.equal({
               helloWorld: {
                 __typename: 'HelloWorld',
@@ -744,13 +749,15 @@ describe('[core] ApolloQueryController', function() {
 
         describe('calling fetchMore', function() {
           beforeEach(async () => element.query.fetchMore({
-            variables: { offset: (element.query?.variables?.offset ?? 0) + 10 },
+            variables: {
+              offset: (element.query?.variables?.offset ?? 0) + 10,
+            },
           }).catch(() => 0));
 
           beforeEach(nextFrame);
 
           it('calls onData again', function() {
-            expect(element.query.options!.onData).to.have.callCount(5);
+            expect(element.query.options!.onData).to.have.calledTwice;
             expect(element.query.options!.onError).to.not.have.been.called;
           });
 

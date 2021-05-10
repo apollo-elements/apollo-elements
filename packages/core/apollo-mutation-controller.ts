@@ -57,7 +57,9 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
 
   variablesChanged?(variables: Variables<D, V>): void
 
-  get mutation(): this['document'] { return this.document; }
+  get mutation(): this['document'] {
+    return this.document ?? null;
+  }
 
   set mutation(document: this['document']) { this.document = document; }
 
@@ -83,6 +85,7 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
     this.loading = true;
     this.called = true;
     this.error = null;
+    this.errors = [];
     this.data = null;
     this[update]();
 
@@ -98,7 +101,7 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
       optimisticResponse: this.options.optimisticResponse,
       refetchQueries: this.options.refetchQueries ?? undefined,
       update: this.options.update,
-      variables: this.variables,
+      variables: this.variables ?? undefined,
       ...params,
     })
       .then(this.onCompletedMutation.bind(this, mutationId))
@@ -133,7 +136,7 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
       if (!this.options.ignoreResults) {
         this.error = null;
         this.data = data ?? null;
-        this.errors = response.errors;
+        this.errors = response.errors ?? [];
         this.options.onCompleted?.(data); /* c8 ignore next */
       }
       this[update]();

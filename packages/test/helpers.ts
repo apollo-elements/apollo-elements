@@ -79,9 +79,13 @@ export function restoreStubs(getStubs: () => (Record<string, SinonStub> | undefi
   };
 }
 
-export function waitForRender<T extends HTMLElement & { hasRendered:() => Promise<T> }>(getElement: () => T | undefined) {
+export function waitForRender<T extends HTMLElement & {
+  updateComplete?: Promise<boolean>;
+  hasRendered:() => Promise<T>;
+}>(getElement: () => T) {
   return async function waitForRender(): Promise<void> {
-    await getElement()?.hasRendered();
+    const element = getElement();
+    await element?.updateComplete ?? element?.hasRendered?.() ?? Promise.resolve();
   };
 }
 
@@ -91,11 +95,7 @@ function setupClass<T extends TestableElement & ApolloElementInterface>(fopts?: 
 }) {
   return function(Klass: Constructor<T>): SetupFunction<T> {
     return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-      class Test extends (Klass as Constructor<TestableElement & ApolloElementInterface>) {
-        declare variables: any;
-
-        declare data: any;
-      }
+      class Test extends (Klass as Constructor<TestableElement & ApolloElementInterface>) { }
 
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
