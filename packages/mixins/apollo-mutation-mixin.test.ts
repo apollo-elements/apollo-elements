@@ -10,32 +10,27 @@ import type {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { GraphQLError, ApolloMutationInterface, Entries } from '@apollo-elements/interfaces';
+import type { GraphQLError, ApolloMutationInterface } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
-import type { Constructor } from '@apollo-elements/interfaces';
-
-import { expect, nextFrame, defineCE, fixture } from '@open-wc/testing';
+import { expect, defineCE, fixture } from '@open-wc/testing';
 
 import { assertType } from '@apollo-elements/test';
 
 import { ApolloMutationMixin } from './apollo-mutation-mixin';
 import { isApolloError } from '@apollo/client/core';
-import { effect } from '@apollo-elements/lib/descriptors';
 
-import {
-  describeMutation,
-  MutationElement,
-  setupMutationClass,
-} from '@apollo-elements/test/mutation.test';
+import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 
 class XL extends HTMLElement {}
 
 /**
  * Testable Mixed-in Apollo Mutation class
  */
-class TestableApolloMutation<D = any, V = any>
+class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloMutationMixin(XL)<D, V>
   implements ApolloMutationInterface<D, V> {
+  declare shadowRoot: ShadowRoot;
   static get template() {
     const template = document.createElement('template');
     template.innerHTML = /* html */`
@@ -48,17 +43,19 @@ class TestableApolloMutation<D = any, V = any>
     return template;
   }
 
-  $(id: keyof TestableApolloMutation) { return this.shadowRoot?.getElementById(id); }
+  $(id: keyof this) { return this.shadowRoot?.getElementById(id as string); }
 
-  observed: Array<keyof TestableApolloMutation> = ['called', 'data', 'error', 'errors', 'loading'];
+  observed: Array<keyof this> = ['called', 'data', 'error', 'errors', 'loading'];
 
   constructor() {
     super();
-    this.observed ??= [];
     this.attachShadow({ mode: 'open' })
       .append(TestableApolloMutation.template.content.cloneNode(true));
   }
 
+  update() {
+    this.render();
+  }
 
   render() {
     this.observed?.forEach(property => {
@@ -71,38 +68,16 @@ class TestableApolloMutation<D = any, V = any>
     return JSON.stringify(x, null, 2);
   }
 
-  async hasRendered(): Promise<this> {
-    await nextFrame();
+  async hasRendered() {
+    await this.updateComplete;
     return this;
   }
 }
 
-const DEFAULTS = {
-  called: false,
-  data: null,
-  error: null,
-  errors: null,
-  loading: false,
-};
-
-Object.defineProperties(TestableApolloMutation.prototype, Object.fromEntries(
-  (Object.entries(DEFAULTS) as Entries<TestableApolloMutation>)
-    .map(([name, init]) => [
-      name,
-      effect<TestableApolloMutation>({
-        name,
-        init,
-        onSet() {
-          this.render();
-        },
-      }),
-    ])
-));
-
 describe('[mixins] ApolloMutationMixin', function() {
   describeMutation({
-    class: TestableApolloMutation as Constructor<MutationElement>,
-    setupFunction: setupMutationClass(TestableApolloMutation as Constructor<MutationElement>),
+    class: TestableApolloMutation,
+    setupFunction: setupMutationClass(TestableApolloMutation),
   });
 
   describe('instantiating simple derived class', function() {
@@ -171,14 +146,14 @@ export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVa
 type TCV = { hey: 'yo' }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export class AccessorTest extends TestableApolloMutation<unknown, TCV> {
+export class AccessorTest extends TestableApolloMutation<TypeCheckData, TCV> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables(): TCV {
     return { hey: 'yo' as const };
   }
 }
 
-export class PropertyTest extends TestableApolloMutation<unknown, TCV> {
+export class PropertyTest extends TestableApolloMutation<TypeCheckData, TCV> {
   variables = { hey: 'yo' as const };
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */

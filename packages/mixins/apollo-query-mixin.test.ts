@@ -1,6 +1,7 @@
 import type { QueryElement } from '@apollo-elements/test/query.test';
 import type { ApolloQueryInterface, GraphQLError } from '@apollo-elements/interfaces';
-import type { Constructor, Entries } from '@apollo-elements/interfaces';
+import type { Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type {
   ApolloClient,
@@ -8,28 +9,22 @@ import type {
   ErrorPolicy,
   WatchQueryFetchPolicy,
   NormalizedCacheObject,
-  OperationVariables,
   TypedDocumentNode,
-  WatchQueryOptions,
 } from '@apollo/client/core';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
 
 import { assertType, isApolloError } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-import { effect } from '@apollo-elements/lib/descriptors';
-
 import { NetworkStatus } from '@apollo/client/core';
-
-import { ObservableQuery } from '@apollo/client/core';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
 
 class XL extends HTMLElement {}
 
-class TestableApolloQuery<D = unknown, V = OperationVariables>
+class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloQueryMixin(XL)<D, V>
   implements QueryElement<D, V> {
   declare shadowRoot: ShadowRoot;
@@ -46,7 +41,9 @@ class TestableApolloQuery<D = unknown, V = OperationVariables>
     return template;
   }
 
-  $(id: keyof TestableApolloQuery) { return this.shadowRoot.getElementById(id); }
+  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+
+  observed: Array<keyof this> = ['data', 'error', 'errors', 'loading', 'networkStatus'];
 
   constructor() {
     super();
@@ -54,12 +51,15 @@ class TestableApolloQuery<D = unknown, V = OperationVariables>
       .append(TestableApolloQuery.template.content.cloneNode(true));
   }
 
+  update() {
+    this.render();
+  }
+
   render() {
-    this.$('data')!.textContent = this.stringify(this.data);
-    this.$('error')!.textContent = this.stringify(this.error);
-    this.$('errors')!.textContent = this.stringify(this.errors);
-    this.$('loading')!.textContent = this.stringify(this.loading);
-    this.$('networkStatus')!.textContent = this.stringify(this.networkStatus);
+    this.observed?.forEach(property => {
+      if (this.$(property))
+        this.$(property)!.textContent = this.stringify(this[property]);
+    });
   }
 
   stringify(x: unknown) {
@@ -67,32 +67,10 @@ class TestableApolloQuery<D = unknown, V = OperationVariables>
   }
 
   async hasRendered() {
-    await nextFrame();
+    await this.updateComplete;
     return this;
   }
 }
-
-const DEFAULTS = {
-  data: null,
-  error: null,
-  errors: null,
-  loading: false,
-  networkStatus: NetworkStatus.ready,
-};
-
-Object.defineProperties(TestableApolloQuery.prototype, Object.fromEntries(
-  (Object.entries(DEFAULTS) as Entries<TestableApolloQuery>)
-    .map(([name, init]) => [
-      name,
-      effect<TestableApolloQuery>({
-        name,
-        init,
-        onSet() {
-          this.render();
-        },
-      }),
-    ])
-));
 
 const setupFunction = setupQueryClass(TestableApolloQuery);
 
@@ -100,7 +78,7 @@ describe('[mixins] ApolloQueryMixin', function() {
   describeQuery({ setupFunction, class: TestableApolloQuery });
   describe('when base does not define observedAttributes', function() {
     class TestBase extends HTMLElement { }
-    let element: TestBase & ApolloQueryInterface<unknown, unknown>;
+    let element: TestBase & ApolloQueryInterface<any, any>;
     beforeEach(async function() {
       const tag = defineCE(ApolloQueryMixin(TestBase));
       element = await fixture(`<${tag}></${tag}>`);
@@ -111,6 +89,7 @@ describe('[mixins] ApolloQueryMixin', function() {
         'error-policy',
         'fetch-policy',
         'next-fetch-policy',
+        'no-auto-subscribe',
       ]);
     });
   });
@@ -121,7 +100,7 @@ describe('[mixins] ApolloQueryMixin', function() {
         return ['a'];
       }
     }
-    let element: TestBase & ApolloQueryInterface<unknown, unknown>;
+    let element: TestBase & ApolloQueryInterface<any, any>;
     beforeEach(async function() {
       const tag = defineCE(ApolloQueryMixin(TestBase));
       element = await fixture(`<${tag}></${tag}>`);
@@ -133,6 +112,7 @@ describe('[mixins] ApolloQueryMixin', function() {
         'error-policy',
         'fetch-policy',
         'next-fetch-policy',
+        'no-auto-subscribe',
       ]);
     });
   });
@@ -186,8 +166,6 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.partialRefetch!);
     assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<ObservableQuery<TypeCheckData, TypeCheckVars>>                     (this.observableQuery!);
-    assertType <Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
@@ -207,7 +185,8 @@ function RuntimeMixin<Base extends Constructor>(superclass: Base) {
   };
 }
 
-class MixedClass<D, V> extends RuntimeMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
+class MixedClass<D extends I.MaybeTDN, V>
+  extends RuntimeMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
 
 function ChildMixin<Base extends Constructor>(superclass: Base) {
   return class extends superclass {
@@ -215,7 +194,7 @@ function ChildMixin<Base extends Constructor>(superclass: Base) {
   };
 }
 
-class Inheritor<D, V> extends ChildMixin(MixedClass)<D, V> { }
+class Inheritor<D extends I.MaybeTDN, V> extends ChildMixin(MixedClass)<D, V> { }
 
 const runChecks = false;
 if (runChecks) {
@@ -228,20 +207,21 @@ if (runChecks) {
   assertType<number>(inheritor.childProp);
 }
 
+type TCD = { hey: 'yo' };
 type TCV = { hey: 'yo' };
 
-export class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<unknown, TCV> {
+export class TypeCheckAccessor extends ApolloQueryMixin(HTMLElement)<TCD, TCV> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables(): TCV {
     return { hey: 'yo' as const };
   }
 }
 
-export class TypeCheckField extends ApolloQueryMixin(HTMLElement)<unknown, TCV> {
+export class TypeCheckField extends ApolloQueryMixin(HTMLElement)<TCD, TCV> {
   variables = { hey: 'yo' as const };
 }
 
-export class TypeCheckFieldBad extends ApolloQueryMixin(HTMLElement)<unknown, TCV> {
+export class TypeCheckFieldBad extends ApolloQueryMixin(HTMLElement)<TCD, TCV> {
   // @ts-expect-error: passes type check;
   variables = { hey: 'hey' };
 }

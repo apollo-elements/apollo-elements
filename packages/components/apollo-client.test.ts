@@ -1,3 +1,5 @@
+import type * as I from '@apollo-elements/interfaces';
+
 import type {
   NonNullableParamQueryData,
   NonNullableParamQueryVariables,
@@ -5,12 +7,7 @@ import type {
   NoParamQueryVariables,
 } from '@apollo-elements/test';
 
-import {
-  gql,
-  NormalizedCacheObject,
-  OperationVariables,
-  TypePolicies,
-} from '@apollo/client/core';
+import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
 import { ApolloClient } from '@apollo/client/core';
 
@@ -26,7 +23,11 @@ import {
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
-import { ApolloElementElement, ApolloQueryElement } from '@apollo-elements/interfaces';
+import {
+  ApolloElementElement,
+  ApolloMutationElement,
+  ApolloQueryElement,
+} from '@apollo-elements/interfaces';
 import { ApolloClientElement } from './apollo-client';
 import { makeClient } from '@apollo-elements/test';
 import { spy, stub, SinonStub } from 'sinon';
@@ -37,7 +38,8 @@ import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
 import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
 /** @ignore */
-class ShallowElement<D = unknown, V = OperationVariables> extends ApolloElementElement<D, V> {
+class ShallowElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloMutationElement<D, V> {
   declare shadowRoot: ShadowRoot;
 
   constructor() {
@@ -68,7 +70,8 @@ class DeepElement extends HTMLElement {
 }
 
 /** @ignore */
-class QueryElement<D = unknown, V = OperationVariables> extends ApolloQueryElement<D, V> {
+class QueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloQueryElement<D, V> {
   query = NoParamQuery;
 
   constructor() {
@@ -103,6 +106,7 @@ describe('<apollo-client>', function() {
   afterEach(function() {
     // @ts-expect-error: spy
     QueryElement.prototype.subscribe.restore?.();
+    delete window.__APOLLO_CLIENT__;
     client = undefined;
     element = null;
     shallow = null;
@@ -132,7 +136,7 @@ describe('<apollo-client>', function() {
   });
 
   describe('with client', function() {
-    beforeEach(async function() {
+    beforeEach(async function setupElements() {
       spy(QueryElement.prototype, 'subscribe');
       cached = window.__APOLLO_CLIENT__;
       delete window.__APOLLO_CLIENT__;
@@ -154,6 +158,8 @@ describe('<apollo-client>', function() {
     afterEach(function() {
       window.__APOLLO_CLIENT__ = cached;
     });
+
+    beforeEach(nextFrame);
 
     it('lists all child elements', function() {
       expect(element!.elements).to.include(shallow);
@@ -307,7 +313,10 @@ describe('<apollo-client>', function() {
     it('creates a new client', async function() {
       element = await fixture<ApolloClientElement>(html`
         <apollo-client uri="/graphql" validate-variables>
-          <${tagName} .query="${NonNullableParamQuery}" .variables="${{ 'nullable': true }}"></${tagName}>
+          <${tagName}
+              .query="${NonNullableParamQuery}"
+              .variables="${{ 'nullable': true }}"
+          ></${tagName}>
         </apollo-client>
       `);
 
@@ -315,7 +324,6 @@ describe('<apollo-client>', function() {
 
       expect(element.querySelector<ApolloQueryEl>(tag)!.query).to.be.ok;
       expect(element.querySelector<ApolloQueryEl>(tag)!.variables).to.be.ok;
-      expect(element.querySelector<ApolloQueryEl>(tag)!.observableQuery).to.be.ok;
 
       // first call is to introspect, and occurs regardless of operations
 

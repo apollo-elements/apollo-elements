@@ -34,8 +34,10 @@ export declare class CustomElement extends HTMLElement {
 /**
  * Type that represents a class
  */
-export type Constructor<T = CustomElement> =
-  new (...a: any[]) => T
+export type Constructor<T = CustomElement> = {
+  new (...a: any[]): T;
+  observedAttributes?: string[];
+}
 
 // BUG: https://github.com/modernweb-dev/web/issues/993#issuecomment-731726688
 null;

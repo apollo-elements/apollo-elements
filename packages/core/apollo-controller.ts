@@ -51,7 +51,7 @@ implements ReactiveController {
 
   called = true;
 
-  client?: ApolloClient<NormalizedCacheObject>;
+  client: ApolloClient<NormalizedCacheObject> | null = null;
 
   data: Data<D> | null = null;
 
@@ -62,8 +62,6 @@ implements ReactiveController {
   loading = false;
 
   #document: ComponentDocument<D> | null = null;
-
-  #variables?: Variables<D, V>;
 
   get document(): ComponentDocument<D> | null { return this.#document; }
 
@@ -80,27 +78,32 @@ implements ReactiveController {
     }
   }
 
-  get variables(): this['options']['variables'] { return this.#variables; }
+  get variables(): Variables<D, V> | null {
+    return this.options.variables ?? null;
+  }
 
-  set variables(variables: this['options']['variables']) {
-    this.#variables = variables;
+  set variables(variables: Variables<D, V> | null) {
+    if (!variables)
+      delete this.options.variables;
+    else
+      this.options.variables = variables;
     this.options[update]?.({ variables });
     this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
   protected abstract documentChanged?(document?: ComponentDocument<D>|null): void
 
-  protected abstract variablesChanged?(variables?: Variables<D, V>): void
+  protected abstract variablesChanged?(variables?: Variables<D, V>|null): void
 
   constructor(public host: ReactiveControllerHost, options?: ApolloControllerOptions<D, V>) {
     this.options = options ?? {};
-    this.client = this.options.client ?? window.__APOLLO_CLIENT__;
+    this.client = this.options.client ?? window.__APOLLO_CLIENT__ ?? null;
     host.addController?.(this);
   }
 
   init(document: ComponentDocument<D> | null): void {
+    this.variables ??= this.options.variables ?? null;
     this.document = document;
-    this.variables = this.options?.variables;
   }
 
   hostConnected(): void {

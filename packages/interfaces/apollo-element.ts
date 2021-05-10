@@ -1,4 +1,4 @@
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type {
   ApolloClient,
@@ -6,12 +6,10 @@ import type {
   DocumentNode,
   ErrorPolicy,
   NormalizedCacheObject,
-  OperationVariables,
   TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type { CustomElement } from './constructor';
-import type { Data, Variables } from './operation';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
@@ -23,14 +21,17 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
  * @fires 'apollo-element-connected' when the element connects to the dom
  * @fires 'apollo-element-disconnected' when the element disconnects from the dom
  */
-export declare abstract class ApolloElementInterface extends CustomElement {
+export declare class ApolloElementInterface<
+  D extends I.MaybeTDN = I.MaybeTDN,
+  V = I.MaybeVariables<D>
+> extends CustomElement {
   declare static documentType: 'document'|'query'|'mutation'|'subscription';
 
   /** @summary Latest Data. */
-  abstract data: unknown | null;
+  declare data: I.Data<D> | null;
 
   /** @summary Operation variables. */
-  abstract variables: unknown | null;
+  declare variables: I.Variables<D, V> | null;
 
   /** @summary The Apollo Client instance. */
   declare client: ApolloClient<NormalizedCacheObject> | null;
@@ -49,7 +50,7 @@ export declare abstract class ApolloElementInterface extends CustomElement {
   declare error: Error | ApolloError | null;
 
   /** @summary Latest errors */
-  declare errors: readonly GraphQLError[] | null;
+  declare errors: readonly I.GraphQLError[] | null;
 
   /**
    * @summary [Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.
@@ -84,9 +85,6 @@ export declare abstract class ApolloElementInterface extends CustomElement {
   protected variablesChanged?(variables: this['variables']): void;
 }
 
-export class ApolloElementElement<D = unknown, V = OperationVariables>
-  extends ApolloElementMixin(HTMLElement) {
-    declare data: Data<D> | null;
-
-    declare variables: Variables<D, V> | null;
+export class ApolloElementElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloElementMixin(HTMLElement)<D, V> {
 }
