@@ -2,12 +2,9 @@ import type {
   ApolloQueryResult,
   DocumentNode,
   ErrorPolicy,
-  FetchPolicy,
   FetchMoreOptions,
   FetchMoreQueryOptions,
   NetworkStatus,
-  ObservableQuery,
-  OperationVariables,
   QueryOptions,
   SubscribeToMoreOptions,
   SubscriptionOptions,
@@ -15,8 +12,9 @@ import type {
   WatchQueryFetchPolicy,
 } from '@apollo/client/core';
 
-import type { ComponentDocument, Data, Variables } from './operation';
+import type { ComponentDocument, Data, Variables, MaybeTDN, MaybeVariables } from './operation';
 import type { ApolloElementInterface } from './apollo-element';
+import type { ApolloQueryController } from '@apollo-elements/core';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
@@ -37,10 +35,12 @@ export type FetchMoreParams<D, V> =
  * @prop {ApolloMutationInterface<D, V>['onData']} onData
  * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
-export declare class ApolloQueryInterface<D, V = OperationVariables>
+export declare class ApolloQueryInterface<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloElementInterface
   implements ApolloQueryInterface<D, V> {
   static documentType: 'query';
+
+  declare controller: ApolloQueryController<D, V>;
 
   /**
    * @summary The latest query data.
@@ -157,11 +157,6 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   declare networkStatus: NetworkStatus;
 
   /**
-   * The Apollo `ObservableQuery` watching this element's query.
-   */
-  declare observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
-
-  /**
    * Set to reobserve the `ObservableQuery`
    */
   declare options: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null;
@@ -191,12 +186,12 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
   /**
    * Optional callback for when a query is completed.
    */
-  onData?(_result: ApolloQueryResult<Data<D>>): void
+  onData?(data: Data<D>): void
 
   /**
    * Optional callback for when an error occurs.
    */
-  onError?(_error: Error): void
+  onError?(error: Error): void
 
   /**
    * Update the variables of this observable query, and fetch the new results.
@@ -248,24 +243,8 @@ export declare class ApolloQueryInterface<D, V = OperationVariables>
    * The optional `variables` parameter is an optional new variables object.
    */
   fetchMore(params?: Partial<FetchMoreParams<D, V>>): Promise<ApolloQueryResult<Data<D>>>;
-
-  /**
-   * Creates an instance of ObservableQuery with the options provided by the element.
-   * - `context` Context to be passed to link execution chain
-   * - `errorPolicy` Specifies the ErrorPolicy to be used for this query
-   * - `fetchPolicy` Specifies the FetchPolicy to be used for this query
-   * - `fetchResults` Whether or not to fetch results
-   * - `metadata` Arbitrary metadata stored in the store with this query. Designed for debugging, developer tools, etc.
-   * - `notifyOnNetworkStatusChange` Whether or not updates to the network status should trigger next on the observer of this query
-   * - `pollInterval` The time interval (in milliseconds) on which this query should be refetched from the server.
-   * - `query` A GraphQL document that consists of a single query to be sent down to the server.
-   * - `variables` A map going from variable name to variable value, where the variables are used within the GraphQL query.
-   */
-  watchQuery(
-    options?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ObservableQuery<Data<D>, Variables<D, V>>;
 }
 
-export class ApolloQueryElement<D = unknown, V = OperationVariables>
+export class ApolloQueryElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloQueryMixin(HTMLElement)<D, V> {
 }

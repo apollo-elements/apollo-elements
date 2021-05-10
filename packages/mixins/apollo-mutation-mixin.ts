@@ -1,30 +1,18 @@
-import type {
-  ApolloError,
-  DocumentNode,
-  FetchPolicy,
-  FetchResult,
-  MutationOptions,
-  MutationUpdaterFn,
-  OperationVariables,
-} from '@apollo/client/core';
+import type { ReactiveControllerHost } from '@lit/reactive-element';
 
-import { gqlDocument, writable } from '@apollo-elements/lib/descriptors';
+import type * as C from '@apollo/client/core';
 
-import type {
-  ApolloMutationInterface,
-  ComponentDocument,
-  Constructor,
-  Data,
-  OptimisticResponseType,
-  RefetchQueriesType,
-  Variables,
-} from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+
 import { ApolloElementMixin } from './apollo-element-mixin';
+import { controlled } from './controller-host-mixin';
+
+import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
 type ApolloMutationResultEvent<TData = unknown> =
-  CustomEvent<FetchResult<TData>>;
+  CustomEvent<C.FetchResult<TData>>;
 
 declare global {
   interface HTMLElementEventMap {
@@ -34,15 +22,16 @@ declare global {
 
 type MixinInstance = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new <D, V = Record<string, any>>(): ApolloMutationInterface<D, V>;
+  new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
+    I.ApolloMutationInterface<D, V> & ReactiveControllerHost;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
 
-function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInstance {
-  class ApolloMutationElement<D, V = OperationVariables>
+function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinInstance {
+  class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
     extends ApolloElementMixin(base)
-    implements ApolloMutationInterface<D, V> {
+    implements I.ApolloMutationInterface<D, V> {
     static documentType = 'mutation' as const;
 
     static get observedAttributes(): string[] {
@@ -53,52 +42,35 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
       ];
     }
 
-    /**
-     * Latest mutation data.
-     */
-    declare data: Data<D> | null;
+    controller = new ApolloMutationController<D, V>(this, null, {
+      update: this.updater,
+      onCompleted: data => this.onCompleted?.(data),
+      onError: error => this.onError?.(error ?? null),
+    });
 
-    /**
-     * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
-     *
-     * @summary Mutation variables.
-     */
-    declare variables: Variables<D, V> | null;
+    @controlled({ readonly: true }) readonly called = false;
 
-    declare mutation: DocumentNode | ComponentDocument<D> | null;
+    @controlled() mutation: I.ComponentDocument<D> | null = null;
 
-    declare refetchQueries: RefetchQueriesType<D> | null;
+    @controlled({ path: 'options' }) optimisticResponse?: I.OptimisticResponseType<D, V>;
 
-    declare called: boolean;
+    @controlled({ path: 'options' }) refetchQueries: I.RefetchQueriesType<D> | null = null;
 
-    declare context?: Record<string, unknown>;
+    @controlled({ path: 'options' }) context?: Record<string, unknown>;
 
-    declare optimisticResponse?: OptimisticResponseType<D, V>;
+    @controlled({ path: 'options' }) fetchPolicy?: Extract<C.FetchPolicy, 'no-cache'>;
 
-    declare fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
+    @controlled({ path: 'options' }) awaitRefetchQueries?: boolean;
 
-    declare awaitRefetchQueries?: boolean;
+    @controlled({ path: 'options' }) ignoreResults = false;
 
-    onCompleted?(_data: Data<D>): void;
+    onCompleted?(_data: I.Data<D>): void;
 
     onError?(_error: Error): void;
 
     updater?(
-      ...params: Parameters<MutationUpdaterFn<Data<D>>>
-    ): ReturnType<MutationUpdaterFn<Data<D>>>;
-
-    ignoreResults = false;
-
-    /**
-     * The ID number of the most recent mutation since the element was instantiated.
-     */
-    private mostRecentMutationId = 0;
-
-    constructor(...a: any[]) {
-      super(...a);
-      this.variables ??= null;
-      this.loading ??= false;
-    }
+      ...params: Parameters<C.MutationUpdaterFn<I.Data<D>>>
+    ): ReturnType<C.MutationUpdaterFn<I.Data<D>>>;
 
     attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);
@@ -123,104 +95,15 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
       }
     }
 
-    connectedCallback() {
-      super.connectedCallback?.();
-    }
-
     /**
      * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
      */
     public async mutate(
-      params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
-    ): Promise<FetchResult<Data<D>>> {
-      if (!this.client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
-      const options: MutationOptions<Data<D>, Variables<D, V>> = {
-        // all covered
-        /* c8 ignore start */
-        // It's better to let Apollo client throw this error
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        mutation: params?.mutation ?? this.mutation!,
-
-        awaitRefetchQueries: params?.awaitRefetchQueries ?? this.awaitRefetchQueries,
-        context: params?.context ?? this.context,
-        errorPolicy: params?.errorPolicy ?? this.errorPolicy,
-        fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
-        optimisticResponse: params?.optimisticResponse ?? this.optimisticResponse,
-        refetchQueries: params?.refetchQueries ?? this.refetchQueries ?? undefined,
-        update: params?.update ?? this.updater,
-        variables: params?.variables ?? this.variables ?? undefined,
-        /* c8 ignore stop */
-      };
-
-      const mutationId = this.generateMutationId();
-
-      this.loading = true;
-      this.error = null;
-      this.data = null;
-      this.called = true;
-
-      return this.client.mutate<Data<D>, Variables<D, V>>(options)
-        .then(this.onCompletedMutation.bind(this, mutationId))
-        .catch(this.onMutationError.bind(this, mutationId));
-    }
-
-    /**
-     * Increments and returns the most recent mutation id.
-     */
-    private generateMutationId(): number {
-      this.mostRecentMutationId += 1;
-      return this.mostRecentMutationId;
-    }
-
-    /**
-     * Returns true when an ID matches the most recent mutation id.
-     */
-    private isMostRecentMutation(mutationId: number): boolean {
-      return this.mostRecentMutationId === mutationId;
-    }
-
-    /**
-     * Callback for when a mutation is completed.
-     */
-    private onCompletedMutation(
-      mutationId: number,
-      response: FetchResult<Data<D>>
-    ): FetchResult<Data<D>> {
-      const { data } = response;
-      this.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
-      if (this.isMostRecentMutation(mutationId) && !this.ignoreResults) {
-        this.loading = false;
-        this.error = null;
-        this.data = data ?? null; /* c8 ignore next */
-        this.errors = response.errors ?? null;
-        if (data)
-          this.onCompleted?.(data);
-      }
-      return response;
-    }
-
-    /**
-     * Callback for when a mutation fails.
-     */
-    private onMutationError(mutationId: number, error: ApolloError): never {
-      this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
-      if (this.isMostRecentMutation(mutationId)) {
-        this.loading = false;
-        this.data = null;
-        this.error = error;
-      }
-      this.onError?.(error);
-      throw error;
+      params?: Partial<C.MutationOptions<I.Data<D>, I.Variables<D, V>>>
+    ): Promise<C.FetchResult<I.Data<D>>> {
+      return this.controller.mutate(params);
     }
   }
-
-  Object.defineProperties(ApolloMutationElement.prototype, {
-    called: writable(false),
-    mutation: gqlDocument(),
-    optimisticResponse: writable(),
-    refetchQueries: writable(null),
-  });
 
   return ApolloMutationElement;
 }

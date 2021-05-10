@@ -4,17 +4,17 @@ import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
-import { expect } from '@open-wc/testing';
+import { expect, aTimeout } from '@open-wc/testing';
 
 import { defineCE, fixture } from '@open-wc/testing';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { client, assertType, isApolloError } from '@apollo-elements/test';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
 import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
 
 class XL extends HTMLElement {}
-class Test extends ApolloElementMixin(XL) {
+class Test extends ApolloElementMixin(XL)<any, any> {
   declare data: unknown | null;
 
   declare variables: unknown | null;
@@ -97,7 +97,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   });
 
   describe('when super has an attributeChangedCallback that handles unrelated attrs', function() {
-    class Test extends ApolloElementMixin(class extends HTMLElement {
+    class Base extends HTMLElement {
       declare data: unknown | null;
 
       declare variables: unknown | null;
@@ -111,7 +111,9 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
       attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         this[name as keyof this] = newVal as unknown as this[keyof this];
       }
-    }) {}
+    }
+
+    class Test extends ApolloElementMixin(Base)<any, any> {}
 
     let element: Test;
 
@@ -152,7 +154,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   });
 
   describe('when super has an attributeChangedCallback that handles "error-policy"', function() {
-    class Test extends ApolloElementMixin(class extends HTMLElement {
+    class Base extends HTMLElement {
       declare data: unknown | null;
 
       declare variables: unknown | null;
@@ -168,7 +170,9 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
           this.errorPolicy = `_${newVal}`;
         this[name as keyof this] = newVal as unknown as this[keyof this];
       }
-    }) {}
+    }
+
+    class Test extends ApolloElementMixin(Base)<any, any> {}
 
     let element: Test;
 
@@ -238,19 +242,17 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   });
 
   it('sets default properties', async function setsDefaultProperties() {
-    window.__APOLLO_CLIENT__ = client;
-
     const tag = unsafeStatic(defineCE(class extends Test {}));
 
     const element = await fixture<Test>(html`<${tag}></${tag}>`);
 
-    expect(element.client, 'client').to.equal(client);
+    expect(element.client, 'client').to.be.null;
     expect(element.context, 'context').to.be.undefined;
     expect(element.document, 'document').to.be.null;
     expect(element.variables, 'variables').to.be.null;
     expect(element.data, 'data').to.be.null;
     expect(element.error, 'error').to.be.null;
-    expect(element.errors, 'errors').to.be.null;
+    expect(element.errors, 'errors').to.be.empty;
     expect(element.loading, 'loading').to.be.false;
   });
 

@@ -249,14 +249,20 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('setting error', function() {
       it('as ApolloError', async function() {
-        const error = new C.ApolloError({ });
-        element.error = error;
+        let error;
+        try {
+          error = new C.ApolloError({ });
+          element.error = error;
+        } catch { null; }
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });
       it('as Error', async function() {
-        const error = new Error();
-        element.error = error;
+        let error;
+        try {
+          const error = new Error();
+          element.error = error;
+        } catch { null; }
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });
