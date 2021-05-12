@@ -130,19 +130,19 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       it('as global client', async function() {
         element.client = window.__APOLLO_CLIENT__!;
         await element.updateComplete;
-        expect(element.controller.options.client).to.equal(window.__APOLLO_CLIENT__);
+        expect(element.controller.client).to.equal(window.__APOLLO_CLIENT__);
       });
       it('as new client', async function() {
         const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
         element.client = client;
         await element.updateComplete;
-        expect(element.controller.options.client).to.equal(client);
+        expect(element.controller.client).to.equal(client);
       });
       it('as illegal value', async function() {
         // @ts-expect-error: test bad value
         element.client = 1;
         await element.updateComplete;
-        expect(element.controller.options.client).to.equal(1);
+        expect(element.controller.client).to.equal(1);
       });
     });
 
@@ -208,8 +208,13 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         expect(element.controller.error).to.equal(error);
       });
       it('as Error', async function() {
-        const error = new Error();
-        element.error = error;
+        let error: Error;
+        try {
+          throw new Error();
+        } catch (err) {
+          error = err;
+          element.error = err;
+        }
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });

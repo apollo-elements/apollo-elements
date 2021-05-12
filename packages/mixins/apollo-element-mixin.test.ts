@@ -4,7 +4,7 @@ import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
-import { expect, aTimeout } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
 
 import { defineCE, fixture } from '@open-wc/testing';
 
@@ -117,9 +117,9 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 
     let element: Test;
 
-    beforeEach(function() {
+    beforeEach(async function() {
       const tag = defineCE(class extends Test {});
-      element = document.createElement(tag) as Test;
+      element = await fixture<Test>(`<${tag}></${tag}>`); // document.createElement(tag) as Test;
     });
 
     describe('when setting an attribute observed by the subclass', function() {

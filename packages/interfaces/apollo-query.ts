@@ -36,7 +36,7 @@ export type FetchMoreParams<D, V> =
  * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare class ApolloQueryInterface<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloElementInterface
+  extends ApolloElementInterface<D, V>
   implements ApolloQueryInterface<D, V> {
   static documentType: 'query';
 

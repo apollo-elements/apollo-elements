@@ -6,14 +6,14 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
-  Observable,
   OperationVariables,
   SubscriptionOptions,
 } from '@apollo/client/core';
 
 import type { ComponentDocument, Data, Variables } from './operation';
 import type { ApolloElementInterface } from './apollo-element';
-
+import type { ApolloSubscriptionController } from '@apollo-elements/core';
+import type * as I from './operation';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
 export interface SubscriptionResult<TData> {
@@ -57,8 +57,12 @@ export interface OnSubscriptionDataParams<TData = unknown> {
  * @prop {ApolloMutationInterface<D, V>['onSubscriptionComplete']} onSubscriptionComplete
  * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
-export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariables>
-  extends ApolloElementInterface {
+export declare abstract class ApolloSubscriptionInterface<
+  D extends I.MaybeTDN = I.MaybeTDN,
+  V = I.MaybeVariables<D>
+> extends ApolloElementInterface {
+  declare controller: ApolloSubscriptionController<D, V>;
+
   /**
    * Latest subscription data.
    */
@@ -87,17 +91,7 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
   /**
    * @summary Whether or not updates to the network status should trigger next on the observer of this subscription.
    */
-  declare notifyOnNetworkStatusChange: boolean;
-
-  /**
-   * Observable watching this element's subscription.
-   */
-  declare observable?: Observable<FetchResult<Data<D>>>;
-
-  /**
-   * Subscription to the observable
-   */
-  declare observableSubscription?: ZenObservable.Subscription;
+  declare notifyOnNetworkStatusChange?: boolean;
 
   /**
    * @summary A GraphQL document containing a single subscription.
@@ -120,8 +114,6 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
    */
   declare shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'];
 
-  constructor(...a: any[]);
-
   /**
    * @summary Resets the observable and subscribes.
    */
@@ -136,17 +128,12 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
   public get canAutoSubscribe(): boolean;
 
   /**
-   * Determines whether the element should attempt to subscribe i.e. begin querying
+   * Determines whether the element should attempt to subscribe automatically
    * Override to prevent subscribing unless your conditions are met
    */
   shouldSubscribe?(
     options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
   ): boolean
-
-  /**
-   * Determines whether the element is able to automatically subscribe
-   */
-  protected canSubscribe(options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean
 
   /**
    * Callback for when data is updated
@@ -162,26 +149,7 @@ export declare abstract class ApolloSubscriptionInterface<D, V = OperationVariab
    * Callback for when subscription completes.
    */
   onSubscriptionComplete?(): void;
-
-  private initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void;
-
-  /**
-   * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
-   */
-  private nextData(result: FetchResult<Data<D>>): void;
-
-  /**
-   * Sets `error` and `loading` on the instance when the subscription errors.
-   */
-  private nextError(error: ApolloError): void;
-
-  /**
-   * Shuts down the subscription
-   */
-  private onComplete(): void;
-
-  private endSubscription(): void;
 }
 
-export class ApolloSubscriptionElement<D = unknown, V = OperationVariables>
+export class ApolloSubscriptionElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V> { }

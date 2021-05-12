@@ -1,20 +1,22 @@
+import type { ApolloQueryElement } from '@apollo-elements/interfaces';
+import type { DocumentNode } from '@apollo/client/core';
+
 import { defineCE, expect, fixtureSync, nextFrame } from '@open-wc/testing';
 import { ValidateVariablesMixin } from './validate-variables-mixin';
 import { ApolloQueryMixin } from './apollo-query-mixin';
 import { setupClient, teardownClient } from '@apollo-elements/test';
-import { ApolloQueryInterface } from '@apollo-elements/interfaces';
 
 import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
 import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
 import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
-import type { DocumentNode } from '@apollo/client/core';
-
 describe('ValidateVariablesMixin', function() {
-  let element: ApolloQueryInterface<unknown, unknown>;
+  let element: ApolloQueryElement<any, any>;
+
   function setQuery(query: DocumentNode|null) {
     return function() {
       element.query = query;
+      return element.updateComplete;
     };
   }
 
@@ -22,7 +24,7 @@ describe('ValidateVariablesMixin', function() {
   afterEach(teardownClient);
 
   beforeEach(function() {
-    class Test extends ValidateVariablesMixin(ApolloQueryMixin(HTMLElement))<unknown, unknown> {}
+    class Test extends ValidateVariablesMixin(ApolloQueryMixin(HTMLElement))<any, any> {}
     const tag = defineCE(Test);
     element = fixtureSync<Test>(`<${tag}></${tag}>`);
   });

@@ -1,29 +1,28 @@
-import type {
-  ApolloError,
-  DocumentNode,
-  FetchPolicy,
-  FetchResult,
-  Observable,
-  SubscriptionOptions,
-} from '@apollo/client/core';
+import type { ReactiveControllerHost } from '@lit/reactive-element';
 
-import type {
-  ApolloSubscriptionInterface,
-  ComponentDocument,
-  Constructor,
-  Data,
-  OnSubscriptionDataParams,
-  SubscriptionDataOptions,
-  Variables,
-} from '@apollo-elements/interfaces';
+import type * as C from '@apollo/client/core';
+
+import type * as I from '@apollo-elements/interfaces';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { booleanAttr, gqlDocument } from '@apollo-elements/lib/descriptors';
+import { controlled } from '@apollo-elements/core/decorators';
+
+import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
+
+type P<T extends ApolloSubscriptionController<any, any>, K extends keyof T> =
+  T[K] extends (...args: any[]) => unknown
+  ? Parameters<T[K]>
+  : never
+
+type R<T extends ApolloSubscriptionController<any, any>, K extends keyof T> =
+  T[K] extends (...args: any[]) => unknown
+  ? ReturnType<T[K]>
+  : never
 
 type ApolloSubscriptionResultEvent<TData = unknown> =
-  CustomEvent<OnSubscriptionDataParams<TData>>;
+  CustomEvent<I.OnSubscriptionDataParams<TData>>;
 
 declare global {
   interface HTMLElementEventMap {
@@ -31,24 +30,30 @@ declare global {
   }
 }
 
-type MixinInstance = {
+type MixinInstance<B> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new <D = unknown, V = Record<string, any>>(...a: any[]): ApolloSubscriptionInterface<D, V>;
+  new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>(...a: any[]):
+    I.ApolloSubscriptionInterface<D, V> & ReactiveControllerHost;
   documentType: 'subscription';
 }
 
-function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInstance & B {
-  class ApolloSubscriptionElement<D, V>
-    extends ApolloElementMixin(base)
-    implements Omit<ApolloSubscriptionInterface<D, V>, 'canSubscribe'> {
+function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinInstance<B> {
+  class ApolloSubscriptionElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+    extends ApolloElementMixin(base)<D, V>
+    implements Omit<I.ApolloSubscriptionInterface<D, V>, 'canSubscribe'> {
     static documentType = 'subscription' as const;
 
-    declare subscription: DocumentNode | ComponentDocument<D> | null;
+    static get observedAttributes(): string[] {
+      return [
+        ...super.observedAttributes ?? [],
+        'no-auto-subscribe',
+      ];
+    }
 
     /**
      * Latest subscription data.
      */
-    declare data: Data<D> | null;
+    declare data: I.Data<D> | null;
 
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
@@ -57,189 +62,69 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(base: B): MixinInsta
      *
      * @summary Subscription variables.
      */
-    declare variables: Variables<D, V> | null;
+    declare variables: I.Variables<D, V> | null;
 
-    declare context?: Record<string, unknown>;
+    controller = new ApolloSubscriptionController<D, V>(this, null, {
+      shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
+      onData: data => this.onSubscriptionData?.(data),
+      onComplete: () => this.onSubscriptionComplete?.(),
+      onError: error => this.onError?.(error),
+    });
 
-    declare fetchPolicy?: FetchPolicy;
+    @controlled() subscription: I.ComponentDocument<D> | null = null;
 
-    declare pollInterval?: number;
+    @controlled({ readonly: true }) declare readonly canAutoSubscribe: boolean;
 
-    declare noAutoSubscribe: boolean;
+    @controlled({ path: 'options' }) context?: Record<string, unknown>;
 
-    declare observable?: Observable<FetchResult<Data<D>>>;
+    @controlled({ path: 'options' }) fetchPolicy?: C.FetchPolicy;
 
-    declare observableSubscription?: ZenObservable.Subscription;
+    @controlled({ path: 'options' }) pollInterval?: number;
 
-    notifyOnNetworkStatusChange = false;
+    @controlled({
+      path: 'options',
+      onSet(
+        this: I.ApolloSubscriptionElement,
+        value: I.ApolloSubscriptionElement['noAutoSubscribe']
+      ) {
+        this.toggleAttribute('no-auto-subscribe', !!value);
+      },
+    })
+    noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
 
-    shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'] = false;
+    @controlled({ path: 'options' }) notifyOnNetworkStatusChange?: boolean;
 
-    skip = false;
+    @controlled({ path: 'options' })
+    shouldResubscribe: I.SubscriptionDataOptions['shouldResubscribe'] = false;
 
-    onSubscriptionData?(_result: OnSubscriptionDataParams<Data<D>>): void
+    @controlled({ path: 'options' }) skip = false;
+
+    onSubscriptionData?(_result: I.OnSubscriptionDataParams<I.Data<D>>): void
 
     onSubscriptionComplete?(): void
 
-    onError?(error: ApolloError): void
+    onError?(error: C.ApolloError): void
 
-    public get canAutoSubscribe() {
-      return (
-        !!this.client &&
-        !this.noAutoSubscribe &&
-        this.shouldSubscribe()
-      );
-    }
-
-    constructor(...a: any[]) { super(...a); }
-
-    connectedCallback(): void {
-      super.connectedCallback?.();
-      if (!this.canSubscribe() || !this.shouldSubscribe()) return; /* c8 ignore next */ // covered
-      this.initObservable();
-      this.subscribe();
-    }
-
-    disconnectedCallback(): void {
-      super.disconnectedCallback?.();
-      this.cancel();
-    }
-
-    documentChanged(document: DocumentNode | ComponentDocument<D>): void {
-      this.cancel();
-
-      const query = document;
-
-      if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
-        this.subscribe();
-    }
-
-    variablesChanged(variables: Variables<D, V> | null): void {
-      this.cancel();
-      if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
-        this.subscribe();
-    }
-
-    public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>) {
-      this.initObservable(params);
-
-      /* c8 ignore start */ // covered
-      const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
-      if (this.observableSubscription && !shouldResubscribe) return;
-      /* c8 ignore stop */
-
-      this.loading = true;
-
-      this.observableSubscription =
-        this.observable?.subscribe({
-          next: this.nextData.bind(this),
-          error: this.nextError.bind(this),
-          complete: this.onComplete.bind(this),
-        });
+    public subscribe(...p: P<this['controller'], 'subscribe'>): void {
+      return this.controller.subscribe(...p);
     }
 
     public cancel(): void {
-      this.endSubscription();
-      this.observableSubscription = undefined;
-      this.observable = undefined;
+      return this.controller.cancel();
     }
 
     /**
-     * Determines whether the element is able to automatically subscribe
+     * Determines whether the element should attempt to subscribe automatically
+     * Override to prevent subscribing unless your conditions are met
+     * @override
      */
-    protected canSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
-      return (
-        !this.noAutoSubscribe &&
-        !!this.client &&
-        !!(params?.query ?? this.document)
-      );
-    }
-
-    /**
-     * Determines whether the element should attempt to automatically subscribe i.e. begin querying
-     *
-     * Override to prevent subscribing unless your conditions are met.
-     */
-    shouldSubscribe(params?: Partial<SubscriptionOptions<this['variables']>>): boolean {
-      return (void params, true);
-    }
-
-    private initObservable(params?: Partial<SubscriptionDataOptions<D, V>>): void {
-      /* c8 ignore start */ // covered
-      const shouldResubscribe = params?.shouldResubscribe ?? this.shouldResubscribe;
-      const client = params?.client ?? this.client;
-      const skip = params?.skip ?? this.skip;
-
-      if (!client)
-        throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
-
-      if ((this.observable && !shouldResubscribe) || skip)
-        return;
-
-      const options: SubscriptionOptions<Variables<D, V>, Data<D>> = {
-        context: params?.context ?? this.context,
-        errorPolicy: params?.errorPolicy ?? this.errorPolicy,
-        fetchPolicy: params?.fetchPolicy ?? this.fetchPolicy,
-        // It's better to let Apollo client throw this error
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        query: params?.subscription ?? this.subscription!,
-        variables: params?.variables ?? this.variables ?? undefined,
-      };
-      /* c8 ignore stop */ // covered
-
-      this.observable = client.subscribe<Data<D>, Variables<D, V>>(options);
-    }
-
-    /**
-     * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
-     */
-    private nextData(result: FetchResult<Data<D>>) {
-      const data = result.data ?? null; /* c8 ignore next */
-      // If we got to this line without a client, it's because of user error
-      const client = this.client!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-      const loading = false;
-      const error = null;
-      const subscriptionData = { data, loading, error };
-      const detail = { client, subscriptionData };
-      this.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
-      this.data = data;
-      this.loading = loading;
-      this.error = error;
-      this.onSubscriptionData?.(detail); /* c8 ignore next */ // covered
-    }
-
-    /**
-     * Sets `error` and `loading` on the instance when the subscription errors.
-     */
-    private nextError(error: ApolloError) {
-      this.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
-      this.error = error;
-      this.loading = false;
-      this.onError?.(error); /* c8 ignore next */ // covered
-    }
-
-    /**
-     * Shuts down the subscription
-     */
-    private onComplete(): void {
-      this.onSubscriptionComplete?.(); /* c8 ignore next */ // covered
-      this.endSubscription();
-    }
-
-    private endSubscription() {
-      if (this.observableSubscription) {
-        this.observableSubscription.unsubscribe();
-        this.observableSubscription = undefined;
-      }
+    shouldSubscribe(
+      options?: Partial<C.SubscriptionOptions<I.Variables<D, V>, I.Data<D>>>
+    ): boolean {
+      return (void options, true);
     }
   }
 
-  Object.defineProperties(ApolloSubscriptionElement.prototype, {
-    subscription: gqlDocument(),
-    noAutoSubscribe: booleanAttr('no-auto-subscribe'),
-  });
-
-  // @ts-expect-error: it is though
   return ApolloSubscriptionElement;
 }
 

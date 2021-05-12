@@ -36,8 +36,8 @@ export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerO
   errorPolicy?: ErrorPolicy;
   fetchPolicy?: Extract<FetchPolicy, 'no-cache'>,
   awaitRefetchQueries?: boolean,
-  onCompleted?(data?: Data<D>|null): void,
-  onError?(error?: Error): void,
+  onCompleted?(data: Data<D>|null): void,
+  onError?(error: Error): void,
   update?(...p: Parameters<MutationUpdaterFn<Data<D>>>): ReturnType<MutationUpdaterFn<Data<D>>>,
   ignoreResults?: boolean,
 }
@@ -137,7 +137,7 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
         this.error = null;
         this.data = data ?? null;
         this.errors = response.errors ?? [];
-        this.options.onCompleted?.(data); /* c8 ignore next */
+        this.options.onCompleted?.(this.data); /* c8 ignore next */
       }
       this[update]();
     }

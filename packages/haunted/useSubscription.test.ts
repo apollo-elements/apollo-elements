@@ -670,7 +670,7 @@ describe('[haunted] useSubscription', function() {
         expect(onData).to.have.been.calledOnce;
         expect(element).shadowDom.to.equal(`
           <ol>
-            <li>Message 2</li>
+            <li>Message 1</li>
           </ol>
         `);
       });

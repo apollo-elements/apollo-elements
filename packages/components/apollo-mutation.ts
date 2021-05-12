@@ -6,9 +6,11 @@ import type { MutationUpdaterFn } from '@apollo/client/core';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
-import { ApolloElement, controlled } from './apollo-element';
+import { ApolloElement } from './apollo-element';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
+
+import { controlled } from '@apollo-elements/core';
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
@@ -43,7 +45,6 @@ interface InputLikeElement extends HTMLElement {
 
 /** @ignore */
 export class WillMutateError extends Error {}
-
 
 /**
  * Simple Mutation component that takes a button or link-wrapped button as it's trigger.
@@ -152,7 +153,8 @@ export class WillMutateError extends Error {}
  */
 @customElement('apollo-mutation')
 export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends GraphQLScriptChildMixin(ApolloElement)<D, V> implements I.ApolloMutationInterface<D, V> {
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V>
+  implements I.ApolloMutationInterface<D, V> {
   static readonly is = 'apollo-mutation';
 
   /**

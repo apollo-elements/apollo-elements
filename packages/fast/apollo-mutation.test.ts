@@ -19,7 +19,7 @@ import {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { Entries, GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import {
   aTimeout,
@@ -53,16 +53,15 @@ const template = html<TestableApolloMutation>`
 let counter = -1;
 
 @customElement({ name: 'fast-testable-apollo-mutation-class', template })
-class TestableApolloMutation<D = unknown, V = OperationVariables>
+class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloMutation<D, V>
   implements MutationElement<D, V> {
   declare shadowRoot: ShadowRoot;
 
   async hasRendered(): Promise<this> {
-    await nextFrame();
+    await this.updateComplete;
     await DOM.nextUpdate();
-    await nextFrame();
-    await aTimeout(50);
+    await this.updateComplete;
     return this;
   }
 
@@ -73,7 +72,7 @@ class TestableApolloMutation<D = unknown, V = OperationVariables>
 
 describe('[fast] ApolloMutation', function describeApolloMutation() {
   describeMutation({
-    async setupFunction<T extends MutationElement>(options: SetupOptions<T> = {}) {
+    async setupFunction<T extends MutationElement<any, any>>(options: SetupOptions<T> = {}) {
       const name = `fast-setup-function-element-${counter++}`;
 
       const { properties, attributes, innerHTML = '' } = options;
@@ -97,7 +96,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       const spies = setupSpies(options?.spy, Test.prototype as unknown as T);
       const stubs = setupStubs(options?.stub, Test.prototype as unknown as T);
 
-      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
+      for (const [key, val] of Object.entries(properties ?? {}) as I.Entries<T>)
         key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
 
       await DOM.nextUpdate();
@@ -114,7 +113,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
     it('is an instance of FASTElement', async function() {
       const name = 'is-an-instance-of-f-a-s-t-element';
       @customElement({ name })
-      class Test extends ApolloMutation<unknown, unknown> { }
+      class Test extends ApolloMutation { }
       const el = await fixture<Test>(`<${name}></${name}>`);
       expect(el).to.be.an.instanceOf(FASTElement);
     });
@@ -132,7 +131,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
     describe('refetchQueries', function() {
       let element: Test;
 
-      class Test extends ApolloMutation<unknown, unknown> { }
+      class Test extends ApolloMutation { }
 
       describe(`when refetch-queries attribute set with comma-separated, badly-formatted query names`, function() {
         beforeEach(async function() {
@@ -216,14 +215,14 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloMutationInterface
     assertType<DocumentNode>                        (this.mutation!);
