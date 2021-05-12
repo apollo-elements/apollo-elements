@@ -1,8 +1,7 @@
-import type { ApolloElementInterface } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import { GluonElement } from '@gluon/gluon';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
-import { defineObservedProperties } from './helpers/descriptor';
 
 export { html } from '@gluon/gluon';
 
@@ -15,19 +14,16 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloElement
-  extends ApolloElementMixin(GluonElement)
-  implements ApolloElementInterface {
+export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloElementMixin(GluonElement as I.Constructor<GluonElement>)<D, V>
+  implements I.ApolloElementInterface<D, V> {
   declare context?: Record<string, unknown>;
 
-  declare variables: unknown | null;
+  declare variables: I.Variables<D, V> | null;
 
-  declare data: unknown | null;
+  declare data: I.Data<D> | null;
+
+  update(): void {
+    this.render();
+  }
 }
-
-defineObservedProperties(ApolloElement, {
-  data: null,
-  error: null,
-  errors: null,
-  loading: false,
-});

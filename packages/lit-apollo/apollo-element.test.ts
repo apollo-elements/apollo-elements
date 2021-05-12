@@ -107,7 +107,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
     // @ts-expect-error: just testing assignment and rendering
     element.client = { test: 'CLIENT' };
     await element.updateComplete;
-    expect(element.shadowRoot.textContent).to.equal('CLIENT');
+    expect(element).shadowDom.to.equal('CLIENT');
   });
 
   it('renders when error is set', async function rendersOnError() {
@@ -142,11 +142,9 @@ class TypeCheck extends ApolloElement {
 
     // ApolloElementInterface
     assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
-    assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<string>                              (this.error.message);
     if (isApolloError(this.error))

@@ -1,15 +1,7 @@
-import type {
-  ApolloQueryInterface,
-  Constructor,
-  Data,
-  Variables,
-} from '@apollo-elements/interfaces';
-
-import { NetworkStatus, OperationVariables } from '@apollo/client/core';
+import type * as I from '@apollo-elements/interfaces';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element';
-import { defineObservedProperties } from './helpers/descriptor';
 
 export { html } from '@gluon/gluon';
 
@@ -22,22 +14,18 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloQuery<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
-  implements ApolloQueryInterface<D, V> {
+export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloQueryMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
+  implements I.ApolloQueryInterface<D, V> {
   /**
    * Latest query data.
    */
-  declare data: Data<D> | null;
+  declare data: I.Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.
    *
    * @summary Query variables.
    */
-  declare variables: Variables<D, V> | null;
+  declare variables: I.Variables<D, V> | null;
 }
-
-defineObservedProperties(ApolloQuery, {
-  networkStatus: NetworkStatus.ready,
-});

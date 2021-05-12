@@ -1,3 +1,13 @@
+import type * as I from '@apollo-elements/interfaces';
+import type {
+  NoParamMutationData,
+  NoParamMutationVariables,
+  NullableParamMutationData,
+  NullableParamMutationVariables,
+} from './schema';
+
+import { ApolloClient, ApolloError, InMemoryCache } from '@apollo/client/core';
+
 import { SetupFunction } from './types';
 
 import {
@@ -8,32 +18,24 @@ import {
   nextFrame,
 } from '@open-wc/testing';
 
-import type { ApolloMutationElement, Constructor, RefetchQueriesType } from '@apollo-elements/interfaces';
-import type { ApolloError, OperationVariables } from '@apollo/client/core';
-import type {
-  NoParamMutationData,
-  NoParamMutationVariables,
-  NullableParamMutationData,
-  NullableParamMutationVariables,
-} from './schema';
-
 import { match, spy, SinonSpy } from 'sinon';
 
-import { makeClient, setupClient } from './client';
+import { setupClient, teardownClient } from './client';
 
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 
 import { restoreSpies, waitForRender } from './helpers';
 
-export interface MutationElement<D = unknown, V = OperationVariables> extends ApolloMutationElement<D, V> {
-  refetchQueries: RefetchQueriesType<D> | null;
+export interface MutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+extends I.ApolloMutationElement<D, V> {
+  refetchQueries: I.RefetchQueriesType<D> | null;
   shadowRoot: ShadowRoot;
   hasRendered(): Promise<this>;
   stringify(x: unknown): string;
 }
 
-export interface DescribeMutationComponentOptions<E extends MutationElement = MutationElement<any, any>> {
+export interface DescribeMutationComponentOptions<E extends MutationElement<any, any> = MutationElement<any, any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -56,7 +58,7 @@ export interface DescribeMutationComponentOptions<E extends MutationElement = Mu
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: Constructor<E>;
+  class?: I.Constructor<E>;
 }
 
 export { setupMutationClass } from './helpers';
@@ -65,6 +67,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
   const { setupFunction, class: Klass } = options;
   describe(`ApolloMutation interface`, function() {
     describe('when simply instantiating', function() {
+      beforeEach(teardownClient);
       let element: MutationElement;
 
       beforeEach(async function setupElement() {
@@ -94,17 +97,19 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       it('caches observed properties', async function() {
-        const client = makeClient();
+        const client = new ApolloClient({ cache: new InMemoryCache(), connectToDevTools: false });
         element.client = client;
-        await element.updateComplete;
+        await element.hasRendered();
         expect(element.client, 'client')
-          .to.equal(client).and
+          .to.equal(client)
+          .and
           .to.equal(element.controller.client);
 
         element.client = null;
-        await element.updateComplete;
+        await element.hasRendered();
         expect(element.client, 'client')
-          .to.be.null.and
+          .to.be.null
+          .and
           .to.equal(element.controller.client);
 
         const data = { data: 'data' };
@@ -232,18 +237,9 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
     }
 
     describe('with global client available', function() {
-      let cached = window.__APOLLO_CLIENT__;
+      beforeEach(setupClient);
 
-      const mockClient = makeClient();
-
-      beforeEach(function setGlobalClient() {
-        cached = window.__APOLLO_CLIENT__;
-        window.__APOLLO_CLIENT__ = mockClient;
-      });
-
-      afterEach(function unsetGlobalClient() {
-        window.__APOLLO_CLIENT__ = cached;
-      });
+      afterEach(teardownClient);
 
       describe('when simply instantiating', function() {
         let element: MutationElement;
@@ -266,7 +262,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
         describe('when simply instantiating', function() {
           it('uses global client', function() {
-            expect(element.client).to.equal(mockClient);
+            expect(element.client).to.equal(window.__APOLLO_CLIENT__);
           });
         });
       });
@@ -578,6 +574,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             element.mutate({ optimisticResponse, variables, update });
           });
 
+          beforeEach(() => element.updateComplete);
+
           it('uses element\'s mutation', function() {
             expect(element.client!.mutate).to.have.been
               .calledWithMatch({
@@ -586,10 +584,9 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
                 errorPolicy: element.errorPolicy,
                 fetchPolicy: element.fetchPolicy,
                 mutation: element.mutation,
-                refetchQueries: element.refetchQueries ?? undefined,
-
-                update,
                 optimisticResponse,
+                refetchQueries: element.refetchQueries ?? undefined,
+                update,
                 variables,
               });
           });
@@ -830,12 +827,12 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         describe('with NullableParam mutation in class field', function() {
           let element: MutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
-          let spies: Record<keyof typeof element | string, SinonSpy>;
+          let spies: Record<Exclude<keyof typeof element, symbol> | string, SinonSpy>;
 
           beforeEach(setupClient);
 
           beforeEach(async function setupElement() {
-            class Test extends (Klass as Constructor<typeof element>) {
+            class Test extends (Klass as I.Constructor<typeof element>) {
               mutation = NullableParamMutation;
             }
 
@@ -850,7 +847,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           describe('with mutation, onCompleted, and onError defined as class methods', function() {
             beforeEach(async function() {
-              class Test extends (Klass as Constructor<typeof element>) {
+              class Test extends (Klass as I.Constructor<typeof element>) {
                 mutation = NullableParamMutation;
 
                 onError() { null; }
@@ -951,7 +948,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
 
             beforeEach(async function setupElement() {
-              class Test extends (Klass as unknown as Constructor<typeof element>) {
+              class Test extends (Klass as unknown as I.Constructor<typeof element>) {
                 mutation = NoParamMutation;
 
                 updater(): void { '💩'; }

@@ -1,9 +1,5 @@
 import type { SinonSpy, SinonStub } from 'sinon';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
-import type { GraphQLError, OptimisticResponseType } from '@apollo-elements/interfaces';
-
 import * as C from '@apollo/client/core';
 
 import * as S from '@apollo-elements/test';
@@ -23,12 +19,7 @@ import { html } from 'lit/static-html.js';
 
 import { match, spy, stub } from 'sinon';
 
-import {
-  assertType,
-  isApolloError,
-  setupClient,
-  teardownClient,
-} from '@apollo-elements/test';
+import { setupClient, teardownClient } from '@apollo-elements/test';
 
 import './apollo-mutation';
 
@@ -71,15 +62,18 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('cache-and-network', async function() {
         element.setAttribute('fetch-policy', 'no-cache');
         await element.updateComplete;
-        expect(element.fetchPolicy === 'no-cache').to.be.true;
-        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+        expect(element.fetchPolicy)
+          .to.equal('no-cache')
+          .and
+          .to.equal(element.controller.options.fetchPolicy);
       });
       it('forwards an illegal value', async function() {
         element.setAttribute('fetch-policy', 'network-only');
         await element.updateComplete;
-        // @ts-expect-error: test for bad value
-        expect(element.fetchPolicy === 'network-only').to.be.true;
-        expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
+        expect(element.fetchPolicy)
+          .to.equal('network-only')
+          .and
+          .to.equal(element.controller.options.fetchPolicy);
       });
     });
 
@@ -139,19 +133,19 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('as global client', async function() {
         element.client = window.__APOLLO_CLIENT__!;
         await element.updateComplete;
-        expect(element.controller.options.client).to.equal(window.__APOLLO_CLIENT__);
+        expect(element.controller.client).to.equal(window.__APOLLO_CLIENT__);
       });
       it('as new client', async function() {
         const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
         element.client = client;
         await element.updateComplete;
-        expect(element.controller.options.client).to.equal(client);
+        expect(element.controller.client).to.equal(client);
       });
       it('as illegal value', async function() {
         // @ts-expect-error: test bad value
         element.client = 1;
         await element.updateComplete;
-        expect(element.controller.options.client).to.equal(1);
+        expect(element.controller.client).to.equal(1);
       });
     });
 
@@ -260,9 +254,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('as Error', async function() {
         let error;
         try {
-          const error = new Error();
-          element.error = error;
-        } catch { null; }
+          throw new Error();
+        } catch (e) {
+          error = e;
+          element.error = error as Error;
+        }
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });

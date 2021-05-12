@@ -45,7 +45,7 @@ export { isApolloError } from '@apollo/client/core';
 
 export const stringify =
   (x: unknown): string =>
-    JSON.stringify(x, null, 2);
+    JSON.stringify(x, null);
 
 export function setupSpies<T>(keys: (keyof T)[] = [], object: T): Record<string|keyof T, SinonSpy> {
   return Object.fromEntries(keys
@@ -82,7 +82,7 @@ export function restoreStubs(getStubs: () => (Record<string, SinonStub> | undefi
 export function waitForRender<T extends HTMLElement & {
   updateComplete?: Promise<boolean>;
   hasRendered:() => Promise<T>;
-}>(getElement: () => T) {
+}>(getElement: () => T|undefined) {
   return async function waitForRender(): Promise<void> {
     const element = getElement();
     await element?.updateComplete ?? element?.hasRendered?.() ?? Promise.resolve();

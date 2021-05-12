@@ -53,7 +53,7 @@ function claimApolloElement(
 
 function isSubscribable(
   element: ApolloElementElement
-): element is ApolloQueryElement|ApolloSubscriptionElement {
+): element is ApolloQueryElement | ApolloSubscriptionElement {
   return (
     isApolloQuery(element) && element.canAutoSubscribe
   );

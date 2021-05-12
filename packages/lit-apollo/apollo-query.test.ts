@@ -1,6 +1,6 @@
 import type { PropertyValues, TemplateResult } from 'lit';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type {
   ApolloClient,
@@ -27,7 +27,8 @@ import { ApolloQuery } from './apollo-query';
 import { LitElement } from 'lit';
 import { NetworkStatus } from '@apollo/client/core';
 
-class TestableApolloQuery<D, V> extends ApolloQuery<D, V> {
+class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloQuery<D, V> {
   render() {
     return html`
       <output id="data">${this.stringify(this.data)}</output>
@@ -55,9 +56,9 @@ describe('[lit-apollo] ApolloQuery', function() {
   describeQuery({ setupFunction, class: TestableApolloQuery });
 
   describe('subclassing', function() {
-    let el: ApolloQuery<unknown, unknown>;
+    let el: ApolloQuery;
     beforeEach(async function subclass() {
-      class Test extends ApolloQuery<unknown, unknown> { }
+      class Test extends ApolloQuery { }
       const tagName = defineCE(Test);
       el = await fixture<Test>(`<${tagName}></${tagName}>`);
     });
@@ -80,7 +81,7 @@ describe('[lit-apollo] ApolloQuery', function() {
     });
 
     describe('with a class that defines observedAttributes with decorator', function() {
-      class Test extends ApolloQuery<unknown, unknown> {
+      class Test extends ApolloQuery {
         @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
       }
 
@@ -117,14 +118,14 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
 
     // ApolloQueryInterface
     assertType<DocumentNode>                        (this.query!);
@@ -147,7 +148,6 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.partialRefetch!);
     assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<ObservableQuery<TypeCheckData, TypeCheckVars>>(this.observableQuery!);
     assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
@@ -163,7 +163,7 @@ class TDNTypeCheck extends ApolloQuery<TDN> {
 }
 
 
-class TypeCheckLit extends ApolloQuery<unknown, unknown> {
+class TypeCheckLit extends ApolloQuery {
   update(changed: PropertyValues<TypeCheckLit>) {
     changed.has('data');
     super.update(changed);

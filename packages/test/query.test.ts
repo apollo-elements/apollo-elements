@@ -127,17 +127,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         expect(element.networkStatus, 'networkStatus').to.equal(NetworkStatus.ready);
         expect(element.noAutoSubscribe, 'noAutoSubscribe').to.be.false;
         expect(element.options, 'options')
-          .to.equal(element.controller.options)
-          .and
-          .to.deep.equal({
-            nextFetchPolicy: null,
-            partialRefetch: false,
-            noAutoSubscribe: false,
-            refetchQueries: null,
-            // not super interested in these
-            onData: element.controller.options.onData,
-            onError: element.controller.options.onError,
-          });
+          .to.equal(element.controller.options);
 
         // options
         expect(element.errorPolicy, 'errorPolicy')
@@ -149,7 +139,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           .and
           .to.equal(element.controller.options.fetchPolicy);
         expect(element.nextFetchPolicy, 'nextFetchPolicy')
-          .to.be.null
+          .to.be.undefined
           .and
           .to.equal(element.controller.options.nextFetchPolicy);
         expect(element.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange')
@@ -157,7 +147,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           .and
           .to.equal(element.controller.options.notifyOnNetworkStatusChange);
         expect(element.partialRefetch, 'partialRefetch')
-          .to.be.false
+          .to.be.undefined
           .and
           .to.equal(element.controller.options.partialRefetch);
         expect(element.pollInterval, 'pollInterval')
@@ -434,7 +424,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         beforeEach(nextFrame);
 
         it('notifies <apollo-client>', function() {
-          expect(disconnectEvent).to.be.ok;
+          expect(disconnectEvent, 'event').to.be.ok;
           expect(disconnectEvent?.bubbles).to.be.true;
           expect(disconnectEvent?.composed).to.be.true;
         });
@@ -1203,12 +1193,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('uses default options', function() {
-            const { query } = element!;
             // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
             expect(element.client.queryManager.watchQuery)
               .to.have.been.calledWithMatch({
-                query,
-                variables,
                 notifyOnNetworkStatusChange: true,
                 SOMETHING_SILLY: true,
               });
@@ -1571,12 +1558,23 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         let element: Test;
 
         beforeEach(setupClient);
+        beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'watchQuery'));
+        afterEach(() => (window.__APOLLO_CLIENT__!.watchQuery as SinonSpy).restore?.());
         afterEach(teardownClient);
 
         beforeEach(async function setupElement() {
           const tag = defineCE(class extends Test {});
           element = await fixture<Test>(`<${tag}></${tag}>`);
         });
+
+        it('subscribes to the query', function() {
+          expect(window.__APOLLO_CLIENT__!.watchQuery)
+            .to.have.been.calledOnce
+            .and
+            .to.have.been.calledWithMatch({ variables: { nullable: 'nullable' } });
+        });
+
+        beforeEach(() => element.updateComplete);
 
         beforeEach(() => spy(element.controller, 'refetch'));
         afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
@@ -1588,6 +1586,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('setting new variables', function() {
+          beforeEach(nextFrame);
+
           beforeEach(function setVariables() {
             element.variables = { nullable: '🍟' };
           });
@@ -1595,7 +1595,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(nextFrame);
 
           it('calls refetch', function() {
-            expect(element.controller.refetch).to.have.been.calledOnceWith(match({ nullable: '🍟' }));
+            expect(element.controller.refetch)
+              .to.have.been.calledOnce
+              .and
+              .to.have.been.calledWithMatch({ nullable: '🍟' });
           });
         });
       });
@@ -1711,8 +1714,6 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             query = S.NoParamQuery;
 
             fetchPolicy = fetchPolicy;
-
-            noAutoSubscribe = true;
           });
 
           element = await fixture<I.ApolloQueryElement>(`<${tag}></${tag}>`);
@@ -1753,7 +1754,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           let element: Test;
 
-          let spies: Record<string | keyof typeof element, SinonSpy>;
+          let spies: Record<string | Exclude<keyof typeof element, symbol>, SinonSpy>;
 
           beforeEach(setupClient);
           afterEach(teardownClient);
@@ -1763,6 +1764,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             element = await fixture<Test>(`<${tag}></${tag}>`);
           });
+
+          beforeEach(() => element.updateComplete);
 
           beforeEach(function spyMethods() {
             spies = {
@@ -1799,6 +1802,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             const variables: S.NonNullableParamQueryVariables = { nonNull: 'nullable' };
 
             beforeEach(() => element.executeQuery({ variables }));
+
+            beforeEach(() => element.updateComplete);
 
             it('calls onData', function() {
               expect(element.onData).to.have.been.calledWithMatch({

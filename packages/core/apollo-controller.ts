@@ -4,7 +4,6 @@ import type {
   ApolloClient,
   ApolloError,
   ApolloQueryResult,
-  DocumentNode,
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
@@ -66,7 +65,9 @@ implements ReactiveController {
   get document(): ComponentDocument<D> | null { return this.#document; }
 
   set document(document: ComponentDocument<D> | null) {
-    if (!document)
+    if (document === this.#document)
+      return;
+    else if (!document)
       this.#document = null;
     else if (!isValidGql(document)) {
       const name = (this.constructor.name).replace(/Apollo(\w+)Controller/, '$1') || 'Document';
@@ -74,7 +75,8 @@ implements ReactiveController {
     } else {
       this.#document = document;
       this.options[update]?.({ document });
-      this.documentChanged?.(document);/* c8 ignore next */
+      if (!this.initializing)
+        this.documentChanged?.(document);/* c8 ignore next */
     }
   }
 
@@ -85,10 +87,13 @@ implements ReactiveController {
   set variables(variables: Variables<D, V> | null) {
     if (!variables)
       delete this.options.variables;
+    else if (variables === this.options.variables)
+      return;
     else
       this.options.variables = variables;
     this.options[update]?.({ variables });
-    this.variablesChanged?.(variables);/* c8 ignore next */
+    if (!this.initializing)
+      this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
   protected abstract documentChanged?(document?: ComponentDocument<D>|null): void

@@ -1,12 +1,22 @@
-import type { ApolloError, ErrorPolicy } from '@apollo/client/core';
+import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
 
-import type { Constructor, GraphQLError } from '@apollo-elements/interfaces';
+import type { PropertyDeclaration } from 'lit';
+
+import type { ApolloController } from '@apollo-elements/core';
+
+import type * as I from '@apollo-elements/interfaces';
 
 import { LitElement } from 'lit';
 
-import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
+import { controlled } from '@apollo-elements/core/decorators';
+import { ApolloElementEvent } from '@apollo-elements/core/events';
 
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+
+export interface ControlledPropertyDeclaration extends PropertyDeclaration {
+  controlled?: boolean|string;
+  readonly?: boolean;
+}
 
 /**
  * `ApolloElement`
@@ -15,22 +25,51 @@ import { property } from 'lit/decorators.js';
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  */
-export class ApolloElement extends ApolloElementMixin(LitElement as Constructor<LitElement>) {
-  declare context?: Record<string, unknown>;
+export class ApolloElement<
+  D extends I.MaybeTDN = I.MaybeTDN,
+  V = I.MaybeVariables<D>
+> extends LitElement {
+  declare controller: ApolloController<D, V>;
 
-  declare variables: unknown | null;
+  readyToReceiveDocument = false;
 
-  @property({ attribute: false }) client = /* c8 ignore next */ window.__APOLLO_CLIENT__ ?? null;
+  connectedCallback(): void {
+    this.readyToReceiveDocument = true;
+    super.connectedCallback();
+    this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
+  }
 
-  @property({ attribute: false }) data: unknown | null = null;
+  disconnectedCallback(): void {
+    this.readyToReceiveDocument = false;
+    this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
+    window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
+    super.disconnectedCallback?.(); /* c8 ignore start */ // manual testing showed that both cases were hit
+  }
 
-  @property({ attribute: false }) error: Error | ApolloError | null = null;
+  /** @summary The Apollo Client instance. */
+  @controlled()
+  @state()
+  client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
-  @property({ attribute: false }) errors: readonly GraphQLError[] | null = null;
+  /** @summary Whether a request is in flight. */
+  @controlled() @property({ reflect: true, type: Boolean }) loading = false;
 
-  @property({ attribute: 'error-policy' }) errorPolicy?: ErrorPolicy;
+  /** @summary Latest Data. */
+  @controlled() @state() data: I.Data<D>|null = null;
 
-  @property({ attribute: 'fetch-policy' }) fetchPolicy?: string;
+  /**
+   * @summary Operation document.
+   * GraphQL operation document i.e. query, subscription, or mutation.
+   * Must be a parsed GraphQL `DocumentNode`
+   */
+  @controlled() @state() document: I.ComponentDocument<D>|null = null;
 
-  @property({ type: Boolean, reflect: true }) loading = false;
+  /** @summary Latest error */
+  @controlled() @state() error: Error|ApolloError|null = null;
+
+  /** @summary Latest errors */
+  @controlled() @state() errors: readonly I.GraphQLError[] = [];
+
+  /** @summary Operation variables. */
+  @controlled() @state() variables: I.Variables<D, V>|null = null;
 }

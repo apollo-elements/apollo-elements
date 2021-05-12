@@ -7,9 +7,11 @@ import type {
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
-import { ApolloElement, controlled } from './apollo-element';
+import { ApolloElement } from './apollo-element';
 
 import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
+
+import { controlled } from '@apollo-elements/core/decorators';
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
