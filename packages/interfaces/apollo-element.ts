@@ -1,5 +1,7 @@
 import type * as I from '@apollo-elements/interfaces';
 
+import type { ApolloController, p } from '@apollo-elements/core';
+
 import type {
   ApolloClient,
   ApolloError,
@@ -25,7 +27,12 @@ export declare class ApolloElementInterface<
   D extends I.MaybeTDN = I.MaybeTDN,
   V = I.MaybeVariables<D>
 > extends CustomElement {
+  /** @protected */
+  declare [p]?: Map<string, unknown>;
+
   declare static documentType: 'document'|'query'|'mutation'|'subscription';
+
+  declare controller: ApolloController<D, V>;
 
   /** @summary Latest Data. */
   declare data: I.Data<D> | null;

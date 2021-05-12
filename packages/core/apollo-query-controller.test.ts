@@ -427,12 +427,15 @@ describe('[core] ApolloQueryController', function() {
         });
 
         it('calls onData', function() {
-          expect(element.query.options!.onData).to.have.been.calledOnceWith(match({
-            helloWorld: {
-              name: 'Chaver',
-              greeting: 'Shalom',
-            },
-          }));
+          expect(element.query.options!.onData)
+            .to.have.been.calledOnce
+            .and
+            .to.have.been.calledWithMatch({
+              helloWorld: {
+                name: 'Chaver',
+                greeting: 'Shalom',
+              },
+            });
         });
 
         describe('setting query variables', function() {

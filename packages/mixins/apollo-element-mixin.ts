@@ -1,10 +1,8 @@
 import type {
   ApolloClient,
   ApolloError,
-  DocumentNode,
   ErrorPolicy,
   NormalizedCacheObject,
-  TypedDocumentNode,
 } from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
@@ -13,10 +11,11 @@ import type { ApolloController } from '@apollo-elements/core';
 
 import type { ReactiveControllerHost } from '@lit/reactive-element';
 
-import { ControllerHostMixin, controlled } from './controller-host-mixin';
+import { ControllerHostMixin } from './controller-host-mixin';
 
-import { capital } from '@apollo-elements/lib/helpers';
-import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
+import { controlled } from '@apollo-elements/core/decorators';
+import { ApolloElementEvent } from '@apollo-elements/core/events';
+
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 declare global {
@@ -27,21 +26,6 @@ declare global {
     'apollo-element-connected': ApolloElementEvent;
     'apollo-element-disconnected': ApolloElementEvent;
     'apollo-error': CustomEvent<ApolloError>;
-  }
-}
-
-/**
- * Fired when an element connects to or disconnects from the DOM
- */
-export class ApolloElementEvent<T = I.ApolloElementElement> extends CustomEvent<T> {
-  declare type: 'apollo-element-connected'|'apollo-element-disconnected';
-
-  constructor(type: 'apollo-element-connected'|'apollo-element-disconnected', detail: T) {
-    super(type, {
-      bubbles: true,
-      composed: true,
-      detail,
-    });
   }
 }
 
@@ -72,7 +56,14 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
     @controlled()
     client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
-    declare controller: ApolloController;
+    declare controller: ApolloController<D, V>;
+
+    /**
+     * @summary Operation document.
+     * A GraphQL document containing a single query, mutation, or subscription.
+     * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
+     */
+    @controlled() document: I.ComponentDocument<D> | null = null;
 
     /** @summary Latest data */
     @controlled() data: I.Data<D> | null = null;
@@ -109,30 +100,6 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
     /** @summary True when the element is connected and ready to receive its GraphQL document */
     public readyToReceiveDocument = false;
 
-    private _document: this['document'] = null;
-
-    /**
-     * @summary Operation document.
-     * A GraphQL document containing a single query, mutation, or subscription.
-     * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
-     */
-    get document(): DocumentNode | TypedDocumentNode | null {
-      return this._document; /* c8 ignore next */ // covered
-    }
-
-    set document(document) {
-      if (!document)
-        this._document = null; /* c8 ignore next */ // covered
-      else if (!isValidGql(document)) {
-        const name = capital((this.constructor as typeof ApolloElement).documentType ?? 'document');
-        throw new TypeError(`${name} must be a parsed GraphQL document`); /* c8 ignore next */
-      } else {
-        this._document = document;
-        if (this.readyToReceiveDocument)
-          this.documentChanged?.(document); /* c8 ignore next */ // covered
-      }
-    }
-
     constructor(...a: any[]) {
       super(...a);
       this.requestUpdate();
@@ -155,9 +122,9 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
     }
 
     connectedCallback(): void {
-      super.connectedCallback?.(); /* c8 ignore start */ // manual testing showed that both cases were hit
-      this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
       this.readyToReceiveDocument = true;
+      super.connectedCallback();
+      this.dispatchEvent(new ApolloElementEvent('apollo-element-connected', this));
     }
 
     disconnectedCallback(): void {

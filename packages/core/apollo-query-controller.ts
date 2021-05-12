@@ -36,7 +36,8 @@ export interface ApolloQueryControllerOptions<D, V> extends
 }
 
 export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<D>>
-  extends ApolloController<D, V> implements ReactiveController {
+  extends ApolloController<D, V>
+  implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
   private pollingInterval?: number;
@@ -49,13 +50,15 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
 
   #hasDisconnected = false;
 
+  #lastQueryDocument?: DocumentNode
+
   get query(): ComponentDocument<D> | null { return this.document; }
 
   set query(document: ComponentDocument<D> | null) { this.document = document; }
 
   constructor(
     host: ReactiveControllerHost,
-    query?: ComponentDocument<D>|null,
+    query?: ComponentDocument<D> | null,
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
@@ -64,8 +67,11 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
 
   hostConnected(): void {
     super.hostConnected();
-    if (this.#hasDisconnected && this.observableQuery)
+    if (this.#hasDisconnected && this.observableQuery) {
       this.observableQuery.reobserve();
+      this.#hasDisconnected = false;
+    } else
+      this.documentChanged(this.query);
   }
 
   hostDisconnected(): void {
@@ -85,26 +91,6 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       !!this.client &&
       !!(options?.query ?? this.document)
     );
-  }
-
-  protected documentChanged(query?: ComponentDocument<D>|null): void {
-    if (
-      !!query &&
-      this.canSubscribe({ query }) &&
-      (this.options.shouldSubscribe?.({ query }) ?? true) &&
-      !this.observableQuery
-    )
-      this.subscribe({ query }); /* c8 ignore next */ // covered
-  }
-
-  protected variablesChanged(variables?: Variables<D, V>): void {
-    if (this.observableQuery)
-      this.refetch(variables);
-    else if (
-      this.canSubscribe({ variables }) &&
-      (this.options.shouldSubscribe?.({ variables }) ?? true)
-    )
-      this.subscribe({ variables });
   }
 
   /**
@@ -160,6 +146,27 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     this[update]();
   }
 
+  protected documentChanged(doc?: ComponentDocument<D> | null): void {
+    const query = doc ?? undefined;
+    if (doc === this.#lastQueryDocument)
+      return;
+    if (
+      this.canSubscribe({ query }) &&
+      (this.options.shouldSubscribe?.({ query }) ?? true)
+    )
+      this.subscribe({ query }); /* c8 ignore next */ // covered
+  }
+
+  protected variablesChanged(variables?: Variables<D, V>): void {
+    if (this.observableQuery)
+      this.refetch(variables);
+    else if (
+      this.canSubscribe({ variables }) &&
+      (this.options.shouldSubscribe?.({ variables }) ?? true)
+    )
+      this.subscribe({ variables });
+  }
+
   /** Flags an element that's ready and able to auto-subscribe */
   public get canAutoSubscribe(): boolean {
     return (
@@ -204,6 +211,8 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       partialRefetch: this.options.partialRefetch,
       ...params,
     });
+
+    this.#lastQueryDocument = params?.query ?? this.query;
 
     this.loading = true;
     this[update]();

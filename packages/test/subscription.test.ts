@@ -1,4 +1,4 @@
-import type { ApolloSubscriptionElement, Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import { SetupFunction } from './types';
 
@@ -9,22 +9,13 @@ import { gql, ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { spy, SinonSpy } from 'sinon';
 import { makeClient, setupClient, teardownClient } from './client';
 
-import NoParamSubscription from './graphql/NoParam.subscription.graphql';
-import NullableParamSubscription from './graphql/NullableParam.subscription.graphql';
-import NonNullableParamSubscription from './graphql/NonNullableParam.subscription.graphql';
-
-import Observable from 'zen-observable';
-
-import {
-  NullableParamSubscriptionData,
-  NullableParamSubscriptionVariables,
-} from './schema';
+import * as S from './schema';
 
 import { restoreSpies, waitForRender } from './helpers';
 
-type SE<D, V> = ApolloSubscriptionElement<D, V>;
+type SE<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> = I.ApolloSubscriptionElement<D, V>;
 
-export interface SubscriptionElement<D = any, V = any> extends SE<D, V> {
+export interface SubscriptionElement<D extends I.MaybeTDN = any, V = any> extends SE<D, V> {
   hasRendered(): Promise<SubscriptionElement<D, V>>;
   stringify(x: unknown): string;
 }
@@ -50,7 +41,7 @@ export interface DescribeSubscriptionComponentOptions {
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: Constructor<SubscriptionElement>;
+  class?: I.Constructor<SubscriptionElement>;
 }
 
 export { setupSubscriptionClass } from './helpers';
@@ -87,14 +78,14 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         // defined fields
         expect(element?.loading, 'loading').to.be.false;
         expect(element?.noAutoSubscribe, 'noAutoSubscribe').to.be.false;
-        expect(element?.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.false;
         expect(element?.shouldResubscribe, 'shouldResubscribe').to.be.false;
         expect(element?.skip, 'skip').to.be.false;
         expect(element?.canAutoSubscribe, 'canAutoSubscribe').to.be.false;
 
-        // optional fields
+        // options fields
+        expect(element?.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
         expect(element?.fetchPolicy, 'fetchPolicy').to.be.undefined;
-        expect(element?.observable, 'observableSubscription').to.be.undefined;
+        expect(element?.errorPolicy, 'errorPolicy').to.be.undefined;
         expect(element?.onError, 'onError').to.be.undefined;
         expect(element?.onSubscriptionComplete, 'onSubscriptionComplete').to.be.undefined;
         expect(element?.onSubscriptionData, 'onSubscriptionData').to.be.undefined;
@@ -157,7 +148,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           beforeEach(function() {
             client = new ApolloClient({ cache: new InMemoryCache() });
             spy(client, 'subscribe');
-            element?.subscribe({ client, subscription: NullableParamSubscription });
+            element?.subscribe({ client, subscription: S.NullableParamSubscription });
           });
 
           afterEach(function() {
@@ -168,7 +159,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           it('calls client subscribe', function() {
             expect(client?.subscribe).to.have.been.calledWithMatch({
-              query: NullableParamSubscription,
+              query: S.NullableParamSubscription,
             });
           });
         });
@@ -176,11 +167,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       describe('setting NoParam subscription', function() {
         beforeEach(function setSubscription() {
-          element!.subscription = NoParamSubscription;
+          element!.subscription = S.NoParamSubscription;
         });
 
         it('sets subscription property', function() {
-          expect(element?.subscription).to.equal(NoParamSubscription);
+          expect(element?.subscription).to.equal(S.NoParamSubscription);
         });
 
         it('does not call subscribe', function() {
@@ -193,7 +184,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         it('throws', function() {
           // @ts-expect-error: we're testing the error
           expect(() => element.subscription = `subscription { foo }`)
-            .to.throw('Subscription must be a gql-parsed DocumentNode');
+            .to.throw('Subscription must be a parsed GraphQL document.');
           expect(element?.subscription).to.not.be.ok;
         });
       });
@@ -218,7 +209,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       afterEach(restoreSpies(() => spies));
 
-      beforeEach(waitForRender(() => element));
+      beforeEach(waitForRender(() => element!));
 
       afterEach(function teardownElement() {
         element?.remove?.();
@@ -230,7 +221,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
       describe('with no-auto-subscribe attribute set', function() {
         describe('after setting NoParam subscription', function() {
           beforeEach(function setSubscription() {
-            element!.subscription = NoParamSubscription;
+            element!.subscription = S.NoParamSubscription;
           });
 
           describe('subscribe()', function() {
@@ -381,17 +372,13 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           describe('subscribe({ subscription })', async function() {
             beforeEach(function() {
-              element?.subscribe({ subscription: NullableParamSubscription });
+              element?.subscribe({ subscription: S.NullableParamSubscription });
             });
 
             it('calls client subscribe', function() {
               expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                query: NullableParamSubscription,
+                query: S.NullableParamSubscription,
               });
-            });
-
-            it('sets observableSubscription', function() {
-              expect(element?.observableSubscription).to.be.ok;
             });
           });
 
@@ -408,28 +395,20 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               it('does not call client subscribe', function() {
                 expect(element?.client?.subscribe).to.not.have.been.called;
               });
-
-              it('does not set observableSubscription', function() {
-                expect(element?.observableSubscription).to.not.be.ok;
-              });
             });
 
             describe('subscribe({ subscription, skip: false })', async function() {
               beforeEach(function() {
                 element!.subscribe({
-                  subscription: NullableParamSubscription,
+                  subscription: S.NullableParamSubscription,
                   skip: false,
                 });
               });
 
               it('calls client subscribe', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                 });
-              });
-
-              it('does not set observableSubscription', function() {
-                expect(element?.observableSubscription).to.be.ok;
               });
             });
           });
@@ -448,21 +427,17 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             beforeEach(function() {
-              element?.subscribe({ client, subscription: NullableParamSubscription });
+              element?.subscribe({ client, subscription: S.NullableParamSubscription });
             });
 
             it('calls client subscribe', function() {
               expect(client?.subscribe).to.have.been.calledWithMatch({
-                query: NullableParamSubscription,
+                query: S.NullableParamSubscription,
               });
             });
 
             it('does not call element client subscribe', function() {
               expect(element?.client?.subscribe).to.not.have.been.called;
-            });
-
-            it('sets observableSubscription', function() {
-              expect(element?.observableSubscription).to.be.ok;
             });
           });
 
@@ -475,12 +450,12 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             describe('subscribe({ subscription })', function() {
               beforeEach(function() {
-                element?.subscribe({ subscription: NullableParamSubscription });
+                element?.subscribe({ subscription: S.NullableParamSubscription });
               });
 
               it('calls client subscribe with element context', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   context,
                 });
               });
@@ -490,12 +465,12 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               const context = {};
 
               beforeEach(function() {
-                element?.subscribe({ subscription: NullableParamSubscription, context });
+                element?.subscribe({ subscription: S.NullableParamSubscription, context });
               });
 
               it('calls client subscribe with context param', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   context,
                 });
               });
@@ -506,12 +481,12 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             const context = {};
 
             beforeEach(function() {
-              element?.subscribe({ subscription: NullableParamSubscription, context });
+              element?.subscribe({ subscription: S.NullableParamSubscription, context });
             });
 
             it('calls client subscribe with context', function() {
               expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                query: NullableParamSubscription,
+                query: S.NullableParamSubscription,
                 context,
               });
             });
@@ -524,11 +499,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             describe('subscribe({ subscription })', async function() {
               beforeEach(function() {
-                element?.subscribe({ subscription: NullableParamSubscription });
+                element?.subscribe({ subscription: S.NullableParamSubscription });
               });
               it('calls client subscribe with element errorPolicy', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   errorPolicy: 'none',
                 });
               });
@@ -536,11 +511,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             describe('subscribe({ subscription, errorPolicy })', async function() {
               beforeEach(function() {
-                element?.subscribe({ subscription: NullableParamSubscription, errorPolicy: 'all' });
+                element?.subscribe({ subscription: S.NullableParamSubscription, errorPolicy: 'all' });
               });
               it('calls client subscribe with params errorPolicy', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   errorPolicy: 'all',
                 });
               });
@@ -550,11 +525,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           describe('subscribe({ subscription, errorPolicy })', async function() {
             const errorPolicy = 'ignore';
             beforeEach(function() {
-              element?.subscribe({ subscription: NullableParamSubscription, errorPolicy });
+              element?.subscribe({ subscription: S.NullableParamSubscription, errorPolicy });
             });
             it('calls client subscribe', function() {
               expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                query: NullableParamSubscription,
+                query: S.NullableParamSubscription,
                 errorPolicy,
               });
             });
@@ -567,11 +542,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             describe('subscribe({ subscription })', async function() {
               beforeEach(function() {
-                element?.subscribe({ subscription: NullableParamSubscription });
+                element?.subscribe({ subscription: S.NullableParamSubscription });
               });
               it('calls client subscribe with element fetchPolicy', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   fetchPolicy: 'cache-first',
                 });
               });
@@ -580,13 +555,13 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             describe('subscribe({ subscription, fetchPolicy })', async function() {
               beforeEach(function() {
                 element?.subscribe({
-                  subscription: NullableParamSubscription,
+                  subscription: S.NullableParamSubscription,
                   fetchPolicy: 'network-only',
                 });
               });
               it('calls client subscribe with params fetchPolicy', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   fetchPolicy: 'network-only',
                 });
               });
@@ -596,25 +571,25 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           describe('subscribe({ subscription, fetchPolicy })', async function() {
             const fetchPolicy = 'no-cache';
             beforeEach(function() {
-              element?.subscribe({ subscription: NullableParamSubscription, fetchPolicy });
+              element?.subscribe({ subscription: S.NullableParamSubscription, fetchPolicy });
             });
 
             it('calls client subscribe', function() {
               expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                query: NullableParamSubscription,
+                query: S.NullableParamSubscription,
                 fetchPolicy,
               });
             });
           });
 
           describe('subscribe({ subscription, variables })', async function() {
-            const variables: NullableParamSubscriptionVariables = { nullable: 'params' };
+            const variables: S.NullableParamSubscriptionVariables = { nullable: 'params' };
             beforeEach(function() {
-              element?.subscribe({ subscription: NullableParamSubscription, variables });
+              element?.subscribe({ subscription: S.NullableParamSubscription, variables });
             });
             it('calls client subscribe', function() {
               expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                query: NullableParamSubscription,
+                query: S.NullableParamSubscription,
                 variables,
               });
             });
@@ -627,11 +602,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             describe('subscribe({ subscription })', async function() {
               beforeEach(function() {
-                element?.subscribe({ subscription: NullableParamSubscription });
+                element?.subscribe({ subscription: S.NullableParamSubscription });
               });
               it('calls client subscribe with element variables', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   variables: { nullable: 'with' },
                 });
               });
@@ -640,13 +615,13 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             describe('subscribe({ subscription, variables })', async function() {
               beforeEach(function() {
                 element?.subscribe({
-                  subscription: NullableParamSubscription,
+                  subscription: S.NullableParamSubscription,
                   variables: { nullable: 'else' },
                 });
               });
               it('calls client subscribe with params variables', function() {
                 expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: NullableParamSubscription,
+                  query: S.NullableParamSubscription,
                   variables: { nullable: 'else' },
                 });
               });
@@ -657,14 +632,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       describe('setting NoParam subscription', function() {
         beforeEach(function setSubscription() {
-          element!.subscription = NoParamSubscription;
+          element!.subscription = S.NoParamSubscription;
         });
 
         it('calls subscribe', function() {
-          expect(element!.subscribe).to.have.been.called;
-        });
-
-        it('creates an observable', function() {
           expect(element?.client?.subscribe).to.have.been.called;
         });
 
@@ -674,15 +645,24 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         describe('then setting NullableParam subscription', function() {
           beforeEach(function setNullableParamSubscription() {
-            element!.subscription = NullableParamSubscription;
+            element!.subscription = S.NullableParamSubscription;
           });
 
-          beforeEach(waitForRender(() => element));
+          beforeEach(waitForRender(() => element!));
           beforeEach(() => aTimeout(50));
 
           it('renders second subscription', async function() {
-            expect(element?.shadowRoot?.textContent).to.not.contain('messageSent');
-            expect(element?.shadowRoot?.textContent).to.contain('nullable');
+            const json = element!.stringify({
+              'nullableParam': {
+                'nullable': 'Hello World',
+                '__typename': 'Nullable',
+              },
+            });
+            expect(element).shadowDom.to.equal(`
+              <output id="data">${json}</output>
+              <output id="error">null</output>
+              <output id="loading">false</output>
+            `);
           });
 
           describe('then setting variables', function() {
@@ -702,29 +682,29 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       describe('setting NullableParam subscription', function() {
         beforeEach(function setSubscription() {
-          element!.subscription = NullableParamSubscription;
+          element!.subscription = S.NullableParamSubscription;
         });
 
         beforeEach(waitForRender(() => element));
 
-        it('creates an observable', function() {
-          expect(element?.observable).to.be.an.instanceOf(Observable);
-        });
-
         it('calls subscribe', function() {
-          expect(element?.subscribe).to.have.been.called;
+          expect(element?.client?.subscribe).to.have.been.called;
         });
 
         beforeEach(() => aTimeout(50));
 
         it('renders data', function() {
-          expect(element?.shadowRoot?.getElementById('data')?.textContent)
-            .to.equal(element?.stringify({
-              nullableParam: {
-                nullable: 'Hello World',
-                __typename: 'Nullable',
-              },
-            }));
+          const json = element!.stringify({
+            'nullableParam': {
+              'nullable': 'Hello World',
+              '__typename': 'Nullable',
+            },
+          });
+          expect(element).shadowDom.to.equal(`
+            <output id="data">${json}</output>
+            <output id="error">null</output>
+            <output id="loading">false</output>
+          `);
         });
 
         describe('then setting variables', function() {
@@ -777,6 +757,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element!.shouldResubscribe = true;
           });
 
+          beforeEach(() => element?.updateComplete);
+
           describe('subscribe({ fetchPolicy, variables })', function() {
             const fetchPolicy = 'network-only';
             const variables = { nullable: 'bar' };
@@ -804,7 +786,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           describe('subscribe({ subscription, fetchPolicy })', function() {
             const fetchPolicy = 'cache-only';
 
-            const subscription = NoParamSubscription;
+            const subscription = S.NoParamSubscription;
 
             beforeEach(function setVariables() {
               element!.variables = { null: null };
@@ -831,18 +813,22 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           describe('subscribe({ subscription, variables })', function() {
-            const subscription = NonNullableParamSubscription;
+            const subscription = S.NonNullableParamSubscription;
 
             const variables = { nonNull: 'bar' };
+
+            beforeEach(() => aTimeout(60));
 
             beforeEach(function() {
               element?.subscribe({ subscription, variables });
             });
 
             it('calls client subscribe with specified subscription', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                query: subscription,
-              });
+              expect(element?.client?.subscribe)
+                .to.have.been.calledTwice;
+              const [operation] = (element?.client?.subscribe as SinonSpy).lastCall.args;
+              expect(operation.query).to.equal(subscription);
+              expect(operation.variables).to.equal(variables);
             });
 
             it('calls client subscribe with element FetchPolicy', function() {
@@ -883,7 +869,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         it('throws expected error', function() {
-          expect(result.message).to.equal('Subscription must be a gql-parsed DocumentNode');
+          expect(result.message).to.equal('Subscription must be a parsed GraphQL document.');
         });
       });
     });
@@ -900,7 +886,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           beforeEach(async function() {
             class Test extends Klass {
-              subscription = NoParamSubscription;
+              subscription = S.NoParamSubscription;
             }
 
             const tag = defineCE(Test);
@@ -909,33 +895,24 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           it('caches subscription property', function() {
-            expect(element?.subscription, 'subscription').to.equal(NoParamSubscription);
+            expect(element?.subscription, 'subscription').to.equal(S.NoParamSubscription);
           });
         });
 
         describe('with shouldSubscribe overridden to return false', function() {
           let element: SubscriptionElement | undefined;
 
-          let spies: Record<string|keyof SubscriptionElement, SinonSpy> | undefined;
-
-          beforeEach(function spyClientSubscribe() {
-            spies = {
-              'client.subscribe': spy(window.__APOLLO_CLIENT__!, 'subscribe'),
-            };
-          });
+          beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'subscribe'));
+          afterEach(() => (window.__APOLLO_CLIENT__!.subscribe as SinonSpy).restore?.());
 
           afterEach(function teardownElement() {
             element?.remove?.();
             element = undefined;
           });
 
-          afterEach(restoreSpies(() => spies));
-
           beforeEach(async function() {
-            type D = NullableParamSubscriptionData;
-            type V = NullableParamSubscriptionVariables;
-            class Test extends (Klass as Constructor<SubscriptionElement<D, V>>) {
-              subscription = NullableParamSubscription;
+            class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+              subscription = S.NullableParamSubscription;
 
               shouldSubscribe() {
                 return false;
@@ -950,53 +927,61 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           it('does not subscribe on connect', function() {
             expect(element?.client?.subscribe).to.not.have.been.called;
           });
-
-          it('does not initialize the observable', function() {
-            expect(element?.observable).to.not.be.ok;
-          });
         });
 
         describe('with noAutoSubscribe set as a class field', function() {
-          let element: SubscriptionElement | undefined;
+          let element: SubscriptionElement;
 
-          let spies: Record<string|keyof SubscriptionElement, SinonSpy> | undefined;
-
-          beforeEach(function spyClientSubscribe() {
-            spies = {
-              'client.subscribe': spy(window.__APOLLO_CLIENT__!, 'subscribe'),
-            };
-          });
+          beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'subscribe'));
+          afterEach(() => (window.__APOLLO_CLIENT__!.subscribe as SinonSpy).restore?.());
 
           afterEach(function teardownElement() {
             element?.remove?.();
+            // @ts-expect-error: fixture cleanup
             element = undefined;
           });
 
-          afterEach(restoreSpies(() => spies));
+          describe('when set before subscription field', function() {
+            beforeEach(async function() {
+              class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+                noAutoSubscribe = true;
 
-          beforeEach(async function() {
-            type D = NullableParamSubscriptionData;
-            type V = NullableParamSubscriptionVariables;
-            class Test extends (Klass as Constructor<SubscriptionElement<D, V>>) {
-              subscription = NullableParamSubscription;
+                subscription = S.NullableParamSubscription;
+              }
 
-              noAutoSubscribe = true;
-            }
+              const tag = defineCE(Test);
 
-            const tag = defineCE(Test);
+              element = await fixture<Test>(`<${tag}></${tag}>`);
+            });
 
-            element = await fixture<Test>(`<${tag}></${tag}>`);
+            it('does not subscribe on connect', function() {
+              expect(element?.client?.subscribe).to.not.have.been.called;
+            });
           });
 
-          it('does not subscribe on connect', function() {
-            expect(element?.client?.subscribe).to.not.have.been.called;
+          describe('when set after subscription field', function() {
+            beforeEach(async function() {
+              class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+                subscription = S.NullableParamSubscription;
+
+                noAutoSubscribe = true;
+              }
+
+              const tag = defineCE(Test);
+
+              element = await fixture<Test>(`<${tag}></${tag}>`);
+            });
+
+            it('does not subscribe on connect', function() {
+              expect(element?.client?.subscribe).to.not.have.been.called;
+            });
           });
         });
 
         describe('with fetchPolicy set as a class field', function() {
           let element: SubscriptionElement | undefined;
 
-          let spies: Record<string|keyof SubscriptionElement, SinonSpy>;
+          let spies: Record<string|Exclude<keyof SubscriptionElement, symbol>, SinonSpy>;
 
           beforeEach(function spyClientSubscribe() {
             spies = {
@@ -1012,10 +997,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
-            type D = NullableParamSubscriptionData;
-            type V = NullableParamSubscriptionVariables;
-            class Test extends (Klass as Constructor<SubscriptionElement<D, V>>) {
-              subscription = NullableParamSubscription;
+            class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+              subscription = S.NullableParamSubscription;
 
               variables = { nullable: 'quux' };
 
@@ -1027,6 +1010,16 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element = await fixture<Test>(`<${tag}></${tag}>`);
           });
 
+          beforeEach(() => element?.updateComplete);
+
+          it('sets fetchPolicy', function() {
+            expect(element?.fetchPolicy).to.equal('cache-only');
+          });
+
+          it('sets controller fetchPolicy', function() {
+            expect(element?.controller?.options.fetchPolicy).to.equal('cache-only');
+          });
+
           it('subscribes with the given FetchPolicy', function() {
             expect(element?.client?.subscribe).to.have.been
               .calledWithMatch({ fetchPolicy: 'cache-only' });
@@ -1036,7 +1029,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         describe('with onComplete, onError, and onSubscriptionData set as class methods', function() {
           let element: SubscriptionElement | undefined;
 
-          let spies: Record<string|keyof SubscriptionElement, SinonSpy> | undefined;
+          let spies: Record<string|Exclude<keyof SubscriptionElement, symbol>, SinonSpy> | undefined;
 
           beforeEach(function spyClientSubscribe() {
             spies = {
@@ -1052,10 +1045,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
-            type D = NullableParamSubscriptionData;
-            type V = NullableParamSubscriptionVariables;
-            class Test extends (Klass as Constructor<SubscriptionElement<D, V>>) {
-              subscription = NonNullableParamSubscription;
+            class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NonNullableParamSubscription>>) {
+              subscription = S.NonNullableParamSubscription;
 
               noAutoSubscribe = true;
 

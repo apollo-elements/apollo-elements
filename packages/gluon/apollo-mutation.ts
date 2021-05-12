@@ -1,8 +1,7 @@
-import type { OperationVariables } from '@apollo/client/core';
+import type * as I from '@apollo-elements/interfaces';
+
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { ApolloMutationInterface, Constructor, Data, Variables } from '@apollo-elements/interfaces';
-import { defineObservedProperties } from './helpers/descriptor';
 
 export { html } from '@gluon/gluon';
 
@@ -15,22 +14,18 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloMutation<D, V = OperationVariables>
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
-  implements ApolloMutationInterface<D, V> {
+export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloMutationMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
+  implements I.ApolloMutationInterface<D, V> {
   /**
    * Latest mutation data.
    */
-  declare data: Data<D> | null;
+  declare data: I.Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
    *
    * @summary Mutation variables.
    */
-  declare variables: Variables<D, V> | null;
+  declare variables: I.Variables<D, V> | null;
 }
-
-defineObservedProperties(ApolloMutation, {
-  called: false,
-});

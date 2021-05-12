@@ -3,12 +3,20 @@ import type { Constructor, CustomElement } from '@apollo-elements/interfaces';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-const p = Symbol('initial props');
+import { p } from '@apollo-elements/core/decorators';
+
+const init = Symbol('ControllerHost initialized');
 
 function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
   superclass: T
-): T & Constructor<ReactiveControllerHost> {
+): T & Constructor<ReactiveControllerHost & {
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+}> {
   return class ControllerHost extends superclass {
+    /** @protected */
+    declare [p]?: Map<keyof this, this[keyof this]>;
+
     #controllers = new Set<ReactiveController>();
 
     #updatePending = false;
@@ -16,6 +24,23 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
     #updateComplete: Promise<boolean>;
 
     #resolve!: (v: boolean) => void;
+
+    private [init] = false;
+
+    constructor(...args: any[]) {
+      super(...args);
+      this.#updateComplete = new Promise(r => {
+        this.#resolve = r;
+      });
+      this[init] = true;
+      this.requestUpdate();
+    }
+
+    private initProps() {
+      this[p]!.forEach((val, key) => {
+        this[key] ??= val;
+      });
+    }
 
     addController(controller: ReactiveController): void {
       // @ts-expect-error: superclass may or may not have it
@@ -32,6 +57,7 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
     }
 
     requestUpdate(): void {
+      if (!this[init]) return;
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.requestUpdate === 'function') return super.requestUpdate();
       this.update();
@@ -42,22 +68,6 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
       // @ts-expect-error: superclass may or may not have it
       return super.updateComplete ??
         this.#updateComplete;
-    }
-
-    private [p] = new Map<keyof this, this[keyof this]>();
-
-    private initProps() {
-      this[p].forEach((val, key) => {
-        this[key] ??= val;
-      });
-    }
-
-    constructor(...args: any[]) {
-      super(...args);
-      this.#updateComplete = new Promise(r => {
-        this.#resolve = r;
-      });
-      this.requestUpdate();
     }
 
     connectedCallback() {
@@ -98,42 +108,3 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
 
 export const ControllerHostMixin =
   dedupeMixin(ControllerHostMixinImpl);
-
-interface MixinControlledOptions {
-  path?: 'options',
-  readonly?: boolean,
-  onSet?(x: unknown): void,
-}
-
-export function controlled(opts: MixinControlledOptions = {}) {
-  return function<T extends ReactiveControllerHost>(
-    proto: T,
-    name: typeof opts.path extends keyof T ? keyof T[typeof opts.path] : keyof T
-  ): void {
-    Object.defineProperty(proto, name, {
-      get() {
-        if (opts.path)
-          return !this.controller ? this[p].get(name) : this.controller[opts.path][name];
-        else
-          return !this.controller ? this[p].get(name) : this.controller[name];
-      },
-
-      set(value) {
-        if (opts.readonly) return;
-        const old = this[name];
-        this[p] ??= new Map();
-        if (!this.controller)
-          (this[p] as Map<typeof name, unknown>).set(name, value);
-        else {
-          if (opts.path)
-            this.controller[opts.path][name] = value;
-          else
-            this.controller[name] = value;
-          if (opts.onSet)
-            opts.onSet.call(this, value);
-          this.requestUpdate(name, old);
-        }
-      },
-    });
-  };
-}

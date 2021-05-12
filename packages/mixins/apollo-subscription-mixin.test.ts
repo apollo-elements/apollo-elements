@@ -1,23 +1,10 @@
-import type {
-  ApolloClient,
-  DocumentNode,
-  FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
-  OperationVariables,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
-import type { Entries } from '@apollo-elements/interfaces';
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
-
-import { effect } from '@apollo-elements/lib/descriptors';
-
-import { Observable } from '@apollo/client/core';
 
 import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
 
@@ -34,7 +21,7 @@ import {
   SubscriptionElement,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D = unknown, V = OperationVariables>
+class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V>
   implements SubscriptionElement<D, V> {
   declare shadowRoot: ShadowRoot;
@@ -49,18 +36,25 @@ class TestableApolloSubscription<D = unknown, V = OperationVariables>
     return template;
   }
 
+  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+
+  observed: Array<keyof this> = ['data', 'error', 'loading'];
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' })
       .appendChild(TestableApolloSubscription.template.content.cloneNode(true));
   }
 
-  $(id: keyof TestableApolloSubscription) { return this.shadowRoot.getElementById(id); }
-
   render() {
-    this.$('data')!.textContent = this.stringify(this.data);
-    this.$('error')!.textContent = this.stringify(this.error);
-    this.$('loading')!.textContent = this.stringify(this.loading);
+    this.observed?.forEach(property => {
+      if (this.$(property))
+        this.$(property)!.textContent = this.stringify(this[property]);
+    });
+  }
+
+  update() {
+    this.render();
   }
 
   stringify(x: unknown) {
@@ -68,31 +62,10 @@ class TestableApolloSubscription<D = unknown, V = OperationVariables>
   }
 
   async hasRendered() {
-    await nextFrame();
+    await this.updateComplete;
     return this;
   }
 }
-
-const DEFAULTS = {
-  data: null,
-  error: null,
-  errors: null,
-  loading: false,
-};
-
-Object.defineProperties(TestableApolloSubscription.prototype, Object.fromEntries(
-  (Object.entries(DEFAULTS) as Entries<TestableApolloSubscription>)
-    .map(([name, init]) => [
-      name,
-      effect<TestableApolloSubscription>({
-        name,
-        init,
-        onSet() {
-          this.render();
-        },
-      }),
-    ])
-));
 
 describe('[mixins] ApolloSubscriptionMixin', function describeApolloSubscriptionMixin() {
   describeSubscription({
@@ -122,36 +95,34 @@ export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeChe
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
-    assertType<DocumentNode>                          (this.subscription!);
+    assertType<C.DocumentNode>                          (this.subscription!);
     assertType<TypeCheckVars>                         (this.variables!);
-    assertType<FetchPolicy>                           (this.fetchPolicy!);
+    assertType<C.FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
     assertType<number>                                (this.pollInterval!);
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
-    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable!);
-    assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends TestableApolloSubscription<TDN> {
   typeCheck(): void {
     assertType<TypeCheckData>(this.data!);

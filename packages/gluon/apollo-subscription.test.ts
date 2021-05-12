@@ -1,16 +1,6 @@
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
-  Observable,
-  OperationVariables,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import { html } from 'lit-html';
 
@@ -27,7 +17,7 @@ import {
 
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloSubscription<D = unknown, V = OperationVariables>
+class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloSubscription<D, V>
   implements SubscriptionElement<D, V> {
   declare shadowRoot: ShadowRoot;
@@ -42,11 +32,14 @@ class TestableApolloSubscription<D = unknown, V = OperationVariables>
     `;
   }
 
-  $(id: keyof TestableApolloSubscription<D, V>) { return this.shadowRoot.getElementById(id); }
+  $(id: keyof TestableApolloSubscription<D, V>) {
+    return this.shadowRoot.getElementById(id as string);
+  }
 
   stringify(x: unknown) { return JSON.stringify(x, null, 2); }
 
   async hasRendered(): Promise<TestableApolloSubscription<D, V>> {
+    await this.updateComplete;
     await nextFrame();
     await this.render();
     return this;
@@ -70,38 +63,36 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
-    assertType<DocumentNode>                          (this.subscription!);
+    assertType<C.DocumentNode>                          (this.subscription!);
     assertType<TypeCheckVars>                         (this.variables!);
-    assertType<FetchPolicy>                           (this.fetchPolicy!);
-    assertType<ErrorPolicy>                           (this.errorPolicy!);
+    assertType<C.FetchPolicy>                           (this.fetchPolicy!);
+    assertType<C.ErrorPolicy>                           (this.errorPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
     assertType<number>                                (this.pollInterval!);
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
-    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable!);
-    assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloSubscription<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);

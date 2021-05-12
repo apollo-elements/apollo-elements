@@ -35,7 +35,7 @@ export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControl
   skip?: boolean;
   onData?: (detail: {
     client: ApolloClient<NormalizedCacheObject>;
-    subscriptionData: { data?: Data<D> | null; loading: boolean; error: null; };
+    subscriptionData: { data: Data<D> | null; loading: boolean; error: null; };
   }) => void;
   onComplete?: () => void;
   onError?: (error: ApolloError) => void;
@@ -50,7 +50,11 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
 
   declare options: ApolloSubscriptionControllerOptions<D, V>;
 
-  get subscription(): ComponentDocument<D> | null { return this.document; }
+  #hasDisconnected = false;
+
+  #lastSubscriptionDocument?: DocumentNode;
+
+  get subscription(): ComponentDocument<D> | null { return this.document ?? null; }
 
   set subscription(document: ComponentDocument<D> | null) { this.document = document; }
 
@@ -64,8 +68,17 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
   }
 
   hostConnected(): void {
-    this.documentChanged(this.subscription ?? null);
-    super.hostConnected?.();
+    super.hostConnected();
+    if (this.#hasDisconnected && this.observableSubscription)
+      this.subscribe();
+    else
+      this.documentChanged(this.subscription);
+  }
+
+  hostDisconnected(): void {
+    this.cancel();
+    this.#hasDisconnected = true;
+    super.hostDisconnected();
   }
 
   /**
@@ -78,6 +91,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     return (
       !this.options.noAutoSubscribe &&
       !!this.client &&
+      (!this.observable || !!this.options.shouldResubscribe) &&
       !!(options?.query ?? this.subscription)
     );
   }
@@ -96,15 +110,17 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     if ((this.observable && !shouldResubscribe) || skip)
       return;
 
+    const query = params?.subscription ?? this.subscription! as DocumentNode;
+    this.#lastSubscriptionDocument = query;
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      query: this.subscription! as DocumentNode,
       variables: this.variables,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
       ...rest,
+      query,
     });
   }
 
@@ -153,10 +169,15 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     }
   }
 
-  protected documentChanged(document?: ComponentDocument<D> | null): void {
+  protected documentChanged(doc?: ComponentDocument<D> | null): void {
+    const query = doc ?? undefined;
+    if (doc === this.#lastSubscriptionDocument)
+      return;
     this.cancel();
-    const query = document ?? undefined;
-    if (this.canSubscribe({ query }) && (this.options.shouldSubscribe?.({ query }) ?? true))
+    if (
+      this.canSubscribe({ query }) &&
+      (this.options.shouldSubscribe?.({ query }) ?? true)
+    )
       this.subscribe();
   }
 

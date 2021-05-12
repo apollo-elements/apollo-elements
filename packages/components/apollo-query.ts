@@ -4,11 +4,13 @@ import type * as I from '@apollo-elements/interfaces';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
-import { ApolloElement, controlled } from './apollo-element';
+import { ApolloElement } from './apollo-element';
 
 import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
 import { NetworkStatus } from '@apollo/client/core';
+
+import { controlled } from '@apollo-elements/core/decorators';
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 

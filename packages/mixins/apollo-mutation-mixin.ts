@@ -7,7 +7,7 @@ import type * as I from '@apollo-elements/interfaces';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { controlled } from './controller-host-mixin';
+import { controlled } from '@apollo-elements/core/decorators';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
@@ -20,17 +20,17 @@ declare global {
   }
 }
 
-type MixinInstance = {
+type MixinInstance<B extends I.Constructor> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
-    I.ApolloMutationInterface<D, V> & ReactiveControllerHost;
+    I.ApolloMutationInterface<D, V> & ReactiveControllerHost & InstanceType<B>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
 
-function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinInstance {
+function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstance<B> {
   class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-    extends ApolloElementMixin(base)
+    extends ApolloElementMixin(base)<D, V>
     implements I.ApolloMutationInterface<D, V> {
     static documentType = 'mutation' as const;
 
@@ -44,8 +44,8 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinIns
 
     controller = new ApolloMutationController<D, V>(this, null, {
       update: this.updater,
-      onCompleted: data => this.onCompleted?.(data),
-      onError: error => this.onError?.(error ?? null),
+      onCompleted: data => this.onCompleted?.(data!),
+      onError: error => this.onError?.(error!),
     });
 
     @controlled({ readonly: true }) readonly called = false;
@@ -105,7 +105,7 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinIns
     }
   }
 
-  return ApolloMutationElement;
+  return ApolloMutationElement as MixinInstance<B>;
 }
 
 /**

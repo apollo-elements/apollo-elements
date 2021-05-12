@@ -1,4 +1,4 @@
-import type { ApolloElementElement, Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import { gql } from '@apollo/client/core';
 
@@ -11,12 +11,17 @@ const SELECTORS = {
   VAR: 'script[type="application/json"]' as 'script',
 };
 
+export declare class GQLScriptChild<
+  D extends I.MaybeTDN = I.MaybeTDN,
+  V = I.MaybeVariables<D>
+> extends I.ApolloElementElement<D, V> {
+  getDOMGraphQLDocument(): this['document'];
+  getDOMVariables(): this['variables'];
+}
+
 function GraphQLScriptChildMixinImplementation<
-  B extends Constructor<HTMLElement & ApolloElementElement<any, any>>
->(superclass: B): B & Constructor<{
-  getDOMGraphQLDocument(): InstanceType<B>['document'];
-  getDOMVariables(): InstanceType<B>['variables'];
-}> {
+  B extends I.Constructor<I.ApolloElementElement<any, any>>
+>(superclass: B): B & I.Constructor<GQLScriptChild> {
   class GraphQLScriptChild extends superclass {
     declare _documentSetByJS: boolean;
 

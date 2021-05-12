@@ -9,18 +9,13 @@ import { NetworkStatus } from '@apollo/client/core';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { controlled } from './controller-host-mixin';
+import { controlled } from '@apollo-elements/core/decorators';
 
 import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
-type P<T extends ApolloQueryController, K extends keyof T> =
-  T[K] extends (...args: any[]) => unknown
-  ? Parameters<T[K]>
-  : never
-
-type R<T extends ApolloQueryController, K extends keyof T> =
-  T[K] extends (...args: any[]) => unknown
-  ? ReturnType<T[K]>
+type P<T extends I.ApolloQueryElement<any, any>, K extends keyof T['controller']> =
+  T['controller'][K] extends (...args: any[]) => unknown
+  ? Parameters<T['controller'][K]>
   : never
 
 type ApolloQueryResultEvent<TData = unknown> =
@@ -32,14 +27,14 @@ declare global {
   }
 }
 
-type MixinInstance = {
+type MixinInstance<B> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>(...a: any[]):
     I.ApolloQueryInterface<D, V> & ReactiveControllerHost;
   documentType: 'query',
 }
 
-function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInstance & B {
+function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInstance<B> {
   class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
     extends ApolloElementMixin(superclass)<D, V>
     implements Omit<I.ApolloQueryInterface<D, V>, 'shouldSubscribe'> {
@@ -56,6 +51,7 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
     }
 
     controller = new ApolloQueryController<D, V>(this, null, {
+      shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
       onData: data => this.onData?.(data),
       onError: error => this.onError?.(error),
     });
@@ -85,9 +81,9 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
 
     @controlled({ path: 'options' }) fetchPolicy?: C.WatchQueryFetchPolicy;
 
-    @controlled({ path: 'options' }) partialRefetch = false;
+    @controlled({ path: 'options' }) partialRefetch?: boolean;
 
-    @controlled({ path: 'options' }) refetchQueries: I.RefetchQueriesType<D> | null = null;
+    @controlled({ path: 'options' }) refetchQueries?: I.RefetchQueriesType<D> | null;
 
     @controlled({ path: 'options' }) returnPartialData?: boolean;
 
@@ -99,15 +95,16 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
         else
           this.removeAttribute('next-fetch-policy');
       },
-    }) nextFetchPolicy?: C.WatchQueryFetchPolicy =
-      this.getAttribute('next-fetch-policy') as C.WatchQueryFetchPolicy ?? null;
+    })
+    nextFetchPolicy?: C.WatchQueryFetchPolicy;
 
     @controlled({
       path: 'options',
       onSet(this: ApolloQueryElement, value: ApolloQueryElement['noAutoSubscribe']) {
         this.toggleAttribute('no-auto-subscribe', !!value);
       },
-    }) noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
+    })
+    noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
 
     @controlled({ path: 'options' }) notifyOnNetworkStatusChange?: boolean;
 
@@ -127,7 +124,7 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
 
       switch (name) {
         case 'next-fetch-policy':
-          if (this.nextFetchPolicy != newVal)
+          if (this.nextFetchPolicy != newVal) // eslint-disable-line eqeqeq
             this.nextFetchPolicy = newVal as C.WatchQueryFetchPolicy;
           break;
         case 'no-auto-subscribe':
@@ -182,10 +179,8 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
     /**
      * Executes a Query once and updates the component with the result
      */
-    executeQuery(
-      params?: Partial<C.QueryOptions<I.Variables<D, V>, I.Data<D>>>
-    ): Promise<C.ApolloQueryResult<I.Data<D>>> {
-      return this.controller.executeQuery(params);
+    async executeQuery(...p: P<this, 'executeQuery'>): Promise<C.ApolloQueryResult<I.Data<D>>> {
+      return this.controller.executeQuery(...p);
     }
 
     /**
@@ -198,10 +193,8 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
      *
      * The optional `variables` parameter is an optional new variables object.
      */
-    async fetchMore(
-      params?: Partial<I.FetchMoreParams<D, V>>
-    ): Promise<C.ApolloQueryResult<I.Data<D>>> {
-      return this.controller.fetchMore(params);
+    async fetchMore(...p: P<this, 'fetchMore'>): Promise<C.ApolloQueryResult<I.Data<D>>> {
+      return this.controller.fetchMore(...p);
     }
   }
 
