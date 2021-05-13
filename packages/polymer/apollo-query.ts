@@ -1,5 +1,4 @@
-import type { OperationVariables } from '@apollo/client/core';
-import type { ApolloQueryInterface, Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './apollo-element';
@@ -34,10 +33,10 @@ import { notify } from './notify-decorator';
  * @fires 'loading-changed'
  * @fires 'network-status-changed'
  */
-export class PolymerApolloQuery<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V>
-  implements ApolloQueryInterface<D, V> {
-  @notify networkStatus: NetworkStatus = NetworkStatus.ready;
+export class PolymerApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloQueryMixin(PolymerApolloElement as I.Constructor<PolymerApolloElement>)<D, V>
+  implements I.ApolloQueryInterface<D, V> {
+  @notify() networkStatus: NetworkStatus = NetworkStatus.ready;
 }
 
 customElements.define('apollo-query', PolymerApolloQuery);

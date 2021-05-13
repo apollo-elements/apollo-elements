@@ -1,4 +1,6 @@
+import type { CustomElement } from '@apollo-elements/interfaces';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { p } from './decorators';
 
 import type {
   ApolloClient,
@@ -6,6 +8,7 @@ import type {
   ApolloQueryResult,
   NormalizedCacheObject,
 } from '@apollo/client/core';
+
 
 import type {
   ComponentDocument,
@@ -15,9 +18,15 @@ import type {
   Variables,
 } from '@apollo-elements/interfaces';
 
-export type ApolloControllerHost = HTMLElement & ReactiveControllerHost;
-
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
+
+export interface ApolloControllerHost extends ReactiveControllerHost, CustomElement {
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  requestUpdate(name?: string, value?: unknown): void;
+  controller?: ApolloController;
+  /** @protected */ [p]?: Map<string, unknown>;
+}
 
 export interface ApolloControllerOptions<D, V> {
   client?: ApolloClient<NormalizedCacheObject>;
@@ -75,13 +84,12 @@ implements ReactiveController {
     } else {
       this.#document = document;
       this.options[update]?.({ document });
-      if (!this.initializing)
-        this.documentChanged?.(document);/* c8 ignore next */
+      this.documentChanged?.(document);/* c8 ignore next */
     }
   }
 
   get variables(): Variables<D, V> | null {
-    return this.options.variables ?? null;
+    return this.options?.variables ?? null;
   }
 
   set variables(variables: Variables<D, V> | null) {
@@ -92,8 +100,7 @@ implements ReactiveController {
     else
       this.options.variables = variables;
     this.options[update]?.({ variables });
-    if (!this.initializing)
-      this.variablesChanged?.(variables);/* c8 ignore next */
+    this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
   protected abstract documentChanged?(document?: ComponentDocument<D>|null): void
@@ -117,6 +124,8 @@ implements ReactiveController {
   }
 
   [update](properties?: Record<string, unknown>): void {
+    for (const [key, val] of Object.entries(properties ?? {}))
+      (this.host as ApolloControllerHost).requestUpdate(key, val);
     this.host.requestUpdate();
     this.options[update]?.(properties);
   }
