@@ -1,5 +1,4 @@
-import type { OperationVariables } from '@apollo/client/core';
-import type { ApolloMutationInterface, Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './apollo-element';
 import { notify } from './notify-decorator';
@@ -32,10 +31,10 @@ import { notify } from './notify-decorator';
  * @fires 'loading-changed'
  * @fires 'called-changed'
  */
-export class PolymerApolloMutation<D = unknown, V = OperationVariables>
-  extends ApolloMutationMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V>
-  implements ApolloMutationInterface<D, V> {
-  @notify called = false;
+export class PolymerApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloMutationMixin(PolymerApolloElement as I.Constructor<PolymerApolloElement>)<D, V>
+  implements I.ApolloMutationInterface<D, V> {
+  @notify() called = false;
 }
 
 customElements.define('apollo-mutation', PolymerApolloMutation);

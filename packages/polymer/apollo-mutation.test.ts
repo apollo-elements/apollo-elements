@@ -1,3 +1,5 @@
+import type * as I from '@apollo-elements/interfaces';
+
 import type {
   ApolloClient,
   DocumentNode,
@@ -10,7 +12,7 @@ import type {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
+import { aTimeout, fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 
 import { gql } from '@apollo/client/core';
 
@@ -35,10 +37,11 @@ import './apollo-mutation';
 import { PolymerApolloMutation } from './apollo-mutation';
 
 import { PolymerElement, html } from '@polymer/polymer';
+import { flush } from '@polymer/polymer/lib/utils/flush';
 
 import NullableParamMutation from '@apollo-elements/test/graphql/NullableParam.mutation.graphql';
 
-class TestableApolloMutation<D, V>
+class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends PolymerApolloMutation<D, V>
   implements MutationElement<D, V> {
   declare shadowRoot: ShadowRoot;
@@ -55,33 +58,40 @@ class TestableApolloMutation<D, V>
     return template;
   }
 
-  $(id: keyof TestableApolloMutation<D, V>) { return this.shadowRoot.getElementById(id); }
+  $(id: keyof TestableApolloMutation<D, V>) { return this.shadowRoot.getElementById(id as string); }
+
+  observed: Array<keyof TestableApolloMutation<D, V>> = [
+    'called',
+    'data',
+    'error',
+    'errors',
+    'loading',
+  ]
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.append(TestableApolloMutation.template.content.cloneNode(true));
-    this.addEventListener('called-changed', this.render);
-    this.addEventListener('data-changed', this.render);
-    this.addEventListener('error-changed', this.render);
-    this.addEventListener('errors-changed', this.render);
-    this.addEventListener('loading-changed', this.render);
   }
 
   render() {
-    this.$('called')!.textContent = this.stringify(this.called);
-    this.$('data')!.textContent = this.stringify(this.data);
-    this.$('error')!.textContent = this.stringify(this.error);
-    this.$('errors')!.textContent = this.stringify(this.errors);
-    this.$('loading')!.textContent = this.stringify(this.loading);
+    if (!this.shadowRoot) return;
+    for (const key of this.observed)
+      this.$(key)!.textContent = this.stringify(this[key]);
+  }
+
+  update() {
+    this.render();
   }
 
   stringify(x: unknown) {
     return JSON.stringify(x, null, 2);
   }
 
-  async hasRendered() {
+  async hasRendered(): Promise<this> {
+    await this.updateComplete;
     await nextFrame();
+    flush();
     return this;
   }
 }
@@ -134,14 +144,14 @@ describe('[polymer] <apollo-mutation>', function() {
     beforeEach(setupClient);
     afterEach(teardownClient);
 
-    let element: PolymerApolloMutation<unknown, unknown>;
+    let element: PolymerApolloMutation;
 
     beforeEach(async function setupElement() {
       element = await fixture(`<apollo-mutation></apollo-mutation>`);
     });
 
     it('notifies on data change', async function() {
-      const mutationStub = stub(element.client, 'mutate');
+      const mutationStub = stub(element.client!, 'mutate');
 
       mutationStub.resolves({ data: { messages: ['hi'] } });
 
@@ -197,10 +207,16 @@ describe('[polymer] <apollo-mutation>', function() {
       wrapper.$.button.click();
     });
 
-    beforeEach(nextFrame);
+    beforeEach(() => aTimeout(1000));
+
+    beforeEach(flush);
 
     it('binds data up into parent component', async function() {
-      expect(wrapper.shadowRoot.textContent).to.contain('🤡');
+      expect(wrapper).shadowDom.to.equal(`
+        <apollo-mutation id="mutation"></apollo-mutation>
+        <button id="button"></button>
+        <output>🤡</output>
+      `);
     });
   });
 });
@@ -212,7 +228,7 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);

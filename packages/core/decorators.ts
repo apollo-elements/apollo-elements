@@ -1,5 +1,14 @@
-import type { ReactiveControllerHost, ReactiveElement } from '@lit/reactive-element';
-import type { ApolloController, ApolloControllerOptions } from './apollo-controller';
+import type { ReactiveElement } from '@lit/reactive-element';
+import type {
+  ApolloController,
+  ApolloControllerHost,
+  ApolloControllerOptions,
+} from './apollo-controller';
+
+type O = ApolloControllerOptions<any, any>;
+
+/** Unique symbol for the initial props map */
+export const p = Symbol('initial props');
 
 export interface DefineOptions {
   path?: 'options',
@@ -7,19 +16,9 @@ export interface DefineOptions {
   onSet?(x: unknown): void,
 }
 
-/** Unique symbol for the initial props map */
-export const p = Symbol('initial props');
-
-declare class ApolloControllerHost {
-  controller: ApolloController<any, any>;
-  requestUpdate(): void
-  declare updateComplete: Promise<boolean>
-  /** @protected */ [p]?: Map<string, unknown>;
-}
-
-function defineOnReactiveElement<T extends HTMLElement & ApolloControllerHost>(
+function defineOnReactiveElement<T extends ReactiveElement & ApolloControllerHost>(
   proto: T,
-  name: keyof T,
+  name: string & keyof T,
   opts: DefineOptions
 ): void {
   defineOnHTMLElement(proto, name, {
@@ -39,10 +38,11 @@ function defineOnReactiveElement<T extends HTMLElement & ApolloControllerHost>(
 
 function defineOnHTMLElement<T extends HTMLElement & ApolloControllerHost>(
   proto: T,
-  name: keyof T,
+  name: string & keyof T,
   opts: DefineOptions
 ): void {
   Object.defineProperty(proto, name, {
+    configurable: true,
     get(this: T) {
       this[p] ??= new Map();
       if (opts.path) {
@@ -66,24 +66,29 @@ function defineOnHTMLElement<T extends HTMLElement & ApolloControllerHost>(
         (this[p] as Map<typeof name, unknown>).set(name, value);
       else {
         if (opts.path)
-          this.controller[opts.path][name as keyof ApolloControllerOptions<any, any>] = value;
+          this.controller[opts.path][name as keyof O] = value as O[keyof O];
         else
           this.controller[name as keyof ApolloController] = value;
         if (opts.onSet)
           opts.onSet.call(this, value);
       }
-      // @ts-expect-error: in the case of lit-element, it does
       this.requestUpdate?.(name, old);
     },
   });
 }
 
+function isReactiveElement(
+  proto: HTMLElement
+): proto is ReactiveElement {
+  return typeof (proto.constructor as typeof ReactiveElement).createProperty === 'function';
+}
+
 export function controlled(opts: DefineOptions = {}) {
-  return function<T extends ReactiveControllerHost & HTMLElement & ApolloControllerHost>(
+  return function<T extends ApolloControllerHost>(
     proto: T,
-    name: keyof T
+    name: string & keyof T
   ): void {
-    if (typeof (proto.constructor as typeof ReactiveElement).createProperty === 'function')
+    if (isReactiveElement(proto))
       defineOnReactiveElement(proto, name, opts);
     else
       defineOnHTMLElement(proto, name, opts);

@@ -96,54 +96,76 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         expect(element.updater, 'updater').to.be.undefined;
       });
 
-      it('caches observed properties', async function() {
-        const client = new ApolloClient({ cache: new InMemoryCache(), connectToDevTools: false });
-        element.client = client;
-        await element.hasRendered();
-        expect(element.client, 'client')
-          .to.equal(client)
-          .and
-          .to.equal(element.controller.client);
+      beforeEach(() => element.updateComplete);
 
-        element.client = null;
-        await element.hasRendered();
-        expect(element.client, 'client')
-          .to.be.null
-          .and
-          .to.equal(element.controller.client);
+      describe('setting observed properties', function() {
+        describe('client', function() {
+          const client = new ApolloClient({ cache: new InMemoryCache(), connectToDevTools: false });
+          it('renders', async function() {
+            element.client = client;
+            await element.hasRendered();
+            expect(element.client, 'client')
+              .to.equal(client)
+              .and
+              .to.equal(element.controller.client);
 
-        const data = { data: 'data' };
-        element.data = data;
-        expect(element.data, 'data')
-          .to.equal(data).and
-          .to.equal(element.controller.data);
+            element.client = null;
+            await element.hasRendered();
+            expect(element.client, 'null')
+              .to.be.null
+              .and
+              .to.equal(element.controller.client);
+          });
+        });
 
-        element.data = null;
-        expect(element.data, 'data')
-          .to.be.null.and
-          .to.equal(element.controller.data);
+        describe('data', function() {
+          const data = { data: 'data' };
+          it('renders', async function() {
+            element.data = data;
+            await element.hasRendered();
+            expect(element.data, 'data')
+              .to.equal(data).and
+              .to.equal(element.controller.data);
 
-        try {
-          element.error = new Error('error');
-          expect(element.error.message, 'error')
-            .to.equal('error').and
-            .to.equal(element.controller.error?.message);
-        } catch { null; }
+            element.data = null;
+            await element.hasRendered();
+            expect(element.data, 'null')
+              .to.be.null.and
+              .to.equal(element.controller.data);
+          });
+        });
 
-        element.error = null;
-        expect(element.error, 'error')
-          .to.be.null.and
-          .to.equal(element.controller.error);
+        describe('error', function() {
+          it('renders', async function() {
+            try {
+              element.error = new Error('error');
+              expect(element.error.message, 'error')
+                .to.equal('error').and
+                .to.equal(element.controller.error?.message);
+            } catch { null; }
+            element.error = null;
+            await element.hasRendered();
+            expect(element.error, 'null')
+              .to.be.null.and
+              .to.equal(element.controller.error);
+          });
+        });
 
-        element.loading = true;
-        expect(element.loading, 'loading')
-          .to.be.true.and
-          .to.equal(element.controller.loading);
+        describe('loading', function() {
+          it('renders', async function() {
+            element.loading = true;
+            await element.hasRendered();
+            expect(element.loading, 'true')
+              .to.be.true.and
+              .to.equal(element.controller.loading);
 
-        element.loading = false;
-        expect(element.loading, 'loading')
-          .to.be.false.and
-          .to.equal(element.controller.loading);
+            element.loading = false;
+            await element.hasRendered();
+            expect(element.loading, 'false')
+              .to.be.false.and
+              .to.equal(element.controller.loading);
+          });
+        });
       });
 
       describe('setting mutation with NoParam mutation', function() {
@@ -780,8 +802,13 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('renders error', function() {
-            expect(element.shadowRoot.getElementById('error')?.textContent)
-              .to.equal(element.stringify(error));
+            expect(element).shadowDom.to.equal(`
+              <output id="called">true</output>
+              <output id="data">null</output>
+              <output id="error">${element.stringify(error)}</output>
+              <output id="errors">[]</output>
+              <output id="loading">false</output>
+            `);
           });
         });
 

@@ -208,15 +208,13 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         expect(element.controller.error).to.equal(error);
       });
       it('as Error', async function() {
-        let error: Error;
         try {
-          throw new Error();
+          throw new Error('hi');
         } catch (err) {
-          error = err;
           element.error = err;
         }
         await element.updateComplete;
-        expect(element.controller.error).to.equal(error);
+        expect(element.controller.error?.message).to.equal('hi');
       });
       it('as null', async function() {
         const error = null;
