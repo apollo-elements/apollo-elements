@@ -1,4 +1,6 @@
-const INSTANCES = new WeakMap();
+import type { ApolloControllerHost, DefineOptions } from '@apollo-elements/core';
+
+import { controlled } from '@apollo-elements/core/decorators';
 
 const dash =
   (str: string): string =>
@@ -16,35 +18,17 @@ export class PolymerChangeEvent<T> extends CustomEvent<{ value: T }> {
 /**
  * Decorator to fire a Polymer-Library-style `*-changed` event;
  */
-export function notify<Class extends HTMLElement>(
-  target: Class,
-  key: keyof Class extends string ? keyof Class : never
-): void {
-  Object.defineProperty(target, key, {
-    enumerable: true,
-    configurable: true,
-
-    set<T extends Class[keyof Class]>(this: Class, init: T) {
-      if (!INSTANCES.get(this))
-        INSTANCES.set(this, {});
-
-      Object.defineProperty(this, key, {
-        enumerable: true,
-        configurable: true,
-
-        get(this: Class) {
-          return INSTANCES.get(this)[key];
-        },
-
-        set<T>(this: Class, value: T) {
-          INSTANCES.get(this)[key] = value;
-          this.dispatchEvent(new PolymerChangeEvent(key, value));
-        },
-      });
-
-      this[key as keyof Class] = init;
-
-      this.dispatchEvent(new PolymerChangeEvent(key, init));
-    },
-  });
+export function notify(opts: DefineOptions = {}) {
+  return function<T extends ApolloControllerHost>(
+    proto: T,
+    name: keyof T
+  ): void {
+    return controlled({
+      ...opts,
+      onSet(this: T, value: unknown) {
+        opts.onSet?.call?.(this, value);
+        this.dispatchEvent(new PolymerChangeEvent(name as string, value));
+      },
+    })(proto, name as string & keyof T);
+  };
 }

@@ -1,5 +1,6 @@
-import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
+import type { ReactiveController } from '@lit/reactive-element';
 import type { Constructor, CustomElement } from '@apollo-elements/interfaces';
+import type { ApolloControllerHost } from '@apollo-elements/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
@@ -9,13 +10,10 @@ const init = Symbol('ControllerHost initialized');
 
 function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
   superclass: T
-): T & Constructor<ReactiveControllerHost & {
-  connectedCallback(): void;
-  disconnectedCallback(): void;
-}> {
+): T & Constructor<ApolloControllerHost> {
   return class ControllerHost extends superclass {
     /** @protected */
-    declare [p]?: Map<keyof this, this[keyof this]>;
+    declare [p]?: Map<string, unknown>;
 
     #controllers = new Set<ReactiveController>();
 
@@ -38,7 +36,7 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
 
     private initProps() {
       this[p]!.forEach((val, key) => {
-        this[key] ??= val;
+        this[key as keyof this] ??= val as this[keyof this];
       });
     }
 
@@ -56,7 +54,7 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
         this.#controllers.delete(controller);
     }
 
-    requestUpdate(): void {
+    requestUpdate(name?: string, value?: unknown): void {
       if (!this[init]) return;
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.requestUpdate === 'function') return super.requestUpdate();

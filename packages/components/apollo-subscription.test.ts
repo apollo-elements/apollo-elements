@@ -470,6 +470,8 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
+    beforeEach(() => element.updateComplete);
+
     it('renders', function() {
       expect(element.$('#error')).to.be.ok;
       expect(element.$('#error')?.textContent).to.equal('error');

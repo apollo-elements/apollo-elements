@@ -7,9 +7,7 @@ import type {
 
 import type * as I from '@apollo-elements/interfaces';
 
-import type { ApolloController } from '@apollo-elements/core';
-
-import type { ReactiveControllerHost } from '@lit/reactive-element';
+import type { ApolloController, ApolloControllerHost } from '@apollo-elements/core';
 
 import { ControllerHostMixin } from './controller-host-mixin';
 
@@ -32,7 +30,7 @@ declare global {
 type MixinInstance<B extends I.Constructor> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
-    I.ApolloElementInterface<D, V> & ReactiveControllerHost;
+    I.ApolloElementInterface<D, V> & ApolloControllerHost;
   documentType: 'mutation'|'query'|'subscription';
   observedAttributes?: string[];
 }
