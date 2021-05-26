@@ -87,7 +87,13 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
     this.error = null;
     this.errors = [];
     this.data = null;
-    this[update]();
+    this[update]({
+      called: this.called,
+      data: this.data,
+      error: this.error,
+      errors: this.errors,
+      loading: this.loading,
+    });
 
     return this.client.mutate<Data<D>, Variables<D, V>>({
       // It's better to let Apollo client throw this error
@@ -139,7 +145,12 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
         this.errors = response.errors ?? [];
         this.options.onCompleted?.(this.data); /* c8 ignore next */
       }
-      this[update]();
+      this[update]({
+        data: this.data,
+        error: this.error,
+        errors: this.errors,
+        loading: this.loading,
+      });
     }
     return response;
   }
@@ -154,7 +165,11 @@ export class ApolloMutationController<D extends MaybeTDN = any, V = MaybeVariabl
       this.error = error;
     }
     this.options.onError?.(error);
-    this[update]();
+    this[update]({
+      data: this.data,
+      error: this.error,
+      loading: this.loading,
+    });
     throw error;
   }
 }

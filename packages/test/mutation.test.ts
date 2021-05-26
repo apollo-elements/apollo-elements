@@ -33,6 +33,7 @@ extends I.ApolloMutationElement<D, V> {
   shadowRoot: ShadowRoot;
   hasRendered(): Promise<this>;
   stringify(x: unknown): string;
+  $(id: string): HTMLElement|null;
 }
 
 export interface DescribeMutationComponentOptions<E extends MutationElement<any, any> = MutationElement<any, any>> {
@@ -123,15 +124,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           it('renders', async function() {
             element.data = data;
             await element.hasRendered();
+
             expect(element.data, 'data')
               .to.equal(data).and
               .to.equal(element.controller.data);
+            expect(element.$('data')).lightDom.to.equal('{\n  "data": "data"\n}');
 
             element.data = null;
             await element.hasRendered();
-            expect(element.data, 'null')
-              .to.be.null.and
+
+            expect(element.data, 'null').to.be.null.and
               .to.equal(element.controller.data);
+            expect(element.$('data')).lightDom.to.equal('null\n');
           });
         });
 
@@ -740,8 +744,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('sets loading', function() {
-            expect(loading).to.be.true;
-            expect(element.loading).to.be.false;
+            expect(loading, 'in flight').to.be.true;
+            expect(element.loading, 'after resolves').to.be.false;
           });
 
           it('sets data', function() {

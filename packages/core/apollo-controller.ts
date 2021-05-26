@@ -26,6 +26,8 @@ export interface ApolloControllerHost extends ReactiveControllerHost, CustomElem
   requestUpdate(name?: string, value?: unknown): void;
   controller?: ApolloController;
   /** @protected */ [p]?: Map<string, unknown>;
+  /** Call to notify the host of controller updates */
+  /** @protected */ [update]?(properties: Partial<Record<keyof this, this[keyof this]>>): void
 }
 
 export interface ApolloControllerOptions<D, V> {

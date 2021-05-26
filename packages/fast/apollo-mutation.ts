@@ -19,7 +19,7 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
   extends ApolloMutationMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
   implements I.ApolloMutationInterface<D, V> {
   /**
-   * Latest mutation data.
+   * @summary Latest mutation data.
    */
   declare data: I.Data<D> | null;
 
@@ -53,4 +53,22 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
   @attr({ mode: 'boolean', attribute: 'await-refetch-queries' }) awaitRefetchQueries?: boolean;
 
   @attr({ attribute: 'fetch-policy' }) fetchPolicy?: I.ApolloMutationInterface<D, V>['fetchPolicy'];
+
+  refetchQueriesChanged(): void {
+    if (!this.controller) return;
+    if (this.controller.options.refetchQueries !== this.refetchQueries)
+      this.controller.options.refetchQueries = this.refetchQueries;
+  }
+
+  awaitRefetchQueriesChanged(): void {
+    if (!this.controller) return;
+    if (this.controller.options.awaitRefetchQueries !== this.awaitRefetchQueries)
+      this.controller.options.awaitRefetchQueries = this.awaitRefetchQueries;
+  }
+
+  fetchPolicyChanged(): void {
+    if (!this.controller) return;
+    if (this.controller.options.fetchPolicy !== this.fetchPolicy)
+      this.controller.options.fetchPolicy = this.fetchPolicy;
+  }
 }
