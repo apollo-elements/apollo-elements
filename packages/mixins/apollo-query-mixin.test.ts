@@ -12,7 +12,7 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import { defineCE, expect, fixture } from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { assertType, isApolloError } from '@apollo-elements/test';
 
@@ -68,6 +68,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
 
   async hasRendered() {
     await this.updateComplete;
+    await nextFrame();
     return this;
   }
 }

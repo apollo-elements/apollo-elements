@@ -128,14 +128,14 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             expect(element.data, 'data')
               .to.equal(data).and
               .to.equal(element.controller.data);
-            expect(element.$('data')).lightDom.to.equal('{\n  "data": "data"\n}');
+            expect(element.shadowRoot.getElementById('data')).lightDom.to.equal('{\n  "data": "data"\n}');
 
             element.data = null;
             await element.hasRendered();
 
             expect(element.data, 'null').to.be.null.and
               .to.equal(element.controller.data);
-            expect(element.$('data')).lightDom.to.equal('null\n');
+            expect(element.shadowRoot.getElementById('data')).lightDom.to.equal('null\n');
           });
         });
 
