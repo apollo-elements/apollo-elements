@@ -9,6 +9,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
+import { update } from '@apollo-elements/core/apollo-controller';
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
 type ApolloMutationResultEvent<TData = unknown> =
@@ -43,6 +44,8 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstanc
     }
 
     controller = new ApolloMutationController<D, V>(this, null, {
+      [update]: (properties: Partial<Record<keyof this, this[keyof this]>>) =>
+        this[update]?.(properties),
       update: this.updater,
       onCompleted: data => this.onCompleted?.(data!),
       onError: error => this.onError?.(error!),

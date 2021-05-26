@@ -13,7 +13,7 @@ import type { ComponentDocument, Data, Variables, MaybeTDN, MaybeVariables } fro
 
 import type { ApolloElementInterface } from './apollo-element';
 
-import type { ApolloMutationController } from '@apollo-elements/core';
+import type { ApolloMutationController, update } from '@apollo-elements/core';
 
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
@@ -148,6 +148,12 @@ export declare class ApolloMutationInterface<D extends MaybeTDN = MaybeTDN, V = 
     public mutate(
       params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
     ): Promise<FetchResult<Data<D>>>;
+
+    /**
+     * @protected
+     * Call to notify the host of controller updates
+     */
+    [update]?(properties: Partial<Record<keyof this, this[keyof this]>>): void
 }
 
 export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
