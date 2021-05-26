@@ -153,7 +153,7 @@ export declare class ApolloMutationInterface<D extends MaybeTDN = MaybeTDN, V = 
      * @protected
      * Call to notify the host of controller updates
      */
-    [update]?(properties: Partial<Record<keyof this, this[keyof this]>>): void
+    [update]?(properties: Partial<this>): void
 }
 
 export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>

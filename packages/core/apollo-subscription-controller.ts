@@ -21,7 +21,7 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import { ApolloController, ApolloControllerOptions, update } from './apollo-controller';
+import { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
 import { bound } from '@apollo-elements/lib/bound';
 
@@ -140,7 +140,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     this.errors = errors;
     this.loading = loading;
     this.options.onData?.(detail);
-    this[update]({ data, error: undefined, errors, loading });
+    this.notify('data', 'error', 'errors', 'loading');
   }
 
   /**
@@ -150,7 +150,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     this.error = error;
     this.loading = false;
     this.options.onError?.(error); /* c8 ignore next */ // covered
-    this[update]({ error: this.error, loading: this.loading });
+    this.notify('error', 'loading');
   }
 
   /**
@@ -159,7 +159,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
   private onComplete(): void {
     this.options.onComplete?.(); /* c8 ignore next */ // covered
     this.endSubscription();
-    this[update]();
+    this.notify();
   }
 
   private endSubscription() {
@@ -205,7 +205,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     /* c8 ignore stop */
 
     this.loading = true;
-    this[update]({ loading: this.loading });
+    this.notify('loading');
 
     this.observableSubscription =
       this.observable?.subscribe({

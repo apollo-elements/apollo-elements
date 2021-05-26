@@ -32,7 +32,8 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
   @hosted() @attr({ mode: 'boolean' }) loading = false;
 
   /** @summary The Apollo Client instance */
-  @hosted() @observable client: C.ApolloClient<C.NormalizedCacheObject> | null = null;
+  @hosted() @observable
+  client: C.ApolloClient<C.NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
   /** @summary Latest Data. */
   @hosted() @observable data: I.Data<D>|null = null;
@@ -47,7 +48,7 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
     return DOM.nextUpdate().then(() => true);
   }
 
-  [update](properties: Partial<Record<keyof this, this[keyof this]>>): void {
+  [update](properties: Partial<this>): void {
     if (!properties) return;
     for (const [k, v] of Object.entries(properties) as I.Entries<this>)
       (this[k] !== v) && (this[k] = v);

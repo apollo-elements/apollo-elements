@@ -10,7 +10,7 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import type { Entries, GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type { SetupOptions } from '@apollo-elements/test';
 
@@ -39,14 +39,11 @@ const template = html<TestableApolloQuery>`
 `;
 
 @customElement({ name: 'fast-testable-apollo-query-class', template })
-class TestableApolloQuery<D = unknown, V = OperationVariables>
+class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloQuery<D, V>
   implements QueryElement<D, V> {
   async hasRendered() {
-    await nextFrame();
-    await DOM.nextUpdate();
-    await nextFrame();
-    await aTimeout(50);
+    await this.updateComplete;
     return this;
   }
 
@@ -74,7 +71,7 @@ describe('[fast] ApolloQuery', function() {
       const element = await fixture<T>(
         `<${name}${attrs}>${innerHTML}</${name}>`);
 
-      for (const [key, val] of Object.entries(opts?.properties ?? {}) as Entries<T>)
+      for (const [key, val] of Object.entries(opts?.properties ?? {}) as I.Entries<T>)
         element[key] = val;
 
       await DOM.nextUpdate();
@@ -87,7 +84,7 @@ describe('[fast] ApolloQuery', function() {
     it('is an instance of FASTElement', async function() {
       const name = 'is-an-instance-of-f-a-s-t-element';
       @customElement({ name })
-      class Test extends ApolloQuery<unknown, unknown> { }
+      class Test extends ApolloQuery { }
       const tag = unsafeStatic(name);
       const el = await fixture<Test>(h`<${tag}></${tag}>`);
       expect(el).to.be.an.instanceOf(FASTElement);
@@ -119,13 +116,13 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     assertType<number>                              (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloQueryInterface
     assertType<DocumentNode>                        (this.query!);

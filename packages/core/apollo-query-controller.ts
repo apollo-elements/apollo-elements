@@ -12,6 +12,7 @@ import type {
 import type {
   ApolloError,
   ApolloQueryResult,
+  DocumentNode,
   ObservableQuery,
   QueryOptions,
   SubscribeToMoreOptions,
@@ -21,7 +22,7 @@ import type {
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { ApolloController, ApolloControllerOptions, update } from './apollo-controller';
+import { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
 import { bound } from '@apollo-elements/lib/bound';
 
@@ -50,7 +51,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
 
   #hasDisconnected = false;
 
-  #lastQueryDocument?: DocumentNode
+  #lastQueryDocument?: DocumentNode;
 
   get query(): ComponentDocument<D> | null { return this.document; }
 
@@ -136,14 +137,14 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     this.networkStatus = result.networkStatus;
     this.partial = result.partial ?? false;
     this.options.onData?.(result.data);
-    this[update]();
+    this.notify('data', 'error', 'errors', 'loading', 'networkStatus', 'partial');
   }
 
   private nextError(error: ApolloError): void {
     this.error = error;
     this.loading = false;
     this.options.onError?.(error);
-    this[update]();
+    this.notify('error', 'loading');
   }
 
   protected documentChanged(doc?: ComponentDocument<D> | null): void {
@@ -212,10 +213,10 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       ...params,
     });
 
-    this.#lastQueryDocument = params?.query ?? this.query;
+    this.#lastQueryDocument = params?.query ?? this.query ?? undefined;
 
     this.loading = true;
-    this[update]();
+    this.notify('loading');
 
     return this.observableQuery?.subscribe({
       next: this.nextData.bind(this),
@@ -248,7 +249,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
         throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
 
       this.loading = true;
-      this[update]();
+      this.notify('loading');
 
       const result = await this.client.query({
         // It's better to let Apollo client throw this error
@@ -288,7 +289,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     params?: Partial<FetchMoreParams<D, V>>
   ): Promise<ApolloQueryResult<Data<D>>> {
     this.loading = true;
-    this[update]();
+    this.notify('loading');
 
     const options = {
       // It's better to let Apollo client throw this error
@@ -308,7 +309,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       variables: options.variables ?? undefined,
     }).then(x => {
       this.loading = false;
-      this[update]();
+      this.notify('loading');
       return x;
     });
   }

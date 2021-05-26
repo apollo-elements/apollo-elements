@@ -12,6 +12,7 @@ import { ApolloElementMixin } from './apollo-element-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
+import { update } from '@apollo-elements/core/apollo-controller';
 
 type P<T extends I.ApolloQueryElement<any, any>, K extends keyof T['controller']> =
   T['controller'][K] extends (...args: any[]) => unknown
@@ -51,6 +52,7 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
     }
 
     controller = new ApolloQueryController<D, V>(this, null, {
+      [update]: (properties: Partial<this>) => this[update]?.(properties),
       shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
       onData: data => this.onData?.(data),
       onError: error => this.onError?.(error),
