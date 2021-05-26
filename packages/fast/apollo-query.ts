@@ -1,14 +1,11 @@
-import type {
-  ApolloQueryInterface,
-  Constructor,
-  Data,
-  Variables,
-} from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import { ApolloElement } from './apollo-element';
-import { NetworkStatus, OperationVariables } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client/core';
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
+import { hosted } from './decorators';
 
 /**
  * `ApolloQuery`
@@ -20,26 +17,30 @@ import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D = unknown, V = OperationVariables>
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V>
-  implements ApolloQueryInterface<D, V> {
+export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloQueryMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
+  implements I.ApolloQueryInterface<D, V> {
   /**
    * Latest query data.
    */
-  declare data: Data<D> | null;
+  declare data: I.Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.
    *
    * @summary Query variables.
    */
-  declare variables: Variables<D, V> | null;
+  declare variables: I.Variables<D, V> | null;
 
-  @attr({ converter: nullableNumberConverter }) networkStatus: NetworkStatus = NetworkStatus.ready;
+  @hosted()
+  @attr({ converter: nullableNumberConverter })
+  networkStatus: NetworkStatus = NetworkStatus.ready;
 
-  @attr({ attribute: 'fetch-policy' }) fetchPolicy?: ApolloQueryInterface<D, V>['fetchPolicy'];
+  @hosted({ path: 'options' })
+  @attr({ attribute: 'fetch-policy' })
+  fetchPolicy?: I.ApolloQueryInterface<D, V>['fetchPolicy'];
 
-  @attr({
-    attribute: 'next-fetch-policy',
-  }) nextFetchPolicy?: ApolloQueryInterface<D, V>['nextFetchPolicy'];
+  @hosted({ path: 'options' })
+  @attr({ attribute: 'next-fetch-policy' })
+  nextFetchPolicy?: I.ApolloQueryInterface<D, V>['nextFetchPolicy'];
 }
