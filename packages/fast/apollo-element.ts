@@ -4,6 +4,8 @@ import type * as C from '@apollo/client/core';
 
 import type { ApolloController } from '@apollo-elements/core';
 
+import { hosted } from './decorators';
+
 import { update } from '@apollo-elements/core/apollo-controller';
 
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
@@ -27,37 +29,22 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
   @observable called = false;
 
   /** @summary Whether a request is in flight. */
-  @attr({ mode: 'boolean' }) loading = false;
+  @hosted() @attr({ mode: 'boolean' }) loading = false;
+
+  /** @summary The Apollo Client instance */
+  @hosted() @observable client: C.ApolloClient<C.NormalizedCacheObject> | null = null;
 
   /** @summary Latest Data. */
-  @observable data: I.Data<D>|null = null;
+  @hosted() @observable data: I.Data<D>|null = null;
 
   /** @summary Latest error */
-  @observable error: Error | C.ApolloError | null = null;
+  @hosted() @observable error: Error | C.ApolloError | null = null;
 
   /** @summary Latest errors */
-  @observable errors: readonly I.GraphQLError[] = [];
+  @hosted() @observable errors: readonly I.GraphQLError[] = [];
 
   get updateComplete(): Promise<boolean> {
     return DOM.nextUpdate().then(() => true);
-  }
-
-  dataChanged(): void {
-    if (!this.controller) return;
-    if (this.controller.data !== this.data)
-      this.controller.data = this.data;
-  }
-
-  errorChanged(): void {
-    if (!this.controller) return;
-    if (this.controller.error !== this.error)
-      this.controller.error = this.error as null;
-  }
-
-  loadingChanged(): void {
-    if (!this.controller) return;
-    if (this.controller.loading !== this.loading)
-      this.controller.loading = this.loading;
   }
 
   [update](properties: Partial<Record<keyof this, this[keyof this]>>): void {
