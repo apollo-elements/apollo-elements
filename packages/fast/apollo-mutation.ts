@@ -6,6 +6,8 @@ import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
+import { hosted } from './decorators';
+
 /**
  * `ApolloMutation`
  *
@@ -30,7 +32,9 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
    */
   declare variables: I.Variables<D, V> | null;
 
-  @attr({ mode: 'boolean' }) called = false;
+  @hosted()
+  @attr({ mode: 'boolean' })
+  called = false;
 
   /**
    * As an attribute, can be a string of comma-separated query names
@@ -39,6 +43,7 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
    * ```
    * As a property, you can pass any legal `refetchQueries` value.
    */
+  @hosted({ path: 'options' })
   @attr({
     mode: 'fromView',
     attribute: 'refetch-queries',
@@ -48,27 +53,14 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
         return typeof value !== 'string' ? value : splitCommasAndTrim(value);
       },
     },
-  }) refetchQueries: I.RefetchQueriesType<D> | null = null;
+  })
+  refetchQueries: I.RefetchQueriesType<D> | null = null;
 
-  @attr({ mode: 'boolean', attribute: 'await-refetch-queries' }) awaitRefetchQueries?: boolean;
+  @hosted({ path: 'options' })
+  @attr({ mode: 'boolean', attribute: 'await-refetch-queries' })
+  awaitRefetchQueries?: boolean;
 
-  @attr({ attribute: 'fetch-policy' }) fetchPolicy?: I.ApolloMutationInterface<D, V>['fetchPolicy'];
-
-  refetchQueriesChanged(): void {
-    if (!this.controller) return;
-    if (this.controller.options.refetchQueries !== this.refetchQueries)
-      this.controller.options.refetchQueries = this.refetchQueries;
-  }
-
-  awaitRefetchQueriesChanged(): void {
-    if (!this.controller) return;
-    if (this.controller.options.awaitRefetchQueries !== this.awaitRefetchQueries)
-      this.controller.options.awaitRefetchQueries = this.awaitRefetchQueries;
-  }
-
-  fetchPolicyChanged(): void {
-    if (!this.controller) return;
-    if (this.controller.options.fetchPolicy !== this.fetchPolicy)
-      this.controller.options.fetchPolicy = this.fetchPolicy;
-  }
+  @hosted({ path: 'options' })
+  @attr({ attribute: 'fetch-policy' })
+  fetchPolicy?: I.ApolloMutationInterface<D, V>['fetchPolicy'];
 }
