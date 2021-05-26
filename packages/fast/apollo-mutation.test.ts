@@ -67,7 +67,9 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
     return JSON.stringify(x, null, 2);
   }
 
-  $(id: string) { return this.shadowRoot.getElementById(id); }
+  $(id: string) {
+    return this.shadowRoot.getElementById(id);
+  }
 }
 
 describe('[fast] ApolloMutation', function describeApolloMutation() {

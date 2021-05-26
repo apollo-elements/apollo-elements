@@ -41,6 +41,14 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
   fetchPolicy?: I.ApolloQueryInterface<D, V>['fetchPolicy'];
 
   @hosted({ path: 'options' })
+  @attr({ attribute: 'error-policy' })
+  errorPolicy?: I.ApolloQueryInterface<D, V>['errorPolicy'];
+
+  @hosted({ path: 'options' })
   @attr({ attribute: 'next-fetch-policy' })
   nextFetchPolicy?: I.ApolloQueryInterface<D, V>['nextFetchPolicy'];
+
+  @hosted({ path: 'options' })
+  @attr({ attribute: 'no-auto-subscribe', mode: 'boolean' })
+  noAutoSubscribe: I.ApolloQueryInterface<D, V>['noAutoSubscribe'] = false;
 }

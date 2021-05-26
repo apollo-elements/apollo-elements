@@ -10,6 +10,7 @@ import { ApolloElementMixin } from './apollo-element-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
+import { update } from '@apollo-elements/core/apollo-controller';
 
 type P<T extends ApolloSubscriptionController<any, any>, K extends keyof T> =
   T[K] extends (...args: any[]) => unknown
@@ -65,6 +66,7 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinIns
     declare variables: I.Variables<D, V> | null;
 
     controller = new ApolloSubscriptionController<D, V>(this, null, {
+      [update]: (properties: Partial<this>) => this[update]?.(properties),
       shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
       onData: data => this.onSubscriptionData?.(data),
       onComplete: () => this.onSubscriptionComplete?.(),

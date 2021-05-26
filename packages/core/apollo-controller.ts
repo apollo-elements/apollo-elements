@@ -27,7 +27,7 @@ export interface ApolloControllerHost extends ReactiveControllerHost, CustomElem
   controller?: ApolloController;
   /** @protected */ [p]?: Map<string, unknown>;
   /** Call to notify the host of controller updates */
-  /** @protected */ [update]?(properties: Partial<Record<keyof this, this[keyof this]>>): void
+  /** @protected */ [update]?(properties: Partial<this>): void
 }
 
 export interface ApolloControllerOptions<D, V> {
@@ -61,7 +61,16 @@ implements ReactiveController {
 
   called = true;
 
-  client: ApolloClient<NormalizedCacheObject> | null = null;
+  #client: ApolloClient<NormalizedCacheObject> | null = null;
+
+  get client() {
+    return this.#client;
+  }
+
+  set client(v) {
+    this.#client = v;
+    this.notify('client');
+  }
 
   data: Data<D> | null = null;
 
@@ -105,9 +114,20 @@ implements ReactiveController {
     this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
+  private [update](properties?: Record<string, unknown>): void {
+    for (const [key, val] of Object.entries(properties ?? {}))
+      (this.host as ApolloControllerHost).requestUpdate(key, val);
+    this.host.requestUpdate();
+    this.options[update]?.(properties);
+  }
+
   protected abstract documentChanged?(document?: ComponentDocument<D>|null): void
 
   protected abstract variablesChanged?(variables?: Variables<D, V>|null): void
+
+  protected notify(...keys: (keyof this)[]): void {
+    this[update](Object.fromEntries(keys.map(x => [x, this[x]])));
+  }
 
   constructor(public host: ReactiveControllerHost, options?: ApolloControllerOptions<D, V>) {
     this.options = options ?? {};
@@ -123,13 +143,6 @@ implements ReactiveController {
   hostConnected(): void {
     const event = new ApolloControllerConnectedEvent(this);
     (this.host as unknown as EventTarget).dispatchEvent?.(event); /* c8 ignore next */
-  }
-
-  [update](properties?: Record<string, unknown>): void {
-    for (const [key, val] of Object.entries(properties ?? {}))
-      (this.host as ApolloControllerHost).requestUpdate(key, val);
-    this.host.requestUpdate();
-    this.options[update]?.(properties);
   }
 
   hostDisconnected(): void {

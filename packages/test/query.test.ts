@@ -1006,7 +1006,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.removeAttribute('no-auto-subscribe');
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(waitForRender(() => element));
 
           it('unsets noAutoSubscribe property', function() {
             expect(element.noAutoSubscribe).to.be.false;
@@ -1228,7 +1228,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element!.refetch({ nullable: 'new args' });
           });
 
-          beforeEach(nextFrame);
+          beforeEach(waitForRender(() => element));
 
           it('updates data', function() {
             expect(element.data?.nullableParam?.nullable).to.equal('new args');

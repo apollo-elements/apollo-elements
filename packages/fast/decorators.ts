@@ -1,7 +1,7 @@
 export function hosted(opts?: { path?: string }) {
   return function(target: any, key: string) {
-    Object.defineProperty(target, key, {
-      [`${key}Changed`]() {
+    Object.defineProperty(target, `${key}Changed`, {
+      value() {
         if (!this.controller) return;
         if (opts?.path) {
           if (this.controller[opts?.path][key] !== this[key])
