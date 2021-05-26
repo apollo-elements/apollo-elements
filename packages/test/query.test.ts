@@ -1229,6 +1229,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           beforeEach(waitForRender(() => element));
+          beforeEach(nextFrame);
 
           it('updates data', function() {
             expect(element.data?.nullableParam?.nullable).to.equal('new args');
