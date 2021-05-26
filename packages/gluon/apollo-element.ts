@@ -24,6 +24,10 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
   declare data: I.Data<D> | null;
 
   update(): void {
-    this.render();
+    this.render({ sync: true });
+  }
+
+  get updateComplete(): Promise<boolean> {
+    return this.render().then(() => true);
   }
 }

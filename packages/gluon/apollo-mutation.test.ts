@@ -45,6 +45,8 @@ class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements Mutat
     await nextFrame();
     return this;
   }
+
+  $(id: string) { return this.shadowRoot.getElementById(id); }
 }
 
 describe('[gluon] ApolloMutation', function() {

@@ -22,7 +22,7 @@ import { html } from 'lit-html';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { defineCE, aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { spy } from 'sinon';
 
@@ -54,6 +54,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   async hasRendered(): Promise<TestableApolloQuery<D, V>> {
     await nextFrame();
     await this.render();
+    await aTimeout(50);
     return this;
   }
 }
