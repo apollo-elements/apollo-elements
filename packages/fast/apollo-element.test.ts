@@ -6,7 +6,8 @@ import type {
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import { expect, fixture, unsafeStatic, html as fhtml } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
+import { unsafeStatic, html as h } from 'lit/static-html.js';
 
 import { ApolloElement } from './apollo-element';
 import { customElement, DOM, FASTElement, html } from '@microsoft/fast-element';
@@ -25,7 +26,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     }
 
     const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const element = await fixture<Test>(h`<${tag}></${tag}>`);
     expect(element).to.be.an.instanceOf(FASTElement);
   });
 
@@ -37,7 +38,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
       declare shadowRoot: ShadowRoot;
     }
     const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag}></${tag}>`);
+    const element = await fixture<Test>(h`<${tag}></${tag}>`);
     // @ts-expect-error: just testing assignment and rendering
     element.client = { test: 'CLIENT' };
     await DOM.nextUpdate();
@@ -49,7 +50,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     const template = html<Test>`${x => x.error ?? 'FAIL'}`;
     @customElement({ name, template }) class Test extends ApolloElement { }
     const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .error="${'error'}"></${tag}>`);
+    const element = await fixture<Test>(h`<${tag} .error="${'error'}"></${tag}>`);
     expect(element).shadowDom.to.equal('error');
   });
 
@@ -58,7 +59,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     const template = html`${x => x.loading ?? false ? 'LOADING' : 'FAIL'}`;
     @customElement({ name, template }) class Test extends ApolloElement { }
     const tag = unsafeStatic(name);
-    const element = await fixture<Test>(fhtml`<${tag} .loading="${true}"></${tag}>`);
+    const element = await fixture<Test>(h`<${tag} .loading="${true}"></${tag}>`);
     expect(element).shadowDom.to.equal('LOADING');
   });
 });
