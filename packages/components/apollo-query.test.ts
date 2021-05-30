@@ -202,7 +202,8 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
 
     describe('setting error', function() {
       it('as ApolloError', async function() {
-        const error = new C.ApolloError({ });
+        let error: C.ApolloError;
+        try { throw new C.ApolloError({}); } catch (e) { error = e; }
         element.error = error;
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);

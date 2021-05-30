@@ -1,3 +1,4 @@
+import type * as C from '@apollo/client/core';
 import type { CustomElement } from '@apollo-elements/interfaces';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { p } from './decorators';
@@ -33,6 +34,8 @@ export interface ApolloControllerHost extends ReactiveControllerHost, CustomElem
 export interface ApolloControllerOptions<D, V> {
   client?: ApolloClient<NormalizedCacheObject>;
   variables?: Variables<D, V>;
+  context?: any;
+  errorPolicy?: C.ErrorPolicy;
   /** Host update callback */
   [update]?(properties?: Record<string, unknown>): void;
 }
@@ -63,11 +66,11 @@ implements ReactiveController {
 
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
-  get client() {
+  get client(): ApolloClient<NormalizedCacheObject> | null {
     return this.#client;
   }
 
-  set client(v) {
+  set client(v: ApolloClient<NormalizedCacheObject> | null) {
     this.#client = v;
     this.notify('client');
   }
@@ -115,8 +118,6 @@ implements ReactiveController {
   }
 
   private [update](properties?: Record<string, unknown>): void {
-    for (const [key, val] of Object.entries(properties ?? {}))
-      (this.host as ApolloControllerHost).requestUpdate(key, val);
     this.host.requestUpdate();
     this.options[update]?.(properties);
   }
