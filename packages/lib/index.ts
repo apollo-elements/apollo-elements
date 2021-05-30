@@ -5,6 +5,4 @@ export { createApolloClient } from './create-apollo-client';
 
 export { booleanAttr, effect, gqlDocument, writable } from './descriptors';
 
-export { applyPrototype } from './prototypes';
-
 export { bound } from './bound';
