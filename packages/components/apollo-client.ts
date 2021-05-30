@@ -10,7 +10,8 @@ import type {
   ApolloQueryElement,
   ApolloSubscriptionElement,
 } from '@apollo-elements/interfaces';
-import type { ApolloElementEvent } from '@apollo-elements/mixins/apollo-element-mixin';
+
+import type { ApolloElementEvent } from '@apollo-elements/core';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-client': ApolloClientElement; } }
 
