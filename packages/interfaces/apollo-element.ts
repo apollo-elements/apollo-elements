@@ -81,6 +81,8 @@ export declare class ApolloElementInterface<
 
   connectedCallback(): void;
 
+  disconnectedCallback(): void;
+
   /**
    * Lifecycle callback that reacts to changes in the GraphQL document
    */
