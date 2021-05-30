@@ -1,13 +1,4 @@
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
-  OperationVariables,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
 import {
   NonNullableParamMutationData,
@@ -21,12 +12,7 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type * as I from '@apollo-elements/interfaces';
 
-import {
-  aTimeout,
-  expect,
-  fixture,
-  nextFrame,
-} from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 
@@ -35,6 +21,8 @@ import {
   teardownClient,
   isApolloError,
   assertType,
+  stringify,
+  TestableElement,
 } from '@apollo-elements/test';
 
 import { ApolloMutation } from './apollo-mutation';
@@ -43,11 +31,11 @@ import { FASTElement, html, customElement, DOM } from '@microsoft/fast-element';
 import { MutationElement, describeMutation } from '@apollo-elements/test/mutation.test';
 
 const template = html<TestableApolloMutation>`
-  <output id="called">${x => x.stringify(x.called)}</output>
-  <output id="data">${x => x.stringify(x.data)}</output>
-  <output id="error">${x => x.stringify(x.error)}</output>
-  <output id="errors">${x => x.stringify(x.errors)}</output>
-  <output id="loading">${x => x.stringify(x.loading)}</output>
+  <output id="called">${x => stringify(x.called)}</output>
+  <output id="data">${x => stringify(x.data)}</output>
+  <output id="error">${x => stringify(x.error)}</output>
+  <output id="errors">${x => stringify(x.errors)}</output>
+  <output id="loading">${x => stringify(x.loading)}</output>
 `;
 
 let counter = -1;
@@ -55,7 +43,7 @@ let counter = -1;
 @customElement({ name: 'fast-testable-apollo-mutation-class', template })
 class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloMutation<D, V>
-  implements MutationElement<D, V> {
+  implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   async hasRendered(): Promise<this> {
@@ -63,12 +51,8 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
     return this;
   }
 
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
-  }
-
-  $(id: string) {
-    return this.shadowRoot.getElementById(id);
+  $(id: keyof this) {
+    return this.shadowRoot.getElementById(id as string);
   }
 }
 
@@ -212,35 +196,35 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
-    assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<readonly I.GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>                 (this.context!);
+    assertType<boolean>                                 (this.loading);
+    assertType<C.DocumentNode>                          (this.document!);
+    assertType<Error>                                   (this.error!);
+    assertType<readonly I.GraphQLError[]>               (this.errors!);
+    assertType<TypeCheckData>                           (this.data!);
+    assertType<string>                                  (this.error.message);
+    assertType<'a'>                                     (this.data.a);
     // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
+    assertType<'a'>                                     (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>             (this.error.graphQLErrors);
 
     // ApolloMutationInterface
-    assertType<DocumentNode>                        (this.mutation!);
-    assertType<TypeCheckVars>                       (this.variables!);
-    assertType<boolean>                             (this.called);
-    assertType<boolean>                             (this.ignoreResults!);
-    assertType<boolean>                             (this.awaitRefetchQueries!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
-    assertType<string>                              (this.errorPolicy);
+    assertType<C.DocumentNode>                          (this.mutation!);
+    assertType<TypeCheckVars>                           (this.variables!);
+    assertType<boolean>                                 (this.called);
+    assertType<boolean>                                 (this.ignoreResults!);
+    assertType<boolean>                                 (this.awaitRefetchQueries!);
+    assertType<C.ErrorPolicy>                           (this.errorPolicy!);
+    assertType<string>                                  (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
-    assertType<number>                              (this.errorPolicy);
-    assertType<string>                              (this.fetchPolicy!);
-    assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
+    assertType<number>                                 (this.errorPolicy);
+    assertType<string>                                 (this.fetchPolicy!);
+    assertType<Extract<C.FetchPolicy, 'no-cache'>>     (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
-      assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+      assertType<(result: C.FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
       assertType<RefetchQueryDescription>(this.refetchQueries!);
 
@@ -253,7 +237,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloMutation<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
