@@ -28,12 +28,7 @@ declare class MixinInstance {
 function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(
   superclass: B
 ): MixinInstance & B {
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/37142
-  class TypePoliciesElement<D, V> extends superclass {
-    declare data: Data<D> | null;
-
-    declare variables: Variables<D, V> | null;
-
+  return class TypePoliciesElement extends superclass {
     /**
      * TypePolicies for the component
      */
@@ -44,9 +39,7 @@ function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(
       if (this.typePolicies)
         this.client?.cache.policies.addTypePolicies(this.typePolicies);
     }
-  }
-
-  return TypePoliciesElement;
+  };
 }
 
 /**

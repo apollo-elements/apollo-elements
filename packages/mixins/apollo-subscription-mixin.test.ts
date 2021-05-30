@@ -13,17 +13,18 @@ import {
   isApolloError,
   setupClient,
   teardownClient,
+  stringify,
+  TestableElement,
 } from '@apollo-elements/test';
 
 import {
   describeSubscription,
   setupSubscriptionClass,
-  SubscriptionElement,
 } from '@apollo-elements/test/subscription.test';
 
 class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V>
-  implements SubscriptionElement<D, V> {
+  implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   static get template() {
@@ -49,16 +50,12 @@ class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeV
   render() {
     this.observed?.forEach(property => {
       if (this.$(property))
-        this.$(property)!.textContent = this.stringify(this[property]);
+        this.$(property)!.textContent = stringify(this[property]);
     });
   }
 
   update() {
     this.render();
-  }
-
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
   }
 
   async hasRendered() {
@@ -95,29 +92,29 @@ export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeChe
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
-    assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<C.DocumentNode>                        (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<readonly I.GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>>  (this.client!);
+    assertType<Record<string, unknown>>                  (this.context!);
+    assertType<boolean>                                  (this.loading);
+    assertType<C.DocumentNode>                           (this.document!);
+    assertType<Error>                                    (this.error!);
+    assertType<readonly I.GraphQLError[]>                (this.errors!);
+    assertType<TypeCheckData>                            (this.data!);
+    assertType<string>                                   (this.error.message);
+    assertType<'a'>                                      (this.data.a);
     // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
+    assertType<'a'>                                      (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>              (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
     assertType<C.DocumentNode>                          (this.subscription!);
-    assertType<TypeCheckVars>                         (this.variables!);
+    assertType<TypeCheckVars>                           (this.variables!);
     assertType<C.FetchPolicy>                           (this.fetchPolicy!);
-    assertType<string>                                (this.fetchPolicy);
-    assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
-    assertType<number>                                (this.pollInterval!);
-    assertType<boolean>                               (this.skip);
-    assertType<boolean>                               (this.noAutoSubscribe);
+    assertType<string>                                  (this.fetchPolicy);
+    assertType<boolean>                                 (this.notifyOnNetworkStatusChange!);
+    assertType<number>                                  (this.pollInterval!);
+    assertType<boolean>                                 (this.skip);
+    assertType<boolean>                                 (this.noAutoSubscribe);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }

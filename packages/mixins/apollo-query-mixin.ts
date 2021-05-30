@@ -28,10 +28,10 @@ declare global {
   }
 }
 
-type MixinInstance<B> = B & {
+type MixinInstance<B extends I.Constructor> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>(...a: any[]):
-    I.ApolloQueryInterface<D, V> & ReactiveControllerHost;
+    I.ApolloQueryInterface<D, V> & ReactiveControllerHost & InstanceType<B>;
   documentType: 'query',
 }
 
@@ -200,7 +200,7 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
     }
   }
 
-  return ApolloQueryElement;
+  return ApolloQueryElement as MixinInstance<B>;
 }
 
 

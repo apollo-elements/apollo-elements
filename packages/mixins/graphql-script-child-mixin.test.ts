@@ -15,8 +15,10 @@ import {
   setupQueryClass,
   setupMutationClass,
   setupSubscriptionClass,
+  stringify,
   isApolloError,
-} from '@apollo-elements/test/helpers';
+  TestableElement,
+} from '@apollo-elements/test';
 
 import {
   ApolloElementElement,
@@ -61,15 +63,15 @@ describe('GraphQLScriptChildMixin', function() {
   afterEach(teardownClient);
 
   describe('on ApolloElement', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloElementElement) {
+    class Test extends GraphQLScriptChildMixin(ApolloElementElement) implements TestableElement {
       async hasRendered() { return this; }
-
-      stringify(x: unknown) { return JSON.stringify(x); }
 
       constructor() {
         super();
         this.attachShadow({ mode: 'open' }).append(template.content.cloneNode(true));
       }
+
+      $(id: keyof this) { return this.shadowRoot!.getElementById(id as string); }
     }
 
     let element: Test;
@@ -366,7 +368,7 @@ describe('GraphQLScriptChildMixin', function() {
   });
 
   describe('on ApolloQuery', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloQueryElement) {
+    class Test extends GraphQLScriptChildMixin(ApolloQueryElement) implements TestableElement {
       declare shadowRoot: ShadowRoot;
 
       constructor() {
@@ -378,7 +380,7 @@ describe('GraphQLScriptChildMixin', function() {
       render() {
         if (!this.shadowRoot) return;
         for (const x of Array.from(this.shadowRoot.querySelectorAll('[id]'), x => x.id))
-          this.shadowRoot.getElementById(x)!.textContent = this.stringify(this[x as keyof this]);
+          this.shadowRoot.getElementById(x)!.textContent = stringify(this[x as keyof this]);
       }
 
       update() {
@@ -390,8 +392,8 @@ describe('GraphQLScriptChildMixin', function() {
         return this;
       }
 
-      stringify(x: unknown) {
-        return JSON.stringify(x);
+      $(id: keyof this) {
+        return this.shadowRoot.getElementById(id as string);
       }
     }
 
@@ -479,7 +481,7 @@ describe('GraphQLScriptChildMixin', function() {
 
         it('sets the query property', function() {
           expect(element?.shadowRoot?.getElementById('data')?.textContent)
-            .to.equal(element?.stringify({
+            .to.equal(stringify({
               helloWorld: {
                 __typename: 'HelloWorld',
                 name: 'Chaver',
@@ -499,7 +501,7 @@ describe('GraphQLScriptChildMixin', function() {
 
           it('rerenders', function() {
             expect(element?.shadowRoot?.getElementById('data')?.textContent)
-              .to.equal(element!.stringify({
+              .to.equal(stringify({
                 helloWorld: {
                   __typename: 'HelloWorld',
                   name: 'Aleichem',
@@ -513,10 +515,10 @@ describe('GraphQLScriptChildMixin', function() {
   });
 
   describe('on ApolloMutation', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloMutationElement) {
-      async hasRendered() { return this; }
+    class Test extends GraphQLScriptChildMixin(ApolloMutationElement) implements TestableElement {
+      $(id: keyof this) { return this.shadowRoot!.getElementById(id as string); }
 
-      stringify(x: unknown) { return JSON.stringify(x); }
+      async hasRendered() { return this; }
     }
 
     const setupFunction = setupMutationClass(Test);
@@ -556,7 +558,7 @@ describe('GraphQLScriptChildMixin', function() {
         return this;
       }
 
-      stringify(x: unknown) { return JSON.stringify(x); }
+      $(id: keyof this) { return this.shadowRoot!.getElementById(id as string); }
     }
 
     const setupFunction = setupSubscriptionClass(Test);
