@@ -21,7 +21,7 @@ import { DOM, FASTElement, attr, observable } from '@microsoft/fast-element';
  * @element
  */
 export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElementMixin(FASTElement)<D, V> {
+  extends ApolloElementMixin(FASTElement as I.Constructor<FASTElement & HTMLElement>)<D, V> {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
