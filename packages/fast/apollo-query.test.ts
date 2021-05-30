@@ -1,25 +1,10 @@
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  WatchQueryFetchPolicy,
-  NormalizedCacheObject,
-  ObservableQuery,
-  OperationVariables,
-  TypedDocumentNode,
-  WatchQueryOptions,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
 
 import type { SetupOptions } from '@apollo-elements/test';
 
-import {
-  fixture,
-  expect,
-  nextFrame,
-  aTimeout,
-} from '@open-wc/testing';
+import { fixture, expect } from '@open-wc/testing';
 
 import { unsafeStatic, html as h } from 'lit/static-html.js';
 
@@ -27,28 +12,36 @@ import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client/core';
 
-import { assertType, isApolloError, setupSpies, setupStubs } from '@apollo-elements/test';
+import {
+  assertType,
+  isApolloError,
+  setupSpies,
+  setupStubs,
+  stringify,
+  TestableElement,
+} from '@apollo-elements/test';
+
 import { QueryElement, describeQuery } from '@apollo-elements/test/query.test';
 
 const template = html<TestableApolloQuery>`
-  <output id="data">${x => x.stringify(x.data)}</output>
-  <output id="error">${x => x.stringify(x.error)}</output>
-  <output id="errors">${x => x.stringify(x.errors)}</output>
-  <output id="loading">${x => x.stringify(x.loading)}</output>
-  <output id="networkStatus">${x => x.stringify(x.networkStatus)}</output>
+  <output id="data">${x => stringify(x.data)}</output>
+  <output id="error">${x => stringify(x.error)}</output>
+  <output id="errors">${x => stringify(x.errors)}</output>
+  <output id="loading">${x => stringify(x.loading)}</output>
+  <output id="networkStatus">${x => stringify(x.networkStatus)}</output>
 `;
 
 @customElement({ name: 'fast-testable-apollo-query-class', template })
 class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloQuery<D, V>
-  implements QueryElement<D, V> {
+  implements TestableElement {
   async hasRendered() {
     await this.updateComplete;
     return this;
   }
 
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
+  $(id: keyof this) {
+    return this.shadowRoot!.getElementById(id as string);
   }
 }
 
@@ -111,30 +104,30 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly I.GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     assertType<number>                              (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
 
     // ApolloQueryInterface
-    assertType<DocumentNode>                        (this.query!);
+    assertType<C.DocumentNode>                      (this.query!);
     assertType<TypeCheckVars>                       (this.variables!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
+    assertType<C.ErrorPolicy>                       (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
-    assertType<WatchQueryFetchPolicy>               (this.fetchPolicy!);
+    assertType<C.WatchQueryFetchPolicy>             (this.fetchPolicy!);
     assertType<string>                              (this.fetchPolicy);
     if (typeof this.nextFetchPolicy !== 'function')
-      assertType<WatchQueryFetchPolicy>             (this.nextFetchPolicy!);
+      assertType<C.WatchQueryFetchPolicy>           (this.nextFetchPolicy!);
     assertType<NetworkStatus>                       (this.networkStatus);
     assertType<number>                              (this.networkStatus);
     // @ts-expect-error: NetworkStatus is not a string
@@ -145,14 +138,13 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.partialRefetch!);
     assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<ObservableQuery<TypeCheckData, TypeCheckVars>>                     (this.observableQuery!);
-    assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
+    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloQuery<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
