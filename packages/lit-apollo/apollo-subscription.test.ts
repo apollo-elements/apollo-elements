@@ -1,18 +1,5 @@
-import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
-
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  FetchResult,
-  Observable,
-  OperationVariables,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as I from '@apollo-elements/interfaces';
+import type * as C from '@apollo/client/core';
 
 import { defineCE, expect, fixture } from '@open-wc/testing';
 
@@ -21,25 +8,25 @@ import { html as h, unsafeStatic } from 'lit/static-html.js';
 import { ApolloSubscription } from './apollo-subscription';
 import { LitElement, TemplateResult, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { assertType, isApolloError } from '@apollo-elements/test';
+import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 
 import {
   describeSubscription,
   setupSubscriptionClass,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D = unknown, V = OperationVariables>
+class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloSubscription<D, V>
-  implements SubscriptionElement<D, V> {
+  implements TestableElement {
   render(): TemplateResult {
     return html`
-      <output id="data">${this.stringify(this.data)}</output>
-      <output id="error">${this.stringify(this.error)}</output>
-      <output id="loading">${this.stringify(this.loading)}</output>
+      <output id="data">${stringify(this.data)}</output>
+      <output id="error">${stringify(this.error)}</output>
+      <output id="loading">${stringify(this.loading)}</output>
     `;
   }
 
-  stringify(x: unknown) { return JSON.stringify(x, null, 2); }
+  $(id: keyof this) { return this.shadowRoot?.getElementById(id as string) ?? null; }
 
   async hasRendered() {
     await this.updateComplete;
@@ -74,7 +61,7 @@ describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription(
     });
 
     describe('with a class that defines observedAttributes with decorator', function() {
-      class Test extends ApolloSubscription<unknown, unknown> {
+      class Test extends ApolloSubscription {
         @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
       }
 
@@ -106,38 +93,36 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
-    assertType<DocumentNode>                          (this.subscription!);
+    assertType<C.DocumentNode>                          (this.subscription!);
     assertType<TypeCheckVars>                         (this.variables!);
-    assertType<ErrorPolicy>                           (this.errorPolicy!);
-    assertType<FetchPolicy>                           (this.fetchPolicy!);
+    assertType<C.ErrorPolicy>                           (this.errorPolicy!);
+    assertType<C.FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                (this.fetchPolicy);
     assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
     assertType<number>                                (this.pollInterval!);
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
-    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable!);
-    assertType<ZenObservable.Subscription>            (this.observableSubscription!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloSubscription<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
