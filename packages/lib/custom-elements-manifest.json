@@ -69,14 +69,6 @@
             "name": "writable",
             "module": "./descriptors.js"
           }
-        },
-        {
-          "name": "applyPrototype",
-          "kind": "js",
-          "declaration": {
-            "name": "applyPrototype",
-            "module": "./prototypes.js"
-          }
         }
       ],
       "declarations": []
@@ -346,83 +338,6 @@
               "type": "PropertyDescriptor"
             }
           }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./prototypes.js",
-      "exports": [
-        {
-          "name": "applyPrototype",
-          "kind": "js",
-          "declaration": {
-            "name": "applyPrototype"
-          }
-        }
-      ],
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "applyPrototype",
-          "summary": "Applies a class' prototype to an element, mixing in the class' properties and methods to the element instance.",
-          "return": {
-            "description": "Combined `PropertyDescriptorMap` for the instance.",
-            "type": {
-              "type": "PropertyDescriptorMap"
-            }
-          },
-          "parameters": [
-            {
-              "name": "host",
-              "summary": "Element to apply prototype properties to.",
-              "optional": false,
-              "type": {
-                "type": "T extends ApolloElementElement",
-                "references": [
-                  {
-                    "name": "T",
-                    "start": 0,
-                    "end": 0
-                  },
-                  {
-                    "name": "ApolloElementElement",
-                    "start": 10,
-                    "end": 30
-                  }
-                ]
-              }
-            },
-            {
-              "name": "klass",
-              "summary": "Class whose prototype to apply to the host element.",
-              "optional": false,
-              "type": {
-                "type": "Constructor<T> | typeof ApolloElementElement",
-                "references": [
-                  { "name": "Constructor", "start": 0, "end": 11 },
-                  { "name": "T", "start": 13, "end": 13 },
-                  { "name": "ApolloElementElement", "start": 25, "end": 44 }
-                ]
-              }
-            },
-            {
-              "name": "type",
-              "summary": "Hint about what kind of class/host pair is in question.",
-              "type": {
-                "type": "'client' | 'subscription' | 'mutation' | 'query'"
-              }
-            },
-            {
-              "name": "effects",
-              "summary": "function that will run the first time this element has a class prototype mixed in via this helper.",
-              "optional": true,
-              "default": "() => void null",
-              "type": {
-                "type": "(host: T) => void"
-              }
-            }
-          ]
         }
       ]
     }
