@@ -8,17 +8,14 @@ import { gql, ApolloClient, InMemoryCache } from '@apollo/client/core';
 
 import { spy, SinonSpy } from 'sinon';
 import { makeClient, setupClient, teardownClient } from './client';
+import { restoreSpies, stringify, waitForRender } from './helpers';
+import { TestableElement } from './types';
 
 import * as S from './schema';
 
-import { restoreSpies, waitForRender } from './helpers';
-
 type SE<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> = I.ApolloSubscriptionElement<D, V>;
 
-export interface SubscriptionElement<D extends I.MaybeTDN = any, V = any> extends SE<D, V> {
-  hasRendered(): Promise<SubscriptionElement<D, V>>;
-  stringify(x: unknown): string;
-}
+export type SubscriptionElement<D extends I.MaybeTDN = any, V = any> = SE<D, V>
 
 export interface DescribeSubscriptionComponentOptions {
   /**
@@ -35,7 +32,7 @@ export interface DescribeSubscriptionComponentOptions {
    * The element must also implement a `stringify` method to perform that stringification,
    * as well as a `hasRendered` method which returns a promise that resolves when the element is finished rendering
    */
-  setupFunction: SetupFunction<SubscriptionElement>;
+  setupFunction: SetupFunction<SubscriptionElement & TestableElement>;
 
   /**
    * Optional: the class which setup function uses to generate the component.
@@ -51,7 +48,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
   describe(`ApolloSubscription interface`, function() {
     describe('when simply instantiating', function() {
-      let element: SubscriptionElement|undefined;
+      let element: SubscriptionElement & TestableElement|undefined;
 
       let spies: Record<keyof typeof element, SinonSpy>;
 
@@ -80,7 +77,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         expect(element?.noAutoSubscribe, 'noAutoSubscribe').to.be.false;
         expect(element?.shouldResubscribe, 'shouldResubscribe').to.be.false;
         expect(element?.skip, 'skip').to.be.false;
-        expect(element?.canAutoSubscribe, 'canAutoSubscribe').to.be.false;
 
         // options fields
         expect(element?.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
@@ -106,7 +102,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         element.data = { data: 'data' };
         expect(element?.data, 'data').to.deep.equal({ data: 'data' });
 
-        const err = new Error('HAH');
+        let err: Error;
+        try {
+          throw new Error('error');
+        } catch (e) { err = e; }
         element.error = err;
         expect(element?.error, 'error').to.equal(err);
 
@@ -133,7 +132,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         it('renders loading', async function() {
           expect(element?.shadowRoot?.getElementById('loading')?.textContent)
-            .to.equal(element?.stringify(true));
+            .to.equal(stringify(true));
         });
       });
 
@@ -191,7 +190,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
     });
 
     describe('with global client available', function() {
-      let element: SubscriptionElement | undefined;
+      let element: SubscriptionElement & TestableElement | undefined;
 
       let spies: Record<string|keyof SubscriptionElement, SinonSpy>;
 
@@ -209,7 +208,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       afterEach(restoreSpies(() => spies));
 
-      beforeEach(waitForRender(() => element!));
+      beforeEach(waitForRender(() => element));
 
       afterEach(function teardownElement() {
         element?.remove?.();
@@ -639,10 +638,6 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           expect(element?.client?.subscribe).to.have.been.called;
         });
 
-        it('can auto subscribe', function() {
-          expect(element?.canAutoSubscribe, 'canAutoSubscribe').to.be.true;
-        });
-
         describe('then setting NullableParam subscription', function() {
           beforeEach(function setNullableParamSubscription() {
             element!.subscription = S.NullableParamSubscription;
@@ -652,7 +647,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           beforeEach(() => aTimeout(50));
 
           it('renders second subscription', async function() {
-            const json = element!.stringify({
+            const json = stringify({
               'nullableParam': {
                 'nullable': 'Hello World',
                 '__typename': 'Nullable',
@@ -694,7 +689,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         beforeEach(() => aTimeout(50));
 
         it('renders data', function() {
-          const json = element!.stringify({
+          const json = stringify({
             'nullableParam': {
               'nullable': 'Hello World',
               '__typename': 'Nullable',
@@ -722,7 +717,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           it('renders the new data', function() {
             expect(element?.shadowRoot?.getElementById('data')?.textContent)
-              .to.equal(element?.stringify({
+              .to.equal(stringify({
                 nullableParam: {
                   nullable: 'qux',
                   __typename: 'Nullable',
@@ -738,7 +733,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           it('renders error', function() {
             expect(element?.shadowRoot?.getElementById('error')?.textContent)
-              .to.equal(element?.stringify(element?.error));
+              .to.equal(stringify(element?.error));
           });
         });
 
@@ -1027,7 +1022,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         describe('with onComplete, onError, and onSubscriptionData set as class methods', function() {
-          let element: SubscriptionElement | undefined;
+          let element: SubscriptionElement & TestableElement | undefined;
 
           let spies: Record<string|Exclude<keyof SubscriptionElement, symbol>, SinonSpy> | undefined;
 
@@ -1045,7 +1040,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
-            class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NonNullableParamSubscription>>) {
+            class Test extends (Klass as I.Constructor<TestableElement & SubscriptionElement<typeof S.NonNullableParamSubscription>>) {
               subscription = S.NonNullableParamSubscription;
 
               noAutoSubscribe = true;

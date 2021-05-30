@@ -2,13 +2,7 @@ import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
 import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
 
-import type {
-  ApolloElementInterface,
-  ApolloMutationInterface,
-  ApolloQueryInterface,
-  ApolloSubscriptionInterface,
-  Constructor,
-} from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type { Entries } from '@apollo-elements/interfaces';
 
@@ -79,27 +73,24 @@ export function restoreStubs(getStubs: () => (Record<string, SinonStub> | undefi
   };
 }
 
-export function waitForRender<T extends HTMLElement & {
-  updateComplete?: Promise<boolean>;
-  hasRendered:() => Promise<T>;
-}>(getElement: () => T|undefined) {
+export function waitForRender<T extends HTMLElement & TestableElement>(getElement: () => T|undefined) {
   return async function waitForRender(): Promise<void> {
     const element = getElement();
-    await element?.updateComplete ?? element?.hasRendered?.() ?? Promise.resolve();
+    await element?.hasRendered?.() ?? Promise.resolve();
   };
 }
 
-function setupClass<T extends TestableElement & ApolloElementInterface>(fopts?: {
-  beforeDefine?: <U extends T>(k: Constructor<U>, opts: SetupOptions<U>) => void,
+function setupClass<T extends TestableElement & I.ApolloElementInterface>(fopts?: {
+  beforeDefine?: <U extends T>(k: I.Constructor<U>, opts: SetupOptions<U>) => void,
   omitKeys?: string[],
 }) {
-  return function(Klass: Constructor<T>): SetupFunction<T> {
+  return function(Klass: I.Constructor<T>): SetupFunction<T> {
     return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-      class Test extends (Klass as Constructor<TestableElement & ApolloElementInterface>) { }
+      class Test extends (Klass as I.Constructor<TestableElement & I.ApolloElementInterface>) { }
 
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
-      fopts?.beforeDefine?.(Test as Constructor<B>, opts!);
+      fopts?.beforeDefine?.(Test as I.Constructor<B>, opts!);
 
       const tag = defineCE(Test);
 
@@ -122,9 +113,9 @@ function setupClass<T extends TestableElement & ApolloElementInterface>(fopts?: 
 }
 
 export const setupApolloElementClass = setupClass();
-export const setupQueryClass = setupClass<TestableElement & ApolloQueryInterface<any, any>>();
-export const setupSubscriptionClass = setupClass<TestableElement & ApolloSubscriptionInterface<any, any>>();
-export const setupMutationClass = setupClass<TestableElement & ApolloMutationInterface<any, any>>({
+export const setupQueryClass = setupClass<TestableElement & I.ApolloQueryInterface<any, any>>();
+export const setupSubscriptionClass = setupClass<TestableElement & I.ApolloSubscriptionInterface<any, any>>();
+export const setupMutationClass = setupClass<TestableElement & I.ApolloMutationInterface<any, any>>({
   omitKeys: ['onCompleted', 'onError'],
   beforeDefine(Test, opts) {
     // for mutation components, which don't fetch on connect,

@@ -1,5 +1,5 @@
-query NullableParamQuery($nullable: String) {
-  nullableParam(nullable: $nullable) {
+query NullableParamQuery($nullable: String, $delay: Int) {
+  nullableParam(nullable: $nullable, delay: $delay) {
     nullable
   }
 }
