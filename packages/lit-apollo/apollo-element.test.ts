@@ -1,10 +1,5 @@
-import type { GraphQLError } from '@apollo-elements/interfaces';
-import type {
-  ApolloClient,
-  ErrorPolicy,
-  DocumentNode,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+import type * as I from '@apollo-elements/interfaces';
+import type * as C from '@apollo/client/core';
 
 import { expect, defineCE, fixture } from '@open-wc/testing';
 
@@ -60,7 +55,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
     });
 
     describe('setting client', function() {
-      const mock = {} as ApolloClient<NormalizedCacheObject>;
+      const mock = {} as C.ApolloClient<C.NormalizedCacheObject>;
       beforeEach(function() {
         element.client = mock;
       });
@@ -141,14 +136,14 @@ class TypeCheck extends ApolloElement {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<string>                              (this.error.message);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
   }
