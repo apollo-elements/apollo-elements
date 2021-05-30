@@ -1,4 +1,4 @@
-import type { Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type { MutationElement } from '@apollo-elements/test/mutation.test';
 
@@ -6,15 +6,7 @@ import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOpti
 
 import type { GraphQLError } from '@apollo-elements/interfaces';
 
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
 import type {
   NoParamMutationData,
@@ -33,6 +25,7 @@ import {
   isApolloError,
   setupClient,
   teardownClient,
+  TestableElement,
 } from '@apollo-elements/test';
 
 import { ApolloMutation } from './apollo-mutation';
@@ -43,22 +36,24 @@ import { property } from 'lit/decorators.js';
 import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
 
 import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
+import { stringify } from '@apollo-elements/test';
 
-class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements MutationElement<D, V> {
+class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloMutation<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   render() {
     return html`
-      <output id="called">${this.stringify(this.called)}</output>
-      <output id="data">${this.stringify(this.data)}</output>
-      <output id="error">${this.stringify(this.error)}</output>
-      <output id="errors">${this.stringify(this.errors)}</output>
-      <output id="loading">${this.stringify(this.loading)}</output>
+      <output id="called">${stringify(this.called)}</output>
+      <output id="data">${stringify(this.data)}</output>
+      <output id="error">${stringify(this.error)}</output>
+      <output id="errors">${stringify(this.errors)}</output>
+      <output id="loading">${stringify(this.loading)}</output>
     `;
   }
 
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
+  $(id: keyof this): HTMLElement | null {
+    return this.shadowRoot.getElementById(id as string);
   }
 
   async hasRendered(): Promise<this> {
@@ -71,11 +66,11 @@ class TestableApolloMutation<D, V> extends ApolloMutation<D, V> implements Mutat
 describe('[lit-apollo] ApolloMutation', function() {
   describeMutation({
     class: TestableApolloMutation,
-    setupFunction: setupMutationClass(TestableApolloMutation as Constructor<MutationElement>),
+    setupFunction: setupMutationClass(TestableApolloMutation),
   });
 
   describe('subclassing', function() {
-    let spies: Record<string|keyof ApolloMutation<unknown, unknown>, SinonSpy>;
+    let spies: Record<string|keyof ApolloMutation, SinonSpy>;
 
     beforeEach(setupClient);
     afterEach(teardownClient);
@@ -92,7 +87,7 @@ describe('[lit-apollo] ApolloMutation', function() {
     });
 
     it('is an instance of LitElement', async function() {
-      class Test extends ApolloMutation<unknown, unknown> { }
+      class Test extends ApolloMutation { }
       const tag = defineCE(Test);
       const element = await fixture<Test>(`<${tag}></${tag}>`);
       expect(element).to.be.an.instanceOf(LitElement);
@@ -141,7 +136,7 @@ describe('[lit-apollo] ApolloMutation', function() {
     });
 
     describe('refetchQueries', function() {
-      class Test extends ApolloMutation<unknown, unknown> { }
+      class Test extends ApolloMutation { }
       let element: Test;
 
       describe(`when refetch-queries attribute set with comma-separated, badly-formatted query names`, function() {
@@ -173,7 +168,7 @@ describe('[lit-apollo] ApolloMutation', function() {
     });
 
     describe('with a class that defines observedAttributes with decorator', function() {
-      class Test extends ApolloMutation<unknown, unknown> {
+      class Test extends ApolloMutation {
         @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
       }
 
@@ -205,10 +200,10 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
@@ -220,20 +215,20 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloMutationInterface
-    assertType<DocumentNode>                        (this.mutation!);
+    assertType<C.DocumentNode>                      (this.mutation!);
     assertType<TypeCheckVars>                       (this.variables!);
     assertType<boolean>                             (this.called);
     assertType<boolean>                             (this.ignoreResults!);
     assertType<boolean>                             (this.awaitRefetchQueries!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
+    assertType<C.ErrorPolicy>                       (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
     assertType<string>                              (this.fetchPolicy!);
-    assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
+    assertType<Extract<C.FetchPolicy, 'no-cache'>>  (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
-      assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+      assertType<(result: C.FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
       assertType<RefetchQueryDescription>(this.refetchQueries!);
 
@@ -246,7 +241,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloMutation<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
