@@ -1,14 +1,5 @@
-import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
-
-import type {
-  ApolloClient,
-  DocumentNode,
-  FetchPolicy,
-  FetchResult,
-  Observable,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
+import type * as I from '@apollo-elements/interfaces';
 
 import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
@@ -21,16 +12,16 @@ import {
 
 import { PolymerApolloSubscription } from './apollo-subscription';
 import { GraphQLError } from 'graphql';
-import { assertType, isApolloError } from '@apollo-elements/test';
+import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 import { html, PolymerElement } from '@polymer/polymer';
 
 import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
 
 import './apollo-subscription';
 
-class TestableApolloSubscription<D, V>
+class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends PolymerApolloSubscription<D, V>
-  implements SubscriptionElement<D, V> {
+  implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   static get template() {
@@ -43,7 +34,7 @@ class TestableApolloSubscription<D, V>
     return template;
   }
 
-  $(id: keyof TestableApolloSubscription<D, V>) { return this.shadowRoot.getElementById(id); }
+  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
 
   constructor() {
     super();
@@ -55,13 +46,9 @@ class TestableApolloSubscription<D, V>
   }
 
   render() {
-    this.$('data')!.textContent = this.stringify(this.data);
-    this.$('error')!.textContent = this.stringify(this.error);
-    this.$('loading')!.textContent = this.stringify(this.loading);
-  }
-
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
+    this.$('data')!.textContent = stringify(this.data);
+    this.$('error')!.textContent = stringify(this.error);
+    this.$('loading')!.textContent = stringify(this.loading);
   }
 
   async hasRendered() {
@@ -79,7 +66,7 @@ describe('[polymer] <apollo-subscription>', function() {
   describe('notifying properties', function() {
     beforeEach(setupClient);
     afterEach(teardownClient);
-    let element: PolymerApolloSubscription<unknown, unknown>;
+    let element: PolymerApolloSubscription;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(`<apollo-subscription></apollo-subscription>`);
@@ -93,7 +80,10 @@ describe('[polymer] <apollo-subscription>', function() {
     });
 
     it('notifies on error change', async function() {
-      const err = new Error('error');
+      let err: Error;
+      try {
+        throw new Error('error');
+      } catch (e) { err = e; }
       setTimeout(() => element.error = err);
       const { detail: { value } } = await oneEvent(element, 'error-changed');
       expect(value).to.equal(err);
@@ -165,10 +155,10 @@ export class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeChec
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
@@ -180,22 +170,20 @@ export class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeChec
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
-    assertType<DocumentNode>                          (this.subscription!);
-    assertType<TypeCheckVars>                         (this.variables!);
-    assertType<FetchPolicy>                           (this.fetchPolicy!);
-    assertType<string>                                (this.fetchPolicy);
-    assertType<boolean>                               (this.notifyOnNetworkStatusChange!);
-    assertType<number>                                (this.pollInterval!);
-    assertType<boolean>                               (this.skip);
-    assertType<boolean>                               (this.noAutoSubscribe);
-    assertType<Observable<FetchResult<TypeCheckData>>>(this.observable!);
-    assertType<ZenObservable.Subscription>            (this.observableSubscription!);
+    assertType<C.DocumentNode>                      (this.subscription!);
+    assertType<TypeCheckVars>                       (this.variables!);
+    assertType<C.FetchPolicy>                       (this.fetchPolicy!);
+    assertType<string>                              (this.fetchPolicy);
+    assertType<boolean>                             (this.notifyOnNetworkStatusChange!);
+    assertType<number>                              (this.pollInterval!);
+    assertType<boolean>                             (this.skip);
+    assertType<boolean>                             (this.noAutoSubscribe);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends PolymerApolloSubscription<TDN> {
   typeCheck(): void {
     assertType<TypeCheckData>(this.data!);

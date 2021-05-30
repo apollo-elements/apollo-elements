@@ -1,5 +1,4 @@
-import type { OperationVariables } from '@apollo/client/core';
-import type { ApolloSubscriptionInterface, Constructor } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './apollo-element';
 
@@ -30,9 +29,9 @@ import { PolymerApolloElement } from './apollo-element';
  * @fires 'errors-changed'
  * @fires 'loading-changed'
  */
-export class PolymerApolloSubscription<D = unknown, V = OperationVariables>
-  extends ApolloSubscriptionMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V>
-  implements ApolloSubscriptionInterface<D, V> { }
+export class PolymerApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends ApolloSubscriptionMixin(PolymerApolloElement as I.Constructor<PolymerApolloElement>)<D, V>
+  implements I.ApolloSubscriptionInterface<D, V> { }
 
 customElements.define('apollo-subscription', PolymerApolloSubscription);
 
