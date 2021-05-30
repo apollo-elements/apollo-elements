@@ -1,4 +1,3 @@
-import type { ApolloElementInterface } from '@apollo-elements/interfaces';
 import type { SinonSpy, SinonStub } from 'sinon';
 
 export type Library =
@@ -9,12 +8,12 @@ export type Library =
   'mixins' |
   'polymer'
 
-export interface TestableElement extends ApolloElementInterface {
-  hasRendered(): Promise<this>
-  stringify(x: unknown): string;
+export interface TestableElement {
+  hasRendered(): Promise<this>;
+  $(id: keyof this): HTMLElement|null;
 }
 
-export interface SetupOptions<T extends TestableElement> {
+export interface SetupOptions<T extends HTMLElement> {
   attributes?: string;
   properties?: Partial<T>;
   innerHTML?: string;
@@ -28,6 +27,6 @@ export interface SetupResult<T extends TestableElement> {
   stubs: Record<keyof T|string, SinonStub>;
 }
 
-export type SetupFunction<Base extends TestableElement> =
+export type SetupFunction<Base extends HTMLElement & TestableElement> =
   <T extends Base>(options?: SetupOptions<T>) =>
     Promise<SetupResult<T>>;

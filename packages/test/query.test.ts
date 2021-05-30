@@ -2,6 +2,8 @@ import type * as I from '@apollo-elements/interfaces';
 
 import type { ApolloQueryController } from '@apollo-elements/core';
 
+import type { TestableElement } from './types';
+
 import * as S from './schema';
 
 import { SetupFunction } from './types';
@@ -28,16 +30,14 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 
 import { match, spy, SinonSpy } from 'sinon';
 import { client, makeClient, setupClient, teardownClient } from './client';
-import { isSubscription, restoreSpies, waitForRender } from './helpers';
+import { isSubscription, restoreSpies, stringify, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql';
 
 export interface QueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends I.ApolloQueryElement<D, V> {
   controller: ApolloQueryController<D, V>;
-  hasRendered(): Promise<QueryElement<D, V>>;
-  stringify(x: unknown): string;
 }
 
-export interface DescribeQueryComponentOptions {
+export interface DescribeQueryComponentOptions<E extends QueryElement = QueryElement<any, any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -54,13 +54,13 @@ export interface DescribeQueryComponentOptions {
    * The element must also implement a `stringify` method to perform that stringification,
    * as well as a `hasRendered` method which returns a promise that resolves when the element is finished rendering
    */
-  setupFunction: SetupFunction<QueryElement<any, any>>;
+  setupFunction: SetupFunction<E & TestableElement>;
 
   /**
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: I.Constructor<QueryElement>;
+  class?: I.Constructor<E & TestableElement>;
 }
 
 export { setupQueryClass } from './helpers';
@@ -69,7 +69,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
   const { setupFunction, class: Klass } = options;
   describe(`ApolloQuery interface`, function() {
     describe('when simply instantiating', function() {
-      let element: QueryElement;
+      let element: TestableElement & QueryElement;
 
       let spies: Record<string|keyof QueryElement, SinonSpy> | undefined;
 
@@ -186,7 +186,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           .and
           .to.equal(element.controller.data);
 
-        const err = new Error('HAH');
+          let err: Error;
+          try {
+            throw new Error('error');
+          } catch (e) { err = e; }
         element.error = err;
         await element.updateComplete;
         expect(element.error, 'error')
@@ -267,7 +270,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           };
         }
 
-        beforeEach(() => element.updateComplete);
+        beforeEach(waitForRender(() => element));
 
         it('renders', function() {
           if (!element)
@@ -284,16 +287,20 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot?.getElementById('data')?.textContent)
-              .to.equal(element.stringify({ data: 'data' }));
+              .to.equal(stringify({ data: 'data' }));
           });
         });
 
         describe('when error is set', function() {
-          beforeEach(setProperties({ error: new Error('oops') }));
+          let err: Error;
+          try {
+            throw new Error('error');
+          } catch (e) { err = e; }
+          beforeEach(setProperties({ error: err }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot?.getElementById('error')?.textContent)
-              .to.equal(element.stringify(new Error('oops')));
+              .to.equal(stringify(err));
           });
         });
 
@@ -302,7 +309,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(waitForRender(() => element));
           it('renders', function() {
             expect(element.shadowRoot?.getElementById('errors')?.textContent)
-              .to.equal(element.stringify([new GraphQLError('oops')]));
+              .to.equal(stringify([new GraphQLError('oops')]));
           });
         });
 
@@ -718,7 +725,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             beforeEach(() => spy(window.__APOLLO_CLIENT__!.link!, 'request'));
 
-            beforeEach(async function() {
+            beforeEach(function() {
               document.body.append(element!);
             });
 
@@ -726,7 +733,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             afterEach(() => (window.__APOLLO_CLIENT__?.link.request as SinonSpy).restore?.());
 
-            afterEach(() => element.remove());
+            afterEach(() => {
+              element.remove();
+            });
 
             it('requests', function() {
               expect(window.__APOLLO_CLIENT__?.link.request).to.have.been.calledOnce;
@@ -818,9 +827,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with no-auto-subscribe attribute set', function() {
-        let element: QueryElement;
+        let element: TestableElement & QueryElement;
 
         let spies: Record<string|keyof QueryElement, SinonSpy> | undefined;
+
+        beforeEach(function(this: Mocha.Context) {
+          if (this.SKIP_ATTRIBUTES) this.skip();
+        });
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
@@ -835,15 +848,15 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
         });
 
+        beforeEach(() => element.updateComplete);
+
         afterEach(restoreSpies(() => spies));
 
         afterEach(function teardownElement() {
-          element.remove();
+          element?.remove?.();
           // @ts-expect-error: fixture cleanup;
           element = undefined;
         });
-
-        beforeEach(() => element.updateComplete);
 
         it('has noAutoSubscribe property set', function() {
           expect(element.noAutoSubscribe).to.be.true;
@@ -1015,7 +1028,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NoParams query', function() {
-        let element: QueryElement<typeof S.NoParamQuery>;
+        let element: TestableElement & QueryElement<typeof S.NoParamQuery>;
 
         function resetPrivateWatchQuerySpy() {
           // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
@@ -1028,14 +1041,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         function setProperties(properties?: Partial<typeof element>) {
           return function() {
-            for (const [key, val] of Object.entries(properties ?? {}) as I.Entries<typeof element>)
-              // @ts-expect-error: maybe fix this later
+            for (const [key, val] of Object.entries(properties ?? {}) as I.Entries<typeof properties>)
               element[key] = val;
           };
         }
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction<QueryElement<typeof S.NoParamQuery>>({
+          ({ element } = await setupFunction({
             properties: {
               query: S.NoParamQuery,
             },
@@ -1204,10 +1216,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NullableParams query', function() {
-        let element: QueryElement<typeof S.NullableParamQuery>;
+        let element: TestableElement & QueryElement<typeof S.NullableParamQuery>;
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction<typeof element>({
+          ({ element } = await setupFunction({
             properties: {
               query: S.NullableParamQuery,
             },
@@ -1335,7 +1347,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         let element: QueryElement<typeof S.NonNullableParamQuery>;
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction<typeof element>({
+          ({ element } = await setupFunction({
             properties: {
               query: S.NonNullableParamQuery,
             },
