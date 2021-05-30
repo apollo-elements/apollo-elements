@@ -1,20 +1,9 @@
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  WatchQueryFetchPolicy,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-  WatchQueryOptions,
-} from '@apollo/client/core';
-
-import type { QueryElement } from '@apollo-elements/test/query.test';
-
+import type * as C from '@apollo/client/core';
 import type * as I from '@apollo-elements/interfaces';
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { assertType, isApolloError } from '@apollo-elements/test';
+import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 
 import { ApolloQuery } from './apollo-query';
 
@@ -30,28 +19,24 @@ import { GluonElement } from '@gluon/gluon';
 
 class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloQuery<D, V>
-  implements QueryElement<D, V> {
-  static get is() {
-    return 'apollo-query';
-  }
+  implements TestableElement {
+  static get is() { return 'apollo-query'; }
 
   declare shadowRoot: ShadowRoot;
 
   get template() {
     return html`
-      <output id="data">${this.stringify(this.data)}</output>
-      <output id="error">${this.stringify(this.error)}</output>
-      <output id="errors">${this.stringify(this.errors)}</output>
-      <output id="loading">${this.stringify(this.loading)}</output>
-      <output id="networkStatus">${this.stringify(this.networkStatus)}</output>
+      <output id="data">${stringify(this.data)}</output>
+      <output id="error">${stringify(this.error)}</output>
+      <output id="errors">${stringify(this.errors)}</output>
+      <output id="loading">${stringify(this.loading)}</output>
+      <output id="networkStatus">${stringify(this.networkStatus)}</output>
     `;
   }
 
-  $(id: keyof TestableApolloQuery<D, V>) { return this.shadowRoot.getElementById(id as string); }
+  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
 
-  stringify(x: unknown) { return JSON.stringify(x, null, 2); }
-
-  async hasRendered(): Promise<TestableApolloQuery<D, V>> {
+  async hasRendered(): Promise<this> {
     await nextFrame();
     await this.render();
     await aTimeout(50);
@@ -109,48 +94,48 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
-    assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<readonly I.GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
+    assertType<Record<string, unknown>>                 (this.context!);
+    assertType<boolean>                                 (this.loading);
+    assertType<C.DocumentNode>                          (this.document!);
+    assertType<Error>                                   (this.error!);
+    assertType<readonly I.GraphQLError[]>               (this.errors!);
+    assertType<TypeCheckData>                           (this.data!);
+    assertType<string>                                  (this.error.message);
+    assertType<'a'>                                     (this.data.a);
     // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
+    assertType<'a'>                                     (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>             (this.error.graphQLErrors);
 
     // ApolloQueryInterface
-    assertType<DocumentNode>                        (this.query!);
-    assertType<TypeCheckVars>                       (this.variables!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
-    assertType<string>                              (this.errorPolicy);
+    assertType<C.DocumentNode>                          (this.query!);
+    assertType<TypeCheckVars>                           (this.variables!);
+    assertType<C.ErrorPolicy>                           (this.errorPolicy!);
+    assertType<string>                                  (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
-    assertType<number>                              (this.errorPolicy);
-    assertType<WatchQueryFetchPolicy>               (this.fetchPolicy!);
-    assertType<string>                              (this.fetchPolicy);
+    assertType<number>                                  (this.errorPolicy);
+    assertType<C.WatchQueryFetchPolicy>                 (this.fetchPolicy!);
+    assertType<string>                                  (this.fetchPolicy);
     if (typeof this.nextFetchPolicy !== 'function')
-      assertType<WatchQueryFetchPolicy>             (this.nextFetchPolicy!);
-    assertType<NetworkStatus>                       (this.networkStatus);
-    assertType<number>                              (this.networkStatus);
+      assertType<C.WatchQueryFetchPolicy>               (this.nextFetchPolicy!);
+    assertType<NetworkStatus>                           (this.networkStatus);
+    assertType<number>                                  (this.networkStatus);
     // @ts-expect-error: NetworkStatus is not a string
-    assertType<string>                              (this.networkStatus);
-    assertType<boolean>                             (this.notifyOnNetworkStatusChange!);
-    assertType<number>                              (this.pollInterval!);
-    assertType<boolean>                             (this.partial!);
-    assertType<boolean>                             (this.partialRefetch!);
-    assertType<boolean>                             (this.returnPartialData!);
-    assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<Partial<WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
+    assertType<string>                                  (this.networkStatus);
+    assertType<boolean>                                 (this.notifyOnNetworkStatusChange!);
+    assertType<number>                                  (this.pollInterval!);
+    assertType<boolean>                                 (this.partial!);
+    assertType<boolean>                                 (this.partialRefetch!);
+    assertType<boolean>                                 (this.returnPartialData!);
+    assertType<boolean>                                 (this.noAutoSubscribe);
+    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloQuery<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
