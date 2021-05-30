@@ -1,4 +1,3 @@
-import type { QueryElement } from '@apollo-elements/test/query.test';
 import type { ApolloQueryInterface, GraphQLError } from '@apollo-elements/interfaces';
 import type { Constructor } from '@apollo-elements/interfaces';
 import type * as I from '@apollo-elements/interfaces';
@@ -14,7 +13,7 @@ import type {
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { assertType, isApolloError } from '@apollo-elements/test';
+import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
@@ -22,11 +21,13 @@ import { NetworkStatus } from '@apollo/client/core';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
 
-class XL extends HTMLElement {}
+class XL extends HTMLElement {
+  hi?: 'hi';
+}
 
 class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloQueryMixin(XL)<D, V>
-  implements QueryElement<D, V> {
+  implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   static get template() {
@@ -47,6 +48,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
 
   constructor() {
     super();
+    this.hi = 'hi';
     this.attachShadow({ mode: 'open' })
       .append(TestableApolloQuery.template.content.cloneNode(true));
   }
@@ -58,12 +60,8 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   render() {
     this.observed?.forEach(property => {
       if (this.$(property))
-        this.$(property)!.textContent = this.stringify(this[property]);
+        this.$(property)!.textContent = stringify(this[property]);
     });
-  }
-
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
   }
 
   async hasRendered() {

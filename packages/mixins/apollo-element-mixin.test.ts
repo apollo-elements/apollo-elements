@@ -1,4 +1,4 @@
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/interfaces';
 
 import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
 
@@ -113,7 +113,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
       }
     }
 
-    class Test extends ApolloElementMixin(Base)<any, any> {}
+    class Test extends ApolloElementMixin(Base as I.Constructor<Base>)<any, any> {}
 
     let element: Test;
 
@@ -172,7 +172,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
       }
     }
 
-    class Test extends ApolloElementMixin(Base)<any, any> {}
+    class Test extends ApolloElementMixin(Base as I.Constructor<Base>)<any, any> {}
 
     let element: Test;
 
@@ -285,10 +285,10 @@ class TypeCheck extends Test {
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<string>                              (this.error.message);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      (this.error.graphQLErrors);
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
   }

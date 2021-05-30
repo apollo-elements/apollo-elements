@@ -4,7 +4,7 @@ import type {
   Constructor,
 } from '@apollo-elements/interfaces';
 
-export function ApolloClientMixin<B extends Constructor<ApolloElementElement>>(
+export function ApolloClientMixin<B extends Constructor<ApolloElementElement<any, any>>>(
   client: ApolloClient<NormalizedCacheObject>,
   superclass: B
 ): B {

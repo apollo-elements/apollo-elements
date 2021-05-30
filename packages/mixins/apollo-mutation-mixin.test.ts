@@ -10,26 +10,28 @@ import type {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { GraphQLError, ApolloMutationInterface } from '@apollo-elements/interfaces';
+import type { GraphQLError } from '@apollo-elements/interfaces';
 import type * as I from '@apollo-elements/interfaces';
 
 import { expect, defineCE, fixture } from '@open-wc/testing';
 
-import { assertType } from '@apollo-elements/test';
+import { assertType, stringify, TestableElement } from '@apollo-elements/test';
 
 import { ApolloMutationMixin } from './apollo-mutation-mixin';
 import { isApolloError } from '@apollo/client/core';
 
 import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 
-class XL extends HTMLElement {}
+class XL extends HTMLElement {
+  hi?: 'hi';
+}
 
 /**
  * Testable Mixed-in Apollo Mutation class
  */
 class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloMutationMixin(XL)<D, V>
-  implements ApolloMutationInterface<D, V> {
+  implements TestableElement {
   declare shadowRoot: ShadowRoot;
   static get template() {
     const template = document.createElement('template');
@@ -49,6 +51,7 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
 
   constructor() {
     super();
+    this.hi = 'hi';
     this.attachShadow({ mode: 'open' })
       .append(TestableApolloMutation.template.content.cloneNode(true));
   }
@@ -60,12 +63,8 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
   render() {
     this.observed?.forEach(property => {
       if (this.$(property))
-        this.$(property)!.textContent = this.stringify(this[property]);
+        this.$(property)!.textContent = stringify(this[property]);
     });
-  }
-
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
   }
 
   async hasRendered() {
