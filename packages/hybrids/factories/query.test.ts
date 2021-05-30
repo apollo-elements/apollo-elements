@@ -1,19 +1,12 @@
-import type { SinonSpy, SinonStub } from 'sinon';
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
-import type { Entries } from '@apollo-elements/interfaces';
+import type { ApolloQueryController } from '@apollo-elements/core';
 
-import { assertType, SetupOptions, SetupResult } from '@apollo-elements/test';
+import * as S from '@apollo-elements/test';
 
-import { setupSpies, setupStubs, stringify } from '@apollo-elements/test';
+import { expect, fixture, nextFrame } from '@open-wc/testing';
+import { define, html } from 'hybrids';
+import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
-import { aTimeout } from '@open-wc/testing';
-
-import { define, html, Hybrids, RenderFunction } from 'hybrids';
-
-import { query, QueryHybridsFactoryOptions } from './query';
-
-import { QueryElement, describeQuery } from '@apollo-elements/test/query.test';
-import { __testing_escape_hatch__ } from '../helpers/accessors';
+import { query } from './query';
 
 let counter = 0;
 
@@ -23,87 +16,84 @@ function getTagName(): string {
   return tagName;
 }
 
-type TestableApolloQueryHybrid<T, U> = Hybrids<QueryElement<T, U> & {
-  stringify(x: unknown): string;
-  hasRendered(): Promise<QueryElement<T, U>>;
-  render?: RenderFunction<QueryElement<T, U>>;
-}>
+describe('[hybrids] query factory', function() {
+  describe('with global client', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
 
-const testQuery = <T, U>(
-  doc?: DocumentNode | TypedDocumentNode<T, U> | null,
-  opts?: QueryHybridsFactoryOptions<T, U>
-): TestableApolloQueryHybrid<T, U> => ({
-    ...query<T, U>(doc, opts),
-    stringify: () => stringify,
-    hasRendered: host => async () => {
-      await aTimeout(0);
-      host.render?.(host);
-      await aTimeout(0);
-      return host;
-    },
-  });
+    describe(`with NullableParamQuery controller at "query" key and "noAutoSubscribe" option`, function() {
+      interface H {
+        query: ApolloQueryController<typeof S.NullableParamQuery>
+      }
 
-describe('[hybrids] ApolloQuery', function() {
-  describeQuery({
-    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>): Promise<SetupResult<T>> {
-      const { attributes, properties, innerHTML = '' } = opts ?? {};
+      let element: H;
 
-      const tag = getTagName();
+      beforeEach(async function() {
+        const tag = getTagName();
 
-      define(tag, {
-        ...testQuery(),
-        render: host => html`
-          <output id="data">${host.stringify(host.data)}</output>
-          <output id="error">${host.stringify(host.error)}</output>
-          <output id="errors">${host.stringify(host.errors)}</output>
-          <output id="loading">${host.stringify(host.loading)}</output>
-          <output id="networkStatus">${host.stringify(host.networkStatus)}</output>
-        `,
+        define(tag, {
+          query: query(S.NullableParamQuery, { noAutoSubscribe: true }),
+          render: (host: HTMLElement & H) => {
+            return html`
+              <output id="called">${stringify(host.query.called)}</output>
+              <output id="data">${stringify(host.query.data)}</output>
+              <output id="error">${stringify(host.query.error)}</output>
+              <output id="errors">${stringify(host.query.errors)}</output>
+              <output id="loading">${stringify(host.query.loading)}</output>
+            `;
+          },
+        });
+
+        element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
       });
 
-      const attrs = attributes ? ` ${attributes}` : '';
+      it('creates the controller', function() {
+        expect(element.query.subscribe, 'subscribe').to.be.a.instanceof(Function);
+        expect(element.query.query, 'query').to.eq(S.NullableParamQuery);
+        expect(element.query.host, 'host').to.be.ok.and.to.not.equal(element);
+        expect(
+          element.query.host.requestUpdate,
+          'host.requestUpdate'
+        ).to.be.an.instanceof(Function);
+      });
 
-      const template = document.createElement('template');
+      describe('calling executeQuery', function() {
+        let p: Promise<any>;
+        beforeEach(function() {
+          p = element.query.executeQuery({ variables: { delay: 100 } });
+        });
 
-      template.innerHTML = `<${tag}${attrs}></${tag}>`;
+        beforeEach(nextFrame);
+        it('sets loading state', function() {
+          expect(element.query.loading).to.be.true;
+        });
+        it('renders loading state', function() {
+          expect(element).shadowDom.to.equal(`
+            <output id="called">true</output>
+            <output id="data">null</output>
+            <output id="error">null</output>
+            <output id="errors">[]</output>
+            <output id="loading">true</output>
+          `);
+        });
 
-      const [element] =
-        (template.content.cloneNode(true) as DocumentFragment)
-          .children as HTMLCollectionOf<T>;
-
-      let spies!: Record<string|keyof T, SinonSpy>;
-      let stubs!: Record<string|keyof T, SinonStub>;
-
-      // @ts-expect-error: just for tests
-      element[__testing_escape_hatch__] = function(el: T) {
-        spies = setupSpies(opts?.spy, el);
-        stubs = setupStubs(opts?.stub, el);
-      };
-
-      document.body.append(element);
-
-      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
-        element[key] = val;
-
-      element.innerHTML = innerHTML;
-
-      return { element, spies, stubs };
-    },
+        describe('when query resolves', function() {
+          beforeEach(() => p);
+          beforeEach(nextFrame);
+          it('resolves query data', function() {
+            expect(element.query.data).to.not.be.null;
+          });
+          it('renders query data', function() {
+            expect(element).shadowDom.to.equal(`
+              <output id="called">true</output>
+              <output id="data">{"nullableParam":{"__typename":"Nullable","nullable":"Hello World"}}</output>
+              <output id="error">null</output>
+              <output id="errors">[]</output>
+              <output id="loading">false</output>
+            `);
+          });
+        });
+      });
+    });
   });
 });
-
-function TDNTypeCheck() {
-  type TypeCheckData = { a: 'a'; b: number };
-  type TypeCheckVars = { c: 'c'; d: number };
-
-  const TDN = {} as TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-
-  const Class = define('typed-query', {
-    ...query(TDN),
-  });
-
-  const instance = new Class();
-
-  assertType<TypeCheckData>(instance.data!);
-  assertType<TypeCheckVars>(instance.variables!);
-}

@@ -1,19 +1,12 @@
-import type { SinonSpy, SinonStub } from 'sinon';
+import type { ApolloSubscriptionController } from '@apollo-elements/core';
 
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
+import * as S from '@apollo-elements/test';
 
-import type { SetupOptions, SetupResult } from '@apollo-elements/test';
+import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
+import { define, html } from 'hybrids';
+import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
-import { assertType, setupSpies, setupStubs, stringify } from '@apollo-elements/test';
-import { define, html, RenderFunction, Hybrids } from 'hybrids';
-import { nextFrame, aTimeout } from '@open-wc/testing';
-import { subscription, SubscriptionHybridsFactoryOptions } from './subscription';
-import { __testing_escape_hatch__ } from '../helpers/accessors';
-
-import {
-  SubscriptionElement,
-  describeSubscription,
-} from '@apollo-elements/test/subscription.test';
+import { subscription } from './subscription';
 
 let counter = 0;
 
@@ -23,89 +16,82 @@ function getTagName(): string {
   return tagName;
 }
 
-type TestableApolloSubscriptionHybrid<T, U> = Hybrids<SubscriptionElement<T, U> & {
-  stringify(x: unknown): string;
-  hasRendered(): Promise<SubscriptionElement<T, U>>;
-  render?: RenderFunction<SubscriptionElement<T, U>>;
-}>
+describe('[hybrids] subscription factory', function() {
+  describe('with global client', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
 
-const testSubscription = <T, U>(
-  doc?: DocumentNode | TypedDocumentNode<T, U> | null,
-  opts?: SubscriptionHybridsFactoryOptions<T, U>
-): TestableApolloSubscriptionHybrid<T, U> => ({
-    ...subscription<T, U>(doc, opts),
-    stringify: () => stringify,
-    hasRendered: host => async () => {
-      await aTimeout(0);
-      host.render?.(host);
-      await aTimeout(0);
-      return host;
-    },
-  });
+    describe(`with NullableParamSubscription controller at "subscription" key and "noAutoSubscribe" option`, function() {
+      interface H {
+        subscription: ApolloSubscriptionController<typeof S.NullableParamSubscription>
+      }
 
-describe('[hybrids] ApolloSubscription', function() {
-  describeSubscription({
-    async setupFunction<T extends SubscriptionElement>(
-      opts?: SetupOptions<T>
-    ): Promise<SetupResult<T>> {
-      const { attributes, properties, innerHTML = '' } = opts ?? {};
+      let element: HTMLElement & H;
 
-      const tag = getTagName();
+      beforeEach(async function() {
+        const tag = getTagName();
 
-      define<SubscriptionElement>(tag, {
-        ...testSubscription(),
-        render: ({ data, error, loading, stringify }) => html`
-          <output id="data">${stringify(data)}</output>
-          <output id="error">${stringify(error)}</output>
-          <output id="loading">${stringify(loading)}</output>
-        `,
+        define(tag, {
+          subscription: subscription(S.NullableParamSubscription, { noAutoSubscribe: true }),
+          render: (host: typeof element) => {
+            return html`
+              <output id="data">${stringify(host.subscription.data)}</output>
+              <output id="error">${stringify(host.subscription.error)}</output>
+              <output id="loading">${stringify(host.subscription.loading)}</output>
+            `;
+          },
+        });
+
+        element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
       });
 
-      const attrs = attributes ? ` ${attributes}` : '';
+      it('creates the controller', function() {
+        expect(element.subscription.subscribe, 'subscribe').to.be.a.instanceof(Function);
+        expect(
+          element.subscription.subscription,
+          'subscription'
+        ).to.eq(S.NullableParamSubscription);
+        expect(element.subscription.host, 'host').to.be.ok.and.to.not.equal(element);
+        expect(
+          element.subscription.host.requestUpdate,
+          'host.requestUpdate'
+        ).to.be.an.instanceof(Function);
+      });
 
-      const template = document.createElement('template');
+      describe('calling subscribe', function() {
+        beforeEach(function() {
+          element.subscription.subscribe();
+        });
 
-      template.innerHTML = `<${tag}${attrs}>${innerHTML}</${tag}>`;
+        beforeEach(nextFrame);
 
-      const [element] =
-        (template.content.cloneNode(true) as DocumentFragment)
-          .children as HTMLCollectionOf<T>;
+        it('sets loading state', function() {
+          expect(element.subscription.loading).to.be.true;
+        });
 
-      let spies: Record<string | keyof T, SinonSpy> = {} as Record<string | keyof T, SinonSpy>;
+        it('renders loading state', function() {
+          expect(element).shadowDom.to.equal(`
+            <output id="data">null</output>
+            <output id="error">null</output>
+            <output id="loading">true</output>
+          `);
+        });
 
-      let stubs: Record<string|keyof T, SinonStub> = {} as Record<string|keyof T, SinonStub>;
-
-      // @ts-expect-error: it's for testing
-      element[__testing_escape_hatch__] = function(el: T) {
-        spies = setupSpies(opts?.spy, el);
-        stubs = setupStubs(opts?.stub, el);
-      };
-
-      document.body.append(element);
-
-      for (const [key, val] of Object.entries(properties ?? {}))
-        // @ts-expect-error: it's for testing
-        element[key] = val;
-
-      await nextFrame();
-
-      return { element, spies, stubs };
-    },
+        describe('when subscription resolves', function() {
+          beforeEach(() => aTimeout(100));
+          beforeEach(nextFrame);
+          it('resolves subscription data', function() {
+            expect(element.subscription.data).to.not.be.null;
+          });
+          it('renders subscription data', function() {
+            expect(element).shadowDom.to.equal(`
+              <output id="data">{"nullableParam":{"nullable":"Hello World","__typename":"Nullable"}}</output>
+              <output id="error">null</output>
+              <output id="loading">false</output>
+            `);
+          });
+        });
+      });
+    });
   });
 });
-
-function TDNTypeCheck() {
-  type TypeCheckData = { a: 'a'; b: number };
-  type TypeCheckVars = { c: 'c'; d: number };
-
-  const TDN = {} as TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-
-  const Class = define('typed-subscription', {
-    ...subscription(TDN),
-  });
-
-  const instance = new Class();
-
-  assertType<TypeCheckData>(instance.data!);
-  assertType<TypeCheckVars>(instance.variables!);
-}

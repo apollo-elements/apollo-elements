@@ -1,16 +1,12 @@
-import type { Entries } from '@apollo-elements/interfaces';
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
-import type { SinonSpy, SinonStub } from 'sinon';
-import type { SetupOptions } from '@apollo-elements/test';
+import type { ApolloMutationController } from '@apollo-elements/core';
 
-import { aTimeout, nextFrame } from '@open-wc/testing';
-import { describeMutation, MutationElement } from '@apollo-elements/test/mutation.test';
-import { define, html, RenderFunction, Hybrids } from 'hybrids';
-import { assertType, setupSpies, setupStubs, stringify } from '@apollo-elements/test';
+import * as S from '@apollo-elements/test';
 
-import { mutation, MutationHybridsFactoryOptions } from './mutation';
+import { expect, fixture, nextFrame } from '@open-wc/testing';
+import { define, html } from 'hybrids';
+import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
-import { __testing_escape_hatch__ } from '../helpers/accessors';
+import { mutation } from './mutation';
 
 let counter = 0;
 
@@ -20,99 +16,84 @@ function getTagName(): string {
   return tagName;
 }
 
-type TestableApolloMutationHybrid<T, U> = Hybrids<MutationElement<T, U> & {
-  stringify(x: unknown): string;
-  hasRendered(): Promise<MutationElement<T, U>>;
-  render?: RenderFunction<MutationElement<T, U>>;
-}>
+describe('[hybrids] mutation factory', function() {
+  describe('with global client', function() {
+    beforeEach(setupClient);
+    afterEach(teardownClient);
 
-const testMutation = <T, U>(
-  doc?: DocumentNode | TypedDocumentNode<T, U> | null,
-  opts?: MutationHybridsFactoryOptions<T, U>
-): TestableApolloMutationHybrid<T, U> => ({
-    ...mutation<T, U>(doc, opts),
-    stringify: () => stringify,
-    hasRendered: host => async () => {
-      await aTimeout(0);
-      host.render?.(host);
-      await aTimeout(0);
-      return host;
-    },
-  });
+    describe('with NullableParamMutation controller at "mutation" key', function() {
+      interface H {
+        mutation: ApolloMutationController<typeof S.NullableParamMutation>
+      }
 
-describe('[hybrids] ApolloMutation', function() {
-  describeMutation({
-    async setupFunction<T extends MutationElement>(options: SetupOptions<T> = {}) {
-      const { attributes, innerHTML = '', properties } = options;
+      let element: HTMLElement & H;
 
-      const tag = getTagName();
+      beforeEach(async function() {
+        const tag = getTagName();
 
-      define<MutationElement>(tag, {
-        ...testMutation(),
-        render: ({ called, data, error, errors, loading, stringify }) => html`
-          <output id="called">${stringify(called)}</output>
-          <output id="data">${stringify(data)}</output>
-          <output id="error">${stringify(error)}</output>
-          <output id="errors">${stringify(errors)}</output>
-          <output id="loading">${stringify(loading)}</output>
-        `,
+        define(tag, {
+          mutation: mutation(S.NullableParamMutation),
+          render: (host: HTMLElement & H) => {
+            return html`
+              <output id="called">${stringify(host.mutation.called)}</output>
+              <output id="data">${stringify(host.mutation.data)}</output>
+              <output id="error">${stringify(host.mutation.error)}</output>
+              <output id="errors">${stringify(host.mutation.errors)}</output>
+              <output id="loading">${stringify(host.mutation.loading)}</output>
+            `;
+          },
+        });
 
+        element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
       });
 
-      const attrs = attributes ? ` ${attributes}` : '';
+      it('creates the controller', function() {
+        expect(element.mutation.mutate, 'mutate').to.be.a.instanceof(Function);
+        expect(element.mutation.mutation, 'mutation').to.eq(S.NullableParamMutation);
+        expect(element.mutation.host, 'host').to.be.ok.and.to.not.equal(element);
+        expect(
+          element.mutation.host.requestUpdate,
+          'host.requestUpdate'
+        ).to.be.an.instanceof(Function);
+      });
 
-      const template = document.createElement('template');
+      describe('calling mutate', function() {
+        let p: Promise<any>;
+        beforeEach(function() {
+          p = element.mutation.mutate({ variables: { delay: 100 } });
+        });
 
-      template.innerHTML = `<${tag}${attrs}></${tag}>`;
+        beforeEach(nextFrame);
+        it('sets loading state', function() {
+          expect(element.mutation.loading).to.be.true;
+        });
+        it('renders loading state', function() {
+          expect(element).shadowDom.to.equal(`
+            <output id="called">true</output>
+            <output id="data">null</output>
+            <output id="error">null</output>
+            <output id="errors">[]</output>
+            <output id="loading">true</output>
+          `);
+        });
 
-      const [element] =
-        (template.content.cloneNode(true) as DocumentFragment)
-          .children as HTMLCollectionOf<T>;
-
-      if (properties?.onCompleted)
-        element.onCompleted = properties.onCompleted as T['onCompleted'];
-
-      if (properties?.onError)
-        element.onError = properties.onCompleted as T['onError'];
-
-      let spies!: Record<string|keyof T, SinonSpy>;
-      let stubs!: Record<string|keyof T, SinonStub>;
-
-      // @ts-expect-error: just for tests
-      element[__testing_escape_hatch__] = function(el: T) {
-        spies = setupSpies(options?.spy, el);
-        stubs = setupStubs(options?.stub, el);
-      };
-
-      document.body.append(element);
-
-      for (const [key, val] of Object.entries(properties ?? {}) as Entries<T>)
-        key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
-
-      await nextFrame();
-
-      element.innerHTML = innerHTML;
-
-      await nextFrame();
-
-      return { element, spies, stubs };
-    },
-
+        describe('when mutation resolves', function() {
+          beforeEach(() => p);
+          beforeEach(nextFrame);
+          it('resolves mutation data', function() {
+            expect(element.mutation.data).to.not.be.null;
+          });
+          it('renders mutation data', function() {
+            expect(element).shadowDom.to.equal(`
+              <output id="called">true</output>
+              <output id="data">{"nullableParam":{"nullable":"Hello World","__typename":"Nullable"}}</output>
+              <output id="error">null</output>
+              <output id="errors">[]</output>
+              <output id="loading">false</output>
+            `);
+          });
+        });
+      });
+    });
   });
 });
-
-function TDNTypeCheck() {
-  type TypeCheckData = { a: 'a'; b: number };
-  type TypeCheckVars = { c: 'c'; d: number };
-
-  const TDN = {} as TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-
-  const Class = define('typed-mutation', {
-    ...mutation(TDN),
-  });
-
-  const instance = new Class();
-
-  assertType<TypeCheckData>(instance.data!);
-  assertType<TypeCheckVars>(instance.variables!);
-}
