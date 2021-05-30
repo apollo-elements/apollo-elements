@@ -24,7 +24,7 @@ declare global {
 type MixinInstance<B extends I.Constructor> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
-    I.ApolloMutationInterface<D, V> & ReactiveControllerHost & InstanceType<B>;
+    InstanceType<B> & I.ApolloMutationInterface<D, V> & ReactiveControllerHost & InstanceType<B>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }

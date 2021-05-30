@@ -27,7 +27,7 @@ declare global {
   }
 }
 
-type MixinInstance<B extends I.Constructor> = B & {
+type MixinInstance<B extends I.Constructor<HTMLElement>> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
     I.ApolloElementInterface<D, V> & ApolloControllerHost;

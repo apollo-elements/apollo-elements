@@ -1,16 +1,15 @@
-
+import type * as I from '@apollo-elements/interfaces';
 import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { TypePoliciesMixin } from './type-policies-mixin';
-import { ApolloElementMixin } from './apollo-element-mixin';
+import { ApolloQueryMixin } from './apollo-query-mixin';
 import { setupClient, teardownClient } from '@apollo-elements/test';
 import { gql } from '@apollo/client/core';
 
 describe('TypePoliciesMixin', function() {
-  class Base extends TypePoliciesMixin(ApolloElementMixin(HTMLElement)) {
-    declare data: null;
-
-    declare variables: null;
-  }
+  class Base<
+    D extends I.MaybeTDN = I.MaybeTDN,
+    V = I.MaybeVariables<D>
+  > extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
 
   let element: Base;
 

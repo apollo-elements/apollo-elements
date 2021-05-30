@@ -35,25 +35,26 @@ const client = window.__APOLLO_CLIENT__!;
 import * as FAST from '@apollo-elements/fast';
 import { FASTElement } from '@microsoft/fast-element';
 
-class TypeCheckFAST extends ApolloClientMixin(client, FAST.ApolloQuery)<string, number> {
+type Data = { a: 'a' }
+class TypeCheckFAST extends ApolloClientMixin(client, FAST.ApolloQuery)<Data, Data> {
   check() {
     assertType<FASTElement>(this);
     assertType<ApolloElementElement>(this);
-    assertType<ApolloQueryElement<string, number>>(this);
-    assertType<string>(this.data!);
-    assertType<number>(this.variables!);
+    assertType<ApolloQueryElement<Data, Data>>(this);
+    assertType<Data>(this.data!);
+    assertType<Data>(this.variables!);
   }
 }
 
 import * as Gluon from '@apollo-elements/gluon';
 import { GluonElement } from '@gluon/gluon';
 
-class TypeCheckGluon extends ApolloClientMixin(client, Gluon.ApolloQuery)<string, number> {
+class TypeCheckGluon extends ApolloClientMixin(client, Gluon.ApolloQuery)<Data, Data> {
   check() {
     assertType<GluonElement>(this);
     assertType<ApolloElementElement>(this);
-    assertType<ApolloQueryElement<string, number>>(this);
-    assertType<string>(this.data!);
-    assertType<number>(this.variables!);
+    assertType<ApolloQueryElement<Data, Data>>(this);
+    assertType<Data>(this.data!);
+    assertType<Data>(this.variables!);
   }
 }
