@@ -4,7 +4,6 @@ import type {
   DocumentNode,
   ErrorPolicy,
   FetchPolicy,
-  FetchResult,
   NormalizedCacheObject,
   OperationVariables,
   SubscriptionOptions,
