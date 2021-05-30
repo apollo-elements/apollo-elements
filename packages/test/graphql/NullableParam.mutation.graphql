@@ -1,5 +1,5 @@
-mutation NullableParamMutation($nullable: String) {
-  nullableParam(nullable: $nullable) {
+mutation NullableParamMutation($nullable: String, $delay: Int) {
+  nullableParam(nullable: $nullable, delay: $delay) {
     nullable
   }
 }

@@ -1,4 +1,5 @@
 import type * as I from '@apollo-elements/interfaces';
+import type { ApolloMutationController } from '@apollo-elements/core';
 import type {
   NoParamMutationData,
   NoParamMutationVariables,
@@ -15,7 +16,6 @@ import {
   expect,
   defineCE,
   fixture,
-  nextFrame,
 } from '@open-wc/testing';
 
 import { match, spy, SinonSpy } from 'sinon';
@@ -25,18 +25,14 @@ import { setupClient, teardownClient } from './client';
 import NoParamMutation from './graphql/NoParam.mutation.graphql';
 import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 
-import { restoreSpies, waitForRender } from './helpers';
+import { restoreSpies, stringify, waitForRender } from './helpers';
+import { TestableElement } from './types';
 
-export interface MutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-extends I.ApolloMutationElement<D, V> {
-  refetchQueries: I.RefetchQueriesType<D> | null;
-  shadowRoot: ShadowRoot;
-  hasRendered(): Promise<this>;
-  stringify(x: unknown): string;
-  $(id: string): HTMLElement|null;
+export interface MutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends I.ApolloMutationElement<D, V> {
+  controller: ApolloMutationController<D, V>;
 }
 
-export interface DescribeMutationComponentOptions<E extends MutationElement<any, any> = MutationElement<any, any>> {
+export interface DescribeMutationComponentOptions<E extends MutationElement = MutationElement<any, any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -50,16 +46,15 @@ export interface DescribeMutationComponentOptions<E extends MutationElement<any,
    * On updates, each `<output>`'s text content should be
    * set to the `JSON.stringified` representation of it's associated value,
    * with 2 spaces as tabs.
-   * The element must also implement a `stringify` method to perform that stringification,
-   * as well as a `hasRendered` method which returns a promise that resolves when the element is finished rendering
+   * The element must implement a `hasRendered` method which returns a promise that resolves when the element is finished rendering
    */
-  setupFunction: SetupFunction<E>;
+  setupFunction: SetupFunction<E & TestableElement>;
 
   /**
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: I.Constructor<E>;
+  class?: I.Constructor<E & TestableElement>;
 }
 
 export { setupMutationClass } from './helpers';
@@ -69,7 +64,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
   describe(`ApolloMutation interface`, function() {
     describe('when simply instantiating', function() {
       beforeEach(teardownClient);
-      let element: MutationElement;
+      let element: MutationElement & TestableElement;
 
       beforeEach(async function setupElement() {
         ({ element } = await setupFunction());
@@ -128,14 +123,16 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             expect(element.data, 'data')
               .to.equal(data).and
               .to.equal(element.controller.data);
-            expect(element.shadowRoot.getElementById('data')).lightDom.to.equal('{\n  "data": "data"\n}');
+            expect(element.shadowRoot!.getElementById('data'), 'data')
+              .lightDom.to.equal(JSON.stringify(data));
 
             element.data = null;
             await element.hasRendered();
 
             expect(element.data, 'null').to.be.null.and
               .to.equal(element.controller.data);
-            expect(element.shadowRoot.getElementById('data')).lightDom.to.equal('null\n');
+            expect(element.shadowRoot!.getElementById('data'), 'null')
+              .lightDom.to.equal(JSON.stringify(null));
           });
         });
 
@@ -299,8 +296,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         let spies: Record<string|keyof MutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<typeof element>({
-            spy: ['onCompleted', 'onError'],
+          ({ element, spies } = await setupFunction({
             properties: {
               mutation: NoParamMutation,
               onCompleted: () => void null,
@@ -310,7 +306,18 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         });
 
         beforeEach(function spyClientMutate() {
-          spies!['client.mutate'] = spy(element.client!, 'mutate');
+          ['onCompleted', 'onError'].forEach(m => {
+            try {
+              spy(element, m as keyof typeof element);
+            } catch {
+              spy(element.controller.options, m as keyof typeof element.controller.options);
+            }
+          });
+          spy(element.client!, 'mutate');
+        });
+
+        afterEach(function restoreClientMutate() {
+          (element.client?.mutate as SinonSpy).restore?.();
         });
 
         afterEach(function teardownElement() {
@@ -698,12 +705,12 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       describe('with NullableParam mutation property set', function() {
-        let element: MutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+        let element: TestableElement & MutationElement<NullableParamMutationData, NullableParamMutationVariables>;
 
         let spies: Record<string | keyof typeof element, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction<typeof element>({
+          ({ element, spies } = await setupFunction({
             properties: {
               mutation: NullableParamMutation,
               onCompleted: spy(),
@@ -713,8 +720,13 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         });
 
         beforeEach(function spyClientMutate() {
-          spies!['client.mutate'] = spy(element.client!, 'mutate');
+          spy(element.client!, 'mutate');
         });
+
+        afterEach(function restoreClientMutate() {
+          (element.client?.mutate as SinonSpy).restore?.();
+        });
+
 
         afterEach(function teardownElement() {
           element.remove();
@@ -734,9 +746,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           afterEach(() => loading = undefined);
 
-          beforeEach(() => element.updateComplete);
-
-          beforeEach(nextFrame);
+          beforeEach(() => element.hasRendered());
 
           it('calls onCompleted with data', function() {
             expect(element.onCompleted).to.have.been
@@ -758,8 +768,8 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           it('renders data', function() {
-            expect(element.shadowRoot.getElementById('data')!.textContent)
-              .to.equal(element.stringify({
+            expect(element.shadowRoot!.getElementById('data')!.textContent)
+              .to.equal(stringify({
                 nullableParam: {
                   nullable: 'Hello World',
                   __typename: 'Nullable',
@@ -809,7 +819,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             expect(element).shadowDom.to.equal(`
               <output id="called">true</output>
               <output id="data">null</output>
-              <output id="error">${element.stringify(error)}</output>
+              <output id="error">${stringify(error)}</output>
               <output id="errors">[]</output>
               <output id="loading">false</output>
             `);

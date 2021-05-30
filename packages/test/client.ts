@@ -54,6 +54,28 @@ const unmocked = makeExecutableSchema({
         return Array.from({ length: limit ?? 10 }, (_, i) => i + 1 + (offset ?? 0));
       },
 
+      async nullableParam(_: any, { nullable, delay }: S.NullableParamMutationVariables): Promise<S.Nullable> {
+        if (delay != null)
+          await aTimeout(delay);
+        if (nullable === 'error')
+          throw new Error(nullable);
+        else
+          return { nullable };
+      },
+
+    },
+
+    Mutation: {
+
+      async nullableParam(_: any, { nullable, delay }: S.NullableParamMutationVariables): Promise<S.Nullable> {
+        if (delay != null)
+          await aTimeout(delay);
+        if (nullable === 'error')
+          throw new Error(nullable);
+        else
+          return { nullable };
+      },
+
     },
   },
 });
