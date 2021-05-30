@@ -1,14 +1,6 @@
 import type * as I from '@apollo-elements/interfaces';
 
-import type {
-  ApolloClient,
-  DocumentNode,
-  ErrorPolicy,
-  FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
-  TypedDocumentNode,
-} from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
@@ -24,11 +16,12 @@ import {
   NullableParamMutationData,
   NullableParamMutationVariables,
   setupClient,
+  stringify,
   teardownClient,
+  TestableElement,
 } from '@apollo-elements/test';
 
 import { setupMutationClass, describeMutation } from '@apollo-elements/test/mutation.test';
-import type { MutationElement } from '@apollo-elements/test/mutation.test';
 
 import { GraphQLError } from 'graphql';
 
@@ -43,7 +36,7 @@ import NullableParamMutation from '@apollo-elements/test/graphql/NullableParam.m
 
 class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends PolymerApolloMutation<D, V>
-  implements MutationElement<D, V> {
+  implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   static get template() {
@@ -58,7 +51,7 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
     return template;
   }
 
-  $(id: keyof TestableApolloMutation<D, V>) { return this.shadowRoot.getElementById(id as string); }
+  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
 
   observed: Array<keyof TestableApolloMutation<D, V>> = [
     'called',
@@ -77,15 +70,11 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
   render() {
     if (!this.shadowRoot) return;
     for (const key of this.observed)
-      this.$(key)!.textContent = this.stringify(this[key]);
+      this.$(key)!.textContent = stringify(this[key]);
   }
 
   update() {
     this.render();
-  }
-
-  stringify(x: unknown) {
-    return JSON.stringify(x, null, 2);
   }
 
   async hasRendered(): Promise<this> {
@@ -99,7 +88,7 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
 class WrapperElement extends PolymerElement {
   declare shadowRoot: ShadowRoot;
 
-  declare mutation: DocumentNode;
+  declare mutation: C.DocumentNode;
 
   declare variables: NullableParamMutationVariables;
 
@@ -166,7 +155,10 @@ describe('[polymer] <apollo-mutation>', function() {
     });
 
     it('notifies on error change', async function() {
-      const err = new Error('error');
+      let err: Error;
+      try {
+        throw new Error('error');
+      } catch (e) { err = e; }
       setTimeout(() => element.error = err);
       const { detail: { value: { message } } } = await oneEvent(element, 'error-changed');
       expect(message).to.equal('error');
@@ -228,10 +220,10 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
-    assertType<DocumentNode>                        (this.document!);
+    assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
@@ -243,20 +235,20 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloMutationInterface
-    assertType<DocumentNode>                        (this.mutation!);
+    assertType<C.DocumentNode>                      (this.mutation!);
     assertType<TypeCheckVars>                       (this.variables!);
     assertType<boolean>                             (this.called);
     assertType<boolean>                             (this.ignoreResults!);
     assertType<boolean>                             (this.awaitRefetchQueries!);
-    assertType<ErrorPolicy>                         (this.errorPolicy!);
+    assertType<C.ErrorPolicy>                       (this.errorPolicy!);
     assertType<string>                              (this.errorPolicy);
     // @ts-expect-error: ErrorPolicy is not a number
     assertType<number>                              (this.errorPolicy);
     assertType<string>                              (this.fetchPolicy!);
-    assertType<Extract<FetchPolicy, 'no-cache'>>    (this.fetchPolicy);
+    assertType<Extract<C.FetchPolicy, 'no-cache'>>  (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
-      assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+      assertType<(result: C.FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
       assertType<RefetchQueryDescription>(this.refetchQueries!);
 
@@ -269,7 +261,7 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
   }
 }
 
-type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends PolymerApolloMutation<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
