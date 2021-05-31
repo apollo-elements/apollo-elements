@@ -59,6 +59,6 @@
   },
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_interfaces.html",
   "dependencies": {
-    "@apollo/client": "^3.3.0"
+    "@apollo/client": "^3.3.19"
   }
 }
