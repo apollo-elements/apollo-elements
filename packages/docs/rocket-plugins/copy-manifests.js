@@ -440,7 +440,7 @@ function logPerf(tag, func) {
   func();
   const [s, ns] = process.hrtime(time);
   const durationNs = s * NS_PER_SEC + ns;
-  console.log(`\n\nDone in ${durationNs / NS_PER_SEC}s!\n\n`);
+  console.log(`\n\nDone in ${durationNs / NS_PER_SEC}s\n\n`);
 }
 
 export function generateManifests() {
@@ -448,3 +448,4 @@ export function generateManifests() {
   logPerf('Generating Custom Element Manifests', generateManifestsFromInterfaces);
   logPerf('Copying Custom Element Manifests', copyCustomElementManifests);
 }
+ 

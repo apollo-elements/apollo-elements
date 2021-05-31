@@ -1,10 +1,11 @@
 import visit from 'unist-util-visit';
 
+import Parse5 from 'parse5';
+
 import { h } from 'hastscript';
 import { map } from 'unist-util-map';
-import Parse5 from 'parse5';
-import toHast from 'hast-util-from-parse5';
-import toHtml from 'hast-util-to-html';
+import { fromParse5 } from 'hast-util-from-parse5';
+import { toHtml } from 'hast-util-to-html';
 
 const isNodeOfName =
   node =>
@@ -44,7 +45,7 @@ function wrap(options, node) {
 }
 
 function transformContent(content, outputPath, options) {
-  const tree = toHast(Parse5.parse(content));
+  const tree = fromParse5(Parse5.parse(content));
 
   return toHtml(map(tree, function(node, index, parent) {
     if (!isTSCodeBlock(parent) || !isConfiguredName(options, node))

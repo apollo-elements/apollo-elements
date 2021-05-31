@@ -59,6 +59,7 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
   }
 
   /**
+   * @summary Fires a mutation
    * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
    */
   @bound public async mutate(
