@@ -1,12 +1,10 @@
-import type { Data } from '@apollo-elements/interfaces';
-
 import type { ResultOf } from '@graphql-typed-document-node/core';
 
-import type { FetchResult, TypedDocumentNode } from '@apollo/client/core';
+import type * as C from '@apollo/client/core';
 
 import * as S from '@apollo-elements/test/schema';
 
-import * as C from './apollo-controller';
+import * as E from './apollo-controller';
 
 import { ApolloError } from '@apollo/client/core';
 
@@ -25,8 +23,8 @@ describe('[core] ApolloMutationController', function() {
     let element: HTMLElement & { mutation: ApolloMutationController<any>; };
 
     const handlers = {
-      [C.ApolloControllerConnectedEvent.type]: spy(),
-      [C.ApolloControllerDisconnectedEvent.type]: spy(),
+      [E.ApolloControllerConnectedEvent.type]: spy(),
+      [E.ApolloControllerDisconnectedEvent.type]: spy(),
     };
 
     const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
@@ -56,7 +54,7 @@ describe('[core] ApolloMutationController', function() {
     });
 
     it('fires event on connect', function() {
-      const { type } = C.ApolloControllerConnectedEvent;
+      const { type } = E.ApolloControllerConnectedEvent;
       const [event] = handlers[type].lastCall.args;
       expect(event.controller, 'controller').to.equal(element.mutation);
       expect(event.type, 'type').to.equal(type);
@@ -67,7 +65,7 @@ describe('[core] ApolloMutationController', function() {
       beforeEach(() => element.remove());
       beforeEach(nextFrame);
       it('fires event on disconnect', function() {
-        const { type } = C.ApolloControllerConnectedEvent;
+        const { type } = E.ApolloControllerConnectedEvent;
         const [event] = handlers[type].lastCall.args;
         expect(event.controller, 'controller').to.equal(element.mutation);
         expect(event.type, 'type').to.equal(type);
@@ -173,7 +171,7 @@ describe('[core] ApolloMutationController', function() {
         });
 
         describe('calling mutate()', function() {
-          let p: Promise<FetchResult<ResultOf<typeof element.mutation.mutation>>>;
+          let p: Promise<C.FetchResult<ResultOf<typeof element.mutation.mutation>>>;
           beforeEach(() => void (p = element.mutation.mutate()));
           it('sets loading', function() {
             expect(element.mutation.loading).to.be.true;
@@ -218,7 +216,7 @@ describe('[core] ApolloMutationController', function() {
             element.mutation.options.ignoreResults = true;
           });
           describe('calling mutate()', function() {
-            let p: Promise<FetchResult<ResultOf<typeof element.mutation.mutation>>>;
+            let p: Promise<C.FetchResult<ResultOf<typeof element.mutation.mutation>>>;
             beforeEach(() => void (p = element.mutation.mutate()));
             it('sets loading', function() {
               expect(element.mutation.loading).to.be.true;
@@ -370,7 +368,7 @@ describe('[core] ApolloMutationController', function() {
         });
 
         describe('with refetchQueries option', function() {
-          const refetchQueries = ['A', 'B', 'C'];
+          const refetchQueries = ['A', 'B', 'E'];
           beforeEach(function() {
             element.mutation.options.refetchQueries = refetchQueries;
           });
@@ -469,7 +467,7 @@ describe('[core] ApolloMutationController', function() {
 
         describe('destructuring mutate', function() {
           let mutate: (typeof element.mutation)['mutate'];
-          let p: Promise<FetchResult<ResultOf<typeof element.mutation.mutation>>>;
+          let p: Promise<C.FetchResult<ResultOf<typeof element.mutation.mutation>>>;
           beforeEach(() => (element.mutation.options.onCompleted! as SinonSpy).resetHistory());
           beforeEach(() => ({ mutate } = element.mutation));
           beforeEach(() => void (p = mutate()));

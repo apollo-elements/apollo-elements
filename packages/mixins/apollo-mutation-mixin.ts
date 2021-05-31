@@ -46,8 +46,8 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstanc
     controller = new ApolloMutationController<D, V>(this, null, {
       [update]: (properties: Partial<this>) => this[update]?.(properties),
       update: this.updater,
-      onCompleted: data => this.onCompleted?.(data!),
-      onError: error => this.onError?.(error!),
+      onCompleted: data => data && this.onCompleted?.(data),
+      onError: error => this.onError?.(error),
     });
 
     @controlled({ readonly: true }) readonly called = false;

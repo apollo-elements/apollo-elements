@@ -110,7 +110,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     if ((this.observable && !shouldResubscribe) || skip)
       return;
 
-    const query = params?.subscription ?? this.subscription! as DocumentNode;
+    const query = params?.subscription ?? this.subscription as DocumentNode;
     this.#lastSubscriptionDocument = query;
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error

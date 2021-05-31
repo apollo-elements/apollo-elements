@@ -17,11 +17,6 @@ type P<T extends ApolloSubscriptionController<any, any>, K extends keyof T> =
   ? Parameters<T[K]>
   : never
 
-type R<T extends ApolloSubscriptionController<any, any>, K extends keyof T> =
-  T[K] extends (...args: any[]) => unknown
-  ? ReturnType<T[K]>
-  : never
-
 type ApolloSubscriptionResultEvent<TData = unknown> =
   CustomEvent<I.OnSubscriptionDataParams<TData>>;
 

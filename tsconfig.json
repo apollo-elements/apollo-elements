@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@apollo-elements/*": ["packages/*/src"]
+      "@apollo-elements/*": ["packages/*"]
     }
   }
 }

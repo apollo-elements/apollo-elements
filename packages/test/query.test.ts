@@ -186,10 +186,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           .and
           .to.equal(element.controller.data);
 
-          let err: Error;
-          try {
-            throw new Error('error');
-          } catch (e) { err = e; }
+        let err: Error;
+        try {
+          throw new Error('error');
+        } catch (e) { err = e; }
         element.error = err;
         await element.updateComplete;
         expect(element.error, 'error')
