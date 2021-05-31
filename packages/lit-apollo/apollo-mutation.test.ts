@@ -1,12 +1,8 @@
 import type * as I from '@apollo-elements/interfaces';
 
-import type { MutationElement } from '@apollo-elements/test/mutation.test';
+import type * as C from '@apollo/client/core';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
-import type { GraphQLError } from '@apollo-elements/interfaces';
-
-import type * as C from '@apollo/client/core';
 
 import type {
   NoParamMutationData,
@@ -205,14 +201,14 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.loading);
     assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
+    assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<TypeCheckData>                       (this.data!);
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data!.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
     if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
 
     // ApolloMutationInterface
     assertType<C.DocumentNode>                      (this.mutation!);

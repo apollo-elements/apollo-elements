@@ -1,5 +1,5 @@
 export function hosted(opts?: { path?: string }) {
-  return function(target: any, key: string) {
+  return function(target: unknown, key: string): void {
     Object.defineProperty(target, `${key}Changed`, {
       value() {
         if (!this.controller) return;

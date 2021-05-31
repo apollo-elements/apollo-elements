@@ -10,7 +10,7 @@ import { ApolloElement } from './apollo-element';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
-import { controlled } from '@apollo-elements/core';
+import { controlled } from '@apollo-elements/core/decorators';
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 

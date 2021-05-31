@@ -1,8 +1,6 @@
 import type * as C from '@apollo/client/core';
 import type * as I from '@apollo-elements/interfaces';
 
-import type { QueryElement } from '@apollo-elements/test/query.test';
-
 import { gql } from '@apollo/client/core';
 
 import { GraphQLError } from 'graphql/error/GraphQLError';
