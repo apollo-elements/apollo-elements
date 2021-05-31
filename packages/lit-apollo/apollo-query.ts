@@ -17,11 +17,6 @@ type P<T extends I.ApolloQueryElement<any, any>, K extends keyof T['controller']
   ? Parameters<T['controller'][K]>
   : never
 
-type R<T extends I.ApolloQueryElement<any, any>, K extends keyof T['controller']> =
-  T['controller'][K] extends (...args: any[]) => unknown
-  ? ReturnType<T['controller'][K]>
-  : never
-
 /**
  * `ApolloQuery`
  *

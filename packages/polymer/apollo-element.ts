@@ -39,7 +39,7 @@ export class PolymerApolloElement<
 
   requestUpdate(): void {
     if (this.controller)
-      for (const [k] of this[p]!) this.maybeNotify(k as keyof this);
+      for (const [k] of this[p] ?? new Map()) this.maybeNotify(k as keyof this);
     super.requestUpdate();
   }
 

@@ -15,20 +15,20 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
     /** @protected */
     declare [p]?: Map<string, unknown>;
 
-    private __controllers = new Set<ReactiveController>();
+    #controllers = new Set<ReactiveController>();
 
-    private __updatePending = false;
+    #updatePending = false;
 
-    private __updateComplete: Promise<boolean>;
+    #updateComplete: Promise<boolean>;
 
-    private __resolve!: (v: boolean) => void;
+    #resolve!: (v: boolean) => void;
 
     private [init] = false;
 
     constructor(...args: any[]) {
       super(...args);
-      this.__updateComplete = new Promise(r => {
-        this.__resolve = r;
+      this.#updateComplete = new Promise(r => {
+        this.#resolve = r;
       });
       this[init] = true;
       this.requestUpdate();
@@ -38,28 +38,28 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.addController === 'function') super.addController(controller);
       else
-        this.__controllers.add(controller);
+        this.#controllers.add(controller);
     }
 
     removeController(controller: ReactiveController): void {
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.removeController === 'function') super.removeController(controller);
       else
-        this.__controllers.delete(controller);
+        this.#controllers.delete(controller);
     }
 
-    requestUpdate(name?: string, value?: unknown): void {
+    requestUpdate(): void {
       if (!this[init]) return;
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.requestUpdate === 'function') return super.requestUpdate();
       this.update();
-      this.__resolve(true);
+      this.#resolve(true);
     }
 
     get updateComplete(): Promise<boolean> {
       // @ts-expect-error: superclass may or may not have it
       return super.updateComplete ??
-        this.__updateComplete;
+        this.#updateComplete;
     }
 
     connectedCallback() {
@@ -68,32 +68,32 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
       super.connectedCallback?.();
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.addController !== 'function')
-        this.__controllers.forEach(c => c.hostConnected?.());
+        this.#controllers.forEach(c => c.hostConnected?.());
     }
 
     disconnectedCallback() {
       super.disconnectedCallback?.();
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.removeController !== 'function')
-        this.__controllers.forEach(c => c.hostDisconnected?.());
+        this.#controllers.forEach(c => c.hostDisconnected?.());
     }
 
     update(...args: any[]) {
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.update === 'function') super.update(...args);
       else
-        this.__controllers.forEach(c => c.hostUpdate?.());
+        this.#controllers.forEach(c => c.hostUpdate?.());
     }
 
     updated(...args: any[]) {
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.updated === 'function') super.updated(...args);
       else {
-        this.__updatePending = false;
-        const resolve = this.__resolve;
-        this.__updateComplete = new Promise(r => { this.__resolve = r; });
-        this.__controllers.forEach(c => c.hostUpdated?.());
-        resolve(this.__updatePending);
+        this.#updatePending = false;
+        const resolve = this.#resolve;
+        this.#updateComplete = new Promise(r => { this.#resolve = r; });
+        this.#controllers.forEach(c => c.hostUpdated?.());
+        resolve(this.#updatePending);
       }
     }
   };

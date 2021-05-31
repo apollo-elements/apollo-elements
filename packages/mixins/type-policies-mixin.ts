@@ -3,8 +3,6 @@ import type { Policies } from '@apollo/client/cache/inmemory/policies';
 import type {
   ApolloElementInterface,
   Constructor,
-  Data,
-  Variables,
 } from '@apollo-elements/interfaces';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
