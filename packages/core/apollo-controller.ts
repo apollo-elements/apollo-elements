@@ -43,7 +43,7 @@ export interface ApolloControllerOptions<D, V> {
 export const update = Symbol('update');
 
 export class ApolloControllerEvent extends Event {
-  static declare type: `apollo-controller-${'disconnected'|'connected'}`;
+  static declare type: 'apollo-controller-connected'|'apollo-controller-disconnected';
 
   constructor(public controller: ApolloController) {
     super(ApolloControllerConnectedEvent.type, { bubbles: true, composed: true });

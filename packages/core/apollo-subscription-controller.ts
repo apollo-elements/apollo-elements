@@ -196,6 +196,9 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     );
   }
 
+  /**
+   * @summary Starts the subscription
+   */
   @bound public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void {
     this.initObservable(params);
 
@@ -215,6 +218,9 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
       });
   }
 
+  /**
+   * @summary Ends the subscription
+   */
   @bound public cancel(): void {
     this.endSubscription();
     this.observableSubscription = undefined;
