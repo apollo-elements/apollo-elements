@@ -83,14 +83,21 @@ function isReactiveElement(
   return typeof (proto.constructor as typeof ReactiveElement).createProperty === 'function';
 }
 
-export function controlled(opts: DefineOptions = {}) {
+/**
+ * @summary Class field decorator for controlled properties
+ *
+ * Controlled properties are element class fields which defer to and reflect that property on the element's `controller` property, which is a `ReactiveController`.
+ *
+ * @param  options Options for the controlled field
+ */
+export function controlled(options: DefineOptions = {}) {
   return function<T extends ApolloControllerHost>(
     proto: T,
     name: string & keyof T
   ): void {
     if (isReactiveElement(proto))
-      defineOnReactiveElement(proto, name, opts);
+      defineOnReactiveElement(proto, name, options);
     else
-      defineOnHTMLElement(proto, name, opts);
+      defineOnHTMLElement(proto, name, options);
   };
 }

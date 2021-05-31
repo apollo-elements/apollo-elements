@@ -1,0 +1,1454 @@
+{
+  "schemaVersion": "1",
+  "$schema": "https://raw.githubusercontent.com/webcomponents/custom-elements-manifest/master/schema.json",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "./index.js",
+      "exports": [
+        {
+          "name": "ApolloController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloController",
+            "module": "./apollo-controller.js"
+          }
+        },
+        {
+          "name": "ApolloMutationController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloMutationController",
+            "module": "./apollo-mutation-controller.js"
+          }
+        },
+        {
+          "name": "ApolloQueryController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloQueryController",
+            "module": "./apollo-query-controller.js"
+          }
+        },
+        {
+          "name": "ApolloSubscriptionController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloSubscriptionController",
+            "module": "./apollo-subscription-controller.js"
+          }
+        },
+        {
+          "name": "controlled",
+          "kind": "js",
+          "declaration": {
+            "name": "controlled",
+            "module": "./decorators.js"
+          }
+        },
+        {
+          "name": "ApolloElementEvent",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloElementEvent",
+            "module": "./events.js"
+          }
+        }
+      ],
+      "declarations": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-controller.js",
+      "exports": [
+        {
+          "name": "ApolloController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloController"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ApolloController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "host",
+              "type": {
+                "type": "ReactiveControllerHost"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "type": "ApolloControllerOptions<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "default": "true",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "default": "null",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "default": "null",
+              "type": {
+                "type": "Data<D> | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "default": "null",
+              "type": {
+                "type": "ApolloError | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "default": "[]",
+              "type": {
+                "type": "readonly GraphQLError[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "default": "false",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "default": "null",
+              "type": {
+                "type": "Variables<D, V> | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "type": "ReactiveControllerHost"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "ApolloControllerOptions<D, V>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "documentChanged",
+              "parameters": [
+                {
+                  "name": "document",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "variablesChanged",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "optional": true,
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "notify",
+              "parameters": [
+                {
+                  "name": "keys",
+                  "optional": true,
+                  "type": {
+                    "type": "(keyof this)[]"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "init",
+              "parameters": [
+                {
+                  "name": "document",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-mutation-controller.js",
+      "exports": [
+        {
+          "name": "ApolloMutationController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloMutationController"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ApolloMutationController",
+          "superclass": {
+            "name": "ApolloController",
+            "package": "@apollo-elements/core",
+            "module": "./apollo-controller.js"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "type": "ApolloMutationControllerOptions<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "default": "false",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "default": "null",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "default": "null",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "default": "null",
+              "type": {
+                "type": "ApolloError | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "default": "[]",
+              "type": {
+                "type": "readonly GraphQLError[]"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "default": "false",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "default": "null",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mutation",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "type": "ReactiveControllerHost"
+                  }
+                },
+                {
+                  "name": "mutation",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "ApolloMutationControllerOptions<D, V>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "documentChanged",
+              "parameters": [
+                {
+                  "name": "document",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "variablesChanged",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "optional": true,
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "notify",
+              "parameters": [
+                {
+                  "name": "keys",
+                  "optional": true,
+                  "type": {
+                    "type": "(keyof this)[]"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "init",
+              "parameters": [
+                {
+                  "name": "document",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "mutate",
+              "summary": "Fires a mutation",
+              "description": "This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
+              "privacy": "public",
+              "async": true,
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "Promise<FetchResult<Data<D>>>"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-query-controller.js",
+      "exports": [
+        {
+          "name": "ApolloQueryController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloQueryController"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ApolloQueryController",
+          "superclass": {
+            "name": "ApolloController",
+            "package": "@apollo-elements/core",
+            "module": "./apollo-controller.js"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "type": "ApolloQueryControllerOptions<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "default": "true",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "default": "null",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "default": "null",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "default": "null",
+              "type": {
+                "type": "ApolloError | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "default": "[]",
+              "type": {
+                "type": "readonly GraphQLError[]"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "default": "false",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "default": "null",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              }
+            },
+            {
+              "kind": "field",
+              "summary": "Flags an element that's ready and able to auto-subscribe",
+              "readonly": true,
+              "name": "canAutoSubscribe",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "type": "ReactiveControllerHost"
+                  }
+                },
+                {
+                  "name": "query",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "ApolloQueryControllerOptions<D, V>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "documentChanged",
+              "parameters": [
+                {
+                  "name": "doc",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "variablesChanged",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "optional": true,
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "notify",
+              "parameters": [
+                {
+                  "name": "keys",
+                  "optional": true,
+                  "type": {
+                    "type": "(keyof this)[]"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "init",
+              "parameters": [
+                {
+                  "name": "document",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refresh",
+              "summary": "Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.",
+              "description": "This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
+              "privacy": "public",
+              "async": true,
+              "parameters": [
+                {
+                  "name": "variables",
+                  "optional": true,
+                  "summary": "The new set of variables. If there are missing variables, the previous values of those variables will be used.",
+                  "type": {
+                    "type": "Variables<D, V>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "Promise<ApolloQueryResult<Data<D>>>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "description": "Resets the observableQuery and subscribes.",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "summary": "options for controlling how the subscription subscribes",
+                  "type": {
+                    "type": "Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "ZenObservable.Subscription"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "subscribeToMore",
+              "description": "Lets you pass a GraphQL subscription and updateQuery function\nto subscribe to more updates for your query.\n\nThe `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "type": "SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "(() => void) | void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "executeQuery",
+              "summary": "Executes a Query once and updates the with the result",
+              "privacy": "params",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<QueryOptions<Variables<D, V>>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "Promise<ApolloQueryResult<Data<D>>>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "fetchMore",
+              "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object.",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<FetchMoreParams<D, V>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "Promise<ApolloQueryResult<Data<D>>>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "startPolling",
+              "summary": "Start polling this query",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "ms",
+                  "summary": "milliseconds to wait between fetches",
+                  "type": {
+                    "type": "number"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "stopPolling",
+              "summary": "Stop polling this query",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./apollo-subscription-controller.js",
+      "exports": [
+        {
+          "name": "ApolloSubscriptionController",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloSubscriptionController"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ApolloSubscriptionController",
+          "superclass": {
+            "name": "ApolloController",
+            "package": "@apollo-elements/core",
+            "module": "./apollo-controller.js"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "type": "ApolloSubscriptionControllerOptions<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "default": "true",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "default": "null",
+              "type": {
+                "type": "ApolloClient<NormalizedCacheObject>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "default": "null",
+              "type": {
+                "type": "Data<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "default": "null",
+              "type": {
+                "type": "ApolloError | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "default": "[]",
+              "type": {
+                "type": "readonly GraphQLError[]"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "default": "false",
+              "type": {
+                "type": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "default": "null",
+              "type": {
+                "type": "Variables<D, V> | null"
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "default": "null",
+              "type": {
+                "type": "ComponentDocument<D> | null"
+              }
+            },
+            {
+              "kind": "field",
+              "summary": "Flags an element that's ready and able to auto-subscribe",
+              "name": "canAutoSubscribe",
+              "type": {
+                "type": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "documentChanged",
+              "parameters": [
+                {
+                  "name": "doc",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "variablesChanged",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "optional": true,
+                  "type": {
+                    "type": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "protected",
+              "name": "notify",
+              "parameters": [
+                {
+                  "name": "keys",
+                  "optional": true,
+                  "type": {
+                    "type": "(keyof this)[]"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "init",
+              "parameters": [
+                {
+                  "name": "document",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "type": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "package": "@apollo-elements/core",
+                "module": "./apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "host",
+                  "type": {
+                    "type": "ReactiveControllerHost"
+                  }
+                },
+                {
+                  "name": "subscription",
+                  "optional": true,
+                  "type": {
+                    "type": "ComponentDocument<D> | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "type": "ApolloSubscriptionControllerOptions<D, V>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "privacy": "public",
+              "summary": "Starts the subscription",
+              "name": "subscribe",
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "type": "Partial<SubscriptionDataOptions<D, V>>"
+                  }
+                }
+              ],
+              "return": {
+                "type": "void"
+              }
+            },
+            {
+              "kind": "method",
+              "privacy": "public",
+              "summary": "Ends the subscription",
+              "name": "cancel",
+              "return": {
+                "type": "void"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./decorators.js",
+      "exports": [
+        {
+          "name": "controlled",
+          "kind": "js",
+          "declaration": {
+            "name": "controlled"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "controlled",
+          "summary": "Class field decorator for controlled properties",
+          "description": "Controlled properties are element class fields which defer to and reflect that property on the element's `controller` property, which is a `ReactiveController`.",
+          "parameters": [
+            {
+              "name": "options",
+              "optional": true,
+              "default": "{}",
+              "summary": "Options for the controlled field",
+              "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| path | <pre class=\"language-ts\"><code class=\"language-ts\">'options'</code></pre> | Optional. When set, the field will reflect the property at the specified path, i.e. `controller.options`. |\n| readonly | <pre class=\"language-ts\"><code class=\"language-ts\">boolean</code></pre> | Optional. When set, setting the field will have no effect. |\n| onSet | <pre class=\"language-ts\"><code class=\"language-ts\">(x: unknown) => void</code></pre> | Optional. When defined, the function will be called with the new value. |\n",
+              "type": {
+                "type": "DefineOptions"
+              }
+            }
+          ],
+          "return": {
+            "type": "<T extends ApolloControllerHost>(proto: T, name: string & keyof T) => void"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./events.js",
+      "exports": [
+        {
+          "name": "ApolloElementEvent",
+          "kind": "js",
+          "declaration": {
+            "name": "ApolloElementEvent"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ApolloElementEvent",
+          "description": "Fired when an element connects to or disconnects from the DOM",
+          "superclass": {
+            "name": "CustomEvent"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "type": "'apollo-element-connected'|'apollo-element-disconnected'"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "type": "'apollo-element-connected'|'apollo-element-disconnected'"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "type": {
+                    "type": "T = ApolloElementElement"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -168,19 +168,10 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       this.subscribe({ variables });
   }
 
-  /** Flags an element that's ready and able to auto-subscribe */
-  public get canAutoSubscribe(): boolean {
-    return (
-      !!this.client &&
-      !this.options.noAutoSubscribe &&
-      (this.options?.shouldSubscribe?.() ?? true)
-    );
-  }
-
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    *
-   * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
+   * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used.
    */
   @bound public async refetch(variables?: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>> {
     if (!this.observableQuery)
@@ -239,7 +230,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
   }
 
   /**
-   * Executes a Query once and updates the with the result
+   * @summary Executes a Query once and updates the with the result
    */
   @bound public async executeQuery(
     params?: Partial<QueryOptions<Variables<D, V>>>
@@ -314,12 +305,19 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
     });
   }
 
+  /**
+   * @summary Start polling this query
+   * @param ms milliseconds to wait between fetches
+   */
   @bound public startPolling(ms: number): void {
     this.pollingInterval = window.setInterval(() => {
       this.refetch();
     }, ms);
   }
 
+  /**
+   * @summary Stop polling this query
+   */
   @bound public stopPolling(): void {
     clearInterval(this.pollingInterval);
   }

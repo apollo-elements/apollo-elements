@@ -120,3 +120,9 @@ header,
     overflow: auto;
   }
 }
+
+@media (min-width: 500px) {
+  :host([data-inherited-from]) header ::slotted([slot="type"]) {
+    display: inline !important;
+  }
+}

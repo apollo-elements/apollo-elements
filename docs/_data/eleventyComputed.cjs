@@ -7,7 +7,6 @@ const image = require('@11ty/eleventy-img');
 const nunjucks = require('nunjucks');
 const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
-const toHTML = require('hast-util-to-html');
 const woff2base64 = require('woff2base64');
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
@@ -57,7 +56,7 @@ async function createPageSocialImage(options) {
   const width = 592;
 
   const {s} = await import('hastscript');
-  
+
   const boxOpts = {
     createElement: s,
     valign: 'center',
@@ -102,9 +101,10 @@ async function createPageSocialImage(options) {
     height: 100,
   });
 
+  const { toHtml } = await import('hast-util-to-html');
   const backToAngleBrackets = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  const titleSVG = toHTML(titleBox.linebreak(backToAngleBrackets(title)).render(), { space: 'svg' });
-  const subtitleSVG = toHTML(subtitleBox.linebreak(backToAngleBrackets(subtitle)).render(), { space: 'svg' });
+  const titleSVG = toHtml(titleBox.linebreak(backToAngleBrackets(title)).render(), { space: 'svg' });
+  const subtitleSVG = toHtml(subtitleBox.linebreak(backToAngleBrackets(subtitle)).render(), { space: 'svg' });
 
   const svgString = nunjucks.renderString(template, {
     category,
