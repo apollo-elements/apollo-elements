@@ -60,7 +60,7 @@
   "homepage": "https://apolloelements.dev/api/lib/",
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
-    "@apollo/client": "^3.3.0",
+    "@apollo/client": "^3.3.19",
     "tslib": "^2.2.0"
   },
   "peerDependencies": {

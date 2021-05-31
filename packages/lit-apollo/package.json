@@ -62,10 +62,10 @@
   },
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_lit_apollo.html",
   "dependencies": {
+    "@apollo-elements/core": "^0.0.0",
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/mixins": "^3.5.0",
-    "@apollo-elements/core": "^0.0.0",
-    "lit": "^2.0.0-rc.1",
+    "lit": "^2.0.0-rc.2",
     "tslib": "^2.2.0"
   }
 }

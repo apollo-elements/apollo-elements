@@ -65,7 +65,7 @@
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/mixins": "^3.5.0",
-    "@microsoft/fast-element": "^1.0.2",
+    "@microsoft/fast-element": "^1.4.0",
     "tslib": "^2.2.0"
   }
 }
