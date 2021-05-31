@@ -3,7 +3,7 @@ import type { ApolloMutationController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { expect, fixture, nextFrame } from '@open-wc/testing';
-import { define, html } from 'hybrids';
+import { define, html, Hybrids } from 'hybrids';
 import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
 import { mutation } from './mutation';
@@ -26,14 +26,14 @@ describe('[hybrids] mutation factory', function() {
         mutation: ApolloMutationController<typeof S.NullableParamMutation>
       }
 
-      let element: HTMLElement & H;
+      let element: H;
 
       beforeEach(async function() {
         const tag = getTagName();
 
         define(tag, {
           mutation: mutation(S.NullableParamMutation),
-          render: (host: HTMLElement & H) => {
+          render: (host: H) => {
             return html`
               <output id="called">${stringify(host.mutation.called)}</output>
               <output id="data">${stringify(host.mutation.data)}</output>
@@ -42,7 +42,7 @@ describe('[hybrids] mutation factory', function() {
               <output id="loading">${stringify(host.mutation.loading)}</output>
             `;
           },
-        });
+        } as Hybrids<H>);
 
         element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
       });

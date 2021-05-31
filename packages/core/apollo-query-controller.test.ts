@@ -58,7 +58,7 @@ describe('[core] ApolloQueryController', function() {
 
       beforeEach(async function setupElement() {
         const tag = defineCE(class extends MirroringHost<any> {
-          query = new ApolloQueryController(this);
+          query = new ApolloQueryController<TypedDocumentNode, unknown>(this);
         });
         element = await fixture(`<${tag}></${tag}>`);
       });

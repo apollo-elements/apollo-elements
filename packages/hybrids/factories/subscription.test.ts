@@ -3,7 +3,7 @@ import type { ApolloSubscriptionController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
-import { define, html } from 'hybrids';
+import { define, html, Hybrids } from 'hybrids';
 import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
 import { subscription } from './subscription';
@@ -40,7 +40,7 @@ describe('[hybrids] subscription factory', function() {
               <output id="loading">${stringify(host.subscription.loading)}</output>
             `;
           },
-        });
+        } as Hybrids<H>);
 
         element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
       });

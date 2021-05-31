@@ -15,12 +15,14 @@ type Omitted =
   |'adoptedCallback'
   |'attributeChangedCallback'
 
+type QueryHybrid = Omit<I.ApolloQueryInterface, Omitted>;
+
 /**
  * Hybrids descriptor bag.
  *
  * Spread into your hybrids to implement the [ApolloQueryInterface](/api/interfaces/query/) interface.
  */
-export const ApolloQuery: Hybrids<Omit<I.ApolloQueryInterface, Omitted>> = {
+export const ApolloQuery: Hybrids<QueryHybrid> = {
   controller: query(null),
 
   ...ApolloElement,
@@ -41,6 +43,8 @@ export const ApolloQuery: Hybrids<Omit<I.ApolloQueryInterface, Omitted>> = {
   noAutoSubscribe: option(false),
   notifyOnNetworkStatusChange: option(),
   nextFetchPolicy: option(),
+  partialRefetch: option(),
+  pollInterval: option(),
   onData: option(),
   onError: option(),
 };
