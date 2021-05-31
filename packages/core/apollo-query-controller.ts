@@ -36,7 +36,7 @@ export interface ApolloQueryControllerOptions<D, V> extends
   onError?: (error: ApolloError) => void;
 }
 
-export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<D>>
+export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloController<D, V>
   implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
@@ -176,7 +176,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
   @bound public async refetch(variables?: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>> {
     if (!this.observableQuery)
       throw new Error('Cannot refetch without an ObservableQuery'); /* c8 ignore next */ // covered
-    return this.observableQuery.refetch(variables);
+    return this.observableQuery.refetch(variables as Variables<D, V>);
   }
 
   /**
@@ -297,7 +297,7 @@ export class ApolloQueryController<D extends MaybeTDN = any, V = MaybeVariables<
       )
     ).fetchMore({
       ...options,
-      variables: options.variables ?? undefined,
+      variables: (options.variables as Variables<D, V>) ?? undefined,
     }).then(x => {
       this.loading = false;
       this.notify('loading');

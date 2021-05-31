@@ -16,12 +16,14 @@ type Omitted =
   |'adoptedCallback'
   |'attributeChangedCallback'
 
+type SubscriptionHybrid = Omit<I.ApolloSubscriptionInterface, Omitted>;
+
 /**
  * Hybrids descriptor bag.
  *
  * Spread into your hybrids to implement the [ApolloSubscriptionInterface](/api/interfaces/subscription/) interface.
  */
-export const ApolloSubscription: Hybrids<Omit<I.ApolloSubscriptionInterface, Omitted>> = {
+export const ApolloSubscription: Hybrids<SubscriptionHybrid> = {
   controller: subscription(null),
 
   ...ApolloElement,
@@ -34,8 +36,11 @@ export const ApolloSubscription: Hybrids<Omit<I.ApolloSubscriptionInterface, Omi
   fetchPolicy: option(),
   noAutoSubscribe: option(false),
   onSubscriptionData: option(),
+  onSubscriptionComplete: option(),
   onError: option(),
   shouldResubscribe: option(false),
+  notifyOnNetworkStatusChange: option(false),
+  pollInterval: option(),
   skip: option(false),
 };
 

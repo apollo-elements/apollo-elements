@@ -15,13 +15,18 @@ type Omitted =
   |'disconnectedCallback'
   |'adoptedCallback'
   |'attributeChangedCallback'
+  |'updater'
+
+type MutationHybrid = Omit<I.ApolloMutationInterface, Omitted> & {
+  update: I.ApolloMutationInterface['updater']
+};
 
 /**
  * Hybrids descriptor bag.
  *
  * Spread into your hybrids to implement the [ApolloMutationElement](/api/interfaces/mutation/) interface.
  */
-export const ApolloMutation: Hybrids<Omit<I.ApolloMutationInterface, Omitted>> = {
+export const ApolloMutation: Hybrids<MutationHybrid> = {
   controller: mutation(null),
 
   ...ApolloElement,
@@ -35,6 +40,7 @@ export const ApolloMutation: Hybrids<Omit<I.ApolloMutationInterface, Omitted>> =
   refetchQueries: option(null),
   ignoreResults: option(false),
   optimisticResponse: option(),
+  update: option(),
 
   onCompleted: option(),
   onError: option(),
