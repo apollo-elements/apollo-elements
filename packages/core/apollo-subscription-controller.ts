@@ -58,6 +58,15 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
 
   set subscription(document: ComponentDocument<D> | null) { this.document = document; }
 
+  /** Flags an element that's ready and able to auto-subscribe */
+  public get canAutoSubscribe(): boolean {
+    return (
+      !!this.client &&
+      !this.options.noAutoSubscribe &&
+      (this.options?.shouldSubscribe?.() ?? true)
+    );
+  }
+
   constructor(
     host: ReactiveControllerHost,
     subscription?: ComponentDocument<D> | null,
@@ -185,15 +194,6 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     this.cancel();
     if (this.canSubscribe({ variables }) && (this.options.shouldSubscribe?.({ variables }) ?? true))
       this.subscribe();
-  }
-
-  /** Flags an element that's ready and able to auto-subscribe */
-  public get canAutoSubscribe(): boolean {
-    return (
-      !!this.client &&
-      !this.options.noAutoSubscribe &&
-      (this.options?.shouldSubscribe?.() ?? true)
-    );
   }
 
   /**

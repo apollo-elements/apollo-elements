@@ -14,7 +14,7 @@ import type {
 
 import type { ComponentDocument, Data, Variables, MaybeTDN, MaybeVariables } from './operation';
 import type { ApolloElementInterface } from './apollo-element';
-import type { ApolloQueryController } from '@apollo-elements/core';
+import type { ApolloQueryController, ApolloQueryControllerOptions } from '@apollo-elements/core';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
@@ -159,7 +159,7 @@ export declare class ApolloQueryInterface<D extends MaybeTDN = MaybeTDN, V = May
   /**
    * Set to reobserve the `ObservableQuery`
    */
-  declare options: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> | null;
+  declare options: ApolloQueryControllerOptions<D, V>;
 
   /**
    * @summary Whether or not updates to the network status should trigger next on the observer of this query.

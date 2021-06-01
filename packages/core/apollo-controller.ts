@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as E from '@apollo/client/core';
 import type { CustomElement } from '@apollo-elements/interfaces';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { p } from './decorators';
@@ -21,6 +21,8 @@ import type {
 
 import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 
+import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } from './events';
+
 export interface ApolloControllerHost extends ReactiveControllerHost, CustomElement {
   connectedCallback(): void;
   disconnectedCallback(): void;
@@ -35,28 +37,12 @@ export interface ApolloControllerOptions<D, V> {
   client?: ApolloClient<NormalizedCacheObject>;
   variables?: Variables<D, V>;
   context?: any;
-  errorPolicy?: C.ErrorPolicy;
+  errorPolicy?: E.ErrorPolicy;
   /** Host update callback */
   [update]?(properties?: Record<string, unknown>): void;
 }
 
 export const update = Symbol('update');
-
-export class ApolloControllerEvent extends Event {
-  static declare type: 'apollo-controller-connected'|'apollo-controller-disconnected';
-
-  constructor(public controller: ApolloController) {
-    super(ApolloControllerConnectedEvent.type, { bubbles: true, composed: true });
-  }
-}
-
-export class ApolloControllerConnectedEvent extends ApolloControllerEvent {
-  static type = 'apollo-controller-connected' as const;
-}
-
-export class ApolloControllerDisconnectedEvent extends ApolloControllerEvent {
-  static type = 'apollo-controller-disconnected' as const;
-}
 
 export abstract class ApolloController<D extends MaybeTDN = any, V = MaybeVariables<D>>
 implements ReactiveController {

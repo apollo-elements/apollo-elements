@@ -4,7 +4,7 @@ import type * as C from '@apollo/client/core';
 
 import * as S from '@apollo-elements/test/schema';
 
-import * as E from './apollo-controller';
+import * as E from './events';
 
 import { ApolloError } from '@apollo/client/core';
 
@@ -65,7 +65,7 @@ describe('[core] ApolloMutationController', function() {
       beforeEach(() => element.remove());
       beforeEach(nextFrame);
       it('fires event on disconnect', function() {
-        const { type } = E.ApolloControllerConnectedEvent;
+        const { type } = E.ApolloControllerDisconnectedEvent;
         const [event] = handlers[type].lastCall.args;
         expect(event.controller, 'controller').to.equal(element.mutation);
         expect(event.type, 'type').to.equal(type);

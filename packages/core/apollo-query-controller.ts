@@ -57,6 +57,15 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   set query(document: ComponentDocument<D> | null) { this.document = document; }
 
+  /** Flags an element that's ready and able to auto-subscribe */
+  public get canAutoSubscribe(): boolean {
+    return (
+      !!this.client &&
+      !this.options.noAutoSubscribe &&
+      (this.options?.shouldSubscribe?.() ?? true)
+    );
+  }
+
   constructor(
     host: ReactiveControllerHost,
     query?: ComponentDocument<D> | null,
