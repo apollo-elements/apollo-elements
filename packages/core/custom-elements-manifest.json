@@ -1415,6 +1415,64 @@
       "declarations": [
         {
           "kind": "class",
+          "name": "ApolloControllerConnectedEvent",
+          "description": "Fired when a controlled element connects to the DOM",
+          "superclass": {
+            "name": "CustomEvent"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "type": "'apollo-element-connected'"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "type": "ApolloController"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "ApolloControllerDisconnectedEvent",
+          "description": "Fired when a controlled element disconnects from the DOM",
+          "superclass": {
+            "name": "CustomEvent"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "type": "'apollo-element-connected'"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "constructor",
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "type": "ApolloController"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "class",
           "name": "ApolloElementEvent",
           "description": "Fired when an element connects to or disconnects from the DOM",
           "superclass": {

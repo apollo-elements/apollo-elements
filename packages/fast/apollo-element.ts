@@ -29,20 +29,29 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
   @observable called = false;
 
   /** @summary Whether a request is in flight. */
-  @hosted() @attr({ mode: 'boolean' }) loading = false;
+  @hosted()
+  @attr({ mode: 'boolean' })
+  loading = false;
 
   /** @summary The Apollo Client instance */
-  @hosted() @observable
+  @hosted()
+  @observable
   client: C.ApolloClient<C.NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
   /** @summary Latest Data. */
-  @hosted() @observable data: I.Data<D>|null = null;
+  @hosted()
+  @observable
+  data: I.Data<D>|null = null;
 
   /** @summary Latest error */
-  @hosted() @observable error: Error | C.ApolloError | null = null;
+  @hosted()
+  @observable
+  error: Error | C.ApolloError | null = null;
 
   /** @summary Latest errors */
-  @hosted() @observable errors: readonly I.GraphQLError[] = [];
+  @hosted()
+  @observable
+  errors: readonly I.GraphQLError[] = [];
 
   get updateComplete(): Promise<boolean> {
     return DOM.nextUpdate().then(() => true);
