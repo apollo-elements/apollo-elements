@@ -567,17 +567,32 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element!.options = { errorPolicy: 'none' };
           });
 
-          it('sets options', function() {
-            expect(element.options).to.deep.equal({ errorPolicy: 'none' });
+          it('sets new options', function() {
+            const { onData, onError, ...options } = element.options;
+            expect(options).to.deep.equal({ errorPolicy: 'none' });
+          });
+
+          it('retains onData and onError', function() {
+            const { onData, onError } = element.options;
+            expect(onData, 'onData').to.be.an.instanceof(Function);
+            expect(onError, 'onError').to.be.an.instanceof(Function);
           });
 
           describe('then nullifying options property', function() {
             beforeEach(function() {
+              // @ts-expect-error: checking illegal behaviour
               element!.options = null;
             });
 
-            it('sets options', function() {
-              expect(element.options).to.be.null;
+            it('removes options', function() {
+              const { onData, onError, ...options } = element.options;
+              expect(options).to.be.empty;
+            });
+
+            it('retains onData and onError', function() {
+              const { onData, onError } = element.options;
+              expect(onData, 'onData').to.be.an.instanceof(Function);
+              expect(onError, 'onError').to.be.an.instanceof(Function);
             });
           });
         });

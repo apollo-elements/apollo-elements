@@ -2,7 +2,9 @@ import type { TypedDocumentNode, ResultOf } from '@graphql-typed-document-node/c
 
 import * as S from '@apollo-elements/test/schema';
 
-import * as C from './apollo-controller';
+import * as E from './events';
+
+import { update } from './apollo-controller';
 
 import { ApolloError } from '@apollo/client/core';
 
@@ -40,8 +42,8 @@ describe('[core] ApolloSubscriptionController', function() {
       const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
 
       const handlers = {
-        [C.ApolloControllerConnectedEvent.type]: spy(),
-        [C.ApolloControllerDisconnectedEvent.type]: spy(),
+        [E.ApolloControllerConnectedEvent.type]: spy(),
+        [E.ApolloControllerDisconnectedEvent.type]: spy(),
       };
 
       afterEach(resetSpies);
@@ -78,7 +80,7 @@ describe('[core] ApolloSubscriptionController', function() {
 
 
       it('fires "apollo-controller-connected"', function() {
-        const { type } = C.ApolloControllerConnectedEvent;
+        const { type } = E.ApolloControllerConnectedEvent;
         const [event] = handlers[type].lastCall.args;
         expect(event.controller, 'controller').to.equal(element.subscription);
         expect(event.type, 'type').to.equal(type);
@@ -89,7 +91,7 @@ describe('[core] ApolloSubscriptionController', function() {
         beforeEach(() => element.remove());
         beforeEach(nextFrame);
         it('fires event on disconnect', function() {
-          const { type } = C.ApolloControllerConnectedEvent;
+          const { type } = E.ApolloControllerDisconnectedEvent;
           const [event] = handlers[type].lastCall.args;
           expect(event.controller, 'controller').to.equal(element.subscription);
           expect(event.type, 'type').to.equal(type);
@@ -100,7 +102,7 @@ describe('[core] ApolloSubscriptionController', function() {
         let requestUpdateSpy: SinonSpy;
         beforeEach(() => requestUpdateSpy = spy(element, 'requestUpdate'));
         afterEach(() => requestUpdateSpy.restore());
-        beforeEach(() => element.subscription[C.update]());
+        beforeEach(() => element.subscription[update]());
         it('updates the host', function() {
           expect(requestUpdateSpy).to.have.been.calledOnce;
         });

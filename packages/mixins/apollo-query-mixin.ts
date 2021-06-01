@@ -72,12 +72,24 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
      */
     declare variables: I.Variables<D, V> | null;
 
+    get options(): this['controller']['options'] {
+      return this.controller.options;
+    }
+
+    set options(options: this['controller']['options']) {
+      const u = this.controller.options[update];
+      const { onData, onError } = this.controller.options;
+      this.controller.options = {
+        ...options,
+        [update]: u,
+        onData,
+        onError,
+      };
+    }
+
     @controlled({ readonly: true }) readonly partial = false;
 
     @controlled() networkStatus: NetworkStatus = NetworkStatus.ready;
-
-    @controlled()
-    declare options: Partial<C.WatchQueryOptions<I.Variables<D, V>, I.Data<D>>> | null;
 
     @controlled() query: I.ComponentDocument<D> | null = null;
 

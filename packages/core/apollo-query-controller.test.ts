@@ -2,7 +2,9 @@ import type { TypedDocumentNode, ResultOf } from '@graphql-typed-document-node/c
 
 import * as S from '@apollo-elements/test/schema';
 
-import * as C from './apollo-controller';
+import * as E from './events';
+
+import { update } from './apollo-controller';
 
 import { ApolloError, NetworkStatus } from '@apollo/client/core';
 
@@ -40,8 +42,8 @@ describe('[core] ApolloQueryController', function() {
       const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
 
       const handlers = {
-        [C.ApolloControllerConnectedEvent.type]: spy(),
-        [C.ApolloControllerDisconnectedEvent.type]: spy(),
+        [E.ApolloControllerConnectedEvent.type]: spy(),
+        [E.ApolloControllerDisconnectedEvent.type]: spy(),
       };
 
       afterEach(resetSpies);
@@ -82,7 +84,7 @@ describe('[core] ApolloQueryController', function() {
 
 
       it('fires "apollo-controller-connected"', function() {
-        const { type } = C.ApolloControllerConnectedEvent;
+        const { type } = E.ApolloControllerConnectedEvent;
         const [event] = handlers[type].lastCall.args;
         expect(event.controller, 'controller').to.equal(element.query);
         expect(event.type, 'type').to.equal(type);
@@ -93,7 +95,7 @@ describe('[core] ApolloQueryController', function() {
         beforeEach(() => element.remove());
         beforeEach(nextFrame);
         it('fires event on disconnect', function() {
-          const { type } = C.ApolloControllerConnectedEvent;
+          const { type } = E.ApolloControllerDisconnectedEvent;
           const [event] = handlers[type].lastCall.args;
           expect(event.controller, 'controller').to.equal(element.query);
           expect(event.type, 'type').to.equal(type);
@@ -104,7 +106,7 @@ describe('[core] ApolloQueryController', function() {
         let requestUpdateSpy: SinonSpy;
         beforeEach(() => requestUpdateSpy = spy(element, 'requestUpdate'));
         afterEach(() => requestUpdateSpy.restore());
-        beforeEach(() => element.query[C.update]());
+        beforeEach(() => element.query[update]());
         it('updates the host', function() {
           expect(requestUpdateSpy).to.have.been.calledOnce;
         });

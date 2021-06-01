@@ -151,10 +151,10 @@ export function teardownClient(): void {
   window.__APOLLO_CLIENT__ = undefined;
 }
 
-export function makeClient(): ApolloClient<NormalizedCacheObject> {
+export function makeClient({ connectToDevTools = false } = {}): ApolloClient<NormalizedCacheObject> {
   // Create the Apollo Client
   return new ApolloClient({
-    connectToDevTools: false,
+    connectToDevTools,
     link: new SchemaLink({ schema }),
     defaultOptions: {
       watchQuery: {
