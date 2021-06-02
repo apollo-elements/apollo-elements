@@ -39,7 +39,7 @@ export const ApolloSubscription: Hybrids<SubscriptionHybrid> = {
   onSubscriptionComplete: option(),
   onError: option(),
   shouldResubscribe: option(false),
-  notifyOnNetworkStatusChange: option(false),
+  notifyOnNetworkStatusChange: option(),
   pollInterval: option(),
   skip: option(false),
 };

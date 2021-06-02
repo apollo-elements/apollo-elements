@@ -4,7 +4,13 @@ import * as S from '@apollo-elements/test';
 
 import { expect, fixture, nextFrame } from '@open-wc/testing';
 import { define, html, Hybrids } from 'hybrids';
-import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
+import {
+  setupClient,
+  stringify,
+  teardownClient,
+  TestableElement,
+  waitForRender,
+} from '@apollo-elements/test';
 
 import { mutation } from './mutation';
 
@@ -22,7 +28,7 @@ describe('[hybrids] mutation factory', function() {
     afterEach(teardownClient);
 
     describe('with NullableParamMutation controller at "mutation" key', function() {
-      interface H {
+      interface H extends HTMLElement, TestableElement {
         mutation: ApolloMutationController<typeof S.NullableParamMutation>
       }
 
@@ -33,6 +39,12 @@ describe('[hybrids] mutation factory', function() {
 
         define(tag, {
           mutation: mutation(S.NullableParamMutation),
+          $: (host: H) => (id: string) => host.shadowRoot!.getElementById(id),
+          hasRendered: host => async () => {
+            await nextFrame();
+            await host.mutation.host.updateComplete;
+            return host;
+          },
           render: (host: H) => {
             return html`
               <output id="called">${stringify(host.mutation.called)}</output>
@@ -44,7 +56,7 @@ describe('[hybrids] mutation factory', function() {
           },
         } as Hybrids<H>);
 
-        element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
+        element = await fixture<H>(`<${tag}></${tag})`);
       });
 
       it('creates the controller', function() {
@@ -60,13 +72,15 @@ describe('[hybrids] mutation factory', function() {
       describe('calling mutate', function() {
         let p: Promise<any>;
         beforeEach(function() {
-          p = element.mutation.mutate({ variables: { delay: 100 } });
+          p = element.mutation.mutate({ variables: { delay: 200 } });
         });
 
-        beforeEach(nextFrame);
+        beforeEach(waitForRender(() => element));
+
         it('sets loading state', function() {
-          expect(element.mutation.loading).to.be.true;
+          expect(element.mutation.loading, 'in-flight').to.be.true;
         });
+
         it('renders loading state', function() {
           expect(element).shadowDom.to.equal(`
             <output id="called">true</output>
