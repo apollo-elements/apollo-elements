@@ -156,9 +156,6 @@ export declare class ApolloQueryInterface<D extends MaybeTDN = MaybeTDN, V = May
    */
   declare networkStatus: NetworkStatus;
 
-  /**
-   * Set to reobserve the `ObservableQuery`
-   */
   declare options: ApolloQueryControllerOptions<D, V>;
 
   /**

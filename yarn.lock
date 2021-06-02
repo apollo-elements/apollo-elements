@@ -8582,6 +8582,11 @@ hybrids@^5.3.2:
   resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-5.3.2.tgz#8e12fc1f0ca8f106fa9003d7bba964840d75927e"
   integrity sha512-rAlBnKqHnv2miLmhQIzh+0OGx+S91Z0zSHVoBeychHJinxM8Fw5rzr3CJ9n9fOneN4FyfvJmt5fIBw75AcUvtg==
 
+hybrids@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-5.3.3.tgz#32a45b4eaab3126f721ff34be8e73f4ba1652370"
+  integrity sha512-J91rOoJnhBllWZS75Tkq2AUL6fjM6xvVKO8Es9+1LVl3zCQ3OL25/vH05GN3otBEiMKNHu4dNrBMIugmx9GiRg==
+
 iconv-lite@0.4, iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -12607,10 +12612,10 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-rollup-plugin-esbuild@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.2.3.tgz#3d719e58e7a5f84515fe52a58d35bc97a9e7e12c"
-  integrity sha512-GWyDUPv79Iw4uQdizD7ch7yA+wiB9W4Ye01RmO/kuF3yjybluJT5rbmLAnyv3kWmOF8suOjf+TvvBCXEj6qSAw==
+rollup-plugin-esbuild@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.3.1.tgz#47a11b88666f9771455204a04ff84888e341a6cd"
+  integrity sha512-viawNJANaHgA2LEBblVqvRwIiqLoQzIQMCcuUfqrmaiBWhFWurAnk7MWEa4BxUJL4btAOSMSeySTBMfcrRdB8Q==
   dependencies:
     "@rollup/pluginutils" "^4.1.0"
     joycon "^3.0.1"
