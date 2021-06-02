@@ -6,8 +6,6 @@ import { query } from './factories/query';
 import { controlled, option, method } from './factories/controlled';
 
 type Omitted =
-  |'shouldSubscribe'
-  |'canAutoSubscribe'
   |'document'
   |'readyToReceiveDocument'
   |'connectedCallback'
@@ -30,7 +28,19 @@ export const ApolloQuery: Hybrids<QueryHybrid> = {
   query: controlled(),
   networkStatus: controlled(),
   partial: controlled(),
-  options: controlled(),
+  canAutoSubscribe: controlled(false, {
+    setter: host => host.controller.canAutoSubscribe,
+  }),
+
+  options: controlled({}, {
+    setter(host, controller, value) {
+      const {
+        onData = host.onData,
+        onError = host.onError,
+      } = (controller as unknown as typeof host.controller).options;
+      controller.options = { onData, onError, ...value };
+    },
+  }),
 
   subscribe: method(),
   subscribeToMore: method(),
@@ -39,14 +49,16 @@ export const ApolloQuery: Hybrids<QueryHybrid> = {
   refetch: method(),
 
   fetchPolicy: option(),
-  returnPartialData: option(),
+  nextFetchPolicy: option(),
   noAutoSubscribe: option(false),
   notifyOnNetworkStatusChange: option(),
-  nextFetchPolicy: option(),
+  onData: option(data => void data),
+  onError: option(error => void error),
   partialRefetch: option(),
   pollInterval: option(),
-  onData: option(),
-  onError: option(),
+  returnPartialData: option(),
+  shouldSubscribe: option(),
+
 };
 
 export type ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> =
