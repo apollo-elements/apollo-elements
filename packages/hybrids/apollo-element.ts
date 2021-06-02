@@ -1,4 +1,3 @@
-import type * as C from '@apollo/client/core';
 import type { Hybrids } from 'hybrids';
 
 import type { ApolloElementElement } from '@apollo-elements/interfaces/apollo-element';
@@ -20,16 +19,16 @@ type Keys =
 type AE = HTMLElement & Pick<ApolloElementElement, Keys>;
 
 export const ApolloElement: Hybrids<AE> = {
-  client: controlled<C.ApolloClient<C.NormalizedCacheObject>|null>(null),
+  client: controlled(null),
   variables: controlled(null),
   data: controlled(),
   error: controlled(),
   errors: controlled(),
   loading: controlled(),
 
-  context: option<Record<string, unknown>>(),
-  errorPolicy: option<C.ErrorPolicy>(),
-  fetchPolicy: option<string>(),
+  context: option(),
+  errorPolicy: option(),
+  fetchPolicy: option(),
 
   ['hybrids client events' as unknown as symbol]: {
     connect(host: ApolloElementElement) {
