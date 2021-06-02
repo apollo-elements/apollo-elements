@@ -6,11 +6,17 @@ type Controller = ApolloController & { host: HybridsControllerHost };
 
 export function controlled<
   V,
-  E extends HTMLElement = HTMLElement,
-  C extends Controller = Controller
+  E extends HTMLElement,
+  C extends Controller
 >(
   initial?: V,
-  getter: (host: E) => C = host => host['controller' as keyof E] as unknown as C,
+  {
+    getter = host => host['controller' as keyof E] as unknown as C,
+    setter,
+  }: {
+    getter?: (host: E) => C,
+    setter?: (host: E, controller: C, value: C[keyof C]) => C[keyof C];
+  } = {}
 ): Descriptor<E, V> {
   let controller: C;
   let propertyName: keyof typeof controller;
@@ -23,8 +29,11 @@ export function controlled<
     set: (_, v) => {
       if (!controller)
         INITIALS.set(propertyName, v);
+      else if (setter)
+        return setter(_, controller, v);
       else
         controller[propertyName] = v;
+
       return v;
     },
     connect(host, key, invalidate) {

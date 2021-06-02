@@ -1,8 +1,8 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
-import type { Descriptor } from 'hybrids';
+import type { Descriptor, InvalidateOptions } from 'hybrids';
 import type * as I from '@apollo-elements/interfaces';
 
-type Invalidate = Parameters<Exclude<Descriptor<HTMLElement, unknown>['connect'], undefined>>[2];
+type Invalidate = (options?: InvalidateOptions) => void;
 
 export class HybridsControllerHost implements ReactiveControllerHost {
   #controllers = new Set<ReactiveController>();
@@ -22,8 +22,9 @@ export class HybridsControllerHost implements ReactiveControllerHost {
   }
 
   async requestUpdate(): Promise<boolean> {
-    for (const [_, f] of this.#keys) f();
-
+    this.#keys.forEach((invalidate, key) => {
+      invalidate({ force: true });
+    });
     return this.updateComplete;
   }
 
@@ -41,7 +42,8 @@ export function controller<E extends HTMLElement, C extends ReactiveController>(
   const controllers = new WeakMap<E, ReactiveController>();
   return {
     get(element) {
-      return controllers.get(element) as C;
+      const c = controllers.get(element) as C;
+      return (x => x)(c);
     },
     connect(element, key, invalidate) {
       if (!hosts.get(element))
