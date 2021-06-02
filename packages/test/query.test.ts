@@ -568,7 +568,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('sets new options', function() {
-            const { onData, onError, ...options } = element.options;
+            const { onData, onError, shouldSubscribe, ...options } = element.options;
             expect(options).to.deep.equal({ errorPolicy: 'none' });
           });
 
@@ -585,7 +585,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             it('removes options', function() {
-              const { onData, onError, ...options } = element.options;
+              const { onData, onError, shouldSubscribe, ...options } = element.options;
               expect(options).to.be.empty;
             });
 

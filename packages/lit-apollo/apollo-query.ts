@@ -59,7 +59,16 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
   /** @summary Flags an element that's ready and able to auto subscribe */
   @controlled({ readonly: true }) @state() canAutoSubscribe = false;
 
-  @controlled() @state() options = this.controller.options;
+  get options(): ApolloQueryController<D, V>['options'] {
+    return this.controller.options;
+  }
+
+  set options(v: ApolloQueryController<D, V>['options']) {
+    const { onData, onError, shouldSubscribe } = this.controller.options;
+    this.controller.options = {
+      onData, onError, shouldSubscribe, ...v,
+    };
+  }
 
   /**
    * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)
