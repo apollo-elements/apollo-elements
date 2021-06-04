@@ -33,7 +33,7 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstanc
   class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
     extends ApolloElementMixin(base)<D, V>
     implements I.ApolloMutationInterface<D, V> {
-    static documentType = 'mutation' as const;
+    static override documentType = 'mutation' as const;
 
     static get observedAttributes(): string[] {
       return [
@@ -74,7 +74,7 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstanc
       ...params: Parameters<C.MutationUpdaterFn<I.Data<D>>>
     ): ReturnType<C.MutationUpdaterFn<I.Data<D>>>;
 
-    attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+    override attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);
       /* c8 ignore start */
       // @ts-expect-error: ts is not tracking the static side

@@ -39,9 +39,9 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
   class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
     extends ApolloElementMixin(superclass)<D, V>
     implements Omit<I.ApolloQueryInterface<D, V>, 'shouldSubscribe'> {
-    static documentType = 'query' as const;
+    static override documentType = 'query' as const;
 
-    static get observedAttributes(): string[] {
+    static override get observedAttributes(): string[] {
       return [
         // exists on ApolloElement
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -130,7 +130,7 @@ function ApolloQueryMixinImpl<B extends I.Constructor>(superclass: B): MixinInst
 
     @controlled({ readonly: true }) readonly canAutoSubscribe = true;
 
-    attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
+    override attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);
       // @ts-expect-error: ts is not tracking the static side
       if (super.constructor?.observedAttributes?.includes?.(name))
