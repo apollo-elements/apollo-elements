@@ -1,16 +1,24 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
 import type { Descriptor, InvalidateOptions } from 'hybrids';
-import type * as I from '@apollo-elements/interfaces';
+
+type Constructor<T> = { new (...a: any[]): T; }
 
 type Invalidate = (options?: InvalidateOptions) => void;
+
+type ControllerRecord = {
+  invalidate: Invalidate;
+  controller: ReactiveController;
+}
 
 export class HybridsControllerHost implements ReactiveControllerHost {
   #controllers = new Set<ReactiveController>();
 
-  #keys = new Map<string|number|symbol, Invalidate>();
+  #keys = new Map<string|number|symbol, ControllerRecord>();
 
-  register(key: string|number|symbol, invalidate: Invalidate): void {
-    this.#keys.set(key, invalidate);
+  constructor(public element: HTMLElement) {}
+
+  register(key: string|number|symbol, record: ControllerRecord): void {
+    this.#keys.set(key, record);
   }
 
   addController(controller: ReactiveController): void {
@@ -19,10 +27,18 @@ export class HybridsControllerHost implements ReactiveControllerHost {
 
   removeController(controller: ReactiveController): void {
     this.#controllers.delete(controller);
+    for (const [key, r] of this.#keys) {
+      if (r.controller === controller)
+        this.#keys.delete(key);
+    }
+  }
+
+  dispatchEvent(...args: Parameters<EventTarget['dispatchEvent']>): boolean {
+    return this.element.dispatchEvent(...args);
   }
 
   async requestUpdate(): Promise<boolean> {
-    this.#keys.forEach((invalidate, key) => {
+    this.#keys.forEach(({ invalidate }, key) => {
       invalidate({ force: true });
     });
     return this.updateComplete;
@@ -36,7 +52,7 @@ export class HybridsControllerHost implements ReactiveControllerHost {
 const hosts = new WeakMap<HTMLElement, HybridsControllerHost>();
 
 export function controller<E extends HTMLElement, C extends ReactiveController>(
-  Controller: I.Constructor<C>,
+  Controller: Constructor<C>,
   ...args: any[]
 ): Descriptor<E, C> {
   const controllers = new WeakMap<E, ReactiveController>();
@@ -47,23 +63,21 @@ export function controller<E extends HTMLElement, C extends ReactiveController>(
     },
     connect(element, key, invalidate) {
       if (!hosts.get(element))
-        hosts.set(element, new HybridsControllerHost());
+        hosts.set(element, new HybridsControllerHost(element));
 
-      const host = hosts.get(element);
+      const host = hosts.get(element) as HybridsControllerHost;
 
-      if (!host)
-        throw new Error('Unexpected');
+      let controller = controllers.get(element);
 
-      host.register(key, invalidate);
+      controller ??= new Controller(hosts.get(element), ...args);
+      controllers.set(element, controller);
 
-      let c = controllers.get(element);
-      c ??= new Controller(hosts.get(element), ...args);
-      controllers.set(element, c);
+      host.register(key, { invalidate, controller });
 
-      c.hostConnected?.();
+      controller.hostConnected?.();
 
       return () => {
-        c?.hostDisconnected?.();
+        controller?.hostDisconnected?.();
       };
     },
   };
