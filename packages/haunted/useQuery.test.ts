@@ -81,7 +81,7 @@ describe('[haunted] useQuery', function() {
               element.shadowRoot!.getElementById('stop')!.click();
             });
 
-            beforeEach(() => aTimeout(80));
+            beforeEach(() => aTimeout(70));
 
             it('stops calling refetch', function() {
               expect(refetchSpy).to.have.been.calledThrice;
