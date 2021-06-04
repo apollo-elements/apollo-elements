@@ -15,8 +15,8 @@ export declare class GQLScriptChild<
   D extends I.MaybeTDN = I.MaybeTDN,
   V = I.MaybeVariables<D>
 > extends I.ApolloElementElement<D, V> {
-  getDOMGraphQLDocument(): this['document'];
-  getDOMVariables(): this['variables'];
+  getDOMGraphQLDocument(): Promise<this['document']>;
+  getDOMVariables(): Promise<this['variables']>;
 }
 
 function GraphQLScriptChildMixinImplementation<
@@ -33,13 +33,13 @@ function GraphQLScriptChildMixinImplementation<
     /**
      * When encountering a DOM Mutation, update the element's state if relevant.
      */
-    private matchNode(node: Node): void {
+    private async matchNode(node: Node): Promise<void> {
       if (!(node instanceof HTMLScriptElement))
         return; /* c8 ignore next */ // it's covered
       if (node.matches(SELECTORS.GQL))
-        this.document = this.getDOMGraphQLDocument();
+        this.document = await this.getDOMGraphQLDocument();
       if (node.matches(SELECTORS.VAR))
-        this.variables = this.getDOMVariables();
+        this.variables = await (this.getDOMVariables());
     }
 
     /**
@@ -59,19 +59,31 @@ function GraphQLScriptChildMixinImplementation<
      * @summary Get a GraphQL DocumentNode from the element's GraphQL script child
      * @protected
      */
-    getDOMGraphQLDocument(): this['document'] {
+    async getDOMGraphQLDocument(): Promise<this['document']> {
       const script = this.querySelector(SELECTORS.GQL);
       /* c8 ignore start */ // covered
-      if (!script?.innerText)
+      if (script?.src)
+        return await fetch(script?.src).then(x => x.text()).then(x => this.parseGQL(x));
+      else if (!script?.innerText)
         return null;
-      else {
-        try {
-          return gql(stripHTMLComments(script.innerText));
-          /* c8 ignore stop */
-        } catch (err) {
-          this.error = err;
-          return null;
-        }
+      else
+        return this.parseGQL(script.innerText);
+    }
+
+    private parseGQL(text: string): this['document'] {
+      try {
+        return gql(stripHTMLComments(text));
+      } catch (err) {
+        this.error = err;
+        return null;
+      }
+    }
+
+    private parseVariables(text: string): this['variables'] {
+      try {
+        return JSON.parse(text); /* c8 ignore next */ // covered
+      } catch {
+        return null;
       }
     }
 
@@ -81,20 +93,21 @@ function GraphQLScriptChildMixinImplementation<
      */
     getDOMVariables(): this['variables'] {
       const script = this.querySelector(SELECTORS.VAR);
-      if (!script) return null; /* c8 ignore next */ // covered
-      try {
-        return JSON.parse(script.innerText); /* c8 ignore next */ // covered
-      } catch {
+      if (!script)
         return null;
-      }
+      // TODO: Allow this to be async without breaking <apollo-mutation> (see constructor)
+      // else if (script.src)
+      //   return await fetch(script.src).then(x => x.json());
+      else
+        return this.parseVariables(script.innerText);
     }
 
-    connectedCallback(): void {
+    async connectedCallback(): Promise<void> {
       this.mo = new MutationObserver(this.onDOMMutation.bind(this));
       this.mo.observe(this, { characterData: true, childList: true, subtree: true });
-      this.document ??= this.getDOMGraphQLDocument();
-      this.variables ??= this.getDOMVariables();
       super.connectedCallback?.();
+      this.document ??= await this.getDOMGraphQLDocument();
+      this.variables ??= this.getDOMVariables();
     }
 
     disconnectedCallback(): void {
