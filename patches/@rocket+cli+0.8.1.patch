@@ -1,0 +1,26 @@
+diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
+index 9883cfb..3769f36 100755
+--- a/node_modules/@rocket/cli/src/RocketLint.js
++++ b/node_modules/@rocket/cli/src/RocketLint.js
+@@ -57,7 +57,7 @@ export class RocketLint {
+ 
+     const { errors, message } = await checkLinks.run();
+     if (errors.length > 0) {
+-      if (this.config.command === 'start') {
++      if (this.config.command === 'start' || process.env.CI) {
+         console.log(message);
+       } else {
+         throw new Error(message);
+diff --git a/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs b/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs
+index 349831f..4a2f4e8 100644
+--- a/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs
++++ b/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs
+@@ -99,7 +99,7 @@ function getImages(html) {
+         const src = getAttribute(data, 'src');
+         const title = getAttribute(data, 'title');
+         const alt = getAttribute(data, 'alt');
+-        if (presetName) {
++        if (presetName && !src.match(/^https?\:\/\//)) {
+           images.push({
+             presetName,
+             attributes,
