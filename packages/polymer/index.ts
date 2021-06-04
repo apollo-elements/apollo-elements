@@ -1,3 +1,3 @@
-export * from './apollo-query';
-export * from './apollo-mutation';
-export * from './apollo-subscription';
+export * from './polymer-apollo-query';
+export * from './polymer-apollo-mutation';
+export * from './polymer-apollo-subscription';

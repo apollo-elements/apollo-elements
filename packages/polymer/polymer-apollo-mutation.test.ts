@@ -25,9 +25,9 @@ import { setupMutationClass, describeMutation } from '@apollo-elements/test/muta
 
 import { GraphQLError } from 'graphql';
 
-import './apollo-mutation';
+import './polymer-apollo-mutation';
 
-import { PolymerApolloMutation } from './apollo-mutation';
+import { PolymerApolloMutation } from './polymer-apollo-mutation';
 
 import { PolymerElement, html } from '@polymer/polymer';
 import { flush } from '@polymer/polymer/lib/utils/flush';
@@ -106,11 +106,11 @@ class WrapperElement extends PolymerElement {
 
   static get template() {
     return html`
-      <apollo-mutation id="mutation"
+      <polymer-apollo-mutation id="mutation"
           mutation="[[mutation]]"
           variables="[[variables]]"
           data="{{data}}">
-      </apollo-mutation>
+      </polymer-apollo-mutation>
 
       <button id="button" on-click="onClick"></button>
 
@@ -123,7 +123,7 @@ class WrapperElement extends PolymerElement {
   }
 }
 
-describe('[polymer] <apollo-mutation>', function() {
+describe('[polymer] <polymer-apollo-mutation>', function() {
   describeMutation({
     class: TestableApolloMutation,
     setupFunction: setupMutationClass(TestableApolloMutation),
@@ -136,7 +136,7 @@ describe('[polymer] <apollo-mutation>', function() {
     let element: PolymerApolloMutation;
 
     beforeEach(async function setupElement() {
-      element = await fixture(`<apollo-mutation></apollo-mutation>`);
+      element = await fixture(`<polymer-apollo-mutation></polymer-apollo-mutation>`);
     });
 
     it('notifies on data change', async function() {
@@ -205,7 +205,7 @@ describe('[polymer] <apollo-mutation>', function() {
 
     it('binds data up into parent component', async function() {
       expect(wrapper).shadowDom.to.equal(`
-        <apollo-mutation id="mutation"></apollo-mutation>
+        <polymer-apollo-mutation id="mutation"></polymer-apollo-mutation>
         <button id="button"></button>
         <output>🤡</output>
       `);
