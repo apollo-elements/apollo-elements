@@ -48,6 +48,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
 
   private observableSubscription?: ZenObservable.Subscription;
 
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
   declare options: ApolloSubscriptionControllerOptions<D, V>;
 
   #hasDisconnected = false;
@@ -76,7 +77,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     this.init(subscription ?? null);
   }
 
-  hostConnected(): void {
+  override hostConnected(): void {
     super.hostConnected();
     if (this.#hasDisconnected && this.observableSubscription)
       this.subscribe();
@@ -84,7 +85,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
       this.documentChanged(this.subscription);
   }
 
-  hostDisconnected(): void {
+  override hostDisconnected(): void {
     this.cancel();
     this.#hasDisconnected = true;
     super.hostDisconnected();
@@ -178,14 +179,14 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     }
   }
 
-  protected clientChanged(): void {
+  protected override clientChanged(): void {
     if (
       this.canSubscribe() &&
       (this.options.shouldSubscribe?.() ?? true)
     ) this.subscribe();
   }
 
-  protected documentChanged(doc?: ComponentDocument<D> | null): void {
+  protected override documentChanged(doc?: ComponentDocument<D> | null): void {
     const query = doc ?? undefined;
     if (doc === this.#lastSubscriptionDocument)
       return;
@@ -197,7 +198,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
       this.subscribe();
   }
 
-  protected variablesChanged(variables?: Variables<D, V>): void {
+  protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
     if (this.canSubscribe({ variables }) && (this.options.shouldSubscribe?.({ variables }) ?? true))
       this.subscribe();
