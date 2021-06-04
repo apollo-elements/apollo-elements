@@ -16,11 +16,13 @@ const last = Symbol('PolymerElement last known');
  * @fires 'errors-changed'
  * @fires 'loading-changed'
  */
-export class PolymerApolloElement<
+export abstract class PolymerApolloElement<
   D extends I.MaybeTDN = I.MaybeTDN,
   V = I.MaybeVariables<D>
 > extends ApolloElementMixin(HTMLElement)<D, V>
   implements I.ApolloElementInterface<D, V> {
+  static readonly is: `polymer-apollo-${'mutation'|'query'|'subscription'}`;
+
   declare client: ApolloClient<NormalizedCacheObject>;
 
   declare context?: Record<string, unknown>;

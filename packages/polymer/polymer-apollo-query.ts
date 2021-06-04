@@ -1,13 +1,13 @@
 import type * as I from '@apollo-elements/interfaces';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
-import { PolymerApolloElement } from './apollo-element';
+import { PolymerApolloElement } from './polymer-apollo-element';
 import { notify } from './notify-decorator';
 
 /**
- * @element apollo-query
+ * @element polymer-apollo-query
  *
- * `<apollo-query>` fires Polymer-style prop-changed events
+ * `<polymer-apollo-query>` fires Polymer-style prop-changed events
  * when its `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
@@ -15,11 +15,11 @@ import { notify } from './notify-decorator';
  *
  * @example
  * ```html
- * <apollo-query
+ * <polymer-apollo-query
  *     data="{{data}}"
  *     variables="[[variables]]"
  *     query="[[UserQuery]]"
- * ></apollo-query>
+ * ></polymer-apollo-query>
  *
  * <paper-icon-item>
  *   <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
@@ -34,11 +34,17 @@ import { notify } from './notify-decorator';
  * @fires 'network-status-changed'
  */
 export class PolymerApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloQueryMixin(PolymerApolloElement as I.Constructor<PolymerApolloElement>)<D, V>
+  extends ApolloQueryMixin(
+    PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
+  )<D, V>
   implements I.ApolloQueryInterface<D, V> {
+  static readonly is = 'polymer-apollo-query';
+
   @notify() networkStatus: NetworkStatus = NetworkStatus.ready;
 }
 
-customElements.define('apollo-query', PolymerApolloQuery);
+customElements.define(PolymerApolloQuery.is, PolymerApolloQuery);
 
-declare global { interface HTMLElementTagNameMap { 'apollo-query': PolymerApolloQuery; } }
+declare global { interface HTMLElementTagNameMap {
+  'polymer-apollo-query': PolymerApolloQuery;
+} }
