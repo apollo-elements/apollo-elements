@@ -39,7 +39,7 @@ function GraphQLScriptChildMixinImplementation<
       if (node.matches(SELECTORS.GQL))
         this.document = await this.getDOMGraphQLDocument();
       if (node.matches(SELECTORS.VAR))
-        this.variables = await (this.getDOMVariables());
+        this.variables = this.getDOMVariables();
     }
 
     /**
@@ -105,9 +105,9 @@ function GraphQLScriptChildMixinImplementation<
     async connectedCallback(): Promise<void> {
       this.mo = new MutationObserver(this.onDOMMutation.bind(this));
       this.mo.observe(this, { characterData: true, childList: true, subtree: true });
-      super.connectedCallback?.();
       this.document ??= await this.getDOMGraphQLDocument();
       this.variables ??= this.getDOMVariables();
+      super.connectedCallback?.();
     }
 
     disconnectedCallback(): void {
