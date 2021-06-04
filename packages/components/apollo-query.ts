@@ -6,7 +6,10 @@ import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-
 
 import { ApolloElement } from './apollo-element';
 
-import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
+import {
+  ApolloQueryController,
+  ApolloQueryControllerOptions,
+} from '@apollo-elements/core/apollo-query-controller';
 
 import { NetworkStatus } from '@apollo/client/core';
 
@@ -75,12 +78,12 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
   implements Omit<I.ApolloQueryInterface<D, V>, PrivateKeys> {
   static readonly is = 'apollo-query';
 
-  controller = new ApolloQueryController<D, V>(this);
+  controller: ApolloQueryController<D, V> = new ApolloQueryController<D, V>(this);
 
   /** @summary Flags an element that's ready and able to auto subscribe */
   @controlled({ readonly: true }) @state() canAutoSubscribe = false;
 
-  @controlled() @state() options = {};
+  @controlled() @state() options: ApolloQueryControllerOptions<D, V> = {};
 
   /**
    * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)
