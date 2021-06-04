@@ -10,15 +10,6 @@ callToActionItems:
   - text: API Docs
     href: /api/
 
-blurbHeader: What is Apollo Elements?
-blurbs:
-  - header: High-Performance
-    text: 'Leverage the modern web platform to deliver less JavaScript, without sacrificing <abbr title="developer experience">DX</abbr>.'
-  - header: GraphQL
-    text: Write declarative, expressive frontends and manage client-side state using GraphQL.
-  - header: Interoperable
-    text: Use your GraphQL components in any other frontend framework, or none!
-
 frameworkDemos:
   - framework: angular
     frameworkAlt: Angular
@@ -72,37 +63,127 @@ libraries:
 
 ---
 
-## Declarative GraphQL Components
-
 ```html playground query-spacex
 <apollo-client uri="https://api.spacex.land/graphql">
   <apollo-query>
-    <script type="application/graphql">
-      query LatestLaunch {
-        launchLatest {
-          id
-          launch_date_utc
-          links { mission_patch }
-          mission_name
-          rocket { rocket_name }
-        }
-      }
-    </script>
+    <script type="application/graphql" src="queries/LatestLaunch.graphql"></script>
     <template>
       <link rel="stylesheet" href="components/spacex-launch.css"/>
-      <h2>Latest Launch</h2>
-      <img .src="{%raw%}{{ data.launchLatest.links.mission_patch }}{%endraw%}"
-           alt="mission patch"/>
-      <p>
-        Mission {%raw%}{{ data.launchLatest.id }}{%endraw%},
-                 <strong>{%raw%}{{ data.launchLatest.mission_name }}{%endraw%}</strong>
-        Launched <time>{%raw%}{{ data.launchLatest.launch_date_utc }}{%endraw%}</time>
-        aboard   <strong>{%raw%}{{ data.launchLatest.rocket.rocket_name }}{%endraw%}</strong>
-      </p>
+      <article class="{%raw%}{{ data ? 'resolved' : 'loading' }}{%endraw%}">
+        <h2>Latest Launch</h2>
+        <img .src="{%raw%}{{ data.launchLatest.links.mission_patch }}{%endraw%}"
+             alt="mission patch"/>
+        <p>
+          Mission {%raw%}{{ data.launchLatest.id }}{%endraw%},
+                   <strong>{%raw%}{{ data.launchLatest.mission_name }}{%endraw%}</strong>
+          Launched <time>{%raw%}{{ data.launchLatest.launch_date_utc }}{%endraw%}</time>
+          aboard   <strong>{%raw%}{{ data.launchLatest.rocket.rocket_name }}{%endraw%}</strong>
+        </p>
+      </article>
     </template>
   </apollo-query>
 </apollo-client>
+<script src="type-policies.js"></script>
 ```
+
+```js playground-file query-spacex type-policies.js
+document
+  .querySelector('apollo-client')
+  .addEventListener('client-changed', event => {
+    if (!event.detail.client) return;
+    event.detail.client.cache.policies.addTypePolicies({
+      Launch: {
+        fields: {
+          launch_date_utc(next, options) {
+            try {
+              return new Date(next).toDateString();
+            } catch(e) {
+              return next;
+            }
+          }
+        }
+      }
+    });
+  });
+```
+
+```css playground-file query-spacex style.css
+html,
+body {
+  background: black;
+  font-family: 'Open sans';
+  color: white;
+}
+```
+
+```css playground-file query-spacex components/spacex-launch.css
+article {
+  display: grid;
+  grid-template-areas: 'h i' 'p p';
+  grid-template-columns: auto min-content;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+:host([loading]) article { display: none; }
+article { opacity: 0; }
+h2 { grid-area: h; }
+p { grid-area: p; }
+img, p { display: block; }
+
+.resolved {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+img {
+  max-width: 50px;
+  grid-area: i;
+  place-self: center;
+}
+```
+
+```graphql playground-file query-spacex queries/LatestLaunch.graphql
+query LatestLaunch {
+  launchLatest {
+    id
+    launch_date_utc
+    links { mission_patch }
+    mission_name
+    rocket { rocket_name }
+  }
+}
+```
+
+```json playground-import-map query-spacex
+{
+  "imports": {
+    "@apollo-elements/components": "ORIGIN/_assets/_static/apollo-elements.js"
+  }
+}
+```
+
+
+<h2 class="reason-header">Why Apollo Elements?</h2>
+
+<section class="reasons">
+
+<article>
+  <h3>High-Performance</h3>
+  Leverage the modern web platform to deliver less JavaScript, without sacrificing <abbr title="developer experience">DX</abbr>.
+</article>
+
+<article>
+  <h3>GraphQL</h3>
+  Write declarative, expressive frontends and manage client-side state using GraphQL.
+</article>
+
+<article>
+  <h3>Interoperable</h3>
+  Use your GraphQL components in any other frontend framework, or none!
+</article>
+
+</section>
 
 Write GraphQL web applications with **declarative HTML** templates.
 Define **custom** query, mutation, or subscription components in JavaScript or TypeScript using your favourite web component library.
@@ -138,20 +219,12 @@ function loadDemo() {
 }
 ```
 
-<script type="playground-config" data-helmet for="query-spacex">
-{
-  "files":{
-    "style.css":{
-      "content":"html,\nbody {\n  background: black;\n  font-family: 'Open sans';\n  color: white;\n}"
-    },
-    "components/spacex-launch.css":{
-      "content":":host {\n  display: flex;\n  flex-direction: column; \n  gap: 12px; \n  padding: 0 12px;\n }\n\nimg, p {\n  display: block;\n}"
-    }
-  },
-  "importMap": {
-    "imports": {
-      "@apollo-elements/components": "ORIGIN/_assets/_static/apollo-elements.js"
-    }
-  }
+<style data-helmet>
+.reasons {
+  margin-bottom: 36px;
 }
-</script>
+
+#query-spacex {
+  --playground-ide-height: 25em;
+}
+</style>

@@ -1,0 +1,54 @@
+diff --git a/node_modules/bind-decorator/index.d.ts b/node_modules/bind-decorator/index.d.ts
+index 5377cfb..6d8c82b 100644
+--- a/node_modules/bind-decorator/index.d.ts
++++ b/node_modules/bind-decorator/index.d.ts
+@@ -1,2 +1,2 @@
+-export declare function bind<T extends Function>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<T>): TypedPropertyDescriptor<T> | void;
+-export default bind;
++export declare function bound<T extends Function>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<T>): TypedPropertyDescriptor<T> | void;
++export default bound;
+diff --git a/node_modules/bind-decorator/index.js b/node_modules/bind-decorator/index.js
+index 423be2d..33c4dfa 100644
+--- a/node_modules/bind-decorator/index.js
++++ b/node_modules/bind-decorator/index.js
+@@ -1,27 +1,14 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-var constants;
+-(function (constants) {
+-    constants.typeOfFunction = 'function';
+-    constants.boolTrue = true;
+-})(constants || (constants = {}));
+-function bind(target, propertyKey, descriptor) {
+-    if (!descriptor || (typeof descriptor.value !== constants.typeOfFunction)) {
+-        throw new TypeError("Only methods can be decorated with @bind. <" + propertyKey + "> is not a method!");
+-    }
+-    return {
+-        configurable: constants.boolTrue,
+-        get: function () {
+-            var bound = descriptor.value.bind(this);
+-            // Credits to https://github.com/andreypopp/autobind-decorator for memoizing the result of bind against a symbol on the instance.
+-            Object.defineProperty(this, propertyKey, {
+-                value: bound,
+-                configurable: constants.boolTrue,
+-                writable: constants.boolTrue
+-            });
+-            return bound;
+-        }
+-    };
++const configurable = true;
++export function bound(_, key, descriptor) {
++  if (typeof descriptor?.value !== 'function')
++    throw new TypeError(`Only methods can be decorated with @bound. <${key ?? _.name}> is not a method!`);
++  return {
++    configurable,
++    get() {
++      const value = descriptor.value.bind(this);
++      Object.defineProperty(this, key, { value, configurable, writable: true });
++      return value;
++    },
++  };
+ }
+-exports.bind = bind;
+-exports.default = bind;
++export default bound;
