@@ -22,7 +22,7 @@ import * as Lit from '@apollo-elements/lit-apollo';
 import * as LitDeco from 'lit/decorators.js';
 import * as Haunted from '@apollo-elements/haunted';
 import * as Hybrids from '@apollo-elements/hybrids';
-import * as Polymer from '@apollo-elements/polymer';
+import '@apollo-elements/polymer/polymer-apollo-query';
 
 import {
   aTimeout,
@@ -357,27 +357,19 @@ describe('<apollo-client>', function() {
         polymer: 'polymer-apollo-query',
       };
 
-      @FAST.customElement({ name: TAG_NAMES.fast }) class FASTApolloQuery extends FAST.ApolloQuery {
-        query = TagNameQuery;
-        variables = { tagName: this.localName };
-      }
+      @FAST.customElement({ name: TAG_NAMES.fast })
+      class FASTApolloQuery extends FAST.ApolloQuery { }
 
-      @LitDeco.customElement(TAG_NAMES.lit) class LitApolloQuery extends Lit.ApolloQuery {
-        query = TagNameQuery;
-        variables = { tagName: this.localName };
-      }
-
-      customElements.define(TAG_NAMES.polymer, class PolymerApolloQuery extends Polymer.PolymerApolloQuery {
-        query = TagNameQuery
-        variables = { tagName: this.localName };
-      });
+      @LitDeco.customElement(TAG_NAMES.lit)
+      class LitApolloQuery extends Lit.ApolloQuery { }
 
       Object.values(TAG_NAMES).forEach(tagName => {
         describe(tagName, function() {
           beforeEach(async function(this: Mocha.Context) {
-            await fixture(`
+            const name = unsafeStatic(tagName);
+            await fixture(html`
               <apollo-client uri="/graphql">
-                <${tagName}></${tagName}>
+                <${name} .query="${TagNameQuery}" .variables="${{ tagName }}"></${name}>
               </apollo-client>
             `);
           });
