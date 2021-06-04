@@ -139,16 +139,11 @@ describe('[core] ApolloMutationController', function() {
             expect(element.mutation.mutation).to.equal(element.mutation.document);
           });
           describe('set mutation', function() {
-            beforeEach(() => element.mutation.documentChanged = spy());
             beforeEach(() => element.mutation.variables = { nullable: '' });
             // @ts-expect-error: wrong mutation document!
             beforeEach(() => element.mutation.mutation = S.UpdateUserMutation);
             it('sets document', function() {
               expect(element.mutation.document).to.equal(S.UpdateUserMutation);
-            });
-            it('calls documentChanged', function() {
-              const [document] = (element.mutation.documentChanged as SinonSpy).lastCall.args;
-              expect(document).to.equal(S.UpdateUserMutation);
             });
           });
         });
@@ -158,14 +153,9 @@ describe('[core] ApolloMutationController', function() {
             expect(element.mutation.variables).to.not.be.ok;
           });
           describe('set variables', function() {
-            beforeEach(() => element.mutation.variablesChanged = spy());
             beforeEach(() => element.mutation.variables = { nullable: '' });
             it('sets variables', function() {
               expect(element.mutation.variables).to.deep.equal({ nullable: '' });
-            });
-            it('calls variablesChanged', function() {
-              const [variables] = (element.mutation.variablesChanged as SinonSpy).lastCall.args;
-              expect(variables).to.deep.equal({ nullable: '' });
             });
           });
         });
