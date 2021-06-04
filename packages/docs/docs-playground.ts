@@ -1,3 +1,4 @@
+import type { ProjectManifest } from 'playground-elements/shared/worker-api.js';
 import type { PlaygroundIde } from 'playground-elements/playground-ide'
 
 const template = document.createElement("template");
@@ -162,10 +163,10 @@ export class DocsPlayground extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['show'];
+    return ['show', 'playground-url'];
   }
 
-  static makePreview(content) {
+  static makePreview(content: string) {
     return `<!-- playground-hide -->
 <!doctype html>
 <head>
@@ -192,6 +193,16 @@ ${content}
     return this.$('button') as HTMLButtonElement;
   }
 
+  playgroundUrl = 'https://unpkg.com/playground-elements@0.9.4?module';
+
+  attributeChangedCallback(name: string, _: string, next: string) {
+    switch (name) {
+      case 'playground-url':
+        if (this.playgroundUrl !== next)
+          this.playgroundUrl = next;
+    }
+  }
+
   constructor() {
     super();
     this.show = this.show.bind(this);
@@ -203,19 +214,22 @@ ${content}
 
   }
 
-  static tryParse(selector) {
-    const script = document.querySelector(selector);
-    try {
-      return JSON.parse(script.textContent.replace(/ORIGIN/g, window.location.origin));
-    } catch (error) {
-      console.error('Could Not Configure Playground:', error);
-      return undefined;
-    }
+  connectedCallback() {
+    window.requestIdleCallback?.(() => this.importPlayground())
+    const files = Object.fromEntries(Array.from(document.querySelectorAll<HTMLTemplateElement>(
+      `[data-playground-id="${this.id}"]`
+    ), e => [e.dataset.filename, { content: e.content.textContent.trim() }]))
+    const importMapTemplate = document.querySelector<HTMLTemplateElement>(
+      `[data-import-map="${this.id}"]`
+    )
+    const config: ProjectManifest = { files };
+    if (importMapTemplate)
+      config.importMap = JSON.parse(importMapTemplate.content.textContent.replace(/ORIGIN/g, window.location.origin));
+    this.init(config);
   }
 
-  async connectedCallback() {
+  async init(config: ProjectManifest) {
     const content = this.textContent.trim();
-    const config = DocsPlayground.tryParse(`[type="playground-config"][for="${this.id}"]`);
     const pathname = new URL('/_assets/_static/apollo-elements.js', location.origin).toString();
     this.playgroundIde.config = {
       ...config,
@@ -233,11 +247,14 @@ ${content}
     }
   }
 
+  async importPlayground() {
+    await import(this.playgroundUrl);
+  }
+
   async show() {
     this.setAttribute('loading', '');
     this.button.disabled = true;
-    const IMPORT_URL = 'https://cdn.skypack.dev/playground-elements@0.9.2';
-    await import(IMPORT_URL);
+    await this.importPlayground();
     this.setAttribute("show", '');
     this.button.disabled = false;
 
@@ -250,3 +267,22 @@ ${content}
 }
 
 customElements.define(DocsPlayground.is, DocsPlayground);
+
+type RequestIdleCallbackHandle = any;
+type RequestIdleCallbackOptions = {
+  timeout: number;
+};
+type RequestIdleCallbackDeadline = {
+  readonly didTimeout: boolean;
+  timeRemaining: (() => number);
+};
+
+declare global {
+  interface Window {
+    requestIdleCallback: ((
+      callback: ((deadline: RequestIdleCallbackDeadline) => void),
+      opts?: RequestIdleCallbackOptions,
+    ) => RequestIdleCallbackHandle);
+    cancelIdleCallback: ((handle: RequestIdleCallbackHandle) => void);
+  }
+}

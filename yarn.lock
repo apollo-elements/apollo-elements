@@ -8577,11 +8577,6 @@ husky@^6.0.0:
   resolved "https://registry.yarnpkg.com/husky/-/husky-6.0.0.tgz#810f11869adf51604c32ea577edbc377d7f9319e"
   integrity sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==
 
-hybrids@^5.3.2:
-  version "5.3.2"
-  resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-5.3.2.tgz#8e12fc1f0ca8f106fa9003d7bba964840d75927e"
-  integrity sha512-rAlBnKqHnv2miLmhQIzh+0OGx+S91Z0zSHVoBeychHJinxM8Fw5rzr3CJ9n9fOneN4FyfvJmt5fIBw75AcUvtg==
-
 hybrids@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/hybrids/-/hybrids-5.3.3.tgz#32a45b4eaab3126f721ff34be8e73f4ba1652370"
