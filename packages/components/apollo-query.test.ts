@@ -500,13 +500,18 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       `);
     });
 
-    beforeEach(nextFrame);
+    beforeEach(() => element.updateComplete);
 
     it('renders', function() {
       expect(element.$$('h1').length).to.equal(1);
       expect(element.$$('span').length).to.equal(2);
       expect(element.$('#data')).to.be.ok;
       expect(element.$('#data')?.textContent).to.equal('noParam');
+    });
+
+    it('removes loading attribute', function() {
+      expect(element.loading, 'property').to.be.false;
+      expect(element.hasAttribute('loading'), 'attribute').to.be.false;
     });
   });
 
