@@ -1,6 +1,7 @@
 import type * as I from '@apollo-elements/interfaces';
 
 import type { ApolloController } from '@apollo-elements/core';
+import type { ReactiveElement } from 'lit';
 
 import type {
   ApolloClient,
@@ -20,6 +21,12 @@ export class ApolloElement<D extends I.MaybeTDN = any, V = I.MaybeVariables<D>>
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
+
+  requestUpdate(name: keyof this, old: this[keyof this]): void {
+    super.requestUpdate(name, (
+      this.constructor as typeof ReactiveElement
+    ).getPropertyOptions(name).type === Boolean ? !!this[name] : old);
+  }
 
   /** @summary The Apollo Client instance. */
   @controlled()
