@@ -17,7 +17,7 @@ import {
   TestableElement,
 } from '@apollo-elements/test';
 
-import './apollo-query';
+import './polymer-apollo-query';
 
 import { PolymerApolloQuery } from './polymer-apollo-query';
 
