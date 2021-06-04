@@ -61,6 +61,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
   public get canAutoSubscribe(): boolean {
     return (
       !!this.client &&
+      !!this.document &&
       !this.options.noAutoSubscribe &&
       (this.options?.shouldSubscribe?.() ?? true)
     );
@@ -142,7 +143,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
     this.data = result.data;
     this.error = result.error ?? null;
     this.errors = result.errors ?? [];
-    this.loading = result.loading;
+    this.loading = result.loading ?? false;
     this.networkStatus = result.networkStatus;
     this.partial = result.partial ?? false;
     this.options.onData?.(result.data);
@@ -154,6 +155,11 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
     this.loading = false;
     this.options.onError?.(error);
     this.notify('error', 'loading');
+  }
+
+  protected clientChanged(): void {
+    if (this.canSubscribe() && (this.options.shouldSubscribe?.() ?? true))
+      this.subscribe();
   }
 
   protected documentChanged(doc?: ComponentDocument<D> | null): void {
