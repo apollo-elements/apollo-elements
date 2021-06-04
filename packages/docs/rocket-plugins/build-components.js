@@ -2,7 +2,7 @@ import path from 'path';
 import esbuild from 'esbuild';
 
 export function buildComponents() {
-  const basePath = path.dirname(import.meta.url.replace('file://', ''));
+  const basePath = path.join(path.dirname(import.meta.url.replace('file://', '')), '../../..');
 
   const resolve = {
     name: 'resolve-monorepo-pkgs',
