@@ -225,7 +225,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
     return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
-  controller = new ApolloMutationController<D, V>(this, null, {
+  controller: ApolloMutationController<D, V> = new ApolloMutationController<D, V>(this, null, {
     onCompleted: data => {
       const trigger = this.inFlightTrigger;
       this.didMutate();

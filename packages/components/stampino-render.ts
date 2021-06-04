@@ -48,8 +48,8 @@ export class StampinoRender extends ReactiveElement {
   }
 
   protected update(changed: PropertyValues<this>): void {
-    super.update(changed);
     this.render();
+    super.update(changed);
   }
 
   private getElementByIdFromRoot(id: string|null): HTMLElement | null {

@@ -5,13 +5,11 @@ import type {
   TypePolicies,
 } from '@apollo/client/core';
 
-import type {
-  ApolloElementElement,
-  ApolloQueryElement,
-  ApolloSubscriptionElement,
-} from '@apollo-elements/interfaces';
+import type { ApolloElementElement } from '@apollo-elements/interfaces';
 
-import type { ApolloElementEvent } from '@apollo-elements/core';
+import type { ApolloController, ApolloEvent } from '@apollo-elements/core';
+
+import { bound } from '@apollo-elements/lib/bound';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-client': ApolloClientElement; } }
 
@@ -39,25 +37,12 @@ function hasShadowRoot(node: Node): node is HTMLElement & { shadowRoot: ShadowRo
   return node instanceof HTMLElement && !!node.shadowRoot;
 }
 
-const keys = (['shouldSubscribe', 'subscribe'] as unknown as (keyof EventTarget)[]);
-function isApolloQuery(e: EventTarget): e is ApolloQueryElement|ApolloSubscriptionElement {
-  return keys.every(k => typeof e[k] === 'function');
-}
-
-function claimApolloElement(
-  event: ApolloElementEvent
-): ApolloElementElement | void {
+function claimApolloElement(event: ApolloEvent): ApolloController | void {
   event.stopPropagation();
-  if (isApolloElement(event.detail))
-    return event.detail;
-}
-
-function isSubscribable(
-  element: ApolloElementElement
-): element is ApolloQueryElement | ApolloSubscriptionElement {
-  return (
-    isApolloQuery(element) && element.canAutoSubscribe
-  );
+  if (event.controller)
+    return event.controller;
+  else if (isApolloElement(event.detail))
+    return event.detail.controller;
 }
 
 /**
@@ -110,7 +95,7 @@ export class ApolloClientElement extends HTMLElement {
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
   /** Private cache of child `ApolloElement`s */
-  #instances: Set<ApolloElementElement> = new Set();
+  #instances: Set<ApolloController> = new Set();
 
   #typePolicies: TypePolicies | undefined = undefined;
 
@@ -121,15 +106,19 @@ export class ApolloClientElement extends HTMLElement {
     return this.#client;
   }
 
-  set client(value: ApolloClient<NormalizedCacheObject> | null) {
-    this.#client = value;
-    this.dispatchEvent(new CustomEvent('client-changed', { detail: { value, client: value } }));
+  set client(client: ApolloClient<NormalizedCacheObject> | null) {
+    this.#client = client;
+    this.dispatchEvent(new CustomEvent('client-changed', { detail: {
+      // to support Polymer-style 2-way binding
+      value: client,
+      client,
+    } }));
     for (const instance of this.#instances)
       this.initialize(instance);
   }
 
-  /** List of all ApolloElements registered to this client. */
-  get elements(): readonly ApolloElementElement[] {
+  /** List of all Apollo Controllers registered to this client. */
+  get controllers(): readonly (ApolloController)[] {
     return [...this.#instances];
   }
 
@@ -172,9 +161,11 @@ export class ApolloClientElement extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' }).append(template.content.cloneNode(true));
-    this.addEventListener('apollo-element-connected', this.onElementConnected.bind(this));
-    this.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
-    window.addEventListener('apollo-element-disconnected', this.onElementDisconnected.bind(this));
+    this.addEventListener('apollo-element-connected', this.onElementConnected);
+    this.addEventListener('apollo-controller-connected', this.onElementConnected);
+    this.addEventListener('apollo-element-disconnected', this.onElementDisconnected);
+    window.addEventListener('apollo-element-disconnected', this.onElementDisconnected);
+    window.addEventListener('apollo-controller-disconnected', this.onElementDisconnected);
   }
 
   attributeChangedCallback(attr: string, oldValue: string, newValue: string): void {
@@ -204,40 +195,39 @@ export class ApolloClientElement extends HTMLElement {
   private async addDeepInstance(child: Node): Promise<void> {
     await new Promise(requestAnimationFrame);
     if (isApolloElement(child))
-      this.#instances.add(child);
+      this.#instances.add(child.controller);
     if (!hasShadowRoot(child)) return;
     for (const grandchild of child.shadowRoot.children)
       this.addDeepInstance(grandchild);
   }
 
   /**
-   * Assigns the element's client instance to the child,
+   * Assigns the element controller's client instance to the child,
    * and registers the child to receive the element's new client when its set.
    */
-  private onElementConnected(event: ApolloElementEvent): void {
-    const target = claimApolloElement(event);
-    if (!target) return;
-    this.#instances.add(target);
-    this.initialize(target);
+  @bound private onElementConnected(event: ApolloEvent): void {
+    const controller = claimApolloElement(event);
+    if (!controller) return;
+    this.#instances.add(controller);
+    this.initialize(controller);
   }
 
   /**
    * Performs clean up when the child disconnects
    */
-  private onElementDisconnected(event: ApolloElementEvent): void {
-    const target = event.detail;
-    if (!this.#instances.has(target)) return;
-    this.#instances.delete(target);
-    target.client = null;
+  @bound private onElementDisconnected(event: ApolloEvent): void {
+    const controller = event.controller ?? event.detail.controller;
+    if (!controller || !this.#instances.has(controller)) return;
+    this.#instances.delete(controller);
+    controller.client = null;
   }
 
   /**
-   * Set the client on the element, and if it's a query or subscription element, attemp to subscribe
+   * Set the client on the element's controller,
+   * and if it's a query or subscription controller, attempt to subscribe
    */
-  private initialize(element: ApolloElementElement): void {
-    element.client = this.client;
-    if (isSubscribable(element))
-      element.subscribe();
+  private initialize(controller: ApolloController): void {
+    controller.client = this.client;
   }
 }
 
