@@ -23,6 +23,9 @@ import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
 
 import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } from './events';
 
+/**
+ * An element which uses an ApolloController to implement an ApolloElement interface.
+ */
 export interface ApolloControllerHost extends ReactiveControllerHost, CustomElement {
   connectedCallback(): void;
   disconnectedCallback(): void;
@@ -38,17 +41,36 @@ export interface ApolloControllerOptions<D, V> {
   variables?: Variables<D, V>;
   context?: any;
   errorPolicy?: E.ErrorPolicy;
+  /** When provided, the controller will fall back to this element to fire events */
+  hostElement?: HTMLElement;
   /** Host update callback */
   [update]?(properties?: Record<string, unknown>): void;
 }
 
 export const update = Symbol('update');
 
+interface DispatchingHost extends ReactiveControllerHost {
+  dispatchEvent: EventTarget['dispatchEvent'];
+}
+
+function canDispatchEvents(host: ReactiveControllerHost): host is DispatchingHost {
+  return 'dispatchEvent' in host;
+}
+
 export abstract class ApolloController<D extends MaybeTDN = any, V = MaybeVariables<D>>
 implements ReactiveController {
-  declare options: ApolloControllerOptions<D, V>;
-
   called = true;
+
+  #options: ApolloControllerOptions<D, V> = {};
+
+  get options(): ApolloControllerOptions<D, V> {
+    return this.#options;
+  }
+
+  set options(v: ApolloControllerOptions<D, V>) {
+    const u = this.#options[update];
+    this.#options = { [update]: u, ...v };
+  }
 
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -58,6 +80,7 @@ implements ReactiveController {
 
   set client(v: ApolloClient<NormalizedCacheObject> | null) {
     this.#client = v;
+    this.clientChanged?.(v);
     this.notify('client');
   }
 
@@ -108,9 +131,11 @@ implements ReactiveController {
     this.options[update]?.(properties);
   }
 
-  protected abstract documentChanged?(document?: ComponentDocument<D>|null): void
+  protected abstract documentChanged?(document?: ComponentDocument<D> | null): void
 
-  protected abstract variablesChanged?(variables?: Variables<D, V>|null): void
+  protected abstract variablesChanged?(variables?: Variables<D, V> | null): void
+
+  protected abstract clientChanged?(client?: ApolloClient<NormalizedCacheObject> | null): void
 
   protected notify(...keys: (keyof this)[]): void {
     this[update](Object.fromEntries(keys.map(x => [x, this[x]])));
@@ -129,7 +154,10 @@ implements ReactiveController {
 
   hostConnected(): void {
     const event = new ApolloControllerConnectedEvent(this);
-    (this.host as unknown as EventTarget).dispatchEvent?.(event); /* c8 ignore next */
+    if (canDispatchEvents(this.host))
+      this.host.dispatchEvent(event);
+    else if (this.options?.hostElement instanceof EventTarget)
+      this.options.hostElement.dispatchEvent(event);
   }
 
   hostDisconnected(): void {
