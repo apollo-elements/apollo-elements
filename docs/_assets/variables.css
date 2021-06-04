@@ -104,7 +104,13 @@
   --playground-code-boolean-color: var(--markdown-syntax-boolean-color);
   --playground-code-tag-color: var(--markdown-syntax-tag-color);
   --playground-code-variable-color: var(--markdown-syntax-variable-color);
+  --playground-code-def-color: var(--markdown-syntax-variable-color);
   --playground-code-background-color: var(--markdown-syntax-background-color);
+  --playground-code-callee-color: var(--markdown-syntax-function-color);
+  --playground-code-keyword-color: var(--markdown-syntax-keyword-color);
+  --playground-code-variable-2-color: var(--markdown-syntax-attr-name-color);
+  --playground-code-selection-background: var(--markdown-table-row-odd-background-color);
+  --playground-code-cursor-color: var(--markdown-syntax-color);
 }
 
 @media (prefers-color-scheme: dark) {
