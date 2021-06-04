@@ -178,6 +178,13 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     }
   }
 
+  protected clientChanged(): void {
+    if (
+      this.canSubscribe() &&
+      (this.options.shouldSubscribe?.() ?? true)
+    ) this.subscribe();
+  }
+
   protected documentChanged(doc?: ComponentDocument<D> | null): void {
     const query = doc ?? undefined;
     if (doc === this.#lastSubscriptionDocument)

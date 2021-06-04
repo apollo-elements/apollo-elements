@@ -24,16 +24,14 @@ function defineOnReactiveElement<T extends ReactiveElement & ApolloControllerHos
   defineOnHTMLElement(proto, name, {
     ...opts,
     onSet(this: T, x: unknown) {
+      const old = this[name];
       opts?.onSet?.call?.(this, x);
-      this.requestUpdate();
+      this.requestUpdate(name, old);
     },
   });
-  (proto.constructor as typeof ReactiveElement)
-    .createProperty(name,
-      (proto.constructor as typeof ReactiveElement)
-        // @ts-expect-error: i know it's protected
-        .getPropertyOptions(name),
-    );
+  const Class = proto.constructor as typeof ReactiveElement;
+  // @ts-expect-error: i know it's protected
+  Class.createProperty(name, Class.getPropertyOptions(name));
 }
 
 function defineOnHTMLElement<T extends HTMLElement & ApolloControllerHost>(
