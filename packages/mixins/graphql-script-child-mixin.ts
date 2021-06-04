@@ -102,7 +102,7 @@ function GraphQLScriptChildMixinImplementation<
         return this.parseVariables(script.innerText);
     }
 
-    async connectedCallback(): Promise<void> {
+    override async connectedCallback(): Promise<void> {
       this.mo = new MutationObserver(this.onDOMMutation.bind(this));
       this.mo.observe(this, { characterData: true, childList: true, subtree: true });
       this.document ??= await this.getDOMGraphQLDocument();
@@ -110,7 +110,7 @@ function GraphQLScriptChildMixinImplementation<
       super.connectedCallback?.();
     }
 
-    disconnectedCallback(): void {
+    override disconnectedCallback(): void {
       super.disconnectedCallback?.();
       this.mo?.disconnect();
     }

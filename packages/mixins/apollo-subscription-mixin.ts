@@ -37,9 +37,9 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinIns
   class ApolloSubscriptionElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
     extends ApolloElementMixin(base)<D, V>
     implements Omit<I.ApolloSubscriptionInterface<D, V>, 'canSubscribe'> {
-    static documentType = 'subscription' as const;
+    static override documentType = 'subscription' as const;
 
-    static get observedAttributes(): string[] {
+    static override get observedAttributes(): string[] {
       return [
         ...super.observedAttributes ?? [],
         'no-auto-subscribe',

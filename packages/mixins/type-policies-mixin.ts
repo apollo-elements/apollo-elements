@@ -32,7 +32,7 @@ function TypePoliciesMixinImpl<B extends Constructor<ApolloElementInterface>>(
      */
     declare typePolicies?: TypePolicies;
 
-    connectedCallback() {
+    override connectedCallback() {
       super.connectedCallback?.();
       if (this.typePolicies)
         this.client?.cache.policies.addTypePolicies(this.typePolicies);
