@@ -1,12 +1,12 @@
 import type * as I from '@apollo-elements/interfaces';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { PolymerApolloElement } from './apollo-element';
+import { PolymerApolloElement } from './polymer-apollo-element';
 import { notify } from './notify-decorator';
 
 /**
- * @element apollo-mutation
+ * @element polymer-apollo-mutation
  *
- * `<apollo-mutation>` fires Polymer-style prop-changed events
+ * `<polymer-apollo-mutation>` fires Polymer-style prop-changed events
  * when its `called`, `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
@@ -15,10 +15,10 @@ import { notify } from './notify-decorator';
  * @example
  *
  * ```html
- * <apollo-mutation id="userMutation"
+ * <polymer-apollo-mutation id="userMutation"
  *     data="{{data}}"
  *     mutation="[[UserMutation]]"
- * ></apollo-mutation>
+ * ></polymer-apollo-mutation>
  *
  * <paper-input label="Name" value="{{name}}"></paper-input>
  * <paper-input label="Picture URL" value="{{picture}}"></paper-input>
@@ -32,11 +32,17 @@ import { notify } from './notify-decorator';
  * @fires 'called-changed'
  */
 export class PolymerApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloMutationMixin(PolymerApolloElement as I.Constructor<PolymerApolloElement>)<D, V>
+  extends ApolloMutationMixin(
+    PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
+  )<D, V>
   implements I.ApolloMutationInterface<D, V> {
+  static readonly is = 'polymer-apollo-mutation';
+
   @notify() called = false;
 }
 
-customElements.define('apollo-mutation', PolymerApolloMutation);
+customElements.define(PolymerApolloMutation.is, PolymerApolloMutation);
 
-declare global { interface HTMLElementTagNameMap { 'apollo-mutation': PolymerApolloMutation; } }
+declare global { interface HTMLElementTagNameMap {
+  'polymer-apollo-mutation': PolymerApolloMutation;
+} }

@@ -1,34 +1,26 @@
 import type * as C from '@apollo/client/core';
 import type * as I from '@apollo-elements/interfaces';
 
-import { gql } from '@apollo/client/core';
+import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
-import { GraphQLError } from 'graphql/error/GraphQLError';
-
-import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
-import { stub } from 'sinon';
+import { setupClient, teardownClient } from '../test/client';
 
 import {
-  assertType,
-  isApolloError,
-  setupClient,
-  stringify,
-  teardownClient,
-  TestableElement,
-} from '@apollo-elements/test';
+  describeSubscription,
+  setupSubscriptionClass,
+} from '@apollo-elements/test/subscription.test';
 
-import './apollo-query';
+import { PolymerApolloSubscription } from './polymer-apollo-subscription';
+import { GraphQLError } from 'graphql';
+import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
+import { html, PolymerElement } from '@polymer/polymer';
 
-import { PolymerApolloQuery } from './apollo-query';
+import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
 
-import { PolymerElement, html } from '@polymer/polymer';
+import './polymer-apollo-subscription';
 
-import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
-
-import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
-
-class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends PolymerApolloQuery<D, V>
+class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  extends PolymerApolloSubscription<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
@@ -37,9 +29,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
     template.innerHTML = /* html */`
       <output id="data"></output>
       <output id="error"></output>
-      <output id="errors"></output>
       <output id="loading"></output>
-      <output id="networkStatus"></output>
     `;
     return template;
   }
@@ -49,20 +39,16 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this.shadowRoot.append(TestableApolloQuery.template.content.cloneNode(true));
+    this.shadowRoot.append(TestableApolloSubscription.template.content.cloneNode(true));
     this.addEventListener('data-changed', this.render);
     this.addEventListener('error-changed', this.render);
-    this.addEventListener('errors-changed', this.render);
     this.addEventListener('loading-changed', this.render);
-    this.addEventListener('network-status-changed', this.render);
   }
 
   render() {
     this.$('data')!.textContent = stringify(this.data);
     this.$('error')!.textContent = stringify(this.error);
-    this.$('errors')!.textContent = stringify(this.errors);
     this.$('loading')!.textContent = stringify(this.loading);
-    this.$('networkStatus')!.textContent = stringify(this.networkStatus);
   }
 
   async hasRendered() {
@@ -71,37 +57,26 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   }
 }
 
-describe('[polymer] <apollo-query>', function() {
-  describeQuery({
-    setupFunction: setupQueryClass(TestableApolloQuery),
-    class: TestableApolloQuery,
+describe('[polymer] <polymer-apollo-subscription>', function() {
+  describeSubscription({
+    class: TestableApolloSubscription,
+    setupFunction: setupSubscriptionClass(TestableApolloSubscription),
   });
 
-  describe('notify events', function() {
-    let element: PolymerApolloQuery;
+  describe('notifying properties', function() {
     beforeEach(setupClient);
     afterEach(teardownClient);
+    let element: PolymerApolloSubscription;
 
     beforeEach(async function() {
-      element = await fixture<typeof element>(`<apollo-query></apollo-query>`);
+      element = await fixture<typeof element>(`<polymer-apollo-subscription></polymer-apollo-subscription>`);
     });
 
     it('notifies on data change', async function() {
-      const queryStub = stub(element.client, 'query');
-
-      queryStub.resolves({
-        loading: false,
-        partial: undefined,
-        networkStatus: 7,
-        data: { messages: ['hi'] },
-      });
-
-      const query = gql`query { messages }`;
-
-      setTimeout(() => element.executeQuery({ query }));
+      const data = { messages: ['hi'] };
+      setTimeout(() => element.data = data);
       const { detail: { value } } = await oneEvent(element, 'data-changed');
-      expect(value).to.deep.equal({ messages: ['hi'] });
-      queryStub.restore();
+      expect(value).to.deep.equal(data);
     });
 
     it('notifies on error change', async function() {
@@ -134,9 +109,9 @@ describe('[polymer] <apollo-query>', function() {
 
         static get properties() {
           return {
-            query: {
+            subscription: {
               type: Object,
-              value: () => NullableParamQuery,
+              value: () => NullableParamSubscription,
             },
             variables: {
               type: Object,
@@ -147,11 +122,11 @@ describe('[polymer] <apollo-query>', function() {
 
         static get template() {
           return html`
-          <apollo-query
-              query="[[query]]"
+          <polymer-apollo-subscription
+              subscription="[[subscription]]"
               variables="[[variables]]"
               data="{{data}}"
-          ></apollo-query>
+          ></polymer-apollo-subscription>
 
           <output>[[data.nullableParam.nullable]]</output>
         `;
@@ -163,6 +138,8 @@ describe('[polymer] <apollo-query>', function() {
         wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
       });
 
+      beforeEach(() => aTimeout(50));
+
       it('binds data up into parent component', async function() {
         expect(wrapper.shadowRoot.textContent).to.contain('🤡');
       });
@@ -172,10 +149,10 @@ describe('[polymer] <apollo-query>', function() {
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
-
-class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
-  typeCheck() {
+export class TypeCheck extends PolymerApolloSubscription<TypeCheckData, TypeCheckVars> {
+  typeCheck(): void {
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+    assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
     assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client);
@@ -192,36 +169,23 @@ class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
     if (isApolloError(this.error))
       assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
 
-    // ApolloQueryInterface
-    assertType<C.DocumentNode>                      (this.query!);
+    // ApolloSubscriptionInterface
+    assertType<C.DocumentNode>                      (this.subscription!);
     assertType<TypeCheckVars>                       (this.variables!);
-    assertType<C.ErrorPolicy>                       (this.errorPolicy!);
-    assertType<string>                              (this.errorPolicy!);
-    // @ts-expect-error: ErrorPolicy is not a number
-    assertType<number>                              (this.errorPolicy);
-    assertType<C.WatchQueryFetchPolicy>             (this.fetchPolicy!);
+    assertType<C.FetchPolicy>                       (this.fetchPolicy!);
     assertType<string>                              (this.fetchPolicy);
-    if (typeof this.nextFetchPolicy !== 'function')
-      assertType<C.WatchQueryFetchPolicy>           (this.nextFetchPolicy!);
-    assertType<C.NetworkStatus>                     (this.networkStatus);
-    assertType<number>                              (this.networkStatus);
-    // @ts-expect-error: NetworkStatus is not a string
-    assertType<string>                              (this.networkStatus);
     assertType<boolean>                             (this.notifyOnNetworkStatusChange!);
     assertType<number>                              (this.pollInterval!);
-    assertType<boolean>                             (this.partial!);
-    assertType<boolean>                             (this.partialRefetch!);
-    assertType<boolean>                             (this.returnPartialData!);
+    assertType<boolean>                             (this.skip);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
   }
 }
 
 type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-class TDNTypeCheck extends PolymerApolloQuery<TDN> {
-  typeCheck() {
+export class TDNTypeCheck extends PolymerApolloSubscription<TDN> {
+  typeCheck(): void {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
   }
