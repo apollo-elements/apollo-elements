@@ -43,6 +43,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   private pollingInterval?: number;
 
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
   declare options: ApolloQueryControllerOptions<D, V>;
 
   networkStatus = NetworkStatus.ready;
@@ -76,7 +77,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
     this.init(query ?? null);
   }
 
-  hostConnected(): void {
+  override hostConnected(): void {
     super.hostConnected();
     if (this.#hasDisconnected && this.observableQuery) {
       this.observableQuery.reobserve();
@@ -85,7 +86,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       this.documentChanged(this.query);
   }
 
-  hostDisconnected(): void {
+  override hostDisconnected(): void {
     this.#hasDisconnected = true;
     super.hostDisconnected();
   }
@@ -157,12 +158,12 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
     this.notify('error', 'loading');
   }
 
-  protected clientChanged(): void {
+  protected override clientChanged(): void {
     if (this.canSubscribe() && (this.options.shouldSubscribe?.() ?? true))
       this.subscribe();
   }
 
-  protected documentChanged(doc?: ComponentDocument<D> | null): void {
+  protected override documentChanged(doc?: ComponentDocument<D> | null): void {
     const query = doc ?? undefined;
     if (doc === this.#lastQueryDocument)
       return;
@@ -173,7 +174,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       this.subscribe({ query }); /* c8 ignore next */ // covered
   }
 
-  protected variablesChanged(variables?: Variables<D, V>): void {
+  protected override variablesChanged(variables?: Variables<D, V>): void {
     if (this.observableQuery)
       this.refetch(variables);
     else if (

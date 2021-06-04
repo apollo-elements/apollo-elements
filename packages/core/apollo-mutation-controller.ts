@@ -35,13 +35,10 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
    */
   private mostRecentMutationId = 0;
 
+  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
   declare options: ApolloMutationControllerOptions<D, V>;
 
   called = false;
-
-  documentChanged?(document?: I.ComponentDocument<D> | null): void
-
-  variablesChanged?(variables: I.Variables<D, V>): void
 
   get mutation(): this['document'] {
     return this.document ?? null;

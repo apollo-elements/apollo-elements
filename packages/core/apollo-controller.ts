@@ -131,11 +131,11 @@ implements ReactiveController {
     this.options[update]?.(properties);
   }
 
-  protected abstract documentChanged?(document?: ComponentDocument<D> | null): void
+  protected documentChanged?(document?: ComponentDocument<D> | null): void;
 
-  protected abstract variablesChanged?(variables?: Variables<D, V> | null): void
+  protected variablesChanged?(variables?: Variables<D, V> | null): void;
 
-  protected abstract clientChanged?(client?: ApolloClient<NormalizedCacheObject> | null): void
+  protected clientChanged?(client?: ApolloClient<NormalizedCacheObject> | null): void;
 
   protected notify(...keys: (keyof this)[]): void {
     this[update](Object.fromEntries(keys.map(x => [x, this[x]])));

@@ -73,7 +73,7 @@ export class ApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeV
   implements Omit<ApolloSubscriptionInterface<D, V>, 'nextError'|'nextData'> {
   static readonly is = 'apollo-subscription';
 
-  controller = new ApolloSubscriptionController<D, V>(this, undefined);
+  controller: ApolloSubscriptionController<D, V> = new ApolloSubscriptionController<D, V>(this);
 
   /** @summary Flags an element that's ready and able to auto subscribe */
   get canAutoSubscribe(): boolean { return this.controller?.canAutoSubscribe ?? false; }
