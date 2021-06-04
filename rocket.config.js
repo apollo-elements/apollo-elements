@@ -17,7 +17,6 @@ import graphql from '@apollo-elements/rollup-plugin-graphql';
 import esbuildRollup from 'rollup-plugin-esbuild';
 
 import path from 'path';
-import esbuild from 'esbuild';
 
 import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
@@ -34,6 +33,7 @@ import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
 import { getWebmentionsForUrl } from './packages/docs/rocket-plugins/webmentions.js';
 import { icon } from './packages/docs/rocket-plugins/icon.js';
+import { buildComponents } from './packages/docs/rocket-plugins/build-components.js';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 
@@ -50,46 +50,8 @@ export default ({
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
   eleventy(eleventyConfig) {
-    eleventyConfig.addWatchTarget("./packages/components/");
-    eleventyConfig.on('beforeBuild', function() {
-
-      const basePath = path.dirname(import.meta.url.replace('file://', ''));
-
-      const resolve = {
-        name: 'resolve-monorepo-pkgs',
-        setup(build) {
-          // Redirect all paths starting with "images/" to "./public/images/"
-          build.onResolve({ filter: /^@apollo-elements\// }, args => {
-            const resolved = `${args.path.replace('@apollo-elements', `${basePath}/packages`)}.ts`;
-            return { path: resolved };
-          });
-        },
-      };
-
-      esbuild.build({
-        entryPoints: ['packages/components/index.ts'],
-        bundle: true,
-        minify: true,
-        outfile: 'docs/_assets/_static/apollo-elements.js',
-        sourcemap: true,
-        target: 'es2020',
-        plugins: [resolve],
-      }).catch(() => {
-        process.exit(1);
-      });
-
-      esbuild.build({
-        external: ['https://*'],
-        entryPoints: ['packages/docs/docs-playground.ts'],
-        bundle: true,
-        minify: true,
-        outfile: 'docs/_assets/_static/docs-playground.js',
-        sourcemap: true,
-        target: 'es2020',
-      }).catch(() => {
-        process.exit(1);
-      });
-    })
+    eleventyConfig.addWatchTarget('./packages/components/');
+    eleventyConfig.on('beforeBuild', buildComponents);
     // eleventyConfig.addPlugin(inclusiveLangPlugin);
     eleventyConfig.addPlugin(helmet);
     eleventyConfig.addPlugin(footnotes);
@@ -199,27 +161,27 @@ export default ({
 
   setupUnifiedPlugins: [
     setupWrap({
-      copy: () => ({ tagName: 'code-copy' }),
-      wcd: ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
-      tab: ([tab]) => wrapTab(tab),
-      reveal: () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
-      center: () => ({ tagName: 'div', attributes: { center: 'true' } }),
-      playground: ([id]) => ({
+      'copy': () => ({ tagName: 'code-copy' }),
+      'wcd': ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
+      'tab': ([tab]) => wrapTab(tab),
+      'reveal': () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
+      'center': () => ({ tagName: 'div', attributes: { center: 'true' } }),
+      'playground': ([id]) => ({
         tagName: 'docs-playground',
-        attributes: { id }
+        attributes: { id },
       }),
       'playground-file': ([id, name]) => ({
         tagName: 'template',
         attributes: {
           'data-playground-id': id,
           'data-filename': name,
-        }
+        },
       }),
       'playground-import-map': ([id]) => ({
         tagName: 'template',
         attributes: {
           'data-import-map': id,
-        }
+        },
       }),
     }),
   ],
