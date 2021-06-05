@@ -11,8 +11,11 @@ type O = ApolloControllerOptions<any, any>;
 export const p = Symbol('initial props');
 
 export interface DefineOptions {
+  /** When set to 'options', the controlled property is a member of controller.options */
   path?: 'options',
+  /** When true, setting the property has no effect */
   readonly?: boolean,
+  /** Called after setting with the new value */
   onSet?(x: unknown): void,
 }
 
@@ -21,14 +24,18 @@ function defineOnReactiveElement<T extends ReactiveElement & ApolloControllerHos
   name: string & keyof T,
   opts: DefineOptions
 ): void {
+  // Run our property effects
   defineOnHTMLElement(proto, name, {
     ...opts,
+    // In addition to any user-defined side-effects,
+    // also notify the ReactiveElement lifecycle
     onSet(this: T, x: unknown) {
       const old = this[name];
       opts?.onSet?.call?.(this, x);
       this.requestUpdate(name, old);
     },
   });
+  // And also run ReactiveElement's property effects
   const Class = proto.constructor as typeof ReactiveElement;
   // @ts-expect-error: i know it's protected
   Class.createProperty(name, Class.getPropertyOptions(name));

@@ -5,7 +5,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from './lib/bound';
 
 export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerOptions<D, V> {
   /**

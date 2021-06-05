@@ -4,7 +4,7 @@ import type { ApolloElementElement, Constructor } from '@apollo-elements/interfa
 
 import type * as C from '@apollo-elements/core';
 
-import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
+import { hasAllVariables } from '@apollo-elements/core/lib/has-all-variables';
 
 export function ValidateVariablesMixin<
   B extends Constructor<ApolloElementElement<any, any> & {

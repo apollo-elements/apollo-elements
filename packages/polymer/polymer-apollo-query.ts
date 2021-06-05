@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/interfaces';
 import { NetworkStatus } from '@apollo/client/core';
-import { ApolloQueryMixin } from '../mixins/apollo-query-mixin';
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element';
 import { notify } from './notify-decorator';
 

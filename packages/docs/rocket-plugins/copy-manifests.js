@@ -264,7 +264,7 @@ function transformMixinsManifest(base) {
 
 /**
  * @param  {import('custom-elements-manifest/schema').Package} manifest pre-transform manifest
- * @param  {'components'|'fast'|'gluon'|'haunted'|'hybrids'|'interfaces'|'lib'|'lit-apollo'|'mixins'|'polymer'} pkg
+ * @param  {'components'|'fast'|'gluon'|'haunted'|'hybrids'|'interfaces'|'lit-apollo'|'mixins'|'polymer'} pkg
  * @return {import('custom-elements-manifest/schema').Package}
  */
 function interfacesToPackage(manifest, pkg) {
@@ -395,8 +395,9 @@ export function generateManifestsFromInterfaces() {
 
 export function copyCustomElementManifests() {
   const pkgJson = readJSONSync('../../../package.json');
-  const packageJsons = globby.sync(pkgJson.workspaces.map(w => `${w}/package.json`));
-  const manifests = Promise.all(packageJsons.map(async function getJson(ppath) {
+  const packageJsonPaths = globby.sync(pkgJson.workspaces.map(w => `${w}/package.json`))
+    .filter(x => x !== 'packages/lib/package.json');
+  const manifests = Promise.all(packageJsonPaths.map(async function getJson(ppath) {
     let from;
     let to;
 
@@ -448,4 +449,3 @@ export function generateManifests() {
   logPerf('Generating Custom Element Manifests', generateManifestsFromInterfaces);
   logPerf('Copying Custom Element Manifests', copyCustomElementManifests);
 }
- 

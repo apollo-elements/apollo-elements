@@ -23,7 +23,7 @@ import type {
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from './lib/bound';
 
 export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControllerOptions<D, V>,
           Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {

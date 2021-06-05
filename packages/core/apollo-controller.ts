@@ -19,7 +19,7 @@ import type {
   Variables,
 } from '@apollo-elements/interfaces';
 
-import { isValidGql } from '@apollo-elements/lib/is-valid-gql';
+import { isValidGql } from './lib/is-valid-gql';
 
 import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } from './events';
 

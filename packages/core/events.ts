@@ -1,11 +1,9 @@
 import type * as C from '@apollo/client/core';
 import type { ApolloController, ApolloControllerHost } from './apollo-controller';
 
-type ApolloEventType =
-  | 'apollo-controller-connected'
-  | 'apollo-controller-disconnected'
-  | 'apollo-element-connected'
-  | 'apollo-element-disconnected';
+type ApolloEventType = `apollo-${'controller'|'element'}-${'connected'|'disconnected'}`;
+type ApolloElementEventType = `apollo-element-${'disconnected'|'connected'}`;
+type ApolloControllerEventType = `apollo-controller-${'disconnected'|'connected'}`;
 
 export abstract class ApolloEvent<T = ApolloControllerHost> extends CustomEvent<T> {
   public abstract type: ApolloEventType
@@ -19,17 +17,17 @@ export abstract class ApolloEvent<T = ApolloControllerHost> extends CustomEvent<
  * @summary Fired when an ApolloElement connects to or disconnects from the DOM
  */
 export class ApolloElementEvent<T = ApolloControllerHost> extends ApolloEvent<T> {
-  declare static type: 'apollo-element-connected'|'apollo-element-disconnected';
-  declare type: 'apollo-element-connected'|'apollo-element-disconnected';
-  constructor(type: 'apollo-element-connected'|'apollo-element-disconnected', detail: T) {
+  declare static type: ApolloElementEventType;
+  declare type: ApolloElementEventType;
+  constructor(type: ApolloElementEventType, detail: T) {
     super(type, { detail });
   }
 }
 
 export abstract class ApolloControllerEvent extends ApolloEvent {
   public abstract controller: ApolloController;
-  public abstract type: 'apollo-controller-connected'|'apollo-controller-disconnected'
-  constructor(type: 'apollo-controller-connected'|'apollo-controller-disconnected') {
+  public abstract type: ApolloControllerEventType
+  constructor(type: ApolloControllerEventType) {
     super(type);
   }
 }
@@ -60,12 +58,11 @@ declare global {
   interface HTMLElementEventMap {
     'apollo-controller-connected': ApolloControllerConnectedEvent;
     'apollo-controller-disconnected': ApolloControllerDisconnectedEvent;
-    'apollo-element-connected': ApolloElementEvent;
-    'apollo-element-disconnected': ApolloElementEvent;
     'apollo-error': CustomEvent<C.ApolloError>;
+    ApolloElementEventType: ApolloElementEvent;
   }
   interface WindowEventMap {
     'apollo-element-disconnected': ApolloElementEvent;
-    'apollo-controller-disconnected': ApolloElementEvent;
+    'apollo-controller-disconnected': ApolloControllerDisconnectedEvent;
   }
 }

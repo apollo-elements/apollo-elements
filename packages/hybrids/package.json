@@ -55,11 +55,10 @@
   ],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
-  "homepage": "https://apolloelements.dev/modules/_apollo_elements_hybrids.html",
+  "homepage": "https://apolloelements.dev/api/libraries/hybrids",
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
-    "@apollo-elements/lib": "^4.0.4",
-    "@apollo-elements/mixins": "^3.5.0",
+    "@apollo-elements/core": "^0.0.0",
     "@lit/reactive-element": "^1.0.0-rc.2",
     "hybrids": "^5.3.3",
     "tslib": "^2.2.0"
