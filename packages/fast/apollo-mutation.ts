@@ -2,7 +2,7 @@ import type * as I from '@apollo-elements/interfaces';
 
 import { attr } from '@microsoft/fast-element';
 
-import { splitCommasAndTrim } from '@apollo-elements/lib/helpers';
+import { splitCommasAndTrim } from '@apollo-elements/core/lib/helpers';
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 

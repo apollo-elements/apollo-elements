@@ -67,7 +67,7 @@ document
 
 ### Customizing Automatic Mode Clients
 
-`<apollo-client>` uses the `createApolloClient` helper from `@apollo-elements/lib/create-apollo-client` under the hood, and it comes with some options for customizing the automatic-mode client. You can set the `validate-variables` attribute to try to prevent fetching operations that don't have all their required top-level variables.
+`<apollo-client>` uses the `createApolloClient` helper from `@apollo-elements/core/lib/create-apollo-client` under the hood, and it comes with some options for customizing the automatic-mode client. You can set the `validate-variables` attribute to try to prevent fetching operations that don't have all their required top-level variables.
 
 <inline-notification type="warning">
 

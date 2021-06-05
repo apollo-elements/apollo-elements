@@ -25,6 +25,9 @@
 [[redirects]]
   from = "/guides/usage/mutations/apollo-mutation-component/*"
   to = "/guides/usage/mutations/html/*"
+[[redirects]]
+  from = "/api/libraries/lib/*"
+  to = "/api/core/lib/*"
 
 # Redirects from typedoc site
 [[redirects]]

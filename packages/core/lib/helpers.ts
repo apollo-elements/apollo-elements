@@ -6,10 +6,6 @@ export function splitCommasAndTrim(value: string): string[] {
     .filter(Boolean);
 }
 
-export function stripHTMLComments(string: string): string {
-  return string.replace?.(/<!---->/g, '');
-}
-
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
 type ObjectOrArray = object | any[];
 /* eslint-enable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */

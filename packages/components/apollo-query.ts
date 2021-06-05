@@ -17,7 +17,7 @@ import { controlled } from '@apollo-elements/core/decorators';
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from '@apollo-elements/core/lib/bound';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryElement } }
 

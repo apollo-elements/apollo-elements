@@ -1507,6 +1507,157 @@
           ]
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lib/create-apollo-client.js",
+      "exports": [
+        {
+          "name": "createApolloClient",
+          "kind": "js",
+          "declaration": {
+            "name": "createApolloClient"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "createApolloClient",
+          "parameters": [
+            {
+              "name": "options",
+              "type": {
+                "type": "Options"
+              },
+              "description": "Limited configuration options for the client.",
+              "summary": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| uri      | string | URI to the client's GraphQL endpoint. |\n| typePolicies | TypePolicies | The client's [type policies](https://www.apollographql.com/docs/react/caching/cache-configuration/#typepolicy-fields). |\n| validateVariables | boolean | Whether to prevent operations that do not have all their non-nullable variables defined. |\n"
+            }
+          ],
+          "return": {
+            "description": "A simple Apollo client instance.",
+            "type": {
+              "type": "ApolloClient<NormalizedCacheObject> & { cache: InMemoryCache }"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lib/has-all-variables.js",
+      "exports": [
+        {
+          "name": "hasAllVariables",
+          "kind": "js",
+          "declaration": {
+            "name": "hasAllVariables"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "hasAllVariables",
+          "description": "Checks whether an operation includes all its non-nullable variables.\nNote that this can't check properties of Input types defined in schema, only top-level variables.\n\n```haskell\nhasAllVariables :: Operation -> Bool\n```",
+          "return": {
+            "description": "Whether the operation has all it's required variables.",
+            "type": {
+              "type": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "operation",
+              "summary": "The GraphQL operation to validate",
+              "optional": false,
+              "type": {
+                "type": "Partial<Operation>",
+                "references": [
+                  {
+                    "name": "Operation",
+                    "start": 8,
+                    "end": 16,
+                    "package": "@apollo/client/core"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lib/is-valid-gql.js",
+      "exports": [
+        {
+          "name": "isValidGql",
+          "kind": "js",
+          "declaration": {
+            "name": "isValidGql"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isValidGql",
+          "summary": "Validates a graphql document node.\n\n```haskell\nisValidGql :: DocumentNode a => a -> Bool\n```",
+          "return": {
+            "description": "Whether the argument is a DocumentNode",
+            "type": {
+              "type": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "doc",
+              "description": "Maybe a DocumentNode",
+              "optional": false,
+              "type": {
+                "type": "any"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./lib/is-client-operation.js",
+      "exports": [
+        {
+          "name": "isClientOperation",
+          "kind": "js",
+          "declaration": {
+            "name": "isClientOperation"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isClientOperation",
+          "summary": "Helper to determine whether an operation is client-side-only\n\n```haskell\nisClientOperation :: Operation -> Bool\n```",
+          "return": {
+            "description": "Whether the operation is client-side-only, i.e. true when the Operation will make no network calls.",
+            "type": {
+              "type": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "operation",
+              "description": "Operation to check",
+              "optional": false,
+              "type": {
+                "type": "Operation"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

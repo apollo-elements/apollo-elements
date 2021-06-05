@@ -24,7 +24,7 @@ import { NetworkStatus } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from './lib/bound';
 
 export interface ApolloQueryControllerOptions<D, V> extends
     ApolloControllerOptions<D, V>,

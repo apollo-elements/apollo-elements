@@ -3,7 +3,6 @@ import type * as I from '@apollo-elements/interfaces';
 import { gql } from '@apollo/client/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { stripHTMLComments } from '@apollo-elements/lib/helpers';
 
 // HACK to get HTMLScriptElement interface on querySelector results
 const SELECTORS = {
@@ -17,6 +16,10 @@ export declare class GQLScriptChild<
 > extends I.ApolloElementElement<D, V> {
   getDOMGraphQLDocument(): Promise<this['document']>;
   getDOMVariables(): Promise<this['variables']>;
+}
+
+function stripHTMLComments(string: string): string {
+  return string.replace?.(/<!---->/g, '');
 }
 
 function GraphQLScriptChildMixinImplementation<

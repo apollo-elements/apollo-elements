@@ -63,6 +63,7 @@
   },
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_fast.html",
   "dependencies": {
+    "@apollo-elements/core": "^0.0.0",
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/mixins": "^3.5.0",
     "@microsoft/fast-element": "^1.4.0",

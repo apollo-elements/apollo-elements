@@ -2,7 +2,7 @@
 import type { TemplateHandlers } from 'stampino';
 import { ReactiveElement, PropertyValues } from '@lit/reactive-element';
 import { render } from 'stampino';
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from '@apollo-elements/core/lib/bound';
 
 /**
  * @element

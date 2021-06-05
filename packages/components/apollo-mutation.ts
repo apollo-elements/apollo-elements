@@ -14,9 +14,9 @@ import { controlled } from '@apollo-elements/core/decorators';
 
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
-import { isEmpty } from '@apollo-elements/lib/helpers';
+import { isEmpty } from '@apollo-elements/core/lib/helpers';
 
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from '@apollo-elements/core/lib/bound';
 
 import * as E from './events';
 

@@ -62,7 +62,7 @@
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_components.html",
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
-    "@apollo-elements/lib": "^4.0.4",
+    "@apollo-elements/core": "^0.0.0",
     "@apollo-elements/mixins": "^3.5.0",
     "@apollo/client": "^3.3.19",
     "stampino": "^0.6.2",

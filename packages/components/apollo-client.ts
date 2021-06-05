@@ -9,7 +9,7 @@ import type { ApolloElementElement } from '@apollo-elements/interfaces';
 
 import type { ApolloController, ApolloEvent } from '@apollo-elements/core';
 
-import { bound } from '@apollo-elements/lib/bound';
+import { bound } from '@apollo-elements/core/lib/bound';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-client': ApolloClientElement; } }
 
@@ -182,7 +182,7 @@ export class ApolloClientElement extends HTMLElement {
   async createApolloClient(): Promise<ApolloClientElement['client']> {
     const { typePolicies, validateVariables } = this;
     const { uri } = this;
-    const { createApolloClient } = await import('@apollo-elements/lib/create-apollo-client');
+    const { createApolloClient } = await import('@apollo-elements/core/lib/create-apollo-client');
     this.client = createApolloClient({ uri, typePolicies, validateVariables });
     return this.client;
   }

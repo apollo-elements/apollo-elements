@@ -62,12 +62,12 @@ For queries like this one, where the variables are dynamic, (e.g. they're based 
 
 ## Option 1: Create a Variable-Validating Link
 
-To prevent *any* operation from fetching without required variables, use `hasAllVariables` from `@apollo-elements/lib` to create an [`ApolloLink`](https://www.apollographql.com/docs/react/api/link/introduction/) which checks every outgoing operation for required variables.
+To prevent *any* operation from fetching without required variables, use `hasAllVariables` from `@apollo-elements/core/lib` to create an [`ApolloLink`](https://www.apollographql.com/docs/react/api/link/introduction/) which checks every outgoing operation for required variables.
 
 ```ts copy
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client/core';
 
-import { hasAllVariables } from '@apollo-elements/lib/has-all-variables';
+import { hasAllVariables } from '@apollo-elements/core/lib/has-all-variables';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -79,7 +79,7 @@ export const client = new ApolloClient({
 });
 ```
 
-The `<apollo-client>` component from [`@apollo-elements/components/apollo-client`](../../api/components/apollo-client.md) and the `createApolloClient({ validateVariables: true })` helper from [`@apollo-elements/lib/create-apollo-client`](../../api/lib/create-apollo-client.md) both incorporate this link.
+The `<apollo-client>` component from [`@apollo-elements/components/apollo-client`](../../api/components/apollo-client.md) and the `createApolloClient({ validateVariables: true })` helper from [`@apollo-elements/core/lib/create-apollo-client`](../../api/lib/create-apollo-client.md) both incorporate this link.
 
 This option is great when you want to 'set it and forget it', and it works for any operation, not solely for queries, but it's heavy-handed. For more fine-grained control you can program each individual query component to defer querying.
 
@@ -204,7 +204,7 @@ The old variable-validating behaviour is still available, but you have to opt-in
   </p>
 
   <validated-variables-query></validated-variables-query>
-  
+
   <script type="module">
   import { ApolloQueryElement } from '@apollo-elements/components/apollo-query';
   customElements.define(
