@@ -5,11 +5,11 @@
 [![ISC License](https://img.shields.io/npm/l/@apollo-elements/hybrids)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
 [![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
-<strong>👾 hybrids element descriptors that shoot for the moon 🚀</strong>
+<strong>👾 hybrids GraphQL factories that shoot for the moon 🚀</strong>
 
 `hybrids` is a modern, functional, and opinionated UI library based on the web component standards. It sports a refreshing take on ui-as-value. Take a look at the [repository](https://github.com/hybridsjs/hybrids) and [documentation](https://hybrids.js.org), and this [blog post introduction to hybrids](https://dev.to/bennypowers/lets-build-web-components-part-7-hybrids-187l)
 
-Apollo Elements hybrids make it easy to take existing hybrids component descriptors and connect them to your Apollo cache.
+Apollo Elements hybrids make it easy to add GraphQL to your hybrids components.
 
 > 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/hybrids/) 🔎
 
@@ -33,7 +33,7 @@ npm install --save @apollo-elements/hybrids
 
 > See our [docs on setting up Apollo client](https://apolloelements.dev/guides/getting-started/apollo-client/) so your components can fetch their data.
 
-This package provides `client`, `mutation`, `query`, and `subscription` [factories](https://hybrids.js.org/#/getting-started/concepts?id=factories) that you can apply to your hybrids definitions.
+This package provides `mutation`, `query`, and `subscription` [factories](https://hybrids.js.org/#/getting-started/concepts?id=factories) that you can apply to your hybrids definitions.
 
 ### ❓ Queries
 Use the `query` factory to connect your element to the apollo cache:
@@ -66,52 +66,20 @@ import HelloQuery from './Hello.query.graphql';
 <code-copy>
 
 ```ts
-const render = ({ data }) => html`
-  <p>${data?.hello ?? 'Hello'}</p>
+const render = ({ hello }) => html`
+  <p>${hello.data?.hello ?? 'Hello'}</p>
 `;
 
 define('hello-element', {
-  ...query(HelloQuery),
+  hello: query(HelloQuery),
   render
 });
 ```
 
 </code-copy>
 
-You can spread in the `ApolloQuery` hybrid property descriptors to define a generic querying element.
-
-<code-copy>
-
-```js
-import { ApolloQuery, define, html } from '@apollo-elements/hybrids';
-
-const render = ({ data }) => html`
-  <p>${data?.hello ?? 'Hello'}</p>
-`
-
-define('any-hello-element', { ...ApolloQuery, render });
-```
-
-</code-copy>
-
-Use them by assigning your graphql nodes to the `query` property.
-
-<code-copy>
-
-```js
-import HelloQuery from './Hello.query.graphql';
-const render = ({ data }) => html`
-  <any-hello-element
-      query="${HelloQuery}"
-      variables="${{ name: 'Mr. Magoo' }}"
-  ></any-hello-element>
-`;
-```
-
-</code-copy>
-
 ### 👾 Mutations
-Like queries, you can use the`mutation` factory, or you can spread the generalized Hybrid.
+Like queries, you can use the `mutation` factory.
 
 <code-copy>
 
@@ -133,7 +101,7 @@ mutation Name($name: String!) {
 
 ```ts
 import { mutation, define, html } from '@apollo-elements/hybrids';
-import NameMutation from './Name.mutation.graphql';
+import UpdateNameMutation from './UpdateName.mutation.graphql';
 ```
 
 </code-copy>
@@ -143,16 +111,16 @@ import NameMutation from './Name.mutation.graphql';
 <code-copy>
 
 ```ts
-const onKeyup = ({ mutate }, { key, target: { value: name } }) => {
-  if (key === 'Enter')
-    mutate({ variables: { name } });
+const onKeyup = (host, event) => {
+  if (event.key === 'Enter')
+    host.updateName.mutate({ variables: { name: event.target.value } });
 }
 
-const render = ({ data }) =>
+const render = () =>
   html`<input aria-label="Name" placeholder="Name" onkeyup="${onKeyup}"/>`;
 
 define('name-input', {
-  ...mutation(NameMutation),
+  updateName: mutation(UpdateNameMutation),
   render,
 });
 ```
@@ -160,7 +128,7 @@ define('name-input', {
 </code-copy>
 
 ### 🗞 Subscriptions
-Just like `query` and `mutation`, use `subscription` factory, or spread in the `ApolloSubscription` Hybrid prototype to define your subscription element.
+Just like `query` and `mutation`, use `subscription` factory.
 
 <code-copy>
 
@@ -190,12 +158,14 @@ import NewsSubscription from './News.subscription.graphql';
 <code-copy>
 
 ```ts
-const render = ({ data, error }) => error ? html`Error! ${error}` : html`
-  Latest News: ${data.news}
+const render = ({ news }) => news.error ? html`
+  Error! ${news.error.message}
+` : html`
+  Latest News: ${news.data?.news}
 `;
 
 define('subscribing-element', {
-  ...subscription(NewsSubscription),
+  news: subscription(NewsSubscription),
   render
 });
 ```
@@ -210,35 +180,30 @@ import { gql } from '@apollo/client/core';
 
 import { apolloClient } from '../client'
 
-const MessagesQuery = gql`
-  query {
-    messages
-  }
-`;
-
-const subscription = gql`
-  subscription {
-    messagePosted
-  }
-`;
-
-const updateQuery = (previous = [], { subscriptionData }) =>
-    !subscriptionData.data ? previous
-  : [subscriptionData.data.messagePosted, ...previous];
-
-const message = message => html`<li>${message}</li>`;
-const render = ({messages}) =>
-  html`<ul>${messages.map(message)}</ul>`;
-
-
 define('messages-list', {
-  ...query(MessagesQuery),
-  render,
-
-  // add a 'private' property that calls `subscribeToMore` on connect
-  __messagePosted_subscription: property(null, function connect(host) {
-    host.subscribeToMore({ document: subscription, updateQuery });
-  }),
+  messages: query(gql`{ messages }`),
+  render({ messages }) {
+    const messages = messages.data?.messages ?? [];
+    return html`<ul>${messages.map(message => html`<li>${message}</li>`)}</ul>`;
+  },
+  /** a 'private' property that calls `subscribeToMore` on connect */
+  __messagePosted_subscription: {
+    connect(host) {
+      host.messages.subscribeToMore({
+        document: gql`
+          subscription {
+            messagePosted
+          }
+        `,
+        updateQuery(previous = [], { subscriptionData }) {
+          return (
+              !subscriptionData.data ? previous
+            : [subscriptionData.data.messagePosted, ...previous]
+          );
+        }
+      });
+    }
+  }
 });
 ```
 

@@ -7,7 +7,7 @@
 
 <strong>🚀 FASTElement base classes that connect to your Apollo cache 🌜</strong>
 
-<strong>👩‍🚀 Launch your app at full speed! 👨‍🚀</strong>
+<strong>👩‍🚀 Launch your app at escape velocity! 👨‍🚀</strong>
 
 > 🔎 Read the [Full API Docs](https://apolloelements.dev/api/libraries/fast/) 🔎
 
