@@ -33,8 +33,8 @@ Import the elements.
 <code-copy>
 
   ```js
-  import '@apollo-elements/polymer/apollo-query';
-  import '@apollo-elements/polymer/apollo-mutation';
+  import '@apollo-elements/polymer/polymer-apollo-query';
+  import '@apollo-elements/polymer/polymer-apollo-mutation';
   ```
 
 </code-copy>
@@ -44,11 +44,11 @@ You can now use them in your polymer template:
 <code-copy>
 
 ```html
-<apollo-query
+<polymer-apollo-query
     data="{{data}}"
     variables="[[variables]]"
     query="[[UserQuery]]"
-></apollo-query>
+></polymer-apollo-query>
 
 <paper-icon-item>
   <iron-image slot="item-icon">[[data.user.picture]]</iron-image>

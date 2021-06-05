@@ -39,31 +39,31 @@ Create a template
 
 <code-copy>
 
-```js
-const template = document.createElement('template');
-      template.innerHTML = `
-        <style>
-          :host([loading]) span {
-            opacity: 0;
-          }
+  ```js
+  const template = document.createElement('template');
+        template.innerHTML = `
+          <style>
+            :host([loading]) span {
+              opacity: 0;
+            }
 
-          span {
-            opacity: 1;
-            will-change: opacity;
-            transition: opacity 0.2s ease-in-out;
-          }
-        </style>
+            span {
+              opacity: 1;
+              will-change: opacity;
+              transition: opacity 0.2s ease-in-out;
+            }
+          </style>
 
-        <article id="error">
-          <pre><code></code></pre>
-        </article>
+          <article id="error">
+            <pre><code></code></pre>
+          </article>
 
-        <p>
-          <span id="greeting"></span>
-          <span id="name"></span>
-        </p>
-      `;
-```
+          <p>
+            <span id="greeting"></span>
+            <span id="name"></span>
+          </p>
+        `;
+  ```
 
 </code-copy>
 
@@ -106,19 +106,19 @@ Add reactivity
 
 <code-copy>
 
-```js
-#data = null;
-get data() { return this.#data; }
-set data(data) { this.#data = data; this.render(); }
+  ```js
+  #data = null;
+  get data() { return this.#data; }
+  set data(data) { this.#data = data; this.render(); }
 
-#loading = false;
-get loading() { return this.#loading; }
-set loading(loading) { this.#loading = loading; this.render(); }
+  #loading = false;
+  get loading() { return this.#loading; }
+  set loading(loading) { this.#loading = loading; this.render(); }
 
-#error = null;
-get error() { return this.#error; }
-set error(error) { this.#error = error; this.render(); }
-```
+  #error = null;
+  get error() { return this.#error; }
+  set error(error) { this.#error = error; this.render(); }
+  ```
 
 </code-copy>
 
@@ -126,29 +126,29 @@ Render the data
 
 <code-copy>
 
-```js
+  ```js
 
-$(id) { return this.shadowRoot.getElementById(id); }
+  $(id) { return this.shadowRoot.getElementById(id); }
 
-render() {
-  if (this.loading)
-    this.setAttribute('loading', '');
-  else
-    this.removeAttribute('loading');
+  render() {
+    if (this.loading)
+      this.setAttribute('loading', '');
+    else
+      this.removeAttribute('loading');
 
-  this.$('error').hidden =
-    !this.error;
+    this.$('error').hidden =
+      !this.error;
 
-  this.$('error').querySelector("code").textContent =
-    this.error?.message ?? '';
+    this.$('error').querySelector("code").textContent =
+      this.error?.message ?? '';
 
-  this.$('greeting').textContent =
-    this.data?.helloWorld?.greeting ?? 'Hello';
+    this.$('greeting').textContent =
+      this.data?.helloWorld?.greeting ?? 'Hello';
 
-  this.$('name').textContent =
-    this.data?.helloWorld?.name ?? 'Friend';
-}
-```
+    this.$('name').textContent =
+      this.data?.helloWorld?.name ?? 'Friend';
+  }
+  ```
 
 </code-copy>
 
@@ -156,9 +156,9 @@ And use it in HTML
 
 <code-copy>
 
-```html
-<hello-query></hello-query>
-```
+  ```html
+  <hello-query></hello-query>
+  ```
 
 </code-copy>
 
@@ -228,7 +228,7 @@ Optional mixin which lets you declare type policies for a component's query.
 
 ## Aren't Mixins Considered Harmful?
 
-Different kind of mixin. These are [JS class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/), which are essentially function composition.
+Different kind of mixin. These are [JavaScript class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/), which are essentially function composition.
 
 ## 📚 Other Libraries
 Looking for other libraries? Want to use Apollo with your favourite custom-elements library? Check out our [docs site](https://apolloelements.dev/)
