@@ -67,6 +67,6 @@ export default {
     '_site-dev',
   ],
   plugins: [
-    asyncFunctionPlugin(),
+    // asyncFunctionPlugin(),
   ],
 };
