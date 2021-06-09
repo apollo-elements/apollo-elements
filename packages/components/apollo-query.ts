@@ -1,6 +1,21 @@
-import type { SubscribeToMoreOptions } from '@apollo/client/core';
+import type {
+  ApolloQueryResult,
+  ErrorPolicy,
+  QueryOptions,
+  SubscribeToMoreOptions,
+  WatchQueryFetchPolicy,
+  WatchQueryOptions,
+} from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  FetchMoreParams,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  NextFetchPolicyFunction,
+  Variables,
+} from '@apollo-elements/interfaces';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
@@ -21,21 +36,9 @@ import { bound } from '@apollo-elements/core/lib/bound';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryElement } }
 
-type P<D extends I.MaybeTDN, V, K extends keyof ApolloQueryController<D, V>> =
-  ApolloQueryController<D, V>[K] extends (...args: any[]) => unknown
-  ? Parameters<ApolloQueryController<D, V>[K]>
-  : never
-
-type R<D extends I.MaybeTDN, V, K extends keyof ApolloQueryController<D, V>> =
-  ApolloQueryController<D, V>[K] extends (...args: any[]) => unknown
-  ? ReturnType<ApolloQueryController<D, V>[K]>
-  : never
-
-type PrivateKeys = 'nextError'|'nextData'|'watchQuery'|'shouldSubscribe';
+type PrivateKeys = 'nextError'|'nextData'|'watchQuery'|'shouldSubscribe'|'controller';
 
 /**
- * @element apollo-query
- *
  * Render a GraphQL query to the DOM
  *
  * @example Render a query to Shadow DOM
@@ -73,9 +76,8 @@ type PrivateKeys = 'nextError'|'nextData'|'watchQuery'|'shouldSubscribe';
  * ```
  */
 @customElement('apollo-query')
-export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends
-  GraphQLScriptChildMixin(ApolloElement)<D, V>
-  implements Omit<I.ApolloQueryInterface<D, V>, PrivateKeys> {
+export class ApolloQueryElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>> extends
+  GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-query';
 
   controller: ApolloQueryController<D, V> = new ApolloQueryController<D, V>(this);
@@ -109,7 +111,7 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
   /**
    * @summary A GraphQL document containing a single query.
    */
-  @controlled() @state() query: null | I.ComponentDocument<D> = null;
+  @controlled() @state() query: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>;
@@ -177,7 +179,7 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: this['controller']['options']['errorPolicy'];
+  errorPolicy?: ErrorPolicy;
 
   /**
    * Determines where the client may return a result from. The options are:
@@ -194,7 +196,7 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+  fetchPolicy?: WatchQueryFetchPolicy;
 
   /**
    * When someone chooses cache-and-network or network-only as their
@@ -211,25 +213,29 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
    * @summary Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.
    * @attr next-fetch-policy
    */
-   @controlled({ path: 'options' })
-   @property({ attribute: 'next-fetch-policy' })
-   nextFetchPolicy?: this['controller']['options']['nextFetchPolicy'];
+  @controlled({ path: 'options' })
+  @property({ attribute: 'next-fetch-policy' })
+  nextFetchPolicy?: WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>;
 
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    *
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
-  @bound public async refetch(...params: P<D, V, 'refetch'>): R<D, V, 'refetch'> {
-     return this.controller.refetch(...params);
-   }
+  @bound public async refetch(
+    variables?: Variables<D, V>
+  ): Promise<ApolloQueryResult<Data<D>>> {
+    return this.controller.refetch(variables);
+  }
 
   /**
    * Resets the observableQuery and subscribes.
    * @param params options for controlling how the subscription subscribes
    */
-  @bound public subscribe(...params: P<D, V, 'subscribe'>): R<D, V, 'subscribe'> {
-    return this.controller.subscribe(...params);
+  @bound public subscribe(
+    params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
+  ): ZenObservable.Subscription {
+    return this.controller.subscribe(params);
   }
 
   /**
@@ -240,18 +246,20 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-   @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: SubscribeToMoreOptions<I.Data<D>, TSubscriptionVariables, TSubscriptionData>
+  @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+    options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
-     return this.controller.subscribeToMore(options);
-   }
+    return this.controller.subscribeToMore(options);
+  }
 
   /**
    * Executes a Query once and updates the with the result
    */
-  @bound public async executeQuery(...params: P<D, V, 'executeQuery'>): R<D, V, 'executeQuery'> {
-     return this.controller.executeQuery(...params);
-   }
+  @bound public async executeQuery(
+    params?: Partial<QueryOptions<Variables<D, V>, Data<D>>>
+  ): Promise<ApolloQueryResult<Data<D>>> {
+    return this.controller.executeQuery(params);
+  }
 
   /**
    * Exposes the `ObservableQuery#fetchMore` method.
@@ -263,13 +271,15 @@ export class ApolloQueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
    *
    * The optional `variables` parameter is an optional new variables object.
    */
-   @bound public async fetchMore(...params: P<D, V, 'fetchMore'>): R<D, V, 'fetchMore'> {
-    return this.controller.fetchMore(...params);
+  @bound public async fetchMore(
+    params?: Partial<FetchMoreParams<D, V>>
+  ): Promise<ApolloQueryResult<Data<D>>> {
+    return this.controller.fetchMore(params);
   }
 
   @bound public startPolling(ms: number): void {
-     return this.controller.startPolling(ms);
-   }
+    return this.controller.startPolling(ms);
+  }
 
   @bound public stopPolling(): void {
     return this.controller.stopPolling();

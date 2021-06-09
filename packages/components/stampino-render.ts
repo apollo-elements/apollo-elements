@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types */
 import type { TemplateHandlers } from 'stampino';
-import { ReactiveElement, PropertyValues } from '@lit/reactive-element';
+import { ReactiveElement, PropertyValues, ReactiveControllerHost } from '@lit/reactive-element';
 import { render } from 'stampino';
 import { bound } from '@apollo-elements/core/lib/bound';
 
@@ -9,7 +9,7 @@ import { bound } from '@apollo-elements/core/lib/bound';
  *
  * @attr {Boolean|string} 'no-shadow' - When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.
  */
-export class StampinoRender extends ReactiveElement {
+export class StampinoRender extends ReactiveElement implements ReactiveControllerHost {
   private static isQueryable(node: Node): node is (ShadowRoot|Document) {
     return 'getElementById' in node;
   }
@@ -21,7 +21,7 @@ export class StampinoRender extends ReactiveElement {
    * or referenced by ID with the `template` attribute.
    *
    * Templates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)
-   * @attr template
+   * @attr {string} template
    * @example Referencing a template by ID
    * ```html
    * <stampino-render template="tpl"></stampino-render>

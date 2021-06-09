@@ -10,6 +10,8 @@ import type {
   NoParamQueryVariables,
 } from '@apollo-elements/test';
 
+import type { ApolloQueryElement } from '@apollo-elements/core';
+
 import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
 import { ApolloClient, TypedDocumentNode } from '@apollo/client/core';
@@ -36,10 +38,7 @@ import {
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
-import {
-  ApolloMutationElement,
-  ApolloQueryElement,
-} from '@apollo-elements/interfaces';
+import { ApolloQueryMixin, ApolloMutationMixin } from '@apollo-elements/mixins';
 
 import { ApolloClientElement } from './apollo-client';
 import { makeClient } from '@apollo-elements/test';
@@ -60,7 +59,7 @@ function restoreFetch() {
 
 describe('<apollo-client>', function() {
   describe('with basic elements', function() {
-    class ShallowElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloMutationElement<D, V> {
+    class ShallowElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloMutationMixin(HTMLElement)<D, V> {
       declare shadowRoot: ShadowRoot;
 
       constructor() {
@@ -89,7 +88,7 @@ describe('<apollo-client>', function() {
       }
     }
 
-    class QueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloQueryElement<D, V> {
+    class QueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloQueryMixin(HTMLElement)<D, V> {
       query = NoParamQuery;
 
       constructor() {
@@ -313,7 +312,7 @@ describe('<apollo-client>', function() {
       beforeEach(mockFetch);
       afterEach(restoreFetch);
 
-      class ApolloQueryEl extends ApolloQueryElement<
+      class ApolloQueryEl extends ApolloQueryMixin(HTMLElement)<
         NonNullableParamQueryData,
         NonNullableParamQueryVariables
       > { }
