@@ -58,7 +58,7 @@
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_haunted.html",
   "dependencies": {
     "@apollo-elements/core": "^0.0.0",
-    "haunted": "^4.8.0"
+    "haunted": "^4.8.1"
   },
   "customElements": "custom-elements.json"
 }

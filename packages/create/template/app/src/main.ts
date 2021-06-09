@@ -1,5 +1,5 @@
 // @ts-ignore: https://github.com/graphql/graphql-js/pull/2409
-globalThis.process ??= { env: '' };
+globalThis.process ??= { env: {} };
 
 import '@apollo-elements/components/apollo-client';
 import { ApolloClientElement } from '@apollo-elements/components/apollo-client';

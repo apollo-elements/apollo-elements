@@ -54,7 +54,7 @@ const config = {
       <head>
       <script>
         // @ts-ignore: https://github.com/graphql/graphql-js/pull/2409
-        globalThis.process ??= { env: '' };
+        globalThis.process ??= { env: {} };
         // suppress advertising
         globalThis.__APOLLO_DEVTOOLS_GLOBAL_HOOK__ = () => void 0;
       </script>
