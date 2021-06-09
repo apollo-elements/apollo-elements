@@ -22,16 +22,16 @@ export class ApolloElement<D extends I.MaybeTDN = any, V = I.MaybeVariables<D>>
 
   readyToReceiveDocument = false;
 
-  requestUpdate(name: keyof this, old: this[keyof this]): void {
+  requestUpdate(name?: string, old?: unknown): void {
     super.requestUpdate(name, (
       this.constructor as typeof ReactiveElement
-    ).getPropertyOptions(name).type === Boolean ? !!this[name] : old);
+    ).getPropertyOptions(name as string).type === Boolean ? !!this[name as keyof this] : old);
   }
 
   /** @summary The Apollo Client instance. */
   @controlled()
   @state()
-  client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
+  client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
   /** @summary Whether a request is in flight. */
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;

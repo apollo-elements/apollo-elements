@@ -20,8 +20,6 @@ declare global { interface HTMLElementTagNameMap {
 } }
 
 /**
- * @element apollo-subscription
- *
  * Render a GraphQL subscription to the DOM
  *
  * @example Render a subscription to Shadow DOM

@@ -46,25 +46,24 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
 }
 
 /**
- * @element apollo-client
- *
  * Provides an ApolloClient instance to all nested ApolloElement children,
  * even across (open) shadow boundaries.
  *
- * @example
- * Generate a simple ApolloClient instance
+ * @element apollo-client
+ *
+ * @fires {CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>} client-changed When the client changes
+ *
+ * @example Generate a simple ApolloClient instance
  * ```html
  * <apollo-client uri="/graphql"></apollo-client>
  * ```
  *
- * @example
- * Prevent network calls when required variables are absent
+ * @example Prevent network calls when required variables are absent
  * ```html
  * <apollo-client uri="/graphql" validate-variables></apollo-client>
  * ```
  *
- * @example
- * Providing a client to a tree of Nodes
+ * @example Providing a client to a tree of Nodes
  * ```html
  * <apollo-client id="client-a">
  *   <apollo-mutation>
@@ -73,8 +72,7 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
  * </apollo-client>
  * ```
  *
- * @example
- * Nesting separate clients
+ * @example Nesting separate clients
  * ```html
  * <apollo-client id="client-a">
  *   <query-element>
@@ -89,18 +87,26 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
  * ```
  */
 export class ApolloClientElement extends HTMLElement {
-  static readonly observedAttributes = ['uri'];
+  static readonly is: 'apollo-client' = 'apollo-client';
 
-  /** Private reference to the `ApolloClient` instance */
+  static readonly observedAttributes = [
+    'uri',
+    'validate-variables',
+  ];
+
+  /** @summary Private reference to the `ApolloClient` instance */
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
-  /** Private cache of child `ApolloElement`s */
+  /** @summary Private storage of child `ApolloController`s */
   #instances: Set<ApolloController> = new Set();
 
+  /** @summary Private storage for the Type Policies */
   #typePolicies: TypePolicies | undefined = undefined;
 
   /**
-   * Reference to the `ApolloClient` instance.
+   * @summary Reference to the `ApolloClient` instance.
+   *
+   * Set the `client` property to update all of this element's deep children.
    */
   get client(): ApolloClient<NormalizedCacheObject> | null {
     return this.#client;
@@ -117,13 +123,15 @@ export class ApolloClientElement extends HTMLElement {
       this.initialize(instance);
   }
 
-  /** List of all Apollo Controllers registered to this client. */
+  /** @summary List of all Apollo Controllers registered to this client. */
   get controllers(): readonly (ApolloController)[] {
     return [...this.#instances];
   }
 
   /**
-   * Type Policies for the client.
+   * @summary Type Policies for the client.
+   *
+   * Set this property with a `TypePolicies` object to add them to the cache.
    */
   get typePolicies(): TypePolicies | undefined {
     return this.#typePolicies ?? undefined;
@@ -138,6 +146,8 @@ export class ApolloClientElement extends HTMLElement {
   /**
    * When the URI attribute is set, `<apollo-client>` will asynchronously
    * create a new ApolloClient instance with some default parameters
+   *
+   * @summary URI to the GraphQL server.
    * @attr uri
    */
   get uri(): string | undefined {
@@ -152,10 +162,16 @@ export class ApolloClientElement extends HTMLElement {
 
   /**
    * When true, client will not fetch operations that do not have all their non-nullable variables set.
+   *
+   * @summary Whether to try to validate operations
    * @attr validate-variables
    */
   get validateVariables(): boolean {
     return this.hasAttribute('validate-variables');
+  }
+
+  set validateVariables(v: boolean) {
+    this.toggleAttribute('validate-variables', !!v);
   }
 
   constructor() {
@@ -171,7 +187,8 @@ export class ApolloClientElement extends HTMLElement {
   attributeChangedCallback(attr: string, oldValue: string, newValue: string): void {
     if (oldValue === newValue) return;
     switch (attr) {
-      case 'uri': this.uri = newValue;
+      case 'uri': this.uri = newValue; break;
+      case 'validate-variables': this.validateVariables = newValue !== null; break;
     }
   }
 
@@ -179,7 +196,11 @@ export class ApolloClientElement extends HTMLElement {
     this.findDeepInstances();
   }
 
-  async createApolloClient(): Promise<ApolloClientElement['client']> {
+  /**
+   * @summary Creates an Apollo client and assigns it to child elements
+   * @return An `ApolloClient` instance.
+   */
+  public async createApolloClient(): Promise<ApolloClient<NormalizedCacheObject>> {
     const { typePolicies, validateVariables } = this;
     const { uri } = this;
     const { createApolloClient } = await import('@apollo-elements/core/lib/create-apollo-client');
@@ -231,4 +252,4 @@ export class ApolloClientElement extends HTMLElement {
   }
 }
 
-customElements.define('apollo-client', ApolloClientElement);
+customElements.define(ApolloClientElement.is, ApolloClientElement);

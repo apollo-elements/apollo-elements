@@ -1,309 +1,3014 @@
 {
-  "version": "experimental",
-  "tags": [
+  "schemaVersion": "0.1.0",
+  "readme": "",
+  "modules": [
     {
-      "name": "apollo-client",
-      "path": "./apollo-client.js",
-      "attributes": [
+      "kind": "javascript-module",
+      "path": "apollo-client.js",
+      "declarations": [
         {
-          "name": "uri",
-          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string | undefined"
-        },
-        {
-          "name": "validate-variables",
-          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
-          "type": "boolean"
+          "kind": "class",
+          "description": "Provides an ApolloClient instance to all nested ApolloElement children,\neven across (open) shadow boundaries.\n\n## Examples\n\n### Generate a simple ApolloClient instance\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### Prevent network calls when required variables are absent\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### Providing a client to a tree of Nodes\n```html\n<apollo-client id=\"client-a\">\n<apollo-mutation>\n<!--...-->\n</apollo-mutation>\n</apollo-client>\n```\n\n### Nesting separate clients\n```html\n<apollo-client id=\"client-a\">\n<query-element>\n<!-- This element queries from client-a's endpoint -->\n</query-element>\n<apollo-client id=\"client-b\">\n<query-element>\n<!-- This element queries from client-b's endpoint -->\n</query-element>\n</apollo-client>\n</apollo-client>\n```",
+          "name": "ApolloClientElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "apollo-client",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#client",
+              "privacy": "private",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "Private reference to the `ApolloClient` instance"
+            },
+            {
+              "kind": "field",
+              "name": "#instances",
+              "privacy": "private",
+              "type": {
+                "text": "Set<ApolloController>"
+              },
+              "summary": "Private storage of child `ApolloController`s"
+            },
+            {
+              "kind": "field",
+              "name": "#typePolicies",
+              "privacy": "private",
+              "type": {
+                "text": "TypePolicies | undefined"
+              },
+              "summary": "Private storage for the Type Policies"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "Reference to the `ApolloClient` instance.\n\nSet the `client` property to update all of this element's deep children."
+            },
+            {
+              "kind": "field",
+              "name": "controllers",
+              "type": {
+                "text": "readonly (ApolloController)[]"
+              },
+              "summary": "List of all Apollo Controllers registered to this client."
+            },
+            {
+              "kind": "field",
+              "name": "typePolicies",
+              "type": {
+                "text": "TypePolicies | undefined"
+              },
+              "summary": "Type Policies for the client.\n\nSet this property with a `TypePolicies` object to add them to the cache."
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+              "summary": "URI to the GraphQL server."
+            },
+            {
+              "kind": "field",
+              "name": "validateVariables",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+              "summary": "Whether to try to validate operations"
+            },
+            {
+              "kind": "method",
+              "name": "createApolloClient",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "summary": "Creates an Apollo client and assigns it to child elements",
+              "async": true
+            },
+            {
+              "kind": "method",
+              "name": "findDeepInstances",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addDeepInstance",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "child",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "async": true
+            },
+            {
+              "kind": "method",
+              "name": "onElementConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "ApolloEvent"
+                  }
+                }
+              ],
+              "description": "Assigns the element controller's client instance to the child,\nand registers the child to receive the element's new client when its set."
+            },
+            {
+              "kind": "method",
+              "name": "onElementDisconnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "ApolloEvent"
+                  }
+                }
+              ],
+              "description": "Performs clean up when the child disconnects"
+            },
+            {
+              "kind": "method",
+              "name": "initialize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ApolloController"
+                  }
+                }
+              ],
+              "description": "Set the client on the element's controller,\nand if it's a query or subscription controller, attempt to subscribe"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>"
+              },
+              "description": "When the client changes",
+              "name": "client-changed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "uri",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
+              "summary": "URI to the GraphQL server.",
+              "fieldName": "uri"
+            },
+            {
+              "name": "validate-variables",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
+              "summary": "Whether to try to validate operations",
+              "fieldName": "validateVariables"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "apollo-client",
+          "customElement": true
         }
       ],
-      "properties": [
+      "exports": [
         {
-          "name": "client",
-          "description": "Reference to the `ApolloClient` instance."
+          "kind": "js",
+          "name": "ApolloClientElement",
+          "declaration": {
+            "name": "ApolloClientElement",
+            "module": "apollo-client.js"
+          }
         },
         {
-          "name": "elements",
-          "description": "List of all ApolloElements registered to this client.",
-          "type": "array"
-        },
-        {
-          "name": "typePolicies",
-          "description": "Type Policies for the client."
-        },
-        {
-          "name": "uri",
-          "attribute": "uri",
-          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string | undefined"
-        },
-        {
-          "name": "validateVariables",
-          "attribute": "validate-variables",
-          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
-          "type": "boolean"
-        }
-      ],
-      "events": [
-        {
-          "name": "client-changed"
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ApolloClientElement",
+            "module": "apollo-client.js"
+          }
         }
       ]
     },
     {
-      "name": "apollo-client",
-      "path": "./apollo-client.ts",
-      "attributes": [
+      "kind": "javascript-module",
+      "path": "apollo-element.js",
+      "declarations": [
         {
-          "name": "uri",
-          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string | undefined"
-        },
-        {
-          "name": "validate-variables",
-          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
-          "type": "boolean"
+          "kind": "class",
+          "description": "",
+          "name": "ApolloElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloController<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "The Apollo Client instance."
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "I.Data<D> | null"
+              },
+              "summary": "Latest Data."
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "I.ComponentDocument<D> | null"
+              },
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`"
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "summary": "Latest error"
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly I.GraphQLError[]"
+              },
+              "summary": "Latest errors"
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "I.Variables<D, V> | null"
+              },
+              "summary": "Operation variables."
+            },
+            {
+              "kind": "method",
+              "name": "isQueryable",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is (ShadowRoot|Document)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "templateHandlers",
+              "type": {
+                "text": "TemplateHandlers"
+              },
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ShadowRoot|HTMLElement"
+                }
+              },
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getElementByIdFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string|null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "E | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelector` within the render root.",
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<E>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelectorAll` within the render root.",
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "fieldName": "template",
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "Boolean|string"
+              },
+              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "name": "'no-shadow'",
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "StampinoRender"
+          }
         }
       ],
-      "properties": [
+      "exports": [
         {
-          "name": "observedAttributes",
-          "type": "string[]",
-          "default": "[\"uri\"]"
-        },
-        {
-          "name": "client",
-          "description": "Reference to the `ApolloClient` instance.",
-          "type": "ApolloClient<NormalizedCacheObject> | null"
-        },
-        {
-          "name": "elements",
-          "description": "List of all ApolloElements registered to this client.",
-          "type": "readonly ApolloElementElement<unknown, Record<string, any>>[]"
-        },
-        {
-          "name": "typePolicies",
-          "description": "Type Policies for the client.",
-          "type": "TypePolicies | undefined"
-        },
-        {
-          "name": "uri",
-          "attribute": "uri",
-          "description": "When the URI attribute is set, `<apollo-client>` will asynchronously\ncreate a new ApolloClient instance with some default parameters",
-          "type": "string | undefined"
-        },
-        {
-          "name": "validateVariables",
-          "attribute": "validate-variables",
-          "description": "When true, client will not fetch operations that do not have all their non-nullable variables set.",
-          "type": "boolean"
-        }
-      ],
-      "events": [
-        {
-          "name": "client-changed"
+          "kind": "js",
+          "name": "ApolloElement",
+          "declaration": {
+            "name": "ApolloElement",
+            "module": "apollo-element.js"
+          }
         }
       ]
     },
     {
-      "name": "apollo-mutation",
-      "path": "./apollo-mutation.ts",
-      "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes",
-      "attributes": [
+      "kind": "javascript-module",
+      "path": "apollo-mutation.js",
+      "declarations": [
         {
-          "name": "input-key",
-          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
-          "type": "string",
-          "default": "\"\""
+          "kind": "class",
+          "description": "",
+          "name": "WillMutateError",
+          "superclass": {
+            "name": "Error"
+          }
         },
         {
-          "name": "called",
-          "description": "Whether the mutation was called",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "refetch-queries",
-          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
-        },
-        {
-          "name": "error-policy",
-          "description": "Specifies the ErrorPolicy to be used for this mutation.",
-          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
-        },
-        {
-          "name": "fetch-policy",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "\"no-cache\" | undefined"
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "default": "\"\""
-        },
-        {
-          "name": "await-refetch-queries"
+          "kind": "class",
+          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\n## Examples\n\n### Using data attributes\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n<mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n```\n\n### Using data attributes and variables\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n<mwc-button trigger label=\"OK\"></mwc-button>\n<mwc-textfield\ndata-variable=\"name\"\nvalue=\"Neil\"\nlabel=\"Name\"></mwc-textfield>\n<mwc-textarea\ndata-variable=\"comment\"\nvalue=\"That's one small step...\"\nlabel=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"name\": \"Neil\",\n\"comment\": \"That's one small step...\",\n\"type\": \"Quote\",\n\"action\": \"FLUB\"\n}\n```\n\n### Using data attributes and variables with input property\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n<mwc-button trigger label=\"OK\"></mwc-button>\n<mwc-textfield\ndata-variable=\"comment\"\nvalue=\"Hey!\"\nlabel=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"actionInput\": {\n\"comment\": \"Hey!\",\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n}\n```\n\n### Using DOM properties\n```html\n<apollo-mutation id=\"mutation\">\n<mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\ndocument.getElementById('mutation').mutation = SomeMutation;\ndocument.getElementById('mutation').variables = {\ntype: \"Type\",\naction: \"ACTION\"\n};\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n```",
+          "name": "ApolloMutationElement",
+          "slots": [
+            {
+              "description": "typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button.\\n\\nYou may also slot in input elements with the `data-variable=\\\"variableName\\\"` attribute. It's `value` property gets the value for the corresponding variable. See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events",
+              "name": "Mutations"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "apollo-mutation",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "isButton",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is ButtonLikeElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Element|null"
+                  }
+                }
+              ],
+              "description": "False when the element is a link."
+            },
+            {
+              "kind": "method",
+              "name": "isLink",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is HTMLAnchorElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Element|null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toVariables",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "T"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "acc",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "InputLikeElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "isTriggerNode",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is HTMLElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "debounce",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "f",
+                  "type": {
+                    "text": "() => void"
+                  }
+                },
+                {
+                  "name": "timeout",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "inFlightTrigger",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "doMutate",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "debouncedMutate",
+              "privacy": "private",
+              "type": {
+                "text": "this"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#buttonMO",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#listeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "triggers",
+              "type": {
+                "text": "NodeListOf<HTMLElement>"
+              },
+              "privacy": "protected",
+              "description": "Slotted trigger nodes"
+            },
+            {
+              "kind": "field",
+              "name": "buttons",
+              "type": {
+                "text": "ButtonLikeElement[]"
+              },
+              "privacy": "protected",
+              "description": "If the slotted trigger node is a button, the trigger\nIf the slotted trigger node is a link with a button as it's first child, the button"
+            },
+            {
+              "kind": "field",
+              "name": "inputs",
+              "type": {
+                "text": "InputLikeElement[]"
+              },
+              "privacy": "protected",
+              "description": "Variable input nodes"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloMutationController<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "inputKey",
+              "type": {
+                "text": "string|null"
+              },
+              "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+              "summary": "key to wrap variables in e.g. `input`."
+            },
+            {
+              "kind": "field",
+              "name": "debounce",
+              "type": {
+                "text": "number | null"
+              },
+              "summary": "Optional number of milliseconds to wait between calls"
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "summary": "Whether the mutation was called",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mutation",
+              "type": {
+                "text": "null | I.ComponentDocument<D>"
+              },
+              "summary": "The mutation."
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown>"
+              },
+              "summary": "Context passed to the link execution chain."
+            },
+            {
+              "kind": "field",
+              "name": "optimisticResponse",
+              "type": {
+                "text": "I.OptimisticResponseType<D, V>"
+              },
+              "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear."
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "I.Variables<D, V> | null"
+              },
+              "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+              "summary": "Mutation variables."
+            },
+            {
+              "kind": "field",
+              "name": "ignoreResults",
+              "summary": "If true, the returned data property will not update with the mutation result.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "awaitRefetchQueries",
+              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "description": "Specifies the ErrorPolicy to be used for this mutation."
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "'no-cache'"
+              },
+              "description": "Specifies the FetchPolicy to be used for this mutation."
+            },
+            {
+              "kind": "field",
+              "name": "refetchQueries",
+              "type": {
+                "text": "I.RefetchQueriesType<D> | null"
+              },
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return."
+            },
+            {
+              "kind": "method",
+              "name": "resolveURL",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "I.Data<D>"
+                  },
+                  "description": "mutation data"
+                },
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement"
+                  },
+                  "description": "the trigger element which triggered this mutation"
+                }
+              ],
+              "description": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger."
+            },
+            {
+              "kind": "method",
+              "name": "onLightDomMutation",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "records",
+                  "type": {
+                    "text": "MutationRecord[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addTriggerListener",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "willMutate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "willNavigate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "I.Data<D>|null|undefined"
+                  }
+                },
+                {
+                  "name": "triggeringElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "async": true
+            },
+            {
+              "kind": "method",
+              "name": "didMutate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onTriggerEvent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ShadowRoot|HTMLElement"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getVariablesFromInputs",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "I.Variables<D, V> | null"
+                }
+              },
+              "description": "Constructs a variables object from the element's data-attributes and any slotted variable inputs."
+            },
+            {
+              "kind": "method",
+              "name": "updater",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "ReturnType<MutationUpdaterFn<I.Data<D>>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "Parameters<MutationUpdaterFn<I.Data<D>>>"
+                  }
+                }
+              ],
+              "description": "A function which updates the apollo cache when the query responds.\nThis function will be called twice over the lifecycle of a mutation.\nOnce at the very beginning if an optimisticResponse was provided.\nThe writes created from the optimistic data will be rolled back before\nthe second time this function is called which is when the mutation has\nsuccesfully resolved. At that point update will be called with the actual\nmutation result and those writes will not be rolled back.\n\nThe reason a DataProxy is provided instead of the user calling the methods\ndirectly on ApolloClient is that all of the writes are batched together at\nthe end of the update, and it allows for writes generated by optimistic\ndata to be rolled back."
+            },
+            {
+              "kind": "method",
+              "name": "mutate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<FetchResult<I.Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<MutationOptions<I.Data<D>, I.Variables<D, V>>> | undefined"
+                  },
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/mutation/#variables) |\n"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "type": {
+                "text": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "I.Data<D> | null"
+              },
+              "summary": "Latest Data.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "I.ComponentDocument<D> | null"
+              },
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "summary": "Latest error",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly I.GraphQLError[]"
+              },
+              "summary": "Latest errors",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isQueryable",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is (ShadowRoot|Document)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "templateHandlers",
+              "type": {
+                "text": "TemplateHandlers"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getElementByIdFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string|null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "E | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelector` within the render root.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<E>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelectorAll` within the render root.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "WillMutateEvent"
+              }
+            },
+            {
+              "type": {
+                "text": "WillMutateEvent"
+              },
+              "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`",
+              "name": "will-mutate"
+            },
+            {
+              "type": {
+                "text": "WillNavigateEvent"
+              },
+              "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`",
+              "name": "will-navigate"
+            },
+            {
+              "type": {
+                "text": "MutationCompletedEvent"
+              },
+              "description": "When the mutation resolves. `detail` is `{ data: Data, element: this }`",
+              "name": "mutation-completed"
+            },
+            {
+              "type": {
+                "text": "MutationErrorEvent"
+              },
+              "description": "When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`",
+              "name": "mutation-error"
+            },
+            {
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "when the element disconnects from the dom",
+              "name": "apollo-element-disconnected"
+            },
+            {
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "when the element connects to the dom",
+              "name": "apollo-element-connected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "await-refetch-queries",
+              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "fieldName": "awaitRefetchQueries"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "description": "Specifies the ErrorPolicy to be used for this mutation.",
+              "fieldName": "errorPolicy"
+            },
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "'no-cache'"
+              },
+              "description": "Specifies the FetchPolicy to be used for this mutation.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "refetch-queries",
+              "type": {
+                "text": "I.RefetchQueriesType<D> | null"
+              },
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+              "fieldName": "refetchQueries"
+            },
+            {
+              "name": "input-key",
+              "type": {
+                "text": "string|null"
+              },
+              "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+              "summary": "key to wrap variables in e.g. `input`.",
+              "fieldName": "inputKey"
+            },
+            {
+              "name": "debounce",
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "f",
+                  "type": {
+                    "text": "() => void"
+                  }
+                },
+                {
+                  "name": "timeout",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "fieldName": "debounce"
+            },
+            {
+              "name": "called",
+              "summary": "Whether the mutation was called",
+              "fieldName": "called"
+            },
+            {
+              "name": "ignore-results",
+              "summary": "If true, the returned data property will not update with the mutation result.",
+              "fieldName": "ignoreResults"
+            },
+            {
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "fieldName": "loading",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            },
+            {
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "fieldName": "template",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "Boolean|string"
+              },
+              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "name": "'no-shadow'",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "GraphQLScriptChildMixin",
+              "package": "@apollo-elements/mixins/graphql-script-child-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElement"
+          },
+          "tagName": "apollo-mutation"
         }
       ],
-      "properties": [
+      "exports": [
         {
-          "name": "styles",
-          "type": "CSSResult[]",
-          "default": "[null]"
+          "kind": "js",
+          "name": "WillMutateError",
+          "declaration": {
+            "name": "WillMutateError",
+            "module": "apollo-mutation.js"
+          }
         },
         {
-          "name": "inputKey",
-          "attribute": "input-key",
-          "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
-          "type": "string",
-          "default": "\"\""
+          "kind": "js",
+          "name": "ApolloMutationElement",
+          "declaration": {
+            "name": "ApolloMutationElement",
+            "module": "apollo-mutation.js"
+          }
         },
         {
-          "name": "observedAttributes",
-          "type": "string[] | undefined"
-        },
+          "kind": "custom-element-definition",
+          "name": "apollo-mutation",
+          "declaration": {
+            "name": "ApolloMutationElement",
+            "module": "apollo-mutation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-query.js",
+      "declarations": [
         {
-          "name": "mutation",
-          "description": "The mutation.",
-          "type": "DocumentNode | ComponentDocument<D> | null"
-        },
-        {
-          "name": "called",
-          "attribute": "called",
-          "description": "Whether the mutation was called",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "optimisticResponse",
-          "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.",
-          "type": "Data<D> | ((vars: Variables<D, V>) => Data<D>) | undefined"
-        },
-        {
-          "name": "awaitRefetchQueries",
-          "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
-          "type": "boolean | undefined"
-        },
-        {
-          "name": "ignoreResults",
-          "description": "If true, the returned data property will not update with the mutation result.",
-          "type": "boolean | undefined",
-          "default": "false"
-        },
-        {
-          "name": "documentType",
-          "type": "\"document\" | \"query\" | \"mutation\" | \"subscription\"",
-          "default": "\"mutation\""
-        },
-        {
-          "name": "document",
-          "type": "DocumentNode | TypedDocumentNode<{ [key: string]: any; }, { [key: string]: any; }> | null"
-        },
-        {
-          "name": "refetchQueries",
-          "attribute": "refetch-queries",
-          "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
-          "type": "RefetchQueryDescription | ((result: FetchResult<Data<D>, Record<string, any>, Record<string, any>>) => RefetchQueryDescription) | null"
-        },
-        {
-          "name": "context",
-          "type": "Record<string, unknown> | undefined"
-        },
-        {
-          "name": "variables",
-          "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-          "type": "Variables<D, V> | null",
-          "default": "\"\""
-        },
-        {
-          "name": "client",
-          "type": "ApolloClient<NormalizedCacheObject> | null",
-          "default": "\"window.__APOLLO_CLIENT__ ?? null\""
-        },
-        {
-          "name": "data",
-          "description": "Latest mutation data",
-          "type": "Data<D> | null"
-        },
-        {
-          "name": "error",
-          "type": "Error | ApolloError | null"
-        },
-        {
-          "name": "errors",
-          "type": "readonly GraphQLError[] | null"
-        },
-        {
-          "name": "errorPolicy",
-          "attribute": "error-policy",
-          "description": "Specifies the ErrorPolicy to be used for this mutation.",
-          "type": "\"none\" | \"ignore\" | \"all\" | undefined"
-        },
-        {
-          "name": "fetchPolicy",
-          "attribute": "fetch-policy",
-          "description": "Specifies the FetchPolicy to be used for this mutation.",
-          "type": "\"no-cache\" | undefined"
-        },
-        {
-          "name": "loading",
-          "attribute": "loading",
-          "type": "boolean",
-          "default": "\"\""
+          "kind": "class",
+          "description": "Render a GraphQL query to the DOM\n\n## Examples\n\n### Render a query to Shadow DOM\n```html\n<apollo-query>\n<script type=\"application/graphql\">\nquery MyProfile {\nprofile { name picture }\n}\n</script>\n<template>\n<img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n</apollo-query>\n```\n\n### Setting query and variables using the DOM\n```html\n<apollo-query id=\"query-element\" template=\"avatar-template\"></apollo-query>\n\n<template id=\"avatar-template\">\n<img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n\n<script type=\"module\">\nimport { gql } from '@apollo/client/core';\nconst el = document.getElementById('query-element');\nel.query = gql`\nquery MyProfile($size: Int) {\nprofile { name picture(size: $size) }\n}\n`;\nel.variables = { size: 48 };\n</script>\n```",
+          "name": "ApolloQueryElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "static": true,
+              "default": "apollo-query",
+              "readonly": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloQueryController<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "summary": "Flags an element that's ready and able to auto subscribe",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "ApolloQueryControllerOptions<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "networkStatus",
+              "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however.",
+              "type": {
+                "text": "NetworkStatus"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "null | I.ComponentDocument<D>"
+              },
+              "summary": "A GraphQL document containing a single query."
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "summary": "Context passed to the link execution chain."
+            },
+            {
+              "kind": "field",
+              "name": "partial",
+              "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
+              "summary": "True when the query returned partial data.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "partialRefetch",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
+              "summary": "Set to retry any partial query results."
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "type": {
+                "text": "number"
+              },
+              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server."
+            },
+            {
+              "kind": "field",
+              "name": "returnPartialData",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache."
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "this['controller']['options']['errorPolicy']"
+              },
+              "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query."
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "this['controller']['options']['fetchPolicy']"
+              },
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query."
+            },
+            {
+              "kind": "field",
+              "name": "nextFetchPolicy",
+              "type": {
+                "text": "this['controller']['options']['nextFetchPolicy']"
+              },
+              "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`."
+            },
+            {
+              "kind": "method",
+              "name": "refetch",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<ApolloQueryResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "P<D, V, 'refetch'>"
+                  }
+                },
+                {
+                  "description": "The new set of variables. If there are missing variables, the previous values of those variables will be used..",
+                  "name": "variables"
+                }
+              ],
+              "description": "Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.",
+              "async": true
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "R<D, V, 'subscribe'>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "P<D, V, 'subscribe'>"
+                  },
+                  "description": "options for controlling how the subscription subscribes"
+                }
+              ],
+              "description": "Resets the observableQuery and subscribes."
+            },
+            {
+              "kind": "method",
+              "name": "subscribeToMore",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "(() => void) | void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "SubscribeToMoreOptions<I.Data<D>, TSubscriptionVariables, TSubscriptionData>"
+                  }
+                }
+              ],
+              "description": "Lets you pass a GraphQL subscription and updateQuery function\nto subscribe to more updates for your query.\n\nThe `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results."
+            },
+            {
+              "kind": "method",
+              "name": "executeQuery",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "R<D, V, 'executeQuery'>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "P<D, V, 'executeQuery'>"
+                  }
+                }
+              ],
+              "description": "Executes a Query once and updates the with the result",
+              "async": true
+            },
+            {
+              "kind": "method",
+              "name": "fetchMore",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "R<D, V, 'fetchMore'>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "P<D, V, 'fetchMore'>"
+                  }
+                }
+              ],
+              "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object.",
+              "async": true
+            },
+            {
+              "kind": "method",
+              "name": "startPolling",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ms",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "stopPolling",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "type": {
+                "text": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "I.Data<D> | null"
+              },
+              "summary": "Latest Data.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "I.ComponentDocument<D> | null"
+              },
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "summary": "Latest error",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly I.GraphQLError[]"
+              },
+              "summary": "Latest errors",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "I.Variables<D, V> | null"
+              },
+              "summary": "Operation variables.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isQueryable",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is (ShadowRoot|Document)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "templateHandlers",
+              "type": {
+                "text": "TemplateHandlers"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ShadowRoot|HTMLElement"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getElementByIdFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string|null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "E | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelector` within the render root.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<E>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelectorAll` within the render root.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "no-auto-subscribe",
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "fieldName": "noAutoSubscribe"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "this['controller']['options']['errorPolicy']"
+              },
+              "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
+              "fieldName": "errorPolicy"
+            },
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "this['controller']['options']['fetchPolicy']"
+              },
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "next-fetch-policy",
+              "type": {
+                "text": "this['controller']['options']['nextFetchPolicy']"
+              },
+              "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
+              "fieldName": "nextFetchPolicy"
+            },
+            {
+              "name": "partial-refetch",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
+              "summary": "Set to retry any partial query results.",
+              "fieldName": "partialRefetch"
+            },
+            {
+              "name": "poll-interval",
+              "type": {
+                "text": "number"
+              },
+              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
+              "fieldName": "pollInterval"
+            },
+            {
+              "name": "return-partial-data",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
+              "fieldName": "returnPartialData"
+            },
+            {
+              "name": "notify-on-network-status-change",
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "fieldName": "notifyOnNetworkStatusChange"
+            },
+            {
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "fieldName": "loading",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            },
+            {
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "fieldName": "template",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "Boolean|string"
+              },
+              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "name": "'no-shadow'",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "GraphQLScriptChildMixin",
+              "package": "@apollo-elements/mixins/graphql-script-child-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElement"
+          },
+          "tagName": "apollo-query"
         }
       ],
-      "events": [
+      "exports": [
         {
-          "name": "will-mutate",
-          "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`"
+          "kind": "js",
+          "name": "ApolloQueryElement",
+          "declaration": {
+            "name": "ApolloQueryElement",
+            "module": "apollo-query.js"
+          }
         },
         {
-          "name": "will-navigate",
-          "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`"
-        },
+          "kind": "custom-element-definition",
+          "name": "apollo-query",
+          "declaration": {
+            "name": "ApolloQueryElement",
+            "module": "apollo-query.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-subscription.js",
+      "declarations": [
         {
-          "name": "mutation-completed",
-          "description": "When the mutation resolves. `detail` is `{ data: Data, element: this }`"
-        },
-        {
-          "name": "mutation-error",
-          "description": "When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`"
-        },
-        {
-          "name": "apollo-element-disconnected",
-          "description": "when the element disconnects from the dom"
-        },
-        {
-          "name": "apollo-element-connected",
-          "description": "when the element connects to the dom"
-        },
-        {
-          "name": "apollo-mutation-result",
-          "description": "when the mutation resolves"
-        },
-        {
-          "name": "apollo-error",
-          "description": "when the mutation rejects"
+          "kind": "class",
+          "description": "Render a GraphQL subscription to the DOM\n\n## Examples\n\n### Render a subscription to Shadow DOM\n```html\n<apollo-subscription>\n<script type=\"application/graphql\">\nsubscription NewMessages {\nmessageAdded { id author content }\n}\n</script>\n<template>\n<article>\n<span class=\"author-name\">{{ data.author.name }}</span>\n<mark-down>{{ data.content }}</mark-down>\n</article>\n</template>\n</apollo-subscription>\n```\n\n### Setting subscription and variables using the DOM\n```html\n<apollo-subscription id=\"subscription-element\" template=\"message-template\"></apollo-subscription>\n\n<template id=\"message-template\">\n<article>\n<span class=\"author-name\">{{ data.author.name }}</span>\n<mark-down>{{ data.content }}</mark-down>\n</article>\n</template>\n\n<script type=\"module\">\nimport { gql } from '@apollo/client/core';\nconst el = document.getElementById('subscription-element');\nel.subscription = gql`\nsubscription NewMessages($limit: Int) {\nmessagesAdded {\nmessages { id author content }\nhasMore\n}\n}\n`;\nel.variables = { limit: 10 };\n</script>\n```",
+          "name": "ApolloSubscriptionElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "static": true,
+              "default": "apollo-subscription",
+              "readonly": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloSubscriptionController<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Flags an element that's ready and able to auto subscribe"
+            },
+            {
+              "kind": "field",
+              "name": "subscription",
+              "type": {
+                "text": "null | ComponentDocument<D>"
+              },
+              "summary": "A GraphQL document containing a single subscription."
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "summary": "Context passed to the link execution chain."
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shouldResubscribe",
+              "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "skip",
+              "summary": "If true, the query will be skipped entirely",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "this['controller']['options']['errorPolicy']"
+              },
+              "summary": "Error policy for the subscription"
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "this['controller']['options']['fetchPolicy']"
+              },
+              "summary": "Specifies the FetchPolicy to be used for this subscription."
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "type": {
+                "text": "number"
+              },
+              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server."
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "Parameters<this['controller']['subscribe']>"
+                  }
+                }
+              ],
+              "summary": "Resets the observable and subscribes."
+            },
+            {
+              "kind": "method",
+              "name": "cancel",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "summary": "Cancels and clears the subscription"
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<this['controller']['options']>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "type": {
+                "text": "boolean"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "I.Data<D> | null"
+              },
+              "summary": "Latest Data.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "I.ComponentDocument<D> | null"
+              },
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "summary": "Latest error",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly I.GraphQLError[]"
+              },
+              "summary": "Latest errors",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "I.Variables<D, V> | null"
+              },
+              "summary": "Operation variables.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isQueryable",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is (ShadowRoot|Document)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "templateHandlers",
+              "type": {
+                "text": "TemplateHandlers"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ShadowRoot|HTMLElement"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getElementByIdFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string|null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "E | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelector` within the render root.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<E>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelectorAll` within the render root.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "no-auto-subscribe",
+              "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "fieldName": "noAutoSubscribe"
+            },
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "this['controller']['options']['fetchPolicy']"
+              },
+              "summary": "Specifies the FetchPolicy to be used for this subscription.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "notify-on-network-status-change",
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "fieldName": "notifyOnNetworkStatusChange"
+            },
+            {
+              "name": "should-resubscribe",
+              "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "fieldName": "shouldResubscribe"
+            },
+            {
+              "name": "skip",
+              "summary": "If true, the query will be skipped entirely",
+              "fieldName": "skip"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "this['controller']['options']['errorPolicy']"
+              },
+              "summary": "Error policy for the subscription",
+              "fieldName": "errorPolicy"
+            },
+            {
+              "name": "poll-interval",
+              "type": {
+                "text": "number"
+              },
+              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
+              "fieldName": "pollInterval"
+            },
+            {
+              "name": "loading",
+              "summary": "Whether a request is in flight.",
+              "fieldName": "loading",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            },
+            {
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "fieldName": "template",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "Boolean|string"
+              },
+              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "name": "'no-shadow'",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "GraphQLScriptChildMixin",
+              "package": "@apollo-elements/mixins/graphql-script-child-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElement"
+          },
+          "tagName": "apollo-subscription"
         }
       ],
-      "slots": [
+      "exports": [
         {
-          "name": "trigger",
-          "description": "The triggering element. Must be a button or and anchor that wraps a button."
+          "kind": "js",
+          "name": "ApolloSubscriptionElement",
+          "declaration": {
+            "name": "ApolloSubscriptionElement",
+            "module": "apollo-subscription.js"
+          }
         },
         {
-          "name": "variable",
-          "description": "An input with a `data-variable` attribute. It's `value` property gets the value for the corresponding variable."
+          "kind": "custom-element-definition",
+          "name": "apollo-subscription",
+          "declaration": {
+            "name": "ApolloSubscriptionElement",
+            "module": "apollo-subscription.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "events.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "MutationEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "MutationEventType"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "detail",
+              "type": {
+                "text": "MutationEventDetail<D, V>"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "CustomEvent"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Fired when the element is about to mutate.\nUseful for setting variables or cancelling the mutation by calling `preventDefault`\nPrevent default to prevent mutation. Detail is `{ element: this }`",
+          "name": "WillMutateEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "will-mutate"
+            },
+            {
+              "kind": "field",
+              "name": "detail",
+              "type": {
+                "text": "MutationEventDetail<D, V>"
+              },
+              "inheritedFrom": {
+                "name": "MutationEvent",
+                "module": "events.js"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "MutationEvent"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Fired when a mutation completes.\n`detail` is the mutation data.",
+          "name": "MutationCompletedEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "mutation-completed"
+            },
+            {
+              "kind": "field",
+              "name": "detail",
+              "type": {
+                "text": "MutationEventDetail<D, V>"
+              },
+              "inheritedFrom": {
+                "name": "MutationEvent",
+                "module": "events.js"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "MutationEvent"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Fired before an <apollo-element> with a link trigger mutates.\nCancel the event with `event.preventDefault()` to prevent navigation.",
+          "name": "WillNavigateEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "will-navigate"
+            },
+            {
+              "kind": "field",
+              "name": "detail",
+              "type": {
+                "text": "MutationEventDetail<D, V>"
+              },
+              "inheritedFrom": {
+                "name": "MutationEvent",
+                "module": "events.js"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "MutationEvent"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Fired when the mutation rejects.",
+          "name": "MutationErrorEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "mutation-error"
+            },
+            {
+              "kind": "field",
+              "name": "detail",
+              "type": {
+                "text": "MutationEventDetail<D, V>"
+              },
+              "inheritedFrom": {
+                "name": "MutationEvent",
+                "module": "events.js"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "MutationEvent"
+          }
         }
       ],
-      "cssParts": [
+      "exports": [
         {
-          "name": "variables",
-          "description": "The container for variable inputs."
+          "kind": "js",
+          "name": "MutationEvent",
+          "declaration": {
+            "name": "MutationEvent",
+            "module": "events.js"
+          }
         },
         {
-          "name": "trigger",
-          "description": "The container for the trigger.\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events"
+          "kind": "js",
+          "name": "WillMutateEvent",
+          "declaration": {
+            "name": "WillMutateEvent",
+            "module": "events.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MutationCompletedEvent",
+          "declaration": {
+            "name": "MutationCompletedEvent",
+            "module": "events.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WillNavigateEvent",
+          "declaration": {
+            "name": "WillNavigateEvent",
+            "module": "events.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MutationErrorEvent",
+          "declaration": {
+            "name": "MutationErrorEvent",
+            "module": "events.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./apollo-client"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./apollo-query"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./apollo-mutation"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./apollo-subscription"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "stampino-render.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "StampinoRender",
+          "members": [
+            {
+              "kind": "method",
+              "name": "isQueryable",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "node is (ShadowRoot|Document)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "Node"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "templateHandlers",
+              "type": {
+                "text": "TemplateHandlers"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)"
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ShadowRoot|HTMLElement"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getElementByIdFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string|null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateFromRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "E | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelector` within the render root."
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "SVGElementTagNameMap[K] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "K"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElementTagNameMap[K] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "K"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<E>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`querySelectorAll` within the render root."
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<SVGElementTagNameMap[K]>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "K"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeListOf<HTMLElementTagNameMap[K]>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "K"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "template",
+              "type": {
+                "text": "HTMLTemplateElement | null"
+              },
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "fieldName": "template"
+            },
+            {
+              "type": {
+                "text": "Boolean|string"
+              },
+              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "name": "'no-shadow'"
+            }
+          ],
+          "superclass": {
+            "name": "ReactiveElement"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "StampinoRender",
+          "declaration": {
+            "name": "StampinoRender",
+            "module": "stampino-render.js"
+          }
         }
       ]
     }

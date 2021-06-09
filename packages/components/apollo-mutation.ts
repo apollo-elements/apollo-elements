@@ -2,7 +2,12 @@ import type * as I from '@apollo-elements/interfaces';
 
 import type { PropertyValues } from 'lit';
 
-import type { MutationUpdaterFn } from '@apollo/client/core';
+import type {
+  FetchResult,
+  MutationUpdaterFn,
+  MutationOptions,
+  ErrorPolicy,
+} from '@apollo/client/core';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
@@ -18,19 +23,14 @@ import { isEmpty } from '@apollo-elements/core/lib/helpers';
 
 import { bound } from '@apollo-elements/core/lib/bound';
 
-import * as E from './events';
+import {
+  MutationCompletedEvent,
+  MutationErrorEvent,
+  WillMutateEvent,
+  WillNavigateEvent,
+} from './events';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-mutation': ApolloMutationElement } }
-
-type P<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
-  ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
-  ? Parameters<ApolloMutationController<D, V>[K]>
-  : never
-
-type R<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
-  ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
-  ? ReturnType<ApolloMutationController<D, V>[K]>
-  : never
 
 /** @noInheritDoc */
 interface ButtonLikeElement extends HTMLElement {
@@ -54,19 +54,18 @@ export class WillMutateError extends Error {}
  * or if all your variables properties are strings,
  * you can use the element's data attributes
  *
- * @fires will-mutate When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`
- * @fires will-navigate When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`
- * @fires mutation-completed When the mutation resolves. `detail` is `{ data: Data, element: this }`
- * @fires mutation-error When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`
- * @fires 'apollo-element-disconnected' when the element disconnects from the dom
- * @fires 'apollo-element-connected' when the element connects to the dom
+ * @fires {WillMutateEvent} will-mutate When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`
+ * @fires {WillNavigateEvent} will-navigate When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`
+ * @fires {MutationCompletedEvent} mutation-completed When the mutation resolves. `detail` is `{ data: Data, element: this }`
+ * @fires {MutationErrorEvent} mutation-error When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`
+ * @fires {ApolloElementEvent} apollo-element-disconnected when the element disconnects from the dom
+ * @fires {ApolloElementEvent} apollo-element-connected when the element connects to the dom
  *
- * @slot - Mutations typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button.\n\nYou may also slot in input elements with the `data-variable=\"variableName\"` attribute. It's `value` property gets the value for the corresponding variable.
+ * @slot Mutations typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button.\n\nYou may also slot in input elements with the `data-variable=\"variableName\"` attribute. It's `value` property gets the value for the corresponding variable.
  *
  * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
  *
- * @example
- * Using data attributes
+ * @example Using data attributes
  * ```html
  * <apollo-mutation data-type="Type" data-action="ACTION">
  *   <mwc-button trigger>OK</mwc-button>
@@ -80,8 +79,7 @@ export class WillMutateError extends Error {}
  * }
  * ```
  *
- * @example
- * Using data attributes and variables
+ * @example Using data attributes and variables
  * ```html
  * <apollo-mutation data-type="Quote" data-action="FLUB">
  *   <mwc-button trigger label="OK"></mwc-button>
@@ -105,8 +103,7 @@ export class WillMutateError extends Error {}
  * }
  * ```
  *
- * @example
- * Using data attributes and variables with input property
+ * @example Using data attributes and variables with input property
  * ```html
  * <apollo-mutation data-type="Type" data-action="ACTION" input-key="actionInput">
  *   <mwc-button trigger label="OK"></mwc-button>
@@ -127,8 +124,7 @@ export class WillMutateError extends Error {}
  * }
  * ```
  *
- * @example
- * Using DOM properties
+ * @example Using DOM properties
  * ```html
  * <apollo-mutation id="mutation">
  *   <mwc-button trigger label="OK"></mwc-button>
@@ -155,7 +151,7 @@ export class WillMutateError extends Error {}
 export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V>
   implements I.ApolloMutationInterface<D, V> {
-  static readonly is = 'apollo-mutation';
+  static readonly is: 'apollo-mutation' = 'apollo-mutation';
 
   /**
    * False when the element is a link.
@@ -229,22 +225,21 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
     onCompleted: data => {
       const trigger = this.inFlightTrigger;
       this.didMutate();
-      this.dispatchEvent(new E.MutationCompletedEvent<D, V>(this));
+      this.dispatchEvent(new MutationCompletedEvent<D, V>(this));
       if (ApolloMutationElement.isLink(trigger) || trigger?.closest?.('a[trigger]'))
         this.willNavigate(data, trigger);
     },
 
     onError: () => {
       this.didMutate();
-      this.dispatchEvent(new E.MutationErrorEvent<D, V>(this));
+      this.dispatchEvent(new MutationErrorEvent<D, V>(this));
     },
   });
 
   /**
    * When set, variable data attributes will be packed into an
    * object property with the name of this property
-   * @example
-   * ```html
+   * @example ```html
    * <apollo-mutation id="a" data-variable="var"></apollo-mutation>
    * <apollo-mutation id="b" input-key="input" data-variable="var"></apollo-mutation>
    * <script>
@@ -315,7 +310,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: this['controller']['options']['errorPolicy'];
+  errorPolicy?: ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
@@ -323,7 +318,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+  fetchPolicy?: 'no-cache';
 
   /**
    * A list of query names which will be refetched once this mutation has returned.
@@ -382,8 +377,13 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
       get(): I.Variables<D, V> | null {
         if (this.__variables)
           return this.__variables;
-        else
-          return el.getVariablesFromInputs() ?? el.getDOMVariables() as I.Variables<D, V>;
+        else {
+          return (
+            el.getVariablesFromInputs() ??
+            // @ts-expect-error: TODO: Find a better way to do this
+            el.getDOMVariables() as I.Variables<D, V>
+          );
+        }
       },
 
       set(v: I.Variables<D, V> | null) {
@@ -435,7 +435,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
   }
 
   private willMutate(trigger: HTMLElement): void {
-    if (!this.dispatchEvent(new E.WillMutateEvent<D, V>(this)))
+    if (!this.dispatchEvent(new WillMutateEvent<D, V>(this)))
       throw new WillMutateError('mutation was canceled');
 
     this.inFlightTrigger = trigger;
@@ -451,7 +451,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
     data: I.Data<D>|null|undefined,
     triggeringElement: HTMLElement
   ): Promise<void> {
-    if (!this.dispatchEvent(new E.WillNavigateEvent(this)))
+    if (!this.dispatchEvent(new WillNavigateEvent(this)))
       return;
 
     const href = triggeringElement.closest<HTMLAnchorElement>('a[trigger]')?.href;
@@ -461,7 +461,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
         // If we get here without `data`, it's due to user error
       : await this.resolveURL(this.data!, triggeringElement); // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
-    history.replaceState(data, E.WillNavigateEvent.type, url);
+    history.replaceState(data, WillNavigateEvent.type, url);
   }
 
   private didMutate(): void {
@@ -545,7 +545,9 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
     ...params: Parameters<MutationUpdaterFn<I.Data<D>>>
   ): ReturnType<MutationUpdaterFn<I.Data<D>>>;
 
-  public mutate(params?: P<D, V, 'mutate'>[0]): R<D, V, 'mutate'> {
+  public mutate(
+    params?: Partial<MutationOptions<I.Data<D>, I.Variables<D, V>>> | undefined
+  ): Promise<FetchResult<I.Data<D>>> {
     return this.controller.mutate({ ...params, update: this.updater });
   }
 }

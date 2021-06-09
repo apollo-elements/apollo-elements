@@ -2,6 +2,7 @@
   "name": "@apollo-elements/components",
   "version": "1.4.0",
   "description": "👩‍🚀🌛 Web component helpers for Apollo GraphQL 🚀👨‍🚀",
+  "type": "module",
   "main": "index.js",
   "module": "index.js",
   "exports": {
@@ -35,8 +36,8 @@
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
     "analyze": "run-p analyze:*",
-    "analyze:md": "cp README.head.md README.md && wca './!{*test,*.d}.{js,ts}' --silent --markdown.headerLevel 2 >> README.md",
-    "analyze:json": "wca analyze './!{*test,*.d}.{js,ts}' --format json --outFile custom-elements.json",
+    "analyze:json": "custom-elements-manifest analyze --litelement",
+    "analyze:md": "node ../../scripts/readmes.md",
     "test": "wtr --coverage --root-dir ../.."
   },
   "publishConfig": {
@@ -67,5 +68,6 @@
     "@apollo/client": "^3.3.19",
     "stampino": "^0.6.2",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }
