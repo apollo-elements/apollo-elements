@@ -49,7 +49,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
 describe('[lit-apollo] ApolloQuery', function() {
   describeQuery({
     setupFunction: setupQueryClass(TestableApolloQuery),
-    class: TestableApolloQuery
+    class: TestableApolloQuery,
   });
 
   describe('subclassing', function() {
