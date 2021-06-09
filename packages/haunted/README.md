@@ -24,6 +24,7 @@
   - [❓ Queries](#-queries)
   - [👾 Mutations](#-mutations)
   - [🗞 Subscriptions](#-subscriptions)
+  - [📲 With `<apollo-client>`](#-with-apollo-client)
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 🔧 Installation
@@ -240,6 +241,20 @@ customElements.define('news-flash', component(NewsFlashSubscription));
 ```
 
 </code-copy>
+
+### 📲 With Apollo Client
+
+If you want your haunted components to register with the closest `<apollo-client>` element, you have to write them using the `function` keyword and pass `this` as the `hostElement` option.
+
+```js
+function Connected() {
+  const { data } = useQuery(ConnectedQuery, {
+    hostElement: this,
+  });
+}
+```
+
+That way, `<apollo-client>` will be able to find your element in the DOM tree and connect to the controller which powers the hook.
 
 ## 👷‍♂️ Maintainers
 `apollo-elements` is a community project maintained by Benny Powers.
