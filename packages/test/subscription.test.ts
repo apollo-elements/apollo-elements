@@ -1,5 +1,7 @@
 import type * as I from '@apollo-elements/interfaces';
 
+import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
+
 import { SetupFunction } from './types';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
@@ -13,11 +15,7 @@ import { TestableElement } from './types';
 
 import * as S from './schema';
 
-type SE<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> = I.ApolloSubscriptionElement<D, V>;
-
-export type SubscriptionElement<D extends I.MaybeTDN = any, V = any> = SE<D, V>
-
-export interface DescribeSubscriptionComponentOptions {
+export interface DescribeSubscriptionComponentOptions<T extends ApolloSubscriptionElement<any, any> = ApolloSubscriptionElement<any, any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -32,23 +30,25 @@ export interface DescribeSubscriptionComponentOptions {
    * The element must also implement a `stringify` method to perform that stringification,
    * as well as a `hasRendered` method which returns a promise that resolves when the element is finished rendering
    */
-  setupFunction: SetupFunction<SubscriptionElement & TestableElement>;
+  setupFunction: SetupFunction<T & TestableElement>;
 
   /**
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: I.Constructor<SubscriptionElement>;
+  class?: I.Constructor<Omit<T, 'update'|'updated'> & TestableElement>;
 }
 
 export { setupSubscriptionClass } from './helpers';
 
 export function describeSubscription(options: DescribeSubscriptionComponentOptions): void {
-  const { setupFunction, class: Klass } = options;
+  const { setupFunction } = options;
+  const Klass: I.Constructor<TestableElement> & typeof ApolloSubscriptionElement =
+    options.class as unknown as I.Constructor<TestableElement> & typeof ApolloSubscriptionElement;
 
   describe(`ApolloSubscription interface`, function() {
     describe('when simply instantiating', function() {
-      let element: SubscriptionElement & TestableElement|undefined;
+      let element: ApolloSubscriptionElement & TestableElement|undefined;
 
       let spies: Record<keyof typeof element, SinonSpy>;
 
@@ -190,9 +190,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
     });
 
     describe('with global client available', function() {
-      let element: SubscriptionElement & TestableElement | undefined;
+      let element: ApolloSubscriptionElement & TestableElement | undefined;
 
-      let spies: Record<string|keyof SubscriptionElement, SinonSpy>;
+      let spies: Record<string|keyof ApolloSubscriptionElement, SinonSpy>;
 
       beforeEach(setupClient);
 
@@ -877,7 +877,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         afterEach(teardownClient);
 
         describe('with subscription set as a class field', function() {
-          let element: SubscriptionElement;
+          let element: ApolloSubscriptionElement;
 
           beforeEach(async function() {
             class Test extends Klass {
@@ -895,7 +895,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         describe('with shouldSubscribe overridden to return false', function() {
-          let element: SubscriptionElement | undefined;
+          let element: ApolloSubscriptionElement | undefined;
 
           beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'subscribe'));
           afterEach(() => (window.__APOLLO_CLIENT__!.subscribe as SinonSpy).restore?.());
@@ -906,7 +906,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           beforeEach(async function() {
-            class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+            class Test extends Klass {
               subscription = S.NullableParamSubscription;
 
               shouldSubscribe() {
@@ -925,7 +925,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         describe('with noAutoSubscribe set as a class field', function() {
-          let element: SubscriptionElement;
+          let element: ApolloSubscriptionElement;
 
           beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'subscribe'));
           afterEach(() => (window.__APOLLO_CLIENT__!.subscribe as SinonSpy).restore?.());
@@ -938,7 +938,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           describe('when set before subscription field', function() {
             beforeEach(async function() {
-              class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+              class Test extends Klass {
                 noAutoSubscribe = true;
 
                 subscription = S.NullableParamSubscription;
@@ -956,7 +956,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           describe('when set after subscription field', function() {
             beforeEach(async function() {
-              class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+              class Test extends Klass {
                 subscription = S.NullableParamSubscription;
 
                 noAutoSubscribe = true;
@@ -974,9 +974,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         describe('with fetchPolicy set as a class field', function() {
-          let element: SubscriptionElement | undefined;
+          let element: ApolloSubscriptionElement<typeof S.NullableParamSubscription> | undefined;
 
-          let spies: Record<string|Exclude<keyof SubscriptionElement, symbol>, SinonSpy>;
+          let spies: Record<string|Exclude<keyof ApolloSubscriptionElement, symbol>, SinonSpy>;
 
           beforeEach(function spyClientSubscribe() {
             spies = {
@@ -992,7 +992,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
-            class Test extends (Klass as I.Constructor<SubscriptionElement<typeof S.NullableParamSubscription>>) {
+            class Test extends Klass<typeof S.NullableParamSubscription> {
               subscription = S.NullableParamSubscription;
 
               variables = { nullable: 'quux' };
@@ -1022,9 +1022,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         describe('with onComplete, onError, and onSubscriptionData set as class methods', function() {
-          let element: SubscriptionElement & TestableElement | undefined;
+          let element: TestableElement & ApolloSubscriptionElement<typeof S.NonNullableParamSubscription> | undefined;
 
-          let spies: Record<string|Exclude<keyof SubscriptionElement, symbol>, SinonSpy> | undefined;
+          let spies: Record<string|Exclude<keyof ApolloSubscriptionElement, symbol>, SinonSpy> | undefined;
 
           beforeEach(function spyClientSubscribe() {
             spies = {
@@ -1040,7 +1040,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           afterEach(restoreSpies(() => spies));
 
           beforeEach(async function() {
-            class Test extends (Klass as I.Constructor<TestableElement & SubscriptionElement<typeof S.NonNullableParamSubscription>>) {
+            class Test extends Klass<typeof S.NonNullableParamSubscription> {
               subscription = S.NonNullableParamSubscription;
 
               noAutoSubscribe = true;

@@ -2,7 +2,13 @@ import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
 import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ApolloElementElement,
+  ApolloMutationElement,
+  ApolloSubscriptionElement,
+  ApolloQueryElement,
+  Constructor,
+} from '@apollo-elements/core/types';
 
 import type { Entries } from '@apollo-elements/interfaces';
 
@@ -80,17 +86,17 @@ export function waitForRender<T extends HTMLElement & TestableElement>(getElemen
   };
 }
 
-function setupClass<T extends TestableElement & I.ApolloElementInterface>(fopts?: {
-  beforeDefine?: <U extends T>(k: I.Constructor<U>, opts: SetupOptions<U>) => void,
+function setupClass<T extends TestableElement & Omit<ApolloElementElement, 'variablesChanged'|'documentChanged'|'update'|'updated'>>(fopts?: {
+  beforeDefine?: <U extends T>(k: Constructor<U>, opts: SetupOptions<U>) => void,
   omitKeys?: string[],
 }) {
-  return function(Klass: I.Constructor<T>): SetupFunction<T> {
+  return function(Klass: Constructor<T>): SetupFunction<T> {
     return async function setupElement<B extends T>(opts?: SetupOptions<B>): Promise<SetupResult<B>> {
-      class Test extends (Klass as I.Constructor<TestableElement & I.ApolloElementInterface>) { }
+      class Test extends Klass { }
 
       const { innerHTML = '', attributes, properties } = opts ?? {};
 
-      fopts?.beforeDefine?.(Test as I.Constructor<B>, opts!);
+      fopts?.beforeDefine?.(Test as Constructor<B>, opts!);
 
       const tag = defineCE(Test);
 
@@ -113,9 +119,9 @@ function setupClass<T extends TestableElement & I.ApolloElementInterface>(fopts?
 }
 
 export const setupApolloElementClass = setupClass();
-export const setupQueryClass = setupClass<TestableElement & I.ApolloQueryInterface<any, any>>();
-export const setupSubscriptionClass = setupClass<TestableElement & I.ApolloSubscriptionInterface<any, any>>();
-export const setupMutationClass = setupClass<TestableElement & I.ApolloMutationInterface<any, any>>({
+export const setupQueryClass = setupClass<TestableElement & Omit<ApolloQueryElement<any, any>, 'update'|'updated'>>();
+export const setupSubscriptionClass = setupClass<TestableElement & Omit<ApolloSubscriptionElement<any, any>, 'update'|'updated'>>();
+export const setupMutationClass = setupClass<TestableElement & Omit<ApolloMutationElement<any, any>, 'update'|'updated'>>({
   omitKeys: ['onCompleted', 'onError'],
   beforeDefine(Test, opts) {
     // for mutation components, which don't fetch on connect,
