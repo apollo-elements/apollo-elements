@@ -37,9 +37,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
 
   async hasRendered(): Promise<this> {
-    await nextFrame();
-    await this.render();
-    await aTimeout(50);
+    await this.updateComplete;
     return this;
   }
 }
@@ -72,6 +70,7 @@ describe('[gluon] ApolloQuery', function() {
         element.networkStatus = 0;
       });
 
+      beforeEach(() => element.updateComplete);
       it('renders', function() {
         expect(element.render).to.have.been.called;
       });

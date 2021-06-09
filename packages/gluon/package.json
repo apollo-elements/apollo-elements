@@ -35,7 +35,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "analyze": "wca analyze --format json --outFile custom-elements.json",
+    "analyze": "custom-elements-manifest analyze",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
   "publishConfig": {
@@ -66,5 +66,6 @@
     "@apollo-elements/mixins": "^3.5.0",
     "@gluon/gluon": ">= 2",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

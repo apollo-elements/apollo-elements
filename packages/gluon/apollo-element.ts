@@ -15,8 +15,7 @@ export { html } from '@gluon/gluon';
  * @element
  */
 export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElementMixin(GluonElement as I.Constructor<GluonElement>)<D, V>
-  implements I.ApolloElementInterface<D, V> {
+  extends ApolloElementMixin(GluonElement as I.Constructor<GluonElement>)<D, V> {
   declare context?: Record<string, unknown>;
 
   declare variables: I.Variables<D, V> | null;
@@ -24,7 +23,7 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
   declare data: I.Data<D> | null;
 
   update(): void {
-    this.render({ sync: true });
+    this.render().then(() => super.update());
   }
 
   get updateComplete(): Promise<boolean> {
