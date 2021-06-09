@@ -2,6 +2,8 @@ import type * as C from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
 
+import type { ApolloSubscriptionController } from '@apollo-elements/core';
+
 import { html } from 'lit-html';
 
 import { nextFrame } from '@open-wc/testing';
@@ -17,11 +19,12 @@ import {
 import { GluonElement } from '@gluon/gluon';
 
 class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloSubscription<D, V>
-  implements TestableElement {
+  extends ApolloSubscription<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   static get is() { return 'gluon-test-subscription-element'; }
+
+  declare controller: ApolloSubscriptionController<D, V>;
 
   get template() {
     return html`
