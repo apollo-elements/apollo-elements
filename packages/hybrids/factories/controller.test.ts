@@ -3,7 +3,9 @@ import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-e
 import { nextFrame, expect, fixture } from '@open-wc/testing';
 import { define, html, Hybrids } from 'hybrids';
 
-import { controller } from './controller';
+import { controller, HybridsControllerHost } from './controller';
+
+import { spy } from 'sinon';
 
 let counter = 0;
 
@@ -12,6 +14,20 @@ function getTagName(): string {
   counter++;
   return tagName;
 }
+
+describe('[hybrids] HybridsControllerHost', function() {
+  it('aliases EventTarget to host element', function() {
+    const element = document.createElement('a');
+    const host = new HybridsControllerHost(element);
+    const s = spy();
+    host.addEventListener('a', s);
+    const a = new CustomEvent('a');
+    element.dispatchEvent(a);
+    expect(s).to.have.been.calledWith(a);
+    host.removeEventListener('a', s);
+    s.resetHistory();
+  });
+});
 
 describe('[hybrids] controller factory', function() {
   describe('with ClockController example from lit.dev', function() {
@@ -78,7 +94,7 @@ describe('[hybrids] controller factory', function() {
 
       describe('then after one second', function() {
         beforeEach(() => element.clock.tick());
-        it('renders the new time', function() {
+        it('renders the old time', function() {
           expect(element).shadowDom.to.equal(`<output>0</output>`);
         });
       });

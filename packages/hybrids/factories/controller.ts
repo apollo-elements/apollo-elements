@@ -10,12 +10,14 @@ type ControllerRecord = {
   controller: ReactiveController;
 }
 
-export class HybridsControllerHost implements ReactiveControllerHost {
+export class HybridsControllerHost extends EventTarget implements ReactiveControllerHost {
   #controllers = new Set<ReactiveController>();
 
   #keys = new Map<string|number|symbol, ControllerRecord>();
 
-  constructor(public element: HTMLElement) {}
+  constructor(public element: HTMLElement) {
+    super();
+  }
 
   register(key: string|number|symbol, record: ControllerRecord): void {
     this.#keys.set(key, record);
@@ -33,8 +35,16 @@ export class HybridsControllerHost implements ReactiveControllerHost {
     }
   }
 
-  dispatchEvent(...args: Parameters<EventTarget['dispatchEvent']>): boolean {
+  dispatchEvent(...args: Parameters<Element['dispatchEvent']>): boolean {
     return this.element.dispatchEvent(...args);
+  }
+
+  addEventListener(...args: Parameters<Element['addEventListener']>): void {
+    return this.element.addEventListener(...args);
+  }
+
+  removeEventListener(...args: Parameters<Element['removeEventListener']>): void {
+    return this.element.removeEventListener(...args);
   }
 
   async requestUpdate(): Promise<boolean> {
