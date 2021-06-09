@@ -9,6 +9,8 @@
 
 <strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong>
 
+> **Looking for Apollo `ReactiveController`s?** See [`@apollo-elements/core`](../core/)
+
 <wcd-live data-title="Live Demo">
 
 [![View Live Demo][1]][2]
@@ -27,7 +29,7 @@
 - [👷‍♂️ Maintainers](#-maintainers)
 
 ## 🔧 Installation
-Apollo elements' `lit-apollo` is distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
+Apollo Elements' `lit-apollo` is distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
 <code-copy>
 

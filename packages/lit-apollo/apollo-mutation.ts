@@ -1,6 +1,14 @@
 import type * as C from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Data,
+  Variables,
+  MaybeTDN,
+  MaybeVariables,
+  ComponentDocument,
+  OptimisticResponseType,
+  RefetchQueriesType,
+} from '@apollo-elements/interfaces';
 
 import { controlled } from '@apollo-elements/core';
 
@@ -10,12 +18,12 @@ import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-
 
 import { ApolloElement } from './apollo-element';
 
-type P<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
+type P<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
   ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
   ? Parameters<ApolloMutationController<D, V>[K]>
   : never
 
-type R<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
+type R<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
   ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
   ? ReturnType<ApolloMutationController<D, V>[K]>
   : never
@@ -28,20 +36,19 @@ type R<D extends I.MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> 
  * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
  *
  */
-export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElement<D, V>
-  implements I.ApolloMutationInterface<D, V> {
+export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  extends ApolloElement<D, V> {
   /**
    * Latest mutation data.
    */
-  declare data: I.Data<D> | null;
+  declare data: Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
    *
    * @summary Mutation variables.
    */
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 
   controller = new ApolloMutationController<D, V>(this, null, {
     onCompleted: data => this.onCompleted?.(data),
@@ -54,7 +61,7 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
   @controlled() @property({ type: Boolean, reflect: true }) called = false;
 
   /** @summary The mutation. */
-  @controlled() @state() mutation: null | I.ComponentDocument<D> = null;
+  @controlled() @state() mutation: ComponentDocument<D> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;
@@ -68,7 +75,7 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
    * the result of a mutation immediately, and update the UI later if any errors
    * appear.
    */
-  @controlled({ path: 'options' }) @state() optimisticResponse?: I.OptimisticResponseType<D, V>;
+  @controlled({ path: 'options' }) @state() optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
    * @summary If true, the returned data property will not update with the mutation result.
@@ -122,7 +129,7 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
           .map(x => x.trim());
       },
     },
-  }) refetchQueries: I.RefetchQueriesType<D> | null = null;
+  }) refetchQueries: RefetchQueriesType<D> | null = null;
 
   /**
    * A function which updates the apollo cache when the query responds.
@@ -139,8 +146,8 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
    * data to be rolled back.
    */
   public updater?(
-    ...params: Parameters<C.MutationUpdaterFn<I.Data<D>>>
-  ): ReturnType<C.MutationUpdaterFn<I.Data<D>>>;
+    ...params: Parameters<C.MutationUpdaterFn<Data<D>>>
+  ): ReturnType<C.MutationUpdaterFn<Data<D>>>;
 
   public mutate(params?: P<D, V, 'mutate'>[0]): R<D, V, 'mutate'> {
     return this.controller.mutate({
@@ -152,7 +159,7 @@ export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariab
   /**
    * Callback for when a mutation is completed.
    */
-  onCompleted?(data: I.Data<D>|null): void
+  onCompleted?(data: Data<D>|null): void
 
   /**
    * Callback for when an error occurs in mutation.

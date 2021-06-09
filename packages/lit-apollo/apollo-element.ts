@@ -51,6 +51,9 @@ export class ApolloElement<
   @state()
   client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
+  /** @summary Context passed to the link execution chain. */
+  @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;
+
   /** @summary Whether a request is in flight. */
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;
 

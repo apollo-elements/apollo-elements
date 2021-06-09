@@ -16,8 +16,7 @@ import {
 } from '@apollo-elements/test/subscription.test';
 
 class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloSubscription<D, V>
-  implements TestableElement {
+  extends ApolloSubscription<D, V> implements TestableElement {
   render(): TemplateResult {
     return html`
       <output id="data">${stringify(this.data)}</output>

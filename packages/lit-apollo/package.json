@@ -34,7 +34,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "analyze": "wca analyze --format json --outFile custom-elements.json",
+    "analyze": "custom-elements-manifest analyze",
     "test": "run-s test:*",
     "test:types": "tsc --noEmit",
     "test:runtime": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
@@ -66,5 +66,6 @@
     "@apollo-elements/interfaces": "^1.5.0",
     "lit": "^2.0.0-rc.2",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

@@ -3,9 +3,13 @@ import type * as C from '@apollo/client/core';
 
 import type { PropertyValues, TemplateResult } from 'lit';
 
+import * as S from '@apollo-elements/test/schema';
+
 import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
+
+import { makeClient } from '@apollo-elements/test';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
@@ -16,6 +20,8 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 import { ApolloQuery } from './apollo-query';
 import { LitElement } from 'lit';
 import { NetworkStatus } from '@apollo/client/core';
+
+import { spy, SinonSpy } from 'sinon';
 
 class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloQuery<D, V> implements TestableElement {
@@ -40,10 +46,11 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   }
 }
 
-const setupFunction = setupQueryClass(TestableApolloQuery);
-
 describe('[lit-apollo] ApolloQuery', function() {
-  describeQuery({ setupFunction, class: TestableApolloQuery });
+  describeQuery({
+    setupFunction: setupQueryClass(TestableApolloQuery),
+    class: TestableApolloQuery
+  });
 
   describe('subclassing', function() {
     let el: ApolloQuery;
@@ -70,6 +77,41 @@ describe('[lit-apollo] ApolloQuery', function() {
       expect(element).shadowDom.to.equal('bar');
     });
 
+    it('calls onError', async function() {
+      const s = spy();
+      class Test extends ApolloQuery {
+        client = makeClient();
+        onError(err: Error) {
+          s(err);
+        }
+      }
+
+      const tagName = defineCE(Test);
+      const tag = unsafeStatic(tagName);
+      const element = await fixture<Test>(html`<${tag}></${tag}>`);
+      await element.executeQuery({
+        query: S.NullableParamQuery,
+        variables: {
+          nullable: 'error',
+        },
+      }).catch(() => null);
+      expect(s).to.have.been.calledOnce;
+    });
+
+    it('polling', async function() {
+      class Test extends ApolloQuery { }
+      const tagName = defineCE(Test);
+      const tag = unsafeStatic(tagName);
+      const element = await fixture<Test>(html`<${tag}></${tag}>`);
+      spy(element.controller, 'startPolling');
+      spy(element.controller, 'stopPolling');
+      element.startPolling(1000);
+      expect(element.controller.startPolling).to.have.been.calledWith(1000);
+      element.stopPolling();
+      expect(element.controller.stopPolling).to.have.been.calledOnce;
+      (element.controller.startPolling as SinonSpy).restore();
+      (element.controller.stopPolling as SinonSpy).restore();
+    });
     describe('with a class that defines observedAttributes with decorator', function() {
       class Test extends ApolloQuery {
         @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
