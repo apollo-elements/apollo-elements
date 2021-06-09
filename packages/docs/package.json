@@ -24,6 +24,7 @@
     "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
+    "x-docs:analyze": "echo 'No analyze step for docs'",
     "analyze": "echo 'No analyze step for docs'",
     "start": "tsc -w --noEmit"
   },
@@ -32,7 +33,12 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/docs"
   },
-  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements"
+  ],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {
@@ -41,7 +47,7 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "@power-elements/codesandbox-button": "^0.0.8",
-    "@pwrs/mixins": "^0.1.1",
+    "@pwrs/mixins": "^0.2.0",
     "tslib": "^2.2.0"
   }
 }

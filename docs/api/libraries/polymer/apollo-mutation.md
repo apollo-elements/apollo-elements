@@ -1,10 +1,10 @@
 ---
 layout: layout-api
 package: '@apollo-elements/polymer'
-module: './apollo-mutation.js'
+module: 'polymer-apollo-mutation.js'
 ---
 
-# Web Component Libraries >> Polymer >> apollo-mutation || 10
+# Web Component Libraries >> Polymer >> polymer-apollo-mutation || 10
 
 `<apollo-mutation>` fires Polymer-style prop-changed events when its `called`, `data`, `error`, `loading` or `networkStatus` properties change.
 

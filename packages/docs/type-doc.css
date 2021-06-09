@@ -24,6 +24,14 @@ header {
   transition: background 0.2s ease-in-out;
 }
 
+:host([data-empty-body]) header {
+  border-radius: 6px;
+}
+
+:host([data-empty-body]) #body {
+  display: none;
+}
+
 :host([data-inherited-from]) header {
   justify-content: space-between;
   overflow-x: hidden;
@@ -35,7 +43,7 @@ header {
   background: var(--markdown-syntax-background-color);
 }
 
-:host([data-inherited-from]) header ::slotted([slot="name"]) {
+:host([data-inherited-from]:not([data-empty-body])) header ::slotted([slot="name"]) {
   cursor: pointer;
 }
 
@@ -56,6 +64,10 @@ type-doc:not([data-inherited-from]) [slot="type"]::before {
   background: none;
   border: none;
   margin-inline-end: 3px;
+}
+
+#inheritance button[disabled] {
+  display: none;
 }
 
 #inheritance button,

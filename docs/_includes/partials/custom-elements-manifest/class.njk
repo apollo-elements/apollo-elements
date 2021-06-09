@@ -1,8 +1,10 @@
-{% from "./macros.njk" import codeBlock, linkHeading %}
+{% from "./macros.njk" import codeBlock, linkHeading with context %}
 
 {% set attributes = declaration | getAttributes %}
 {% set fields = declaration | getFields %}
 {% set methods = declaration | getMethods %}
+{% set privateFields = declaration | getPrivateFields %}
+{% set privateMethods = declaration | getPrivateMethods %}
 {% set slots = declaration | getSlots %}
 {% set cssParts = declaration | getCssParts %}
 {% set cssProperties = declaration | getCssProperties %}
@@ -10,67 +12,51 @@
 
 {% block demo %}{% endblock %}
 
+{% set offset = 1 if moduleContents === 'multiple' else 0 %}
+{% set prefix = (declaration.name + '-') if moduleContents === 'multiple' else '' %}
+
+{% if moduleContents === 'multiple' %}
+  {{ linkHeading(declaration.name, prefix=prefix, level=2) }}
+{% endif %}
+
 {% if declaration.summary %}
   {% markdown %}{{ declaration.summary | safe }}{% endmarkdown %}
 {% endif %}
 
+{% if declaration.description %}
+  {% markdown %}{{ declaration.description | safe }}{% endmarkdown %}
+{% endif %}
+
 {% block beforeAttributes %}{% endblock %}
 {% if attributes.length %}
-  {{ linkHeading('Attributes', level=2) }}
-  {% for attribute in (attributes | sortByProp('name')) %}
-    {% if not attribute.inheritedFrom %}
-      {% include "./attribute.njk" %}
-    {% endif %}
-  {% endfor %}
-  {% for attribute in (attributes | sortByProp('name')) %}
-    {% if attribute.inheritedFrom %}
-      {% include "./attribute.njk" %}
-    {% endif %}
-  {% endfor %}
+  {{ linkHeading('Attributes', prefix=prefix, level=2+offset) }}
+  {% for attribute in (attributes | sortClassMembers) %}{% include "./attribute.njk" %}{% endfor %}
 {% endif %}
 
 {% block beforeProperties %}{% endblock %}
 {% if fields.length %}
-  {{ linkHeading('Properties', level=2) }}
-  {% for property in (fields | sortByProp('name')) %}
-    {% if not property.inheritedFrom %}
-      {% include "./property.njk" %}
-    {% endif %}
-  {% endfor %}
-  {% for property in (fields | sortByProp('name')) %}
-    {% if property.inheritedFrom %}
-      {% include "./property.njk" %}
-    {% endif %}
-  {% endfor %}
+  {{ linkHeading('Properties', prefix=prefix, level=2+offset) }}
+  {% for property in (fields | sortClassMembers) %}{% include "./property.njk" %}{% endfor %}
 {% endif %}
 {% block afterProperties %}{% endblock %}
 
 {% block beforeMethods %}{% endblock %}
 {% if methods.length %}
-  {{ linkHeading('Methods', level=2) }}
-  {% for method in (methods | sortByProp('name')) %}
-    {% if not method.inheritedFrom %}
-      {% include "./method.njk" %}
-    {% endif %}
-  {% endfor %}
-  {% for method in (methods | sortByProp('name')) %}
-    {% if method.inheritedFrom %}
-      {% include "./method.njk" %}
-    {% endif %}
-  {% endfor %}
+  {{ linkHeading('Methods', prefix=prefix, level=2+offset) }}
+  {% for method in (methods | sortClassMembers) %}{% include "./method.njk" %}{% endfor %}
 {% endif %}
 
 {% block beforeSlots %}{% endblock %}
 {% if slots.length %}
-  {{ linkHeading('Slots', level=2) }}
-  {% for slot in (slots | sortByProp('name')) %}
+  {{ linkHeading('Slots', prefix=prefix, level=2+offset) }}
+  {% for slot in (slots | sortClassMembers) %}
     {% include "./slot.njk" %}
   {% endfor %}
 {% endif %}
 
 {% block beforeParts %}{% endblock %}
 {% if cssParts.length %}
-  {{ linkHeading('CSS Shadow Parts', level=2) }}
+  {{ linkHeading('CSS Shadow Parts', prefix=prefix, level=2+offset) }}
   <table class="css-parts-table">
     <thead>
       <tr>
@@ -79,7 +65,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for cssPart in (cssParts | sortByProp('name')) %}
+      {% for cssPart in (cssParts | sortClassMembers) %}
         <tr>
           <td>{{ cssPart.name }}</td>
           <td>{{ cssPart.description }}</td>
@@ -94,7 +80,7 @@
 
 {% block beforeCssCustomProperties %}{% endblock %}
 {% if cssProperties.length %}
-  {{ linkHeading('CSS Custom Properties', level=2) }}
+  {{ linkHeading('CSS Custom Properties', prefix=prefix, level=2+offset) }}
   <table class="css-custom-properties-table">
     <thead>
       <tr>
@@ -104,7 +90,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for cssProp in (cssProperties | sortByProp('name')) %}
+      {% for cssProp in (cssProperties | sortClassMembers) %}
         <tr>
           <td>{{ cssProp.name }}</td>
           <td>{{ codeBlock(cssProp.defaultValue, lang="css") }}</td>
@@ -120,7 +106,7 @@
 
 {% block beforeEvents %}{% endblock %}
 {% if events.length %}
-  {{ linkHeading('Events', level=2) }}
+  {{ linkHeading('Events', prefix=prefix, level=2+offset) }}
   <table class="events-table">
     <thead>
       <tr>
@@ -130,13 +116,30 @@
       </tr>
     </thead>
     <tbody>
-      {% for event in (events | sortByProp('name')) %}
+      {% for event in (events | sortClassMembers) %}
         <tr>
           <td>{{ event.name }}</td>
-          <td>{{ codeBlock(event.type.type) }}</td>
+          <td>{{ codeBlock(event.type.text) }}</td>
           <td>{% markdown %}{{ event.description | safe }}{% endmarkdown %}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 {% endif %} {# events #}
+
+{% block beforePrivate %}{% endblock %}
+{% if privateFields.length or privateMethods.length %}
+  <details>
+    <summary>Private API</summary>
+
+    {% if privateFields.length %}
+      {{ linkHeading('Private Properties', prefix=prefix, level=2+offset, anchor=false) }}
+      {% for property in (privateFields | sortClassMembers) %}{% include "./property.njk" %}{% endfor %}
+    {% endif %}
+
+    {% if privateMethods.length %}
+      {{ linkHeading('Private Methods', prefix=prefix, level=2+offset, anchor=false) }}
+      {% for method in (privateMethods | sortClassMembers) %}{% include "./method.njk" %}{% endfor %}
+    {% endif %}
+  </details>
+{% endif %}

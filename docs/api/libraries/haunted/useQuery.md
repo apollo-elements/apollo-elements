@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/haunted'
-module: './useQuery.js'
+module: 'useQuery.js'
 ---
 # Web Component Libraries >> Haunted >> useQuery || 10
 

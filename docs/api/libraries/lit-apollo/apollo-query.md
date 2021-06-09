@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/lit-apollo'
-module: './apollo-query.js'
+module: 'apollo-query.js'
 ---
 # Web Component Libraries >> Lit >> ApolloQuery || 20
 

@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/gluon'
-module: './apollo-mutation.js'
+module: 'apollo-mutation.js'
 ---
 # Web Component Libraries >> Gluon >> ApolloMutation || 30
 

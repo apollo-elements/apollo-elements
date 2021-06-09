@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/haunted'
-module: './useSubscription.js'
+module: 'useSubscription.js'
 ---
 # Web Component Libraries >> Haunted >> useSubscription || 30
 

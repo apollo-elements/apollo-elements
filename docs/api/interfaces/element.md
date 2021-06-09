@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/interfaces'
-module: './apollo-element.ts'
+module: 'apollo-element.ts'
 ---
 # Interfaces >> ApolloElement || 00
 

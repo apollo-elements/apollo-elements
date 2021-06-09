@@ -18,6 +18,8 @@ import esbuildRollup from 'rollup-plugin-esbuild';
 
 import path from 'path';
 
+import clearModule from 'clear-module';
+
 import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
@@ -28,7 +30,6 @@ import { setupWrap } from './packages/docs/rocket-plugins/wrap.js';
 import { githubTag } from './packages/docs/rocket-plugins/liquid/github.js';
 import { linkTag } from './packages/docs/rocket-plugins/liquid/link.js';
 import { customElementsManifest } from './packages/docs/rocket-plugins/custom-elements-manifest.js';
-import { generateManifests } from './packages/docs/rocket-plugins/copy-manifests.js';
 import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
 import { getWebmentionsForUrl } from './packages/docs/rocket-plugins/webmentions.js';
@@ -50,17 +51,14 @@ export default ({
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
   eleventy(eleventyConfig) {
-    eleventyConfig.addWatchTarget('./packages/components/');
+    eleventyConfig.addWatchTarget('packages/components/*.ts');
     eleventyConfig.on('beforeBuild', buildComponents);
     // eleventyConfig.addPlugin(inclusiveLangPlugin);
     eleventyConfig.addPlugin(helmet);
     eleventyConfig.addPlugin(footnotes);
 
     /* start custom-elements-manifest */
-    eleventyConfig.addWatchTarget('./packages/interfaces/');
-    eleventyConfig.addWatchTarget('./packages/haunted/');
-    eleventyConfig.addWatchTarget('./packages/hybrids/');
-    eleventyConfig.addWatchTarget('./packages/lib/');
+    eleventyConfig.addWatchTarget('docs/_data/customElementsManifests/@apollo-elements/**/*.json');
 
     eleventyConfig.addPlugin(customElementsManifest, {
       imports: { keepExtension: false },
@@ -99,8 +97,6 @@ export default ({
         ZenObservable: 'https://github.com/zenparsing/zen-observable',
       },
     });
-
-    eleventyConfig.on('beforeBuild', generateManifests);
     /* end custom-elements-manifest */
 
     /* start blog */
@@ -166,9 +162,9 @@ export default ({
       'tab': ([tab]) => wrapTab(tab),
       'reveal': () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
       'center': () => ({ tagName: 'div', attributes: { center: 'true' } }),
-      'playground': ([id]) => ({
+      'playground': ([id, file]) => ({
         tagName: 'docs-playground',
-        attributes: { id },
+        attributes: { id, file },
       }),
       'playground-file': ([id, name]) => ({
         tagName: 'template',

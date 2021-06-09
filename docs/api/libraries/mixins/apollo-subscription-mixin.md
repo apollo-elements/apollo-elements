@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './apollo-subscription-mixin.js'
+module: 'apollo-subscription-mixin.js'
 ---
 # Web Component Libraries >> Class Mixins >> ApolloSubscriptionMixin || 40
 

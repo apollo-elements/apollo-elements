@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/lit-apollo'
-module: './apollo-subscription.js'
+module: 'apollo-subscription.js'
 ---
 # Web Component Libraries >> Lit >> ApolloSubscription || 40
 

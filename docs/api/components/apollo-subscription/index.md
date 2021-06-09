@@ -2,10 +2,10 @@
 layout: layout-api
 package: '@apollo-elements/components'
 templateEngineOverride: njk,md
-module: './apollo-subscription.js'
+module: 'apollo-subscription.js'
 ---
 
-# Components >> &lt;apollo-subscription&gt; || 30
+# Components >> apollo-subscription || 30
 
 `<apollo-subscription>` lets you query GraphQL without writing any JavaScript. Import the custom element then write your template, query, and variables in HTML. The element class inherits from [`ApolloSubscriptionInterface`](/api/interfaces/subscription/)
 

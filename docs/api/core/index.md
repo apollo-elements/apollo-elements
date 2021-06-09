@@ -1,7 +1,7 @@
 ---
-layout: layout-api
+layout: layout-api-index
 package: '@apollo-elements/core'
-module: './index.js'
+module: 'index.js'
 description: Core Controllers for Apollo Elements
 ---
 # Core || 10
@@ -10,11 +10,7 @@ The core of Apollo Elements is a set of JavaScript classes that implement the [R
 
 This also introduces a separation between GraphQL operations (like queries or mutations) and the web components which host them. Previous versions of Apollo Elements strongly tied each GraphQL document to a single custom element, meaning if you wanted to have several queries in one component, the component either needed to define those queries as children, or combine the queries into a single document.
 
-```html playground controller-host
-<profile-home></profile-home>
-```
-
-```ts playground-file controller-host components/profile-home/profile-home.ts
+```ts playground controller-host profile-home.ts
 import {
   ApolloMutationController,
   ApolloQueryController,
@@ -22,46 +18,147 @@ import {
 } from '@apollo-elements/core';
 
 import { customElement, state, query } from 'lit/decorators.js';
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 
-import { ProfileQuery } from './Profile.query.graphql';
-import { UpdateProfileMutation } from './UpdateProfile.mutation.graphql';
-import { FriendCameOnlineSubscription } from './FriendCameOnline.subscription.graphql';
+import { ProfileQuery } from './Profile.query.graphql.js';
+import { UpdateProfileMutation } from './UpdateProfile.mutation.graphql.js';
+import { FriendCameOnlineSubscription } from './FriendCameOnline.subscription.graphql.js';
 
-import { ClickToEdit } from '../click-to-edit';
+import { Snackbar } from '@material/mwc-snackbar';
+import '@material/mwc-textfield';
 
-import style from './profile-home.css';
+console.log(ApolloQueryController);
 
 @customElement('profile-home')
 class ProfileHome extends LitElement {
-  static readonly styles = [style];
-
   profile = new ApolloQueryController(this, ProfileQuery);
   updateProfile = new ApolloMutationController(this, UpdateProfileMutation);
-  friendCameOnline = new ApolloSubscriptionController(this, FriendCameOnlineSubscription);
+  friendCameOnline = new ApolloSubscriptionController(this, FriendCameOnlineSubscription, {
+    onSubscriptionData: () => this.snackbar.show(),
+  });
 
-  @query('#nick-edit') nickEdit: ClickToEdit;
+  @query('mwc-snackbar') snackbar: Snackbar;
 
   render() {
     return html`
-      <header class=${classMap({ loading: profile.loading })}>
-        <h1>
-          Welcome,
-          <click-to-edit id=nick-edit
-              ?disabled=${updateProfile.loading}
-              @change=${() => updateProfile.mutate({ variables: { nick: this.nickEdit.value } })}>
-            ${profile.data?.nick}
-          </click-to-edit>
-        </h1>
-        <img src=${profile.data?.avatar} role=presentation/>
-
+      <mwc-snackbar labeltext="${this.friendCameOnline.data?.nick} came online"></mwc-snackbar>
+      <header class=${classMap({ loading: this.profile.loading })}>
+        <h1>Welcome, ${this.profile.data?.nick}</h1>
+        <mwc-textfield
+            label="Edit Nick"
+            value=${this.profile.data?.nick}
+            @change=${this.onChange}
+        ></mwc-textfield>
       </header>
-
-      <toast-notification when=${friendCameOnline.data?.id}>
-        <img src=${friendCameOnline.data?.avatar} role=presentation/>
-        <h2>${friendCameOnline.data?.nick}</h2>
-      </toast-notification>
     `;
+  }
+
+  onChange(event) {
+    const nick = event.target.value
+    this.updateProfile.mutate({ variables: { nick } });
+  }
+}
+```
+
+```html playground-file controller-host index.html
+<script type="module" src="profile-home.js"></script>
+<script type="module" src="client.js"></script>
+
+<apollo-client>
+  <profile-home></profile-home>
+</apollo-client>
+```
+
+```ts playground-file controller-host Profile.query.graphql.ts
+import { gql, TypedDocumentNode } from '@apollo/client/core';
+export const ProfileQuery: TypedDocumentNode<{
+  profile: {
+    nick: string
+  }
+}> = gql`
+query ProfileQuery {
+  profile {
+    nick
+  }
+}
+`;
+```
+
+```ts playground-file controller-host UpdateProfile.mutation.graphql.ts
+import { gql, TypedDocumentNode } from '@apollo/client/core';
+export const UpdateProfileMutation: TypedDocumentNode<{
+  updateProfile: {
+    nick: string
+  }
+}, {
+  nick: string
+}> = gql`
+mutation UpdateProfile($nick: String) {
+  updateProfile(nick: $nick) {
+    nick
+  }
+}
+`;
+```
+
+```ts playground-file controller-host FriendCameOnline.subscription.graphql.ts
+import { gql, TypedDocumentNode } from '@apollo/client/core';
+export const FriendCameOnlineSubscription: TypedDocumentNode<{
+  friendCameOnline: {
+    nick: string
+  }
+}> = gql`
+subscription FriendCameOnline {
+  friendCameOnline {
+    nick
+  }
+}
+`;
+```
+
+```js playground-file controller-host client.js
+import { ApolloClient, InMemoryCache } from '@apollo/client/core';
+import { SchemaLink } from '@apollo/client/link/schema';
+
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { addMocksToSchema } from '@graphql-tools/mock';
+
+document.querySelector('apollo-client')
+  .client = new ApolloClient({
+    link: new SchemaLink({
+      cache: new InMemoryCache(),
+      schema: addMocksToSchema({
+        schema: makeExecutableSchema({
+          typeDefs: `
+            type User {
+              nick: String
+            }
+
+            type Query {
+              profile: User
+            }
+
+            type Mutation {
+              updateProfile(nick: String): User
+            }
+
+            type Subscription {
+              friendCameOnline: User
+            }
+          `,
+        }),
+        mocks: {}
+      }),
+    }),
+  });
+```
+
+```json playground-import-map controller-host
+{
+  "imports": {
+    "@apollo-elements/core": "ORIGIN/_assets/_static/apollo-elements.js",
+    "@apollo/client/core": "ORIGIN/_assets/_static/apollo-client.js"
   }
 }
 ```

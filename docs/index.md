@@ -83,28 +83,23 @@ libraries:
     </template>
   </apollo-query>
 </apollo-client>
-<script src="type-policies.js"></script>
+<script src="type-policies.js" type="module"></script>
 ```
 
 ```js playground-file query-spacex type-policies.js
-document
-  .querySelector('apollo-client')
-  .addEventListener('client-changed', event => {
-    if (!event.detail.client) return;
-    event.detail.client.cache.policies.addTypePolicies({
-      Launch: {
-        fields: {
-          launch_date_utc(next, options) {
-            try {
-              return new Date(next).toDateString();
-            } catch(e) {
-              return next;
-            }
-          }
+document.querySelector('apollo-client').typePolicies = {
+  Launch: {
+    fields: {
+      launch_date_utc(next, options) {
+        try {
+          return new Date(next).toDateString();
+        } catch(e) {
+          return next;
         }
       }
-    });
-  });
+    }
+  }
+};
 ```
 
 ```css playground-file query-spacex style.css
@@ -158,7 +153,9 @@ query LatestLaunch {
 ```json playground-import-map query-spacex
 {
   "imports": {
-    "@apollo-elements/components": "ORIGIN/_assets/_static/apollo-elements.js"
+    "@apollo-elements/components": "./apollo-elements.js",
+    "@apollo-elements/core": "./apollo-elements.js",
+    "@apollo/client/core": "./apollo-client.js"
   }
 }
 ```

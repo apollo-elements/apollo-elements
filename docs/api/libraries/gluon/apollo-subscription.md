@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/fast'
-module: './apollo-subscription.js'
+module: 'apollo-subscription.js'
 ---
 # Web Component Libraries >> Gluon >> ApolloSubscription || 40
 

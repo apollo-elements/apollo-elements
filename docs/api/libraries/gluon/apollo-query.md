@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/fast'
-module: './apollo-query.js'
+module: 'apollo-query.js'
 ---
 # Web Component Libraries >> Gluon >> ApolloQuery || 20
 

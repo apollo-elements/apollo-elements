@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './apollo-mutation-mixin.js'
+module: 'apollo-mutation-mixin.js'
 ---
 # Web Component Libraries >> Class Mixins >> ApolloMutationMixin || 30
 

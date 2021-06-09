@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './graphql-script-child-mixin.js'
+module: 'graphql-script-child-mixin.js'
 ---
 
 # Web Component Libraries >> Class Mixins >> GraphQLScriptChildMixin || 70

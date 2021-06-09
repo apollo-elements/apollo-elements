@@ -1,7 +1,20 @@
+// @ts-check
+
 /* eslint-disable easy-loops/easy-loops */
 import { join } from 'path';
 import { markdown } from './markdown.js';
 import { externalTypeLinks } from './link-to-type.js';
+
+/** @typedef {import('custom-elements-manifest/schema').Module} Module */
+/** @typedef {import('custom-elements-manifest/schema').ClassMember} ClassMember */
+/** @typedef {import('custom-elements-manifest/schema').Declaration} Declaration */
+/** @typedef {import('custom-elements-manifest/schema').FunctionDeclaration} FunctionDeclaration */
+/** @typedef {import('custom-elements-manifest/schema').FunctionLike} FunctionLike */
+/** @typedef {import('custom-elements-manifest/schema').ClassDeclaration} ClassDeclaration */
+/** @typedef {import('custom-elements-manifest/schema').ClassMethod} ClassMethod */
+/** @typedef {import('custom-elements-manifest/schema').Parameter} Parameter */
+/** @typedef {import('custom-elements-manifest/schema').Type} Type */
+
 import githubUrl from 'get-github-url';
 
 export function manifestModuleImports(eleventyConfig, globalOptions) {
@@ -34,10 +47,14 @@ export function manifestModuleImports(eleventyConfig, globalOptions) {
   });
 }
 
+/**
+ * @param  {string|Type} stringOrTypeDescriptor
+ * @return {string}
+ */
 export function getTypeString(stringOrTypeDescriptor) {
   if (!stringOrTypeDescriptor) return '';
   return typeof stringOrTypeDescriptor === 'string' ? stringOrTypeDescriptor
-  : stringOrTypeDescriptor.type ?? '';
+  : stringOrTypeDescriptor.text ?? '';
 }
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
@@ -46,9 +63,15 @@ const isLengthy = xs => !!xs.length;
 
 const isMixin = d => d.kind === 'mixin';
 
+const isPrivate = x => x.privacy === 'protected' || x.privacy === 'private';
+
 const split = (x, d) => !x ? '' : x.split(d ?? ' ');
 
 const propIs = prop => test => obj => obj[prop] === test;
+
+const and = (p, q) => x => p(x) && q(x);
+
+const not = p => x => !p(x);
 
 const kindIs = propIs('kind');
 
@@ -60,15 +83,23 @@ const filterMembersBy = p => declaration =>
 const getModule = (manifest, path) =>
   (manifest?.modules ?? []).find(pathIs(path));
 
-const getMethods = filterMembersBy(kindIs('method'));
+const getAllFields = filterMembersBy(kindIs('field'));
 
-const getFields = filterMembersBy(kindIs('field'));
+const getAllMethods = filterMembersBy(kindIs('method'));
+
+const getFields = filterMembersBy(and(kindIs('field'), not(isPrivate)))
+
+const getMethods = filterMembersBy(and(kindIs('method'), not(isPrivate)))
+
+const getPrivateFields = filterMembersBy(and(kindIs('field'), isPrivate))
+
+const getPrivateMethods = filterMembersBy(and(kindIs('method'), isPrivate))
 
 const getExports = module => module.exports;
 
 const getAttributes = declaration =>
   (declaration?.attributes ?? []).filter(attribute =>
-    !getFields(declaration).some(f =>
+    !getAllFields(declaration).some(f =>
       f.name === attribute.fieldName));
 
 const getCssProperties = declaration =>
@@ -106,6 +137,17 @@ function sortByProp(list = [], prop = '') {
 }
 
 /**
+ * Sort a list of custom-element.json `ClassMember`s
+ * @param  {import("custom-elements-manifest/schema").ClassMember[]}  [list=[]]
+ * @return {import("custom-elements-manifest/schema").ClassMember[]}
+ */
+function sortClassMembers(list = []) {
+  return sortByProp(list, 'name')
+    .sort((a, b) => (a.inheritedFrom && b.inheritedFrom) ? 0 : a.inheritedFrom ? 1 : -1)
+    .sort((a, b) => (a.static && b.static) ? 0 : a.static ? -1 : 1);
+}
+
+/**
  * @typedef   {Object} HackOptions
  * @property  {String} key   11ty Navigation key
  * @property  {Object} module custom element manifest
@@ -126,12 +168,17 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addFilter('getExports', getExports);
   eleventyConfig.addFilter('getFields', getFields);
   eleventyConfig.addFilter('getMethods', getMethods);
+  eleventyConfig.addFilter('getPrivateFields', getPrivateFields);
+  eleventyConfig.addFilter('getPrivateMethods', getPrivateMethods);
   eleventyConfig.addFilter('getSlots', getSlots);
 
   eleventyConfig.addFilter('getTypeString', getTypeString);
   eleventyConfig.addFilter('getHeadings', getHeadings);
 
   eleventyConfig.addFilter('sortByProp', sortByProp);
+  eleventyConfig.addFilter('sortClassMembers', sortClassMembers);
+
+  eleventyConfig.addFilter('isPrivate', isPrivate);
 
   eleventyConfig.addPlugin(manifestModuleImports, options.imports);
   eleventyConfig.addPlugin(externalTypeLinks, options.types);

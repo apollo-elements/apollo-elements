@@ -6,12 +6,14 @@
     {{ linkHeading(declaration.name) }}
   </span>
 
-  {% if declaration.summary %}
-    {% markdown %}{{ declaration.summary | safe }}{% endmarkdown %}
-  {% endif %}
+  {% if not declaration.kind === 'mixin' %}
+    {% if declaration.summary %}
+      {% markdown %}{{ declaration.summary | safe }}{% endmarkdown %}
+    {% endif %}
 
-  {% if declaration.description %}
-    {% markdown %}{{ declaration.description | safe }}{% endmarkdown %}
+    {% if declaration.description %}
+      {% markdown %}{{ declaration.description | safe }}{% endmarkdown %}
+    {% endif %}
   {% endif %}
 
   {% if declaration.parameters %}

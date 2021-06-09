@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/haunted'
-module: './useMutation.js'
+module: 'useMutation.js'
 ---
 # Web Component Libraries >> Haunted >> useMutation || 20
 

@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/fast'
-module: './apollo-mutation.js'
+module: 'apollo-mutation.js'
 ---
 # Web Component Libraries >> FAST >> ApolloMutation || 30
 

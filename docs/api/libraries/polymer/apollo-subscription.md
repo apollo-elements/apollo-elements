@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/polymer'
-module: './apollo-subscription.js'
+module: 'polymer-apollo-subscription.js'
 ---
 
-# Web Component Libraries >> Polymer >> apollo-subscription || 10
+# Web Component Libraries >> Polymer >> polymer-apollo-subscription || 10
