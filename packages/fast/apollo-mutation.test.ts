@@ -1,5 +1,7 @@
 import type * as C from '@apollo/client/core';
 
+import type { ApolloMutationElement } from '@apollo-elements/core/types';
+
 import {
   NonNullableParamMutationData,
   NonNullableParamMutationVariables,
@@ -28,7 +30,7 @@ import {
 import { ApolloMutation } from './apollo-mutation';
 import { FASTElement, html, customElement, DOM } from '@microsoft/fast-element';
 
-import { MutationElement, describeMutation } from '@apollo-elements/test/mutation.test';
+import { describeMutation } from '@apollo-elements/test/mutation.test';
 
 const template = html<TestableApolloMutation>`
   <output id="called">${x => stringify(x.called)}</output>
@@ -58,7 +60,7 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
 
 describe('[fast] ApolloMutation', function describeApolloMutation() {
   describeMutation({
-    async setupFunction<T extends MutationElement<any, any>>(options: SetupOptions<T> = {}) {
+    async setupFunction<T extends ApolloMutationElement<any, any>>(options: SetupOptions<T> = {}) {
       const name = `fast-setup-function-element-${counter++}`;
 
       const { properties, attributes, innerHTML = '' } = options;
