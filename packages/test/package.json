@@ -12,6 +12,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
+    "x-docs:analyze": "echo 'No analyze step for test'",
     "analyze": "echo 'No analyze step for test'",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",

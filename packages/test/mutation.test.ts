@@ -1,11 +1,6 @@
 import type * as I from '@apollo-elements/interfaces';
-import type { ApolloMutationController } from '@apollo-elements/core';
-import type {
-  NoParamMutationData,
-  NoParamMutationVariables,
-  NullableParamMutationData,
-  NullableParamMutationVariables,
-} from './schema';
+import type { ApolloMutationElement } from '@apollo-elements/core';
+import type * as S from './schema';
 
 import { ApolloClient, ApolloError, InMemoryCache } from '@apollo/client/core';
 
@@ -28,11 +23,7 @@ import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
 import { restoreSpies, stringify, waitForRender } from './helpers';
 import { TestableElement } from './types';
 
-export interface MutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends I.ApolloMutationElement<D, V> {
-  controller: ApolloMutationController<D, V>;
-}
-
-export interface DescribeMutationComponentOptions<E extends MutationElement = MutationElement<any, any>> {
+export interface DescribeMutationComponentOptions<E extends Omit<ApolloMutationElement<any, any>, 'update'|'updated'> = ApolloMutationElement<any, any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -54,21 +45,24 @@ export interface DescribeMutationComponentOptions<E extends MutationElement = Mu
    * Optional: the class which setup function uses to generate the component.
    * Only relevant to class-based libraries
    */
-  class?: I.Constructor<E & TestableElement>;
+  class?: I.Constructor<Omit<E, 'update'|'updated'> & TestableElement>;
 }
 
 export { setupMutationClass } from './helpers';
 
 export function describeMutation(options: DescribeMutationComponentOptions): void {
-  const { setupFunction, class: Klass } = options;
+  const { setupFunction } = options;
+  const Klass: typeof ApolloMutationElement = options.class as unknown as typeof ApolloMutationElement;
   describe(`ApolloMutation interface`, function() {
     describe('when simply instantiating', function() {
       beforeEach(teardownClient);
-      let element: MutationElement & TestableElement;
+      let element: ApolloMutationElement & TestableElement;
 
       beforeEach(async function setupElement() {
         ({ element } = await setupFunction());
       });
+
+      beforeEach(waitForRender(() => element));
 
       it('has default properties', function() {
         // nullable fields
@@ -91,8 +85,6 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         expect(element.optimisticResponse, 'optimisticResponse').to.be.undefined;
         expect(element.updater, 'updater').to.be.undefined;
       });
-
-      beforeEach(() => element.updateComplete);
 
       describe('setting observed properties', function() {
         describe('client', function() {
@@ -193,7 +185,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
       describe('with await-refetch-queries attribute', function() {
-        let element: MutationElement;
+        let element: ApolloMutationElement;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'await-refetch-queries' }));
@@ -205,7 +197,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       describe('with refetch-queries="A"', function() {
-        let element: MutationElement;
+        let element: ApolloMutationElement;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'refetch-queries="A"' }));
@@ -235,7 +227,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       describe('with fetch-policy="no-cache"', function() {
-        let element: MutationElement;
+        let element: ApolloMutationElement;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'fetch-policy="no-cache"' }));
@@ -247,7 +239,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       describe('with refetch-queries="A,   B, C  "', function() {
-        let element: MutationElement;
+        let element: ApolloMutationElement;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'refetch-queries="A,   B, C  "' }));
@@ -265,9 +257,9 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       afterEach(teardownClient);
 
       describe('when simply instantiating', function() {
-        let element: MutationElement;
+        let element: ApolloMutationElement;
 
-        let spies: Record<string | keyof MutationElement, SinonSpy>;
+        let spies: Record<string | keyof ApolloMutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
@@ -291,9 +283,9 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       describe('with NoParam mutation property set', function() {
-        let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
+        let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
-        let spies: Record<string|keyof MutationElement, SinonSpy>;
+        let spies: Record<string|keyof ApolloMutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
@@ -705,7 +697,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       });
 
       describe('with NullableParam mutation property set', function() {
-        let element: TestableElement & MutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+        let element: TestableElement & ApolloMutationElement<typeof S.NullableParamMutation>;
 
         let spies: Record<string | keyof typeof element, SinonSpy>;
 
@@ -866,14 +858,14 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
     if (Klass) {
       describe('ApolloMutation subclasses', function() {
         describe('with NullableParam mutation in class field', function() {
-          let element: MutationElement<NullableParamMutationData, NullableParamMutationVariables>;
+          let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
           let spies: Record<Exclude<keyof typeof element, symbol> | string, SinonSpy>;
 
           beforeEach(setupClient);
 
           beforeEach(async function setupElement() {
-            class Test extends (Klass as I.Constructor<typeof element>) {
+            class Test extends Klass<typeof S.NullableParamMutation> {
               mutation = NullableParamMutation;
             }
 
@@ -888,7 +880,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           describe('with mutation, onCompleted, and onError defined as class methods', function() {
             beforeEach(async function() {
-              class Test extends (Klass as I.Constructor<typeof element>) {
+              class Test extends Klass<typeof S.NullableParamMutation> {
                 mutation = NullableParamMutation;
 
                 onError() { null; }
@@ -986,7 +978,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           });
 
           describe('with `updater` defined as a class method', function() {
-            let element: MutationElement<NoParamMutationData, NoParamMutationVariables>;
+            let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
             beforeEach(async function setupElement() {
               class Test extends (Klass as unknown as I.Constructor<typeof element>) {
