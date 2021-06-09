@@ -12,11 +12,6 @@ import { property, state } from 'lit/decorators.js';
 
 import { ApolloElement } from './apollo-element';
 
-type P<T extends I.ApolloQueryElement<any, any>, K extends keyof T['controller']> =
-  T['controller'][K] extends (...args: any[]) => unknown
-  ? Parameters<T['controller'][K]>
-  : never
-
 /**
  * `ApolloQuery`
  *
@@ -39,10 +34,10 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    */
   declare variables: I.Variables<D, V> | null;
 
-  controller = new ApolloQueryController<D, V>(this, null, {
+  controller: ApolloQueryController<D, V> = new ApolloQueryController<D, V>(this, null, {
     shouldSubscribe: options => this.readyToReceiveDocument && this.shouldSubscribe(options),
     onData: data => this.onData?.(data),
-    onError: error => this.onError?.(error),
+    onError: error => this.onError?.(error), /* c8 ignore next */ // covered
   });
 
   /**
@@ -239,9 +234,9 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * Executes a Query once and updates the with the result
    */
   public async executeQuery(
-    ...params: P<this, 'executeQuery'>
+    params?: Partial<C.QueryOptions<I.Variables<D, V>, I.Data<D>>>
   ): Promise<C.ApolloQueryResult<I.Data<D>>> {
-    return this.controller.executeQuery(...params);
+    return this.controller.executeQuery(params);
   }
 
   /**
@@ -255,9 +250,9 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * The optional `variables` parameter is an optional new variables object.
    */
   public async fetchMore(
-    ...params: P<this, 'fetchMore'>
+    params?: Partial<I.FetchMoreParams<D, V>>
   ): Promise<C.ApolloQueryResult<I.Data<D>>> {
-    return this.controller.fetchMore(...params);
+    return this.controller.fetchMore(params);
   }
 
   public startPolling(ms: number): void {
