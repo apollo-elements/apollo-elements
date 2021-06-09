@@ -34,7 +34,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "analyze": "wca analyze './*.ts' --format json --outFile custom-elements.json",
+    "analyze": "custom-elements-manifest analyze",
     "test": "run-s test:*",
     "test:types": "tsc --noEmit",
     "test:runtime": "wtr --coverage --config ../../web-test-runner.config.js './*.test.ts'"
@@ -48,7 +48,12 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/polymer"
   },
-  "keywords": ["Apollo", "GraphQL", "Web Components", "Custom Elements"],
+  "keywords": [
+    "Apollo",
+    "GraphQL",
+    "Web Components",
+    "Custom Elements"
+  ],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "bugs": {
@@ -60,5 +65,6 @@
     "@apollo-elements/interfaces": "^1.5.0",
     "@apollo-elements/mixins": "^3.5.0",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

@@ -8,7 +8,7 @@ import { aTimeout, fixture, expect, oneEvent, defineCE, nextFrame } from '@open-
 
 import { gql } from '@apollo/client/core';
 
-import { stub } from 'sinon';
+import { stub, spy } from 'sinon';
 
 import {
   assertType,
@@ -119,6 +119,7 @@ class WrapperElement extends PolymerElement {
   }
 
   onClick() {
+    this.$.mutation.onCompleted ??= spy();
     this.$.mutation.mutate();
   }
 }
@@ -191,7 +192,7 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
     let wrapper: WrapperElement;
 
     beforeEach(async function setupWrapper() {
-      const tag = defineCE(WrapperElement);
+      const tag = defineCE(class extends WrapperElement {});
       wrapper = await fixture<WrapperElement>(`<${tag}></${tag}>`);
     });
 
@@ -199,7 +200,7 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
       wrapper.$.button.click();
     });
 
-    beforeEach(() => aTimeout(1000));
+    beforeEach(() => aTimeout(100));
 
     beforeEach(flush);
 
@@ -209,6 +210,10 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
         <button id="button"></button>
         <output>🤡</output>
       `);
+    });
+
+    it('calls onCompleted', function() {
+      expect(wrapper.$.mutation.onCompleted).to.have.been.calledOnce;
     });
   });
 });

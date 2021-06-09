@@ -24,16 +24,15 @@ import { PolymerApolloElement } from './polymer-apollo-element';
  * </paper-toast>
  * ```
  *
- * @fires 'data-changed'
- * @fires 'error-changed'
- * @fires 'errors-changed'
- * @fires 'loading-changed'
+ * @fires data-changed
+ * @fires error-changed
+ * @fires errors-changed
+ * @fires loading-changed
  */
 export class PolymerApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloSubscriptionMixin(
     PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
-  )<D, V>
-  implements I.ApolloSubscriptionInterface<D, V> {
+  )<D, V> {
   static readonly is = 'polymer-apollo-subscription';
 }
 
