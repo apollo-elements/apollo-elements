@@ -2,7 +2,7 @@ import type * as C from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
 
-import type { SubscriptionElement } from '@apollo-elements/test/subscription.test';
+import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
 
 import {
   SetupOptions,
@@ -48,7 +48,7 @@ let counter = 1;
 
 describe('[fast] ApolloSubscription', function() {
   describeSubscription({
-    async setupFunction<T extends(SubscriptionElement)>(opts?: SetupOptions<T>) {
+    async setupFunction<T extends ApolloSubscriptionElement>(opts?: SetupOptions<T>) {
       const name = `fast-setup-function-element-${counter++}`;
 
       @customElement({ name, template })

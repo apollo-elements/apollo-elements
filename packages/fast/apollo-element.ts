@@ -2,6 +2,8 @@ import type * as I from '@apollo-elements/interfaces';
 
 import type * as C from '@apollo/client/core';
 
+import type { CustomElement } from '@apollo-elements/core/types';
+
 import type { ApolloController } from '@apollo-elements/core';
 
 import { hosted } from './decorators';
@@ -21,7 +23,7 @@ import { DOM, FASTElement, attr, observable } from '@microsoft/fast-element';
  * @element
  */
 export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElementMixin(FASTElement as I.Constructor<FASTElement & HTMLElement>)<D, V> {
+  extends ApolloElementMixin(FASTElement as I.Constructor<FASTElement & CustomElement>)<D, V> {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
@@ -58,7 +60,6 @@ export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariabl
   }
 
   [update](properties: Partial<this>): void {
-    if (!properties) return;
     for (const [k, v] of Object.entries(properties) as I.Entries<this>)
       (this[k] !== v) && (this[k] = v);
   }

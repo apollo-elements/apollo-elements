@@ -18,8 +18,7 @@ import { hosted } from './decorators';
  * @element
  */
 export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloMutationMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
-  implements I.ApolloMutationInterface<D, V> {
+  extends ApolloMutationMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V> {
   /**
    * @summary Latest mutation data.
    */

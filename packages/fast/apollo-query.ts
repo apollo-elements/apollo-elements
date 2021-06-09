@@ -18,8 +18,7 @@ import { hosted } from './decorators';
  *
  */
 export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloQueryMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
-  implements I.ApolloQueryInterface<D, V> {
+  extends ApolloQueryMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V> {
   /**
    * Latest query data.
    */

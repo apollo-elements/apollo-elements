@@ -18,8 +18,7 @@ import { hosted } from './decorators';
  *
  */
 export class ApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloSubscriptionMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V>
-  implements I.ApolloSubscriptionInterface<D, V> {
+  extends ApolloSubscriptionMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V> {
   /**
    * Latest subscription data.
    */

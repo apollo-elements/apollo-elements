@@ -2,6 +2,8 @@ import type * as C from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
 
+import type { ApolloQueryElement } from '@apollo-elements/core';
+
 import type { SetupOptions } from '@apollo-elements/test';
 
 import { fixture, expect } from '@open-wc/testing';
@@ -21,7 +23,7 @@ import {
   TestableElement,
 } from '@apollo-elements/test';
 
-import { QueryElement, describeQuery } from '@apollo-elements/test/query.test';
+import { describeQuery } from '@apollo-elements/test/query.test';
 
 const template = html<TestableApolloQuery>`
   <output id="data">${x => stringify(x.data)}</output>
@@ -49,7 +51,7 @@ let counter = -1;
 
 describe('[fast] ApolloQuery', function() {
   describeQuery({
-    async setupFunction<T extends QueryElement>(opts?: SetupOptions<T>) {
+    async setupFunction<T extends ApolloQueryElement>(opts?: SetupOptions<T>) {
       const name = `fast-setup-function-element-${counter++}`;
 
       @customElement({ name, template })

@@ -34,7 +34,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "analyze": "wca analyze --format json --outFile custom-elements.json",
+    "analyze": "custom-elements-manifest analyze --fast",
     "test": "run-s test:*",
     "test:types": "tsc --noEmit",
     "test:runtime": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
@@ -68,5 +68,6 @@
     "@apollo-elements/mixins": "^3.5.0",
     "@microsoft/fast-element": "^1.4.0",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }
