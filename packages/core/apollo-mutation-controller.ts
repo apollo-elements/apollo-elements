@@ -1,7 +1,23 @@
-import type * as I from '@apollo-elements/interfaces';
-import type * as C from '@apollo/client/core';
-
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+
+import type {
+  ComponentDocument,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  OptimisticResponseType,
+  RefetchQueriesType,
+  Variables,
+} from '@apollo-elements/interfaces';
+
+import type {
+  ApolloError,
+  ErrorPolicy,
+  FetchPolicy,
+  FetchResult,
+  MutationOptions,
+  MutationUpdaterFn,
+} from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
@@ -13,22 +29,22 @@ export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerO
    *
    * @summary Mutation variables.
    */
-  variables?: I.Variables<D, V>,
-  refetchQueries?: I.RefetchQueriesType<D> | null,
+  variables?: Variables<D, V>,
+  refetchQueries?: RefetchQueriesType<D> | null,
   context?: Record<string, unknown>,
-  optimisticResponse?: I.OptimisticResponseType<D, V>,
-  errorPolicy?: C.ErrorPolicy;
-  fetchPolicy?: Extract<C.FetchPolicy, 'no-cache'>,
+  optimisticResponse?: OptimisticResponseType<D, V>,
+  errorPolicy?: ErrorPolicy;
+  fetchPolicy?: Extract<FetchPolicy, 'no-cache'>,
   awaitRefetchQueries?: boolean,
-  onCompleted?(data: I.Data<D>|null): void,
+  onCompleted?(data: Data<D>|null): void,
   onError?(error: Error): void,
   update?(
-    ...p: Parameters<C.MutationUpdaterFn<I.Data<D>>>
-  ): ReturnType<C.MutationUpdaterFn<I.Data<D>>>,
+    ...p: Parameters<MutationUpdaterFn<Data<D>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>>>,
   ignoreResults?: boolean,
 }
 
-export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVariables<D>>
+export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloController<D, V> implements ReactiveController {
   /**
    * The ID number of the most recent mutation since the element was instantiated.
@@ -40,19 +56,17 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
 
   called = false;
 
-  get mutation(): this['document'] {
-    return this.document ?? null;
-  }
+  get mutation(): ComponentDocument<D> | null { return this.document; }
 
-  set mutation(document: this['document']) { this.document = document; }
+  set mutation(document: ComponentDocument<D> | null) { this.document = document; }
 
   constructor(
     host: ReactiveControllerHost,
-    mutation?: I.ComponentDocument<D> | null,
+    mutation?: ComponentDocument<D> | null,
     options?: ApolloMutationControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(mutation ?? null);
+    this.init(mutation ?? null);/* c8 ignore next */
   }
 
   /**
@@ -60,8 +74,8 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
    * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
    */
   @bound public async mutate(
-    params?: Partial<C.MutationOptions<I.Data<D>, I.Variables<D, V>>>
-  ): Promise<C.FetchResult<I.Data<D>>> {
+    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
+  ): Promise<FetchResult<Data<D>>> {
     if (!this.client)
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
     const mutationId = this.generateMutationId();
@@ -73,7 +87,7 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
     this.data = null;
     this.notify('called', 'data', 'error', 'errors', 'loading');
 
-    return this.client.mutate<I.Data<D>, I.Variables<D, V>>({
+    return this.client.mutate<Data<D>, Variables<D, V>>({
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       mutation: this.mutation!,
@@ -112,14 +126,15 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
    */
   private onCompletedMutation(
     mutationId: number,
-    response: C.FetchResult<I.Data<D>>
-  ): C.FetchResult<I.Data<D>> {
+    response: FetchResult<Data<D>>
+  ): FetchResult<Data<D>> {
     const { data } = response;
+    this.emitter.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
     if (this.isMostRecentMutation(mutationId)) {
       this.loading = false;
       if (!this.options.ignoreResults) {
         this.error = null;
-        this.data = data ?? null;
+        this.data = data ?? null;/* c8 ignore next */
         this.errors = response.errors ?? [];
         this.options.onCompleted?.(this.data); /* c8 ignore next */
       }
@@ -131,7 +146,8 @@ export class ApolloMutationController<D extends I.MaybeTDN = any, V = I.MaybeVar
   /**
    * Callback for when a mutation fails.
    */
-  private onMutationError(mutationId: number, error: C.ApolloError): never {
+  private onMutationError(mutationId: number, error: ApolloError): never {
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
     if (this.isMostRecentMutation(mutationId)) {
       this.loading = false;
       this.data = null;

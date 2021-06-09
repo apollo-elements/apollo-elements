@@ -18,8 +18,3 @@ export function isEmpty(x: ObjectOrArray): boolean {
   const { length } = Array.isArray(x) ? x : Object.keys(x);
   return !length;
 }
-
-/** Capitalize a string */
-export function capital(string: string): string {
-  return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
-}

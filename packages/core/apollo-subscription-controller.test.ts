@@ -75,6 +75,7 @@ describe('[core] ApolloSubscriptionController', function() {
         expect(element.subscription.options, 'options').to.be.empty;
         expect(element.subscription.subscription, 'query').to.not.be.ok;
         expect(element.subscription.variables, 'variables').to.not.be.ok;
+        expect(element.subscription.canAutoSubscribe, 'canAutoSubscribe').to.be.false;
         /* eslint-enable max-len */
       });
 
@@ -232,6 +233,10 @@ describe('[core] ApolloSubscriptionController', function() {
           (element.subscription.client?.subscribe as SinonSpy).restore?.();
         });
 
+        it('cannot auto subscribe', function() {
+          expect(element.subscription.canAutoSubscribe).to.be.false;
+        });
+
         it('reads document from query', function() {
           expect(element.subscription.subscription)
             .to.be.ok
@@ -317,6 +322,10 @@ describe('[core] ApolloSubscriptionController', function() {
         afterEach(function teardownElement() {
           element.remove();
           element = undefined as unknown as typeof element;
+        });
+
+        it('cannot auto subscribe', function() {
+          expect(element.subscription.canAutoSubscribe).to.be.false;
         });
 
         it('does not subscribe', function() {
@@ -670,6 +679,24 @@ describe('[core] ApolloSubscriptionController', function() {
                   nullable: 'אין עוד מלבדו',
                 },
               });
+          });
+        });
+
+        describe('removing then appending the element', function() {
+          beforeEach(function() {
+            spy(element.subscription, 'subscribe');
+          });
+
+          beforeEach(function() {
+            const container = element.parentElement!;
+            element.remove();
+            container.append(element);
+          });
+
+          beforeEach(nextFrame);
+
+          it('resubscribes on connect', function() {
+            expect(element.subscription.subscribe).to.have.been.called;
           });
         });
       });

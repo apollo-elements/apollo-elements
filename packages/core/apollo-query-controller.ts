@@ -29,11 +29,11 @@ import { bound } from './lib/bound';
 export interface ApolloQueryControllerOptions<D, V> extends
     ApolloControllerOptions<D, V>,
     Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
-  variables?: Variables<D, V>,
+  variables?: Variables<D, V>;
   noAutoSubscribe?: boolean;
   shouldSubscribe?: (options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>) => boolean;
   onData?: (data: Data<D>) => void;
-  onError?: (error: ApolloError) => void;
+  onError?: (error: Error) => void;
 }
 
 export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
@@ -43,28 +43,54 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   private pollingInterval?: number;
 
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  /** @summary Options to customize the query and to interface with the controller. */ // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
   declare options: ApolloQueryControllerOptions<D, V>;
 
+  /**
+   * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)
+   * depending on your network status as it provides a more detailed view into the state of a network request
+   * on your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.
+   * These number values each represent a different network state.
+   *
+   * 1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.
+   * 2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.
+   * 3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.
+   * 4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.
+   * 5. Unused.
+   * 6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.
+   * 7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.
+   * 8. `error`: No request is in flight for this query, but one or more errors were detected.
+   *
+   * If the network status is less then 7 then it is equivalent to `loading` being true. In fact you could
+   * replace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.
+   * It is recommended that you use `loading`, however.
+   */
   networkStatus = NetworkStatus.ready;
 
+  /**
+   * If data was read from the cache with missing fields,
+   * partial will be true. Otherwise, partial will be falsy.
+   *
+   * @summary True when the query returned partial data.
+   */
   partial = false;
 
   #hasDisconnected = false;
 
   #lastQueryDocument?: DocumentNode;
 
+  /** @summary A GraphQL document containing a single query. */
   get query(): ComponentDocument<D> | null { return this.document; }
 
   set query(document: ComponentDocument<D> | null) { this.document = document; }
 
-  /** Flags an element that's ready and able to auto-subscribe */
+  /** @summary Flags an element that's ready and able to auto-subscribe */
   public get canAutoSubscribe(): boolean {
     return (
       !!this.client &&
       !!this.document &&
       !this.options.noAutoSubscribe &&
-      (this.options?.shouldSubscribe?.() ?? true)
+      this.shouldSubscribe()
     );
   }
 
@@ -74,12 +100,13 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(query ?? null);
+    this.init(query ?? null);/* c8 ignore next */
   }
 
+  /** @summary initializes or reinitializes the query */
   override hostConnected(): void {
     super.hostConnected();
-    if (this.#hasDisconnected && this.observableQuery) {
+    if (this.#hasDisconnected && this.observableQuery) { /* c8 ignore next */
       this.observableQuery.reobserve();
       this.#hasDisconnected = false;
     } else
@@ -89,6 +116,10 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
   override hostDisconnected(): void {
     this.#hasDisconnected = true;
     super.hostDisconnected();
+  }
+
+  private shouldSubscribe(opts?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean {
+    return this.options.shouldSubscribe?.(opts) ?? true;/* c8 ignore next */
   }
 
   /**
@@ -137,51 +168,47 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       returnPartialData: this.options.returnPartialData,
       nextFetchPolicy: this.options.nextFetchPolicy,
       ...params,
-    });
+    }) as ObservableQuery<Data<D>, Variables<D, V>>;
   }
 
   private nextData(result: ApolloQueryResult<Data<D>>): void {
+    this.emitter.dispatchEvent(new CustomEvent('apollo-query-result', { detail: result }));
     this.data = result.data;
-    this.error = result.error ?? null;
+    this.error = result.error ?? null;/* c8 ignore next */
     this.errors = result.errors ?? [];
-    this.loading = result.loading ?? false;
+    this.loading = result.loading ?? false;/* c8 ignore next */
     this.networkStatus = result.networkStatus;
     this.partial = result.partial ?? false;
-    this.options.onData?.(result.data);
+    this.options.onData?.(result.data);/* c8 ignore next */
     this.notify('data', 'error', 'errors', 'loading', 'networkStatus', 'partial');
   }
 
   private nextError(error: ApolloError): void {
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
     this.error = error;
     this.loading = false;
-    this.options.onError?.(error);
+    this.options.onError?.(error);/* c8 ignore next */
     this.notify('error', 'loading');
   }
 
   protected override clientChanged(): void {
-    if (this.canSubscribe() && (this.options.shouldSubscribe?.() ?? true))
-      this.subscribe();
+    if (this.canSubscribe() && this.shouldSubscribe())/* c8 ignore next */
+      this.subscribe();/* c8 ignore next */
   }
 
   protected override documentChanged(doc?: ComponentDocument<D> | null): void {
-    const query = doc ?? undefined;
+    const query = doc ?? undefined;/* c8 ignore next */
     if (doc === this.#lastQueryDocument)
-      return;
-    if (
-      this.canSubscribe({ query }) &&
-      (this.options.shouldSubscribe?.({ query }) ?? true)
-    )
+      return;/* c8 ignore next */
+    if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))/* c8 ignore next */
       this.subscribe({ query }); /* c8 ignore next */ // covered
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     if (this.observableQuery)
-      this.refetch(variables);
-    else if (
-      this.canSubscribe({ variables }) &&
-      (this.options.shouldSubscribe?.({ variables }) ?? true)
-    )
-      this.subscribe({ variables });
+      this.refetch(variables);/* c8 ignore next */
+    else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))/* c8 ignore next */
+      this.subscribe({ variables });/* c8 ignore next */
   }
 
   /**
@@ -220,7 +247,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       ...params,
     });
 
-    this.#lastQueryDocument = params?.query ?? this.query ?? undefined;
+    this.#lastQueryDocument = params?.query ?? this.query ?? undefined;/* c8 ignore next */
 
     this.loading = true;
     this.notify('loading');
@@ -249,7 +276,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    * @summary Executes a Query once and updates the with the result
    */
   @bound public async executeQuery(
-    params?: Partial<QueryOptions<Variables<D, V>>>
+    params?: Partial<QueryOptions<Variables<D, V>, Data<D>>>
   ): Promise<ApolloQueryResult<Data<D>>> {
     try {
       if (!this.client)
@@ -258,15 +285,14 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       this.loading = true;
       this.notify('loading');
 
-      const result = await this.client.query({
-        // It's better to let Apollo client throw this error
+      const result = await this.client.query<Data<D>, Variables<D, V>>({
+        // It's better to let Apollo client throw this error, if needs be
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        query: this.query!,
-        variables: this.variables,
+        query: this.query!, variables: this.variables!,
         context: this.options.context,
         errorPolicy: this.options.errorPolicy,
         fetchPolicy:
-            this.options.fetchPolicy === 'cache-and-network' ? undefined
+            this.options.fetchPolicy === 'cache-and-network' ? undefined/* c8 ignore next */
           : this.options.fetchPolicy,
         notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
         partialRefetch: this.options.partialRefetch,
@@ -275,7 +301,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       });
       if (result) // NB: not sure why, but sometimes this returns undefined
         this.nextData(result);
-      return result;
+      return result;/* c8 ignore next */
     } catch (error) {
       this.nextError(error);
       throw error;
@@ -313,7 +339,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       )
     ).fetchMore({
       ...options,
-      variables: (options.variables as Variables<D, V>) ?? undefined,
+      variables: (options.variables as Variables<D, V>) ?? undefined, /* c8 ignore next */
     }).then(x => {
       this.loading = false;
       this.notify('loading');
