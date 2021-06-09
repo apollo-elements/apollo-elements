@@ -31,7 +31,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
-    "analyze": "echo 'No analyze step for hybrids'",
+    "analyze": "custom-elements-manifest analyze",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
@@ -62,5 +62,6 @@
     "@lit/reactive-element": "^1.0.0-rc.2",
     "hybrids": "^5.3.3",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }
