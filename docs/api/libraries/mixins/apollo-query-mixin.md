@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './apollo-query-mixin.js'
+module: 'apollo-query-mixin.js'
 ---
 
 # Web Component Libraries >> Class Mixins >> ApolloQueryMixin || 20

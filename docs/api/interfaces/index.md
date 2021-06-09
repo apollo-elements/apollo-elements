@@ -1,7 +1,7 @@
 ---
 layout: layout-api-index
 package: '@apollo-elements/interfaces'
-module: './index.ts'
+module: 'index.ts'
 ---
 # Interfaces || 20
 

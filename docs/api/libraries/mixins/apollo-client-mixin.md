@@ -1,12 +1,14 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './apollo-client-mixin.js'
+module: 'apollo-client-mixin.js'
 ---
 
 # Web Component Libraries >> Class Mixins >> ApolloClientMixin
 
-Mixin which associates an ApolloClient instance with a custom element class.
+Mixin which associates an `ApolloClient` instance with a custom element class.
+
+See [Usage: Apollo Client](/guides/usage/apollo-client/) for examples and alternatives.
 
 ```js
 import { ApolloQueryElement } from '@apollo-elements/interfaces';

@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/lit-apollo'
-module: './apollo-mutation.js'
+module: 'apollo-mutation.js'
 ---
 # Web Component Libraries >> Lit >> ApolloMutation || 30
 

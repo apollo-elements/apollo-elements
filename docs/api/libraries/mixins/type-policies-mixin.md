@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './type-policies-mixin.js'
+module: 'type-policies-mixin.js'
 ---
 
 # Web Component Libraries >> Class Mixins >> TypePoliciesMixin

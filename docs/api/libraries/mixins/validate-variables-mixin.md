@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/mixins'
-module: './validate-variables-mixin.js'
+module: 'validate-variables-mixin.js'
 ---
 
 # Web Component Libraries >> Class Mixins >> ValidateVariablesMixin

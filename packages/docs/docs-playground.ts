@@ -172,6 +172,10 @@ export class DocsPlayground extends HTMLElement {
 <head>
   <link rel="stylesheet" href="style.css"/>
   <script type="module" src="apollo-elements.js"></script>
+  <script type="module">
+    import * as AE from '@apollo-elements/core';
+    console.log(AE);
+  </script>
 </head>
 <body>
 <!-- playground-hide-end -->
@@ -191,6 +195,10 @@ ${content}
 
   get button(): HTMLButtonElement {
     return this.$('button') as HTMLButtonElement;
+  }
+
+  get file(): string {
+    return this.getAttribute('file') ?? 'index.html';
   }
 
   playgroundUrl = 'https://unpkg.com/playground-elements@0.9.4?module';
@@ -228,23 +236,34 @@ ${content}
     this.init(config);
   }
 
+  static async fetchScript(url: string): Promise<string> {
+    return fetch(new URL(url, location.origin).toString()).then(x => x.text());
+  }
+
   async init(config: ProjectManifest) {
     const content = this.textContent.trim();
-    const pathname = new URL('/_assets/_static/apollo-elements.js', location.origin).toString();
-    this.playgroundIde.config = {
-      ...config,
-      files: {
-        'index.html': {
-          contentType: 'text/html',
-          content: DocsPlayground.makePreview(content),
-        },
-        'apollo-elements.js': {
-          content: await fetch(pathname).then(x => x.text()),
-          hidden: true,
-        },
-        ...config.files,
-      }
-    }
+    const files = Object.fromEntries(Object.entries({
+      [this.file]: { content: content },
+      'apollo-client.js': {
+        content: await DocsPlayground.fetchScript('/_assets/_static/apollo-client.js'),
+        contentType: 'application/javascript',
+        hidden: true,
+      },
+      'apollo-elements.js': {
+        content: await DocsPlayground.fetchScript('/_assets/_static/apollo-elements.js'),
+        contentType: 'application/javascript',
+        hidden: true,
+      },
+      'style.css': {
+        content: ''
+      },
+      ...config.files,
+    }).map(([k, v]) => [k, k !== 'index.html' ? v : ({
+      ...v,
+      contentType: k.endsWith('js') ? 'application/javascript' : v.contentType,
+      content: DocsPlayground.makePreview(v.content),
+    })]));
+    this.playgroundIde.config = { ...config, files }
   }
 
   async importPlayground() {

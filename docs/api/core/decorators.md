@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/core'
-module: './decorators.js'
+module: 'decorators.js'
 description: Property Decorators for Apollo Elements
 ---
 # Core >> Decorators || 50

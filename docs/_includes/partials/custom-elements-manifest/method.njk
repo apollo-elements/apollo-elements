@@ -5,7 +5,7 @@
     data-method="{{ method.name }}"
     {{ ('data-inherited-from='+method.inheritedFrom.name) if method.inheritedFrom}}>
   <span slot="name">
-    {% if method.privacy == 'protected' %}<em>protected</em>{% endif %}
+    {% if method.privacy %}<em>{{ method.privacy }}</em>{% endif %}
     {% if method.async %}<em>async</em>{% endif %}
     {{ linkHeading(method.name) }}
     {% if method.optional %}<span>(optional)</span>{% endif %}

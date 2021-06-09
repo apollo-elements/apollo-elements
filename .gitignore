@@ -44,7 +44,7 @@ _site-dev
 _site
 
 ## Apollo Elements docs ignores
-docs/_data/cems
+docs/_data/customElementsManifests
 *.draft.md
 packages/*/docs/*.yml
 

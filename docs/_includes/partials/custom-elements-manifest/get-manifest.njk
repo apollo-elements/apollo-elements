@@ -1,8 +1,8 @@
 {% set pkgParts = (package | split('/')) %}
 {% if (pkgParts | length) > 1 %}
-  {% set manifest = (cems[pkgParts | first][pkgParts | last]['custom-elements-manifest']) %}
-  {% set packageJson = (cems[pkgParts | first][pkgParts | last]['package']) %}
+  {% set manifest = (customElementsManifests[pkgParts | first][pkgParts | last]['custom-elements']) %}
+  {% set packageJson = (customElementsManifests[pkgParts | first][pkgParts | last]['package']) %}
 {% else %}
-  {% set manifest = (cems[pkgParts | first]['custom-elements-manifest']) %}
-  {% set packageJson = (cems[pkgParts | first]['package']) %}
+  {% set manifest = (customElementsManifests[pkgParts | first]['custom-elements']) %}
+  {% set packageJson = (customElementsManifests[pkgParts | first]['package']) %}
 {% endif %}

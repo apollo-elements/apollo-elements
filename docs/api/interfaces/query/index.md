@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/interfaces'
-module: './apollo-query.ts'
+module: 'apollo-query.ts'
 ---
 # Interfaces >> ApolloQuery || 10
 

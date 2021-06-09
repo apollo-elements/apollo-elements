@@ -9,6 +9,8 @@ export class TypeDoc extends LitElement {
 
   @property({ type: Boolean, reflect: true }) expanded = false;
 
+  @property({ type: Boolean, attribute: 'data-empty-body' }) emptyBody = false;
+
   render(): TemplateResult {
     const isInherited = this.hasAttribute('data-inherited-from');
     const { expanded } = this;
@@ -26,6 +28,7 @@ export class TypeDoc extends LitElement {
               aria-label="Toggle details"
               aria-expanded="${expanded}"
               aria-controls="body"
+              ?disabled="${this.emptyBody}"
               @click="${this.toggleInherited}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M0 0h24v24H0z" fill="none"/>
@@ -53,6 +56,6 @@ export class TypeDoc extends LitElement {
   }
 
   private toggleInherited() {
-    this.expanded = !this.expanded;
+    this.expanded = !this.emptyBody && !this.expanded;
   }
 }
