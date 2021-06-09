@@ -1,5 +1,7 @@
 import type * as I from '@apollo-elements/interfaces';
 
+import type { DocumentNode, ApolloError } from '@apollo/client/core';
+
 import { gql } from '@apollo/client/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
@@ -10,26 +12,25 @@ const SELECTORS = {
   VAR: 'script[type="application/json"]' as 'script',
 };
 
-export declare class GQLScriptChild<
-  D extends I.MaybeTDN = I.MaybeTDN,
-  V = I.MaybeVariables<D>
-> extends I.ApolloElementElement<D, V> {
-  getDOMGraphQLDocument(): Promise<this['document']>;
-  getDOMVariables(): Promise<this['variables']>;
-}
-
 function stripHTMLComments(string: string): string {
   return string.replace?.(/<!---->/g, '');
 }
 
+type Instance = {
+  new <
+    D extends I.MaybeTDN = I.MaybeTDN,
+    V = I.MaybeVariables<D>
+  >(...args: any[]): I.ApolloElementElement<D, V>
+}
+
 function GraphQLScriptChildMixinImplementation<
-  B extends I.Constructor<I.ApolloElementElement<any, any>>
->(superclass: B): B & I.Constructor<GQLScriptChild> {
+  B extends I.Constructor<I.CustomElement & {
+    document: DocumentNode|null;
+    variables: unknown|null;
+    error: Error|ApolloError|null;
+  }>
+>(superclass: B): B {
   class GraphQLScriptChild extends superclass {
-    declare _documentSetByJS: boolean;
-
-    declare _variablesSetByJS: boolean;
-
     /** Updates the element state in reaction to GraphQL or JSON script child changes. */
     private mo?: MutationObserver;
 
@@ -58,24 +59,9 @@ function GraphQLScriptChildMixinImplementation<
       }
     }
 
-    /**
-     * @summary Get a GraphQL DocumentNode from the element's GraphQL script child
-     * @protected
-     */
-    async getDOMGraphQLDocument(): Promise<this['document']> {
-      const script = this.querySelector(SELECTORS.GQL);
-      /* c8 ignore start */ // covered
-      if (script?.src)
-        return await fetch(script?.src).then(x => x.text()).then(x => this.parseGQL(x));
-      else if (!script?.innerText)
-        return null;
-      else
-        return this.parseGQL(script.innerText);
-    }
-
     private parseGQL(text: string): this['document'] {
       try {
-        return gql(stripHTMLComments(text));
+        return gql(stripHTMLComments(text)); /* c8 ignore next */ // covered
       } catch (err) {
         this.error = err;
         return null;
@@ -90,11 +76,30 @@ function GraphQLScriptChildMixinImplementation<
       }
     }
 
+    private async fetchDocument(url: string): Promise<this['document']> {
+      return fetch(url)
+        .then(x => x.text())
+        .then(x => this.parseGQL(x));
+    }
+
+    /**
+     * @summary Get a GraphQL DocumentNode from the element's GraphQL script child
+     */
+    protected async getDOMGraphQLDocument(): Promise<this['document']> {
+      const script = this.querySelector(SELECTORS.GQL);
+      /* c8 ignore start */ // covered
+      if (script?.src)
+        return this.fetchDocument(script.src);
+      else if (!script?.innerText)
+        return null;
+      else
+        return this.parseGQL(script.innerText);
+    }
+
     /**
      * @summary Gets operation variables from the element's JSON script child
-     * @protected
      */
-    getDOMVariables(): this['variables'] {
+    protected getDOMVariables(): this['variables'] {
       const script = this.querySelector(SELECTORS.VAR);
       if (!script)
         return null;
@@ -105,6 +110,11 @@ function GraphQLScriptChildMixinImplementation<
         return this.parseVariables(script.innerText);
     }
 
+    /**
+     * Initializes a `MutationObserver` which watches for changes the the element's children.
+     * When a `<script type="application/graphql">` or `<script type="application/json">`
+     * is appended, the mixin asynchrously sets the `document` or `variables`.
+     */
     override async connectedCallback(): Promise<void> {
       this.mo = new MutationObserver(this.onDOMMutation.bind(this));
       this.mo.observe(this, { characterData: true, childList: true, subtree: true });
@@ -113,6 +123,9 @@ function GraphQLScriptChildMixinImplementation<
       super.connectedCallback?.();
     }
 
+    /**
+     * Disconnects the `MutationObserver`.
+     */
     override disconnectedCallback(): void {
       super.disconnectedCallback?.();
       this.mo?.disconnect();

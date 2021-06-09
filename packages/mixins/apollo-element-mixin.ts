@@ -7,7 +7,7 @@ import type {
 
 import type * as I from '@apollo-elements/interfaces';
 
-import type { ApolloController, ApolloControllerHost } from '@apollo-elements/core';
+import type { ApolloController, ApolloElementElement } from '@apollo-elements/core';
 
 import { ControllerHostMixin } from './controller-host-mixin';
 
@@ -19,7 +19,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 type MixinInstance<B extends I.Constructor<HTMLElement>> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
-    I.ApolloElementInterface<D, V> & ApolloControllerHost;
+    ApolloElementElement<D, V>;
   documentType: 'mutation'|'query'|'subscription';
   observedAttributes?: string[];
 }
@@ -59,12 +59,7 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
      * @summary Operation variables.
      * An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.
      */
-    @controlled({
-      onSet(this: ApolloElement, variables: I.Variables<D, V>) {
-        if (this.readyToReceiveDocument)
-          this.variablesChanged?.(variables);
-      },
-    }) variables: I.Variables<D, V> | null = null;
+    @controlled() variables: I.Variables<D, V> | null = null;
 
     /** @summary Latest error. */
     @controlled() error: Error | ApolloError | null = null;
@@ -81,7 +76,14 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
     /** @summary Context passed to the link execution chain. */
     @controlled({ path: 'options' }) context?: Record<string, unknown>;
 
-    /** @summary Error Policy for the operation. */
+    /**
+     * errorPolicy determines the level of events for errors in the execution result. The options are:
+     * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
+     * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
+     * - `all`: errors are treated like data and will notify observables
+     * @summary [Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.
+     * @attr error-policy
+     */
     @controlled({ path: 'options' }) errorPolicy?: ErrorPolicy;
 
     /** @summary True when the element is connected and ready to receive its GraphQL document */
