@@ -34,7 +34,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "analyze": "wca analyze --format json --outFile custom-elements.json",
+    "analyze": "custom-elements-manifest analyze",
     "test": "run-s test:*",
     "test:types": "tsc --noEmit",
     "test:runtime": "wtr --coverage --config ../../web-test-runner.config.js './*.test.ts'"
@@ -67,5 +67,6 @@
     "@open-wc/dedupe-mixin": "^1.3.0",
     "bind-decorator": "^1.0.11",
     "tslib": "^2.2.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

@@ -1,47 +1,29 @@
-import type { ReactiveControllerHost } from '@lit/reactive-element';
-
 import type * as C from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
 
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
-
-import { ApolloElementMixin } from './apollo-element-mixin';
-import { controlled } from '@apollo-elements/core/decorators';
+import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
 
 import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
-import { update } from '@apollo-elements/core/apollo-controller';
+import { ApolloElementMixin } from './apollo-element-mixin';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { controlled } from '@apollo-elements/core/decorators';
 
-type P<T extends ApolloSubscriptionController<any, any>, K extends keyof T> =
-  T[K] extends (...args: any[]) => unknown
-  ? Parameters<T[K]>
-  : never
-
-type ApolloSubscriptionResultEvent<TData = unknown> =
-  CustomEvent<I.OnSubscriptionDataParams<TData>>;
-
-declare global {
-  interface HTMLElementEventMap {
-    'apollo-subscription-result': ApolloSubscriptionResultEvent;
-  }
-}
-
-type MixinInstance<B> = B & {
+type MixinInstance<B extends I.Constructor> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>(...a: any[]):
-    I.ApolloSubscriptionInterface<D, V> & ReactiveControllerHost;
+    InstanceType<B> & ApolloSubscriptionElement<D, V>;
   documentType: 'subscription';
 }
 
-function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinInstance<B> {
-  class ApolloSubscriptionElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-    extends ApolloElementMixin(base)<D, V>
-    implements Omit<I.ApolloSubscriptionInterface<D, V>, 'canSubscribe'> {
+function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): MixinInstance<B> {
+  class MixedApolloSubscriptionElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+    extends ApolloElementMixin(superclass)<D, V> {
     static override documentType = 'subscription' as const;
 
     static override get observedAttributes(): string[] {
       return [
-        ...super.observedAttributes ?? [],
+        ...super.observedAttributes as string[],
         'no-auto-subscribe',
       ];
     }
@@ -61,10 +43,9 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinIns
     declare variables: I.Variables<D, V> | null;
 
     controller = new ApolloSubscriptionController<D, V>(this, null, {
-      [update]: (properties: Partial<this>) => this[update]?.(properties),
       shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
-      onData: data => this.onSubscriptionData?.(data),
-      onComplete: () => this.onSubscriptionComplete?.(),
+      onData: data => this.onSubscriptionData?.(data), /* c8 ignore next */ // covered
+      onComplete: () => this.onSubscriptionComplete?.(), /* c8 ignore next */ // covered
       onError: error => this.onError?.(error),
     });
 
@@ -102,8 +83,8 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinIns
 
     onError?(error: C.ApolloError): void
 
-    public subscribe(...p: P<this['controller'], 'subscribe'>): void {
-      return this.controller.subscribe(...p);
+    public subscribe(params?: Partial<I.SubscriptionDataOptions<D, V>>): void {
+      return this.controller.subscribe(params);
     }
 
     public cancel(): void {
@@ -122,7 +103,7 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(base: B): MixinIns
     }
   }
 
-  return ApolloSubscriptionElement;
+  return MixedApolloSubscriptionElement as MixinInstance<B>;
 }
 
 /**

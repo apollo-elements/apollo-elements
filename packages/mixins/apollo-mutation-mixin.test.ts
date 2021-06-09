@@ -22,15 +22,12 @@ import { isApolloError } from '@apollo/client/core';
 
 import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 
-class XL extends HTMLElement {
-  hi?: 'hi';
-}
 
 /**
  * Testable Mixed-in Apollo Mutation class
  */
 class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloMutationMixin(XL)<D, V>
+  extends ApolloMutationMixin(class XL extends HTMLElement { hi?: 'hi'; })<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
   static get template() {
@@ -58,6 +55,7 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
 
   update() {
     this.render();
+    super.update();
   }
 
   render() {

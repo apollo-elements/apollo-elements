@@ -11,15 +11,21 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
+import * as S from '@apollo-elements/test/schema';
+
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
+import { makeClient, teardownClient } from '@apollo-elements/test';
+
 import { NetworkStatus } from '@apollo/client/core';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
+
+import { spy } from 'sinon';
 
 class XL extends HTMLElement {
   hi?: 'hi';
@@ -113,6 +119,69 @@ describe('[mixins] ApolloQueryMixin', function() {
         'next-fetch-policy',
         'no-auto-subscribe',
       ]);
+    });
+  });
+
+  describe('basic instance', function() {
+    let element: ApolloQueryInterface<any, any>;
+    beforeEach(async function() {
+      const tag = defineCE(ApolloQueryMixin(HTMLElement));
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+    describe('setting nextFetchPolicy', function() {
+      beforeEach(() => element.nextFetchPolicy = 'cache-and-network');
+      beforeEach(nextFrame);
+      it('sets attribute', function() {
+        expect(element.getAttribute('next-fetch-policy')).to.equal('cache-and-network');
+      });
+      describe('then unsetting nextFetchPolicy', function() {
+        beforeEach(() => element.nextFetchPolicy = undefined);
+        beforeEach(nextFrame);
+        it('removes attribute', function() {
+          expect(element.hasAttribute('next-fetch-policy')).to.be.false;
+        });
+      });
+      describe('then setting nextFetchPolicy with a function', function() {
+        beforeEach(() => element.nextFetchPolicy = () => 'cache-first');
+        beforeEach(nextFrame);
+        it('removes attribute', function() {
+          expect(element.hasAttribute('next-fetch-policy')).to.be.false;
+        });
+      });
+    });
+  });
+
+  describe('with onData and onError', function() {
+    let element: ApolloQueryInterface<any, any>;
+    const s = spy();
+    beforeEach(async function() {
+      const tag = defineCE(class extends ApolloQueryMixin(HTMLElement)<any, any> {
+        client = makeClient();
+        onData(x: unknown) { s(x); }
+        onError(x: Error) { s(x); }
+      });
+      element = await fixture(`<${tag}></${tag}>`);
+    });
+    afterEach(() => s.resetHistory());
+    afterEach(teardownClient);
+    describe('resolving a query', function() {
+      beforeEach(() => element.executeQuery({ query: S.NullableParamQuery }));
+      beforeEach(nextFrame);
+      it('calls onData', function() {
+        expect(s).to.have.been.calledOnce;
+      });
+    });
+    describe('getting a query error', function() {
+      beforeEach(() => element.executeQuery({
+        query: S.NullableParamQuery,
+        variables: {
+          nullable: 'error',
+        },
+      }).catch(() => null));
+      beforeEach(nextFrame);
+      it('calls onError', function() {
+        expect(s).to.have.been.calledOnce;
+      });
     });
   });
 });

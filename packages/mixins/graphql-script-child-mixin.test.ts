@@ -25,7 +25,7 @@ import {
   ApolloQueryElement,
   ApolloMutationElement,
   ApolloSubscriptionElement,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import HelloQuery from '@apollo-elements/test/graphql/Hello.query.graphql';
 import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
@@ -42,11 +42,13 @@ import {
   waitForRender,
 } from '@apollo-elements/test';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 
 import { GraphQLScriptChildMixin } from './graphql-script-child-mixin';
+
+import { stub, SinonStub } from 'sinon';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -244,6 +246,39 @@ describe('GraphQLScriptChildMixin', function() {
         it('gets document from DOM', function() {
           expect(element.document).to.deep.equal(gql`{ perek { pasuk } }`);
         });
+      });
+    });
+
+    describe('with GraphQL script src child', function() {
+      let element: Test;
+
+      beforeEach(function() {
+        const s = stub(window, 'fetch');
+        s.returns(Promise.resolve(new Response('query { x }')));
+      });
+
+      afterEach(function() {
+        (window.fetch as SinonStub).restore();
+      });
+
+      beforeEach(async function() {
+        const tag = unsafeStatic(defineCE(class extends Test {}));
+
+        element = await fixture<Test>(h`
+          <${tag}>
+            <script type="application/graphql" src="/query.graphql"></script>
+          </${tag}>
+        `);
+      });
+
+      beforeEach(() => aTimeout(100));
+
+      it('fetches the script', async function() {
+        expect(window.fetch).to.have.been.calledWith(`${window.location.origin}/query.graphql`);
+      });
+
+      it('sets the document', async function() {
+        expect(element.document).to.deep.equal(gql`query { x }`);
       });
     });
 
@@ -626,30 +661,30 @@ async function TypeCheck() {
       assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
       assertType<Record<string, unknown>>             (this.context!);
       assertType<boolean>                             (this.loading);
-      assertType<C.DocumentNode>                        (this.document!);
+      assertType<C.DocumentNode>                      (this.document!);
       assertType<Error>                               (this.error!);
-      assertType<readonly I.GraphQLError[]>             (this.errors!);
+      assertType<readonly I.GraphQLError[]>           (this.errors!);
       assertType<string>                              (this.error.message);
       if (isApolloError(this.error))
-        assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+        assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
     }
   }
 
   class TypeCheckLitApolloElement extends GraphQLScriptChildMixin(LitApolloElement) {
     typeCheck(): void {
-      assertType<Promise<unknown>>                   (this.updateComplete);
-      assertType<LitElement>                         (this);
+      assertType<Promise<unknown>>                        (this.updateComplete);
+      assertType<LitElement>                              (this);
 
       // ApolloElementInterface
       assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
-      assertType<Record<string, unknown>>             (this.context!);
-      assertType<boolean>                             (this.loading);
-      assertType<C.DocumentNode>                        (this.document!);
-      assertType<Error>                               (this.error!);
-      assertType<readonly I.GraphQLError[]>             (this.errors!);
-      assertType<string>                              (this.error.message);
+      assertType<Record<string, unknown>>                 (this.context!);
+      assertType<boolean>                                 (this.loading);
+      assertType<C.DocumentNode>                          (this.document!);
+      assertType<Error>                                   (this.error!);
+      assertType<readonly I.GraphQLError[]>               (this.errors!);
+      assertType<string>                                  (this.error.message);
       if (isApolloError(this.error))
-        assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+        assertType<readonly I.GraphQLError[]>             (this.error.graphQLErrors);
     }
   }
 
@@ -661,32 +696,32 @@ async function TypeCheck() {
 
       // ApolloElementInterface
       assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
-      assertType<Record<string, unknown>>             (this.context!);
-      assertType<boolean>                             (this.loading);
-      assertType<C.DocumentNode>                        (this.document!);
-      assertType<Error>                               (this.error!);
-      assertType<readonly I.GraphQLError[]>             (this.errors!);
-      assertType<D>                                   (this.data!);
-      assertType<string>                              (this.error.message);
-      assertType<'a'>                                 (this.data.a);
+      assertType<Record<string, unknown>>                 (this.context!);
+      assertType<boolean>                                 (this.loading);
+      assertType<C.DocumentNode>                          (this.document!);
+      assertType<Error>                                   (this.error!);
+      assertType<readonly I.GraphQLError[]>               (this.errors!);
+      assertType<D>                                       (this.data!);
+      assertType<string>                                  (this.error.message);
+      assertType<'a'>                                     (this.data.a);
       // @ts-expect-error: b as number type
       assertType<'a'>                                 (this.data.b);
       assertType<V>                                   (this.variables);
       assertType<'d'>                                 (this.variables.d);
       assertType<number>                              (this.variables.e);
       if (isApolloError(this.error))
-        assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+        assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
 
       // ApolloQueryInterface
-      assertType<C.DocumentNode>                        (this.query!);
-      assertType<C.ErrorPolicy>                         (this.errorPolicy!);
+      assertType<C.DocumentNode>                      (this.query!);
+      assertType<C.ErrorPolicy>                       (this.errorPolicy!);
       // @ts-expect-error: ErrorPolicy is not a number
       assertType<number>                              (this.errorPolicy);
-      assertType<C.WatchQueryFetchPolicy>               (this.fetchPolicy!);
+      assertType<C.WatchQueryFetchPolicy>             (this.fetchPolicy!);
       assertType<string>                              (this.fetchPolicy);
       if (typeof this.nextFetchPolicy !== 'function')
-        assertType<C.WatchQueryFetchPolicy>             (this.nextFetchPolicy!);
-      assertType<C.NetworkStatus>                       (this.networkStatus);
+        assertType<C.WatchQueryFetchPolicy>           (this.nextFetchPolicy!);
+      assertType<C.NetworkStatus>                     (this.networkStatus);
       assertType<number>                              (this.networkStatus);
       // @ts-expect-error: NetworkStatus is not a string
       assertType<string>                              (this.networkStatus);
@@ -696,7 +731,7 @@ async function TypeCheck() {
       assertType<boolean>                             (this.partialRefetch!);
       assertType<boolean>                             (this.returnPartialData!);
       assertType<boolean>                             (this.noAutoSubscribe);
-      assertType <Partial<C.WatchQueryOptions<V, D>>>   (this.options!);
+      assertType <Partial<C.WatchQueryOptions<V, D>>> (this.options!);
     }
   }
 

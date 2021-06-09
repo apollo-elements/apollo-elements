@@ -1,38 +1,26 @@
-import type { ReactiveControllerHost } from '@lit/reactive-element';
-
 import type * as C from '@apollo/client/core';
 
 import type * as I from '@apollo-elements/interfaces';
+
+import type { ApolloMutationElement } from '@apollo-elements/core/types';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
-import { update } from '@apollo-elements/core/apollo-controller';
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
-type ApolloMutationResultEvent<TData = unknown> =
-  CustomEvent<C.FetchResult<TData>>;
-
-declare global {
-  interface HTMLElementEventMap {
-    'apollo-mutation-result': ApolloMutationResultEvent;
-  }
-}
-
 type MixinInstance<B extends I.Constructor> = B & {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
-    InstanceType<B> & I.ApolloMutationInterface<D, V> & ReactiveControllerHost & InstanceType<B>;
+    InstanceType<B> & ApolloMutationElement<D, V>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
 
-function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstance<B> {
-  class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-    extends ApolloElementMixin(base)<D, V>
-    implements I.ApolloMutationInterface<D, V> {
+function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinInstance<B> {
+  class MixedApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+    extends ApolloElementMixin(base)<D, V> {
     static override documentType = 'mutation' as const;
 
     static get observedAttributes(): string[] {
@@ -44,7 +32,6 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstanc
     }
 
     controller = new ApolloMutationController<D, V>(this, null, {
-      [update]: (properties: Partial<this>) => this[update]?.(properties),
       update: this.updater,
       onCompleted: data => data && this.onCompleted?.(data),
       onError: error => this.onError?.(error),
@@ -107,7 +94,7 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): MixinInstanc
     }
   }
 
-  return ApolloMutationElement as MixinInstance<B>;
+  return MixedApolloMutationElement as MixinInstance<B>;
 }
 
 /**
