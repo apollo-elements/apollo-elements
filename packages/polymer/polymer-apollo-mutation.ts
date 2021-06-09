@@ -25,17 +25,16 @@ import { notify } from './notify-decorator';
  * <paper-button on-click="mutate">Submit</paper-button>
  * ```
  *
- * @fires 'data-changed'
- * @fires 'error-changed'
- * @fires 'errors-changed'
- * @fires 'loading-changed'
- * @fires 'called-changed'
+ * @fires data-changed
+ * @fires error-changed
+ * @fires errors-changed
+ * @fires loading-changed
+ * @fires called-changed
  */
 export class PolymerApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends ApolloMutationMixin(
     PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
-  )<D, V>
-  implements I.ApolloMutationInterface<D, V> {
+  )<D, V> {
   static readonly is = 'polymer-apollo-mutation';
 
   @notify() called = false;
