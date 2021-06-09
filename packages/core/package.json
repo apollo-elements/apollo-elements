@@ -34,7 +34,7 @@
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
     "start": "tsc -w --noEmit",
-    "analyze": "wca analyze --format json --outFile custom-elements.json",
+    "analyze": "custom-elements-manifest analyze",
     "test": "tsc --noEmit"
   },
   "publishConfig": {
@@ -60,9 +60,11 @@
   "homepage": "https://apolloelements.dev/api/interfaces",
   "dependencies": {
     "@apollo/client": "^3.3.19",
+    "lit": "^2.0.0-rc.2",
     "tslib": "^2.2.0"
   },
   "peerDependencies": {
     "graphql": "^15.4.0"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

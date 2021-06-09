@@ -55,7 +55,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
 
   #lastSubscriptionDocument?: DocumentNode;
 
-  get subscription(): ComponentDocument<D> | null { return this.document ?? null; }
+  get subscription(): ComponentDocument<D> | null { return this.document; }
 
   set subscription(document: ComponentDocument<D> | null) { this.document = document; }
 
@@ -64,7 +64,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     return (
       !!this.client &&
       !this.options.noAutoSubscribe &&
-      (this.options?.shouldSubscribe?.() ?? true)
+      this.shouldSubscribe()
     );
   }
 
@@ -74,19 +74,20 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     options?: ApolloSubscriptionControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(subscription ?? null);
+    this.init(subscription ?? null);/* c8 ignore next */
   }
 
   override hostConnected(): void {
     super.hostConnected();
+    /* c8 ignore start */ // covered
     if (this.#hasDisconnected && this.observableSubscription)
-      this.subscribe();
+      this.subscribe(); /* c8 ignore stop */
     else
       this.documentChanged(this.subscription);
   }
 
   override hostDisconnected(): void {
-    this.cancel();
+    this.endSubscription();
     this.#hasDisconnected = true;
     super.hostDisconnected();
   }
@@ -114,13 +115,14 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
       ...rest
     } = params ?? {};
 
-    if (!client)
+    if (!client) /* c8 ignore start */ // covered
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
 
-    if ((this.observable && !shouldResubscribe) || skip)
-      return;
 
-    const query = params?.subscription ?? this.subscription as DocumentNode;
+    if ((this.observable && !shouldResubscribe) || skip)
+      return; /* c8 ignore stop */
+
+    const query = params?.subscription ?? this.subscription as DocumentNode; /* c8 ignore next */
     this.#lastSubscriptionDocument = query;
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
@@ -145,11 +147,12 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
     const loading = false;
     const subscriptionData = { data, loading, error: null };
     const detail = { client, subscriptionData };
+    this.emitter.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
     this.data = data;
     this.error = null;
-    this.errors = errors;
+    this.errors = errors ?? [];
     this.loading = loading;
-    this.options.onData?.(detail);
+    this.options.onData?.(detail); /* c8 ignore next */ // covered
     this.notify('data', 'error', 'errors', 'loading');
   }
 
@@ -157,6 +160,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
    * Sets `error` and `loading` on the instance when the subscription errors.
    */
   private nextError(error: ApolloError) {
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
     this.error = error;
     this.loading = false;
     this.options.onError?.(error); /* c8 ignore next */ // covered
@@ -173,35 +177,32 @@ export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVar
   }
 
   private endSubscription() {
-    if (this.observableSubscription) {
+    if (this.observableSubscription)
       this.observableSubscription.unsubscribe();
-      this.observableSubscription = undefined;
-    }
+  }
+
+  private shouldSubscribe(opts?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean {
+    return this.options.shouldSubscribe?.(opts) ?? true; /* c8 ignore next */
   }
 
   protected override clientChanged(): void {
-    if (
-      this.canSubscribe() &&
-      (this.options.shouldSubscribe?.() ?? true)
-    ) this.subscribe();
+    if (this.canSubscribe() && this.shouldSubscribe())/* c8 ignore next */
+      this.subscribe();/* c8 ignore next */
   }
 
   protected override documentChanged(doc?: ComponentDocument<D> | null): void {
-    const query = doc ?? undefined;
+    const query = doc ?? undefined;/* c8 ignore next */
     if (doc === this.#lastSubscriptionDocument)
-      return;
+      return;/* c8 ignore next */
     this.cancel();
-    if (
-      this.canSubscribe({ query }) &&
-      (this.options.shouldSubscribe?.({ query }) ?? true)
-    )
-      this.subscribe();
+    if (this.canSubscribe({ query }) && this.shouldSubscribe({ query })) /* c8 ignore next */
+      this.subscribe();/* c8 ignore next */
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
-    if (this.canSubscribe({ variables }) && (this.options.shouldSubscribe?.({ variables }) ?? true))
-      this.subscribe();
+    if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))/* c8 ignore next */
+      this.subscribe();/* c8 ignore next */
   }
 
   /**

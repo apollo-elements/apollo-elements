@@ -20,7 +20,7 @@ import { setupClient, teardownClient } from '@apollo-elements/test';
 
 describe('[core] ApolloMutationController', function() {
   describe('without mutation or options arguments', function() {
-    let element: HTMLElement & { mutation: ApolloMutationController<any>; };
+    let element: ReactiveElement & { mutation: ApolloMutationController; };
 
     const handlers = {
       [E.ApolloControllerConnectedEvent.type]: spy(),
