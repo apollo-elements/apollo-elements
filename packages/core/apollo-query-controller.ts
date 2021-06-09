@@ -7,7 +7,7 @@ import type {
   MaybeTDN,
   MaybeVariables,
   Variables,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import type {
   ApolloError,

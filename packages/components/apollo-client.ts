@@ -5,9 +5,7 @@ import type {
   TypePolicies,
 } from '@apollo/client/core';
 
-import type { ApolloElementElement } from '@apollo-elements/interfaces';
-
-import type { ApolloController, ApolloEvent } from '@apollo-elements/core';
+import type { ApolloController, ApolloEvent, ApolloElementElement } from '@apollo-elements/core';
 
 import { bound } from '@apollo-elements/core/lib/bound';
 

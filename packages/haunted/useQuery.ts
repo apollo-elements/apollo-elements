@@ -1,4 +1,4 @@
-import type { ComponentDocument, MaybeTDN, MaybeVariables } from '@apollo-elements/interfaces';
+import type { ComponentDocument, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
 
 import { useController } from 'haunted/lib/use-controller';
 

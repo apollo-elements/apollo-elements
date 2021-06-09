@@ -7,7 +7,7 @@ import type {
   MaybeVariables,
   SubscriptionDataOptions,
   Variables,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import type {
   ApolloClient,

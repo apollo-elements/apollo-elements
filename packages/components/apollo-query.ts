@@ -15,7 +15,7 @@ import type {
   MaybeVariables,
   NextFetchPolicyFunction,
   Variables,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 

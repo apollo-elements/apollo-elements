@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 
 import type { SinonSpy } from 'sinon';
 

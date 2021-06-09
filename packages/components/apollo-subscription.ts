@@ -1,9 +1,8 @@
 import type {
-  ApolloSubscriptionInterface,
   ComponentDocument,
   MaybeTDN,
   MaybeVariables,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
@@ -67,8 +66,7 @@ declare global { interface HTMLElementTagNameMap {
  */
 @customElement('apollo-subscription')
 export class ApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends GraphQLScriptChildMixin(ApolloElement)<D, V>
-  implements Omit<ApolloSubscriptionInterface<D, V>, 'nextError'|'nextData'> {
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-subscription';
 
   controller: ApolloSubscriptionController<D, V> = new ApolloSubscriptionController<D, V>(this);

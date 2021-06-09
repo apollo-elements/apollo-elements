@@ -1,4 +1,10 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element';
@@ -14,17 +20,15 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloQueryMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V> {
-  /**
-   * Latest query data.
-   */
-  declare data: I.Data<D> | null;
+export class ApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
+  /** @summary Latest query data. */
+  declare data: Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.
    *
    * @summary Query variables.
    */
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 }

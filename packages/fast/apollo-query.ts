@@ -1,4 +1,16 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  NextFetchPolicyFunction,
+  Variables,
+} from '@apollo-elements/core/types';
+
+import type {
+  ErrorPolicy,
+  WatchQueryFetchPolicy,
+} from '@apollo/client/core';
 
 import { ApolloElement } from './apollo-element';
 import { NetworkStatus } from '@apollo/client/core';
@@ -17,19 +29,19 @@ import { hosted } from './decorators';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloQueryMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V> {
+export class ApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
   /**
    * Latest query data.
    */
-  declare data: I.Data<D> | null;
+  declare data: Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.
    *
    * @summary Query variables.
    */
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 
   @hosted()
   @attr({ converter: nullableNumberConverter })
@@ -37,17 +49,17 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
 
   @hosted({ path: 'options' })
   @attr({ attribute: 'fetch-policy' })
-  fetchPolicy?: I.ApolloQueryInterface<D, V>['fetchPolicy'];
+  fetchPolicy?: WatchQueryFetchPolicy;
 
   @hosted({ path: 'options' })
   @attr({ attribute: 'error-policy' })
-  errorPolicy?: I.ApolloQueryInterface<D, V>['errorPolicy'];
+  errorPolicy?: ErrorPolicy;
 
   @hosted({ path: 'options' })
   @attr({ attribute: 'next-fetch-policy' })
-  nextFetchPolicy?: I.ApolloQueryInterface<D, V>['nextFetchPolicy'];
+  nextFetchPolicy?: WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>;
 
   @hosted({ path: 'options' })
   @attr({ attribute: 'no-auto-subscribe', mode: 'boolean' })
-  noAutoSubscribe: I.ApolloQueryInterface<D, V>['noAutoSubscribe'] = false;
+  noAutoSubscribe = false;
 }

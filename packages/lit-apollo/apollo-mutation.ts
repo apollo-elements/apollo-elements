@@ -8,7 +8,7 @@ import type {
   ComponentDocument,
   OptimisticResponseType,
   RefetchQueriesType,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import { controlled } from '@apollo-elements/core';
 

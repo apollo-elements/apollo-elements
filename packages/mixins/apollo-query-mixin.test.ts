@@ -1,6 +1,5 @@
-import type { ApolloQueryInterface, GraphQLError } from '@apollo-elements/interfaces';
-import type { Constructor } from '@apollo-elements/interfaces';
-import type * as I from '@apollo-elements/interfaces';
+import type { Constructor, GraphQLError } from '@apollo-elements/core/types';
+import type * as I from '@apollo-elements/core/types';
 
 import type {
   ApolloClient,
@@ -83,7 +82,7 @@ describe('[mixins] ApolloQueryMixin', function() {
   describeQuery({ setupFunction, class: TestableApolloQuery });
   describe('when base does not define observedAttributes', function() {
     class TestBase extends HTMLElement { }
-    let element: TestBase & ApolloQueryInterface<any, any>;
+    let element: TestBase & I.ApolloQueryElement<any, any>;
     beforeEach(async function() {
       const tag = defineCE(ApolloQueryMixin(TestBase));
       element = await fixture(`<${tag}></${tag}>`);
@@ -105,7 +104,7 @@ describe('[mixins] ApolloQueryMixin', function() {
         return ['a'];
       }
     }
-    let element: TestBase & ApolloQueryInterface<any, any>;
+    let element: TestBase & I.ApolloQueryElement<any, any>;
     beforeEach(async function() {
       const tag = defineCE(ApolloQueryMixin(TestBase));
       element = await fixture(`<${tag}></${tag}>`);
@@ -123,7 +122,7 @@ describe('[mixins] ApolloQueryMixin', function() {
   });
 
   describe('basic instance', function() {
-    let element: ApolloQueryInterface<any, any>;
+    let element: I.ApolloQueryElement<any, any>;
     beforeEach(async function() {
       const tag = defineCE(ApolloQueryMixin(HTMLElement));
       element = await fixture(`<${tag}></${tag}>`);
@@ -152,7 +151,7 @@ describe('[mixins] ApolloQueryMixin', function() {
   });
 
   describe('with onData and onError', function() {
-    let element: ApolloQueryInterface<any, any>;
+    let element: I.ApolloQueryElement<any, any>;
     const s = spy();
     beforeEach(async function() {
       const tag = defineCE(class extends ApolloQueryMixin(HTMLElement)<any, any> {

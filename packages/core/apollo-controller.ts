@@ -15,7 +15,7 @@ import type {
   MaybeTDN,
   MaybeVariables,
   Variables,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import { isValidGql } from './lib/is-valid-gql';
 

@@ -1,6 +1,15 @@
 import type * as C from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Constructor,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  OnSubscriptionDataParams,
+  SubscriptionDataOptions,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
 
@@ -9,15 +18,15 @@ import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
-type MixinInstance<B extends I.Constructor> = B & {
+type MixinInstance<B extends Constructor> = B & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>(...a: any[]):
+  new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>(...a: any[]):
     InstanceType<B> & ApolloSubscriptionElement<D, V>;
   documentType: 'subscription';
 }
 
-function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): MixinInstance<B> {
-  class MixedApolloSubscriptionElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
+  class MixedApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
     extends ApolloElementMixin(superclass)<D, V> {
     static override documentType = 'subscription' as const;
 
@@ -31,7 +40,7 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): Mi
     /**
      * Latest subscription data.
      */
-    declare data: I.Data<D> | null;
+    declare data: Data<D> | null;
 
     /**
      * An object map from variable name to variable value, where the variables are used within the GraphQL subscription.
@@ -40,7 +49,7 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): Mi
      *
      * @summary Subscription variables.
      */
-    declare variables: I.Variables<D, V> | null;
+    declare variables: Variables<D, V> | null;
 
     controller = new ApolloSubscriptionController<D, V>(this, null, {
       shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
@@ -49,7 +58,7 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): Mi
       onError: error => this.onError?.(error),
     });
 
-    @controlled() subscription: I.ComponentDocument<D> | null = null;
+    @controlled() subscription: ComponentDocument<D> | null = null;
 
     @controlled({ readonly: true }) declare readonly canAutoSubscribe: boolean;
 
@@ -62,8 +71,8 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): Mi
     @controlled({
       path: 'options',
       onSet(
-        this: I.ApolloSubscriptionElement,
-        value: I.ApolloSubscriptionElement['noAutoSubscribe']
+        this: ApolloSubscriptionElement,
+        value: ApolloSubscriptionElement['noAutoSubscribe']
       ) {
         this.toggleAttribute('no-auto-subscribe', !!value);
       },
@@ -73,17 +82,17 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): Mi
     @controlled({ path: 'options' }) notifyOnNetworkStatusChange?: boolean;
 
     @controlled({ path: 'options' })
-    shouldResubscribe: I.SubscriptionDataOptions['shouldResubscribe'] = false;
+    shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'] = false;
 
     @controlled({ path: 'options' }) skip = false;
 
-    onSubscriptionData?(_result: I.OnSubscriptionDataParams<I.Data<D>>): void
+    onSubscriptionData?(_result: OnSubscriptionDataParams<Data<D>>): void
 
     onSubscriptionComplete?(): void
 
     onError?(error: C.ApolloError): void
 
-    public subscribe(params?: Partial<I.SubscriptionDataOptions<D, V>>): void {
+    public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void {
       return this.controller.subscribe(params);
     }
 
@@ -97,13 +106,13 @@ function ApolloSubscriptionMixinImpl<B extends I.Constructor>(superclass: B): Mi
      * @override
      */
     shouldSubscribe(
-      options?: Partial<C.SubscriptionOptions<I.Variables<D, V>, I.Data<D>>>
+      options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
     ): boolean {
       return (void options, true);
     }
   }
 
-  return MixedApolloSubscriptionElement as MixinInstance<B>;
+  return MixedApolloSubscriptionElement as unknown as MixinInstance<B>;
 }
 
 /**

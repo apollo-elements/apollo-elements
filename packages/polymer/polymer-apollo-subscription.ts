@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element';
 
@@ -29,9 +29,9 @@ import { PolymerApolloElement } from './polymer-apollo-element';
  * @fires errors-changed
  * @fires loading-changed
  */
-export class PolymerApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+export class PolymerApolloSubscription<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloSubscriptionMixin(
-    PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
+    PolymerApolloElement as unknown as Constructor<PolymerApolloElement>
   )<D, V> {
   static readonly is = 'polymer-apollo-subscription';
 }

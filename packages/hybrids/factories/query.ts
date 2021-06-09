@@ -1,4 +1,10 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  MaybeTDN,
+  MaybeVariables,
+  ComponentDocument,
+} from '@apollo-elements/core/types';
+
 import type { Descriptor } from 'hybrids';
 
 import { controller } from './controller';
@@ -17,14 +23,14 @@ import {
  */
 export function query<
   E extends HTMLElement,
-  D extends I.MaybeTDN = I.MaybeTDN,
-  V = I.MaybeVariables<D>
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
 >(
-  queryDocument?: I.ComponentDocument<D> | null,
+  queryDocument?: ComponentDocument<D> | null,
   options?: ApolloQueryControllerOptions<D, V>,
 ): Descriptor<E, ApolloQueryController<D, V>> {
   return controller(
-    ApolloQueryController as I.Constructor<ApolloQueryController<D, V>>,
+    ApolloQueryController as Constructor<ApolloQueryController<D, V>>,
     queryDocument,
     options,
   );

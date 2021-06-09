@@ -1,5 +1,11 @@
 import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Data,
+  GraphQLError,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 import type { ApolloController } from '@apollo-elements/core';
 
 import { getInitialProps, getInitialProp } from '@apollo-elements/core/decorators';
@@ -18,8 +24,8 @@ const last = Symbol('PolymerElement last known');
  * @fires loading-changed
  */
 export abstract class PolymerApolloElement<
-  D extends I.MaybeTDN = I.MaybeTDN,
-  V = I.MaybeVariables<D>
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
 > extends ApolloElementMixin(HTMLElement)<D, V> {
   static readonly is: `polymer-apollo-${'mutation'|'query'|'subscription'}`;
 
@@ -29,13 +35,13 @@ export abstract class PolymerApolloElement<
 
   declare context?: Record<string, unknown>;
 
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 
-  @notify() data: I.Data<D> | null = null;
+  @notify() data: Data<D> | null = null;
 
   @notify() error: Error | ApolloError | null = null;
 
-  @notify() errors: readonly I.GraphQLError[] = [];
+  @notify() errors: readonly GraphQLError[] = [];
 
   @notify() loading = false;
 

@@ -1,4 +1,4 @@
-import type { Data, Variables, MaybeTDN } from '@apollo-elements/interfaces/operation';
+import type { Data, Variables, MaybeTDN } from '@apollo-elements/core/types';
 import type { ApolloError, DocumentNode } from '@apollo/client/core';
 import type { ApolloMutationElement } from './apollo-mutation';
 

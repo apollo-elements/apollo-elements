@@ -1,4 +1,10 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import { GluonElement } from '@gluon/gluon';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
@@ -14,13 +20,13 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElementMixin(GluonElement as I.Constructor<GluonElement>)<D, V> {
+export class ApolloElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  extends ApolloElementMixin(GluonElement as Constructor<GluonElement>)<D, V> {
   declare context?: Record<string, unknown>;
 
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 
-  declare data: I.Data<D> | null;
+  declare data: Data<D> | null;
 
   update(): void {
     this.render().then(() => super.update());

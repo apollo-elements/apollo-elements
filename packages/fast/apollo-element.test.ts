@@ -4,7 +4,7 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
+import type { GraphQLError } from '@apollo-elements/core/types';
 
 import { expect, fixture } from '@open-wc/testing';
 import { unsafeStatic, html as h } from 'lit/static-html.js';

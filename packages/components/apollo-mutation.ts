@@ -1,4 +1,12 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  MaybeTDN,
+  MaybeVariables,
+  Data,
+  Variables,
+  ComponentDocument,
+  OptimisticResponseType,
+  RefetchQueriesType,
+} from '@apollo-elements/core/types';
 
 import type { PropertyValues } from 'lit';
 
@@ -148,9 +156,8 @@ export class WillMutateError extends Error {}
  * ```
  */
 @customElement('apollo-mutation')
-export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends GraphQLScriptChildMixin(ApolloElement)<D, V>
-  implements I.ApolloMutationInterface<D, V> {
+export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is: 'apollo-mutation' = 'apollo-mutation';
 
   /**
@@ -262,7 +269,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
   @controlled() @property({ type: Boolean, reflect: true }) called = false;
 
   /** @summary The mutation. */
-  @controlled() @state() mutation: null | I.ComponentDocument<D> = null;
+  @controlled() @state() mutation: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;
@@ -276,7 +283,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
    * the result of a mutation immediately, and update the UI later if any errors
    * appear.
    */
-  @controlled({ path: 'options' }) @state() optimisticResponse?: I.OptimisticResponseType<D, V>;
+  @controlled({ path: 'options' }) @state() optimisticResponse?: OptimisticResponseType<D, V>;
 
 
   /**
@@ -284,7 +291,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
    *
    * @summary Mutation variables.
    */
-  @controlled() @state() variables: I.Variables<D, V> | null = null;
+  @controlled() @state() variables: Variables<D, V> | null = null;
 
   /**
    * @summary If true, the returned data property will not update with the mutation result.
@@ -338,7 +345,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
           .map(x => x.trim());
       },
     },
-  }) refetchQueries: I.RefetchQueriesType<D> | null = null;
+  }) refetchQueries: RefetchQueriesType<D> | null = null;
 
   /**
    * Define this function to determine the URL to navigate to after a mutation.
@@ -367,26 +374,26 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
    * @param trigger the trigger element which triggered this mutation
    * @returns url to navigate to
    */
-  resolveURL?(data: I.Data<D>, trigger: HTMLElement): string | Promise<string>;
+  resolveURL?(data: Data<D>, trigger: HTMLElement): string | Promise<string>;
 
   constructor() {
     super();
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const el = this;
     Object.defineProperty(this.controller, 'variables', {
-      get(): I.Variables<D, V> | null {
+      get(): Variables<D, V> | null {
         if (this.__variables)
           return this.__variables;
         else {
           return (
             el.getVariablesFromInputs() ??
             // @ts-expect-error: TODO: Find a better way to do this
-            el.getDOMVariables() as I.Variables<D, V>
+            el.getDOMVariables() as Variables<D, V>
           );
         }
       },
 
-      set(v: I.Variables<D, V> | null) {
+      set(v: Variables<D, V> | null) {
         this.__variables = v ?? undefined;
       },
     });
@@ -448,7 +455,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
   }
 
   private async willNavigate(
-    data: I.Data<D>|null|undefined,
+    data: Data<D>|null|undefined,
     triggeringElement: HTMLElement
   ): Promise<void> {
     if (!this.dispatchEvent(new WillNavigateEvent(this)))
@@ -503,7 +510,7 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
   /**
    * Constructs a variables object from the element's data-attributes and any slotted variable inputs.
    */
-  protected getVariablesFromInputs(): I.Variables<D, V> | null {
+  protected getVariablesFromInputs(): Variables<D, V> | null {
     if (isEmpty(this.dataset) && isEmpty(this.inputs))
       return null;
 
@@ -513,9 +520,9 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
     };
 
     if (this.inputKey)
-      return { [this.inputKey]: input } as unknown as I.Variables<D, V>;
+      return { [this.inputKey]: input } as unknown as Variables<D, V>;
     else
-      return input as I.Variables<D, V>;
+      return input as Variables<D, V>;
   }
 
   update(changed: PropertyValues<this>): void {
@@ -542,12 +549,12 @@ export class ApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.Mayb
    * data to be rolled back.
    */
   public updater?(
-    ...params: Parameters<MutationUpdaterFn<I.Data<D>>>
-  ): ReturnType<MutationUpdaterFn<I.Data<D>>>;
+    ...params: Parameters<MutationUpdaterFn<Data<D>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>>>;
 
   public mutate(
-    params?: Partial<MutationOptions<I.Data<D>, I.Variables<D, V>>> | undefined
-  ): Promise<FetchResult<I.Data<D>>> {
+    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>> | undefined
+  ): Promise<FetchResult<Data<D>>> {
     return this.controller.mutate({ ...params, update: this.updater });
   }
 }

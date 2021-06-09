@@ -1,4 +1,11 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  OnSubscriptionDataParams,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import type * as C from '@apollo/client/core';
 
@@ -18,9 +25,10 @@ import { state, property } from '@lit/reactive-element/decorators.js';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElement<D, V>
-  implements Omit<I.ApolloSubscriptionInterface<D, V>, 'nextError'|'nextData'> {
+export class ApolloSubscription<
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
+> extends ApolloElement<D, V> {
   static readonly is = 'apollo-subscription';
 
   controller = new ApolloSubscriptionController<D, V>(this, null, {
@@ -36,10 +44,7 @@ export class ApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
   /**
    * @summary A GraphQL document containing a single subscription.
    */
-  @controlled() @state() subscription: I.ComponentDocument<D> | null = null;
-
-  /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, any>;
+  @controlled() @state() subscription: ComponentDocument<D> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`
@@ -111,7 +116,7 @@ export class ApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
    * @override
    */
   shouldSubscribe(
-    options?: Partial<C.SubscriptionOptions<I.Variables<D, V>, I.Data<D>>>
+    options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
   ): boolean {
     return (void options, true);
   }
@@ -119,7 +124,7 @@ export class ApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVa
   /**
    * Callback for when data is updated
    */
-  onSubscriptionData?(result: I.OnSubscriptionDataParams<I.Data<D>>): void;
+  onSubscriptionData?(result: OnSubscriptionDataParams<Data<D>>): void;
 
   /**
    * Callback for when error is updated

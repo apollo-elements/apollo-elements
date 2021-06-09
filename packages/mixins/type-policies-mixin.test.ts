@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { TypePoliciesMixin } from './type-policies-mixin';
 import { ApolloQueryMixin } from './apollo-query-mixin';

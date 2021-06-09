@@ -5,7 +5,15 @@ import type {
   NormalizedCacheObject,
 } from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Constructor,
+  Data,
+  GraphQLError,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import type { ApolloController, ApolloElementElement } from '@apollo-elements/core';
 
@@ -16,18 +24,19 @@ import { ApolloElementEvent } from '@apollo-elements/core/events';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-type MixinInstance<B extends I.Constructor<HTMLElement>> = B & {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
+type MixinInstance<B extends Constructor<HTMLElement>> = B & {
+  new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>():
     ApolloElementElement<D, V>;
-  documentType: 'mutation'|'query'|'subscription';
+  documentType: 'document'|'mutation'|'query'|'subscription';
   observedAttributes?: string[];
 }
 
-function ApolloElementMixinImplementation<B extends I.Constructor>(
+function ApolloElementMixinImplementation<B extends Constructor & {
+  observedAttributes?: string[]
+}>(
   superclass: B
 ): MixinInstance<B> {
-  class ApolloElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+  class ApolloElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
     extends ControllerHostMixin(superclass) {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
@@ -50,22 +59,22 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
      * A GraphQL document containing a single query, mutation, or subscription.
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
-    @controlled() document: I.ComponentDocument<D> | null = null;
+    @controlled() document: ComponentDocument<D> | null = null;
 
     /** @summary Latest data */
-    @controlled() data: I.Data<D> | null = null;
+    @controlled() data: Data<D> | null = null;
 
     /**
      * @summary Operation variables.
      * An object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.
      */
-    @controlled() variables: I.Variables<D, V> | null = null;
+    @controlled() variables: Variables<D, V> | null = null;
 
     /** @summary Latest error. */
     @controlled() error: Error | ApolloError | null = null;
 
     /** @summary Latest errors. */
-    @controlled() errors: readonly I.GraphQLError[] = [];
+    @controlled() errors: readonly GraphQLError[] = [];
 
     /** @summary Whether a request is in-flight. */
     @controlled() loading = false;
@@ -135,8 +144,7 @@ function ApolloElementMixinImplementation<B extends I.Constructor>(
     protected variablesChanged?(variables: this['variables']): void
   }
 
-  // @ts-expect-error: let's pretend it is
-  return ApolloElement;
+  return ApolloElement as unknown as MixinInstance<B>;
 }
 
 /**

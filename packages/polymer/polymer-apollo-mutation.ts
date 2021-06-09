@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element';
 import { notify } from './notify-decorator';
@@ -31,9 +31,9 @@ import { notify } from './notify-decorator';
  * @fires loading-changed
  * @fires called-changed
  */
-export class PolymerApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+export class PolymerApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloMutationMixin(
-    PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
+    PolymerApolloElement as unknown as Constructor<PolymerApolloElement>
   )<D, V> {
   static readonly is = 'polymer-apollo-mutation';
 
