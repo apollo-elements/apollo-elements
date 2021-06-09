@@ -1,42 +1,37 @@
-import type { ReactiveController } from '@lit/reactive-element';
+import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
 import type { Constructor, CustomElement } from '@apollo-elements/interfaces';
-import type { ApolloControllerHost } from '@apollo-elements/core';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import { p } from '@apollo-elements/core/decorators';
+import { setInitialProps } from '@apollo-elements/core/decorators';
 
-const init = Symbol('ControllerHost initialized');
+const INITIALIZED = new WeakMap();
+
+const microtask = Promise.resolve();
 
 function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
   superclass: T
-): T & Constructor<ApolloControllerHost> {
-  return class ControllerHost extends superclass {
-    /** @protected */
-    declare [p]?: Map<string, unknown>;
-
+) {
+  return class ControllerHost extends superclass implements ReactiveControllerHost {
     #controllers = new Set<ReactiveController>();
 
     #updatePending = false;
 
-    #updateComplete: Promise<boolean>;
-
     #resolve!: (v: boolean) => void;
 
-    private [init] = false;
+    #updateComplete = new Promise(r => {
+      this.#resolve = r;
+    });
 
     constructor(...args: any[]) {
       super(...args);
-      this.#updateComplete = new Promise(r => {
-        this.#resolve = r;
-      });
-      this[init] = true;
+      INITIALIZED.set(this, true);
       this.requestUpdate();
     }
 
     addController(controller: ReactiveController): void {
       // @ts-expect-error: superclass may or may not have it
-      if (typeof super.addController === 'function') super.addController(controller);
+      if (typeof super.addController === 'function') super.addController(controller);/* c8 ignore next */
       else
         this.#controllers.add(controller);
     }
@@ -49,11 +44,19 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
     }
 
     requestUpdate(): void {
-      if (!this[init]) return;
+      if (!INITIALIZED.get(this)) return;/* c8 ignore next */
       // @ts-expect-error: superclass may or may not have it
-      if (typeof super.requestUpdate === 'function') return super.requestUpdate();
+      if (typeof super.requestUpdate === 'function') return super.requestUpdate();/* c8 ignore next */
+      if (!this.#updatePending)
+        this.doUpdate();
+    }
+
+    async doUpdate() {
+      this.#updatePending = true;
+      await this.#updateComplete;
       this.update();
-      this.#resolve(true);
+      this.#updateComplete = new Promise(r => { this.#resolve = r; });
+      microtask.then(() => this.updated());
     }
 
     get updateComplete(): Promise<boolean> {
@@ -64,15 +67,16 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
 
     connectedCallback() {
       // assign props that were set before initialization finished
-      (this[p] as Map<keyof this, this[keyof this]>)?.forEach?.((val, key) => this[key] ??= val);
-      super.connectedCallback?.();
+      setInitialProps(this);
+      super.connectedCallback?.();/* c8 ignore next */
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.addController !== 'function')
         this.#controllers.forEach(c => c.hostConnected?.());
+      this.#resolve(true);
     }
 
     disconnectedCallback() {
-      super.disconnectedCallback?.();
+      super.disconnectedCallback?.();/* c8 ignore next */
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.removeController !== 'function')
         this.#controllers.forEach(c => c.hostDisconnected?.());
@@ -80,20 +84,18 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
 
     update(...args: any[]) {
       // @ts-expect-error: superclass may or may not have it
-      if (typeof super.update === 'function') super.update(...args);
+      if (typeof super.update === 'function') super.update(...args);/* c8 ignore next */
       else
-        this.#controllers.forEach(c => c.hostUpdate?.());
+        this.#controllers.forEach(c => c.hostUpdate?.());/* c8 ignore next */
     }
 
     updated(...args: any[]) {
       // @ts-expect-error: superclass may or may not have it
-      if (typeof super.updated === 'function') super.updated(...args);
+      if (typeof super.updated === 'function') super.updated(...args);/* c8 ignore next */
       else {
         this.#updatePending = false;
-        const resolve = this.#resolve;
-        this.#updateComplete = new Promise(r => { this.#resolve = r; });
-        this.#controllers.forEach(c => c.hostUpdated?.());
-        resolve(this.#updatePending);
+        this.#controllers.forEach(c => c.hostUpdated?.());/* c8 ignore next */
+        this.#resolve(this.#updatePending);
       }
     }
   };
