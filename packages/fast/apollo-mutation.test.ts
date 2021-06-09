@@ -12,7 +12,7 @@ import {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 
 import { expect, fixture } from '@open-wc/testing';
 

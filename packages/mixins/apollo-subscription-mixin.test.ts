@@ -1,6 +1,6 @@
 import type * as C from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 
 import { defineCE, expect, fixture } from '@open-wc/testing';
 

@@ -4,7 +4,14 @@ import type { PropertyDeclaration } from 'lit';
 
 import type { ApolloController } from '@apollo-elements/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Data,
+  GraphQLError,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import { LitElement } from 'lit';
 
@@ -26,8 +33,8 @@ export interface ControlledPropertyDeclaration extends PropertyDeclaration {
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
  */
 export class ApolloElement<
-  D extends I.MaybeTDN = I.MaybeTDN,
-  V = I.MaybeVariables<D>
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
 > extends LitElement {
   declare controller: ApolloController<D, V>;
 
@@ -58,21 +65,21 @@ export class ApolloElement<
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;
 
   /** @summary Latest Data. */
-  @controlled() @state() data: I.Data<D>|null = null;
+  @controlled() @state() data: Data<D>|null = null;
 
   /**
    * @summary Operation document.
    * GraphQL operation document i.e. query, subscription, or mutation.
    * Must be a parsed GraphQL `DocumentNode`
    */
-  @controlled() @state() document: I.ComponentDocument<D>|null = null;
+  @controlled() @state() document: ComponentDocument<D>|null = null;
 
   /** @summary Latest error */
   @controlled() @state() error: Error|ApolloError|null = null;
 
   /** @summary Latest errors */
-  @controlled() @state() errors: readonly I.GraphQLError[] = [];
+  @controlled() @state() errors: readonly GraphQLError[] = [];
 
   /** @summary Operation variables. */
-  @controlled() @state() variables: I.Variables<D, V>|null = null;
+  @controlled() @state() variables: Variables<D, V>|null = null;
 }

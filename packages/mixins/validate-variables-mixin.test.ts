@@ -1,4 +1,4 @@
-import type { ApolloQueryElement } from '@apollo-elements/interfaces';
+import type { ApolloQueryElement } from '@apollo-elements/core/types';
 import type { DocumentNode } from '@apollo/client/core';
 
 import { defineCE, expect, fixtureSync, nextFrame } from '@open-wc/testing';

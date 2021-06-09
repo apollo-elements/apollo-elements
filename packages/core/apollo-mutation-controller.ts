@@ -8,7 +8,7 @@ import type {
   OptimisticResponseType,
   RefetchQueriesType,
   Variables,
-} from '@apollo-elements/interfaces';
+} from '@apollo-elements/core/types';
 
 import type {
   ApolloError,

@@ -1,4 +1,10 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import { ApolloElement } from './apollo-element';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
@@ -14,17 +20,15 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloMutationMixin(ApolloElement as I.Constructor<ApolloElement>)<D, V> {
-  /**
-   * Latest mutation data.
-   */
-  declare data: I.Data<D> | null;
+export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
+  /** @summary Latest mutation data. */
+  declare data: Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
    *
    * @summary Mutation variables.
    */
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 }

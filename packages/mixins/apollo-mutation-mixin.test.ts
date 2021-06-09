@@ -10,8 +10,8 @@ import type {
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type { GraphQLError } from '@apollo-elements/interfaces';
-import type * as I from '@apollo-elements/interfaces';
+import type { GraphQLError } from '@apollo-elements/core/types';
+import type * as I from '@apollo-elements/core/types';
 
 import { expect, defineCE, fixture } from '@open-wc/testing';
 

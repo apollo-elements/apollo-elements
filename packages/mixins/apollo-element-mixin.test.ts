@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 
 import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
 

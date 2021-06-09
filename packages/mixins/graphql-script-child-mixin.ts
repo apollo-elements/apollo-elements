@@ -1,6 +1,6 @@
-import type * as I from '@apollo-elements/interfaces';
-
 import type { DocumentNode, ApolloError } from '@apollo/client/core';
+
+import type { Constructor, CustomElement } from '@apollo-elements/core/types';
 
 import { gql } from '@apollo/client/core';
 
@@ -16,15 +16,8 @@ function stripHTMLComments(string: string): string {
   return string.replace?.(/<!---->/g, '');
 }
 
-type Instance = {
-  new <
-    D extends I.MaybeTDN = I.MaybeTDN,
-    V = I.MaybeVariables<D>
-  >(...args: any[]): I.ApolloElementElement<D, V>
-}
-
 function GraphQLScriptChildMixinImplementation<
-  B extends I.Constructor<I.CustomElement & {
+  B extends Constructor<CustomElement & {
     document: DocumentNode|null;
     variables: unknown|null;
     error: Error|ApolloError|null;

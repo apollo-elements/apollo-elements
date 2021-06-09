@@ -1,6 +1,6 @@
 import type { SubscriptionOptions } from '@apollo/client/core';
 
-import type { ApolloElementElement, Constructor } from '@apollo-elements/interfaces';
+import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
 
 import type * as C from '@apollo-elements/core';
 

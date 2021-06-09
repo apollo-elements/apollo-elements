@@ -1,5 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
-import type { Constructor, CustomElement } from '@apollo-elements/interfaces';
+import type { Constructor, CustomElement } from '@apollo-elements/core/types';
 import type { ControllerHost } from '@apollo-elements/core/types';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';

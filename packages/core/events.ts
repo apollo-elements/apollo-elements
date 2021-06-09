@@ -1,5 +1,5 @@
 import type { ApolloController } from './apollo-controller';
-import type { Data } from '@apollo-elements/interfaces';
+import type { Data } from '@apollo-elements/core/types';
 import type {
   ApolloClient,
   ApolloError,

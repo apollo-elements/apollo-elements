@@ -1,4 +1,10 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  ComponentDocument,
+  MaybeTDN,
+  MaybeVariables,
+} from '@apollo-elements/core/types';
+
 import type { Descriptor } from 'hybrids';
 
 import { controller } from './controller';
@@ -17,14 +23,14 @@ import {
  */
 export function mutation<
   E extends HTMLElement,
-  D extends I.MaybeTDN = I.MaybeTDN,
-  V = I.MaybeVariables<D>
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
 >(
-  mutationDocument?: I.ComponentDocument<D> | null,
+  mutationDocument?: ComponentDocument<D> | null,
   options?: ApolloMutationControllerOptions<D, V>,
 ): Descriptor<E, ApolloMutationController<D, V>> {
   return controller(
-    ApolloMutationController as I.Constructor<ApolloMutationController<D, V>>,
+    ApolloMutationController as Constructor<ApolloMutationController<D, V>>,
     mutationDocument,
     options,
   );

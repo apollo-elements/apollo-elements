@@ -1,6 +1,13 @@
 import type * as C from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Data,
+  FetchMoreParams,
+  MaybeTDN,
+  MaybeVariables,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
@@ -20,19 +27,21 @@ import { ApolloElement } from './apollo-element';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloElement<D, V> implements I.ApolloQueryInterface<D, V> {
+export class ApolloQuery<
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
+> extends ApolloElement<D, V> {
   /**
    * Latest query data.
    */
-  declare data: I.Data<D> | null;
+  declare data: Data<D> | null;
 
   /**
    * An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.
    *
    * @summary Query variables.
    */
-  declare variables: I.Variables<D, V> | null;
+  declare variables: Variables<D, V> | null;
 
   controller: ApolloQueryController<D, V> = new ApolloQueryController<D, V>(this, null, {
     shouldSubscribe: options => this.readyToReceiveDocument && this.shouldSubscribe(options),
@@ -46,7 +55,7 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * @override
    */
   shouldSubscribe(
-    options?: Partial<C.SubscriptionOptions<I.Variables<D, V>, I.Data<D>>>
+    options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
   ): boolean {
     return (void options, true);
   }
@@ -89,7 +98,7 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
   /**
    * @summary A GraphQL document containing a single query.
    */
-  @controlled() @state() query: null | I.ComponentDocument<D> = null;
+  @controlled() @state() query: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>;
@@ -201,8 +210,8 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
   public async refetch(
-    variables?: I.Variables<D, V>
-  ): Promise<C.ApolloQueryResult<I.Data<D>>> {
+    variables?: Variables<D, V>
+  ): Promise<C.ApolloQueryResult<Data<D>>> {
     return this.controller.refetch(variables);
   }
 
@@ -211,7 +220,7 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * @param params options for controlling how the subscription subscribes
    */
   public subscribe(
-    params?: Partial<C.WatchQueryOptions<I.Variables<D, V>, I.Data<D>>>
+    params?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
   ): ZenObservable.Subscription {
     return this.controller.subscribe(params);
   }
@@ -225,7 +234,7 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * and returns an object with updated query data based on the new results.
    */
   public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: C.SubscribeToMoreOptions<I.Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }
@@ -234,8 +243,8 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * Executes a Query once and updates the with the result
    */
   public async executeQuery(
-    params?: Partial<C.QueryOptions<I.Variables<D, V>, I.Data<D>>>
-  ): Promise<C.ApolloQueryResult<I.Data<D>>> {
+    params?: Partial<C.QueryOptions<Variables<D, V>, Data<D>>>
+  ): Promise<C.ApolloQueryResult<Data<D>>> {
     return this.controller.executeQuery(params);
   }
 
@@ -250,8 +259,8 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
    * The optional `variables` parameter is an optional new variables object.
    */
   public async fetchMore(
-    params?: Partial<I.FetchMoreParams<D, V>>
-  ): Promise<C.ApolloQueryResult<I.Data<D>>> {
+    params?: Partial<FetchMoreParams<D, V>>
+  ): Promise<C.ApolloQueryResult<Data<D>>> {
     return this.controller.fetchMore(params);
   }
 
@@ -266,7 +275,7 @@ export class ApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables
   /**
    * Optional callback for when a query is completed.
    */
-  onData?(data: I.Data<D>): void
+  onData?(data: Data<D>): void
 
   /**
    * Optional callback for when an error occurs.

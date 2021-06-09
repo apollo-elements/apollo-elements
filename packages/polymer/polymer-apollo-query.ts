@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element';
@@ -33,9 +33,9 @@ import { notify } from './notify-decorator';
  * @fires loading-changed
  * @fires network-status-changed
  */
-export class PolymerApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+export class PolymerApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloQueryMixin(
-    PolymerApolloElement as unknown as I.Constructor<PolymerApolloElement>
+    PolymerApolloElement as unknown as Constructor<PolymerApolloElement>
   )<D, V> {
   static readonly is = 'polymer-apollo-query';
 

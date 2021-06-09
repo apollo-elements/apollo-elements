@@ -1,4 +1,10 @@
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  Constructor,
+  MaybeTDN,
+  MaybeVariables,
+  ComponentDocument,
+} from '@apollo-elements/core/types';
+
 import type { Descriptor } from 'hybrids';
 
 import { controller } from './controller';
@@ -17,14 +23,14 @@ import {
  */
 export function subscription<
   E extends HTMLElement,
-  D extends I.MaybeTDN = I.MaybeTDN,
-  V = I.MaybeVariables<D>
+  D extends MaybeTDN = MaybeTDN,
+  V = MaybeVariables<D>
 >(
-  subscriptionDocument?: I.ComponentDocument<D> | null,
+  subscriptionDocument?: ComponentDocument<D> | null,
   options?: ApolloSubscriptionControllerOptions<D, V>,
 ): Descriptor<E, ApolloSubscriptionController<D, V>> {
   return controller(
-    ApolloSubscriptionController as I.Constructor<ApolloSubscriptionController<D, V>>,
+    ApolloSubscriptionController as Constructor<ApolloSubscriptionController<D, V>>,
     subscriptionDocument,
     options,
   );

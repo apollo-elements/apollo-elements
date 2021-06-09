@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 
 import type * as C from '@apollo/client/core';
 
@@ -19,13 +19,6 @@ import {
   isApolloError,
   TestableElement,
 } from '@apollo-elements/test';
-
-import {
-  ApolloElementElement,
-  ApolloQueryElement,
-  ApolloMutationElement,
-  ApolloSubscriptionElement,
-} from '@apollo-elements/core/types';
 
 import HelloQuery from '@apollo-elements/test/graphql/Hello.query.graphql';
 import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
@@ -59,13 +52,28 @@ template.innerHTML = `
   <output id="loading"></output>
 `;
 
+import {
+  ApolloElementMixin,
+  ApolloQueryMixin,
+  ApolloMutationMixin,
+  ApolloSubscriptionMixin,
+} from '@apollo-elements/mixins';
+
+/* eslint-disable max-len */
+class ApolloElementElement<D extends C.TypedDocumentNode> extends ApolloElementMixin(HTMLElement)<D> {}
+class ApolloMutationElement<D extends C.TypedDocumentNode> extends ApolloMutationMixin(HTMLElement)<D> {}
+class ApolloQueryElement<D extends C.TypedDocumentNode> extends ApolloQueryMixin(HTMLElement)<D> {}
+class ApolloSubscriptionElement<D extends C.TypedDocumentNode> extends ApolloSubscriptionMixin(HTMLElement)<D> {}
+/* eslint-enable max-len */
+
 describe('GraphQLScriptChildMixin', function() {
   beforeEach(setupClient);
 
   afterEach(teardownClient);
 
   describe('on ApolloElement', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloElementElement) implements TestableElement {
+    class Test<D extends C.TypedDocumentNode = C.TypedDocumentNode<any, any>>
+      extends GraphQLScriptChildMixin(ApolloElementElement)<D> implements TestableElement {
       async hasRendered() { return this; }
 
       constructor() {
@@ -403,7 +411,9 @@ describe('GraphQLScriptChildMixin', function() {
   });
 
   describe('on ApolloQuery', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloQueryElement) implements TestableElement {
+    class Test<D extends C.TypedDocumentNode = C.TypedDocumentNode<any, any>>
+      extends GraphQLScriptChildMixin(ApolloQueryElement)<D>
+      implements TestableElement {
       declare shadowRoot: ShadowRoot;
 
       constructor() {
@@ -550,7 +560,9 @@ describe('GraphQLScriptChildMixin', function() {
   });
 
   describe('on ApolloMutation', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloMutationElement) implements TestableElement {
+    class Test<D extends C.TypedDocumentNode = C.TypedDocumentNode<any, any>>
+      extends GraphQLScriptChildMixin(ApolloMutationElement)<D>
+      implements TestableElement {
       $(id: keyof this) { return this.shadowRoot!.getElementById(id as string); }
 
       async hasRendered() { return this; }
@@ -585,7 +597,9 @@ describe('GraphQLScriptChildMixin', function() {
   });
 
   describe('on ApolloSubscription', function() {
-    class Test extends GraphQLScriptChildMixin(ApolloSubscriptionElement) {
+    class Test<D extends C.TypedDocumentNode = C.TypedDocumentNode<any, any>>
+      extends GraphQLScriptChildMixin(ApolloSubscriptionElement)<D>
+      implements TestableElement {
       declare shadowRoot: ShadowRoot;
 
       async hasRendered() {
@@ -653,7 +667,9 @@ async function TypeCheck() {
   type D = { a: 'a', b: number };
   type V = { d: 'd', e: number };
 
-  class TypeCheckElement extends GraphQLScriptChildMixin(ApolloElementElement) {
+  const Doc: C.TypedDocumentNode<D, V> = {} as C.TypedDocumentNode<D, V>;
+
+  class TypeCheckElement extends GraphQLScriptChildMixin(ApolloElementElement)<typeof Doc> {
     typeCheck(): void {
       assertType<HTMLElement>                         (this);
 
@@ -688,7 +704,7 @@ async function TypeCheck() {
     }
   }
 
-  class TypeCheckQuery extends GraphQLScriptChildMixin(ApolloQueryElement)<D, V> {
+  class TypeCheckQuery extends GraphQLScriptChildMixin(ApolloQueryElement)<typeof Doc> {
     variables = { d: 'd' as const, e: 0 };
 
     typeCheck(): void {
@@ -751,7 +767,7 @@ async function TypeCheck() {
     }
   }
 
-  class TypeCheckMutation extends GraphQLScriptChildMixin(ApolloMutationElement)<D, V> {
+  class TypeCheckMutation extends GraphQLScriptChildMixin(ApolloMutationElement)<typeof Doc> {
     typeCheck(): void {
       assertType<HTMLElement>(this);
 
@@ -794,7 +810,7 @@ async function TypeCheck() {
     }
   }
 
-  class TypeCheckSubscription extends GraphQLScriptChildMixin(ApolloSubscriptionElement)<D, V> {
+  class TypeCheckSubscription extends GraphQLScriptChildMixin(ApolloSubscriptionElement)<typeof Doc> {
     typeCheck(): void {
       assertType<HTMLElement>(this);
 

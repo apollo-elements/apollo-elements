@@ -10,7 +10,7 @@ import type {
   Constructor,
 } from '@apollo-elements/core/types';
 
-import type { Entries } from '@apollo-elements/interfaces';
+import type { Entries } from '@apollo-elements/core/types';
 
 import { defineCE, fixture } from '@open-wc/testing';
 

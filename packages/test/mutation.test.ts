@@ -1,4 +1,4 @@
-import type * as I from '@apollo-elements/interfaces';
+import type * as I from '@apollo-elements/core/types';
 import type { ApolloMutationElement } from '@apollo-elements/core';
 import type * as S from './schema';
 

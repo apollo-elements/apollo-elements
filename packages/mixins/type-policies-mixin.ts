@@ -1,6 +1,6 @@
 import type { TypePolicies } from '@apollo/client/core';
 import type { Policies } from '@apollo/client/cache/inmemory/policies';
-import type { Constructor } from '@apollo-elements/interfaces';
+import type { Constructor } from '@apollo-elements/core/types';
 import type { ApolloElementElement } from '@apollo-elements/core/types';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';

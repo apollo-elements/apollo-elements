@@ -1,6 +1,15 @@
 import type * as C from '@apollo/client/core';
 
-import type * as I from '@apollo-elements/interfaces';
+import type {
+  ComponentDocument,
+  Constructor,
+  Data,
+  MaybeTDN,
+  MaybeVariables,
+  OptimisticResponseType,
+  RefetchQueriesType,
+  Variables,
+} from '@apollo-elements/core/types';
 
 import type { ApolloMutationElement } from '@apollo-elements/core/types';
 
@@ -11,15 +20,15 @@ import { controlled } from '@apollo-elements/core/decorators';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
-type MixinInstance<B extends I.Constructor> = B & {
-  new <D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>():
+type MixinInstance<B extends Constructor> = B & {
+  new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>():
     InstanceType<B> & ApolloMutationElement<D, V>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
 
-function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinInstance<B> {
-  class MixedApolloMutationElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInstance<B> {
+  class MixedApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
     extends ApolloElementMixin(base)<D, V> {
     static override documentType = 'mutation' as const;
 
@@ -39,13 +48,11 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinIns
 
     @controlled({ readonly: true }) readonly called = false;
 
-    @controlled() mutation: I.ComponentDocument<D> | null = null;
+    @controlled() mutation: ComponentDocument<D> | null = null;
 
-    @controlled({ path: 'options' }) optimisticResponse?: I.OptimisticResponseType<D, V>;
+    @controlled({ path: 'options' }) optimisticResponse?: OptimisticResponseType<D, V>;
 
-    @controlled({ path: 'options' }) refetchQueries: I.RefetchQueriesType<D> | null = null;
-
-    @controlled({ path: 'options' }) context?: Record<string, unknown>;
+    @controlled({ path: 'options' }) refetchQueries: RefetchQueriesType<D> | null = null;
 
     @controlled({ path: 'options' }) fetchPolicy?: Extract<C.FetchPolicy, 'no-cache'>;
 
@@ -53,13 +60,13 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinIns
 
     @controlled({ path: 'options' }) ignoreResults = false;
 
-    onCompleted?(_data: I.Data<D>): void;
+    onCompleted?(_data: Data<D>): void;
 
     onError?(_error: Error): void;
 
     updater?(
-      ...params: Parameters<C.MutationUpdaterFn<I.Data<D>>>
-    ): ReturnType<C.MutationUpdaterFn<I.Data<D>>>;
+      ...params: Parameters<C.MutationUpdaterFn<Data<D>>>
+    ): ReturnType<C.MutationUpdaterFn<Data<D>>>;
 
     override attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);
@@ -88,8 +95,8 @@ function ApolloMutationMixinImpl<B extends I.Constructor>(base: B): B & MixinIns
      * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
      */
     public async mutate(
-      params?: Partial<C.MutationOptions<I.Data<D>, I.Variables<D, V>>>
-    ): Promise<C.FetchResult<I.Data<D>>> {
+      params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>
+    ): Promise<C.FetchResult<Data<D>>> {
       return this.controller.mutate(params);
     }
   }
