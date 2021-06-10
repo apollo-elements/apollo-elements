@@ -1,15 +1,35 @@
 diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
-index 9883cfb..ae15f64 100755
+index 9883cfb..121c303 100755
 --- a/node_modules/@rocket/cli/src/RocketLint.js
 +++ b/node_modules/@rocket/cli/src/RocketLint.js
-@@ -53,11 +53,12 @@ export class RocketLint {
-       rootDir: this.config.lintInputDir,
-       printOnError: false,
-       continueOnError: true,
-+      ignoreLinkPatterns: ['*/_assets/_static/docs-playground.js'],
-     });
+@@ -49,15 +49,27 @@ export class RocketLint {
+     }
+ 
+     const checkLinks = new CheckHtmlLinksCli();
+-    checkLinks.setOptions({
+-      rootDir: this.config.lintInputDir,
+-      printOnError: false,
+-      continueOnError: true,
+-    });
++checkLinks.setOptions({
++  rootDir: this.config.lintInputDir,
++  printOnError: false,
++  continueOnError: true,
++  ignoreLinkPatterns: [
++    '*/_assets/_static/docs-playground.js',
++    '*_assets/_static/docs-playground.js',
++    '../_assets/_static/docs-playground.js',
++    '../../_assets/_static/docs-playground.js',
++    '../../../_assets/_static/docs-playground.js',
++    '../../../../_assets/_static/docs-playground.js',
++    '../../../../../_assets/_static/docs-playground.js',
++    '../../../../../../_assets/_static/docs-playground.js',
++    '../../../../../../../_assets/_static/docs-playground.js',
++  ],
++});
  
      const { errors, message } = await checkLinks.run();
++
      if (errors.length > 0) {
 -      if (this.config.command === 'start') {
 +      if (this.config.command === 'start' || process.env.CI) {
