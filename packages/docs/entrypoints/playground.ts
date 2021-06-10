@@ -1,1 +1,1 @@
-export * from 'playground-elements';
+import 'playground-elements';

@@ -1,8 +1,13 @@
 diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
-index 9883cfb..3769f36 100755
+index 9883cfb..ae15f64 100755
 --- a/node_modules/@rocket/cli/src/RocketLint.js
 +++ b/node_modules/@rocket/cli/src/RocketLint.js
-@@ -57,7 +57,7 @@ export class RocketLint {
+@@ -53,11 +53,12 @@ export class RocketLint {
+       rootDir: this.config.lintInputDir,
+       printOnError: false,
+       continueOnError: true,
++      ignoreLinkPatterns: ['*/_assets/_static/docs-playground.js'],
+     });
  
      const { errors, message } = await checkLinks.run();
      if (errors.length > 0) {
