@@ -66,21 +66,25 @@ describe('[haunted] useQuery', function() {
         beforeEach(nextFrame);
 
         describe('calling startPolling', function() {
-          beforeEach(function startPolling() {
+          function startPolling() {
             element.shadowRoot!.getElementById('start')!.click();
+          }
+          function stopPolling() {
+              element.shadowRoot!.getElementById('stop')!.click();
+          }
+
+          beforeEach(function() {
+            startPolling();
+            setTimeout(stopPolling, 70);
           });
 
-          beforeEach(() => aTimeout(70));
+          beforeEach(() => aTimeout(100));
 
           it('refetches', function() {
             expect(refetchSpy).to.have.been.calledThrice;
           });
 
           describe('then stopPolling', function() {
-            beforeEach(function stopPolling() {
-              element.shadowRoot!.getElementById('stop')!.click();
-            });
-
             beforeEach(() => aTimeout(100));
 
             it('stops calling refetch', function() {
