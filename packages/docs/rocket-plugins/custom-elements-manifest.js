@@ -86,7 +86,7 @@ const getModule = (manifest, path) =>
   (manifest?.modules ?? []).find(pathIs(path));
 
 const getDeclaration = (moduleData, declaration) =>
-  moduleData.declarations.find(nameIs(declaration));
+  (moduleData?.declarations ?? []).find(nameIs(declaration));
 
 const getAllFields = filterMembersBy(kindIs('field'));
 
