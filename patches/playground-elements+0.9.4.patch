@@ -11,3 +11,30 @@ index e1f386c..489fc59 100644
          }
          catch {
              errors.push(`Import map key "${specifierKey}" is invalid because` +
+diff --git a/node_modules/playground-elements/src/playground-code-editor.ts b/node_modules/playground-elements/src/playground-code-editor.ts
+index 2f34d74..0e790ef 100644
+--- a/node_modules/playground-elements/src/playground-code-editor.ts
++++ b/node_modules/playground-elements/src/playground-code-editor.ts
+@@ -1,3 +1,4 @@
++// @ts-nocheck
+ /**
+  * @license
+  * Copyright 2020 Google LLC
+diff --git a/node_modules/playground-elements/src/playground-ide.ts b/node_modules/playground-elements/src/playground-ide.ts
+index d381d6f..6282853 100644
+--- a/node_modules/playground-elements/src/playground-ide.ts
++++ b/node_modules/playground-elements/src/playground-ide.ts
+@@ -1,3 +1,4 @@
++// @ts-nocheck
+ /**
+  * @license
+  * Copyright 2019 Google LLC
+diff --git a/node_modules/playground-elements/src/typescript-worker/types-fetcher.ts b/node_modules/playground-elements/src/typescript-worker/types-fetcher.ts
+index c3bf85f..6a3a20a 100644
+--- a/node_modules/playground-elements/src/typescript-worker/types-fetcher.ts
++++ b/node_modules/playground-elements/src/typescript-worker/types-fetcher.ts
+@@ -1,3 +1,4 @@
++// @ts-nocheck
+ /**
+  * @license
+  * Copyright 2021 Google LLC
