@@ -201,7 +201,8 @@ ${content}
     return this.getAttribute('file') ?? 'index.html';
   }
 
-  playgroundUrl = 'https://unpkg.com/playground-elements@0.9.4?module';
+  // playgroundUrl = 'https://unpkg.com/playground-elements@0.9.4?module';
+  playgroundUrl = '/_assets/_static/playground-elements/playground.js';
 
   attributeChangedCallback(name: string, _: string, next: string) {
     switch (name) {
@@ -218,6 +219,8 @@ ${content}
     const url = this.getAttribute('sandbox-base-url');
     if (url)
       this.playgroundIde.setAttribute('sandbox-base-url', new URL(url, location.origin).toString());
+    else
+      this.playgroundIde.setAttribute('sandbox-base-url', location.origin + '/_assets/_static/playground-elements/');
     this.button.addEventListener('click', this.show);
 
   }
@@ -226,13 +229,27 @@ ${content}
     window.requestIdleCallback?.(() => this.importPlayground())
     const files = Object.fromEntries(Array.from(document.querySelectorAll<HTMLTemplateElement>(
       `[data-playground-id="${this.id}"]`
-    ), e => [e.dataset.filename, { content: e.content.textContent.trim() }]))
+    ), e => [e.dataset.filename, {
+      content: e.content.textContent.trim(),
+      hidden: 'hidden' in e.dataset,
+      ...'lang' in e.dataset && {
+        contentType: e.dataset.lang.match(/^(j(ava)?|t(ype)?)s(cript)?$/) ? 'application/javascript' : undefined
+      },
+    }]))
     const importMapTemplate = document.querySelector<HTMLTemplateElement>(
       `[data-import-map="${this.id}"]`
     )
     const config: ProjectManifest = { files };
     if (importMapTemplate)
       config.importMap = JSON.parse(importMapTemplate.content.textContent.replace(/ORIGIN/g, window.location.origin));
+    config.importMap = {
+      imports: {
+        ...config.importMap.imports,
+        '@apollo/client/core': '../../../apollo-elements.js',
+        '@apollo/client/utilities': '../../../apollo-elements.js',
+        '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-elements.js',
+      }
+    }
     this.init(config);
   }
 
@@ -244,11 +261,11 @@ ${content}
     const content = this.textContent.trim();
     const files = Object.fromEntries(Object.entries({
       [this.file]: { content: content },
-      'apollo-client.js': {
-        content: await DocsPlayground.fetchScript('/_assets/_static/apollo-client.js'),
-        contentType: 'application/javascript',
-        hidden: true,
-      },
+      // 'apollo-client.js': {
+      //   content: await DocsPlayground.fetchScript('/_assets/_static/apollo-client.js'),
+      //   contentType: 'application/javascript',
+      //   hidden: true,
+      // },
       'apollo-elements.js': {
         content: await DocsPlayground.fetchScript('/_assets/_static/apollo-elements.js'),
         contentType: 'application/javascript',

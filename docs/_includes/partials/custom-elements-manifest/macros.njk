@@ -30,23 +30,17 @@
 
 {%- macro inheritance(member) -%}
   {% if member.inheritedFrom %}
-    {% set moduleLink %}
-      {%- if member.inheritedFrom.module -%}
-        {%- for post in collections.all -%}
-          {%- if member.inheritedFrom.package -%}
-            {%- if
-              (post.data.package == member.inheritedFrom.package)
-              and
-              (post.data.module == member.inheritedFrom.module)
-            -%}
-              {{- post.url | url -}}
-            {%- endif -%}
-          {%- elif post.data.module == member.inheritedFrom.module -%}
-            {{- post.url | url -}}
+    {%- if member.inheritedFrom.module -%}
+      {%- for post in collections.all -%}
+        {%- if (not moduleLink) and member.inheritedFrom.package -%}
+          {%- if (post.data.package == member.inheritedFrom.package) and (post.data.module == member.inheritedFrom.module) -%}
+            {% set moduleLink = post.url | url %}
           {%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
-    {%- endset -%}
+        {%- elif post.data.module == member.inheritedFrom.module -%}
+        {% set moduleLink = post.url | url %}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
     {%- if moduleLink.length -%}
       <span slot="inheritance">
         <em>inherited from</em>

@@ -153,9 +153,8 @@ query LatestLaunch {
 ```json playground-import-map query-spacex
 {
   "imports": {
-    "@apollo-elements/components": "./apollo-elements.js",
-    "@apollo-elements/core": "./apollo-elements.js",
-    "@apollo/client/core": "./apollo-client.js"
+    "@apollo-elements/core": "../../../apollo-elements.js",
+    "@apollo-elements/components": "../../../apollo-elements.js"
   }
 }
 ```

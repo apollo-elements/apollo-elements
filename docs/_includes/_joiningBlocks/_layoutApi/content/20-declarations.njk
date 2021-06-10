@@ -1,4 +1,6 @@
-{% for declaration in moduleData.declarations %}
+{% set declarations = [moduleData | getDeclaration(className)] if className else moduleData.declarations %}
+
+{% for declaration in declarations %}
   {% if declaration.kind == 'class' %}
 
     {%- block class -%}

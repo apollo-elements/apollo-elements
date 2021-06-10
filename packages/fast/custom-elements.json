@@ -52,7 +52,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D>|null"
+                "text": "Data<D>|null"
               },
               "summary": "Latest Data."
             },
@@ -68,7 +68,7 @@
               "kind": "field",
               "name": "errors",
               "type": {
-                "text": "readonly I.GraphQLError[]"
+                "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors"
             },
@@ -137,7 +137,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               },
               "summary": "Latest mutation data."
             },
@@ -145,7 +145,7 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
               "summary": "Mutation variables."
@@ -161,7 +161,7 @@
               "kind": "field",
               "name": "refetchQueries",
               "type": {
-                "text": "I.RefetchQueriesType<D> | null"
+                "text": "RefetchQueriesType<D> | null"
               },
               "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value."
             },
@@ -176,7 +176,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "I.ApolloMutationInterface<D, V>['fetchPolicy']"
+                "text": "'no-cache'"
               }
             }
           ],
@@ -187,7 +187,7 @@
             {
               "name": "refetch-queries",
               "type": {
-                "text": "I.RefetchQueriesType<D> | null"
+                "text": "RefetchQueriesType<D> | null"
               },
               "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
               "fieldName": "refetchQueries"
@@ -202,7 +202,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "I.ApolloMutationInterface<D, V>['fetchPolicy']"
+                "text": "'no-cache'"
               },
               "fieldName": "fetchPolicy"
             }
@@ -241,7 +241,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               },
               "description": "Latest query data."
             },
@@ -249,7 +249,7 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.",
               "summary": "Query variables."
@@ -265,21 +265,21 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "I.ApolloQueryInterface<D, V>['fetchPolicy']"
+                "text": "WatchQueryFetchPolicy"
               }
             },
             {
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "I.ApolloQueryInterface<D, V>['errorPolicy']"
+                "text": "ErrorPolicy"
               }
             },
             {
               "kind": "field",
               "name": "nextFetchPolicy",
               "type": {
-                "text": "I.ApolloQueryInterface<D, V>['nextFetchPolicy']"
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
               }
             },
             {
@@ -300,29 +300,26 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "I.ApolloQueryInterface<D, V>['fetchPolicy']"
+                "text": "WatchQueryFetchPolicy"
               },
               "fieldName": "fetchPolicy"
             },
             {
               "name": "error-policy",
               "type": {
-                "text": "I.ApolloQueryInterface<D, V>['errorPolicy']"
+                "text": "ErrorPolicy"
               },
               "fieldName": "errorPolicy"
             },
             {
               "name": "next-fetch-policy",
               "type": {
-                "text": "I.ApolloQueryInterface<D, V>['nextFetchPolicy']"
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
               },
               "fieldName": "nextFetchPolicy"
             },
             {
               "name": "no-auto-subscribe",
-              "type": {
-                "text": "I.ApolloQueryInterface<D, V>['noAutoSubscribe']"
-              },
               "fieldName": "noAutoSubscribe"
             }
           ],
@@ -360,7 +357,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               },
               "description": "Latest subscription data."
             },
@@ -368,7 +365,7 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the subscription GraphQL document to that variable's value.",
               "summary": "Subscription variables."
@@ -377,7 +374,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "I.ApolloSubscriptionInterface<D, V>['fetchPolicy']"
+                "text": "FetchPolicy"
               }
             }
           ],
@@ -385,7 +382,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "I.ApolloSubscriptionInterface<D, V>['fetchPolicy']"
+                "text": "FetchPolicy"
               },
               "fieldName": "fetchPolicy"
             }
