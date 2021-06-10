@@ -32,7 +32,7 @@ export function setupWrap(config) {
                 if (typeof fn !== 'function')
                   throw new Error('Wrapper function must be a function');
 
-                const { tagName, attributes = {} } = fn(args, page);
+                const { tagName, attributes = {} } = fn(args, node, page);
 
                 const attrs = Object.entries(attributes)
                   .reduce((acc, [attr, value]) =>

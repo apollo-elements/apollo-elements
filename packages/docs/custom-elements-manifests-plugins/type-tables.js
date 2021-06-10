@@ -3,6 +3,7 @@
 /** @typedef {import('custom-elements-manifest/schema').Module} Module */
 /** @typedef {import('custom-elements-manifest/schema').ClassMember} ClassMember */
 /** @typedef {import('custom-elements-manifest/schema').Declaration} Declaration */
+/** @typedef {import('custom-elements-manifest/schema').ClassField} ClassField */
 /** @typedef {import('custom-elements-manifest/schema').FunctionDeclaration} FunctionDeclaration */
 /** @typedef {import('custom-elements-manifest/schema').FunctionLike} FunctionLike */
 /** @typedef {import('custom-elements-manifest/schema').ClassDeclaration} ClassDeclaration */
@@ -36,37 +37,8 @@ const TABLES =
       fs.readFileSync(new URL(`./types/${filename}`, import.meta.url).pathname, 'utf8'),
     ]));
 
-/**
- * For any return or parameter type found in the manifest,
- * if it has an associated Markdown file in docs/api/types/,
- * replace the `description` field with the markdown file's contents.
- * @template {Parameter|ReturnType} T
- * @param  {Record<FilePath, FileContents>} table object map of typename to markdown description
- * @param  {import('custom-elements-manifest/schema').Module} moduleDoc custom element manifest module
- * @param  {T} member
- * @return {T}
- */
-function replaceDescriptionUsingTables(table, moduleDoc, member) {
-  // /^(Partial<|Promise<)?(a|b|c)/; // Uncomment to preview with regexp-railroad.
-  const TYPES_REGEXP = new RegExp(`^(Partial<|Promise<)?(${Object.keys(table).join('|')})`);
-  const [, , foundMemberTypeName] = member.type?.text.match(TYPES_REGEXP) ?? [];
-  if (!foundMemberTypeName)
-    return member;
-  else {
-    const typeDescription = table[foundMemberTypeName];
-
-    const description = (member.description ? `${member.description}\n\n` : '') + (
-        !moduleDoc.path.match(/apollo-subscription\.[jt]s/) ? typeDescription
-      : typeDescription.replace(/query/g, 'subscription')
-    );
-
-    console.log(chalk.blue`Replaced description for ${chalk.bold(foundMemberTypeName)} in ${moduleDoc.path}`);
-    return {
-      ...member,
-      description,
-    };
-  }
-}
+// /^(Partial<|Promise<)?(a|b|c)/; // Uncomment to preview with regexp-railroad.
+const TYPES_REGEXP = new RegExp(`^(Partial<|Promise<)?(${Object.keys(TABLES).join('|')})`);
 
 /**
  * @param  {Declaration}  declaration
@@ -92,6 +64,61 @@ function isFunctionLike(member) {
   return member.kind === 'method' || member.kind === 'function';
 }
 
+/**
+ * @param  {ClassMember|Declaration}  member
+ * @return {member is ClassField}
+ */
+function isClassField(member) {
+  return member.kind === 'field';;
+}
+
+/**
+ * For any return or parameter type found in the manifest,
+ * if it has an associated Markdown file in docs/api/types/,
+ * replace the `description` field with the markdown file's contents.
+ * @template {Parameter|ReturnType|ClassField} T
+ * @param  {import('custom-elements-manifest/schema').Module} moduleDoc custom element manifest module
+ * @param  {T} member
+ * @return {T}
+ */
+function replaceDescriptionUsingTables(moduleDoc, member) {
+  const [, , foundMemberTypeName] = member.type?.text.match(TYPES_REGEXP) ?? [];
+  if (!foundMemberTypeName)
+    return member;
+  else {
+    const typeDescription = TABLES[foundMemberTypeName];
+
+    const { description: orig } = member;
+
+    member.description = (orig ? `${orig}\n\n` : '') + (typeDescription);
+
+    if (member.description !== orig)
+      console.log(chalk.blue`Replaced description for ${chalk.bold(foundMemberTypeName)} in ${moduleDoc.path}`);
+    else
+      console.log(chalk.red`FAILED to replace description for ${chalk.bold(foundMemberTypeName)} in ${moduleDoc.path}`);
+  }
+}
+
+/**
+ * Processes a function-like Declaration Member
+ * @param {FunctionLike} member
+ * @param  {Module} moduleDoc
+ */
+function processFunctionLike(member, moduleDoc) {
+  if (member.parameters)
+    member.parameters.forEach(param => replaceDescriptionUsingTables(moduleDoc, param))
+  if (member.return)
+    replaceDescriptionUsingTables(moduleDoc, member.return)
+}
+
+/**
+ * Processes a ClassField Member
+ * @param {ClassField} member
+ * @param  {Module} moduleDoc
+ */
+function processClassField(member, moduleDoc) {
+  replaceDescriptionUsingTables(moduleDoc, member);
+}
 
 /**
  * Processes a Declaration Member
@@ -100,12 +127,11 @@ function isFunctionLike(member) {
  */
 function processMember(moduleDoc) {
   return function(member) {
-  if (!isFunctionLike(member)) return;
-  if (member.parameters)
-    member.parameters = member.parameters.map(param => replaceDescriptionUsingTables(TABLES, moduleDoc, param))
-  if (member.return)
-    member.return = replaceDescriptionUsingTables(TABLES, moduleDoc, member.return)
-}
+    if (isFunctionLike(member))
+      processFunctionLike(member, moduleDoc)
+    else if (isClassField(member))
+      processClassField(member, moduleDoc)
+  }
 }
 
 /**

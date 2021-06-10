@@ -77,11 +77,16 @@ const kindIs = propIs('kind');
 
 const pathIs = propIs('path');
 
+const nameIs = propIs('name');
+
 const filterMembersBy = p => declaration =>
   (declaration?.members ?? []).filter(p);
 
 const getModule = (manifest, path) =>
   (manifest?.modules ?? []).find(pathIs(path));
+
+const getDeclaration = (moduleData, declaration) =>
+  moduleData.declarations.find(nameIs(declaration));
 
 const getAllFields = filterMembersBy(kindIs('field'));
 
@@ -160,6 +165,7 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addFilter('split', split);
   eleventyConfig.addFilter('getGitHubURL', getGitHubURL);
   eleventyConfig.addFilter('getModule', getModule);
+  eleventyConfig.addFilter('getDeclaration', getDeclaration);
 
   eleventyConfig.addFilter('getAttributes', getAttributes);
   eleventyConfig.addFilter('getCssParts', getCssParts);

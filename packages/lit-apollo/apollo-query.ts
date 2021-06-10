@@ -9,7 +9,10 @@ import type {
   Variables,
 } from '@apollo-elements/core/types';
 
-import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
+import {
+  ApolloQueryController,
+  ApolloQueryControllerOptions,
+} from '@apollo-elements/core/apollo-query-controller';
 
 import { controlled } from '@apollo-elements/core/decorators';
 
@@ -63,11 +66,11 @@ export class ApolloQuery<
   /** @summary Flags an element that's ready and able to auto subscribe */
   @controlled({ readonly: true }) @state() canAutoSubscribe = false;
 
-  get options(): ApolloQueryController<D, V>['options'] {
+  get options(): ApolloQueryControllerOptions<D, V> {
     return this.controller.options;
   }
 
-  set options(v: ApolloQueryController<D, V>['options']) {
+  set options(v: ApolloQueryControllerOptions<D, V>) {
     const { onData, onError, shouldSubscribe } = this.controller.options;
     this.controller.options = {
       onData, onError, shouldSubscribe, ...v,

@@ -120,14 +120,14 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               }
             },
             {
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               }
             },
             {
@@ -141,7 +141,7 @@
               "kind": "field",
               "name": "errors",
               "type": {
-                "text": "readonly I.GraphQLError[]|null"
+                "text": "readonly GraphQLError[]"
               }
             },
             {

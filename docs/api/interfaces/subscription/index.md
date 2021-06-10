@@ -1,7 +1,8 @@
 ---
 layout: layout-api
-package: '@apollo-elements/interfaces'
-module: 'apollo-subscription.ts'
+package: '@apollo-elements/core'
+className: ApolloSubscriptionElement
+module: 'types.js'
 ---
 # Interfaces >> ApolloSubscription || 30
 

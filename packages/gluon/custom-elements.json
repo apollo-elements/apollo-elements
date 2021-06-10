@@ -22,14 +22,14 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               }
             },
             {
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               }
             },
             {
@@ -91,15 +91,15 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               },
-              "description": "Latest mutation data."
+              "summary": "Latest mutation data."
             },
             {
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
               "summary": "Mutation variables."
@@ -147,15 +147,15 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               },
-              "description": "Latest query data."
+              "summary": "Latest query data."
             },
             {
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.",
               "summary": "Query variables."
@@ -203,15 +203,15 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "I.Data<D> | null"
+                "text": "Data<D> | null"
               },
-              "description": "Latest subscription data."
+              "summary": "Latest subscription data."
             },
             {
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "I.Variables<D, V> | null"
+                "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the subscription GraphQL document to that variable's value.",
               "summary": "Subscription variables."

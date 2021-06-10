@@ -148,4 +148,3 @@ That is to say, whether you create a query element with `lit-apollo`, `haunted`,
 ## Packages
 
 - [Generator](./create/): Quickly scaffold a GraphQL app
-- [Helpers](./lib/): Various library helpers
