@@ -1,9 +1,7 @@
 {
   "include": [
     ".",
-    "../../declaration.d.ts",
-    "./node_modules",
-    "../node_modules"
+    "../../declaration.d.ts"
   ],
   "compilerOptions": {
     "target": "es2020",
@@ -12,6 +10,7 @@
     "useDefineForClassFields": false,
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "sourceMap": true,
     "moduleResolution": "Node"
