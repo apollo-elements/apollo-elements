@@ -37,7 +37,7 @@
     "start": "tsc -w --noEmit",
     "analyze": "run-p analyze:*",
     "analyze:json": "custom-elements-manifest analyze --litelement",
-    "analyze:md": "node ../../scripts/readmes.md",
+    "analyze:md": "node ../../scripts/readmes.js",
     "test": "wtr --coverage --root-dir ../.."
   },
   "publishConfig": {

@@ -314,7 +314,7 @@
               "kind": "field",
               "name": "mutation",
               "type": {
-                "text": "this['document']"
+                "text": "ComponentDocument<D> | null"
               }
             },
             {
@@ -323,16 +323,18 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "Promise<C.FetchResult<I.Data<D>>>"
-                }
+                  "text": "Promise<FetchResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
               },
               "parameters": [
                 {
                   "name": "params",
                   "optional": true,
                   "type": {
-                    "text": "Partial<C.MutationOptions<I.Data<D>, I.Variables<D, V>>>"
-                  }
+                    "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
+                  },
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/mutation/#variables) |\n"
                 }
               ],
               "summary": "Fires a mutation\nThis resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
@@ -374,8 +376,9 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "C.FetchResult<I.Data<D>>"
-                }
+                  "text": "FetchResult<Data<D>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
               },
               "parameters": [
                 {
@@ -387,8 +390,9 @@
                 {
                   "name": "response",
                   "type": {
-                    "text": "C.FetchResult<I.Data<D>>"
-                  }
+                    "text": "FetchResult<Data<D>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
                 }
               ],
               "description": "Callback for when a mutation is completed."
@@ -412,7 +416,7 @@
                 {
                   "name": "error",
                   "type": {
-                    "text": "C.ApolloError"
+                    "text": "ApolloError"
                   }
                 }
               ],
@@ -767,7 +771,8 @@
               "type": {
                 "text": "ApolloQueryControllerOptions<D, V>"
               },
-              "summary": "Options to customize the query and to interface with the controller."
+              "summary": "Options to customize the query and to interface with the controller.",
+              "description": "All properties are optional\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| fetchPolicy | `WatchQueryFetchPolicy`{lang=ts} | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables | `Variables<D, V>`{lang=ts} | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData | `(data: Data<D>) => void`{lang=ts} | Optional callback for when a query resolves. |\n| onError | `(error: Error) => void`{lang=ts} | Optional callback for when an error occurs. |\n"
             },
             {
               "kind": "field",
@@ -840,6 +845,26 @@
             },
             {
               "kind": "method",
+              "name": "shouldSubscribe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "canSubscribe",
               "privacy": "private",
               "return": {
@@ -854,7 +879,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Determines whether the element is able to automatically subscribe"
@@ -1044,7 +1069,7 @@
                   "type": {
                     "text": "Partial<QueryOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](/api/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](/api/interfaces/element/#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "summary": "Executes a Query once and updates the with the result",
@@ -1433,7 +1458,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Determines whether the element is able to automatically subscribe"
@@ -1502,6 +1527,26 @@
               "kind": "method",
               "name": "endSubscription",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ]
             },
             {
               "kind": "method",
@@ -2234,6 +2279,2313 @@
           "declaration": {
             "name": "*",
             "package": "./events"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "types.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CustomElement",
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ControllerHost",
+          "members": [
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "Common base interface for apollo elements",
+          "name": "ApolloElementElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "type": {
+                "text": "'document'|'query'|'mutation'|'subscription'"
+              },
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "privacy": "public",
+              "summary": "The Apollo Client instance."
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloController<D, V>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.",
+              "summary": "Operation document."
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "privacy": "public",
+              "summary": "Latest Data."
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "privacy": "public",
+              "summary": "Operation variables."
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "privacy": "public",
+              "summary": "Latest error"
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly GraphQLError[]"
+              },
+              "privacy": "public",
+              "summary": "Latest errors"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether a request is in flight."
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "summary": "Fetch Policy for the operation."
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown>"
+              },
+              "privacy": "public",
+              "summary": "Context passed to the link execution chain."
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "privacy": "public",
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation."
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "True when the element is connected and ready to receive its GraphQL document"
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "document",
+                  "type": {
+                    "text": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document"
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the operation variables"
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHost",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHost",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHost",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "ControllerHost",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHost",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHost",
+                "module": "types.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "when the element connects to the dom",
+              "name": "'apollo-element-connected'"
+            },
+            {
+              "description": "when the element disconnects from the dom",
+              "name": "'apollo-element-disconnected'"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "string"
+              },
+              "summary": "Fetch Policy for the operation.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "fieldName": "errorPolicy"
+            }
+          ],
+          "superclass": {
+            "name": "ControllerHost"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Common interface for mutation elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "name": "ApolloMutationElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "type": {
+                "text": "'mutation'"
+              },
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloMutationController<D, V>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "privacy": "public",
+              "summary": "Latest mutation data"
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "privacy": "public",
+              "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+              "summary": "Mutation variables."
+            },
+            {
+              "kind": "field",
+              "name": "awaitRefetchQueries",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default."
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether the mutation was called.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "Extract<FetchPolicy, 'no-cache'>"
+              },
+              "privacy": "public",
+              "description": "If set to 'no-cache', the mutation result will not update the Apollo cache."
+            },
+            {
+              "kind": "field",
+              "name": "ignoreResults",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "If true, the returned data property will not update with the mutation result."
+            },
+            {
+              "kind": "field",
+              "name": "mutation",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "summary": "The mutation."
+            },
+            {
+              "kind": "field",
+              "name": "optimisticResponse",
+              "type": {
+                "text": "OptimisticResponseType<D, V>"
+              },
+              "privacy": "public",
+              "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.\n\nAn object that represents the result of this mutation that will be optimistically stored before the server has actually returned a result.\nThis is most often used for optimistic UI, where we want to be able to see the result of a mutation immediately, and update the UI later if any errors appear.\n\n```ts\nelement.optimisticResponse = ({ name }: HelloMutationVariables) => ({\n  __typename: 'Mutation',\n  hello: {\n    __typename: 'Greeting',\n    name,\n  },\n});\n```\n"
+            },
+            {
+              "kind": "field",
+              "name": "refetchQueries",
+              "type": {
+                "text": "RefetchQueriesType<D> | null"
+              },
+              "privacy": "public",
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return."
+            },
+            {
+              "kind": "field",
+              "name": "onCompleted",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_data",
+                  "type": {
+                    "text": "Data<D>"
+                  }
+                }
+              ],
+              "description": "Callback for when a mutation is completed.",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onCompleted']"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onError",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_error",
+                  "type": {
+                    "text": "Error"
+                  }
+                }
+              ],
+              "description": "Callback for when an error occurs in mutation.",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onError']"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updater",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "ReturnType<MutationUpdaterFn<Data<D>>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "Parameters<MutationUpdaterFn<Data<D>>>"
+                  }
+                }
+              ],
+              "description": "A function which updates the apollo cache when the query responds.\nThis function will be called twice over the lifecycle of a mutation.\nOnce at the very beginning if an optimisticResponse was provided.\nThe writes created from the optimistic data will be rolled back before\nthe second time this function is called which is when the mutation has\nsuccesfully resolved. At that point update will be called with the actual\nmutation result and those writes will not be rolled back.\n\nThe reason a DataProxy is provided instead of the user calling the methods\ndirectly on ApolloClient is that all of the writes are batched together at\nthe end of the update, and it allows for writes generated by optimistic\ndata to be rolled back.",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['updater']"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "mutate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<FetchResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
+                  },
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/mutation/#variables) |\n"
+                }
+              ],
+              "description": "This resolves a single mutation according to the options specified and returns a\nPromise which is either resolved with the resulting data or rejected with an error."
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "privacy": "public",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.",
+              "summary": "Operation document.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "privacy": "public",
+              "summary": "Latest error",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly GraphQLError[]"
+              },
+              "privacy": "public",
+              "summary": "Latest errors",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether a request is in flight.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown>"
+              },
+              "privacy": "public",
+              "summary": "Context passed to the link execution chain.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "privacy": "public",
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "document",
+                  "type": {
+                    "text": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the operation variables",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<FetchResult<Data<D>>>"
+              },
+              "description": "when the mutation resolves",
+              "name": "apollo-mutation-result"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<ApolloError>"
+              },
+              "description": "when the mutation rejects",
+              "name": "apollo-error"
+            },
+            {
+              "description": "when the element connects to the dom",
+              "name": "'apollo-element-connected'",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            },
+            {
+              "description": "when the element disconnects from the dom",
+              "name": "'apollo-element-disconnected'",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "await-refetch-queries",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "fieldName": "awaitRefetchQueries"
+            },
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "Extract<FetchPolicy, 'no-cache'>"
+              },
+              "description": "If set to 'no-cache', the mutation result will not update the Apollo cache.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "refetch-queries",
+              "type": {
+                "text": "RefetchQueriesType<D> | null"
+              },
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+              "fieldName": "refetchQueries"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "fieldName": "errorPolicy",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElementElement"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Common interface for query elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "name": "ApolloQueryElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "type": {
+                "text": "'mutation'"
+              },
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloQueryController<D, V>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "privacy": "public",
+              "summary": "The latest query data."
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "privacy": "public",
+              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+              "summary": "Query variables."
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "WatchQueryFetchPolicy"
+              },
+              "privacy": "public",
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query."
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Flags an element that's ready and able to auto subscribe"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "ApolloQueryControllerOptions<D, V>"
+              },
+              "privacy": "public",
+              "description": "All properties are optional\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| fetchPolicy | `WatchQueryFetchPolicy`{lang=ts} | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables | `Variables<D, V>`{lang=ts} | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData | `(data: Data<D>) => void`{lang=ts} | Optional callback for when a query resolves. |\n| onError | `(error: Error) => void`{lang=ts} | Optional callback for when an error occurs. |\n"
+            },
+            {
+              "kind": "field",
+              "name": "networkStatus",
+              "type": {
+                "text": "NetworkStatus"
+              },
+              "privacy": "public",
+              "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however."
+            },
+            {
+              "kind": "field",
+              "name": "nextFetchPolicy",
+              "type": {
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+              },
+              "privacy": "public",
+              "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`."
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so."
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this query."
+            },
+            {
+              "kind": "field",
+              "name": "partial",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
+              "summary": "True when the query returned partial data.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "partialRefetch",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
+              "summary": "Set to retry any partial query results."
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server."
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "DocumentNode | ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "summary": "A GraphQL document containing a single query."
+            },
+            {
+              "kind": "field",
+              "name": "returnPartialData",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache."
+            },
+            {
+              "kind": "field",
+              "name": "onData",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "Data<D>"
+                  },
+                  "description": "the query data."
+                }
+              ],
+              "description": "Optional callback for when a query is completed.",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onData']"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onError",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "Error"
+                  },
+                  "description": "the error."
+                }
+              ],
+              "description": "Optional callback for when an error occurs.",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onError']"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refetch",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<ApolloQueryResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "Variables<D, V>"
+                  },
+                  "description": "The new set of variables. If there are missing variables, the previous values of those variables will be used.."
+                }
+              ],
+              "description": "Update the variables of this observable query, and fetch the new results."
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "description": "Determines whether the element should attempt to subscribe i.e. begin querying\nOverride to prevent subscribing unless your conditions are met"
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "ZenObservable.Subscription"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "description": "Resets the internal state of the query and subscribes."
+            },
+            {
+              "kind": "method",
+              "name": "subscribeToMore",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void | (() => void)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>"
+                  }
+                }
+              ],
+              "description": "Lets you pass a GraphQL subscription and updateQuery function\nto subscribe to more updates for your query.\n\nThe `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results."
+            },
+            {
+              "kind": "method",
+              "name": "executeQuery",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<ApolloQueryResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<QueryOptions<Variables<D, V>, Data<D>>> | undefined"
+                  },
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](/api/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](/api/interfaces/element/#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "description": "Executes a Query once and updates the component with the result"
+            },
+            {
+              "kind": "method",
+              "name": "fetchMore",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Promise<ApolloQueryResult<Data<D>>>"
+                },
+                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<FetchMoreParams<D, V>> | undefined"
+                  },
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts} | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables | `Variables<D, V>`{lang=ts} | Query variables |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object."
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "privacy": "public",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.",
+              "summary": "Operation document.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "privacy": "public",
+              "summary": "Latest error",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly GraphQLError[]"
+              },
+              "privacy": "public",
+              "summary": "Latest errors",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether a request is in flight.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown>"
+              },
+              "privacy": "public",
+              "summary": "Context passed to the link execution chain.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "privacy": "public",
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "document",
+                  "type": {
+                    "text": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the operation variables",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<ApolloQueryResult<Data<D>>>"
+              },
+              "description": "when the query resolves",
+              "name": "apollo-query-result"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<ApolloError>"
+              },
+              "description": "when the query rejects",
+              "name": "apollo-error"
+            },
+            {
+              "description": "when the element connects to the dom",
+              "name": "'apollo-element-connected'",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            },
+            {
+              "description": "when the element disconnects from the dom",
+              "name": "'apollo-element-disconnected'",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "WatchQueryFetchPolicy"
+              },
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "next-fetch-policy",
+              "type": {
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+              },
+              "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
+              "fieldName": "nextFetchPolicy"
+            },
+            {
+              "name": "no-auto-subscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "fieldName": "noAutoSubscribe"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "fieldName": "errorPolicy",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElementElement"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "Common interface for subscription elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "name": "ApolloSubscriptionElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "type": {
+                "text": "'subscription'"
+              },
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloSubscriptionController<D, V>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "privacy": "public",
+              "description": "Latest subscription data."
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "privacy": "public",
+              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\n\nSetting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+              "summary": "Subscription variables."
+            },
+            {
+              "kind": "field",
+              "name": "subscription",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "summary": "A GraphQL document containing a single subscription."
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Flags an element that's ready and able to auto subscribe"
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "FetchPolicy"
+              },
+              "privacy": "public",
+              "summary": "Specifies the FetchPolicy to be used for this subscription."
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server."
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "If true, the element will not begin querying data until you manually call `subscribe`"
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription."
+            },
+            {
+              "kind": "field",
+              "name": "shouldResubscribe",
+              "type": {
+                "text": "SubscriptionDataOptions['shouldResubscribe']"
+              },
+              "privacy": "public",
+              "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+            },
+            {
+              "kind": "field",
+              "name": "skip",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "If true, the query will be skipped entirely"
+            },
+            {
+              "kind": "field",
+              "name": "onSubscriptionData",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_result",
+                  "type": {
+                    "text": "OnSubscriptionDataParams<Data<D>>"
+                  }
+                }
+              ],
+              "description": "Callback for when data is updated",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onSubscriptionData']"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onSubscriptionComplete",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Callback for when subscription completes.",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onSubscriptionComplete']"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onError",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "ApolloError"
+                  }
+                }
+              ],
+              "description": "Callback for when error is updated",
+              "type": {
+                "text": "ApolloMutationInterface<D, V>['onError']"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionDataOptions<D, V>>"
+                  },
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                }
+              ],
+              "summary": "Resets the subscription and subscribes."
+            },
+            {
+              "kind": "method",
+              "name": "cancel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "summary": "Cancels and clears the subscription"
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                }
+              ],
+              "description": "Determines whether the element should attempt to subscribe automatically\nOverride to prevent subscribing unless your conditions are met"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "privacy": "public",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "privacy": "public",
+              "description": "GraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL DocumentNode, so use `graphql-tag`.",
+              "summary": "Operation document.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "privacy": "public",
+              "summary": "Latest error",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly GraphQLError[]"
+              },
+              "privacy": "public",
+              "summary": "Latest errors",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "Whether a request is in flight.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown>"
+              },
+              "privacy": "public",
+              "summary": "Context passed to the link execution chain.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "privacy": "public",
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "document",
+                  "type": {
+                    "text": "ComponentDocument<D> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "Variables<D, V> | null"
+                  }
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the operation variables",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "ApolloSubscriptionResultEvent"
+              },
+              "description": "when the subscription updates",
+              "name": "apollo-subscription-result"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<ApolloError>"
+              },
+              "description": "when the query rejects",
+              "name": "apollo-error"
+            },
+            {
+              "description": "when the element connects to the dom",
+              "name": "'apollo-element-connected'",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            },
+            {
+              "description": "when the element disconnects from the dom",
+              "name": "'apollo-element-disconnected'",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "FetchPolicy"
+              },
+              "summary": "Specifies the FetchPolicy to be used for this subscription.",
+              "fieldName": "fetchPolicy"
+            },
+            {
+              "name": "no-auto-subscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "fieldName": "noAutoSubscribe"
+            },
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "ErrorPolicy"
+              },
+              "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "fieldName": "errorPolicy",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElementElement"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CustomElement",
+          "declaration": {
+            "name": "CustomElement",
+            "module": "types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ControllerHost",
+          "declaration": {
+            "name": "ControllerHost",
+            "module": "types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloElementElement",
+          "declaration": {
+            "name": "ApolloElementElement",
+            "module": "types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutationElement",
+          "declaration": {
+            "name": "ApolloMutationElement",
+            "module": "types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQueryElement",
+          "declaration": {
+            "name": "ApolloQueryElement",
+            "module": "types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscriptionElement",
+          "declaration": {
+            "name": "ApolloSubscriptionElement",
+            "module": "types.js"
           }
         }
       ]

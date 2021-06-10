@@ -34,7 +34,7 @@ import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
 import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
 import { getWebmentionsForUrl } from './packages/docs/rocket-plugins/webmentions.js';
 import { icon } from './packages/docs/rocket-plugins/icon.js';
-import { buildComponents } from './packages/docs/rocket-plugins/build-components.js';
+import { onBeforeBuildBundleComponents } from './packages/docs/rocket-plugins/build-components.js';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 
@@ -52,7 +52,13 @@ export default ({
 
   eleventy(eleventyConfig) {
     eleventyConfig.addWatchTarget('packages/components/*.ts');
-    eleventyConfig.on('beforeBuild', buildComponents);
+    eleventyConfig.addPassthroughCopy(`_assets/_static/**/*`);
+    eleventyConfig.setTemplateFormats([
+      'md',
+      'njk',
+    ]);
+    eleventyConfig.on('beforeBuild', onBeforeBuildBundleComponents);
+    // eleventyConfig.on('afterBuild', onAfterBuildCopyPlayground);
     // eleventyConfig.addPlugin(inclusiveLangPlugin);
     eleventyConfig.addPlugin(helmet);
     eleventyConfig.addPlugin(footnotes);
@@ -63,28 +69,30 @@ export default ({
     eleventyConfig.addPlugin(customElementsManifest, {
       imports: { keepExtension: false },
       types: {
-        ApolloCache: 'https://www.apollographql.com/docs/react/api/cache/InMemoryCache/',
-        ApolloClient: 'https://www.apollographql.com/docs/react/api/core/ApolloClient/',
         ApolloElementElement: '/api/interfaces/element/',
-        ApolloError: 'https://github.com/apollographql/apollo-client/blob/d96f4578f89b933c281bb775a39503f6cdb59ee8/src/errors/index.ts#L36-L70',
         ApolloMutationElement: '/api/interfaces/mutation/',
         ApolloQueryElement: '/api/interfaces/query/',
-        ApolloQueryResult: 'https://github.com/apollographql/apollo-client/blob/d96f4578f89b933c281bb775a39503f6cdb59ee8/src/core/types.ts#L21-L31',
         ApolloSubscriptionElement: '/api/interfaces/subscription/',
+        OptimisticResponseType: '/api/interfaces/mutation/#optimisticresponse',
+
+        Hybrids: 'https://hybrids.js.org/#/misc/typescript',
+
+        ApolloCache: 'https://www.apollographql.com/docs/react/api/cache/InMemoryCache/',
+        ApolloClient: 'https://www.apollographql.com/docs/react/api/core/ApolloClient/',
+        ApolloError: 'https://github.com/apollographql/apollo-client/blob/d96f4578f89b933c281bb775a39503f6cdb59ee8/src/errors/index.ts#L36-L70',
+        ApolloQueryResult: 'https://github.com/apollographql/apollo-client/blob/d96f4578f89b933c281bb775a39503f6cdb59ee8/src/core/types.ts#L21-L31',
         DocumentNode: 'https://github.com/graphql/graphql-js/blob/cd273ad136d615b3f2f4c830bd8891c7c5590c30/src/language/ast.d.ts#L212',
         ErrorPolicy: 'https://www.apollographql.com/docs/react/data/error-handling/#error-policies',
         FetchPolicy: 'https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy',
         FetchResult: 'https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/link/core/types.ts#L24-L32',
         GraphQLError: 'https://github.com/graphql/graphql-js/blob/607345275f60e07dba1b7156a23b9ddf8b086fc9/src/error/GraphQLError.d.ts#L13',
         HTMLElement: 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement',
-        Hybrids: 'https://hybrids.js.org/#/misc/typescript',
         InMemoryCache: 'https://www.apollographql.com/docs/react/api/cache/InMemoryCache/',
         MutationOptions: 'https://github.com/apollographql/apollo-client/blob/29d41eb590157777f8a65554698fcef4d757a691/src/core/watchQueryOptions.ts#L247-L276',
         MutationUpdaterFn: 'https://github.com/apollographql/apollo-client/blob/29d41eb590157777f8a65554698fcef4d757a691/src/core/watchQueryOptions.ts#L279-L282',
         NetworkStatus: 'https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/core/networkStatus.ts#L4',
         ObservableQuery: 'https://www.apollographql.com/docs/react/api/core/ObservableQuery/',
         Operation: 'https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/link/core/types.ts#L15-L22',
-        OptimisticResponseType: '/api/interfaces/mutation/#optimisticresponse',
         PureQueryOptions: 'https://github.com/apollographql/apollo-client/blob/d96f4578f89b933c281bb775a39503f6cdb59ee8/src/core/types.ts#L15-L19',
         QueryOptions: 'https://github.com/apollographql/apollo-client/blob/29d41eb590157777f8a65554698fcef4d757a691/src/core/watchQueryOptions.ts#L38-L91',
         RefetchQueriesType: 'https://github.com/apollographql/apollo-client/blob/29d41eb590157777f8a65554698fcef4d757a691/src/core/watchQueryOptions.ts#L201-L203',
@@ -164,13 +172,26 @@ export default ({
       'center': () => ({ tagName: 'div', attributes: { center: 'true' } }),
       'playground': ([id, file]) => ({
         tagName: 'docs-playground',
-        attributes: { id, file },
+        attributes: {
+          id,
+          file,
+        },
       }),
-      'playground-file': ([id, name]) => ({
+      'playground-file': ([id, name], node) => ({
         tagName: 'template',
         attributes: {
           'data-playground-id': id,
           'data-filename': name,
+          'data-lang': node.lang,
+        },
+      }),
+      'playground-hidden-file': ([id, name], node) => ({
+        tagName: 'template',
+        attributes: {
+          'data-playground-id': id,
+          'data-filename': name,
+          'data-hidden': true,
+          'data-lang': node.lang,
         },
       }),
       'playground-import-map': ([id]) => ({

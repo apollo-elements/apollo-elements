@@ -1,7 +1,8 @@
 ---
 layout: layout-api
-package: '@apollo-elements/interfaces'
-module: 'apollo-mutation.ts'
+package: '@apollo-elements/core'
+className: ApolloMutationElement
+module: 'types.js'
 ---
 # Interfaces >> ApolloMutation || 20
 

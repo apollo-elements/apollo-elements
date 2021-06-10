@@ -198,7 +198,12 @@ export declare class ApolloElementElement<
   /** @summary Context passed to the link execution chain. */
   public context?: Record<string, unknown>;
   /**
-   * errorPolicy determines the level of events for errors in the execution result. The options are:
+   * Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors
+   * from the server are sent to your UI code. By default, the error policy treats any
+   * GraphQL Errors as network errors and ends the request chain.
+   * It doesn't save any data in the cache, and renders your UI with the error property
+   * set to an `ApolloError`. By changing this policy per request, you can adjust how
+   * GraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:
    * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
    * - `ignore`: errors from the request do not stop the observable, but also don't call `next`
    * - `all`: errors are treated like data and will notify observables

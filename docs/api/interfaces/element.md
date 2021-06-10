@@ -1,7 +1,8 @@
 ---
 layout: layout-api
-package: '@apollo-elements/interfaces'
-module: 'apollo-element.ts'
+package: '@apollo-elements/core'
+className: ApolloElementElement
+module: 'types.js'
 ---
 # Interfaces >> ApolloElement || 00
 
