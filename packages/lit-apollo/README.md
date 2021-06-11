@@ -9,7 +9,8 @@
 
 <strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong>
 
-> **Looking for Apollo `ReactiveController`s?** See [`@apollo-elements/core`](../core/)
+> This package is for single-operation GraphQL components.
+> **Looking for Apollo Reactive Controllers?** See [`@apollo-elements/core`](../core/)
 
 <wcd-live data-title="Live Demo">
 
