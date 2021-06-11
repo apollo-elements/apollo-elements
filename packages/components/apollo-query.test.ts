@@ -4,7 +4,7 @@ import * as C from '@apollo/client/core';
 
 import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
-import { spy, SinonSpy } from 'sinon';
+import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
 import { html } from 'lit/static-html.js';
 
@@ -233,6 +233,8 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
 
     describe('with a simple template that renders data', function() {
       let element: ApolloQueryElement<typeof S.PaginatedQuery>;
+      let clock: SinonFakeTimers;
+
       beforeEach(async function() {
         element = await fixture(html`
           <apollo-query>
@@ -322,21 +324,19 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
                   expect(element).shadowDom.to.equal('1,2,3,4,5,6,7,8,9,10,11');
                 });
               });
-              describe('then calling startPolling(20)', function() {
+              describe('then calling startPolling(1000)', function() {
+                beforeEach(() => { clock = useFakeTimers(); });
                 beforeEach(() => spy(element.controller, 'refetch'));
                 afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
-                beforeEach(function startPolling() {
-                  element.startPolling(20);
-                });
-                beforeEach(() => aTimeout(70));
+                afterEach(() => clock.restore());
+                beforeEach(function startPolling() { element.startPolling(1000); });
+                beforeEach(() => { clock.tick(3500); });
                 it('refetches', function() {
                   expect(element.controller.refetch).to.have.been.calledThrice;
                 });
                 describe('then stopPolling', function() {
-                  beforeEach(function stopPolling() {
-                    element.stopPolling();
-                  });
-                  beforeEach(() => aTimeout(100));
+                  beforeEach(function stopPolling() { element.stopPolling(); });
+                  beforeEach(() => { clock.tick(3500); });
                   it('stops calling refetch', function() {
                     expect(element.controller.refetch).to.have.been.calledThrice;
                   });
