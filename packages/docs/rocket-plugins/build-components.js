@@ -90,12 +90,25 @@ export function buildComponents() {
   });
 
   build({
+    entryPoints: ['packages/docs/entrypoints/haunted.ts'],
+    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/apollo-elements-haunted.js',
+  });
+
+  build({
+    entryPoints: ['packages/docs/entrypoints/schemalink.ts'],
+    external: [ 'lit', 'lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/schema-link.js',
+  });
+
+  build({
     entryPoints: ['packages/docs/entrypoints/client.ts'],
     outfile: 'docs/_assets/_static/apollo-client.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/mixins.ts'],
+    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/mixins.js',
   });
 
@@ -106,7 +119,7 @@ export function buildComponents() {
   });
 
   build({
-    external: [ 'lit', 'lit/*', 'https://*' ],
+    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     entryPoints: ['packages/docs/entrypoints/components.ts'],
     outfile: 'packages/docs/components.js',
   });
@@ -135,13 +148,14 @@ export async function copyPlaygroundFiles() {
   console.log(chalk.blue`Copying playground files...`)
   const OUT = 'docs/_assets/_static/playground-elements/';
   const SITE = '_site/_assets/_static/playground-elements/'
-  copySync('node_modules/playground-elements/playground-service-worker-proxy.html', OUT);
-  copySync('node_modules/playground-elements/playground-service-worker.js', OUT);
-  copySync('node_modules/playground-elements/playground-typescript-worker.js', OUT);
+  const DEV = '_site-dev/_assets/_static/playground-elements/'
 
-  await mkdirp(SITE)
-  copySync('node_modules/playground-elements/playground-service-worker-proxy.html', SITE);
-  copySync('node_modules/playground-elements/playground-service-worker.js', SITE);
-  copySync('node_modules/playground-elements/playground-typescript-worker.js', SITE);
+  for (const base of [OUT, DEV, SITE]) {
+    await mkdirp(base)
+    copySync('node_modules/playground-elements/playground-service-worker-proxy.html', base);
+    copySync('node_modules/playground-elements/playground-service-worker.js', base);
+    copySync('node_modules/playground-elements/playground-typescript-worker.js', base);
+  }
+
   console.log(chalk.green`Done!`)
 }
