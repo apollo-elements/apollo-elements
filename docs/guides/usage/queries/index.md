@@ -28,8 +28,8 @@ query HelloQuery {
 
 Apollo Elements give you three ways to define query components:
 1. Using the `<apollo-query>` HTML element
-2. By defining a custom element that extends from {%footnoteref "querymixin" 'or applies <a href="/api/libraries/mixins/apollo-query-mixin/"><code>ApolloQueryMixin</code></a>'%}{%endfootnoteref%}
-3. Using `useQuery` [haunted hook](/api/libraries/haunted/useQuery/) or `query` [hybrids factory](/api/libraries/hybrids/query/)
+2. With [`ApolloQueryController`](/api/core/query/) reactive controller, `useQuery` [haunted hook](/api/libraries/haunted/useQuery/), or `query` [hybrids factory](/api/libraries/hybrids/query/)
+3. By defining a custom element that extends from {%footnoteref "querymixin" 'or applies <a href="/api/libraries/mixins/apollo-query-mixin/"><code>ApolloQueryMixin</code></a>'%}{%endfootnoteref%}
 
 ## HTML Queries
 
@@ -65,6 +65,8 @@ The `<apollo-query>` element from `@apollo-elements/components` lets you declara
 ```
 
 Read more about `<apollo-query>` in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/).
+
+<!-- ## TODO: query controller  -->
 
 ## Custom Query Elements
 

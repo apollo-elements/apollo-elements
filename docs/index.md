@@ -150,16 +150,6 @@ query LatestLaunch {
 }
 ```
 
-```json playground-import-map query-spacex
-{
-  "imports": {
-    "@apollo-elements/core": "../../../apollo-elements.js",
-    "@apollo-elements/components": "../../../apollo-elements.js"
-  }
-}
-```
-
-
 <h2 class="reason-header">Why Apollo Elements?</h2>
 
 <section class="reasons">

@@ -171,11 +171,6 @@ export class DocsPlayground extends HTMLElement {
 <!doctype html>
 <head>
   <link rel="stylesheet" href="style.css"/>
-  <script type="module" src="apollo-elements.js"></script>
-  <script type="module">
-    import * as AE from '@apollo-elements/core';
-    console.log(AE);
-  </script>
 </head>
 <body>
 <!-- playground-hide-end -->
@@ -201,7 +196,6 @@ ${content}
     return this.getAttribute('file') ?? 'index.html';
   }
 
-  // playgroundUrl = 'https://unpkg.com/playground-elements@0.9.4?module';
   playgroundUrl = '/_assets/_static/playground-elements/playground.js';
 
   attributeChangedCallback(name: string, _: string, next: string) {
@@ -242,14 +236,44 @@ ${content}
     const config: ProjectManifest = { files };
     if (importMapTemplate)
       config.importMap = JSON.parse(importMapTemplate.content.textContent.replace(/ORIGIN/g, window.location.origin));
+
     config.importMap = {
       imports: {
-        ...config.importMap.imports,
-        '@apollo/client/core': '../../../apollo-elements.js',
-        '@apollo/client/utilities': '../../../apollo-elements.js',
-        '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-elements.js',
+        '@apollo-elements/components': '../../../apollo-elements.js',
+        '@apollo-elements/core': '../../../apollo-elements.js',
+        '@apollo-elements/core/apollo-mutation-controller': '../../../apollo-elements.js',
+        '@apollo-elements/core/apollo-query-controller': '../../../apollo-elements.js',
+        '@apollo-elements/core/apollo-subscription-controller': '../../../apollo-elements.js',
+        '@apollo-elements/core/decorators': '../../../apollo-elements.js',
+        '@apollo-elements/core/events': '../../../apollo-elements.js',
+        '@apollo-elements/core/lib/has-all-variables': '../../../apollo-elements.js',
+        "@apollo-elements/haunted": "../../../apollo-elements-haunted.js",
+        "@apollo-elements/haunted/useQuery.js": "../../../apollo-elements-haunted.js",
+        "@apollo-elements/haunted/useMutation.js": "../../../apollo-elements-haunted.js",
+        "@apollo-elements/haunted/useSubscription.js": "../../../apollo-elements-haunted.js",
+        "@apollo-elements/haunted/useQuery": "../../../apollo-elements-haunted.js",
+        "@apollo-elements/haunted/useMutation": "../../../apollo-elements-haunted.js",
+        "@apollo-elements/haunted/useSubscription": "../../../apollo-elements-haunted.js",
+        '@apollo-elements/mixins': '../../../mixins.js',
+        '@apollo-elements/mixins/apollo-client-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/apollo-mutation-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/apollo-query-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/apollo-subscription-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/controller-host-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/graphql-script-child-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/type-policies-mixin': '../../../mixins.js',
+        '@apollo-elements/mixins/validate-variables-mixin': '../../../mixins.js',
+
+        '@apollo/client/core': '../../../apollo-client.js',
+        '@apollo/client/utilities': '../../../apollo-client.js',
+        '@apollo/client/link/schema': '../../../schema-link.js',
+        '@apollo/client/link/schema/index.esm.js': '../../../schema-link.js',
+        '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-client.js',
+
+        ...config.importMap?.imports,
       }
     }
+
     this.init(config);
   }
 
@@ -272,7 +296,8 @@ ${content}
         hidden: true,
       },
       'style.css': {
-        content: ''
+        content: '',
+        hidden: !config?.files?.['style.css'],
       },
       ...config.files,
     }).map(([k, v]) => [k, k !== 'index.html' ? v : ({

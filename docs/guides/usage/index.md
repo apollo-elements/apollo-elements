@@ -118,6 +118,9 @@ The tabs below demonstrate multiple ways to write the same query component:
   ```
 
   ```js tab vanilla
+  import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin';
+  import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
+
   const template = document.createElement("template");
   template.innerHTML = `
     <h2>Astronauts</h2>
@@ -131,8 +134,8 @@ The tabs below demonstrate multiple ways to write the same query component:
     </astro-naut>
   `;
 
-  class Astronauts extends ApolloQuery(HTMLElement) {
-    query = gql`
+  class Astronauts extends ApolloQueryMixin(HTMLElement) {
+    query = new ApolloQueryController(this, gql`
       query Users {
         users {
           id
@@ -140,14 +143,7 @@ The tabs below demonstrate multiple ways to write the same query component:
           picture
         }
       }
-    `;
-
-    #data = null;
-    get data() { return this.#data; }
-    set data(data) {
-      this.#data = data;
-      this.render();
-    }
+    `)
 
     constructor() {
       super();
@@ -156,7 +152,12 @@ The tabs below demonstrate multiple ways to write the same query component:
         .appendChild(template.content.cloneNode(true));
     }
 
-    render() {
+    update() {
+      this.render();
+      super.update();
+    }
+
+    update() {
       const node = this.shadowRoot.getElementById('astronauts');
       for (const child of node.children)
         child.remove();
@@ -174,8 +175,10 @@ The tabs below demonstrate multiple ways to write the same query component:
   ```
 
   ```js tab lit
+  import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
+
   class Astronauts extends ApolloQuery {
-    query = gql`
+    query = new ApolloQueryController(this, gql`
       query Users {
         users {
           id
@@ -183,12 +186,12 @@ The tabs below demonstrate multiple ways to write the same query component:
           picture
         }
       }
-    `;
+    `);
 
     render() {
       return html`
         <h2>Astronauts</h2>
-        ${(this.data?.users ?? []).map(({ id, name, picture }) => html`
+        ${(this.query.data?.users ?? []).map(({ id, name, picture }) => html`
         <astro-naut id="${ id }" name="${ name }">
           <img src="${ picture }"
                alt="Portrait of ${ name }"/>
@@ -200,6 +203,8 @@ The tabs below demonstrate multiple ways to write the same query component:
   ```
 
   ```ts tab fast
+  import { ApolloQuery } from '@apollo-elements/fast';
+
   const getId: Binding<Astronaut> = x => x.id;
   const getName: Binding<Astronaut> = x => x.name;
   const getPicture: Binding<Astronaut> = x => x.picture;
@@ -255,8 +260,9 @@ The tabs below demonstrate multiple ways to write the same query component:
   ```
 
   ```js tab hybrids
+  import { query } from '@apollo-elements/hybrids/factories/query';
+
   define('astro-nauts', {
-    client: client(),
     query: query(gql`
       query Users {
           users {
@@ -268,7 +274,7 @@ The tabs below demonstrate multiple ways to write the same query component:
     `),
     render: host => html`
       <h2>Astronauts</h2>
-      ${(host.data?.users ?? []).map(({ id, name, picture }) => html`
+      ${(host.query.data?.users ?? []).map(({ id, name, picture }) => html`
       <astro-naut id="${ id }" name="${ name }">
         <img src="${ picture }"
              alt="Portrait of ${ name }"/>
