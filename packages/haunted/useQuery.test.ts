@@ -19,7 +19,7 @@ import { sendKeys } from '@web/test-runner-commands';
 
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { spy, SinonSpy } from 'sinon';
+import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
 describe('[haunted] useQuery', function() {
   describe('with global client', function() {
@@ -51,7 +51,7 @@ describe('[haunted] useQuery', function() {
               </article>
               <p>${c.data?.helloWorld?.greeting}, ${c.data?.helloWorld?.name}!</p>
 
-              <button id="start" @click="${() => c.startPolling(20)}">start</button>
+              <button id="start" @click="${() => c.startPolling(1000)}">start</button>
               <button id="stop" @click="${c.stopPolling}">stop</button>
               <button id="executeQuery" @click="${() => c.executeQuery({ variables: { name: 'Mr Magoo', greeting: 'How do you do' } })}"></button>
               <button id="errorQuery" @click="${() => c.executeQuery({ variables: { name: 'Mr Magoo', greeting: 'How do you do' } })}"></button>
@@ -65,27 +65,30 @@ describe('[haunted] useQuery', function() {
 
         beforeEach(nextFrame);
 
-        describe('calling startPolling', function() {
+        describe('calling startPolling then stopPolling', function() {
+          let clock: SinonFakeTimers;
+
+          beforeEach(() => clock = useFakeTimers());
+          afterEach(() => clock.restore());
           function startPolling() {
             element.shadowRoot!.getElementById('start')!.click();
           }
+
           function stopPolling() {
-              element.shadowRoot!.getElementById('stop')!.click();
+            element.shadowRoot!.getElementById('stop')!.click();
           }
 
-          beforeEach(function() {
-            startPolling();
-            setTimeout(stopPolling, 70);
-          });
+          beforeEach(startPolling);
 
-          beforeEach(() => aTimeout(100));
+          beforeEach(() => clock.tick(3500));
 
           it('refetches', function() {
             expect(refetchSpy).to.have.been.calledThrice;
           });
 
           describe('then stopPolling', function() {
-            beforeEach(() => aTimeout(100));
+            beforeEach(stopPolling);
+            beforeEach(() => clock.tick(5000));
 
             it('stops calling refetch', function() {
               expect(refetchSpy).to.have.been.calledThrice;

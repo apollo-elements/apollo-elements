@@ -16,7 +16,7 @@ import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing
 
 import { resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { match, spy, SinonSpy } from 'sinon';
+import { match, spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
 describe('[core] ApolloQueryController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
@@ -682,9 +682,12 @@ describe('[core] ApolloQueryController', function() {
         });
 
         describe('calling startPolling', function() {
-          beforeEach(function startPolling() { element.query.startPolling(20); });
+          let clock: SinonFakeTimers;
+          beforeEach(() => clock = useFakeTimers());
+          afterEach(() => clock.restore());
+          beforeEach(function startPolling() { element.query.startPolling(1000); });
 
-          beforeEach(() => aTimeout(70));
+          beforeEach(() => clock.tick(3500));
 
           it('refetches', function() {
             expect(element.query.refetch).to.have.been.calledThrice;
@@ -695,7 +698,7 @@ describe('[core] ApolloQueryController', function() {
               element.query.stopPolling();
             });
 
-            beforeEach(() => aTimeout(100));
+            beforeEach(() => clock.tick(3500));
 
             it('stops calling refetch', function() {
               expect(element.query.refetch).to.have.been.calledThrice;
