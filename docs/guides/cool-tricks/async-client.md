@@ -325,24 +325,20 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   }
 
   async function connect(host) {
-    // asynchronously get a reference to the client
-    host.client = await getClient();
-    // only then start fetching data
-    host.subscribe();
+    // asynchronously get a reference to the client.
+    // setting the client will automatically start querying.
+    host.query.client = await getClient();
   }
 
   define('async-element', {
     // use 'connect' to gain access to connectedCallback
-    // because of how Hybrids queues connectedCallbacks,
-    // set this before you set `query`
-    noAutoSubscribe: property(true, connect),
-    client: client(null),
-    query: query<Data, Variables>(UserSessionQuery),
-    render: ({ data }) => html`
-      <h1>👋 ${data?.userSession.name}!</h1>
+    __asyncClient: { connect },
+    query: query(UserSessionQuery),
+    render: ({ query }) => html`
+      <h1>👋 ${query.data?.userSession.name}!</h1>
       <p>
         <span>Your last activity was</span>
-        <time>${getTime(data?.userSession)}</time>
+        <time>${getTime(query.data?.userSession)}</time>
       </p>
     `
   })

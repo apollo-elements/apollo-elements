@@ -118,15 +118,19 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
   ```
 
   ```ts tab haunted
-  import { useQuery, component, html } from '@apollo-elements/haunted';
+  import { useEffect, useQuery, component, html } from '@apollo-elements/haunted';
   import { GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 
-  function GreetMe() {
-    const { data } = useQuery(null);
+  function GreetMe(props) {
+    // NOTE: must pass `hostElement: this` to use `<apollo-client>`
+    const q = useQuery(null, { hostElement: this });
+    useEffect(() => { query.variables = props.variables }, [props.variables]);
+    useEffect(() => { query.query = props.document }, [props.document]);
+
     return html`
       <p>
-        ${data?.greeting ?? 'Hello'},
-        ${data?.name ?? 'friend'}
+        ${q.data?.greeting ?? 'Hello'},
+        ${q.data?.name ?? 'friend'}
       </p>
     `;
   }
@@ -143,13 +147,13 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
     if (!(node instanceof HTMLScriptElement))
       return; /* c8 ignore next */ // it's covered
     if (node.matches('[type="application/graphql"]'))
-      host.document = gql(node.textContent);
+      host.query.document = gql(node.textContent);
     if (node.matches('[type="application/json"]'))
-      host.variables = JSON.parse(node.textContent);
+      host.query.variables = JSON.parse(node.textContent);
   }
 
   define('greet-me', {
-    ...query(null),
+    query: query(HelloQuery),
     _domQuery: {
       connect(host) {
         const mo = new MutationObserver(records => {
@@ -165,8 +169,8 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
         return () => mo.disconnect();
       }
     }
-    render: ({ data }) => html`
-      <p>${data?.greeting ?? 'Hello'}, ${data?.name ?? 'friend'}</p>
+    render: ({ query }) => html`
+      <p>${query.data?.greeting ?? 'Hello'}, ${query.data?.name ?? 'friend'}</p>
     `
   })
   ```

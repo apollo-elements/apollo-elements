@@ -79,14 +79,9 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
+  import { UserQuery } from './User.query.graphql';
 
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
-
-  export class ProfilePage extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<Data, Variables> {
+  export class ProfilePage extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<typeof UserQuery> {
     query = UserQuery;
 
     typePolicies = UserTypePolicies;
@@ -100,15 +95,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
+  import { UserQuery } from './User.query.graphql';
 
   @customElement('profile-page')
-  export class ProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+  export class ProfilePage extends TypePoliciesMixin(ApolloQuery)<typeof UserQuery> {
     query = UserQuery;
 
     typePolicies = UserTypePolicies;
@@ -120,15 +110,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
+  import { UserQuery } from './User.query.graphql';
 
   @customElement({ name: 'profile-page' })
-  export class ProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+  export class ProfilePage extends TypePoliciesMixin(ApolloQuery)<typeof UserQuery> {
     query = UserQuery;
 
     typePolicies = UserTypePolicies;
@@ -139,23 +124,18 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
+  import { UserQuery } from './User.query.graphql';
 
   function ProfilePage({ client }) {
+    const { client, data } = useQuery(UserQuery);
+
     /**
      * There's no TypePoliciesMixin for haunted,
      * but you can use the `useEffect` hook to do the same
      */
-    useEffect(({ host }) => {
-      host.client.cache.policies.addTypePolicies(UserTypePolicies);
+    useEffect(() => {
+      client.cache.policies.addTypePolicies(UserTypePolicies);
     }, [client]);
-
-    const { data } = useQuery(UserQuery);
 
     return html`...`;
   }
@@ -167,25 +147,19 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   import { client, query, define } from '@apollo-elements/hybrids';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
-
-  /**
-   * There's no TypePoliciesMixin for hybrids,
-   * but you can use this one-line function to do the same
-   */
-  function connect(host) {
-    host.client.cache.policies.addTypePolicies(host.typePolicies);
-  }
+  import { UserQuery } from './User.query.graphql';
 
   define('profile-page', {
-    client: client(window.__APOLLO_QUERY__),
     query: query(UserQuery),
-    typePolicies: property(UserTypePolicies, connect),
+    __typePolicies: {
+      /**
+       * There's no TypePoliciesMixin for hybrids,
+       * but you can use this one-line function to do the same
+       */
+      connect(host) {
+        host.query.client.cache.policies.addTypePolicies(UserTypePolicies);
+      }
+    },
   });
   ```
 
@@ -214,15 +188,10 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
+  import { UserQuery } from './User.query.graphql';
 
   export class AdminProfilePage
-  extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<Data, Variables> {
+  extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<typeof UserQuery> {
     query = UserQuery;
 
     typePolicies = { ...UserTypePolicies, ...AdminTypePolicies };
@@ -236,15 +205,10 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
+  import { UserQuery } from './User.query.graphql';
 
   @customElement('admin-profile-page')
-  export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+  export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<typeof UserQuery> {
     query = UserQuery;
 
     typePolicies = { ...UserTypePolicies, ...AdminTypePolicies };
@@ -258,13 +222,8 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
 
   import UserQuery from './User.query.graphql';
 
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
-
   @customElement({ name: 'admin-profile-page' })
-  export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<Data, Variables> {
+  export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<typeof UserQuery> {
     query = UserQuery;
 
     typePolicies = { ...UserTypePolicies, ...AdminTypePolicies };
@@ -275,28 +234,21 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
+  import { UserQuery } from './User.query.graphql';
 
-  import type {
-  UserQueryData as Data,
-  UserQueryVariables as Variables,
-  } from '../schema';
+  function AdminProfilePage() {
+    const { client, data } = useQuery(UserQuery);
 
-  function AdminProfilePage({ client }) {
-  /**
-   * There's no TypePoliciesMixin for haunted,
-   * but you can use the `useEffect` hook to do the same
-   */
-  useEffect(({ host }) => {
-    host.client.cache.policies.addTypePolicies({
-      ...UserTypePolicies,
-      ...AdminTypePolicies
-    });
-  }, [client]);
+    /**
+     * There's no TypePoliciesMixin for haunted,
+     * but you can use the `useEffect` hook to do the same
+     */
+    useEffect(() => {
+      client.cache.policies.addTypePolicies(UserTypePolicies),
+      client.cache.policies.addTypePolicies(AdminTypePolicies),
+    }, [client]);
 
-  const { data } = useQuery(UserQuery);
-
-  return html`...`;
+    return html`...`;
   }
 
   customElements.define('admin-profile-page', component(AdminProfilePage));
@@ -306,28 +258,20 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   import { client, query, define } from '@apollo-elements/hybrids';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
-
-  import type {
-    UserQueryData as Data,
-    UserQueryVariables as Variables,
-  } from '../schema';
-
-  /**
-   * There's no TypePoliciesMixin for hybrids,
-   * but you can use this one-line function to do the same
-   */
-  function connect(host) {
-    host.client.cache.policies.addTypePolicies(host.typePolicies);
-  }
+  import { UserQuery } from './User.query.graphql';
 
   define('admin-profile-page', {
-    client: client(window.__APOLLO_QUERY__),
     query: query(UserQuery),
-    typePolicies: property({
-      ...UserTypePolicies,
-      ...AdminTypePolicies
-    }, connect),
+    __typePolicies: {
+      /**
+       * There's no TypePoliciesMixin for hybrids,
+       * but you can use this one-line function to do the same
+       */
+      connect(host) {
+        host.query.client.cache.policies.addTypePolicies(UserTypePolicies),
+        host.query.client.cache.policies.addTypePolicies(AdminTypePolicies),
+      }
+    }
   });
   ```
 

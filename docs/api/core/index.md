@@ -153,12 +153,3 @@ document.querySelector('apollo-client')
     }),
   });
 ```
-
-```json playground-import-map controller-host
-{
-  "imports": {
-    "@apollo-elements/core": "ORIGIN/_assets/_static/apollo-elements.js",
-    "@apollo/client/core": "ORIGIN/_assets/_static/apollo-client.js"
-  }
-}
-```

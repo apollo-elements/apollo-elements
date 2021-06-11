@@ -119,25 +119,22 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
   // the `useQuery`, `useMutation`, and `useSubscription` hooks accept a client option.
 
   function ConnectedQuery() {
-    const { data } = useQuery(gql`query ConnectedQuery { }`, { client });
+    const { data } = useQuery(gql`query ConnectedQuery { connected }`, { client });
   }
   ```
 
   ```ts tab hybrids
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  import { query, define, html } from '@apollo-elements/hybrids';
   import { client as apolloClient } from './specific-apollo-client';
 
   interface Data { /* ... */ }
   interface Variables { /* ... */ }
 
-  // There is no ApolloClientMixin for Hybrids, rather
-  // the `client` factory accepts a client instance.
+  // There is no ApolloClientMixin for Hybrids, rather pass the client
+  // to the `query`, `mutation`, or `subscription` factory.
 
   define('connected-query', {
-    client: client(apolloClient),
-    query: query(gql`query ConnectedQuery {
-      # ...
-    }`),
+    query: query(gql`query ConnectedQuery { connected }`, { client }),
   });
   ```
 

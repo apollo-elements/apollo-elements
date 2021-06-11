@@ -96,7 +96,6 @@ dl {
 ```json playground-import-map mouse-controller
 {
   "imports": {
-    "@apollo-elements/core": "../../../apollo-elements.js",
     "@apollo-elements/mixins/controller-host-mixin": "../../../mixins.js"
   }
 }

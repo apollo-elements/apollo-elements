@@ -33,11 +33,11 @@ import { query, define, html } from '@apollo-elements/hybrids';
 import HelloQuery from './Hello.query.graphql';
 
 define('hello-query', {
-  ...query(HelloQuery),
-  render: ({ data }) => html`
+  query: query(HelloQuery),
+  render: ({ query }) => html`
     <span id="hello">
-      ${data?.hello?.greeting ?? 'hello'},
-      ${data?.hello?.name ?? 'world'}!
+      ${query.data?.hello?.greeting ?? 'hello'},
+      ${query.data?.hello?.name ?? 'world'}!
     </span>
   `,
 });
