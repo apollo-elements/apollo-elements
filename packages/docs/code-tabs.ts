@@ -1,7 +1,6 @@
 import { SelectMixin } from '@pwrs/mixins/select/select-mixin';
 import { html, LitElement, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property, queryAll, state } from 'lit/decorators.js';
-import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 import ButtonStyles from './button.css';
 import TabsStyles from './tabs.css';
@@ -95,7 +94,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
       <div id="tabs" role="tablist">
         ${items.map(({ dataset: { id, iconHref, label } }, i) => html`
         <button role="tab" data-id="${id}" @click="${this.onClickTab}" ?selected="${this.selectedIndex === i}">
-          <img src="${ifDefined(iconHref)}" role="presentation"/>
+          <img .src="${iconHref}" role="presentation"/>
           ${label}
         </button>
         `)}
