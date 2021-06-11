@@ -2,11 +2,11 @@
 "@apollo-elements/hybrids": major
 ---
 
-Upgrades hybrids dependency to version 5.
+Upgrades hybrids dependency to version 5.3.3 and use `ApolloController`
 
-`query`, `mutation`, and `subscription` factories now return a spread of properties. This was done to avoid the need to hack into hybrids' reactivity system.
+Now, `query`, `mutation`, and `subscription` factories use `ApolloController` under the hood. This removes the need to hack into hybrids' reactivity system, deletes bad prototype hacking, and decreseases bundle sizes.
 
-To migrate, remove your `client` calls and replace your `query` etc with spreads:
+We also removed the `client` factory. Instead, pass a `client` instance in to the factory's options (or don't, to fallback to the default `window.__APOLLO_CLIENT__`).
 
 #### Before:
 
@@ -21,6 +21,6 @@ define("my-query", {
 
 ```js
 define("my-query", {
-  ...query(MyQuery, { client: someClient }),
+  query: query(MyQuery, { client: someClient }),
 });
 ```

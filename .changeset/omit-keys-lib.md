@@ -1,5 +1,10 @@
 ---
 "@apollo-elements/lib": major
+"@apollo-elements/interfaces": major
 ---
 
-Allows to omit keys when applying a prototype via `applyPrototype`. Wraps all arguments after the first two in an "options" argument object.
+Deprecate `@apollo-elements/lib` and `@apollo-elements/interfaces`
+
+Removes the `lib` and `interfaces` packages, and moves their contents to `core`.
+
+If you were for some reason importing these, update your imports.
