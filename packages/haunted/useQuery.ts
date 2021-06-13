@@ -7,7 +7,7 @@ import {
   ApolloQueryControllerOptions,
 } from '@apollo-elements/core/apollo-query-controller';
 
-export function useQuery<D extends MaybeTDN = any, V = MaybeVariables<D>>(
+export function useQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>(
   query: ComponentDocument<D>,
   options?: ApolloQueryControllerOptions<D, V>
 ): ApolloQueryController<D, V> {

@@ -29,6 +29,7 @@ export class HybridsControllerHost extends EventTarget implements ReactiveContro
 
   removeController(controller: ReactiveController): void {
     this.#controllers.delete(controller);
+    // eslint-disable-next-line easy-loops/easy-loops
     for (const [key, r] of this.#keys) {
       if (r.controller === controller)
         this.#keys.delete(key);
@@ -48,7 +49,7 @@ export class HybridsControllerHost extends EventTarget implements ReactiveContro
   }
 
   async requestUpdate(): Promise<boolean> {
-    this.#keys.forEach(({ invalidate }, key) => {
+    this.#keys.forEach(({ invalidate }) => {
       invalidate({ force: true });
     });
     return this.updateComplete;

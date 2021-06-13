@@ -56,7 +56,7 @@ export abstract class PolymerApolloElement<
     if (this[k] !== this[last].get(k)) {
       this[last].set(k, this[k]);
       if (!this.controller)
-        this[k] = getInitialProp(this, k);
+        this[k] = getInitialProp(this, k) as this[keyof this];
       else
         this[k] = this.controller[k as keyof ApolloController<D, V>] as this[keyof this];
       this.dispatchEvent(new PolymerChangeEvent(k as string, this[k]));

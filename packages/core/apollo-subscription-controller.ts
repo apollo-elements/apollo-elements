@@ -41,7 +41,7 @@ export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControl
   onError?: (error: ApolloError) => void;
 }
 
-export class ApolloSubscriptionController<D extends MaybeTDN = any, V = MaybeVariables<D>>
+export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloController<D, V>
   implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
