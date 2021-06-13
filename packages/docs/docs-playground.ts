@@ -2,8 +2,26 @@ import type { ProjectManifest } from 'playground-elements/shared/worker-api.js';
 import type { PlaygroundIde } from 'playground-elements/playground-ide'
 
 const BASE_IMPORT_MAP = {
-  '@apollo-elements/components': '../../../apollo-elements.js',
+  'lit': '../../../lit.js',
+  'lit/decorators': '../../../lit.js',
+  'lit/decorators.js': '../../../lit.js',
+  'lit/directives/class-map': '../../../lit.js',
+  'lit/directives/if-defined': '../../../lit.js',
+  'lit/directives/class-map.js': '../../../lit.js',
+  'lit/directives/if-defined.js': '../../../lit.js',
 
+  '@apollo/client/core': '../../../apollo-client.js',
+  '@apollo/client/utilities': '../../../apollo-client.js',
+  '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-client.js',
+
+  '@apollo/client/link/schema': '../../../schema-link.js',
+  '@apollo/client/link/schema/index.esm.js': '../../../schema-link.js',
+  'event-iterator': '../../../schema-link.js',
+  '@graphql-tools/schema': '../../../schema-link.js',
+  '@graphql-tools/mock': '../../../schema-link.js',
+  '@graphql-tools/tools': '../../../schema-link.js',
+
+  '@apollo-elements/components': '../../../apollo-elements.js',
   '@apollo-elements/core': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-mutation-controller': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-query-controller': '../../../apollo-elements.js',
@@ -43,20 +61,6 @@ const BASE_IMPORT_MAP = {
   '@apollo-elements/polymer/polymer-apollo-query': '../../../polymer.js',
   '@apollo-elements/polymer/polymer-apollo-subscription': '../../../polymer.js',
 
-  '@apollo/client/core': '../../../apollo-client.js',
-  '@apollo/client/utilities': '../../../apollo-client.js',
-  '@apollo/client/link/schema': '../../../schema-link.js',
-  '@apollo/client/link/schema/index.esm.js': '../../../schema-link.js',
-  '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-client.js',
-  'event-iterator': '../../../schema-link.js',
-  '@graphql-tools/schema': '../../../schema-link.js',
-  '@graphql-tools/mock': '../../../schema-link.js',
-  '@graphql-tools/tools': '../../../schema-link.js',
-
-  'lit': '../../../lit.js',
-  'lit/decorators': '../../../lit.js',
-  'lit/directives/class-map': '../../../lit.js',
-  'lit/directives/if-defined': '../../../lit.js',
 }
 
 const template = document.createElement("template");
