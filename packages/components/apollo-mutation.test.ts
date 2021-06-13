@@ -1412,6 +1412,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         });
         await oneEvent(element, 'mutation-completed');
       });
+      beforeEach(() => element.updateComplete);
       it('renders data to shadow root', function() {
         expect(element).shadowDom.to.equal('<span class="noParam"></span>');
       });
@@ -1452,6 +1453,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         });
         await oneEvent(element, 'mutation-completed');
       });
+      beforeEach(() => element.updateComplete);
       it('renders data to shadow root', function() {
         expect(element).lightDom.to.equal(`
           <button id="trigger" trigger>mutate</button>

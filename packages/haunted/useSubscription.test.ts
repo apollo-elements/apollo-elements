@@ -172,6 +172,7 @@ describe('[haunted] useSubscription', function() {
               noAutoSubscribe: true,
               variables: {
                 nullable: 'POW',
+                delay: 20,
               },
             });
 
