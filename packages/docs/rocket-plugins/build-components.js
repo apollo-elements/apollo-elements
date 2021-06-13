@@ -96,6 +96,12 @@ export function buildComponents() {
   });
 
   build({
+    entryPoints: ['packages/docs/entrypoints/hybrids.ts'],
+    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/apollo-elements-hybrids.js',
+  });
+
+  build({
     entryPoints: ['packages/docs/entrypoints/schemalink.ts'],
     external: [ 'lit', 'lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/schema-link.js',
@@ -110,6 +116,12 @@ export function buildComponents() {
     entryPoints: ['packages/docs/entrypoints/mixins.ts'],
     external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/mixins.js',
+  });
+
+  build({
+    entryPoints: ['packages/docs/entrypoints/polymer.ts'],
+    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/polymer.js',
   });
 
   build({

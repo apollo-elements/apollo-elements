@@ -263,30 +263,24 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   ```ts tab haunted
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
-  import UserSessionQuery from './UserSession.query.graphql';
-
-  import type {
-    UserSessionQueryData as Data,
-    UserSessionQueryVariables as Variables,
-  } from '../schema';
+  import { UserSessionQuery } from './UserSession.query.graphql';
 
   import { getClient } from './client';
   import { formatDistance } from 'date-fns/esm';
 
   function AsyncElement(el) {
-    const { client, data } =
-      useQuery<Data, Variables>(UserSessionQuery, { noAutoSubscribe: true });
+    const query =
+      useQuery(UserSessionQuery, { noAutoSubscribe: true });
 
-    useEffect(async ({ host }) => {
-      if (host.client) return;
+    useEffect(async () => {
       // asynchronously get a reference to the client
-      host.client = await getClient();
+      query.client = await getClient();
       // only then start fetching data
-      host.subscribe();
-    }, [client]);
+      query.subscribe();
+    }, []);
 
-    const name = data?.userSession.name ?? ''
-    const lastActive = data?.userSession.lastActive;
+    const name = query.data?.userSession.name ?? ''
+    const lastActive = query.data?.userSession.lastActive;
 
     const time =
       !lastActive ? '' : formatDistance(lastActive, Date.now(), { addSuffix: true });
@@ -304,17 +298,12 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   ```
 
   ```ts tab hybrids
-  import { client, query, define, property, html } from '@apollo-elements/hybrids';
+  import { query, define, property, html } from '@apollo-elements/hybrids';
 
   import { getClient } from './client';
   import { formatDistance } from 'date-fns/esm';
 
-  import UserSessionQuery from './UserSession.query.graphql';
-
-  import type {
-    UserSessionQueryData as Data,
-    UserSessionQueryVariables as Variables,
-  } from '../schema';
+  import { UserSessionQuery } from './UserSession.query.graphql';
 
   function getTime(userSession): string {
     const lastActive = userSession?.lastActive;

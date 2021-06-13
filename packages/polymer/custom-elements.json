@@ -229,7 +229,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### ```html\n<polymer-apollo-mutation id=\"userMutation\"\n    data=\"{{data}}\"\n    mutation=\"[[UserMutation]]\"\n></polymer-apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```",
+          "description": "## Examples\n\n### Use in a Polymer template\n\n```html\n<polymer-apollo-mutation id=\"userMutation\"\ndata=\"{{data}}\"\nmutation=\"[[UserMutation]]\"\n></polymer-apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```",
           "name": "PolymerApolloMutation",
           "members": [
             {

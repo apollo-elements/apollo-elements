@@ -354,7 +354,6 @@ For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can appl
 
   ```ts tab hybrids
   define('hello-query', {
-    client: client(),
     query: query(HelloQuery, {
       variables: {
         greeting: "How's it going",
@@ -429,7 +428,6 @@ If you want to keep your element from automatically subscribing, you can opt out
   ```ts tab hybrids
   define('lazy-hello-world', {
     noAutoSubscribe: true,
-    client: client(),
     query: query(HelloQuery),
   });
   ```
@@ -543,7 +541,6 @@ The query component class' protected [`shouldSubscribe`](/api/interfaces/query/#
 
   ```ts tab hybrids
   define('page-query', {
-    client: client(),
     query: query(PageQuery, {
       /**
        * Prevent fetching if the URL contains a `?noAutoFetch` query param
@@ -608,7 +605,6 @@ The query component class' protected [`shouldSubscribe`](/api/interfaces/query/#
 
   ```ts tab hybrids
   define('heavy-slow-query', {
-    client: client(),
     query: query(HeavySlowQuery, {
       fetchPolicy: 'cache-only',
     }),

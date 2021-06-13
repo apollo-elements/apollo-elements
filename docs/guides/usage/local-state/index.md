@@ -191,7 +191,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   ```ts tab hybrids
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  import { query, define, html } from '@apollo-elements/hybrids';
 
   type Theme = 'dark'|'light';
   type Data = { theme: Theme };
@@ -201,14 +201,13 @@ Let's define a custom element that displays a button to toggle the theme.
   }
 
   define('theme-toggle', {
-    client: client(window.__APOLLO_CLIENT__),
     query: query<Data, null>(ThemeToggleQuery),
     nextTheme: {
       get(host) {
-        host.data?.theme === 'dark' ? 'light' : 'dark';
+        host.query.data?.theme === 'dark' ? 'light' : 'dark';
       }
     },
-    render: ({ data, nextTheme }) => html`
+    render: ({ query: { data }, nextTheme }) => html`
       <button onclick="${toggleTheme}">
         Change to ${nextTheme} theme
       </button>
@@ -313,8 +312,8 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
   import { typePolicies } from './typePolicies';
 
-  function ThemeToggle({ client }) {
-    const { data } = useQuery<Data, null>(ThemeToggleQuery);
+  function ThemeToggle() {
+    const { client, data } = useQuery<Data, null>(ThemeToggleQuery);
 
     /**
      * There's no TypePoliciesMixin for haunted,
@@ -326,7 +325,7 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
 
     const nextTheme = data?.theme === 'dark' ? 'light' : 'dark';
 
-    function toggleTheme(host) {
+    function toggleTheme() {
       // TBD
     }
 
@@ -346,12 +345,12 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
    * but you can use this one-line function to do the same
    */
   function connect(host) {
-    host.client.cache.policies.addTypePolicies(host.typePolicies);
+    host.query.client.cache.policies.addTypePolicies(host.typePolicies);
   }
 
   define('theme-toggle', {
     //... code from previous steps
-    typePolicies: property(typePolicies, connect),
+    __typePolicies: { connect },
   });
   ```
 
@@ -429,8 +428,8 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```ts tab hybrids
   function toggleTheme(host) {
     const theme = host.nextTheme;
-    host.client.writeQuery({
-      query: host.query,
+    host.query.client.writeQuery({
+      query: host.query.query,
       data: { theme },
     });
   }
@@ -566,7 +565,7 @@ Now in order to update the theme, we need to perform two steps:
   ```ts tab hybrids
   function toggleTheme(host) {
     localStorage.setItem('theme', host.nextTheme);
-    host.client.cache.evict({ fieldName: 'theme' });
+    host.query.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 

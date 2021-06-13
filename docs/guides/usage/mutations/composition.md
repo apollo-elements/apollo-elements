@@ -117,19 +117,10 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
     <form hidden>
       <h3>Edit</h3>
       <apollo-mutation input-key="input">
-        <label>Name
-          <input slot="variable" data-variable="name">
-        </label>
-
-        <label>Picture (URL)
-          <input slot="variable" data-variable="picture">
-        </label>
-
-        <label>Birthday
-          <input slot="variable" data-variable="birthday" type="date"/>
-        </label>
-
-        <button slot="trigger">Save</button>
+        <label>Name <input data-variable="name"></label>
+        <label>Picture (URL) <input data-variable="picture"></label>
+        <label>Birthday <input data-variable="birthday" type="date"/></label>
+        <button trigger>Save</button>
       </apollo-mutation>
     </form>
   `;
@@ -210,19 +201,10 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
         <form ?hidden="${!this.data?.isMe}">
           <h3>Edit</h3>
           <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
-            <label>Name
-              <input slot="variable" data-variable="name">
-            </label>
-
-            <label>Picture (URL)
-              <input slot="variable" data-variable="picture">
-            </label>
-
-            <label>Birthday
-              <input slot="variable" data-variable="birthday" type="date"/>
-            </label>
-
-            <button slot="trigger">Save</button>
+            <label>Name <input data-variable="name"></label>
+            <label>Picture (URL) <input data-variable="picture"></label>
+            <label>Birthday <input data-variable="birthday" type="date"/></label>
+            <button trigger>Save</button>
           </apollo-mutation>
         </form>
       `;
@@ -260,19 +242,10 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
     <form ?hidden="${!x => x.data?.isMe}">
       <h3>Edit</h3>
       <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
-        <label>Name
-          <input slot="variable" data-variable="name">
-        </label>
-
-        <label>Picture (URL)
-          <input slot="variable" data-variable="picture">
-        </label>
-
-        <label>Birthday
-          <input slot="variable" data-variable="birthday" type="date"/>
-        </label>
-
-        <button slot="trigger">Save</button>
+        <label>Name <input data-variable="name"></label>
+        <label>Picture (URL) <input data-variable="picture"></label>
+        <label>Birthday <input data-variable="birthday" type="date"/></label>
+        <button trigger>Save</button>
       </apollo-mutation>
     </form>
   `;
@@ -288,13 +261,8 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
   import '@apollo-elements/components/apollo-mutation';
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
-  import ProfileQuery from './Profile.query.graphql';
-  import UpdateProfileMutation from 'UpdateProfile.mutation.graphql';
-
-  import type {
-    ProfileQueryData as Data,
-    ProfileQueryVariables as Variables,
-  } from '../schema';
+  import { ProfileQuery } from './Profile.query.graphql';
+  import { UpdateProfileMutation } from 'UpdateProfile.mutation.graphql';
 
   function ProfilePage() {
     const { data, loading } = useQuery(ProfileQuery);
@@ -316,19 +284,10 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
       <form ?hidden="${!data?.isMe}">
         <h3>Edit</h3>
         <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
-          <label>Name
-            <input slot="variable" data-variable="name">
-          </label>
-
-          <label>Picture (URL)
-            <input slot="variable" data-variable="picture">
-          </label>
-
-          <label>Birthday
-            <input slot="variable" data-variable="birthday" type="date"/>
-          </label>
-
-          <button slot="trigger">Save</button>
+          <label>Name <input data-variable="name"></label>
+          <label>Picture (URL) <input data-variable="picture"></label>
+          <label>Birthday <input data-variable="birthday" type="date"/></label>
+          <button trigger>Save</button>
         </apollo-mutation>
       </form>
     `;
@@ -341,17 +300,12 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
   ```ts tab hybrids
 
   import '@apollo-elements/components/apollo-mutation';
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  import { query, define, html } from '@apollo-elements/hybrids';
 
-  import ProfileQuery from './Profile.query.graphql';
-  import UpdateProfileMutation from 'UpdateProfile.mutation.graphql';
+  import { ProfileQuery } from './Profile.query.graphql';
+  import { UpdateProfileMutation } from 'UpdateProfile.mutation.graphql';
 
-  import type {
-    ProfileQueryData as Data,
-    ProfileQueryVariables as Variables,
-  } from '../schema';
-
-  const render = ({ data, loading }) => html`
+  const render = ({ query: { data, loading } }) => html`
     <h2>Profile</h2>
 
     <dl hidden="${loading || !data}">
@@ -368,25 +322,15 @@ To make it easier to write declarative mutations, you can import the `<apollo-mu
     <form hidden="${!data?.isMe}">
       <h3>Edit</h3>
       <apollo-mutation mutation="${UpdateProfileMutation}" input-key="input">
-        <label>Name
-          <input slot="variable" data-variable="name">
-        </label>
-
-        <label>Picture (URL)
-          <input slot="variable" data-variable="picture">
-        </label>
-
-        <label>Birthday
-          <input slot="variable" data-variable="birthday" type="date"/>
-        </label>
-
-        <button slot="trigger">Save</button>
+        <label>Name <input data-variable="name"></label>
+        <label>Picture (URL) <input data-variable="picture"></label>
+        <label>Birthday <input data-variable="birthday" type="date"/></label>
+        <button trigger>Save</button>
       </apollo-mutation>
     </form>
   `;
 
   define('profile-page', {
-    client: client(window.__APOLLO_CLIENT__),
     query: query(ProfileQuery),
     render,
   });

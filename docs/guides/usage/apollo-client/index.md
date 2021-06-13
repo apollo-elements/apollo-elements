@@ -112,9 +112,6 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
   import { useQuery } from '@apollo-elements/haunted';
   import { client } from './specific-apollo-client';
 
-  interface Data { /* ... */ }
-  interface Variables { /* ... */ }
-
   // There is no ApolloClientMixin for Haunted, rather
   // the `useQuery`, `useMutation`, and `useSubscription` hooks accept a client option.
 
@@ -126,9 +123,6 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
   ```ts tab hybrids
   import { query, define, html } from '@apollo-elements/hybrids';
   import { client as apolloClient } from './specific-apollo-client';
-
-  interface Data { /* ... */ }
-  interface Variables { /* ... */ }
 
   // There is no ApolloClientMixin for Hybrids, rather pass the client
   // to the `query`, `mutation`, or `subscription` factory.

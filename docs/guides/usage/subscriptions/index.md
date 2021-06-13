@@ -106,7 +106,7 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
 
     useEffect(() => {
       subscribeToMore({ document: MessageSentSubscription, updateQuery });
-    }, [subscribeToMore]);
+    }, []);
 
     return html`...`;
   }
@@ -122,20 +122,24 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   }
 
   function connect(host) {
-    host.subscribeToMore({ updateQuery, document: MessageSentSubscription });
+    host.query.subscribeToMore({
+      document: MessageSentSubscription,
+      updateQuery(...args) {
+        return host.onSubscriptionData(...args);
+      },
+    });
   }
 
   define('chat-query', {
-    client: client(window.__APOLLO_CLIENT__),
     query: query<Data, Variables>(MessagesQuery),
-    onSubscriptionData: { get() { return x => onSubscriptionData(host, x); } },
-    // use a "private" property to gain access to connectedCallback
-    __init_subscribetomore__: property(null, connect)
-    render
+    onSubscriptionData: property(() => null, connect),
+    render,
   });
   ```
 
 </code-tabs>
+
+<!-- TODO: redo this section for controllers -->
 
 Alternatively, we could create on a separate component to handle fetching the subscription side. In this example, `<chat-subscription>` has its `subscription` property passed in from the parent, rather than defined statically, as one normally would. This could be useful in cases where `<chat-subscription>` can update a variety of different queries.
 
@@ -349,18 +353,11 @@ Alternatively, we could create on a separate component to handle fetching the su
   ```
 
   ```ts tab haunted
-  import { useQuery, useSubscription, component, html } from '@apollo-elements/hybrids';
+  import { useQuery, useSubscription, component, html } from '@apollo-elements/haunted';
   import { format } from 'date-fns/fp';
 
-  import MessagesQuery from './Messages.query.graphql';
-  import MessageSentSubscription from './MessageSent.subscription.graphql';
-
-  import type {
-    MessagesQueryData as Data,
-    MessagesQueryVariables as Variables,
-    MessagesSubscriptionData as SubscriptionData,
-    MessagesSubscriptionVariables as SubscriptionVariables,
-  } from '../schema';
+  import { MessagesQuery } from './Messages.query.graphql';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql';
 
   function onSubscriptionData(host, result) {
     const { client, subscriptionData: { data: { messageSent } } } = result
@@ -392,22 +389,17 @@ Alternatively, we could create on a separate component to handle fetching the su
   ```
 
   ```ts tab hybrids
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  import { query, define, html } from '@apollo-elements/hybrids';
   import { format } from 'date-fns/fp';
 
   import './chat-subscription';
 
-  import MessagesQuery from './Messages.query.graphql';
-  import MessageSentSubscription from './MessageSent.subscription.graphql';
-
-  import type {
-    MessagesQueryData as Data,
-    MessagesQueryVariables as Variables,
-  } from '../schema';
+  import { MessagesQuery } from './Messages.query.graphql';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql';
 
   function onSubscriptionData(host, result) {
     const { client, subscriptionData: { data: { messageSent } } } = result
-    const { query } = host;
+    const { query } = host.query;
     const { messages } = client.readQuery({ query });
     const data = { messages: [...messages, messageSent] };
     client.writeQuery({ query, data });
@@ -440,7 +432,6 @@ Alternatively, we could create on a separate component to handle fetching the su
   `;
 
   define<ApolloQuery<Data, Variables>>('chat-query', {
-    client: client(),
     query: query(MessagesQuery),
     onSubscriptionData: {
       get() {

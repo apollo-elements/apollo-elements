@@ -111,11 +111,10 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
   ```
 
   ```ts tab hybrids
-  import { client, query } from '@apollo-elements/hybrids';
+  import { define, query } from '@apollo-elements/hybrids';
   import HelloQuery from './Hello.query.graphql';
 
   define('hello-world', {
-    client: client(window.__APOLLO_CLIENT__),
     query: query(HelloQuery),
   });
   ```
