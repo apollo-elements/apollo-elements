@@ -90,6 +90,11 @@ export function buildComponents() {
   });
 
   build({
+    entryPoints: ['packages/docs/entrypoints/lit.ts'],
+    outfile: 'docs/_assets/_static/lit.js',
+  });
+
+  build({
     entryPoints: ['packages/docs/entrypoints/haunted.ts'],
     external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-haunted.js',

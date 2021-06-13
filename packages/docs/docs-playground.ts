@@ -53,6 +53,10 @@ const BASE_IMPORT_MAP = {
   '@graphql-tools/mock': '../../../schema-link.js',
   '@graphql-tools/tools': '../../../schema-link.js',
 
+  'lit': '../../../lit.js',
+  'lit/decorators': '../../../lit.js',
+  'lit/directives/class-map': '../../../lit.js',
+  'lit/directives/if-defined': '../../../lit.js',
 }
 
 const template = document.createElement("template");
