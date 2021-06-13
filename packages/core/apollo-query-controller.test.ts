@@ -807,6 +807,7 @@ describe('[core] ApolloQueryController', function() {
         });
 
         beforeEach(nextFrame);
+        beforeEach(() => element.updateComplete);
 
         it('renders initial data', function() {
           expect(element).shadowDom.to.equal(`
@@ -826,6 +827,7 @@ describe('[core] ApolloQueryController', function() {
           });
 
           beforeEach(nextFrame);
+          beforeEach(() => element.updateComplete);
 
           it('renders subscription', function() {
             expect(element).shadowDom.to.equal(`

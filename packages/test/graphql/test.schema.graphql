@@ -43,7 +43,7 @@ type Query {
 type Subscription {
   messageSent: Message
   pageAdded: Int
-  nullableParam(nullable: String): Nullable
+  nullableParam(nullable: String, delay: Int): Nullable
   nonNullParam(nonNull: String!): NonNull
   noParam: NoParam
 }

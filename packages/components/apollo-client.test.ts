@@ -356,11 +356,13 @@ describe('<apollo-client>', function() {
         polymer: 'polymer-apollo-query',
       };
 
+      /* eslint-disable @typescript-eslint/no-unused-vars */
       @FAST.customElement({ name: TAG_NAMES.fast })
       class FASTApolloQuery extends FAST.ApolloQuery { }
 
       @LitDeco.customElement(TAG_NAMES.lit)
       class LitApolloQuery extends Lit.ApolloQuery { }
+      /* eslint-enable @typescript-eslint/no-unused-vars */
 
       Object.values(TAG_NAMES).forEach(tagName => {
         describe(tagName, function() {

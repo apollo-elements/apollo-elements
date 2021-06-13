@@ -592,6 +592,8 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         `);
       });
 
+      beforeEach(nextFrame);
+
       it('renders', function() {
         expect(element.$('#error')).to.be.ok;
         expect(element.$('#error')?.textContent).to.equal('error');
