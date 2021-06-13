@@ -221,7 +221,8 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
 
   import { DetailsTypePolicies } from './typePolicies';
 
-  function ToggleViews({ client }) {
+  function ToggleViews() {
+    const { client, data } = useQuery(DetailsOpenQuery)
 
     /**
      * There's no TypePoliciesMixin for haunted,
@@ -230,8 +231,6 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
     useEffect(({ host: { client } }) => {
       client.cache.policies.addTypePolicies(DetailsTypePolicies);
     }, [client]);
-
-    const { data } = useQuery(DetailsOpenQuery)
 
     function onToggle(event) {
       client.cache.writeQuery({
@@ -264,7 +263,7 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
   ```
 
   ```ts tab hybrids
-  import { client, query, define, property, html } from '@apollo-elements/hybrids';
+  import { query, define, property, html } from '@apollo-elements/hybrids';
 
   import { DetailsTypePolicies } from './typePolicies';
 
@@ -299,14 +298,13 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
    * but you can use this one-line function to do the same
    */
   function connect(host) {
-    host.client.cache.policies.addTypePolicies(host.typePolicies);
+    host.query.client.cache.policies.addTypePolicies(DetailsTypePolicies);
   }
 
   define('toggle-views', {
     render,
-    client: client(window.__APOLLO_QUERY__),
     query: query(DetailsOpenQuery),
-    typePolicies: property(DetailsTypePolicies, connect),
+    __typePolicies: { connect },
   });
   ```
 

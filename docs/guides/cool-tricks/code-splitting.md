@@ -144,9 +144,8 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   ```
 
   ```ts tab hybrids
-  import { client, query, define } from '@apollo-elements/hybrids';
+  import { query, define } from '@apollo-elements/hybrids';
   import { UserTypePolicies } from './typePolicies';
-
   import { UserQuery } from './User.query.graphql';
 
   define('profile-page', {
@@ -255,7 +254,7 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   ```
 
   ```ts tab hybrids
-  import { client, query, define } from '@apollo-elements/hybrids';
+  import { query, define } from '@apollo-elements/hybrids';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
   import { UserQuery } from './User.query.graphql';

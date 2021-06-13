@@ -73,3 +73,7 @@ body[layout='layout-api'] #sidebar,
 body[layout='layout-api-index'] #sidebar {
   display: block;
 }
+
+docs-playground {
+  margin-bottom: 16px;
+}

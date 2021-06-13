@@ -127,8 +127,6 @@ Pass your `TypedDocumentNode` objects' type as the first type argument to your c
   import { useQuery } from '@apollo-elements/haunted';
   import { TypedQuery } from './Typed.query.graphql';
 
-  // Bonus: Haunted will infer the function argument type, so no need for type arguments.
-
   function TypedQueryElement() {
     const { data } = useQuery(TypedQuery);
 
@@ -141,9 +139,12 @@ Pass your `TypedDocumentNode` objects' type as the first type argument to your c
   import { define, query, html } from '@apollo-elements/hybrids';
   import { TypedQuery } from './Typed.query.graphql';
 
+  type ApolloQueryElement<T extends TypedDocumentNode> =
+    HTMLElement & { query: ApolloQueryController<T> };
+
   define<ApolloQueryElement<typeof TypedQuery>>('typed-query', {
     query: query(TypedQuery),
-    render: ({ data }) => {
+    render: ({ query: { data } }) => {
       if (data !== null)
         console.assert(typeof data.name === 'string');
     }

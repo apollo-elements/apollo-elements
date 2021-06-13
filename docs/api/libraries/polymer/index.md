@@ -35,62 +35,97 @@ These custom elements fire [polymer](https://polymer-library.polymer-project.org
 
 This example uses [`<apollo-client>`](/api/components/apollo-client/) to create a client and assign it to `<apollo-query>`. There's no need to explicitly assign the `client` property, since `<apollo-client>` automatically sets the client on all it's deeply nested children.
 
-```ts wcd 9kmJUbA735YuF4HRBzO7 src/Hello.ts
+```ts playground polymer-apollo Hello.ts
 import { PolymerElement, html } from '@polymer/polymer';
+import { HelloQuery } from './Hello.query.graphql.js';
 import '@apollo-elements/components/apollo-client';
-import '@apollo-elements/polymer/apollo-query';
+import '@apollo-elements/polymer/polymer-apollo-query';
 
 class HelloQueryElement extends PolymerElement {
   static get template() {
     return html`
-      <apollo-client uri="/graphql">
-        <apollo-query
-            data="{%raw%}{{data}}{%endraw%}"
-            query="[[query]]"
-            variables="[[variables]]">
-        </apollo-query>
-      </apollo-client>
+      <polymer-apollo-query
+          data="{%raw%}{{data}}{%endraw%}"
+          query="[[query]]"
+          variables="[[variables]]">
+      </polymer-apollo-query>
 
-      <span id="hello">
-        [[getGreeting(data)]], [[getName(data)]]!
-      </span>
+      <h2>Variables</h2>
+      <label>Name <input value="{%raw%}{{name::input}}{%endraw%}"/></label>
+      <label>Greeting <input value="{%raw%}{{greeting::input}}{%endraw%}"/></label>
+
+      <h2>Result</h2>
+      <span id="hello">[[data.hello.greeting]], [[data.hello.name]]!</span>
     `;
   }
 
   static get properties() {
     return {
       data: { type: Object },
-      variables: {
-        type: Object,
-        value: () => ({
-          name: 'Partner',
-          greeting: 'Howdy',
-        }),
-      },
-      query: {
-        type: Object,
-        value: () => gql`
-          query HelloQuery($name: String, $greeting: String) {
-            hello(name: $name, greeting: $greeting) {
-              name
-              greeting
-            }
-          }
-        `
-      }
+      variables: { type: Object, computed: 'computeVariables(name, greeting)' },
+      query: { type: Object, value: () => HelloQuery },
+      name: { type: String, value: 'World' },
+      greeting: { type: String, value: 'Hello' },
     };
   }
 
-  getGreeting(data) {
-    return data && data.hello && data.hello.greeting || 'hello';
-  }
-
-  getName(data) {
-    return data && data.hello && data.hello.name || 'world';
-  }
+  computeVariables(name, greeting) { return { name, greeting }; }
 }
 
 customElements.define('hello-query', HelloQueryElement);
+```
+
+```js playground-file polymer-apollo Hello.query.graphql.js
+import { gql } from '@apollo/client/core';
+export const HelloQuery = gql`
+  query HelloQuery($name: String, $greeting: String) {
+    hello(name: $name, greeting: $greeting) {
+      name
+      greeting
+    }
+  }
+`;
+```
+
+```ts playground-file polymer-apollo client.js
+import { ApolloClient, InMemoryCache } from '@apollo/client/core';
+import { SchemaLink } from '@apollo/client/link/schema';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+
+const schema = makeExecutableSchema({
+  typeDefs: `
+    type Greeting {
+      name: String
+      greeting: String
+    }
+
+    type Query {
+      hello(name: String, greeting: String): Greeting
+    }
+  `,
+  resolvers: {
+    Query: {
+      async hello(_, { name = 'World', greeting = 'Hello' }) {
+        return { name, greeting };
+      }
+    },
+  }
+});
+
+document.querySelector('apollo-client')
+  .client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new SchemaLink({ schema }),
+  });
+```
+
+```html playground-file polymer-apollo index.html
+<script type="module" src="client.js"></script>
+<script type="module" src="Hello.js"></script>
+
+<apollo-client>
+  <hello-query></hello-query>
+</apollo-client>
 ```
 
 ### Using Two-Way Binding to Set the Client

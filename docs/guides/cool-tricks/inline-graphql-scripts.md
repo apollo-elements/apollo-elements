@@ -123,14 +123,17 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
   function GreetMe(props) {
     // NOTE: must pass `hostElement: this` to use `<apollo-client>`
-    const q = useQuery(null, { hostElement: this });
+    const query = useQuery(null, { hostElement: this });
+
+    // When GraphQLScriptChildMixin resolves the query and variables,
+    // set them on the query controller to start the query
     useEffect(() => { query.variables = props.variables }, [props.variables]);
     useEffect(() => { query.query = props.document }, [props.document]);
 
     return html`
       <p>
-        ${q.data?.greeting ?? 'Hello'},
-        ${q.data?.name ?? 'friend'}
+        ${query.data?.greeting ?? 'Hello'},
+        ${query.data?.name ?? 'friend'}
       </p>
     `;
   }

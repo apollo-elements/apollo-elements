@@ -87,6 +87,8 @@ libraries:
 ```
 
 ```js playground-file query-spacex type-policies.js
+import '@apollo-elements/components';
+
 document.querySelector('apollo-client').typePolicies = {
   Launch: {
     fields: {

@@ -12,7 +12,7 @@ import { notify } from './notify-decorator';
  *
  * See [ApolloMutationInterface](/api/interfaces/mutation/) for more information.
  *
- * @example
+ * @example Use in a Polymer template
  *
  * ```html
  * <polymer-apollo-mutation id="userMutation"

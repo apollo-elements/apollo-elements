@@ -34,8 +34,12 @@ customElements.define('mouse-host', class MouseHost extends ControllerHostMixin(
   }
 
   update() {
-    this.$('#x').textContent = this.mouse.pos.x;
-    this.$('#y').textContent = this.mouse.pos.y;
+    const { x, y } = this.mouse.pos;
+    const { clientWidth, clientHeight } = document.documentElement;
+    this.$('#x').textContent = x;
+    this.$('#y').textContent = y;
+    this.style.setProperty('--hue', (x / clientWidth) * 250);
+    this.style.setProperty('--saturation', `${(y / clientHeight) * 100}%`);
     super.update();
   }
 });
@@ -79,6 +83,14 @@ html {
 ```
 
 ```css playground-file mouse-controller mouse-host.css
+:host {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-content: center;
+  background: hsl(var(--hue) var(--saturation) 50%);
+}
+
 dt, dd { margin: 0; }
 dl {
   display: grid;
@@ -88,8 +100,12 @@ dl {
 ```
 
 ```css playground-hidden-file mouse-controller style.css
-:root {
+html, body {
   font-family: sans-serif;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
 }
 ```
 

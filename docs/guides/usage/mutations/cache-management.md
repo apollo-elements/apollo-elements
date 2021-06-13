@@ -197,20 +197,15 @@ And this component definition:
   ```
 
   ```ts tab haunted
-  import type {
-    BlogPostMutationData as Data,
-    BlogPostMutationVariables as Variables
-  } from '../../codegen/operations';
-
   import { useMutation, useState, component, html } from '@apollo-elements/haunted';
 
-  import BlogPostMutation from './BlogPost.mutation.graphql';
+  import { BlogPostMutation } from './BlogPost.mutation.graphql';
 
-  function BlogPost(el) {
+  function BlogPost() {
     const [content, setContent] = useState('');
 
     const [addBlogPost, { data, loading }] =
-      useMutation<Data, Variables>(BlogPostMutation, {
+      useMutation(BlogPostMutation, {
         onCompleted: () => setContent(''),
       });
 
@@ -239,14 +234,9 @@ And this component definition:
   ```
 
   ```ts tab hybrids
-  import type {
-    BlogPostMutationData as Data,
-    BlogPostMutationVariables as Variables
-  } from '../../codegen/operations';
+  import { mutation, define, html } from '@apollo-elements/fast';
 
-  import { client, mutation, define, html } from '@apollo-elements/fast';
-
-  import BlogPostMutation from './BlogPost.mutation.graphql';
+  import { BlogPostMutation } from './BlogPost.mutation.graphql';
 
   const name = 'blog-post';
 
@@ -257,14 +247,13 @@ And this component definition:
 
   async function mutate(host) {
     try {
-      host.mutate();
+      host.mutation.mutate();
     } finally {
       host.textarea.value = '';
     }
   }
 
   define(name, {
-    client: client(window.__APOLLO_CLIENT__),
     mutation: mutation(BlogPostMutation),
     render: ({ loading, data }) => html`
       <loading-overlay ?active="${loading}"></loading-overlay>
@@ -401,13 +390,14 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   ```
 
   ```ts tab haunted
+  import type { ResultOf } from '@graphql-typed-document-node/core';
   /**
    * update function which reads a cached query result, merges
    * it with the mutation result, and then writes it back to the cache.
    */
   function update(
     cache: ApolloCache<NormalizedCacheObject>,
-    result: FetchResult<Data>
+    result: FetchResult<ResultOf<typeof BlogPostMutation>>
   ) {
     // 1: Read the cache synchronously to get the current list of posts
     const query = LatestPostsQuery;
@@ -425,7 +415,7 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
     const [content, setContent] = useState('');
 
     const [addBlogPost, { data, loading }] =
-      useMutation<Data, Variables>(BlogPostMutation, {
+      useMutation(BlogPostMutation, {
         onCompleted: () => setContent(''),
         update,
       });
@@ -457,7 +447,7 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
 
   async function mutate(host) {
     try {
-      host.mutate({ update });
+      host.mutation.mutate({ update });
     } finally {
       host.textarea.value = '';
     }
@@ -530,11 +520,9 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   ```
 
   ```ts tab haunted
-  function BlogPost(el) {
+  function BlogPost() {
     const [datePosted, setDatePosted] = useState(new Date().toISOString());
     const [content, setContent] = useState('');
-
-    const optimistic = ;
 
     const [addBlogPost, { data, loading }] =
       useMutation<Data, Variables>(BlogPostMutation, {
@@ -577,7 +565,6 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
 
   ```ts tab hybrids
   define(name, {
-    client: client(window.__APOLLO_CLIENT__),
     mutation: mutation(BlogPostMutation, {
       optimisticResponse: variables => ({
         postBlogPost: {
@@ -585,8 +572,6 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
           url: '#',
           // implementation left as an exercise to the reader
           summary: summarize(variables.content),
-          datePosted,
-          content,
         },
       }),
     }),
