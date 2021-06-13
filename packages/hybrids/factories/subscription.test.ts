@@ -60,7 +60,7 @@ describe('[hybrids] subscription factory', function() {
 
       describe('calling subscribe', function() {
         beforeEach(function() {
-          element.subscription.subscribe();
+          element.subscription.subscribe({ variables: { delay: 20 } });
         });
 
         beforeEach(nextFrame);

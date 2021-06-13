@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type * as I from '@apollo-elements/core/types';
 
 import type { ApolloQueryElement } from '@apollo-elements/core';

@@ -471,6 +471,8 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       `);
     });
 
+    beforeEach(nextFrame);
+
     beforeEach(() => element.updateComplete);
 
     it('renders', function() {

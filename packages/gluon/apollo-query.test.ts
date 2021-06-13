@@ -11,7 +11,7 @@ import { html } from 'lit-html';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-import { defineCE, aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '@open-wc/testing';
 
 import { spy } from 'sinon';
 

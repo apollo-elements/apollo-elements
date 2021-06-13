@@ -1101,6 +1101,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               element?.subscribe();
             });
 
+            beforeEach(nextFrame);
+
             describe('when subscription rejects', function() {
               beforeEach(waitForRender(() => element));
 
