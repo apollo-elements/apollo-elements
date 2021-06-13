@@ -1,7 +1,7 @@
 ---
 layout: layout-api-index
 package: '@apollo-elements/core'
-module: 'index.js'
+module: index.js
 description: Core Controllers for Apollo Elements
 ---
 # Core || 10
@@ -129,7 +129,7 @@ import { EventIterator } from 'event-iterator';
 const USERS = [
   { id: 1, nick: 'Neil' },
   { id: 2, nick: 'Buzz' },
-  { id: 3, nick: 'Glen' },
+  { id: 3, nick: 'Michael' },
 ];
 
 function makeNextUser() {
