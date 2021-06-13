@@ -94,7 +94,7 @@ const schema = addMocksToSchema({
       return { message: `Message ${++MESSAGES}` };
     },
 
-    NonNull(_: any, { nonNull }): S.NonNull {
+    NonNull(_: any, { nonNull }: any): S.NonNull {
       if (nonNull === 'error')
         throw new Error(nonNull);
       else
@@ -121,7 +121,7 @@ const schema = addMocksToSchema({
         return { name: name ?? 'Chaver', greeting: greeting ?? 'Shalom' };
     },
 
-    User(_: any, { username, haircolor }): S.User {
+    User(_: any, { username, haircolor }: any): S.User {
       return {
         username,
         haircolor,
@@ -129,7 +129,7 @@ const schema = addMocksToSchema({
       };
     },
 
-    AB(_: any, { input }): S.AB {
+    AB(_: any, { input }: any): S.AB {
       return {
         a: input.a || 'a',
         b: input.b || 'b',
