@@ -28,12 +28,15 @@ import { FriendCameOnlineSubscription } from './FriendCameOnline.subscription.gr
 import { Snackbar } from '@material/mwc-snackbar';
 import '@material/mwc-textfield';
 
-console.log(ApolloQueryController);
-
 @customElement('profile-home')
 class ProfileHome extends LitElement {
   profile = new ApolloQueryController(this, ProfileQuery);
-  updateProfile = new ApolloMutationController(this, UpdateProfileMutation);
+
+  updateProfile = new ApolloMutationController(this, UpdateProfileMutation, {
+    refetchQueries: [{ query: ProfileQuery }],
+    awaitRefetchQueries: true,
+  });
+
   friendCameOnline = new ApolloSubscriptionController(this, FriendCameOnlineSubscription, {
     onSubscriptionData: () => this.snackbar.show(),
   });
@@ -44,10 +47,10 @@ class ProfileHome extends LitElement {
     return html`
       <mwc-snackbar labeltext="${this.friendCameOnline.data?.nick} came online"></mwc-snackbar>
       <header class=${classMap({ loading: this.profile.loading })}>
-        <h1>Welcome, ${this.profile.data?.nick}</h1>
+        <h1>Welcome, ${this.profile.data?.profile?.nick}</h1>
         <mwc-textfield
             label="Edit Nick"
-            value=${this.profile.data?.nick}
+            value=${this.profile.data?.profile?.nick}
             @change=${this.onChange}
         ></mwc-textfield>
       </header>
@@ -120,36 +123,79 @@ subscription FriendCameOnline {
 ```js playground-file controller-host client.js
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
-
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { addMocksToSchema } from '@graphql-tools/mock';
+import { EventIterator } from 'event-iterator';
+
+const USERS = [
+  { id: 1, nick: 'Neil' },
+  { id: 2, nick: 'Buzz' },
+  { id: 3, nick: 'Glen' },
+];
+
+function makeNextUser() {
+  return USERS[Math.floor(Math.random() * USERS.length)];
+}
+
+class Pub extends EventTarget {
+  friend() {
+    this.dispatchEvent(new Event('friend'));
+    setTimeout(() => this.friend(), (Math.random() * 20000));
+  }
+
+  constructor() {
+    super();
+    setTimeout(() => this.friend(), (Math.random() * 20000));
+  }
+}
+
+const schema = makeExecutableSchema({
+  typeDefs: `
+    type User {
+      id: ID
+      nick: String
+    }
+
+    type Query {
+      profile: User
+    }
+
+    type Mutation {
+      updateProfile(nick: String): User
+    }
+
+    type Subscription {
+      friendCameOnline: User
+    }
+  `,
+  resolvers: {
+
+    Query: {
+      async profile() {
+        return USERS.find(x => x.id === 1);
+      }
+    },
+
+    Mutation: {
+      async updateProfile(_, { nick }) {
+        const user = USERS.find(x => x.id == 1);
+        user.nick = nick;
+        return user;
+      }
+    },
+
+    Subscription: {
+      friendCameOnline: {
+        subscribe: () => EventIterator.subscribe.call(new Pub(), 'friend'),
+        resolve: () => makeNextUser(),
+      }
+    }
+
+  }
+});
 
 document.querySelector('apollo-client')
   .client = new ApolloClient({
-    link: new SchemaLink({
-      cache: new InMemoryCache(),
-      schema: addMocksToSchema({
-        schema: makeExecutableSchema({
-          typeDefs: `
-            type User {
-              nick: String
-            }
-
-            type Query {
-              profile: User
-            }
-
-            type Mutation {
-              updateProfile(nick: String): User
-            }
-
-            type Subscription {
-              friendCameOnline: User
-            }
-          `,
-        }),
-        mocks: {}
-      }),
-    }),
+    cache: new InMemoryCache(),
+    link: new SchemaLink({ schema }),
   });
 ```

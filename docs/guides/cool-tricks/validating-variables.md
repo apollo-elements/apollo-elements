@@ -174,8 +174,8 @@ With this approach, you can control on a per-component basis when to subscribe.
   ```
 
   ```ts tab hybrids
-  import { define, query, client } from '@apollo-elements/hybrids';
-  import PostQuery from './Post.query.graphql';
+  import { define, query } from '@apollo-elements/hybrids';
+  import { PostQuery } from './Post.query.graphql';
   import { routeVar } from '../variables';
 
   function shouldSubscribe() {
@@ -183,9 +183,7 @@ With this approach, you can control on a per-component basis when to subscribe.
   }
 
   define('blog-post', {
-    client: client(window.__APOLLO_CLIENT__),
-    query: query(PostQuery),
-    shouldSubscribe: { get(host) { return shouldSubscribe(host); } }
+    query: query(PostQuery, { shouldSubscribe }),
   });
   ```
 

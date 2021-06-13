@@ -284,7 +284,7 @@ As such, you can only expect your component's `data` property to be truthy once 
   ```
 
   ```ts tab hybrids
-  import { client, mutation, define, html } from '@apollo-elements/hybrids';
+  import { mutation, define, html } from '@apollo-elements/hybrids';
 
   import { AddUserMutation } from './AddUser.mutation.graphql';
 
@@ -297,16 +297,15 @@ As such, you can only expect your component's `data` property to be truthy once 
       host.mutate();
 
   define<ApolloMutationElement<typeof AddUserMutation>('add-user', {
-    client: client(),
     mutation: mutation(AddUserMutation),
-    render: ({ host }) => {
-      const name = host.data.name ?? '';
-      const timestamp = host.data ? new Date(host.data.timestamp).toDateString() : '';
+    render: ({ mutation }) => {
+      const name = mutation.data?.name ?? '';
+      const timestamp = mutation.data ? new Date(mutation.data.timestamp).toDateString() : '';
       return html`
         <p-card>
           <h2 slot="heading">Add User</h2>
 
-          <dl ?hidden="${!host.data}">
+          <dl ?hidden="${!mutation.data}">
             <dt>Name</dt>  <dd>${name}</dd>
             <dt>Added</dt> <dd>${timestamp}</dd>
           </dl>

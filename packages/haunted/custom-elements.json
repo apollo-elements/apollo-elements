@@ -50,7 +50,7 @@
           "name": "useMutation",
           "return": {
             "type": {
-              "text": "[ApolloMutationController<D, V>['mutate'], ApolloMutationController<D, V>]"
+              "text": "[\n  (params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>) => Promise<FetchResult<Data<D>>>,\n  ApolloMutationController<D, V>\n]"
             }
           },
           "parameters": [

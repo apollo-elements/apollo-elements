@@ -1,6 +1,60 @@
 import type { ProjectManifest } from 'playground-elements/shared/worker-api.js';
 import type { PlaygroundIde } from 'playground-elements/playground-ide'
 
+const BASE_IMPORT_MAP = {
+  '@apollo-elements/components': '../../../apollo-elements.js',
+
+  '@apollo-elements/core': '../../../apollo-elements.js',
+  '@apollo-elements/core/apollo-mutation-controller': '../../../apollo-elements.js',
+  '@apollo-elements/core/apollo-query-controller': '../../../apollo-elements.js',
+  '@apollo-elements/core/apollo-subscription-controller': '../../../apollo-elements.js',
+  '@apollo-elements/core/decorators': '../../../apollo-elements.js',
+  '@apollo-elements/core/events': '../../../apollo-elements.js',
+  '@apollo-elements/core/lib/has-all-variables': '../../../apollo-elements.js',
+
+  "@apollo-elements/haunted": "../../../apollo-elements-haunted.js",
+  "@apollo-elements/haunted/useQuery.js": "../../../apollo-elements-haunted.js",
+  "@apollo-elements/haunted/useMutation.js": "../../../apollo-elements-haunted.js",
+  "@apollo-elements/haunted/useSubscription.js": "../../../apollo-elements-haunted.js",
+  "@apollo-elements/haunted/useQuery": "../../../apollo-elements-haunted.js",
+  "@apollo-elements/haunted/useMutation": "../../../apollo-elements-haunted.js",
+  "@apollo-elements/haunted/useSubscription": "../../../apollo-elements-haunted.js",
+
+  "@apollo-elements/hybrids": "../../../apollo-elements-hybrids.js",
+  "@apollo-elements/hybrids/factories/query.js": "../../../apollo-elements-hybrids.js",
+  "@apollo-elements/hybrids/factories/mutation.js": "../../../apollo-elements-hybrids.js",
+  "@apollo-elements/hybrids/factories/subscription.js": "../../../apollo-elements-hybrids.js",
+  "@apollo-elements/hybrids/factories/query": "../../../apollo-elements-hybrids.js",
+  "@apollo-elements/hybrids/factories/mutation": "../../../apollo-elements-hybrids.js",
+  "@apollo-elements/hybrids/factories/subscription": "../../../apollo-elements-hybrids.js",
+
+  '@apollo-elements/mixins': '../../../mixins.js',
+  '@apollo-elements/mixins/apollo-client-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/apollo-mutation-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/apollo-query-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/apollo-subscription-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/controller-host-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/graphql-script-child-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/type-policies-mixin': '../../../mixins.js',
+  '@apollo-elements/mixins/validate-variables-mixin': '../../../mixins.js',
+
+  '@apollo-elements/polymer': '../../../polymer.js',
+  '@apollo-elements/polymer/polymer-apollo-mutation': '../../../polymer.js',
+  '@apollo-elements/polymer/polymer-apollo-query': '../../../polymer.js',
+  '@apollo-elements/polymer/polymer-apollo-subscription': '../../../polymer.js',
+
+  '@apollo/client/core': '../../../apollo-client.js',
+  '@apollo/client/utilities': '../../../apollo-client.js',
+  '@apollo/client/link/schema': '../../../schema-link.js',
+  '@apollo/client/link/schema/index.esm.js': '../../../schema-link.js',
+  '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-client.js',
+  'event-iterator': '../../../schema-link.js',
+  '@graphql-tools/schema': '../../../schema-link.js',
+  '@graphql-tools/mock': '../../../schema-link.js',
+  '@graphql-tools/tools': '../../../schema-link.js',
+
+}
+
 const template = document.createElement("template");
 template.innerHTML = `
   <style>
@@ -239,37 +293,7 @@ ${content}
 
     config.importMap = {
       imports: {
-        '@apollo-elements/components': '../../../apollo-elements.js',
-        '@apollo-elements/core': '../../../apollo-elements.js',
-        '@apollo-elements/core/apollo-mutation-controller': '../../../apollo-elements.js',
-        '@apollo-elements/core/apollo-query-controller': '../../../apollo-elements.js',
-        '@apollo-elements/core/apollo-subscription-controller': '../../../apollo-elements.js',
-        '@apollo-elements/core/decorators': '../../../apollo-elements.js',
-        '@apollo-elements/core/events': '../../../apollo-elements.js',
-        '@apollo-elements/core/lib/has-all-variables': '../../../apollo-elements.js',
-        "@apollo-elements/haunted": "../../../apollo-elements-haunted.js",
-        "@apollo-elements/haunted/useQuery.js": "../../../apollo-elements-haunted.js",
-        "@apollo-elements/haunted/useMutation.js": "../../../apollo-elements-haunted.js",
-        "@apollo-elements/haunted/useSubscription.js": "../../../apollo-elements-haunted.js",
-        "@apollo-elements/haunted/useQuery": "../../../apollo-elements-haunted.js",
-        "@apollo-elements/haunted/useMutation": "../../../apollo-elements-haunted.js",
-        "@apollo-elements/haunted/useSubscription": "../../../apollo-elements-haunted.js",
-        '@apollo-elements/mixins': '../../../mixins.js',
-        '@apollo-elements/mixins/apollo-client-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/apollo-mutation-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/apollo-query-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/apollo-subscription-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/controller-host-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/graphql-script-child-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/type-policies-mixin': '../../../mixins.js',
-        '@apollo-elements/mixins/validate-variables-mixin': '../../../mixins.js',
-
-        '@apollo/client/core': '../../../apollo-client.js',
-        '@apollo/client/utilities': '../../../apollo-client.js',
-        '@apollo/client/link/schema': '../../../schema-link.js',
-        '@apollo/client/link/schema/index.esm.js': '../../../schema-link.js',
-        '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-client.js',
-
+        ...BASE_IMPORT_MAP,
         ...config.importMap?.imports,
       }
     }
@@ -296,8 +320,12 @@ ${content}
         hidden: true,
       },
       'style.css': {
-        content: '',
         hidden: !config?.files?.['style.css'],
+        content: `
+          html {
+            font-family: 'Open Sans', sans-serif;
+          }
+        `,
       },
       ...config.files,
     }).map(([k, v]) => [k, k !== 'index.html' ? v : ({

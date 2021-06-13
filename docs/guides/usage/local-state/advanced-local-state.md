@@ -474,12 +474,7 @@ function onWillMutate(event) {
   ```
 
   ```ts tab haunted
-  import type { WillMutateEvent } from '@apollo-elements/components';
-  import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
+  import type { ApolloMutationElement, WillMutateEvent } from '@apollo-elements/components';
 
   import '@apollo-elements/components/apollo-mutation';
 
@@ -489,7 +484,7 @@ function onWillMutate(event) {
   import { SitesQuery } from './Sites.query.graphql';
 
   type CreateNetworkMutator =
-    ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
+    ApolloMutationElement<typeof CreateNetworkMutation>;
 
   interface ItemDetail {
     itemId: string;
@@ -545,7 +540,7 @@ function onWillMutate(event) {
   ```
 
   ```ts tab hybrids
-  import type { ApolloQueryInterface } from '@apollo-elements/interfaces';
+  import type { ApolloQueryController } from '@apollo-elements/core';
   import type { ApolloMutation } from '@apollo-elements/components';
   import type { WillMutateEvent } from '@apollo-elements/components';
   import type {
@@ -553,7 +548,7 @@ function onWillMutate(event) {
     SitesQueryVariables as Variables
   } from '../../schema';
 
-  import { client, query, define, html } from '@apollo-elements/hybrids';
+  import { query, define, html } from '@apollo-elements/hybrids';
 
   import '@apollo-elements/components/apollo-mutation';
 
@@ -562,11 +557,13 @@ function onWillMutate(event) {
   type CreateNetworkMutator =
     ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
 
+  type QueryElement = HTMLElement & { query: ApolloQueryController<Data, Variables>> };
+
   function onSelectedChanged(
-    host: HTMLElement & ApolloQueryInterface<Data, Variables>>,
+    host: QueryElement,
     event: CustomEvent<{ itemId: string, selected: boolean }>
   ) {
-    host.client.writeFragment({
+    host.query.client.writeFragment({
       id: `Site:${event.detail.itemId}`,
       fragment: gql`
         fragment siteSelected on Site {
@@ -580,7 +577,7 @@ function onWillMutate(event) {
   }
 
   function onWillMutate(
-    host: HTMLElement & ApolloQueryInterface<Data, Variables>,
+    host: QueryElement,
     event: WillMutateEvent & { target: CreateNetworkMutator }
   ) {
     event.target.variables = {
@@ -591,11 +588,10 @@ function onWillMutate(event) {
   }
 
   define('all-sites', {
-    client: client(window.__APOLLO_CLIENT__),
     query: query<Data, Variables>(SitesQuery),
-    render: ({ data }) => html`
+    render: ({ query: { data } }) => html`
       <select-list>
-        ${data.sites.map(site => html`
+        ${(data?.sites??[]).map(site => html`
         <select-item
             item-id="${site.id}"
             item-name="${site.name}"
