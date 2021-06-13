@@ -1,7 +1,7 @@
 import type { ReactiveElement, ReactiveControllerHost } from '@lit/reactive-element';
 import type { ApolloController, ApolloControllerOptions } from './apollo-controller';
 
-type O = ApolloControllerOptions<any, any>;
+type O = ApolloControllerOptions<any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 type Key = string|number|symbol;
 
 /* eslint-disable @typescript-eslint/ban-types */
@@ -18,8 +18,8 @@ export function getInitialProps<T extends AnyObj>(
   return initialProps.get(obj) as Map<keyof T, T[keyof T]>;
 }
 
-export function getInitialProp<T extends AnyObj>(obj: T, key: keyof T): T[keyof T] {
-  return getInitialProps(obj).get(key)!;
+export function getInitialProp<T extends AnyObj>(obj: T, key: keyof T): T[keyof T] | undefined {
+  return getInitialProps(obj).get(key);
 }
 
 export function setInitialProps<T extends AnyObj>(obj: T): void {
@@ -77,7 +77,7 @@ function defineOnHTMLElement<T extends HTMLElement & ReactiveControllerHost & {
       if (opts.path) { /* c8 ignore next */
         return (
             !this.controller ? getInitialProp(this, name)/* c8 ignore next */
-          : this.controller[opts.path][name as keyof ApolloControllerOptions<any, any>]
+          : this.controller[opts.path][name as keyof O]
         );
       } else {
         return (
@@ -96,7 +96,7 @@ function defineOnHTMLElement<T extends HTMLElement & ReactiveControllerHost & {
         if (opts.path)
           this.controller[opts.path][name as keyof O] = value as O[keyof O];
         else
-          this.controller[name as keyof ApolloController] = value as any;
+          this.controller[name as keyof ApolloController] = value as any; // eslint-disable-line @typescript-eslint/no-explicit-any
         if (opts.onSet)
           opts.onSet.call(this, value);/* c8 ignore next */
       }

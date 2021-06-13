@@ -36,8 +36,6 @@ import { bound } from '@apollo-elements/core/lib/bound';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryElement } }
 
-type PrivateKeys = 'nextError'|'nextData'|'watchQuery'|'shouldSubscribe'|'controller';
-
 /**
  * Render a GraphQL query to the DOM
  *
@@ -114,7 +112,7 @@ export class ApolloQueryElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariable
   @controlled() @state() query: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, any>;
+  @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   /**
    * If data was read from the cache with missing fields,

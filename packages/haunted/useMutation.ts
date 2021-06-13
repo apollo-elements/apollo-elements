@@ -15,7 +15,7 @@ import {
   ApolloMutationControllerOptions,
 } from '@apollo-elements/core/apollo-mutation-controller';
 
-export function useMutation<D extends MaybeTDN = any, V = MaybeVariables<D>>(
+export function useMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>(
   mutation: ComponentDocument<D>,
   options?: ApolloMutationControllerOptions<D, V>
 ): [

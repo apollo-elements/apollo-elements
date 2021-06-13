@@ -80,7 +80,7 @@ export class ApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeV
   @controlled() @state() subscription: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, any>;
+  @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`

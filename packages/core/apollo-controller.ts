@@ -27,7 +27,7 @@ export interface ApolloControllerOptions<D, V> {
   /** Variables for the operation. */
   variables?: Variables<D, V>;
   /** Context passed to the link execution chain. */
-  context?: any;
+  context?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   /**
    * errorPolicy determines the level of events for errors in the execution result. The options are:
    * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
