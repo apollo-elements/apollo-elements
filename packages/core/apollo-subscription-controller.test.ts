@@ -60,7 +60,7 @@ describe('[core] ApolloSubscriptionController', function() {
 
       beforeEach(async function setupElement() {
         const tag = defineCE(class extends MirroringHost<any> {
-          subscription = new ApolloSubscriptionController(this);
+          subscription = new ApolloSubscriptionController<any>(this);
         });
         element = await fixture(`<${tag}></${tag}>`);
       });

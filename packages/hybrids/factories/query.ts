@@ -19,7 +19,7 @@ import {
  *
  * @param  queryDocument The query document.
  * @param  options Options to control the query.
- * @return Hybrids descriptor for a [ApolloMutationController](/api/core/mutation/)
+ * @return Hybrids descriptor for a [`ApolloQueryController`](/api/core/query/)
  */
 export function query<
   E extends HTMLElement,
