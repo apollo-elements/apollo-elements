@@ -11,7 +11,7 @@ import { copySync } from 'cpx';
 // @ts-expect-error: it's not typescript
 import graphqlLoaderPlugin from '@luckycatfactory/esbuild-graphql-loader/lib/index.mjs';
 
-import { resolve, unpkg } from './esbuild-plugins/resolve.js';
+import { resolve } from './esbuild-plugins/resolve.js';
 import { litCss } from './esbuild-plugins/lit-css.js';
 
 /**
@@ -27,7 +27,6 @@ function build(opts) {
     ...opts,
     plugins: [
       resolve({ external: opts.external }),
-      ...process.env.CI === 'true' ? [ unpkg()] : [],
       litCss(),
       graphqlLoaderPlugin(),
     ],
@@ -40,7 +39,7 @@ function build(opts) {
 export function buildComponents() {
   build({
     entryPoints: ['packages/docs/entrypoints/apollo-elements.ts'],
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*' ],
+    external: [ 'https://*', 'http://*' ],
     outfile: 'docs/_assets/_static/apollo-elements.js',
   });
 
@@ -51,19 +50,19 @@ export function buildComponents() {
 
   build({
     entryPoints: ['packages/docs/entrypoints/haunted.ts'],
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-haunted.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/hybrids.ts'],
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-hybrids.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/schemalink.ts'],
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/schema-link.js',
   });
 
@@ -74,24 +73,24 @@ export function buildComponents() {
 
   build({
     entryPoints: ['packages/docs/entrypoints/mixins.ts'],
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/mixins.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/polymer.ts'],
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/polymer.js',
   });
 
   build({
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*' ],
+    external: [ 'https://*', 'http://*' ],
     entryPoints: ['packages/docs/docs-playground.ts'],
     outfile: 'docs/_assets/_static/docs-playground.js',
   });
 
   build({
-    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     entryPoints: ['packages/docs/entrypoints/components.ts'],
     outfile: 'packages/docs/components.js',
   });
