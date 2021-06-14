@@ -40,7 +40,7 @@ function build(opts) {
 export function buildComponents() {
   build({
     entryPoints: ['packages/docs/entrypoints/apollo-elements.ts'],
-    external: [ 'lit', 'lit/*', '@lit/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*' ],
     outfile: 'docs/_assets/_static/apollo-elements.js',
   });
 
@@ -51,19 +51,19 @@ export function buildComponents() {
 
   build({
     entryPoints: ['packages/docs/entrypoints/haunted.ts'],
-    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-haunted.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/hybrids.ts'],
-    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-hybrids.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/schemalink.ts'],
-    external: [ 'lit', 'lit/*', '@lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/schema-link.js',
   });
 
@@ -74,24 +74,24 @@ export function buildComponents() {
 
   build({
     entryPoints: ['packages/docs/entrypoints/mixins.ts'],
-    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/mixins.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/polymer.ts'],
-    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/polymer.js',
   });
 
   build({
-    external: [ 'lit', 'lit/*', '@lit/*', 'https://*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*' ],
     entryPoints: ['packages/docs/docs-playground.ts'],
     outfile: 'docs/_assets/_static/docs-playground.js',
   });
 
   build({
-    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'https://*', 'http://*', 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     entryPoints: ['packages/docs/entrypoints/components.ts'],
     outfile: 'packages/docs/components.js',
   });
