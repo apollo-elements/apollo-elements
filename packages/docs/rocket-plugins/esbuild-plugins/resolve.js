@@ -44,8 +44,8 @@ export function unpkg() {
       build.onResolve({ filter: /^@?lit\/?/ }, args => {
         return {
           external: true,
-          namespace: '',
-          path: `https://unpkg.com/${args.path}?module`
+          namespace: 'https',
+          path: `unpkg.com/${args.path}?module`
         };
       });
     },
