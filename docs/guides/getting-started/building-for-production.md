@@ -62,7 +62,7 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
   ```
 
   ```ts tab mixins
-  import HelloQuery from './Hello.query.graphql';
+  import { HelloQuery } from './Hello.query.graphql';
   import style from './hello-query.css';
 
   class HelloWorld extends ApolloQuery {
@@ -77,13 +77,15 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
   ```
 
   ```ts tab lit
-  import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
-  import HelloQuery from './Hello.query.graphql';
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement } from 'lit';
+  import { customElement } from 'lit/decorators.js';
+  import { HelloQuery } from './Hello.query.graphql';
   import style from './hello-query.css';
 
   @customElement('hello-world')
   class HelloWorld extends ApolloQuery {
-    query = HelloQuery;
+    query = new ApolloQueryController(this, HelloQuery);
 
     static styles = style;
   }
@@ -91,17 +93,17 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
 
   ```ts tab fast
   import { ApolloQuery, customElement } from '@apollo-elements/fast';
-  import HelloQuery from './Hello.query.graphql';
+  import { HelloQuery } from './Hello.query.graphql';
 
   @customElement({ name: 'hello-world' })
-  class HelloWorld extends ApolloQuery {
+  class HelloWorld extends ApolloQuery<typeof HelloQuery> {
     query = HelloQuery;
   }
   ```
 
   ```ts tab haunted
   import { useQuery, component, html } from '@apollo-elements/haunted';
-  import HelloQuery from './Hello.query.graphql';
+  import { HelloQuery } from './Hello.query.graphql';
 
   function HelloWorld() {
     const { data } = useQuery(HelloQuery);
@@ -112,7 +114,7 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
 
   ```ts tab hybrids
   import { define, query } from '@apollo-elements/hybrids';
-  import HelloQuery from './Hello.query.graphql';
+  import { HelloQuery } from './Hello.query.graphql';
 
   define('hello-world', {
     query: query(HelloQuery),

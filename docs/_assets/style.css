@@ -77,3 +77,18 @@ body[layout='layout-api-index'] #sidebar {
 docs-playground {
   margin-bottom: 16px;
 }
+
+.before-after pre { position: relative; }
+
+.before-after pre::before {
+  display: block;
+  position: absolute;
+  right: 0;
+  background: var(--footer-background);
+  top: 0;
+  padding: 4px 12px;
+  border-bottom-left-radius: 6px;
+}
+
+.before-after pre:first-child::before { content: 'Before'; }
+.before-after pre:last-child::before { content: 'After'; }

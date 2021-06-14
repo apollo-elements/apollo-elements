@@ -17,7 +17,7 @@ This page has detailed API documentation for `<apollo-subscription>`. See the [`
 
 ## Live Demo
 
-```html wcd 1111 www/index.html
+```html playground subscription-component index.html
 <apollo-subscription>
 
   <script type="application/graphql">
@@ -35,6 +35,8 @@ This page has detailed API documentation for `<apollo-subscription>`. See the [`
   </script>
 
   <template>
+    <small><em>This demo is blocked by an <a target="_blank" rel="nofollow noreferer" href="https://github.com/apollographql/apollo-feature-requests/issues/299">issue in <code>SchemaLink</code></a>.</small>
+
     <sl-alert type="primary" duration="3000" closable open>
       <sl-icon slot="icon" name="info-circle"></sl-icon>
       <article>

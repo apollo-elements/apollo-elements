@@ -46,7 +46,69 @@ window.__APOLLO_CLIENT__ = client;
 
 If you'd prefer to avoid assigning to the `window`, you have more options...
 
-## `ApolloClientMixin`
+## Controllers' `client` Parameter
+
+Pass the `client` param to controllers to specify the client instance
+
+<code-tabs collection="libraries" default-tab="lit">
+
+  ```html tab html
+  <blink>
+  The HTML Apollo Elements use the ApolloElement interface. See the previous segments.
+  </blink>
+  ```
+
+  ```ts tab mixins
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { ControllerHostMixin } from '@apollo-elements/mixins';
+  import { MyQuery } from './My.query.graphql';
+  import { client } from './specific-apollo-client';
+
+  export class ConnectedQuery extends ControllerHostMixin(HTMLElement) {
+    query = new ApolloQueryController(this, MyQuery, { client });
+  }
+
+  customElements.define('connected-query', ConnectedQuery);
+  ```
+
+  ```ts tab lit
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement } from 'lit';
+  import { customElement } from 'lit/decorators.js';
+  import { MyQuery } from './My.query.graphql';
+  import { client } from './specific-apollo-client';
+
+  @customElement('connected-query')
+  export class ConnectedQuery extends LitElement {
+    query = new ApolloQueryController(this, MyQuery, { client });
+  }
+  ```
+
+  ```ts tab fast
+  /* FAST doesn't yet have Apollo behaviours. Stay tuned! */
+  ```
+
+  ```ts tab haunted
+  import { useQuery } from '@apollo-elements/haunted';
+  import { client } from './specific-apollo-client';
+
+  function ConnectedQuery() {
+    const { data } = useQuery(gql`query ConnectedQuery { connected }`, { client });
+  }
+  ```
+
+  ```ts tab hybrids
+  import { query, define, html } from '@apollo-elements/hybrids';
+  import { client as apolloClient } from './specific-apollo-client';
+
+  define('connected-query', {
+    query: query(gql`query ConnectedQuery { connected }`, { client }),
+  });
+  ```
+
+</code-tabs>
+
+## Elements' `ApolloClientMixin`
 
 Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your components' classes to connect them to a specific client:
 
@@ -95,9 +157,6 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
   import { ApolloQuery, customElement } from '@apollo-elements/fast';
   import { client } from './specific-apollo-client';
 
-  interface Data { /* ... */ }
-  interface Variables { /* ... */ }
-
   const Base =
     ApolloClientMixin(client, ApolloQuery);
 
@@ -105,7 +164,7 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
   const template = html<ConnectedQuery>`...`;
 
   @customElement({ name, template })
-  export class ConnectedQuery extends Base<Data, Variables> { /* ... */ }
+  export class ConnectedQuery extends Base<any> { /* ... */ }
   ```
 
   ```ts tab haunted

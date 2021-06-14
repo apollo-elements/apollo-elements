@@ -237,22 +237,19 @@ function onWillMutate(event) {
 
   ```ts tab mixins
   import type { WillMutateEvent } from '@apollo-elements/components';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
 
-  import '@apollo-elements/components/apollo-mutation';
+  import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
 
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+
+  import '@apollo-elements/components/apollo-mutation';
 
   interface ItemDetail {
     itemId: string;
     selected: boolean;
   }
 
-  type CreateNetworkMutator =
-    ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
+  type CreateNetworkMutator = ApolloMutation<typeof CreateNetworkMutation>;
 
   const template = document.createElement('template');
   template.innerHTML = `
@@ -337,33 +334,31 @@ function onWillMutate(event) {
 
   ```ts tab lit
   import type { WillMutateEvent } from '@apollo-elements/components';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
 
-  import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement, html } from 'lit';
+  import { customElement } from 'lit/decorators.js';
+
+  import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
 
   import '@apollo-elements/components/apollo-mutation';
-
-  import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
 
   interface ItemDetail {
     itemId: string;
     selected: boolean;
   }
 
-  type CreateNetworkMutator =
-    ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
+  type CreateNetworkMutator = ApolloMutation<typeof CreateNetworkMutation>;
 
   @customElement('all-sites')
-  class SitesElement extends ApolloQuery<Data, Variables> {
-    query = SitesQuery;
+  class SitesElement extends LitElement {
+    query = new ApolloQueryController(this, SitesQuery);
 
     render() {
+      const sites = this.query.data?.sites ?? [];
       return html`
         <select-list>
-          ${this.data.sites.map(site => html`
+          ${sites.map(site => html`
           <select-item
               item-id="${site.id}"
               item-name="${site.name}"
@@ -382,7 +377,7 @@ function onWillMutate(event) {
     }
 
     onSelectedChanged(event: CustomEvent<ItemDetail>) {
-      this.client.writeFragment({
+      this.query.client.writeFragment({
         id: `Site:${event.detail.itemId}`,
         fragment: gql`
           fragment siteSelected on Site {
@@ -396,8 +391,9 @@ function onWillMutate(event) {
     }
 
     onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
+      if (!this.query.data?.sites) return;
       event.target.variables = {
-        sites: this.data.sites
+        sites: this.query.data.sites
           .filter(x => x.selected)
           .map(x => x.id); // string[]
       }
@@ -406,19 +402,14 @@ function onWillMutate(event) {
 
   ```ts tab fast
   import type { WillMutateEvent } from '@apollo-elements/components';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
 
   import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
 
+  import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
+
   import '@apollo-elements/components/apollo-mutation';
 
-  import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
-
-  type CreateNetworkMutator =
-    ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
+  type CreateNetworkMutator = ApolloMutation<typeof CreateNetworkMutation>;
 
   interface ItemDetail {
     itemId: string;
@@ -476,15 +467,15 @@ function onWillMutate(event) {
   ```ts tab haunted
   import type { ApolloMutationElement, WillMutateEvent } from '@apollo-elements/components';
 
-  import '@apollo-elements/components/apollo-mutation';
-
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
   import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
+
   import { SitesQuery } from './Sites.query.graphql';
 
-  type CreateNetworkMutator =
-    ApolloMutationElement<typeof CreateNetworkMutation>;
+  import '@apollo-elements/components/apollo-mutation';
+
+  type CreateNetworkMutator = ApolloMutationElement<typeof CreateNetworkMutation>;
 
   interface ItemDetail {
     itemId: string;
@@ -510,7 +501,7 @@ function onWillMutate(event) {
 
     function onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
       event.target.variables = {
-        sites: this.data.sites
+        sites: data.sites
           .filter(x => x.selected)
           .map(x => x.id); // string[]
       }
@@ -543,19 +534,14 @@ function onWillMutate(event) {
   import type { ApolloQueryController } from '@apollo-elements/core';
   import type { ApolloMutation } from '@apollo-elements/components';
   import type { WillMutateEvent } from '@apollo-elements/components';
-  import type {
-    SitesQueryData as Data,
-    SitesQueryVariables as Variables
-  } from '../../schema';
 
   import { query, define, html } from '@apollo-elements/hybrids';
 
+  import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
+
   import '@apollo-elements/components/apollo-mutation';
 
-  import CreateNetworkMutation from './CreateNetwork.mutation.graphql';
-
-  type CreateNetworkMutator =
-    ApolloMutation<CreateNetworkMutationData, CreateNetworkMutationVariables>;
+  type CreateNetworkMutator = ApolloMutation<typeof CreateNetworkMutation>;
 
   type QueryElement = HTMLElement & { query: ApolloQueryController<Data, Variables>> };
 

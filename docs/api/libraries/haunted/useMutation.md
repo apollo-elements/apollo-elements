@@ -5,7 +5,7 @@ module: 'useMutation.js'
 ---
 # Web Component Libraries >> Haunted >> useMutation || 20
 
-Apollo `useMutation` hook for web components. Elements that call `useMutation` inherit the [`ApolloMutationInterface`](/api/interfaces/mutation/).
+Apollo `useMutation` hook for web components.
 
 Read the [mutation component guides](../../../../guides/usage/mutations/) for examples and tips.
 
@@ -95,6 +95,5 @@ window.__APOLLO_CLIENT__ = new ApolloClient({
   link: new HttpLink({ uri: 'https://api.spacex.land/graphql' }),
 });
 ```
-Elements that call `useMutation` inherit the [`ApolloMutationInterface`](/api/interfaces/query/).
 
-Read the [mutation component guides](../../../../guides/usage/mutations/) for examples and tips.
+Read the [mutation component guides](/guides/usage/mutations/) for examples and tips.

@@ -14,6 +14,15 @@ const BASE_IMPORT_MAP = {
   '@graphql-tools/tools': '../../../schema-link.js',
 
   '@apollo-elements/components': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-client': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-client.js': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-mutation': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-mutation.js': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-query': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-query.js': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-subscription': '../../../apollo-elements.js',
+  '@apollo-elements/components/apollo-subscription.js': '../../../apollo-elements.js',
+
   '@apollo-elements/core': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-mutation-controller': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-query-controller': '../../../apollo-elements.js',
@@ -21,6 +30,15 @@ const BASE_IMPORT_MAP = {
   '@apollo-elements/core/decorators': '../../../apollo-elements.js',
   '@apollo-elements/core/events': '../../../apollo-elements.js',
   '@apollo-elements/core/lib/has-all-variables': '../../../apollo-elements.js',
+
+  "@microsoft/fast-element": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast/apollo-query.js": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast/apollo-mutation.js": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast/apollo-subscription.js": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast/apollo-query": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast/apollo-mutation": "../../../apollo-elements-fast.js",
+  "@apollo-elements/fast/apollo-subscription": "../../../apollo-elements-fast.js",
 
   "@apollo-elements/haunted": "../../../apollo-elements-haunted.js",
   "@apollo-elements/haunted/useQuery.js": "../../../apollo-elements-haunted.js",
