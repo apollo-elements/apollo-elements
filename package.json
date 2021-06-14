@@ -62,8 +62,8 @@
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@custom-elements-json/helpers": "^0.0.1",
-    "@custom-elements-manifest/analyzer": "^0.1.19",
-    "@custom-elements-manifest/to-markdown": "^0.0.3",
+    "@custom-elements-manifest/analyzer": "^0.1.22",
+    "@custom-elements-manifest/to-markdown": "^0.0.4",
     "@gluon/gluon": "^2.5.3",
     "@gluon/keybinding": "^1.1.0",
     "@graphql-codegen/cli": "^1.21.5",
@@ -98,8 +98,8 @@
     "@web/dev-server-import-maps": "^0.0.5",
     "@web/dev-server-rollup": "^0.3.4",
     "@web/rollup-plugin-copy": "^0.3.0",
-    "@web/test-runner": "^0.13.7",
-    "@web/test-runner-commands": "^0.5.2",
+    "@web/test-runner": "^0.13.11",
+    "@web/test-runner-commands": "^0.5.4",
     "clear-module": "^4.1.1",
     "commitizen": "^4.2.4",
     "commitlint-plugin-workspace-scopes": "^1.1.0",
@@ -139,7 +139,7 @@
     "ramda": "^0.27.1",
     "remark-mermaid": "^0.2.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.51.1",
+    "rollup": "^2.51.2",
     "rollup-plugin-esbuild": "^4.5.0",
     "rollup-plugin-lit-css": "^2.1.0",
     "rollup-plugin-terser": "^7.0.2",
@@ -154,7 +154,7 @@
     "woff2base64": "^2.0.0"
   },
   "dependencies": {
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.0"
   },
   "resolutions": {
     "@types/chai": "^4.2.18",
