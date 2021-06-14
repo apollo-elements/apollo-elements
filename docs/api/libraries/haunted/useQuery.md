@@ -5,9 +5,9 @@ module: useQuery.js
 ---
 # Web Component Libraries >> Haunted >> useQuery || 10
 
-Apollo `useQuery` hook for web components. Elements that call `useQuery` inherit the [`ApolloQueryInterface`](/api/interfaces/query/).
+Apollo `useQuery` hook for web components.
 
-Read the [query component guides](../../../../guides/usage/queries/) for examples and tips.
+Read the [query component guides](/guides/usage/queries/) for examples and tips.
 
 <style data-helmet>
 #use-query {
@@ -35,7 +35,6 @@ query LaunchesQuery($limit: Int) {
 
 ```js playground use-query launches.js
 import { useQuery, component, html } from '@apollo-elements/haunted';
-import { GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 import { LaunchesQuery } from './Launches.query.graphql.js';
 
 function Launches({ document = null, variables = null }) {
@@ -58,7 +57,7 @@ function Launches({ document = null, variables = null }) {
   `;
 }
 
-customElements.define('spacex-launches', GraphQLScriptChildMixin(component(Launches)));
+customElements.define('spacex-launches', component(Launches));
 ```
 
 ```css playground-file use-query launches.css

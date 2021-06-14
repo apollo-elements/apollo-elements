@@ -222,7 +222,7 @@ The tabs below demonstrate multiple ways to write the same query component:
   `;
 
   @customElement({ name: 'astro-nauts', template })
-  class Astronauts extends ApolloQuery {
+  class Astronauts extends ApolloQuery<{ users: { id: string; name: string; picture: string } }> {
     query = gql`
       query Users {
         users {

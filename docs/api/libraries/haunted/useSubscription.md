@@ -5,9 +5,9 @@ module: 'useSubscription.js'
 ---
 # Web Component Libraries >> Haunted >> useSubscription || 30
 
-Apollo `useSubscription` hook for web components. Elements that call `useSubscription` inherit the [`ApolloSubscriptionInterface`](/api/interfaces/subscription/).
+Apollo `useSubscription` hook for web components.
 
-Read the [subscription component guides](../../../../guides/usage/subscriptions/) for examples and tips.
+Read the [subscription component guides](/guides/usage/subscriptions/) for examples and tips.
 
 ```ts playground subscription-factory user-added.ts
 import { useSubscription, useState, component, html } from '@apollo-elements/hybrids';

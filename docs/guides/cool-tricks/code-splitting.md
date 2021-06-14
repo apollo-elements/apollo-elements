@@ -219,7 +219,7 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
 
-  import UserQuery from './User.query.graphql';
+  import { UserQuery } from './User.query.graphql';
 
   @customElement({ name: 'admin-profile-page' })
   export class AdminProfilePage extends TypePoliciesMixin(ApolloQuery)<typeof UserQuery> {
@@ -275,3 +275,5 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   ```
 
 </code-tabs>
+
+When using `Apollo*Controllers`, take inspiration from the `haunted` and `hybrids` examples and call `addTypePolicies` on the controller's cache when the host connects.

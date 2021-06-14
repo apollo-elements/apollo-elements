@@ -49,6 +49,12 @@ export function buildComponents() {
   });
 
   build({
+    entryPoints: ['packages/docs/entrypoints/fast.ts'],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/apollo-elements-fast.js',
+  });
+
+  build({
     entryPoints: ['packages/docs/entrypoints/haunted.ts'],
     external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-haunted.js',

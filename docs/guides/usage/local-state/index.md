@@ -112,17 +112,19 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   ```ts tab lit
-  import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LittElement, html } from 'lit';
+  import { customElement } from 'lit/decorators.js';
 
   type Theme = 'dark'|'light';
   type Data = { theme: Theme };
 
   @customElement('theme-toggle')
-  class ThemeToggle extends ApolloQuery<Data, null> {
-    query = ThemeToggleQuery;
+  class ThemeToggle extends LitElement {
+    query = new ApolloQueryController(this, ThemeToggleQuery);
 
     get nextTheme(): Theme {
-      return this.data?.theme === 'dark' ? 'light' : 'dark';
+      return this.query.data?.theme === 'dark' ? 'light' : 'dark';
     }
 
     render() {
@@ -152,7 +154,7 @@ Let's define a custom element that displays a button to toggle the theme.
   `;
 
   @customElement({ name: 'theme-toggle', template})
-  class ThemeToggle extends ApolloQuery<Data, null> {
+  class ThemeToggle extends ApolloQuery<typeof ThemeToggleQuery> {
     query = ThemeToggleQuery;
 
     get nextTheme(): Theme {
@@ -172,7 +174,7 @@ Let's define a custom element that displays a button to toggle the theme.
   type Data = { theme: Theme };
 
   function ThemeToggle() {
-    const { data } = useQuery<Data, null>(ThemeToggleQuery);
+    const { data } = useQuery(ThemeToggleQuery);
 
     const nextTheme = data?.theme === 'dark' ? 'light' : 'dark';
 
@@ -201,7 +203,7 @@ Let's define a custom element that displays a button to toggle the theme.
   }
 
   define('theme-toggle', {
-    query: query<Data, null>(ThemeToggleQuery),
+    query: query(ThemeToggleQuery),
     nextTheme: {
       get(host) {
         host.query.data?.theme === 'dark' ? 'light' : 'dark';
@@ -285,14 +287,16 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   ```
 
   ```ts tab lit
-  import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { typePolicies } from './typePolicies';
 
   @customElement('theme-toggle')
-  class ThemeToggle extends TypePoliciesMixin(ApolloQuery)<Data, null> {
-    typePolicies = typePolicies;
+  class ThemeToggle extends LitElement {
+    query = new ApolloQueryController(this, ThemeToggleQuery);
 
-    // ...
+    connectedCallback() {
+      super.connectedCallback();
+      this.query.client.cache.policies.addTypePolicies(typePolicies);
+    }
   }
   ```
 
@@ -301,7 +305,7 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   import { typePolicies } from './typePolicies';
 
   @customElement({ name: 'theme-toggle', template })
-  class ThemeToggle extends TypePoliciesMixin(ApolloQuery)<Data, null> {
+  class ThemeToggle extends TypePoliciesMixin(ApolloQuery)<typeof ThemeToggleQuery> {
     typePolicies = typePolicies;
 
     // ...
@@ -313,7 +317,7 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   import { typePolicies } from './typePolicies';
 
   function ThemeToggle() {
-    const { client, data } = useQuery<Data, null>(ThemeToggleQuery);
+    const { client, data } = useQuery(ThemeToggleQuery);
 
     /**
      * There's no TypePoliciesMixin for haunted,
@@ -374,13 +378,13 @@ All that's left is to define the `toggleTheme` function to actually update the c
           .querySelector('apollo-query')
       queryEl.extras = {
         toggleTheme() {
-          const theme = queryEl.data?.theme === 'light' ? 'dark' : 'light';
+          const theme = queryEl.data.theme === 'light' ? 'dark' : 'light';
           queryEl.client.writeQuery({
             query: queryEl.query,
             data: { theme },
           });
         }
-      }
+      };
     }
   </script>
   ```
@@ -398,8 +402,8 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```ts tab lit
   toggleTheme() {
     const theme = this.nextTheme;
-    this.client.writeQuery({
-      query: this.query,
+    this.query.client.writeQuery({
+      query: this.query.query,
       data: { theme },
     });
   }
@@ -469,7 +473,7 @@ Last, we'll refactor the `toggleTheme` method to directly update the value of `t
 
   ```js tab html
   toggleTheme() {
-    themeVar(queryEl.data?.theme === 'light' ? 'dark' : 'light');
+    themeVar(queryEl.data.theme === 'light' ? 'dark' : 'light');
   }
   ```
 
@@ -529,7 +533,7 @@ Now in order to update the theme, we need to perform two steps:
 
   ```js tab html
   toggleTheme() {
-    localStorage.setItem('theme', queryEl.data?.theme === 'light' ? 'dark' : 'light');
+    localStorage.setItem('theme', queryEl.data.theme === 'light' ? 'dark' : 'light');
     queryEl.client.cache.evict({ fieldName: 'theme' });
   }
   ```
@@ -544,7 +548,7 @@ Now in order to update the theme, we need to perform two steps:
   ```ts tab lit
   toggleTheme() {
     localStorage.setItem('theme', this.nextTheme);
-    this.client.cache.evict({ fieldName: 'theme' });
+    this.query.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 

@@ -4,6 +4,12 @@ package: '@apollo-elements/lit-apollo'
 ---
 # Web Component Libraries >> Lit || 20
 
+<inline-notification type="tip">
+
+Looking for reactive Apollo controllers? See [`@apollo-elements/core`](/api/core/)
+
+</inline-notification>
+
 [`lit`](https://lit.dev) combines a reactive component base class with an efficient and expressive templating system. It's a popular and simple choice for building any kind of web component project.
 
 ## Installation
