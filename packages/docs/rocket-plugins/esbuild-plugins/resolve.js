@@ -40,12 +40,10 @@ export function unpkg() {
   return {
     name: 'resolve-unpkg',
     setup(build) {
-      // Redirect all paths starting with "@apollo-elements/" to "/packages/"
       build.onResolve({ filter: /^@?lit\/?/ }, args => {
         return {
           external: true,
-          namespace: 'https',
-          path: `unpkg.com/${args.path}?module`
+          path: `https://unpkg.com/${args.path}?module`
         };
       });
     },
