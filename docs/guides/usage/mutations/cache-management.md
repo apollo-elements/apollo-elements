@@ -103,60 +103,49 @@ And this component definition:
   ```
 
   ```ts tab lit
-  import type {
-    BlogPostMutationData as Data,
-    BlogPostMutationVariables as Variables
-  } from '../../codegen/operations';
+  import { ApolloMutationController } from '@apollo-elements/core';
+  import { LitElement, html } from 'lit';
 
-  import { ApolloMutation, html } from '@apollo-elements/lit-apollo';
-
-  import BlogPostMutation from './BlogPost.mutation.graphql';
+  import { BlogPostMutation } from './BlogPost.mutation.graphql';
 
   @customElement('blog-post')
-  class BlogPost extends ApolloMutation<Data, Variables> {
-    mutation = BlogPostMutation;
+  class BlogPost extends LitElement {
+    mutation = new ApolloMutationController(this, BlogPostMutation, {
+      onCompleted: () => this.textarea.value = '';
+    });
 
     @query('textarea') textarea: HTMLTextAreaElement;
 
     render() {
       return html`
-        <loading-overlay ?active="${this.loading}"></loading-overlay>
+        <loading-overlay ?active="${this.mutation.loading}"></loading-overlay>
 
         <label>New Post
           <textarea @input="${this.onInput}"></textarea>
         </label>
 
-        <button ?hidden="${this.data}" @click="${() => this.mutate()}">
+        <button ?hidden="${this.mutation.data}" @click="${() => this.mutation.mutate()}">
           Post!
         </button>
 
-        <article ?hidden="${!this.data}">
+        <article ?hidden="${!this.mutation.data}">
           <strong>Post Succeeded!</strong>
-          <p>${this.data?.summary}</p>
+          <p>${this.mutation.data?.summary}</p>
         </article>
       `;
     }
 
     onInput(event) {
       const content = event.target.value;
-      this.variables = { content };
-    }
-
-    onCompleted() {
-      this.textarea.value = '';
+      this.mutation.variables = { content };
     }
   }
   ```
 
   ```ts tab fast
-  import type {
-    BlogPostMutationData as Data,
-    BlogPostMutationVariables as Variables
-  } from '../../codegen/operations';
-
   import { ApolloMutation, html, ref } from '@apollo-elements/fast';
 
-  import BlogPostMutation from './BlogPost.mutation.graphql';
+  import { BlogPostMutation } from './BlogPost.mutation.graphql';
 
   const name = 'blog-post';
 
@@ -178,7 +167,7 @@ And this component definition:
     </article>
   `;
   @customElement({ name, template })
-  class BlogPost extends ApolloMutation<Data, Variables> {
+  class BlogPost extends ApolloMutation<typeof BlogPostMutation> {
     static readonly is = name;
 
     declare textarea: HTMLTextAreaElement;
@@ -242,7 +231,7 @@ And this component definition:
 
   function onInput(host, event) {
     const content = event.target.value;
-    host.variables = { content };
+    host.mutation.variables = { content };
   }
 
   async function mutate(host) {
@@ -255,7 +244,7 @@ And this component definition:
 
   define(name, {
     mutation: mutation(BlogPostMutation),
-    render: ({ loading, data }) => html`
+    render: ({ mutation: { loading, data } }) => html`
       <loading-overlay ?active="${loading}"></loading-overlay>
 
       <label>
@@ -346,25 +335,27 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   ```
 
   ```ts tab lit
-  /**
-   * update function which reads a cached query result, merges
-   * it with the mutation result, and then writes it back to the cache.
-   */
-  updater(
-    cache: ApolloCache<NormalizedCacheObject>,
-    result: FetchResult<Data>
-  ) {
-    // 1: Read the cache synchronously to get the current list of posts
-    const query = LatestPostsQuery;
-    const cached = cache.readQuery({ query: LatestPostsQuery });
+  mutation = new ApolloMutationController(this, BlogPostMutation, {
+    /**
+     * update function which reads a cached query result, merges
+     * it with the mutation result, and then writes it back to the cache.
+     */
+    update(
+      cache: ApolloCache<NormalizedCacheObject>,
+      result: FetchResult<Data>
+    ) {
+      // 1: Read the cache synchronously to get the current list of posts
+      const query = LatestPostsQuery;
+      const cached = cache.readQuery({ query: LatestPostsQuery });
 
-    // 2: Calculate the expected result of LatestPostsQuery,
-    //    considering the mutation result
-    const data = { posts: [result.data.postBlogPost, ...cached.posts] }
+      // 2: Calculate the expected result of LatestPostsQuery,
+      //    considering the mutation result
+      const data = { posts: [result.data.postBlogPost, ...cached.posts] }
 
-    // 3: Perform the cache update by calling `writeQuery`
-    cache.writeQuery({ query, data });
-  }
+      // 3: Perform the cache update by calling `writeQuery`
+      cache.writeQuery({ query, data });
+    }
+  })
   ```
 
   ```ts tab fast
@@ -425,34 +416,29 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   ```
 
   ```ts tab hybrids
-  /**
-   * update function which reads a cached query result, merges
-   * it with the mutation result, and then writes it back to the cache.
-   */
-  function update(
-    cache: ApolloCache<NormalizedCacheObject>,
-    result: FetchResult<Data>
-  ) {
-    // 1: Read the cache synchronously to get the current list of posts
-    const query = LatestPostsQuery;
-    const cached = cache.readQuery({ query: LatestPostsQuery });
+  define('blog-post', {
+    mutation: mutation(BlogPostMutation, {
+      /**
+       * update function which reads a cached query result, merges
+       * it with the mutation result, and then writes it back to the cache.
+       */
+      function update(
+        cache: ApolloCache<NormalizedCacheObject>,
+        result: FetchResult<Data>
+      ) {
+        // 1: Read the cache synchronously to get the current list of posts
+        const query = LatestPostsQuery;
+        const cached = cache.readQuery({ query: LatestPostsQuery });
 
-    // 2: Calculate the expected result of LatestPostsQuery,
-    //    considering the mutation result
-    const data = { posts: [result.data.postBlogPost, ...cached.posts] }
+        // 2: Calculate the expected result of LatestPostsQuery,
+        //    considering the mutation result
+        const data = { posts: [result.data.postBlogPost, ...cached.posts] }
 
-    // 3: Perform the cache update by calling `writeQuery`
-    cache.writeQuery({ query, data });
-  }
-
-  async function mutate(host) {
-    try {
-      host.mutation.mutate({ update });
-    } finally {
-      host.textarea.value = '';
-    }
-  }
-
+        // 3: Perform the cache update by calling `writeQuery`
+        cache.writeQuery({ query, data });
+      }
+    }),
+  })
   ```
 
 </code-tabs>

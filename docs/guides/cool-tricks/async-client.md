@@ -170,35 +170,27 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   ```
 
   ```ts tab lit
-  import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
-
-  import UserSessionQuery from './UserSession.query.graphql';
-
-  import type {
-    UserSessionQueryData as Data,
-    UserSessionQueryVariables as Variables,
-  } from '../schema';
-
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement, html } from 'lit';
+  import { customElement } from 'lit/decorators.js';
+  import { UserSessionQuery } from './UserSession.query.graphql';
   import { getClient } from './client';
   import { formatDistance } from 'date-fns/esm';
 
   @customElement('async-element')
-  class AsyncElement extends ApolloQuery<Data, Variables> {
-    noAutoSubscribe = true;
-
-    query = UserSessionQuery;
+  class AsyncElement extends LitElement {
+    query = new ApolloQueryController(this, UserSessionQuery);
 
     async connectedCallback() {
       super.connectedCallback();
       // asynchronously get a reference to the client
-      this.client = await getClient();
-      // only then start fetching data
-      this.subscribe();
+      // setting the client will automatically subscribe.
+      this.query.client = await getClient();
     }
 
     render() {
-      const name = this.data?.userSession.name ?? ''
-      const lastActive = this.data?.userSession.lastActive;
+      const name = this.query.data?.userSession?.name ?? '';
+      const lastActive = this.query.data?.userSession?.lastActive;
 
       const time =
         !lastActive ? '' : formatDistance(lastActive, Date.now(), { addSuffix: true });
@@ -217,12 +209,7 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   ```ts tab fast
   import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
 
-  import UserSessionQuery from './UserSession.query.graphql';
-
-  import type {
-    UserSessionQueryData as Data,
-    UserSessionQueryVariables as Variables,
-  } from '../schema';
+  import { UserSessionQuery } from './UserSession.query.graphql';
 
   import { getClient } from './client';
   import { formatDistance } from 'date-fns/esm';
@@ -245,7 +232,7 @@ If for whatever reason you'd like to load your component files eagerly, set the 
       </p>
     `
   })
-  class AsyncElement extends ApolloQuery<Data, Variables> {
+  class AsyncElement extends ApolloQuery<typeof UserSessionQuery> {
     noAutoSubscribe = true;
 
     query = UserSessionQuery;
@@ -253,9 +240,8 @@ If for whatever reason you'd like to load your component files eagerly, set the 
     async connectedCallback() {
       super.connectedCallback();
       // asynchronously get a reference to the client
+      // setting the client will start fetching the query
       this.client = await getClient();
-      // only then start fetching data
-      this.subscribe();
     }
   };
   ```

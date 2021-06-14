@@ -87,7 +87,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
   }
 
   @customElement('greet-me')
-  class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<Data, null> {
+  class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<typeof HelloQuery> {
     render() {
       return html`
         <p>
@@ -114,7 +114,7 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
       ${x => x.data?.name ?? 'friend'}
     </p>
   ` })
-  class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<Data, null> { }
+  class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<typeof HelloQuery> { }
   ```
 
   ```ts tab haunted

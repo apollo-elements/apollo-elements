@@ -157,13 +157,8 @@ Alternatively, we could create on a separate component to handle fetching the su
 
   import bound from 'bind-decorator';
 
-  import MessagesQuery from './Messages.query.graphql';
-  import MessageSentSubscription from './MessageSent.subscription.graphql';
-
-  import type {
-    MessagesQueryData as Data,
-    MessagesQueryVariables as Variables,
-  } from '../schema';
+  import { MessagesQuery } from './Messages.query.graphql';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql';
 
   const template = document.createElement('template');
   template.innerHTML = `
@@ -189,7 +184,7 @@ Alternatively, we could create on a separate component to handle fetching the su
     <dd></dd>
   `;
 
-  export class ChatQuery extends ApolloQueryMixin<Data, Variables> {
+  export class ChatQuery extends ApolloQueryMixin<typeof MessagesQuery> {
     query = MessagesQuery;
 
     constructor() {
@@ -238,24 +233,21 @@ Alternatively, we could create on a separate component to handle fetching the su
   ```
 
   ```ts tab lit
-  import { ApolloQuery, html, customElement } from '@apollo-elements/lit-apollo';
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement, html } from 'lit';
+  import { customElement } from 'lit/decorators.js';
   import { format } from 'date-fns/fp';
 
   import './chat-subscription';
 
   import bound from 'bind-decorator';
 
-  import MessagesQuery from './Messages.query.graphql';
-  import MessageSentSubscription from './MessageSent.subscription.graphql';
-
-  import type {
-    MessagesQueryData as Data,
-    MessagesQueryVariables as Variables,
-  } from '../schema';
+  import { MessagesQuery } from './Messages.query.graphql';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql';
 
   @customElement("chat-query")
-  export class ChatQuery extends ApolloQuery<Data, Variables> {
-    query = MessagesQuery;
+  export class ChatQuery extends LitElement {
+    query = new ApolloQueryController(this, MessagesQuery);
 
     render() {
       return html`
@@ -264,16 +256,16 @@ Alternatively, we could create on a separate component to handle fetching the su
             .onSubscriptionData=${this.onSubscriptionData}>
         </chat-subscription>
       ${(
-        this.loading ? html`
+        this.query.loading ? html`
           Loading...`
-      : this.error ? html`
+      : this.query.error ? html`
           <h1>😢 Such Sad, Very Error! 😰</h1>
           <pre>
             <code>${error.message}</code>
           </pre>`
       : html`
         <dl>
-          ${this.data.messages.map(message => html`
+          ${this.query.data.messages.map(message => html`
             <dt>
               <time>${format('HH:mm', message.date)}</time>
               ${message.user}
@@ -287,7 +279,7 @@ Alternatively, we could create on a separate component to handle fetching the su
 
     @bound onSubscriptionData(result) {
       const { client, subscriptionData: { data: { messageSent } } } = result;
-      const { query } = this;
+      const { query } = this.query;
       const { messages } = client.readQuery({ query });
       const data = { messages: [...messages, messageSent] };
       client.writeQuery({ query, data });
@@ -304,13 +296,8 @@ Alternatively, we could create on a separate component to handle fetching the su
 
   import bound from 'bind-decorator';
 
-  import MessagesQuery from './Messages.query.graphql';
-  import MessageSentSubscription from './MessageSent.subscription.graphql';
-
-  import type {
-    MessagesQueryData as Data,
-    MessagesQueryVariables as Variables,
-  } from '../schema';
+  import { MessagesQuery } from './Messages.query.graphql';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql';
 
   const template = html<ChatQuery>`
     <chat-subscription
@@ -339,7 +326,7 @@ Alternatively, we could create on a separate component to handle fetching the su
   `;
 
   @customElement({ name: 'chat-query', template })
-  export class ChatQuery extends ApolloQuery<Data, Variables> {
+  export class ChatQuery extends ApolloQuery<typeof MessagesQuery> {
     query = MessagesQuery;
 
     @bound onSubscriptionData({ client, subscriptionData: { data: { messageSent } } }) {

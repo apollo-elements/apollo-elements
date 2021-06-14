@@ -1,24 +1,20 @@
----
-description: How to update your Apollo Elements 2 app to Apollo Elements 3
----
-
-# Getting Started >> Migrating from 2.0 || 50
+# Getting Started >> Migrating >> From Apollo Client 2.0 || 20
 
 Apollo Client 3 and Apollo Elements 3 both bring with them significant breaking changes. When upgrading your app to `@apollo-elements` 3, follow these steps to ease the transition:
 
-## Replace imports with `@apollo/client/core`
+### Replace imports with `@apollo/client/core`
 `apollo-client`, `apollo-cache-inmemory`, `apollo-link-*` and others are now supplied by `@apollo/client/core`, so replace your import statements to match.
 *NB:* you should always import from `@apollo/client/core`, not from `@apollo/client`, as the latter includes dependencies on `react` which you probably don't need or want. A single import statement from `@apollo/client` in your app can cause the TypeScript compiler to fail if `react` is not installed as a dependency. To avoid this, always import from `@apollo/client/core`.
 
-## Remove calls to `writeData`
+### Remove calls to `writeData`
 If your app used `client.writeData` (e.g. to set default values when loading the cache), you must replace it with calls to either `writeQuery`, `writeFragment` or `cache.modify`. You can also set default values in [field policies](#replace-resolvers-with-type-policies)
 
-## Check Non-Nullable Variables
+### Check Non-Nullable Variables
 Query and Subscription elements in `@apollo-elements` 2 tried to prevent operations with non-nullable variables from fetching if their required arguments were null or undefined. Version 3 removes that check by default, so as long as there's a client and a query, they subscribe immediately. To avoid errors, always make sure to set your variables before you query.
 
 To keep components from fetching until they have their required variables, see [Validating Variables](/guides/cool-tricks/validating-variables/).
 
-## Replace Resolvers with Type Policies
+### Replace Resolvers with Type Policies
 Apollo client 3 deprecates local resolvers in favour of type policies. Your resolvers will still work for now, but it's recommended to migrate them.
 
 Say you had this query, and you wanted to define the client-side type policies for it.
@@ -298,13 +294,13 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
    * but you can use this one-line function to do the same
    */
   function connect(host) {
-    host.query.client.cache.policies.addTypePolicies(DetailsTypePolicies);
+    host.client.cache.policies.addTypePolicies(host.typePolicies);
   }
 
   define('toggle-views', {
     render,
     query: query(DetailsOpenQuery),
-    __typePolicies: { connect },
+    typePolicies: property(DetailsTypePolicies, connect),
   });
   ```
 

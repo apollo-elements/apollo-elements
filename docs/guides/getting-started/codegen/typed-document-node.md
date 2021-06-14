@@ -52,7 +52,9 @@ import TypedQuery from './Typed.query.graphql';
 
 ## Using them in Components
 
-Pass your `TypedDocumentNode` objects' type as the first type argument to your component constructors. These examples assume you followed the first approach outlined above. If you are generating types, omit the `typeof` operator.
+When you pass your `TypedDocumentNode` to a controller (or haunted hook, or hybrids factory), TypeScript will infer the return type. If you're using a component class (e.g. `class extends ApolloQuery`), pass the `TypedDocumentNode` objects' type as the first type argument to your component constructors.
+
+These examples assume you followed the first approach outlined above. If you are generating types, omit the `typeof` operator.
 
 <code-tabs collection="libraries" default-tab="lit">
 
@@ -95,16 +97,17 @@ Pass your `TypedDocumentNode` objects' type as the first type argument to your c
   ```
 
   ```ts tab lit
-  import { ApolloQuery, PropertyValues } from '@apollo-elements/lit-apollo';
+  import { LitElement, PropertyValues } from 'lit';
+  import { ApolloQueryController } from '@apollo-elements/core';
   import { TypedQuery } from './Typed.query.graphql';
 
-  class TypedQueryElement extends ApolloQuery<typeof TypedQuery> {
-    query = TypedQuery;
-
-    updated(changed: PropertyValues<this>) {
-      if (changed.has('data') && this.data !== null)
-        console.assert(typeof this.data.name === 'string');
-    }
+  class TypedQueryElement extends LitElement {
+    query = new ApolloQueryController(this, TypedQuery, {
+      onData: (data) => {
+        if (data)
+          console.assert(typeof this.query.data.name === 'string');
+      }
+    });
   }
   ```
 

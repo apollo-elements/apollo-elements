@@ -16,11 +16,12 @@ Mutations are how you make changes to the data in your GraphQL application. If y
 
 Unlike [query components](/guides/usage/queries/), which automatically fetch their data by default, mutation components don't do anything until you program them to, e.g. in reaction to the user pressing a "save" button or entering text in a text field. Mutation components, or indeed the imperative call to their `mutate()` method, take options to control how the mutation is performed and how the application should respond when it succeeds and returns a result.
 
-Apollo Elements gives you three options for defining mutations in your <abbr title="user interface">UI</abbr>, which you can mix and match them, depending on your particular needs.
+Apollo Elements gives you four options for defining mutations in your <abbr title="user interface">UI</abbr>, which you can mix and match them, depending on your particular needs.
 
 1. Using the [`<apollo-mutation>` component](#with-apollo-mutation)
-2. Making a [mutation component](#mutation-components) by extending `ApolloMutation` or by using `useMutation`
-3. Calling `client.mutate` [imperatively](#imperative-mutations)
+2. Using the [`ApolloMutationController`](#apollomutationcontroller)
+3. Making a [mutation component](#mutation-components) by extending `ApolloMutation` or by using `useMutation`
+4. Calling `client.mutate` [imperatively](#imperative-mutations)
 
 
 ## HTML Mutations
@@ -54,6 +55,25 @@ You can declaratively define mutations using the `<apollo-mutation>` HTML elemen
 ```
 
 Read more about declarative mutations in [using `<apollo-mutation>`](./html/) and [composing mutations](./composition/) or check out the [mutation component API docs](/api/components/apollo-mutation/).
+
+## ApolloMutationController
+
+Add a mutation to your component by creating an [`ApolloMutationController`](/api/core/mutation/). Call it's `mutate()` method to fire the mutation. You can use it on any element which implements `ReactiveControllerHost`, e.g. `LitElement`, or you can use it on `HTMLElement` if you apply `ControllerHostMixin` from [`@apollo-elements/mixins`](/api/libraries/mixins/controller-host-mixin/)
+
+```js copy
+import { LitElement, html } from 'lit';
+import { ApolloMutationController } from '@apollo-elements/core';
+
+export class MutatingElement extends LitElement {
+  mutation = new ApolloMutationController(this, AddUserMutation);
+
+  render() { /*...*/ }
+
+  onClickSubmit() {
+    this.mutation.mutate();
+  }
+}
+```
 
 ## Custom Mutation Elements
 
@@ -159,19 +179,22 @@ As such, you can only expect your component's `data` property to be truthy once 
   ```
 
   ```ts tab lit
-  import type { TemplateResult } from 'lit';
-  import { ApolloMutation } from '@apollo-elements/lit-apollo/apollo-mutation';
-  import { customElement, html } from 'lit/decorators';
+  import { ApolloMutationController } from '@apollo-elements/core';
+  import { html, TemplateResult } from 'lit';
+  import { customElement } from 'lit/decorators.js';
 
   import { AddUserMutation } from './AddUser.mutation.graphql';
 
   @customElement('add-user')
-  export class AddUserElement extends ApolloMutation<typeof AddUserMutation> {
-    mutation = AddUserMutation;
+  export class AddUserElement extends LitElement {
+    mutation = new ApolloMutationController(this, AddUserMutation);
 
     render(): TemplateResult {
-      const name = this.data.name ?? '';
-      const timestamp = this.data ? new Date(this.data.timestamp).toDateString() : '';
+      const name = this.mutation.data.name ?? '';
+      const timestamp =
+          !this.mutation.data ? ''
+        : new Date(this.mutation.data.timestamp).toDateString();
+
       return html`
         <p-card>
           <h2 slot="heading">Add User</h2>
@@ -187,13 +210,13 @@ As such, you can only expect your component's `data` property to be truthy once 
               @input="${this.onInput}"></mwc-textfield>
           <mwc-button slot="actions"
               label="Add User"
-              @input="${() => this.mutate()}"></mwc-button>
+              @input="${() => this.mutation.mutate()}"></mwc-button>
         </p-card>
       `;
     }
 
     onInput({ target: { value: name } }) {
-      this.variables = { name };
+      this.mutation.variables = { name };
     }
   }
   ```
@@ -288,6 +311,10 @@ As such, you can only expect your component's `data` property to be truthy once 
 
   import { AddUserMutation } from './AddUser.mutation.graphql';
 
+  type AddUserElement = {
+    mutation: ApolloMutationController<typeof AddUserMutation>;
+  }
+
   const onInput =
     (host, event) =>
       setVariables({ name: event.target.value }));
@@ -296,7 +323,7 @@ As such, you can only expect your component's `data` property to be truthy once 
     host =>
       host.mutate();
 
-  define<ApolloMutationElement<typeof AddUserMutation>('add-user', {
+  define<AddUserElement>('add-user', {
     mutation: mutation(AddUserMutation),
     render: ({ mutation }) => {
       const name = mutation.data?.name ?? '';

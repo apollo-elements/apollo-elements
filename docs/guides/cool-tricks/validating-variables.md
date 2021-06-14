@@ -113,7 +113,7 @@ With this approach, you can control on a per-component basis when to subscribe.
 
   ```ts tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-  import PostQuery from './Post.query.graphql';
+  import { PostQuery } from './Post.query.graphql';
   import { routeVar } from '../variables';
 
   class BlogPost extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
@@ -128,27 +128,29 @@ With this approach, you can control on a per-component basis when to subscribe.
   ```
 
   ```ts tab lit
-  import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
-  import PostQuery from './Post.query.graphql';
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement } from 'lit';
+  import { customElement } from 'lit/decorators.js';
+  import { PostQuery } from './Post.query.graphql';
   import { routeVar } from '../variables';
 
   @customElement('blog-post')
-  class BlogPost extends ApolloQuery<Data, Variables> {
-    query = PostQuery;
-
-    shouldSubscribe() {
-      return !!(routeVar().params?.postId)
-    }
+  class BlogPost extends LitElement {
+    query = new ApolloQueryController(this, PostQuery, {
+      shouldSubscribe() {
+        return !!(routeVar().params?.postId)
+      }
+    });
   }
   ```
 
   ```ts tab fast
   import { ApolloQuery, customElement } from '@apollo-elements/fast';
-  import PostQuery from './Post.query.graphql';
+  import { PostQuery } from './Post.query.graphql';
   import { routeVar } from '../variables';
 
   @customElement({ name: 'blog-post' })
-  class BlogPost extends ApolloQuery<Data, Variables> {
+  class BlogPost extends ApolloQuery<typeof PostQuery> {
     query = PostQuery;
 
     shouldSubscribe() {
@@ -159,7 +161,7 @@ With this approach, you can control on a per-component basis when to subscribe.
 
   ```ts tab haunted
   import { useQuery, component } from '@apollo-elements/haunted';
-  import PostQuery from './Post.query.graphql';
+  import { PostQuery } from './Post.query.graphql';
   import { routeVar } from '../variables';
 
   function BlogPost() {
@@ -214,10 +216,10 @@ The old variable-validating behaviour is still available, but you have to opt-in
   ```ts tab mixins
   import { ValidateVariablesMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
 
-  import NonNullableQuery from './NonNullable.query.graphql';
+  import { NonNullableQuery } from './NonNullable.query.graphql';
 
   class NonNullable extends
-  ValidateVariablesMixin(ApolloQueryMixin(HTMLElement))<Data, Variables> {
+  ValidateVariablesMixin(ApolloQueryMixin(HTMLElement))<typeof NonNullableQuery> {
     query = NonNullableQuery;
   }
 
@@ -228,11 +230,10 @@ The old variable-validating behaviour is still available, but you have to opt-in
   import { ValidateVariablesMixin } from '@apollo-elements/mixins';
   import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
 
-  import NonNullableQuery from './NonNullable.query.graphql';
+  import { NonNullableQuery } from './NonNullable.query.graphql';
 
   @customElement('non-nullable')
-  class NonNullable extends
-  ValidateVariablesMixin(ApolloQuery)<Data, Variables> {
+  class NonNullable extends ValidateVariablesMixin(ApolloQuery)<typeof NonNullableQuery> {
     query = NonNullableQuery;
   }
   ```
@@ -241,11 +242,10 @@ The old variable-validating behaviour is still available, but you have to opt-in
   import { ValidateVariablesMixin } from '@apollo-elements/mixins';
   import { ApolloQuery, customElement } from '@apollo-elements/fast';
 
-  import NonNullableQuery from './NonNullable.query.graphql';
+  import { NonNullableQuery } from './NonNullable.query.graphql';
 
   @customElement({ name: 'non-nullable' })
-  class NonNullable extends
-  ValidateVariablesMixin(ApolloQuery)<Data, Variables> {
+  class NonNullable extends ValidateVariablesMixin(ApolloQuery)<typeof NonNullableQuery> {
     query = NonNullableQuery;
   }
   ```

@@ -171,22 +171,24 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
   ```
 
   ```ts tab lit
-  import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
+  import { ApolloQueryController } from '@apollo-elements/core';
+  import { LitElement, html } from 'lit';
+  import { customElement } from 'lit/decorators.js';
   import { HelloQuery } from './Hello.query.graphql';
 
   @customElement('hello-query')
-  export class HelloQueryElement extends ApolloQuery<Data, Variables> {
-    query = HelloQuery;
+  export class HelloQueryElement extends LitElement {
+    query = new ApolloQueryController(this, HelloQuery);
 
     render() {
-      const greeting = this.data?.greeting ?? 'Hello';
-      const name = this.data?.name ?? 'Friend';
+      const greeting = this.query.data?.greeting ?? 'Hello';
+      const name = this.query.data?.name ?? 'Friend';
       return html`
-        <article class="${classMap({ skeleton: this.loading })}">
-          <p id="error" ?hidden="${!this.error}">${this.error?.message}</p>
+        <article class="${classMap({ skeleton: this.query.loading })}">
+          <p id="error" ?hidden="${!this.query.error}">${this.query.error?.message}</p>
           <p>
-            ${this.data?.greeting ?? 'Hello'},
-            ${this.data?.name ?? 'Friend'}
+            ${this.query.data?.greeting ?? 'Hello'},
+            ${this.query.data?.name ?? 'Friend'}
           </p>
         </article>
       `;
@@ -196,7 +198,7 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
 
   ```ts tab fast
   import { ApolloQuery, customElement } from '@apollo-elements/fast';
-  import HelloQuery from './Hello.query.graphql';
+  import { HelloQuery } from './Hello.query.graphql';
 
   const template = html<HelloQueryElement>`
     <article class="${x => x.loading ? 'skeleton' : ''})}">
@@ -209,7 +211,7 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
   `;
 
   @customElement({ name: 'hello-query', template })
-  export class HelloQueryElement extends ApolloQuery<Data, Variables> {
+  export class HelloQueryElement extends ApolloQuery<typeof HelloQuery> {
     query = HelloQuery;
   }
   ```
@@ -278,7 +280,7 @@ root.querySelector('hello-query').variables = {
   name: 'Dude'
 };
 ```
-For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
+For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`ApolloQueryController`](/api/core/query/), [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
 
 <code-tabs collection="libraries" default-tab="lit">
 
@@ -319,19 +321,19 @@ For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can appl
   ```
 
   ```ts tab lit
-  export class HelloQueryElement extends ApolloQuery<Data, Variables> {
-    query = HelloQuery;
-
-    variables = {
-      greeting: "How's it going",
-      name: 'Dude'
-    };
+  export class HelloQueryElement extends LitElement {
+    query = new ApolloQueryController(this, HelloQuery, {
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      },
+    });
   }
   ```
 
   ```ts tab fast
   @customElement({ name: 'hello-query', template })
-  export class HelloQueryElement extends ApolloQuery<Data, Variables> {
+  export class HelloQueryElement extends ApolloQuery<typeof HelloQuery> {
     query = HelloQuery;
 
     variables = {
@@ -401,8 +403,14 @@ If you want to keep your element from automatically subscribing, you can opt out
   ```
 
   ```ts tab lit
-  class LazyGreeting extends HelloQueryElement {
-    noAutoSubscribe = true;
+  export class HelloQueryElement extends LitElement {
+    query = new ApolloQueryController(this, HelloQuery, {
+      noAutoSubscribe: true,
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      },
+    });
   }
   ```
 
@@ -498,16 +506,21 @@ The query component class' protected [`shouldSubscribe`](/api/interfaces/query/#
   ```
 
   ```ts tab lit
-  class PageQueryElement extends ApolloQuery<typeof PageQuery> {
-    query = PageQuery;
+  export class HelloQueryElement extends LitElement {
+    query = new ApolloQueryController(this, HelloQuery, {
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      },
 
-    /**
-     * Prevent fetching if the URL contains a `?noAutoFetch` query param
-     */
-    override shouldSubscribe(): boolean {
-      const { searchParams } = new URL(location.href);
-      return !searchParams.has('noAutoFetch');
-    }
+      /**
+       * Prevent fetching if the URL contains a `?noAutoFetch` query param
+       */
+      shouldSubscribe(): boolean {
+        const { searchParams } = new URL(location.href);
+        return !searchParams.has('noAutoFetch');
+      }
+    });
   }
   ```
 
@@ -580,10 +593,10 @@ The query component class' protected [`shouldSubscribe`](/api/interfaces/query/#
   ```
 
   ```ts tab lit
-  class HeavySlowQueryElement extends ApolloQuery<typeof HeavySlowQuery> {
-    query = HeavySlowQuery;
-
-    fetchPolicy: FetchPolicy = 'cache-only';
+  export class HeavySlowQueryElement extends LitElement {
+    query = new ApolloQueryController(this, HeavySlowQuery, {
+      fetchPolicy: 'cache-only',
+    });
   }
   ```
 
@@ -613,7 +626,7 @@ The query component class' protected [`shouldSubscribe`](/api/interfaces/query/#
 
 </code-tabs>
 
-You can also use the `fetch-policy` attribute on individual elements:
+You can also use the `fetch-policy` attribute on individual elements (if they implement the ApolloElement interface, e.g. `<apollo-query>` or elements with `ApolloQueryMixin`):
 ```html copy
 <apollo-query fetch-policy="network-only">
   <script type="application/graphql">
