@@ -3,12 +3,19 @@ import type { PlaygroundIde } from 'playground-elements/playground-ide'
 
 const BASE_IMPORT_MAP = {
   'lit': '../../../lit.js',
+  'lit-html': '../../../lit.js',
+  'lit-element': '../../../lit.js',
   'lit/decorators': '../../../lit.js',
   'lit/decorators.js': '../../../lit.js',
   'lit/directives/class-map': '../../../lit.js',
   'lit/directives/if-defined': '../../../lit.js',
   'lit/directives/class-map.js': '../../../lit.js',
   'lit/directives/if-defined.js': '../../../lit.js',
+  'lit-html/directives/class-map': '../../../lit.js',
+  'lit-html/directives/if-defined': '../../../lit.js',
+  'lit-html/directives/class-map.js': '../../../lit.js',
+  'lit-html/directives/if-defined.js': '../../../lit.js',
+  '@lit/reactive-element': '../../../lit.js',
 
   '@apollo/client/core': '../../../apollo-client.js',
   '@apollo/client/utilities': '../../../apollo-client.js',
