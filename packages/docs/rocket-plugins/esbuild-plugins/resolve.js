@@ -34,3 +34,15 @@ export function resolve({ external } = {}) {
     },
   }
 }
+
+export function unpkg() {
+  return {
+    name: 'resolve-unpkg',
+    setup(build) {
+      // Redirect all paths starting with "@apollo-elements/" to "/packages/"
+      build.onResolve({ filter: /^@?lit\/?/ }, args => {
+        return { path: `https://unpkg.com/${args.path}?module` };
+      });
+    },
+  }
+}

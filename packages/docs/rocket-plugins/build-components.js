@@ -11,7 +11,7 @@ import { copySync } from 'cpx';
 // @ts-expect-error: it's not typescript
 import graphqlLoaderPlugin from '@luckycatfactory/esbuild-graphql-loader/lib/index.mjs';
 
-import { resolve } from './esbuild-plugins/resolve.js';
+import { resolve, unpkg } from './esbuild-plugins/resolve.js';
 import { litCss } from './esbuild-plugins/lit-css.js';
 
 /**
@@ -27,6 +27,7 @@ function build(opts) {
     ...opts,
     plugins: [
       resolve({ external: opts.external }),
+      ...process.env.CI === 'true' ? [ unpkg()] : [],
       litCss(),
       graphqlLoaderPlugin(),
     ],
