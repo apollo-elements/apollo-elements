@@ -14,9 +14,9 @@ const BASE_IMPORT_MAP = {
   '@apollo/client/utilities': '../../../apollo-client.js',
   '@apollo/client/utilities/graphql/storeUtils.js': '../../../apollo-client.js',
 
+  'event-iterator': '../../../schema-link.js',
   '@apollo/client/link/schema': '../../../schema-link.js',
   '@apollo/client/link/schema/index.esm.js': '../../../schema-link.js',
-  'event-iterator': '../../../schema-link.js',
   '@graphql-tools/schema': '../../../schema-link.js',
   '@graphql-tools/mock': '../../../schema-link.js',
   '@graphql-tools/tools': '../../../schema-link.js',

@@ -1,9 +1,5 @@
 // @ts-check
 // @ts-expect-error: it's not typescript
-import fs from 'fs';
-// @ts-expect-error: it's not typescript
-import path from 'path';
-// @ts-expect-error: it's not typescript
 import esbuild from 'esbuild';
 // @ts-expect-error: it's not typescript
 import chalk from 'chalk';
@@ -15,65 +11,23 @@ import { copySync } from 'cpx';
 // @ts-expect-error: it's not typescript
 import graphqlLoaderPlugin from '@luckycatfactory/esbuild-graphql-loader/lib/index.mjs';
 
-import { createRequire } from 'module';
-
-// @ts-expect-error: it's not typescript
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-// @ts-expect-error: it's not typescript
-const require = createRequire(import.meta.url);
-
-const stringToTemplateLiteral = require('string-to-template-literal').default;
-
-const ROOT = path.join(__dirname, '../../..');
+import { resolve } from './esbuild-plugins/resolve.js';
+import { litCss } from './esbuild-plugins/lit-css.js';
 
 /**
- * @param  {{ entryPoints: string[]; outfile: string; external?: string[] }} opts
+ * @param  {import('esbuild').BuildOptions} opts
  */
-function build({ entryPoints, outfile, external }) {
+function build(opts) {
   esbuild.build({
-    entryPoints,
-    external,
-    outfile,
     bundle: true,
-    minify: true,
+    minify: process.env.CI === 'true',
     sourcemap: true,
     format: 'esm',
     target: 'es2020',
+    ...opts,
     plugins: [
-      {
-        name: 'resolve-monorepo-pkgs',
-        setup(build) {
-          // Redirect all paths starting with "images/" to "./public/images/"
-          build.onResolve({ filter: /^@apollo-elements\// }, args => {
-            let resolved = `${args.path.replace('@apollo-elements', `${ROOT}/packages`)}`;
-            if (resolved.match(/\//g).length > 1)
-                resolved += '.ts';
-            else {
-              // good Lord! I won't tell if you don't
-              try {
-                resolved = require.resolve(resolved);
-              } catch(e) {
-                resolved = e.message.match(/^Cannot find module '(.*)'/)[1].replace('.js', '.ts')
-              }
-            }
-            return { path: resolved };
-          });
-        },
-      },
-      {
-        name: 'lit-css',
-        setup(build) {
-          const loader = 'js';
-          const tag = 'css'
-          const specifier = 'lit'
-          build.onLoad({ filter: /\.css$/ }, async args => {
-            const cssString = await fs.promises.readFile(args.path, 'utf8');
-            let contents = `import {${tag}} from '${specifier}';export default ${tag}${stringToTemplateLiteral(cssString)}`;
-            return { contents, loader };
-          });
-        }
-      },
+      resolve({ external: opts.external }),
+      litCss(),
       graphqlLoaderPlugin(),
     ],
   }).catch(() => {
@@ -85,7 +39,7 @@ function build({ entryPoints, outfile, external }) {
 export function buildComponents() {
   build({
     entryPoints: ['packages/docs/entrypoints/apollo-elements.ts'],
-    external: [ 'lit', 'lit/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*' ],
     outfile: 'docs/_assets/_static/apollo-elements.js',
   });
 
@@ -96,19 +50,19 @@ export function buildComponents() {
 
   build({
     entryPoints: ['packages/docs/entrypoints/haunted.ts'],
-    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-haunted.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/hybrids.ts'],
-    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/apollo-elements-hybrids.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/schemalink.ts'],
-    external: [ 'lit', 'lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/schema-link.js',
   });
 
@@ -119,24 +73,24 @@ export function buildComponents() {
 
   build({
     entryPoints: ['packages/docs/entrypoints/mixins.ts'],
-    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/mixins.js',
   });
 
   build({
     entryPoints: ['packages/docs/entrypoints/polymer.ts'],
-    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/polymer.js',
   });
 
   build({
-    external: [ 'lit', 'lit/*', 'https://*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', 'https://*' ],
     entryPoints: ['packages/docs/docs-playground.ts'],
     outfile: 'docs/_assets/_static/docs-playground.js',
   });
 
   build({
-    external: [ 'lit', 'lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    external: [ 'lit', 'lit/*', '@lit/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     entryPoints: ['packages/docs/entrypoints/components.ts'],
     outfile: 'packages/docs/components.js',
   });
@@ -147,12 +101,6 @@ export function buildPlayground() {
     entryPoints: ['packages/docs/entrypoints/playground.ts'],
     outfile: 'docs/_assets/_static/playground-elements/playground.js',
   });
-
-  build({
-    entryPoints: ['packages/docs/entrypoints/playground-typescript-worker.ts'],
-    outfile: 'docs/_assets/_static/playground-typescript-worker.js',
-  });
-
 }
 
 export async function onBeforeBuildBundleComponents() {
