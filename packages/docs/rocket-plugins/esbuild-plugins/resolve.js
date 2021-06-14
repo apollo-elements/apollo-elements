@@ -34,18 +34,3 @@ export function resolve({ external } = {}) {
     },
   }
 }
-
-/** @return {import('esbuild').Plugin} */
-export function unpkg() {
-  return {
-    name: 'resolve-unpkg',
-    setup(build) {
-      build.onResolve({ filter: /^@?lit\/?/ }, args => {
-        return {
-          external: true,
-          path: `https://unpkg.com/${args.path}?module`
-        };
-      });
-    },
-  }
-}
