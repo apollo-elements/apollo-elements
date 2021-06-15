@@ -20,6 +20,7 @@ const NS_PER_SEC = 1e9;
  */
 export function copyPlugin(configUrl) {
   return {
+    name: 'copy-manifests-to-rocket-data',
     packageLinkPhase() {
       const time = process.hrtime();
 
