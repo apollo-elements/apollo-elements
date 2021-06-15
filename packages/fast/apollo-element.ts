@@ -13,7 +13,7 @@ import type { CustomElement } from '@apollo-elements/core/types';
 
 import type { ApolloController } from '@apollo-elements/core';
 
-import { hosted } from './decorators';
+import { hosted } from './decorators.js';
 
 import { update } from '@apollo-elements/core/apollo-controller';
 

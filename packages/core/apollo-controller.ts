@@ -17,9 +17,9 @@ import type {
   Variables,
 } from '@apollo-elements/core/types';
 
-import { isValidGql } from './lib/is-valid-gql';
+import { isValidGql } from './lib/is-valid-gql.js';
 
-import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } from './events';
+import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } from './events.js';
 
 export interface ApolloControllerOptions<D, V> {
   /** The `ApolloClient` instance for the controller. */

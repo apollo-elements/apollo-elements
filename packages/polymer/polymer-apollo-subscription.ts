@@ -1,6 +1,6 @@
 import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
-import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
-import { PolymerApolloElement } from './polymer-apollo-element';
+import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin.js';
+import { PolymerApolloElement } from './polymer-apollo-element.js';
 
 /**
  * @element polymer-apollo-subscription

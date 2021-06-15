@@ -2,7 +2,7 @@ import type { NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client/core';
 
-import { hasAllVariables } from './has-all-variables';
+import { hasAllVariables } from './has-all-variables.js';
 
 interface Options {
   /** URI to the client's GraphQL endpoint. */

@@ -7,7 +7,7 @@ import type {
 } from '@apollo-elements/core/types';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 
 export { html } from '@gluon/gluon';
 

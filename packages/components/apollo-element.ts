@@ -18,7 +18,7 @@ import type {
 
 import { controlled } from '@apollo-elements/core/decorators';
 
-import { StampinoRender } from './stampino-render';
+import { StampinoRender } from './stampino-render.js';
 
 import { property, state } from 'lit/decorators.js';
 

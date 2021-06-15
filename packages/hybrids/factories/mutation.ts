@@ -7,7 +7,7 @@ import type {
 
 import type { Descriptor } from 'hybrids';
 
-import { controller } from './controller';
+import { controller } from './controller.js';
 
 import {
   ApolloMutationController,

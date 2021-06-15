@@ -1,5 +1,5 @@
-export * from './useQuery';
-export * from './useMutation';
-export * from './useSubscription';
+export * from './useQuery.js';
+export * from './useMutation.js';
+export * from './useSubscription.js';
 
 export * from 'haunted';

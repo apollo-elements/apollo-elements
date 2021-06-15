@@ -8,12 +8,12 @@ import type {
 
 import type { FetchPolicy } from '@apollo/client/core';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
 import { attr } from '@microsoft/fast-element';
 
-import { hosted } from './decorators';
+import { hosted } from './decorators.js';
 
 /**
  * `ApolloSubscription`
