@@ -1,3 +1,4 @@
+// @ts-check
 
 function isExampleTag(tag) {
   return tag.tagName.getText() === 'example';
@@ -19,8 +20,8 @@ export function exampleTagPlugin() {
         // TODO: case ts.SyntaxKind.FunctionDeclaration:
         // TODO: case ts.SyntaxKind.FunctionExpression:
         case TS.SyntaxKind.ClassDeclaration: {
-          /** @type {import('typescript').ClassDeclaration} */
-          const dec = node;
+          /** @type {import('typescript').ClassDeclaration & { jsDoc?: import('typescript').JSDoc[] }} */
+          const dec = (node);
 
           const className = dec.name.getText();
 
@@ -28,13 +29,16 @@ export function exampleTagPlugin() {
           const classDoc = (moduleDoc.declarations.find(x => x.name === className));
 
           if (!classDoc || !Array.isArray(classDoc.members))
-            return dev && console.warn(`[@example]: Could not find class ${className} in module doc for path ${moduleDoc.path}`);
+            return context.dev && console.warn(`[@example-tag]: Could not find class ${className} in module doc for path ${moduleDoc.path}`);
 
           let sawExamples = false;
-          /** @type {import('typescript').JSDocTag[]} */
+
           for (const doc of dec.jsDoc ?? []) {
 
-            const tags = (doc?.tags ?? []).filter(isExampleTag);
+            const tags =
+              /** @type {import('typescript').JSDocTag[]} */
+              (doc?.tags ?? [])
+                .filter(isExampleTag);
 
             if (tags.length && !sawExamples) {
               classDoc.description += `\n\n## Examples\n\n`;
@@ -42,10 +46,12 @@ export function exampleTagPlugin() {
             }
 
             for (const tag of tags) {
-              const [heading, ...rest] = tag.comment.split('\n');
-              if (context.dev)
-                console.log(`Found @example ${heading}`);
-              classDoc.description += `### ${heading}\n${rest.join('\n')}\n\n`;
+              if (typeof tag.comment === 'string') {
+                const [heading, ...rest] = tag.comment.split('\n');
+                if (context.dev)
+                  console.log(`Found @example ${heading}`);
+                classDoc.description += `### ${heading}\n${rest.join('\n')}\n\n`;
+              }
             }
             classDoc.description = classDoc.description.trim();
           }
