@@ -1,4 +1,5 @@
 // @ts-check
+
 /**
  * @return {Partial<import('@custom-elements-manifest/analyzer').Plugin>}
  */
