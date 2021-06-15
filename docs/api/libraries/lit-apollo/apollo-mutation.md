@@ -11,6 +11,6 @@ Looking for reactive Apollo controllers? See [`@apollo-elements/core`](/api/core
 
 </inline-notification>
 
-`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`](/api/interfaces/mutation/).
+`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`](/api/core/interfaces/mutation/).
 
 Read the [mutation component guides](../../../../guides/usage/mutations/) for examples and tips.

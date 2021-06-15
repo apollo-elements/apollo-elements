@@ -1,6 +1,6 @@
 `<apollo-query>` fires Polymer-style prop-changed events when its `data`, `error`, `loading` or `networkStatus` properties change.
 
-See [ApolloQueryInterface](/api/interfaces/query/) for more information.
+See [ApolloQueryInterface](/api/core/interfaces/query/) for more information.
 
 ### Example
 

@@ -27,7 +27,7 @@ import { ApolloElement } from './apollo-element';
  *
  * 🚀 Custom element base class that connects to your Apollo cache.
  *
- * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
+ * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
 export class ApolloQuery<

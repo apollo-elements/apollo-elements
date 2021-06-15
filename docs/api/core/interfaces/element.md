@@ -2,9 +2,9 @@
 layout: layout-api
 package: '@apollo-elements/core'
 className: ApolloElementElement
-module: 'types.js'
+module: types.js
 ---
-# Interfaces >> ApolloElement || 00
+# Core >> Interfaces >> ApolloElement || 00
 
 Common base interface for Apollo Elements. Provides reactivity for `data`, `error`, `errors`, `loading`, and `variables` fields.
 

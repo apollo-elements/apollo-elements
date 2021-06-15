@@ -1,6 +1,6 @@
 `<apollo-mutation>` fires Polymer-style prop-changed events when its `called`, `data`, `error`, `loading` or `networkStatus` properties change.
 
-See [ApolloMutationInterface](/api/interfaces/mutation/) for more information.
+See [ApolloMutationInterface](/api/core/interfaces/mutation/) for more information.
 
 ### Examples
 

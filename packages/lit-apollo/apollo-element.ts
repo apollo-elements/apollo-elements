@@ -30,7 +30,7 @@ export interface ControlledPropertyDeclaration extends PropertyDeclaration {
  *
  * 🚀 Custom element base class for apollo lit elements.
  *
- * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  */
 export class ApolloElement<
   D extends MaybeTDN = MaybeTDN,

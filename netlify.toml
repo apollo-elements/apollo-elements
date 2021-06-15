@@ -15,19 +15,22 @@
   to = "/guides/usage/*"
 [[redirects]]
   from = "/guides/usage/queries/lifecycle/*"
-  to = "/api/interfaces/query/lifecycle/"
+  to = "/api/core/interfaces/query/lifecycle/"
 [[redirects]]
   from = "/guides/usage/mutations/lifecycle/*"
-  to = "/api/interfaces/mutation/lifecycle/"
+  to = "/api/core/interfaces/mutation/lifecycle/"
 [[redirects]]
   from = "/guides/usage/subscriptions/lifecycle/*"
-  to = "/api/interfaces/subscription/lifecycle/"
+  to = "/api/core/interfaces/subscription/lifecycle/"
 [[redirects]]
   from = "/guides/usage/mutations/apollo-mutation-component/*"
   to = "/guides/usage/mutations/html/*"
 [[redirects]]
   from = "/api/libraries/lib/*"
   to = "/api/core/lib/*"
+[[redirects]]
+  from = "/api/core/interfaces/*"
+  to = "/api/core/interfaces/*"
 
 # Redirects from typedoc site
 [[redirects]]

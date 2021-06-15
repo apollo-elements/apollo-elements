@@ -8,7 +8,7 @@ module: 'polymer-apollo-mutation.js'
 
 `<apollo-mutation>` fires Polymer-style prop-changed events when its `called`, `data`, `error`, or `loading` properties change.
 
-See [ApolloMutationInterface](/api/interfaces/mutation/) for more information.
+See [ApolloMutationInterface](/api/core/interfaces/mutation/) for more information.
 
 ```js playground polymer-apollo AddUser.js
 import { PolymerElement, html } from '@polymer/polymer';

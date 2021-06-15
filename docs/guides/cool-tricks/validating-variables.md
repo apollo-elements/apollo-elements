@@ -79,7 +79,7 @@ export const client = new ApolloClient({
 });
 ```
 
-The `<apollo-client>` component from [`@apollo-elements/components/apollo-client`](../../api/components/apollo-client.md) and the `createApolloClient({ validateVariables: true })` helper from [`@apollo-elements/core/lib/create-apollo-client`](../../api/core/lib/create-apollo-client.md) both incorporate this link.
+The `<apollo-client>` component from [`@apollo-elements/components/apollo-client`](../../api/components/apollo-client.md) and the `createApolloClient({ validateVariables: true })` helper from [`@apollo-elements/core/lib/create-apollo-client`](/api/core/helpers/lib/#lib/create-apollo-client.js) both incorporate this link.
 
 This option is great when you want to 'set it and forget it', and it works for any operation, not solely for queries, but it's heavy-handed. For more fine-grained control you can program each individual query component to defer querying.
 

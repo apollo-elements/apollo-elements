@@ -8,7 +8,7 @@ Query components combine a <abbr title="graph query language">GraphQL</abbr> que
 
 <inline-notification type="tip">
 
-This page is a HOW-TO guide. For detailed docs on the `ApolloQuery` interface see the [API docs](/api/interfaces/query/)
+This page is a HOW-TO guide. For detailed docs on the `ApolloQuery` interface see the [API docs](/api/core/interfaces/query/)
 
 </inline-notification>
 
@@ -28,7 +28,7 @@ query HelloQuery {
 
 Apollo Elements give you three ways to define query components:
 1. Using the `<apollo-query>` HTML element
-2. With [`ApolloQueryController`](/api/core/query/) reactive controller, `useQuery` [haunted hook](/api/libraries/haunted/useQuery/), or `query` [hybrids factory](/api/libraries/hybrids/query/)
+2. With [`ApolloQueryController`](/api/core/controllers/query/) reactive controller, `useQuery` [haunted hook](/api/libraries/haunted/useQuery/), or `query` [hybrids factory](/api/libraries/hybrids/query/)
 3. By defining a custom element that extends from {%footnoteref "querymixin" 'or applies <a href="/api/libraries/mixins/apollo-query-mixin/"><code>ApolloQueryMixin</code></a>'%}{%endfootnoteref%}
 
 ## HTML Queries
@@ -272,7 +272,7 @@ query HelloQuery($name: String, $greeting: String) {
 }
 ```
 
-To apply variables to your query element, set its [`variables` property](/api/interfaces/query/#variables). For the above example, which has two string parameters, `name` and `greeting`, set your element's `variables` property to an object with keys `name` and `greeting` and values representing the query arguments:
+To apply variables to your query element, set its [`variables` property](/api/core/interfaces/query/#variables). For the above example, which has two string parameters, `name` and `greeting`, set your element's `variables` property to an object with keys `name` and `greeting` and values representing the query arguments:
 
 ```js copy
 root.querySelector('hello-query').variables = {
@@ -280,7 +280,7 @@ root.querySelector('hello-query').variables = {
   name: 'Dude'
 };
 ```
-For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`ApolloQueryController`](/api/core/query/), [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
+For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`ApolloQueryController`](/api/core/controllers/query/), [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
 
 <code-tabs collection="libraries" default-tab="lit">
 
@@ -377,7 +377,7 @@ There are three main ways to control how and when your query component fetches i
 2. By overriding the `shouldSubscribe` method
 3. By setting a custom `FetchPolicy`
 
-You can call your component's [`executeQuery()`](/api/interfaces/query/#executequery) method at any time to {%footnoteref 'executeQuery' "if you've previously set a 'cache-only' fetch policy and you want to imperatively issue query over the network, call <code>executeQuery({ fetchPolicy: 'network-only' })</code>"%}immediately{%endfootnoteref%} fetch the query.
+You can call your component's [`executeQuery()`](/api/core/interfaces/query/#executequery) method at any time to {%footnoteref 'executeQuery' "if you've previously set a 'cache-only' fetch policy and you want to imperatively issue query over the network, call <code>executeQuery({ fetchPolicy: 'network-only' })</code>"%}immediately{%endfootnoteref%} fetch the query.
 
 ### No Auto Subscribe
 
@@ -442,7 +442,7 @@ If you want to keep your element from automatically subscribing, you can opt out
 
 </code-tabs>
 
-Once you do, the element won't fetch any data unless you call its [`subscribe()`](/api/interfaces/query/#subscribe) or [`executeQuery()`](/api/interfaces/query/#executequery) methods.
+Once you do, the element won't fetch any data unless you call its [`subscribe()`](/api/core/interfaces/query/#subscribe) or [`executeQuery()`](/api/core/interfaces/query/#executequery) methods.
 
 ```js copy
 const element = document.querySelector('hello-query')
@@ -468,7 +468,7 @@ NOTE, for [hybrids](/api/libraries/hybrids/) components, if you explicitly defin
 
 ### Overriding `shouldSubscribe`
 
-The query component class' protected [`shouldSubscribe`](/api/interfaces/query/#shouldsubscribe) method controls whether or not to subscribe to updates. The default implementation constantly returns `true`. If you wish to customize that behaviour, override the method with your own custom predicate, like this example which checks for the presence of a query param in the page URL:
+The query component class' protected [`shouldSubscribe`](/api/core/interfaces/query/#shouldsubscribe) method controls whether or not to subscribe to updates. The default implementation constantly returns `true`. If you wish to customize that behaviour, override the method with your own custom predicate, like this example which checks for the presence of a query param in the page URL:
 
 <code-tabs collection="libraries" default-tab="lit">
 
@@ -645,7 +645,7 @@ You can also use the `fetch-policy` attribute on individual elements (if they im
 </apollo-query>
 ```
 
-If you want your query to fire once over the network, but subsequently to only use the client-side cache, use the [`nextFetchPolicy`](/api/interfaces/query/#nextfetchpolicy) property.
+If you want your query to fire once over the network, but subsequently to only use the client-side cache, use the [`nextFetchPolicy`](/api/core/interfaces/query/#nextfetchpolicy) property.
 
 If you want your component to automatically subscribe, but only if its required variables are present, see [Validating Variables](/guides/cool-tricks/validating-variables/).
 
@@ -655,14 +655,14 @@ As we've seen query elements set their `data` property whenever the query resolv
 If you want to run other side effects, here are some options:
 
 - use your library's reactivity system, e.g. `updated` for Lit or `dataChanged` for FAST
-- define [`onData`](/api/interfaces/query/lifecycle/#ondata) callback
-- listen for the `apollo-query-result` and `apollo-error` [events](/api/interfaces/query/lifecycle/#events)
-- call the [`executeQuery`](/api/interfaces/query/#executequery) method and `await` it's result.
+- define [`onData`](/api/core/interfaces/query/lifecycle/#ondata) callback
+- listen for the `apollo-query-result` and `apollo-error` [events](/api/core/interfaces/query/lifecycle/#events)
+- call the [`executeQuery`](/api/core/interfaces/query/#executequery) method and `await` it's result.
 
-For more information, see [query element lifecycle](/api/interfaces/query/lifecycle/)
+For more information, see [query element lifecycle](/api/core/interfaces/query/lifecycle/)
 
 ## Next Steps
 
 Read about the [`<apollo-query>` HTML element](/guides/usage/queries/html/),
-dive into the [`ApolloQuery` API](/api/interfaces/query/) and [component lifecycle](/api/interfaces/query/lifecycle/)
+dive into the [`ApolloQuery` API](/api/core/interfaces/query/) and [component lifecycle](/api/core/interfaces/query/lifecycle/)
 or continue on to the [mutations guide](/guides/usage/mutations/).

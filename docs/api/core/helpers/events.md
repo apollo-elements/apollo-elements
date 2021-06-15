@@ -5,7 +5,7 @@ module: events.js
 moduleContents: multiple
 description: Events for Apollo Elements
 ---
-# Core >> Events || 60
+# Core >> Helpers >> Events
 
 `<apollo-client>` listens for `apollo-element-connected` and `apollo-element-disconnected` events to manage their client reference.
 

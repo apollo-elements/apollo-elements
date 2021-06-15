@@ -4,7 +4,7 @@ package: '@apollo-elements/core'
 module: apollo-query-controller.js
 description: Query Controller for Apollo Elements
 ---
-# Core >> ApolloQueryController || 20
+# Core >> Controllers >> ApolloQueryController || 20
 
 `ApolloQueryController` gets data from your GraphQL server. Pass it a GraphQL query, and any options you choose, and it will update its host when it's state (e.g. `data`, `error`, or `loading`) changes.
 

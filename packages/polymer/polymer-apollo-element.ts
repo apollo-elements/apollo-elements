@@ -15,7 +15,7 @@ import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin
 const last = Symbol('PolymerElement last known');
 
 /**
- * See [ApolloElementInterface](/api/interfaces/element/) for more information.
+ * See [ApolloElementInterface](/api/core/interfaces/element/) for more information.
  *
  * @fires data-changed
  * @fires variables-changed

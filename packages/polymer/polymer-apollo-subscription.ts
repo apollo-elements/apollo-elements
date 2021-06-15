@@ -8,7 +8,7 @@ import { PolymerApolloElement } from './polymer-apollo-element';
  * `<polymer-apollo-subscription>` fires Polymer-style prop-changed events
  * when its `data`, `error`, or `loading` properties change.
  *
- * See [ApolloSubscriptionInterface](/api/interfaces/subscription/) for more information.
+ * See [ApolloSubscriptionInterface](/api/core/interfaces/subscription/) for more information.
  *
  * @example
  * ```html

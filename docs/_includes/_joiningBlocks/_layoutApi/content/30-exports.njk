@@ -1,4 +1,4 @@
 {% from "partials/custom-elements-manifest/macros.njk" import exports, linkHeading %}
 
-{{ linkHeading('Exports', level=2) }}
+{{ linkHeading('Exports', level=(exportsHeading or 2)) }}
 {{ exports(moduleData, packageName=package) }}

@@ -7,7 +7,7 @@ module: 'apollo-query.js'
 
 # Components >> apollo-query || 30
 
-`<apollo-query>` lets you query GraphQL without writing any JavaScript. Import the custom element then write your template, query, and variables in HTML. The element class inherits from [`ApolloQueryInterface`](/api/interfaces/query/)
+`<apollo-query>` lets you query GraphQL without writing any JavaScript. Import the custom element then write your template, query, and variables in HTML. The element class inherits from [`ApolloQueryInterface`](/api/core/interfaces/query/)
 
 <inline-notification type="tip">
 

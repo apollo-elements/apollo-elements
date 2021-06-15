@@ -25,7 +25,7 @@ import { DOM, FASTElement, attr, observable } from '@microsoft/fast-element';
  *
  * 🚀 Custom element base class for Apollo FAST elements.
  *
- * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  *
  * @element
  */

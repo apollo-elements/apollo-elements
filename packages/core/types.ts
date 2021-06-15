@@ -223,7 +223,7 @@ export declare class ApolloElementElement<
 /**
  * Common interface for mutation elements
  *
- * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  *
  * @fires {CustomEvent<FetchResult<Data<D>>>} apollo-mutation-result when the mutation resolves
  * @fires {CustomEvent<ApolloError>} apollo-error when the mutation rejects
@@ -324,7 +324,7 @@ export declare class ApolloMutationElement<
 /**
  * Common interface for query elements
  *
- * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  *
  * @fires {CustomEvent<ApolloQueryResult<Data<D>>>} apollo-query-result when the query resolves
  * @fires {CustomEvent<ApolloError>} apollo-error when the query rejects
@@ -505,7 +505,7 @@ export declare class ApolloQueryElement<
 /**
  * Common interface for subscription elements
  *
- * See [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events
+ * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  *
  * @fires {ApolloSubscriptionResultEvent} apollo-subscription-result when the subscription updates
  * @fires {CustomEvent<ApolloError>} apollo-error when the query rejects

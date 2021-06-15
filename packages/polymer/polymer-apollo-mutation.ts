@@ -10,7 +10,7 @@ import { notify } from './notify-decorator';
  * when its `called`, `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
- * See [ApolloMutationInterface](/api/interfaces/mutation/) for more information.
+ * See [ApolloMutationInterface](/api/core/interfaces/mutation/) for more information.
  *
  * @example Use in a Polymer template
  *
