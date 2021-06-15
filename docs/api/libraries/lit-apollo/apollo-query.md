@@ -11,6 +11,6 @@ Looking for reactive Apollo controllers? See [`@apollo-elements/core`](/api/core
 
 </inline-notification>
 
-`ApolloQuery` inherits from `ApolloElement` and implements the [`ApolloQueryInterface`](/api/interfaces/query/).
+`ApolloQuery` inherits from `ApolloElement` and implements the [`ApolloQueryInterface`](/api/core/interfaces/query/).
 
 Read the [query component guides](../../../../guides/usage/queries/) for examples and tips.

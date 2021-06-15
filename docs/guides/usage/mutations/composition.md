@@ -594,4 +594,4 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
 </code-tabs>
 
 
-Read more about [`ApolloMutationController`](/api/core/mutation/) in the API docs.
+Read more about [`ApolloMutationController`](/api/core/controllers/mutation/) in the API docs.

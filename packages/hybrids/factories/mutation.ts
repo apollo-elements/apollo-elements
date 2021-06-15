@@ -19,7 +19,7 @@ import {
  *
  * @param  mutationDocument The mutation document.
  * @param  options Options to control the mutation.
- * @return Hybrids descriptor for a [ApolloMutationController](/api/core/mutation/)
+ * @return Hybrids descriptor for a [ApolloMutationController](/api/core/controllers/mutation/)
  */
 export function mutation<
   E extends HTMLElement,

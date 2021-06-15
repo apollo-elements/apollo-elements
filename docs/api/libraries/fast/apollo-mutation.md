@@ -5,7 +5,7 @@ module: apollo-mutation.js
 ---
 # Web Component Libraries >> FAST >> ApolloMutation || 30
 
-`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`](/api/interfaces/mutation/).
+`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`](/api/core/interfaces/mutation/).
 
 Read the [mutation component guides](/guides/usage/mutations/) for examples and tips.
 

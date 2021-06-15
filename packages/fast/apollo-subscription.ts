@@ -22,7 +22,7 @@ import { hosted } from './decorators';
  *
  * @element
  *
- * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/interfaces/subscription) for more information on events
+ * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
 export class ApolloSubscription<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>

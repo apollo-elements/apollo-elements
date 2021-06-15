@@ -43,7 +43,7 @@
     <text y="15" transform="translate(171.417 173)">
       <tspan x="39.5">«Interface»</tspan>
       <tspan class="title" dy="10" x="31.2">
-        <a href="./interfaces/element/">ApolloElement</a>
+        <a href="/api/core/interfaces/element/">ApolloElement</a>
       </tspan>
     </text>
     <path d="M0 32h130.4" transform="translate(171.417 173)"/>
@@ -58,7 +58,7 @@
     <text y="15" transform="translate(0 286.5)">
       <tspan x="34.367">«Interface»</tspan>
       <tspan class="title" dy="10" x="31.2">
-        <a href="./interfaces/query/">ApolloQuery</a>
+        <a href="/api/core/interfaces/query/">ApolloQuery</a>
       </tspan>
     </text>
     <path d="M0 32h120.133" transform="translate(0 286.5)"/>
@@ -73,7 +73,7 @@
     <text y="15" transform="translate(170.133 286.5)">
       <tspan x="40.783">«Interface»</tspan>
       <tspan class="title" dy="10" x="31.2">
-        <a href="./interfaces/mutation/">ApolloMutation</a>
+        <a href="/api/core/interfaces/mutation/">ApolloMutation</a>
       </tspan>
     </text>
     <path d="M0 32h132.967" transform="translate(170.133 286.5)"/>
@@ -88,7 +88,7 @@
     <text y="15" transform="translate(353.1 286.5)">
       <tspan x="49.125">«Interface»</tspan>
       <tspan class="title" dy="10" x="31.2">
-        <a href="./interfaces/subscription/">ApolloSubscription</a>
+        <a href="/api/core/interfaces/subscription/">ApolloSubscription</a>
       </tspan>
     </text>
     <path d="M0 32h149.65" transform="translate(353.1 286.5)"/>

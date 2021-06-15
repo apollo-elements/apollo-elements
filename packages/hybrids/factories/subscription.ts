@@ -19,7 +19,7 @@ import {
  *
  * @param  subscriptionDocument The subscription document.
  * @param  options Options to control the subscription.
- * @return Hybrids descriptor for a [ApolloMutationController](/api/core/subscription/)
+ * @return Hybrids descriptor for a [ApolloMutationController](/api/core/controllers/subscription/)
  */
 export function subscription<
   E extends HTMLElement,

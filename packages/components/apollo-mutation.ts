@@ -71,7 +71,7 @@ export class WillMutateError extends Error {}
  *
  * @slot Mutations typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button.\n\nYou may also slot in input elements with the `data-variable=\"variableName\"` attribute. It's `value` property gets the value for the corresponding variable.
  *
- * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
+ * See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events
  *
  * @example Using data attributes
  * ```html

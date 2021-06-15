@@ -1,1 +1,1 @@
-See [ApolloElementInterface](/api/interfaces/element/) for more information.
+See [ApolloElementInterface](/api/core/interfaces/element/) for more information.

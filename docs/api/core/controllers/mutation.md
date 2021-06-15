@@ -4,7 +4,7 @@ package: '@apollo-elements/core'
 module: apollo-mutation-controller.js
 description: Mutation Controller for Apollo Elements
 ---
-# Core >> ApolloMutationController || 30
+# Core >> Controllers >> ApolloMutationController || 30
 
 `ApolloMutationController` modifies data on your GraphQL server. Pass it a GraphQL mutation document, and any options you choose, and when you call its `mutate()` method, it will issue the mutation. It then updates its host when it's state (e.g. `data`, `error`, or `loading`) changes.
 

@@ -14,7 +14,7 @@ generateSocialImage: true
 
 # Launching a Stellar Docs Site with Rocket
 
-Apollo Elements' new docs site launches aboard the [Modern Web Rocket](https://wip-rocket.netlify.app/). It's a ground-up rewrite that puts users first and presents the best of what Apollo Elements has to offer. The new site has [live code demos](#live-demos-via-webcomponentsdev), [API tables](/api/) generated from custom elements manifest files, a new light theme, [customizable snippet browser](#code-tabs), comprehensive component lifecycle documentation for [query](/api/interfaces/query/lifecycle/), [mutation](/api/interfaces/mutation/lifecycle/), and [subscription](/api/interfaces/subscription/lifecycle/) elements, and more.
+Apollo Elements' new docs site launches aboard the [Modern Web Rocket](https://wip-rocket.netlify.app/). It's a ground-up rewrite that puts users first and presents the best of what Apollo Elements has to offer. The new site has [live code demos](#live-demos-via-webcomponentsdev), [API tables](/api/) generated from custom elements manifest files, a new light theme, [customizable snippet browser](#code-tabs), comprehensive component lifecycle documentation for [query](/api/core/interfaces/query/lifecycle/), [mutation](/api/core/interfaces/mutation/lifecycle/), and [subscription](/api/core/interfaces/subscription/lifecycle/) elements, and more.
 
 Read on to learn a little how the site was made, or just [dive in to the docs](https://apolloelements.dev)
 

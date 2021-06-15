@@ -11,7 +11,7 @@ import { notify } from './notify-decorator';
  * when its `data`, `error`, `loading` or `networkStatus`
  * properties change.
  *
- * See [ApolloQueryInterface](/api/interfaces/query/) for more information.
+ * See [ApolloQueryInterface](/api/core/interfaces/query/) for more information.
  *
  * @example
  * ```html

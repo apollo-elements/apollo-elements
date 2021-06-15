@@ -1,21 +1,43 @@
 {% extends 'layout-sidebar.njk' %}
 
 {% from "partials/custom-elements-manifest/get-manifest.njk" import manifest with context %}
+{% from "partials/custom-elements-manifest/macros.njk" import linkHeading %}
 
-{% set moduleData = manifest | getModule(module) %}
+{% macro renderModule(mod, blocks, setExportsHeading=false) %}
+  {% set moduleData = manifest | getModule(mod) %}
 
-{% set additionalHeadings = moduleData | getHeadings %}
+  {% set additionalHeadings = moduleData | getHeadings %}
+
+  {% if setExportsHeading %}
+    {% set exportsHeading = 3 %}
+  {% endif %}
+
+  {% for blockName, blockPath in blocks %}
+    {% include blockPath %}
+  {% endfor %}
+{% endmacro %}
 
 {% block content %}
+  {% if layout == 'layout-api-index' %}
+    {% set blocks = _joiningBlocks._layoutApiIndex.content %}
+  {% elif layout == 'layout-api' %}
+    {% set blocks = _joiningBlocks._layoutApi.content %}
+  {% endif %}
+
   <main class="markdown-body">
-    {% if layout == 'layout-api-index' %}
-      {% set block = _joiningBlocks._layoutApiIndex.content %}
-    {% elif layout == 'layout-api' %}
-      {% set block = _joiningBlocks._layoutApi.content %}
-    {% endif %}
-    {% for blockName, blockPath in block %}
-      {% include blockPath %}
-    {% endfor %}
+    {%- if module -%}
+      {{- renderModule(module, blocks) -}}
+    {%- elif modules -%}
+      {% for blockName, blockPath in blocks %}
+        {% if blockName === '10-content.njk' %}
+          {% include blockPath %}
+        {% endif %}
+      {% endfor %}
+      {%- for module in modules -%}
+        {{ linkHeading((manifest | getModule(module)).path, level=2) }}
+        {{- renderModule(module, blocks | nonContent, setExportsHeading=true) -}}
+      {%- endfor -%}
+    {%- endif -%}
   </main>
 {% endblock content %}
 

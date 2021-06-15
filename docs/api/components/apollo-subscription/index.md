@@ -7,7 +7,7 @@ module: 'apollo-subscription.js'
 
 # Components >> apollo-subscription || 30
 
-`<apollo-subscription>` lets you query GraphQL without writing any JavaScript. Import the custom element then write your template, query, and variables in HTML. The element class inherits from [`ApolloSubscriptionInterface`](/api/interfaces/subscription/)
+`<apollo-subscription>` lets you query GraphQL without writing any JavaScript. Import the custom element then write your template, query, and variables in HTML. The element class inherits from [`ApolloSubscriptionInterface`](/api/core/interfaces/subscription/)
 
 <inline-notification type="tip">
 

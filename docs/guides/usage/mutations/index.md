@@ -8,7 +8,7 @@ Mutation components combine a <abbr title="Graph query language">GraphQL</abbr> 
 
 <inline-notification type="tip">
 
-This page is a HOW-TO guide. For detailed docs on the `ApolloMutation` interface see the [API docs](/api/interfaces/mutation/)
+This page is a HOW-TO guide. For detailed docs on the `ApolloMutation` interface see the [API docs](/api/core/interfaces/mutation/)
 
 </inline-notification>
 
@@ -58,7 +58,7 @@ Read more about declarative mutations in [using `<apollo-mutation>`](./html/) an
 
 ## ApolloMutationController
 
-Add a mutation to your component by creating an [`ApolloMutationController`](/api/core/mutation/). Call it's `mutate()` method to fire the mutation. You can use it on any element which implements `ReactiveControllerHost`, e.g. `LitElement`, or you can use it on `HTMLElement` if you apply `ControllerHostMixin` from [`@apollo-elements/mixins`](/api/libraries/mixins/controller-host-mixin/)
+Add a mutation to your component by creating an [`ApolloMutationController`](/api/core/controllers/mutation/). Call it's `mutate()` method to fire the mutation. You can use it on any element which implements `ReactiveControllerHost`, e.g. `LitElement`, or you can use it on `HTMLElement` if you apply `ControllerHostMixin` from [`@apollo-elements/mixins`](/api/libraries/mixins/controller-host-mixin/)
 
 ```js copy
 import { LitElement, html } from 'lit';
@@ -430,5 +430,5 @@ For more performant and customizable updates, you can define a [mutation update 
 ## Next Steps
 
 Read about the [`<apollo-mutation>` HTML element](/guides/usage/mutations/html/),
-dive into the [`ApolloMutation` API](/api/interfaces/mutation/) and [component lifecycle](/api/interfaces/mutation/lifecycle/)
+dive into the [`ApolloMutation` API](/api/core/interfaces/mutation/) and [component lifecycle](/api/core/interfaces/mutation/lifecycle/)
 or continue on to the [subscriptions guide](/guides/usage/subscriptions/).

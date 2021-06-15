@@ -86,7 +86,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "See [ApolloElementInterface](/api/interfaces/element/) for more information.",
+          "description": "See [ApolloElementInterface](/api/core/interfaces/element/) for more information.",
           "name": "PolymerApolloElement",
           "members": [
             {

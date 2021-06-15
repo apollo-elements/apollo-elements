@@ -2,7 +2,7 @@
 description: Details on how to Apollo Elements GraphQL query components work.
 ---
 
-# Interfaces >> ApolloQuery >> Component Lifecycle || 20
+# Core >> Interfaces >> ApolloQuery >> Component Lifecycle || 20
 
 ## `connectedCallback`
 On connecting to the DOM, the element reads it's query and variable properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.
@@ -37,19 +37,19 @@ Set this property at any point to reobserve the `ObservableQuery`.
 
 ## `onData`
 
-The [`onData`](/api/interfaces/query/#ondata) callback is a unary function that takes an `ApolloQueryResult` containing `data`, `loading`, `error`, etc.
+The [`onData`](/api/core/interfaces/query/#ondata) callback is a unary function that takes an `ApolloQueryResult` containing `data`, `loading`, `error`, etc.
 
 `onData` is called *after* the element instance' properties are set.
 
 ## `onError`
 
-The [`onError`](/api/interfaces/query/#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
+The [`onError`](/api/core/interfaces/query/#onerror) callback is a unary function that takes an `Error` or `ApolloError`.
 
 `onError` is called *after* the element instance' properties are set.
 
 ## Events
 
-Listen for the `apollo-query-result` and `apollo-error` [events](/api/interfaces/query/#events) to react to changes. They fire *before* the element instance' properties are set.
+Listen for the `apollo-query-result` and `apollo-error` [events](/api/core/interfaces/query/#events) to react to changes. They fire *before* the element instance' properties are set.
 
 ### `apollo-query-result`
 Detail is an `ApolloQueryResult` object.
@@ -61,4 +61,4 @@ Detail is an `ApolloQueryResult` object.
 | errors | `readonly GraphQLError[]` | If the query returned partials results, and some were errors, the list of errors. |
 | loading | `boolean` | Whether the operation is in-flight. |
 | partial | `boolean` | Whether the query returned partial data. |
-| networkStatus | `NetworkStatus` | See [NetworkStatus](/api/interfaces/query/#networkstatus). |
+| networkStatus | `NetworkStatus` | See [NetworkStatus](/api/core/interfaces/query/#networkstatus). |

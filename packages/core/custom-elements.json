@@ -325,7 +325,7 @@
                 "type": {
                   "text": "Promise<FetchResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
               },
               "parameters": [
                 {
@@ -334,7 +334,7 @@
                   "type": {
                     "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
                   },
-                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/mutation/#variables) |\n"
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/core/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/mutation/#variables) |\n"
                 }
               ],
               "summary": "Fires a mutation\nThis resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
@@ -378,7 +378,7 @@
                 "type": {
                   "text": "FetchResult<Data<D>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
               },
               "parameters": [
                 {
@@ -392,7 +392,7 @@
                   "type": {
                     "text": "FetchResult<Data<D>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
                 }
               ],
               "description": "Callback for when a mutation is completed."
@@ -859,7 +859,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ]
             },
@@ -879,7 +879,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Determines whether the element is able to automatically subscribe"
@@ -1069,7 +1069,7 @@
                   "type": {
                     "text": "Partial<QueryOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](/api/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](/api/interfaces/element/#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](/api/core/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](/api/core/interfaces/element/#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "summary": "Executes a Query once and updates the with the result",
@@ -1458,7 +1458,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Determines whether the element is able to automatically subscribe"
@@ -1479,7 +1479,7 @@
                   "type": {
                     "text": "Partial<SubscriptionDataOptions<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
                 }
               ]
             },
@@ -1493,7 +1493,7 @@
                   "type": {
                     "text": "FetchResult<Data<D>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
                 }
               ],
               "description": "Sets `data`, `loading`, and `error` on the instance when new subscription results arrive."
@@ -1544,7 +1544,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ]
             },
@@ -1612,7 +1612,7 @@
                   "type": {
                     "text": "Partial<SubscriptionDataOptions<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
                 }
               ],
               "summary": "Starts the subscription"
@@ -1885,7 +1885,7 @@
           "name": "getInitialProp",
           "return": {
             "type": {
-              "text": "T[keyof T]"
+              "text": "T[keyof T] | undefined"
             }
           },
           "parameters": [
@@ -2740,7 +2740,7 @@
         },
         {
           "kind": "class",
-          "description": "Common interface for mutation elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "description": "Common interface for mutation elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
           "name": "ApolloMutationElement",
           "members": [
             {
@@ -2917,7 +2917,7 @@
                 "type": {
                   "text": "Promise<FetchResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n"
+                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
               },
               "parameters": [
                 {
@@ -2926,7 +2926,7 @@
                   "type": {
                     "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
                   },
-                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/mutation/#variables) |\n"
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode | TypedDocumentNode`{lang=ts} | See [mutation](/api/core/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/mutation/#variables) |\n"
                 }
               ],
               "description": "This resolves a single mutation according to the options specified and returns a\nPromise which is either resolved with the resulting data or rejected with an error."
@@ -3287,7 +3287,7 @@
         },
         {
           "kind": "class",
-          "description": "Common interface for query elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "description": "Common interface for query elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
           "name": "ApolloQueryElement",
           "members": [
             {
@@ -3522,7 +3522,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Determines whether the element should attempt to subscribe i.e. begin querying\nOverride to prevent subscribing unless your conditions are met"
@@ -3543,7 +3543,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Resets the internal state of the query and subscribes."
@@ -3584,7 +3584,7 @@
                   "type": {
                     "text": "Partial<QueryOptions<Variables<D, V>, Data<D>>> | undefined"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](/api/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](/api/interfaces/element/#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts} | Specifies the [`fetchPolicy`](/api/core/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Specifies the [`ErrorPolicy`](/api/core/interfaces/element/#errorpolicy) to be used for this query. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Executes a Query once and updates the component with the result"
@@ -3969,7 +3969,7 @@
         },
         {
           "kind": "class",
-          "description": "Common interface for subscription elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "description": "Common interface for subscription elements\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
           "name": "ApolloSubscriptionElement",
           "members": [
             {
@@ -4070,7 +4070,7 @@
               },
               "privacy": "public",
               "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
-              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
             },
             {
               "kind": "field",
@@ -4155,7 +4155,7 @@
                   "type": {
                     "text": "Partial<SubscriptionDataOptions<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode | TypedDocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
                 }
               ],
               "summary": "Resets the subscription and subscribes."
@@ -4187,7 +4187,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | See [query](#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/subscription/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/subscription/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Determines whether the element should attempt to subscribe automatically\nOverride to prevent subscribing unless your conditions are met"
