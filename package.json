@@ -6,10 +6,11 @@
     "file": "./logo.png"
   },
   "scripts": {
+    "analyze": "yarn workspaces run analyze",
     "build": "run-s build:*",
     "build:codegen": "graphql-codegen",
     "build:packages": "yarn workspaces run build",
-    "build:analyze": "yarn workspaces run analyze",
+    "build:analyze": "yarn analyze",
     "clean": "run-s clean:*",
     "clean:packages": "rimraf 'packages/!(create)/**/!(rollup.config).{js,js.map,d.ts,tgz}'",
     "clean:create-app": "rimraf 'packages/create/*.{js,js.map,d.ts,tgz}'",
@@ -18,7 +19,8 @@
     "release:prerelease": "sh scripts/prerelease.sh",
     "postrelease": "yarn clean",
     "docs": "run-s build:codegen docs:*",
-    "docs:analyze": "yarn workspaces run analyze",
+    "docs:analyze": "yarn analyze",
+    "docs:analyze:debug": "cat packages/components/custom-elements.json",
     "docs:esbuild": "node ./scripts/esbuild.js",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
     "docs:copy": "run-s docs:copy:*",
