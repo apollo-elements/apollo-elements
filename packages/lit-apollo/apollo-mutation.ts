@@ -16,7 +16,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 
 type P<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
   ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown

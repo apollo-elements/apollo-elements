@@ -1,5 +1,5 @@
 import type { ReactiveElement, ReactiveControllerHost } from '@lit/reactive-element';
-import type { ApolloController, ApolloControllerOptions } from './apollo-controller';
+import type { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
 type O = ApolloControllerOptions<any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 type Key = string|number|symbol;

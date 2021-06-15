@@ -12,12 +12,12 @@ import type {
   WatchQueryFetchPolicy,
 } from '@apollo/client/core';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 import { NetworkStatus } from '@apollo/client/core';
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
-import { hosted } from './decorators';
+import { hosted } from './decorators.js';
 
 /**
  * `ApolloQuery`

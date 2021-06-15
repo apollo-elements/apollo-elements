@@ -20,7 +20,7 @@ import { NetworkStatus } from '@apollo/client/core';
 
 import { property, state } from 'lit/decorators.js';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 
 /**
  * `ApolloQuery`

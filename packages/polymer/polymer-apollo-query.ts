@@ -1,8 +1,8 @@
 import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
-import { PolymerApolloElement } from './polymer-apollo-element';
-import { notify } from './notify-decorator';
+import { PolymerApolloElement } from './polymer-apollo-element.js';
+import { notify } from './notify-decorator.js';
 
 /**
  * @element polymer-apollo-query

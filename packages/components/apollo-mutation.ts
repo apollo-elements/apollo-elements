@@ -19,7 +19,7 @@ import type {
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
@@ -36,7 +36,7 @@ import {
   MutationErrorEvent,
   WillMutateEvent,
   WillNavigateEvent,
-} from './events';
+} from './events.js';
 
 declare global { interface HTMLElementTagNameMap { 'apollo-mutation': ApolloMutationElement } }
 

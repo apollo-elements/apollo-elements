@@ -6,7 +6,7 @@ import type {
   Variables,
 } from '@apollo-elements/core/types';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
 
 export { html } from '@gluon/gluon';

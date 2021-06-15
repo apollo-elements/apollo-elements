@@ -1,6 +1,6 @@
 import type { Data, Variables, MaybeTDN } from '@apollo-elements/core/types';
 import type { ApolloError, DocumentNode } from '@apollo/client/core';
-import type { ApolloMutationElement } from './apollo-mutation';
+import type { ApolloMutationElement } from './apollo-mutation.js';
 
 export type MutationEventType = (
     'mutation-completed'
