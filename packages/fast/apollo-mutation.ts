@@ -10,10 +10,10 @@ import type {
 import { attr } from '@microsoft/fast-element';
 
 import { splitCommasAndTrim } from '@apollo-elements/core/lib/helpers';
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 
-import { hosted } from './decorators';
+import { hosted } from './decorators.js';
 
 /**
  * `ApolloMutation`

@@ -22,9 +22,9 @@ import type {
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { ApolloController, ApolloControllerOptions } from './apollo-controller';
+import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
-import { bound } from './lib/bound';
+import { bound } from './lib/bound.js';
 
 export interface ApolloQueryControllerOptions<D, V> extends
     ApolloControllerOptions<D, V>,

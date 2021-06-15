@@ -9,7 +9,7 @@ import type {
 import type { ApolloController } from '@apollo-elements/core';
 
 import { getInitialProps, getInitialProp } from '@apollo-elements/core/decorators';
-import { notify, PolymerChangeEvent } from './notify-decorator';
+import { notify, PolymerChangeEvent } from './notify-decorator.js';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
 const last = Symbol('PolymerElement last known');
@@ -29,6 +29,7 @@ export abstract class PolymerApolloElement<
 > extends ApolloElementMixin(HTMLElement)<D, V> {
   static readonly is: `polymer-apollo-${'mutation'|'query'|'subscription'}`;
 
+  /** @ignore */
   [last] = new Map<keyof this, unknown>();
 
   declare client: ApolloClient<NormalizedCacheObject>;

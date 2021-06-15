@@ -1,4 +1,4 @@
-import type { ApolloController } from './apollo-controller';
+import type { ApolloController } from './apollo-controller.js';
 import type { Data } from '@apollo-elements/core/types';
 import type {
   ApolloClient,

@@ -9,7 +9,7 @@ import type {
 
 import type * as C from '@apollo/client/core';
 
-import { ApolloElement } from './apollo-element';
+import { ApolloElement } from './apollo-element.js';
 
 import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
 

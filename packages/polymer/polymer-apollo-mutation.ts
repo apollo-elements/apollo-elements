@@ -1,7 +1,7 @@
 import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-import { PolymerApolloElement } from './polymer-apollo-element';
-import { notify } from './notify-decorator';
+import { PolymerApolloElement } from './polymer-apollo-element.js';
+import { notify } from './notify-decorator.js';
 
 /**
  * @element polymer-apollo-mutation

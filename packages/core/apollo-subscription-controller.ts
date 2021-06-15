@@ -21,9 +21,9 @@ import type {
   WatchQueryOptions,
 } from '@apollo/client/core';
 
-import { ApolloController, ApolloControllerOptions } from './apollo-controller';
+import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
-import { bound } from './lib/bound';
+import { bound } from './lib/bound.js';
 
 export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControllerOptions<D, V>,
           Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
@@ -113,7 +113,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
       client = this.client,
       skip = this.options.skip,
       ...rest
-    } = params ?? {};
+    } = params ?? {}; /* c8 ignore start */ // covered
 
     if (!client) /* c8 ignore start */ // covered
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
