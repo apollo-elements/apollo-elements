@@ -214,7 +214,7 @@
           "mixins": [
             {
               "name": "ApolloElementMixin",
-              "module": "/apollo-element-mixin"
+              "module": "/apollo-element-mixin.js"
             },
             {
               "name": "dedupeMixin",
@@ -473,7 +473,7 @@
           "name": "ApolloElementMixin",
           "declaration": {
             "name": "ApolloElementMixin",
-            "module": "./apollo-element-mixin"
+            "module": "./apollo-element-mixin.js"
           }
         },
         {
@@ -481,7 +481,7 @@
           "name": "ApolloQueryMixin",
           "declaration": {
             "name": "ApolloQueryMixin",
-            "module": "./apollo-query-mixin"
+            "module": "./apollo-query-mixin.js"
           }
         },
         {
@@ -489,7 +489,7 @@
           "name": "ApolloMutationMixin",
           "declaration": {
             "name": "ApolloMutationMixin",
-            "module": "./apollo-mutation-mixin"
+            "module": "./apollo-mutation-mixin.js"
           }
         },
         {
@@ -497,7 +497,7 @@
           "name": "ApolloSubscriptionMixin",
           "declaration": {
             "name": "ApolloSubscriptionMixin",
-            "module": "./apollo-subscription-mixin"
+            "module": "./apollo-subscription-mixin.js"
           }
         },
         {
@@ -505,7 +505,7 @@
           "name": "ApolloClientMixin",
           "declaration": {
             "name": "ApolloClientMixin",
-            "module": "./apollo-client-mixin"
+            "module": "./apollo-client-mixin.js"
           }
         },
         {
@@ -513,7 +513,7 @@
           "name": "GraphQLScriptChildMixin",
           "declaration": {
             "name": "GraphQLScriptChildMixin",
-            "module": "./graphql-script-child-mixin"
+            "module": "./graphql-script-child-mixin.js"
           }
         },
         {
@@ -521,7 +521,7 @@
           "name": "TypePoliciesMixin",
           "declaration": {
             "name": "TypePoliciesMixin",
-            "module": "./type-policies-mixin"
+            "module": "./type-policies-mixin.js"
           }
         },
         {
@@ -529,7 +529,7 @@
           "name": "ValidateVariablesMixin",
           "declaration": {
             "name": "ValidateVariablesMixin",
-            "module": "./validate-variables-mixin"
+            "module": "./validate-variables-mixin.js"
           }
         }
       ]

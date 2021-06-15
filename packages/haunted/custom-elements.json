@@ -12,7 +12,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./useQuery"
+            "package": "./useQuery.js"
           }
         },
         {
@@ -20,7 +20,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./useMutation"
+            "package": "./useMutation.js"
           }
         },
         {
@@ -28,7 +28,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./useSubscription"
+            "package": "./useSubscription.js"
           }
         },
         {

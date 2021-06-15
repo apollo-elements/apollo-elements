@@ -2763,7 +2763,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./apollo-client"
+            "package": "./apollo-client.js"
           }
         },
         {
@@ -2771,7 +2771,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./apollo-query"
+            "package": "./apollo-query.js"
           }
         },
         {
@@ -2779,7 +2779,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./apollo-mutation"
+            "package": "./apollo-mutation.js"
           }
         },
         {
@@ -2787,7 +2787,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./apollo-subscription"
+            "package": "./apollo-subscription.js"
           }
         }
       ]
