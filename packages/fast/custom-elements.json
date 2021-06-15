@@ -447,7 +447,7 @@
           "name": "ApolloElement",
           "declaration": {
             "name": "ApolloElement",
-            "module": "./apollo-element"
+            "module": "./apollo-element.js"
           }
         },
         {
@@ -455,7 +455,7 @@
           "name": "ApolloQuery",
           "declaration": {
             "name": "ApolloQuery",
-            "module": "./apollo-query"
+            "module": "./apollo-query.js"
           }
         },
         {
@@ -463,7 +463,7 @@
           "name": "ApolloMutation",
           "declaration": {
             "name": "ApolloMutation",
-            "module": "./apollo-mutation"
+            "module": "./apollo-mutation.js"
           }
         },
         {
@@ -471,7 +471,7 @@
           "name": "ApolloSubscription",
           "declaration": {
             "name": "ApolloSubscription",
-            "module": "./apollo-subscription"
+            "module": "./apollo-subscription.js"
           }
         },
         {

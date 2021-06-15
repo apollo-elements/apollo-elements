@@ -12,7 +12,7 @@
           "name": "controller",
           "declaration": {
             "name": "controller",
-            "module": "./factories/controller"
+            "module": "./factories/controller.js"
           }
         },
         {
@@ -20,7 +20,7 @@
           "name": "query",
           "declaration": {
             "name": "query",
-            "module": "./factories/query"
+            "module": "./factories/query.js"
           }
         },
         {
@@ -28,7 +28,7 @@
           "name": "mutation",
           "declaration": {
             "name": "mutation",
-            "module": "./factories/mutation"
+            "module": "./factories/mutation.js"
           }
         },
         {
@@ -36,7 +36,7 @@
           "name": "subscription",
           "declaration": {
             "name": "subscription",
-            "module": "./factories/subscription"
+            "module": "./factories/subscription.js"
           }
         },
         {

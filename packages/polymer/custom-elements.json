@@ -12,7 +12,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./polymer-apollo-query"
+            "package": "./polymer-apollo-query.js"
           }
         },
         {
@@ -20,7 +20,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./polymer-apollo-mutation"
+            "package": "./polymer-apollo-mutation.js"
           }
         },
         {
@@ -28,7 +28,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./polymer-apollo-subscription"
+            "package": "./polymer-apollo-subscription.js"
           }
         }
       ]
@@ -406,7 +406,7 @@
           "mixins": [
             {
               "name": "ApolloSubscriptionMixin",
-              "module": "/mixins/apollo-subscription-mixin"
+              "module": "/mixins/apollo-subscription-mixin.js"
             }
           ],
           "superclass": {},
