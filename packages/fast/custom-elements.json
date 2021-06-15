@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloElement`\n\n🚀 Custom element base class for Apollo FAST elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "description": "`ApolloElement`\n\n🚀 Custom element base class for Apollo FAST elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
           "name": "ApolloElement",
           "members": [
             {
@@ -130,7 +130,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloMutation`\n\n👩‍🚀 Custom element base class to issue mutations via your Apollo cache.\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events",
+          "description": "`ApolloMutation`\n\n👩‍🚀 Custom element base class to issue mutations via your Apollo cache.\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events",
           "name": "ApolloMutation",
           "members": [
             {

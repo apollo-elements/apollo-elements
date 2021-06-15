@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloElement`\n\n🚀 Custom element base class for apollo lit elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/interfaces/element) for more information on events",
+          "description": "`ApolloElement`\n\n🚀 Custom element base class for apollo lit elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
           "name": "ApolloElement",
           "members": [
             {
@@ -127,7 +127,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloMutation`\n\n👩‍🚀 Custom element base class to issue mutations via your Apollo cache.\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events",
+          "description": "`ApolloMutation`\n\n👩‍🚀 Custom element base class to issue mutations via your Apollo cache.\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events",
           "name": "ApolloMutation",
           "members": [
             {
@@ -447,7 +447,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloQuery`\n\n🚀 Custom element base class that connects to your Apollo cache.\n\nSee [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events",
+          "description": "`ApolloQuery`\n\n🚀 Custom element base class that connects to your Apollo cache.\n\nSee [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events",
           "name": "ApolloQuery",
           "members": [
             {
@@ -929,7 +929,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.\n\nSee [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/interfaces/subscription) for more information on events",
+          "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.\n\nSee [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events",
           "name": "ApolloSubscription",
           "members": [
             {

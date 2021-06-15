@@ -153,6 +153,15 @@ function sortClassMembers(list = []) {
 }
 
 /**
+ * Get the non-content blocks from a _joiningBlocks directory
+ * @param  {Record<string, string>} blocks Object with keys blockname (file name) and values block include path
+ * @return {Record<string, string>} blocks Object with keys blockname (file name) and values block include path
+ */
+function nonContent(blocks) {
+  return Object.fromEntries(Object.entries(blocks).filter(([k]) => k !== '10-content.njk'));
+}
+
+/**
  * @typedef   {Object} HackOptions
  * @property  {String} key   11ty Navigation key
  * @property  {Object} module custom element manifest
@@ -185,6 +194,8 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addFilter('sortClassMembers', sortClassMembers);
 
   eleventyConfig.addFilter('isPrivate', isPrivate);
+
+  eleventyConfig.addFilter('nonContent', nonContent);
 
   eleventyConfig.addPlugin(manifestModuleImports, options.imports);
   eleventyConfig.addPlugin(externalTypeLinks, options.types);

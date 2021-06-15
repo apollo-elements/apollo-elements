@@ -20,7 +20,7 @@ import { hosted } from './decorators';
  *
  * 👩‍🚀 Custom element base class to issue mutations via your Apollo cache.
  *
- * See [`ApolloMutationInterface`](https://apolloelements.dev/api/interfaces/mutation) for more information on events
+ * See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events
  *
  * @element
  */

@@ -69,11 +69,11 @@ export default ({
     eleventyConfig.addPlugin(customElementsManifest, {
       imports: { keepExtension: false },
       types: {
-        ApolloElementElement: '/api/interfaces/element/',
-        ApolloMutationElement: '/api/interfaces/mutation/',
-        ApolloQueryElement: '/api/interfaces/query/',
-        ApolloSubscriptionElement: '/api/interfaces/subscription/',
-        OptimisticResponseType: '/api/interfaces/mutation/#optimisticresponse',
+        ApolloElementElement: '/api/core/interfaces/element/',
+        ApolloMutationElement: '/api/core/interfaces/mutation/',
+        ApolloQueryElement: '/api/core/interfaces/query/',
+        ApolloSubscriptionElement: '/api/core/interfaces/subscription/',
+        OptimisticResponseType: '/api/core/interfaces/mutation/#optimisticresponse',
 
         Hybrids: 'https://hybrids.js.org/#/misc/typescript',
 

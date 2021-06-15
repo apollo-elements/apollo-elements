@@ -26,7 +26,7 @@ import { hosted } from './decorators';
  *
  * @element
  *
- * See [`ApolloQueryInterface`](https://apolloelements.dev/api/interfaces/query) for more information on events
+ * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
 export class ApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>

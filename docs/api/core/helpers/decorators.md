@@ -4,7 +4,7 @@ package: '@apollo-elements/core'
 module: 'decorators.js'
 description: Property Decorators for Apollo Elements
 ---
-# Core >> Decorators || 50
+# Core >> Helpers >> Decorators || 50
 
 Decorators for Apollo Elements. Used internally to reflect properties from controllers to their elements. Normally you shouldn't need to import these directly.
 

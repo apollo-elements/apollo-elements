@@ -672,5 +672,5 @@ We could create on a separate `<chat-subscription>` component to handle fetching
 
 See this simple chat-app demo which demonstrates building custom elements which subscribe to a GraphQL server over websockets: [`#leeway`](https://leeway.apolloelements.dev)
 
-Dive into the [`ApolloSubscription` API](/api/interfaces/subscription/) and [component lifecycle](/api/interfaces/subscription/lifecycle/)
+Dive into the [`ApolloSubscription` API](/api/core/interfaces/subscription/) and [component lifecycle](/api/core/interfaces/subscription/lifecycle/)
 or continue on to the [managing local state guide](/guides/usage/local-state/).

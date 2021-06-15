@@ -10,7 +10,7 @@ description: Write declarative GraphQL mutations with &lt;apollo-mutation&gt; cu
 
 Provides a way to declare mutations and their variables, including input components.
 
-Inherits from [`ApolloMutationInterface`](/api/interfaces/mutation/)
+Inherits from [`ApolloMutationInterface`](/api/core/interfaces/mutation/)
 
 {% block demo %}
 ## Live Demo

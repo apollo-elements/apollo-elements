@@ -10,7 +10,7 @@ This page is a HOW-TO guide. For detailed docs on the `<apollo-mutation>` elemen
 
 </inline-notification>
 
-This generic mutation component inherits [`ApolloMutation`](/api/interfaces/mutation/), so you can use it by assigning a mutation and some variables and calling it's `mutate()` method:
+This generic mutation component inherits [`ApolloMutation`](/api/core/interfaces/mutation/), so you can use it by assigning a mutation and some variables and calling it's `mutate()` method:
 
 ```js copy
 const mutationElement = document.querySelector('apollo-mutation');

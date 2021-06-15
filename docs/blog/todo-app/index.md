@@ -473,7 +473,7 @@ import { customElement, query } from 'lit-element/lib/decorators';
 import type { TextField } from '@material/mwc-textfield';
 ```
 
-Then we'll implement `setVariables`, which will update the element's `variables` property on each keypress; and `onCompleted`, a [mutation component lifecycle callback](/api/interfaces/mutation/lifecycle/) which fires whenever a mutation completes, which we'll use to clear the input.
+Then we'll implement `setVariables`, which will update the element's `variables` property on each keypress; and `onCompleted`, a [mutation component lifecycle callback](/api/core/interfaces/mutation/lifecycle/) which fires whenever a mutation completes, which we'll use to clear the input.
 
 ```ts copy
 @query('mwc-textfield') private input: TextField;

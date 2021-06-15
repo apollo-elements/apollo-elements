@@ -22,7 +22,7 @@ import { state, property } from '@lit/reactive-element/decorators.js';
  *
  * 🚀 Custom element base class that updates with an Apollo GraphQL subscription.
  *
- * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/interfaces/subscription) for more information on events
+ * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
 export class ApolloSubscription<
