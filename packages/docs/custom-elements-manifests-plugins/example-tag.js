@@ -8,6 +8,7 @@ function isExampleTag(tag) {
  */
 export function exampleTagPlugin() {
   return {
+    name: '@example-tag',
     analyzePhase({ ts, node, moduleDoc, context }) {
       /** @type{import('typescript')}*/
       const TS = ts;

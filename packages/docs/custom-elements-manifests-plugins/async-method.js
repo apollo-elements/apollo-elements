@@ -5,6 +5,7 @@ import { getMemberDoc } from './helpers.js';
  */
 export function asyncFunctionPlugin() {
   return {
+    name: 'async-function-flag',
     analyzePhase({ ts, node, moduleDoc, context }) {
       switch (node.kind) {
         case ts.SyntaxKind.FunctionDeclaration:
