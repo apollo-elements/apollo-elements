@@ -6,6 +6,7 @@ import { getMemberDoc } from './helpers.js';
  */
 export function readonlyPlugin() {
   return {
+    name: '@readonly-tag',
     analyzePhase({ ts, node, moduleDoc }) {
       /** @type{import('typescript')}*/
       const api = ts;

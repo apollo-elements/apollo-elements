@@ -38,6 +38,7 @@ function isAsConst(initializer, api) {
  */
 export function primitiveTypePlugin() {
   return {
+    name: 'type-discovery-primitive-initializer',
     analyzePhase({ ts, node, moduleDoc }) {
       /** @type{import('typescript')}*/
       const api = ts;

@@ -4,6 +4,7 @@
  */
 export function rewriteTsExtensionsPlugin() {
   return {
+    name: 'ts-to-js-extension',
     packageLinkPhase({ customElementsManifest }){
       customElementsManifest?.modules?.forEach(mod => {
           mod.path = mod.path.replace('.ts', '.js')

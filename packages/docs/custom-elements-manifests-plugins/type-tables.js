@@ -140,6 +140,7 @@ function processMember(moduleDoc) {
  */
 export function typeTablesPlugin() {
   return {
+    name: 'type-description-markdown',
     moduleLinkPhase({ moduleDoc }) {
       const process = processMember(moduleDoc);
       moduleDoc.declarations?.forEach?.(function(declaration) {
