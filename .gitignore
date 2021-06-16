@@ -32,6 +32,8 @@ packages/gluon/helpers/*.d.ts
 packages/gluon/helpers/*.js
 packages/gluon/helpers/*.js.map
 
+!custom-elements-manifest.config.js
+
 !packages/*/global.d.ts
 !packages/gluon/gluon.d.ts
 !packages/docs/rollup.config.js
