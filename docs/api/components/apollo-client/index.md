@@ -34,8 +34,8 @@ Reuse the same query component for two different GraphQL endpoints.
 ```
 
 ```js playground-file client-demo introspection-queries.js
-import '@apollo-elements/client';
-import { useQuery, component, html } from @apollo-elements/haunted;
+import '@apollo-elements/components';
+import { useQuery, component, html } from '@apollo-elements/haunted';
 import { IntrospectionQueriesQuery } from './IntrospectionQueries.query.graphql.js';
 
 function IntrospectionQueries() {
@@ -63,7 +63,7 @@ strong { color: #eee; }
 strong[described]::after { content: ': '; }
 ```
 
-```js playground-file client-demo IntrospectionQueries.graphql.js
+```js playground-file client-demo IntrospectionQueries.query.graphql.js
 import { gql } from '@apollo/client/core';
 
 export const IntrospectionQueriesQuery = gql` {
