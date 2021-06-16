@@ -763,7 +763,7 @@ Add the following to the `<todo-edit>` template:
     data-todo-id="${this.todoId}"
     .mutation="${DeleteTodoMutation}"
     .updater="${this.deleteUpdater}">
-  <mwc-icon-button slot="trigger" icon="delete" label="delete"></mwc-icon-button>
+  <mwc-icon-button trigger icon="delete" label="delete"></mwc-icon-button>
 </apollo-mutation>
 ```
 

@@ -5,6 +5,12 @@ module: apollo-mutation.js
 templateEngineOverride: njk,md
 description: Write declarative GraphQL mutations with &lt;apollo-mutation&gt; custom element. Write your GraphQL and variables in HTML, even use inputs to define variables. Do more with less code with Apollo Elements and web components.
 ---
+<!-- ----------------------------------------------------------------------------------------
+     Welcome! This file includes automatically generated API documentation.
+     To edit the docs that appear within, find the original source file under `packages/*`,
+     corresponding to the package name and module in this YAML front-matter block.
+     Thank you for your interest in Apollo Elements 😁
+------------------------------------------------------------------------------------------ -->
 
 # Components >> apollo-mutation || 30
 

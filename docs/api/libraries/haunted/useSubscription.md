@@ -1,8 +1,15 @@
 ---
 layout: layout-api
 package: '@apollo-elements/haunted'
-module: 'useSubscription.js'
+module: useSubscription.js
 ---
+<!-- ----------------------------------------------------------------------------------------
+     Welcome! This file includes automatically generated API documentation.
+     To edit the docs that appear within, find the original source file under `packages/*`,
+     corresponding to the package name and module in this YAML front-matter block.
+     Thank you for your interest in Apollo Elements 😁
+------------------------------------------------------------------------------------------ -->
+
 # Web Component Libraries >> Haunted >> useSubscription || 30
 
 Apollo `useSubscription` hook for web components.
