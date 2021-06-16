@@ -38,29 +38,26 @@ import '@apollo-elements/components';
 import { useQuery, component, html } from '@apollo-elements/haunted';
 import { IntrospectionQueriesQuery } from './IntrospectionQueries.query.graphql.js';
 
-function IntrospectionQueries() {
-  const { data } = useQuery(IntrospectionQueriesQuery);
+customElements.define('introspection-queries', component(function IntrospectionQueries() {
+  const { data } = useQuery(IntrospectionQueriesQuery, { hostElement: this });
   const fields = data?.__type?.fields ?? [];
   return html`
-    <link rel="stylesheet" href="introspection-queries.css"
+    <link rel="stylesheet" href="introspection-queries.css"/>
     <ul>
     ${fields.map(({ name, description, args }) => html`
       <li>
-        <strong ?described="${!!description}">${name}</strong>
+        <strong class="${description ? 'described' : ''}">${name}</strong>
         <span>${description}</span>
       </li>
     `)}
     </ul>
   `;
-}
-
-customElements.define('introspection-queries', component(IntrospectionQueries));
+}));
 ```
 
 ```css playground-file client-demo introspection-queries.css
 ul { margin: 0 }
-strong { color: #eee; }
-strong[described]::after { content: ': '; }
+strong.described::after { content: ': '; }
 ```
 
 ```js playground-file client-demo IntrospectionQueries.query.graphql.js
