@@ -2,7 +2,7 @@
 
 [![Published on npm](https://img.shields.io/npm/v/@apollo-elements/gluon.svg)](https://www.npmjs.com/package/@apollo-elements/gluon)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@apollo-elements/gluon)
-[![ISC License](https://img.shields.io/npm/l/@apollo-elements/gluon)](https://github.com/apollo-elements/apollo-elements/blob/master/LICENCE.md)
+[![ISC License](https://img.shields.io/npm/l/@apollo-elements/gluon)](https://github.com/apollo-elements/apollo-elements/blob/main/LICENCE.md)
 [![Release](https://github.com/apollo-elements/apollo-elements/workflows/Release/badge.svg)](https://github.com/apollo-elements/apollo-elements/actions)
 
 <strong>🚀 GluonElement base classes that connect to your Apollo cache 🌜</strong>
