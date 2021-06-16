@@ -60,7 +60,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -158,7 +158,7 @@ The PR which added changesets was horribly large, with no end to its scope in si
 Using git's interactive rebase command, we can add in changesets after the fact:
 
 ```bash
-git rebase --interactive origin/master
+git rebase --interactive origin/main
 ```
 
 ```git
