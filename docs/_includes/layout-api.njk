@@ -3,8 +3,11 @@
 {% from "partials/custom-elements-manifest/get-manifest.njk" import manifest with context %}
 {% from "partials/custom-elements-manifest/macros.njk" import linkHeading %}
 
-{% macro renderModule(mod, blocks, setExportsHeading=false) %}
-  {% set moduleData = manifest | getModule(mod) %}
+{% macro renderModule(mod, blocks, moduleData, setExportsHeading=false) %}
+
+  {% if not moduleData %}
+    {% set moduleData = manifest | getModule(mod) %}
+  {% endif %}
 
   {% set additionalHeadings = moduleData | getHeadings %}
 
@@ -17,26 +20,25 @@
   {% endfor %}
 {% endmacro %}
 
-{% block content %}
-  {% if layout == 'layout-api-index' %}
-    {% set blocks = _joiningBlocks._layoutApiIndex.content %}
-  {% elif layout == 'layout-api' %}
-    {% set blocks = _joiningBlocks._layoutApi.content %}
-  {% endif %}
+{% set blocks = _joiningBlocks._layoutApiIndex.content if layout === 'layout-api-index' else _joiningBlocks._layoutApi.content %}
 
+{% block content %}
   <main class="markdown-body">
-    {%- if module -%}
-      {{- renderModule(module, blocks) -}}
-    {%- elif modules -%}
+    {%- if modules -%}
       {% for blockName, blockPath in blocks %}
         {% if blockName === '10-content.njk' %}
           {% include blockPath %}
         {% endif %}
       {% endfor %}
       {%- for module in modules -%}
-        {{ linkHeading((manifest | getModule(module)).path, level=2) }}
+        {{- linkHeading((manifest | getModule(module)).path, level=2) -}}
         {{- renderModule(module, blocks | nonContent, setExportsHeading=true) -}}
       {%- endfor -%}
+    {%- elif module -%}
+      {{- renderModule(module, blocks) -}}
+    {%- else -%}
+      {% set module = 'index.js' %}
+      {{- renderModule(module, blocks=blocks) -}}
     {%- endif -%}
   </main>
 {% endblock content %}

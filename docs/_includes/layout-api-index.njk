@@ -1,11 +1,5 @@
 {% extends 'layout-api.njk' %}
 
-{% from "partials/custom-elements-manifest/get-manifest.njk" import manifest, packageJson with context %}
-
-{% from "partials/custom-elements-manifest/macros.njk" import exports %}
-
-{% set moduleData = {} %}
-
 {% block head %}
   {{ super() }}
   <style>

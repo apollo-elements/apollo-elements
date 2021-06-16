@@ -1,7 +1,6 @@
 ---
 layout: layout-api-index
 package: '@apollo-elements/core'
-module: index.js
 description: Core Controllers for Apollo Elements
 ---
 # Core || 10
