@@ -1,3 +1,5 @@
+// @ts-check
+
 import { getMemberDoc } from './helpers.js';
 
 /**
@@ -6,12 +8,12 @@ import { getMemberDoc } from './helpers.js';
 export function asyncFunctionPlugin() {
   return {
     name: 'async-function-flag',
-    analyzePhase({ ts, node, moduleDoc, context }) {
+    analyzePhase({ ts, node, moduleDoc }) {
       switch (node.kind) {
         case ts.SyntaxKind.FunctionDeclaration:
         case ts.SyntaxKind.FunctionExpression: {
           /** @type {import('typescript').FunctionDeclaration | import('typescript').FunctionExpression} */
-          const dec = node;
+          const dec = (node);
 
           if (!dec.name)
             break;
@@ -32,7 +34,7 @@ export function asyncFunctionPlugin() {
 
         case ts.SyntaxKind.MethodDeclaration: {
           /** @type {import('typescript').MethodDeclaration} */
-          const dec = node;
+          const dec = (node);
 
           if (!dec.name)
             break;
@@ -42,7 +44,9 @@ export function asyncFunctionPlugin() {
           const { parent } = dec;
 
           if (parent && ts.isClassLike(parent) || ts.isClassDeclaration(parent)) {
-            const className = parent.name?.getText?.();
+            /** @type {import('typescript').ClassLikeDeclaration} */
+            const cls = (parent);
+            const className = cls.name?.getText?.();
 
             const memberDoc = getMemberDoc(moduleDoc, className, methodName);
 
