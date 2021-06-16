@@ -4,6 +4,13 @@ package: '@apollo-elements/core'
 module: apollo-subscription-controller.js
 description: Subscription Controller for Apollo Elements
 ---
+<!-- ----------------------------------------------------------------------------------------
+     Welcome! This file includes automatically generated API documentation.
+     To edit the docs that appear within, find the original source file under `packages/*`,
+     corresponding to the package name and module in this YAML front-matter block.
+     Thank you for your interest in Apollo Elements 😁
+------------------------------------------------------------------------------------------ -->
+
 # Core >> Controllers >> ApolloSubscriptionController || 40
 
 `ApolloSubscriptionController` lets you subscribe to real-time updated from your GraphQL server. Pass it a GraphQL subscription document, and any options you choose, and it will update its host when it's state (e.g. `data`, `error`, or `loading`) changes.
