@@ -67,7 +67,7 @@ const isPrivate = x => x.privacy === 'protected' || x.privacy === 'private';
 
 const split = (x, d) => !x ? '' : x.split(d ?? ' ');
 
-const propIs = prop => test => obj => obj[prop] === test;
+const propIs = prop => test => obj => test instanceof RegExp ? !!obj[prop]?.match(test) : obj[prop] === test;
 
 const and = (p, q) => x => p(x) && q(x);
 

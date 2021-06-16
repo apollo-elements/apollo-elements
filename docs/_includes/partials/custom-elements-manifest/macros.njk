@@ -23,9 +23,14 @@
 {%- endmacro -%}
 
 {%- macro exports(moduleData, packageName='', splitLines=false) -%}
+  {%- if moduleData -%}
   <code-copy>
-    {{- codeBlock(moduleData | manifestModuleImports(packageName=packageName, splitLines=splitLines) | safe | trim) -}}
+    {{- codeBlock(moduleData | manifestModuleImports(
+      packageName=packageName,
+      splitLines=splitLines
+    ) | safe | trim) -}}
   </code-copy>
+  {%- endif -%}
 {%- endmacro -%}
 
 {%- macro inheritance(member) -%}
