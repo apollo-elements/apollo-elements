@@ -371,7 +371,7 @@ function onWillMutate(event) {
         <apollo-mutation
             .mutation="${CreateNetworkMutation}"
             @will-mutate="${this.onWillMutate}">
-          <button slot="trigger">Create</button>
+          <button trigger>Create</button>
         </apollo-mutation>
       `;
     }
@@ -433,7 +433,7 @@ function onWillMutate(event) {
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
           @will-mutate="${(x, { event }) => x.onWillMutate(event)}">
-        <button slot="trigger">Create</button>
+        <button trigger>Create</button>
       </apollo-mutation>
     `,
   })
@@ -522,7 +522,7 @@ function onWillMutate(event) {
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
           @will-mutate="${this.onWillMutate}">
-        <button slot="trigger">Create</button>
+        <button trigger>Create</button>
       </apollo-mutation>
     `,
   }
@@ -590,7 +590,7 @@ function onWillMutate(event) {
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
           @will-mutate="${onWillMutate}">
-        <button slot="trigger">Create</button>
+        <button trigger>Create</button>
       </apollo-mutation>
     `,
   });

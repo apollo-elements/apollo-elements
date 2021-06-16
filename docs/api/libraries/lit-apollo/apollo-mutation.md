@@ -1,8 +1,15 @@
 ---
 layout: layout-api
 package: '@apollo-elements/lit-apollo'
-module: 'apollo-mutation.js'
+module: apollo-mutation.js
 ---
+<!-- ----------------------------------------------------------------------------------------
+     Welcome! This file includes automatically generated API documentation.
+     To edit the docs that appear within, find the original source file under `packages/*`,
+     corresponding to the package name and module in this YAML front-matter block.
+     Thank you for your interest in Apollo Elements 😁
+------------------------------------------------------------------------------------------ -->
+
 # Web Component Libraries >> Lit >> ApolloMutation || 30
 
 <inline-notification type="tip">
