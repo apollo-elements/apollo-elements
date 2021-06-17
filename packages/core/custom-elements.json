@@ -1092,7 +1092,7 @@
                   "type": {
                     "text": "Partial<FetchMoreParams<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts} | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables | `Variables<D, V>`{lang=ts} | Query variables |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode \\| TypedDocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts} | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables | `Variables<D, V>`{lang=ts} | Query variables |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object.",
@@ -3606,7 +3606,7 @@
                   "type": {
                     "text": "Partial<FetchMoreParams<D, V>> | undefined"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode | TypedDocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts} | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables | `Variables<D, V>`{lang=ts} | Query variables |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query | `DocumentNode \\| TypedDocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts} | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables | `Variables<D, V>`{lang=ts} | Query variables |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
                 }
               ],
               "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object."
