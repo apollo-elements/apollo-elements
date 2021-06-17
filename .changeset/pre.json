@@ -1,0 +1,33 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "@apollo-elements/components": "1.4.0",
+    "@apollo-elements/core": "0.0.0",
+    "@apollo-elements/create": "1.4.0",
+    "@apollo-elements/docs": "1.1.3",
+    "@apollo-elements/fast": "1.3.0",
+    "@apollo-elements/gluon": "3.3.0",
+    "@apollo-elements/haunted": "1.1.4",
+    "@apollo-elements/hybrids": "3.4.4",
+    "@apollo-elements/lit-apollo": "3.3.0",
+    "@apollo-elements/mixins": "3.5.0",
+    "@apollo-elements/polymer": "3.4.0",
+    "@apollo-elements/test": "1.3.0"
+  },
+  "changesets": [
+    "components-10-new-elements.md",
+    "components-20-mutation-templates.md",
+    "components-30-mutation-trigger-attr.md",
+    "components-35-debounce-attr.md",
+    "components-40-mutation-remove-named-slots.md",
+    "curly-cycles-rest.md",
+    "dull-cougars-cover.md",
+    "haunted-update-lib-call.md",
+    "omit-keys-lib.md",
+    "polymer-element-names.md",
+    "short-terms-wait.md",
+    "sour-mayflies-breathe.md",
+    "spotty-doors-admire.md"
+  ]
+}
