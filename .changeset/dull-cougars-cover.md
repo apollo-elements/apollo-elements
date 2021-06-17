@@ -1,8 +1,6 @@
 ---
 "@apollo-elements/components": patch
 "@apollo-elements/create": patch
-"@apollo-elements/interfaces": patch
-"@apollo-elements/lib": patch
 "@apollo-elements/lit-apollo": major
 ---
 
