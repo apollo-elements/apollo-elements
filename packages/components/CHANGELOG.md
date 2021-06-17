@@ -1,5 +1,14 @@
 # @apollo-elements/components
 
+## 2.0.0-next.2
+
+### Patch Changes
+
+- 55990659: Add missing custom-elements.json to package file manifest
+- Updated dependencies [55990659]
+  - @apollo-elements/core@0.0.1-next.0
+  - @apollo-elements/mixins@4.0.0-next.1
+
 ## 2.0.0-next.1
 
 ### Patch Changes
