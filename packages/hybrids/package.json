@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/hybrids",
-  "version": "3.4.4",
+  "version": "4.0.0-next.0",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
