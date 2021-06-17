@@ -1,5 +1,13 @@
 # @apollo-elements/lit-apollo
 
+## 4.0.0-next.2
+
+### Patch Changes
+
+- 408641da: Fix generated custom elements manifest
+- Updated dependencies [408641da]
+  - @apollo-elements/core@0.0.1-next.1
+
 ## 4.0.0-next.1
 
 ### Patch Changes
