@@ -7,8 +7,6 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@apollo-elements/interfaces",
-    "@apollo-elements/lib",
     "@apollo-elements/test"
   ]
 }
