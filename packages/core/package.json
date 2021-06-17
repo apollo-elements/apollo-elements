@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/core",
-  "version": "0.0.0",
+  "version": "0.0.1-next.0",
   "description": "👩‍🚀🌛 Core Classes for Apollo Elements 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
