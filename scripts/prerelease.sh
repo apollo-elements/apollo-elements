@@ -5,6 +5,6 @@
   && yarn changeset pre enter next \
   || echo 'Already in pre mode'
 
-yarn changeset version --since next
+yarn changeset version --since main
 git add .
 git commit -m "chore: version prerelease packages"
