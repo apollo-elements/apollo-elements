@@ -8,10 +8,7 @@ To [debounce](https://www.freecodecamp.org/news/javascript-debounce-example/) a 
 
 ```html
 <apollo-mutation debounce="500">
-  <label
-    >Name
-    <input trigger="keyup" data-variable="name" />
-  </label>
+  <label>Name <input trigger="keyup" data-variable="name" /></label>
 </apollo-mutation>
 ```
 
