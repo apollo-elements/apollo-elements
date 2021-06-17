@@ -6,5 +6,9 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "@apollo-elements/interfaces",
+    "@apollo-elements/lib",
+    "@apollo-elements/test"
+  ]
 }
