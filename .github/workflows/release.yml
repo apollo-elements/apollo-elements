@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  release:
     # Prevents changesets action from creating a PR on forks
     if: github.repository == 'apollo-elements/apollo-elements'
     runs-on: ubuntu-latest
