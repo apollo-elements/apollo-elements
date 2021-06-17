@@ -40,6 +40,23 @@ const BASE_IMPORT_MAP = {
   "@apollo-elements/fast/apollo-mutation": "../../../apollo-elements-fast.js",
   "@apollo-elements/fast/apollo-subscription": "../../../apollo-elements-fast.js",
 
+  "@apollo-elements/lit-apollo": "../../../apollo-elements-lit-apollo.js",
+  "@apollo-elements/lit-apollo/apollo-query.js": "../../../apollo-elements-lit-apollo.js",
+  "@apollo-elements/lit-apollo/apollo-mutation.js": "../../../apollo-elements-lit-apollo.js",
+  "@apollo-elements/lit-apollo/apollo-subscription.js": "../../../apollo-elements-lit-apollo.js",
+  "@apollo-elements/lit-apollo/apollo-query": "../../../apollo-elements-lit-apollo.js",
+  "@apollo-elements/lit-apollo/apollo-mutation": "../../../apollo-elements-lit-apollo.js",
+  "@apollo-elements/lit-apollo/apollo-subscription": "../../../apollo-elements-fast.js",
+
+  "@apollo-elements/gluon": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/index.js": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/apollo-query.js": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/apollo-mutation.js": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/apollo-subscription.js": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/apollo-query": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/apollo-mutation": "../../../apollo-elements-gluon.js",
+  "@apollo-elements/gluon/apollo-subscription": "../../../apollo-elements-gluon.js",
+
   "@apollo-elements/haunted": "../../../apollo-elements-haunted.js",
   "@apollo-elements/haunted/useQuery.js": "../../../apollo-elements-haunted.js",
   "@apollo-elements/haunted/useMutation.js": "../../../apollo-elements-haunted.js",
@@ -92,15 +109,7 @@ template.innerHTML = `
     overflow: hidden;
     --playground-code-font-family: monospace;
     --playground-code-font-size: 14px;
-    --playground-code-background: var(--markdown-syntax-background-color);
-    --playground-tab-bar-background: var(--page-background);
-    --playground-tab-bar-foreground-color: var(--primary-text-color);
-    --playground-preview-toolbar-background: var(--page-background);
-    --playground-preview-toolbar-foreground-color: var(--primary-text-color);
     --playground-border: none;
-    --playground-highlight-color: var(--primary-color);
-    --playground-preview-width: 30%;
-    --playground-bar-height: 35px;
   }
 
   #snippet,

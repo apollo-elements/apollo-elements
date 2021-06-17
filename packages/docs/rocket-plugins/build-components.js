@@ -67,6 +67,18 @@ export function buildComponents() {
   });
 
   build({
+    entryPoints: ['packages/docs/entrypoints/gluon.ts'],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/apollo-elements-gluon.js',
+  });
+
+  build({
+    entryPoints: ['packages/docs/entrypoints/lit-apollo.ts'],
+    external: [ 'https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*' ],
+    outfile: 'docs/_assets/_static/apollo-elements-lit-apollo.js',
+  });
+
+  build({
     entryPoints: ['packages/docs/entrypoints/schemalink.ts'],
     external: [ 'https://*', 'http://*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*' ],
     outfile: 'docs/_assets/_static/schema-link.js',
