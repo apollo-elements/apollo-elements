@@ -21,6 +21,7 @@
     }
   },
   "files": [
+    "custom-elements.json",
     "*.d.ts",
     "*.js",
     "*.js.map",
