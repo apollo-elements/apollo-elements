@@ -12,7 +12,7 @@
     "build:packages": "yarn workspaces run build",
     "build:analyze": "yarn analyze",
     "clean": "run-s clean:*",
-    "clean:packages": "rimraf 'packages/!(create)/**/!(rollup.config).{js,js.map,d.ts,tgz}'",
+    "clean:packages": "rimraf 'packages/!(create|docs)/**/!(*.config).{js,js.map,d.ts,tgz}'",
     "clean:create-app": "rimraf 'packages/create/*.{js,js.map,d.ts,tgz}'",
     "clean:node-modules": "rimraf 'packages/**/node_modules'",
     "release": "sh scripts/release.sh",
