@@ -111,6 +111,12 @@
   --playground-code-variable-2-color: var(--markdown-syntax-attr-name-color);
   --playground-code-selection-background: var(--markdown-table-row-odd-background-color);
   --playground-code-cursor-color: var(--markdown-syntax-color);
+  --playground-code-background: var(--markdown-syntax-background-color);
+  --playground-tab-bar-background: var(--page-background);
+  --playground-tab-bar-foreground-color: var(--primary-text-color);
+  --playground-preview-toolbar-background: var(--page-background);
+  --playground-preview-toolbar-foreground-color: var(--primary-text-color);
+  --playground-highlight-color: var(--primary-color);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -2,6 +2,7 @@
   {%- if module and module.path and (module.path == './index.js') or (module.path == './index.ts') -%}
     {%- if module.exports -%}
       {%- block exports -%}
+        {{- linkHeading('Exports', level=(exportsHeading or 2)) -}}
         {{- exports(module, packageName=package, splitLines=true) -}}
       {%- endblock -%}
     {%- endif -%}

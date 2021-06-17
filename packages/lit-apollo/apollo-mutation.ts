@@ -10,7 +10,7 @@ import type {
   RefetchQueriesType,
 } from '@apollo-elements/core/types';
 
-import { controlled } from '@apollo-elements/core';
+import { controlled } from '@apollo-elements/core/decorators';
 
 import { property, state } from 'lit/decorators.js';
 
