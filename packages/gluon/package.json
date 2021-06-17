@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/gluon",
-  "version": "4.0.0-next.0",
+  "version": "4.0.0-next.1",
   "description": "👩‍🚀🌛 Gluon Elements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
@@ -64,7 +64,7 @@
   "homepage": "https://apolloelements.dev/modules/_apollo_elements_gluon.html",
   "dependencies": {
     "@apollo-elements/interfaces": "^1.5.0",
-    "@apollo-elements/mixins": "^4.0.0-next.0",
+    "@apollo-elements/mixins": "^4.0.0-next.1",
     "@gluon/gluon": ">= 2",
     "tslib": "^2.3.0"
   },
