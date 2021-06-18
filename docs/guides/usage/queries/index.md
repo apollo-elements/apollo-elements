@@ -435,8 +435,7 @@ If you want to keep your element from automatically subscribing, you can opt out
 
   ```ts tab hybrids
   define('lazy-hello-world', {
-    noAutoSubscribe: true,
-    query: query(HelloQuery),
+    query: query(HelloQuery, { noAutoSubscribe: true }),
   });
   ```
 
@@ -462,7 +461,7 @@ You can also set the boolean `no-auto-subscribe` attribute to the element instan
 
 <inline-notification type="warning">
 
-NOTE, for [hybrids](/api/libraries/hybrids/) components, if you explicitly define a `noAutoSubscribe` property in the descriptor, this attribute may not set the associated property.
+NOTE, the `no-auto-subscribe` attribute comes built-in for query class elements e.g. `@apollo-elements/mixins/apollo-query-mixin.js` for [controllers](/api/core/), [hybrids](/api/libraries/hybrids/) components or [haunted](/api/libraries/haunted/) `useQuery` hooks, you can pass the `noAutoSubscribe` option to the controller, but you'll be in charge of reading the attribute yourself.
 
 </inline-notification>
 

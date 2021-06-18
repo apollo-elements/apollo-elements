@@ -24,6 +24,7 @@ const BASE_IMPORT_MAP = {
   '@apollo-elements/components/apollo-subscription.js': '../../../apollo-elements.js',
 
   '@apollo-elements/core': '../../../apollo-elements.js',
+  '@apollo-elements/core/index.js': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-mutation-controller': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-query-controller': '../../../apollo-elements.js',
   '@apollo-elements/core/apollo-subscription-controller': '../../../apollo-elements.js',
@@ -87,7 +88,6 @@ const BASE_IMPORT_MAP = {
   '@apollo-elements/polymer/polymer-apollo-mutation': '../../../polymer.js',
   '@apollo-elements/polymer/polymer-apollo-query': '../../../polymer.js',
   '@apollo-elements/polymer/polymer-apollo-subscription': '../../../polymer.js',
-
 }
 
 const template = document.createElement("template");
@@ -258,7 +258,7 @@ export class DocsPlayground extends HTMLElement {
 ${content}
 <!-- playground-hide -->
 </body>
-<!-- playground-hide-end -->`.replace(/ORIGIN/g, window.location.origin);
+<!-- playground-hide-end -->`;
   }
 
   $(x: string) {
@@ -316,7 +316,7 @@ ${content}
     )
     const config: ProjectManifest = { files };
     if (importMapTemplate)
-      config.importMap = JSON.parse(importMapTemplate.content.textContent.replace(/ORIGIN/g, window.location.origin));
+      config.importMap = JSON.parse(importMapTemplate.content.textContent);
 
     config.importMap = {
       imports: {
@@ -336,16 +336,6 @@ ${content}
     const content = this.textContent.trim();
     const files = Object.fromEntries(Object.entries({
       [this.file]: { content: content },
-      // 'apollo-client.js': {
-      //   content: await DocsPlayground.fetchScript('/_assets/_static/apollo-client.js'),
-      //   contentType: 'application/javascript',
-      //   hidden: true,
-      // },
-      'apollo-elements.js': {
-        content: await DocsPlayground.fetchScript('/_assets/_static/apollo-elements.js'),
-        contentType: 'application/javascript',
-        hidden: true,
-      },
       'style.css': {
         hidden: !config?.files?.['style.css'],
         content: `
@@ -355,11 +345,7 @@ ${content}
         `,
       },
       ...config.files,
-    }).map(([k, v]) => [k, k !== 'index.html' ? v : ({
-      ...v,
-      contentType: k.endsWith('js') ? 'application/javascript' : v.contentType,
-      content: DocsPlayground.makePreview(v.content),
-    })]));
+    }).map(([k, v]) => [k, k !== 'index.html' ? v : ({ ...v, content: DocsPlayground.makePreview(v.content), })]));
     this.playgroundIde.config = { ...config, files }
   }
 

@@ -114,11 +114,3 @@ html, body {
   margin: 0;
 }
 ```
-
-```json playground-import-map mouse-controller
-{
-  "imports": {
-    "@apollo-elements/mixins/controller-host-mixin": "../../../mixins.js"
-  }
-}
-```
