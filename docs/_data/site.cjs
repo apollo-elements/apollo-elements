@@ -21,6 +21,10 @@ module.exports = {
         "url": "https://twitter.com/ApolloElements"
       },
       {
+        "name": "Slack",
+        "url": "https://join.slack.com/share/zt-rze808zo-YmRT8zyJI6sDTQjC_49ytA"
+      },
+      {
         "name": "Discord",
         "url": "https://discord.gg/2FgMbKf"
       },
