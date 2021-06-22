@@ -117,8 +117,6 @@ customElements.define('color-picker', ColorPicker);
 ```
 
 ```js playground-file mouse-controller mouse-controller.js
-import { ReactiveControllerHost } from 'lit';
-
 export class MouseController {
   down = false;
   pos = { x: 0, y: 0 };
