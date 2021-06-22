@@ -45,7 +45,7 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
-    "directory": "packages/interfaces"
+    "directory": "packages/core"
   },
   "keywords": [
     "Apollo",
@@ -58,7 +58,7 @@
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
-  "homepage": "https://apolloelements.dev/api/interfaces",
+  "homepage": "https://apolloelements.dev/api/core/",
   "dependencies": {
     "@apollo/client": "^3.3.20",
     "lit": "^2.0.0-rc.2",
