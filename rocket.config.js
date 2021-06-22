@@ -18,8 +18,6 @@ import esbuildRollup from 'rollup-plugin-esbuild';
 
 import path from 'path';
 
-import clearModule from 'clear-module';
-
 import helmet from 'eleventy-plugin-helmet';
 import footnotes from 'eleventy-plugin-footnotes';
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
