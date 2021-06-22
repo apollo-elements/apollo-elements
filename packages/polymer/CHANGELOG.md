@@ -1,5 +1,14 @@
 # @apollo-elements/polymer
 
+## 4.0.0-next.2
+
+### Patch Changes
+
+- 91d03c60: Removed references to deprecated interfaces package
+- Updated dependencies [91d03c60]
+  - @apollo-elements/core@0.0.1-next.2
+  - @apollo-elements/mixins@4.0.0-next.2
+
 ## 4.0.0-next.1
 
 ### Patch Changes
