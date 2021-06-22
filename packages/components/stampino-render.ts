@@ -89,23 +89,18 @@ export class StampinoRender extends ReactiveElement implements ReactiveControlle
   }
 
   /** `querySelector` within the render root. */
-  public $<E extends Element = Element>(selector: string): E | null
-
-  public $<K extends keyof SVGElementTagNameMap>(selector: K): SVGElementTagNameMap[K] | null;
-
-  public $<K extends keyof HTMLElementTagNameMap>(selector: K): HTMLElementTagNameMap[K] | null {
-    return this.renderRoot.querySelector(selector);
+  public $<E extends Element = Element>(sel: string): E | null
+  public $<K extends keyof SVGElementTagNameMap>(sel: K): SVGElementTagNameMap[K] | null;
+  public $<K extends keyof HTMLElementTagNameMap>(sel: K): HTMLElementTagNameMap[K] | null
+  public $(sel: string): Element | null {
+    return this.renderRoot.querySelector(sel);
   }
 
   /** `querySelectorAll` within the render root. */
-
-  public $$<E extends Element = Element>(selector: string): NodeListOf<E>;
-
-  public $$<K extends keyof SVGElementTagNameMap>(selector: K): NodeListOf<SVGElementTagNameMap[K]>;
-
-  public $$<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): NodeListOf<HTMLElementTagNameMap[K]> {
-    return this.renderRoot.querySelectorAll(selector);
+  public $$<E extends Element = Element>(sel: string): NodeListOf<E>;
+  public $$<K extends keyof SVGElementTagNameMap>(sel: K): NodeListOf<SVGElementTagNameMap[K]>;
+  public $$<K extends keyof HTMLElementTagNameMap>(sel: K): NodeListOf<HTMLElementTagNameMap[K]>
+  public $$(sel: string): NodeList {
+    return this.renderRoot.querySelectorAll(sel);
   }
 }
