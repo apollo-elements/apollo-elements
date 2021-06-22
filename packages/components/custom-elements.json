@@ -429,7 +429,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -452,7 +452,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -1188,7 +1188,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -1211,7 +1211,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -1899,7 +1899,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -1922,7 +1922,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -2416,7 +2416,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -2439,7 +2439,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -2884,7 +2884,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -2903,7 +2903,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "K"
                   }
@@ -2921,9 +2921,27 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "K"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "sel",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]
@@ -2939,7 +2957,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "string"
                   }
@@ -2958,7 +2976,7 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "K"
                   }
@@ -2976,9 +2994,27 @@
               },
               "parameters": [
                 {
-                  "name": "selector",
+                  "name": "sel",
                   "type": {
                     "text": "K"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "$$",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "NodeList"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "sel",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]
