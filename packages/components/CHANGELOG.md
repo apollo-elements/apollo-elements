@@ -1,5 +1,15 @@
 # @apollo-elements/components
 
+## 2.0.0-next.4
+
+### Patch Changes
+
+- 91d03c60: Removed references to deprecated interfaces package
+- f167041b: Fix $ and $\$ override signatures. Affects TypeScript types only.
+- Updated dependencies [91d03c60]
+  - @apollo-elements/core@0.0.1-next.2
+  - @apollo-elements/mixins@4.0.0-next.2
+
 ## 2.0.0-next.3
 
 ### Patch Changes

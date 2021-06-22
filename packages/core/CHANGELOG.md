@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 0.0.1-next.2
+
+### Patch Changes
+
+- 91d03c60: Removed references to deprecated interfaces package
+
 ## 0.0.1-next.1
 
 ### Patch Changes
