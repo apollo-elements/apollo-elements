@@ -47,7 +47,7 @@ const BASE_IMPORT_MAP = {
   "@apollo-elements/lit-apollo/apollo-subscription.js": "../../../apollo-elements-lit-apollo.js",
   "@apollo-elements/lit-apollo/apollo-query": "../../../apollo-elements-lit-apollo.js",
   "@apollo-elements/lit-apollo/apollo-mutation": "../../../apollo-elements-lit-apollo.js",
-  "@apollo-elements/lit-apollo/apollo-subscription": "../../../apollo-elements-fast.js",
+  "@apollo-elements/lit-apollo/apollo-subscription": "../../../apollo-elements-lit-apollo.js",
 
   "@apollo-elements/gluon": "../../../apollo-elements-gluon.js",
   "@apollo-elements/gluon/index.js": "../../../apollo-elements-gluon.js",

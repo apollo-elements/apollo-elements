@@ -117,6 +117,7 @@
   --playground-preview-toolbar-background: var(--page-background);
   --playground-preview-toolbar-foreground-color: var(--primary-text-color);
   --playground-highlight-color: var(--primary-color);
+  --playground-code-builtin-color: var(--markdown-blockquote-color);
 }
 
 @media (prefers-color-scheme: dark) {
