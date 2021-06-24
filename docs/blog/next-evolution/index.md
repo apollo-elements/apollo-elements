@@ -5,14 +5,13 @@ tags:
   - webcomponents
   - html
 published: true
-generateSocialImage: true
+cover_image: /blog/next-evolution/social@2x.png
+socialMediaImage: /blog/next-evolution/social@2x.png
 date: 2021-07-01
 updated: Last Modified
 ---
 
 # The Next Evolution of Apollo Elements
-
-{% include ./astro-evo.svg | safe %}
 
 Apollo Elements has come a long way since its first release as `lit-apollo` in 2017. What started as a way to build GraphQL-querying LitElements has blossomed into a [multi-library](https://apolloelements.dev/api/libraries/), multi-paradigm project with [extensive docs](https://apolloelements.dev/api/).
 
@@ -82,6 +81,8 @@ The previous major version of `@apollo-elements/components` included `<apollo-cl
 With these new elements, and their older sibling `<apollo-mutation>`, you can write entire GraphQL apps in nothing but HTML. You read that right, declarative, data-driven GraphQL apps in HTML. You still have access to the Apollo Client API, so feel free to sprinkle in a little JS here and there for added spice.
 
 This is all made possible by a pair of libraries from the Lit team's Justin Fagnani called [Stampino](https://github.com/justinfagnani/stampino/) and [jexpr](https://github.com/justinfagnani/jexpr/). Together, they let you define dynamic parts in HTML `<template>` elements, filling them with JavaScript expressions based on your GraphQL data.
+
+Here's the demo app from above, but written in HTML:
 
 ```html playground html-components index.html
 <apollo-client>
@@ -297,6 +298,10 @@ import '@material/mwc-textfield';
 import '@material/mwc-linear-progress';
 import '@material/mwc-list';
 import '@material/mwc-button';
+
+// The JS down here is to simulate a GraphQL server,
+// You could just as easily set the `uri` attr on
+// the `<apollo-client>` element
 
 async function randomDelay(range = 2000) {
   await new Promise(r => setTimeout(r, Math.floor(Math.random() * range)));

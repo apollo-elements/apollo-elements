@@ -26,40 +26,62 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 ```ts playground query-controller profile-home.ts
 import { ApolloQueryController } from '@apollo-elements/core';
 import { customElement } from 'lit/decorators.js';
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { ProfileQuery } from './Profile.query.graphql.js';
+import style from './profile-home.css.js';
 
 @customElement('profile-home')
 class ProfileHome extends LitElement {
-  static styles = css`
-    img { height: 200px; width: auto; }
-  `;
+  static ids = [1,2,3];
+
+  static styles = style;
 
   profile = new ApolloQueryController(this, ProfileQuery, {
     variables: { id: 1 }
   });
 
-  render() {
+  radio(id) {
+    const astronaut = this.profile.data?.profile;
     return html`
-      <h2>User ID Variable</h2>
-      <input id="1" type="radio" name="id" value="1" @change="${this.onChange}"/>
-      <label for="1">1</label>
-      <input id="2" type="radio" name="id" value="2" @change="${this.onChange}"/>
-      <label for="2">2</label>
-      <input id="3" type="radio" name="id" value="3" @change="${this.onChange}"/>
-      <label for="3">3</label>
-      <header class=${classMap({ loading: this.profile?.loading })}>
-        <h1>Welcome, ${this.profile.data?.profile?.name}</h1>
-      </header>
-      <img .src=${this.profile.data?.profile?.picture} alt=""/>
-    `;
+      <label> <input id=${id} type=radio name=id value=${id}
+               ?checked=${astronaut?.id == id}
+               @change=${this.onChange}/> ${id} </label>`;
   }
 
-  onChange(event) {
-    this.profile.variables = { id: event.target.value }
+  onChange(event) { this.profile.variables = { id: event.target.value } }
+
+  render() {
+    const { data, loading } = this.profile;
+    const astronaut = data?.profile;
+    return html`
+      <form><legend>Crew ID</legend>${ProfileHome.ids.map(this.radio, this)}</form>
+      <article class=${classMap({ loading })}>
+        <img .src=${astronaut?.picture} alt=""/>
+        <figure>
+          <blockquote>${astronaut?.quote}</blockquote>
+          <figcaption>- ${astronaut?.name}, ${astronaut?.position}</figcaption>
+        </figure>
+      </article>
+    `;
   }
 }
+```
+
+```js playground-file query-controller profile-home.css.js
+import { css } from 'lit';
+export default css`
+  :host { display: block; }
+  .loading { opacity: 0.5; filter: grayscale(100%); }
+  img { width: 100%; height: auto; background: lightgrey; min-height: 295px; }
+  article { width: 100%; }
+  figure { margin: 0; }
+  form {
+    display: grid;
+    grid-template: 40px / max-content repeat(3, 40px);
+    place-items: center;
+  }
+`;
 ```
 
 ```html playground-file query-controller index.html
@@ -73,16 +95,16 @@ class ProfileHome extends LitElement {
 
 ```ts playground-file query-controller Profile.query.graphql.ts
 import { gql, TypedDocumentNode } from '@apollo/client/core';
-export const ProfileQuery: TypedDocumentNode<{
-  profile: {
-    name: string;
-    picture: string;
-  }
-}> = gql`
+type Data = { profile: { id: number; name: string; picture: string; quote: string; } };
+type Variables = { id: number; };
+export const ProfileQuery: TypedDocumentNode<Data, Variables> = gql`
 query ProfileQuery($id: ID) {
   profile(id: $id) {
+    id
     name
+    position
     picture
+    quote
   }
 }
 `;
@@ -94,9 +116,27 @@ import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 const USERS = [
-  { id: 1, name: 'Neil', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Neil_Armstrong_pose.jpg/1024px-Neil_Armstrong_pose.jpg?1623601441968' },
-  { id: 2, name: 'Buzz', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Buzz_Aldrin.jpg/1024px-Buzz_Aldrin.jpg?1623601483170' },
-  { id: 3, name: 'Michael', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Michael_Collins_%28S69-31742%2C_restoration%29.jpg/1024px-Michael_Collins_%28S69-31742%2C_restoration%29.jpg?1623601522599' },
+  {
+    id: 1,
+    name: 'Neil',
+    position: 'Commander',
+    picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Neil_Armstrong_pose.jpg/1024px-Neil_Armstrong_pose.jpg?1623601441968',
+    quote: 'That’s one small step for a man, one giant leap for mankind.',
+  },
+  {
+    id: 2,
+    name: 'Buzz',
+    position: 'Lunar Module Pilot',
+    picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Buzz_Aldrin.jpg/1024px-Buzz_Aldrin.jpg?1623601483170',
+    quote: 'Those footprints belong to each and every one of you, to all mankind.',
+  },
+  {
+    id: 3,
+    name: 'Michael',
+    position: 'Command Module Pilot',
+    picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Michael_Collins_%28S69-31742%2C_restoration%29.jpg/1024px-Michael_Collins_%28S69-31742%2C_restoration%29.jpg?1623601522599',
+    quote: 'It’s human nature to stretch, to go, to see, to understand. Exploration is not a choice, really; it’s an imperative.',
+  },
 ];
 
 const schema = makeExecutableSchema({
@@ -105,6 +145,8 @@ const schema = makeExecutableSchema({
       id: ID
       name: String
       picture: String
+      position: String
+      quote: String
     }
 
     type Query {
@@ -114,6 +156,7 @@ const schema = makeExecutableSchema({
   resolvers: {
     Query: {
       async profile(_, { id }) {
+        await new Promise(r => setTimeout(r, Math.random() * 1000));
         return USERS.find(x => x.id == parseInt(id));
       }
     },
