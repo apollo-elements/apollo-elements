@@ -326,13 +326,15 @@ ${content}
     }
 
     this.init(config);
+    if (location.hash === `#${this.id}`)
+      this.show();
   }
 
   static async fetchScript(url: string): Promise<string> {
     return fetch(new URL(url, location.origin).toString()).then(x => x.text());
   }
 
-  async init(config: ProjectManifest) {
+  init(config: ProjectManifest) {
     const content = this.textContent.trim();
     const files = Object.fromEntries(Object.entries({
       [this.file]: { content: content },

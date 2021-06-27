@@ -289,15 +289,15 @@ mutation AddUser($name: String) {
 ```
 
 ```js playground-file html-components components.js
-import { ApolloClient, InMemoryCache, gql, TypedDocumentNode } from '@apollo/client/core';
-import { SchemaLink } from '@apollo/client/link/schema';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-
 import '@apollo-elements/components';
 import '@material/mwc-textfield';
 import '@material/mwc-linear-progress';
 import '@material/mwc-list';
 import '@material/mwc-button';
+
+import { ApolloClient, InMemoryCache, gql, TypedDocumentNode } from '@apollo/client/core';
+import { SchemaLink } from '@apollo/client/link/schema';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
 // The JS down here is to simulate a GraphQL server,
 // You could just as easily set the `uri` attr on

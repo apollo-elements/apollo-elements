@@ -35,7 +35,7 @@
     "start": "run-p start:*",
     "start:clean": "yarn clean",
     "start:codegen": "graphql-codegen --watch",
-    "start:tsc": "yarn workspaces run start --stream --parallel",
+    "start:tsc": "yarn workspaces run start --pretty",
     "start:docs": "run-s docs:esbuild start:docs:rocket",
     "start:docs:rocket": "rocket start",
     "test": "wtr --coverage",
