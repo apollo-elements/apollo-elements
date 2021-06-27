@@ -140,6 +140,31 @@ Bringing this release into the light involved more than just refactoring and upd
 
 Additionally, here in apollo-elements, we added the [`ControllerHostMixin`](/api/libraries/mixins/controller-host-mixin/) as a way to maintain the previous element-per-graphql-document API without breaking backwards (too much). You can use this generic mixin to add controller support to any web component.
 
+## Fixes and Enhancements
+
+The last release included support for the web components hooks library [haunted](https://github.com/matthewp/haunted), but that support hid a dirty little secret within. Any time you called a hook inside a Haunted function component, apollo elements would sneakily mix the GraphQL interface onto the custom element's prototype. It was a good hack as long as you only call one hook per component, but would break down as soon as you compose multiple operations.
+
+With controllers at the core, and the [`useController`](https://github.com/matthewp/haunted#usecontroller) hook, you can use as many Apollo hooks as you want in your elements without clobbering each other or polluting the element interface.
+
+```js playground haunted-multiple-hooks query-hooks.js
+import { useQuery, html, component } from '@apollo-elements/haunted';
+import { client } from './client.js';
+import { FruitsQuery } from './Fruits.query.graphql.js';
+import { VeggiesQuery } from './Veggies.query.graphql.js';
+
+customElements.define('healthy-snack', component(function HealthySnack() {
+  const { data: fruits } = useQuery(FruitsQuery, { client });
+  const { data: veggies } = useQuery(VeggiesQuery, { client });
+  const snack = [ ...(fruits?.fruits ?? []), ...(veggies?.veggies ?? []) ];
+  return html`
+    <link rel="stylesheet" href="healthy-snack.css"/>
+    <ul>${snack.map(x => html`<li>${x}</li>`)}</ul>
+  `;
+}));
+```
+
+The same is true of the [hybrids](https://hybrids.js.org) support, it now uses the controllers underneath the hood, letting you mix multiple operations in a single hybrid.
+
 ## Try it Out
 
 Apollo Elements next is available in prerelease on [npm](https://npm.im/@apollo-elements/core@next). We hope you enjoy using it and look forward to seeing what you come up with.
@@ -232,7 +257,7 @@ window.__APOLLO_CLIENT__ = new ApolloClient({
         User: {
           async picture({ name, picture }) {
             return picture ?? await fetch(`https://ui-avatars.com/api/?background=random&name=${name.replace(/\s/g, '+')}`).then(r => r.url)
-          }
+          },
         },
         Query: {
           async users() {
@@ -247,7 +272,7 @@ window.__APOLLO_CLIENT__ = new ApolloClient({
             await randomDelay();
             return user;
           },
-        }
+        },
       },
       typeDefs: `
         type User {
@@ -263,10 +288,10 @@ window.__APOLLO_CLIENT__ = new ApolloClient({
         type Mutation {
           addUser(name: String!): User
         }
-      `
-    })
-  })
-})
+      `,
+    }),
+  }),
+});
 ```
 
 ```graphql playground-file html-components Users.query.graphql
@@ -338,7 +363,7 @@ document.querySelector('apollo-client').client = new ApolloClient({
             await randomDelay();
             return user;
           },
-        }
+        },
       },
       typeDefs: `
         type User {
@@ -355,7 +380,65 @@ document.querySelector('apollo-client').client = new ApolloClient({
           addUser(name: String!): User
         }
       `
-    })
-  })
-})
+    }),
+  }),
+});
+```
+
+```html playground-file haunted-multiple-hooks index.html
+<healthy-snack></healthy-snack>
+<script type="module" src="query-hooks.js"></script>
+```
+
+<style data-helmet>
+#haunted-multiple-hooks {
+  --playground-ide-height: 320px;
+}
+</style>
+
+```css playground-file haunted-multiple-hooks healthy-snack.css
+ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 36px;
+  gap: 8px;
+}
+```
+
+```js playground-file haunted-multiple-hooks Fruits.query.graphql.js
+import { gql } from '@apollo/client/core';
+export const FruitsQuery = gql`{ fruits }`;
+```
+
+```js playground-file haunted-multiple-hooks Veggies.query.graphql.js
+import { gql } from '@apollo/client/core';
+export const VeggiesQuery = gql`{ veggies }`;
+```
+
+```js playground-file haunted-multiple-hooks client.js
+import { ApolloClient, InMemoryCache, gql, TypedDocumentNode } from '@apollo/client/core';
+import { SchemaLink } from '@apollo/client/link/schema';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+
+export const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: new SchemaLink({
+    schema: makeExecutableSchema({
+      resolvers: {
+        Query: {
+          fruits: () => ['🍒', '🍎', '🍌', '🍑', '🥭', '🍍', '🥝', '🥑'],
+          veggies: () => ['🥬', '🥒', '🌽', '🥕', '🍠', '🍅', '🥦', '🥔'],
+        },
+      },
+      typeDefs: `
+        type Query {
+          fruits: [String]
+          veggies: [String]
+        }
+      `
+    }),
+  }),
+});
 ```
