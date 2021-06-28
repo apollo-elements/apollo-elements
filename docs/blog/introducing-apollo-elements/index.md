@@ -23,7 +23,7 @@ Apollo Elements handles the plumbing between web components libraries like `lit-
 
 If you're new to web components, take a <abbr title="peek">👀</abbr> at my "Let's Build Web Components" series to get up to speed:
 
-{% link https://dev.to/bennypowers/lets-build-web-components-part-1-the-standards-3e85 %}
+{% dev https://dev.to/bennypowers/lets-build-web-components-part-1-the-standards-3e85 %}
 
 ## Connected Components
 

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "1.0.0",
   "readme": "",
   "modules": [
     {
@@ -128,25 +128,29 @@
               "name": "data",
               "type": {
                 "text": "Data<D> | null"
-              }
+              },
+              "default": "null"
             },
             {
               "kind": "field",
               "name": "error",
               "type": {
                 "text": "Error | ApolloError | null"
-              }
+              },
+              "default": "null"
             },
             {
               "kind": "field",
               "name": "errors",
               "type": {
                 "text": "readonly GraphQLError[]"
-              }
+              },
+              "default": "[]"
             },
             {
               "kind": "field",
               "name": "loading",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -236,7 +240,7 @@
               "kind": "field",
               "name": "is",
               "static": true,
-              "default": "polymer-apollo-mutation",
+              "default": "'polymer-apollo-mutation'",
               "readonly": true,
               "type": {
                 "text": "string"
@@ -245,6 +249,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -309,7 +314,7 @@
               "kind": "field",
               "name": "is",
               "static": true,
-              "default": "polymer-apollo-query",
+              "default": "'polymer-apollo-query'",
               "readonly": true,
               "type": {
                 "text": "string"
@@ -382,7 +387,7 @@
               "kind": "field",
               "name": "is",
               "static": true,
-              "default": "polymer-apollo-subscription",
+              "default": "'polymer-apollo-subscription'",
               "readonly": true,
               "type": {
                 "text": "string"

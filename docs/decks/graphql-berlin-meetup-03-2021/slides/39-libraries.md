@@ -32,7 +32,7 @@ templateEngineOverride: njk,md
 {% for library in libraries %}
   <li>
     <figure>
-      <img src="/_merged_assets/library-logos/{{ library.logo }}.svg" alt="" width="150px" height="150px"/>
+      <img src="/_merged_assets/brand-logos/{{ library.logo }}.svg" alt="" width="150px" height="150px"/>
       <figcaption>{{ library.name }}</figcaption>
     </figure>
   </li>

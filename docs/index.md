@@ -195,7 +195,6 @@ These demos all import the same Apollo Element component from NPM.
 {% include 'partials/frameworks.njk' %}
 
 ```js script
-import '@power-elements/codesandbox-button';
 const demos = document.getElementById('demos');
 demos.addEventListener('select', loadDemo);
 function loadDemo() {

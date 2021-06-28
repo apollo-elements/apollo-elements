@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "1.0.0",
   "readme": "",
   "modules": [
     {
@@ -21,6 +21,7 @@
             {
               "kind": "field",
               "name": "readyToReceiveDocument",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -28,6 +29,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -36,6 +38,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -54,7 +57,8 @@
               "type": {
                 "text": "Data<D>|null"
               },
-              "summary": "Latest Data."
+              "summary": "Latest Data.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -62,7 +66,8 @@
               "type": {
                 "text": "Error | C.ApolloError | null"
               },
-              "summary": "Latest error"
+              "summary": "Latest error",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -70,7 +75,8 @@
               "type": {
                 "text": "readonly GraphQLError[]"
               },
-              "summary": "Latest errors"
+              "summary": "Latest errors",
+              "default": "[]"
             },
             {
               "kind": "field",
@@ -100,6 +106,7 @@
           "attributes": [
             {
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "fieldName": "loading"
             }
           ],
@@ -153,6 +160,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -163,7 +171,8 @@
               "type": {
                 "text": "RefetchQueriesType<D> | null"
               },
-              "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value."
+              "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -182,6 +191,7 @@
           ],
           "attributes": [
             {
+              "default": "false",
               "fieldName": "called"
             },
             {
@@ -190,6 +200,7 @@
                 "text": "RefetchQueriesType<D> | null"
               },
               "description": "As an attribute, can be a string of comma-separated query names\n```html\n<mutation-element refetch-queries=\"QueryA, QueryB,QueryC\"></mutation-element>\n```\nAs a property, you can pass any legal `refetchQueries` value.",
+              "default": "null",
               "fieldName": "refetchQueries"
             },
             {
@@ -285,6 +296,7 @@
             {
               "kind": "field",
               "name": "noAutoSubscribe",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -320,6 +332,7 @@
             },
             {
               "name": "no-auto-subscribe",
+              "default": "false",
               "fieldName": "noAutoSubscribe"
             }
           ],

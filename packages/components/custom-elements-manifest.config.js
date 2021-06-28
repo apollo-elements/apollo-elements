@@ -1,4 +1,4 @@
-import { plugins, copyPlugin } from '../docs/custom-elements-manifests-plugins/index.js';
+import { plugins, copyPlugin } from '@apollo-elements/custom-elements-manifest-preset';
 
 /** @type {import('@open-wc/custom-elements-manifest').Plugin} */
 export default ({

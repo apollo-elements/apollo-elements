@@ -22,11 +22,9 @@
   "scripts": {
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
-    "analyze": "echo 'No analyze step for create'",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
-    "start": "tsc -w",
-    "test": "echo 'No tests for create yet'"
+    "start": "tsc -w"
   },
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"

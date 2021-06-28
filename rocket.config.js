@@ -1,42 +1,23 @@
-// @ts-check
-
 /* eslint-env node */
 
-import { rocketLaunch } from '@rocket/launch';
-import { rocketBlog } from '@rocket/blog';
-import { rocketSearch } from '@rocket/search';
+import graphql from '@apollo-elements/rollup-plugin-graphql';
+import litcss from 'rollup-plugin-lit-css';
 
 import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 
+import { codeTabs } from 'rocket-plugin-code-tabs';
+import { apolloElements } from 'rocket-plugin-apollo-elements';
+import { customElementsManifestAPIDocs } from 'rocket-plugin-custom-elements-manifest';
+import { playgroundElements } from 'rocket-plugin-playground-elements';
+import { slideDecks } from 'rocket-plugin-slide-decks';
+import { webcomponentsDev } from 'rocket-plugin-webcomponents-dev';
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
+import { rocketBlog } from '@rocket/blog';
+import { rocketLaunch } from '@rocket/launch';
+import { rocketSearch } from '@rocket/search';
 
-import litcss from 'rollup-plugin-lit-css';
-import graphql from '@apollo-elements/rollup-plugin-graphql';
-
-import esbuildRollup from 'rollup-plugin-esbuild';
-
-import path from 'path';
-
-import helmet from 'eleventy-plugin-helmet';
-import footnotes from 'eleventy-plugin-footnotes';
-import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
-
-import { markdown } from './packages/docs/rocket-plugins/markdown.js';
-import { prettyJson } from './packages/docs/rocket-plugins/prettyJson.js';
-import { setupWrap } from './packages/docs/rocket-plugins/wrap.js';
-import { githubTag } from './packages/docs/rocket-plugins/liquid/github.js';
-import { linkTag } from './packages/docs/rocket-plugins/liquid/link.js';
-import { customElementsManifest } from './packages/docs/rocket-plugins/custom-elements-manifest.js';
-import { fixNoscript } from './packages/docs/rocket-plugins/fix-noscript.js';
-import { wrapTab } from './packages/docs/rocket-plugins/code-tabs.js';
-import { getWebmentionsForUrl } from './packages/docs/rocket-plugins/webmentions.js';
-import { icon } from './packages/docs/rocket-plugins/icon.js';
-import { onBeforeBuildBundleComponents } from './packages/docs/rocket-plugins/build-components.js';
-
-import { addPlugin, adjustPluginOptions } from 'plugins-manager';
-
-const isProd = process.env.ELEVENTY_ENV === 'production';
+const IMPORT_MAP_BASE = `{{ORIGIN}}/_assets/_static/apollo-elements`;
 
 /** @type {import('@rocket/cli/dist-types/types/main').RocketCliOptions} */
 export default ({
@@ -44,29 +25,130 @@ export default ({
     rocketLaunch(),
     rocketBlog(),
     rocketSearch(),
-  ],
+    apolloElements(),
+    webcomponentsDev(),
+    slideDecks(),
 
-  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
+    playgroundElements({
+      importMap: {
+        '@apollo/client/core': `${IMPORT_MAP_BASE}/apollo-client.js`,
+        '@apollo/client/utilities': `${IMPORT_MAP_BASE}/apollo-client.js`,
+        '@apollo/client/utilities/graphql/storeUtils.js': `${IMPORT_MAP_BASE}/apollo-client.js`,
 
-  eleventy(eleventyConfig) {
-    eleventyConfig.addWatchTarget('packages/components/*.ts');
-    eleventyConfig.addPassthroughCopy('docs/_assets/_static/**/*');
-    eleventyConfig.setTemplateFormats([
-      'md',
-      'njk',
-    ]);
-    eleventyConfig.on('beforeBuild', onBeforeBuildBundleComponents);
-    // eleventyConfig.on('afterBuild', onAfterBuildCopyPlayground);
-    // eleventyConfig.addPlugin(inclusiveLangPlugin);
-    eleventyConfig.addPlugin(helmet);
-    eleventyConfig.addPlugin(footnotes);
+        'event-iterator': `${IMPORT_MAP_BASE}/schema-link.js`,
+        '@apollo/client/link/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
+        '@apollo/client/link/schema/index.esm.js': `${IMPORT_MAP_BASE}/schema-link.js`,
+        '@graphql-tools/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
+        '@graphql-tools/mock': `${IMPORT_MAP_BASE}/schema-link.js`,
+        '@graphql-tools/tools': `${IMPORT_MAP_BASE}/schema-link.js`,
 
-    /* start custom-elements-manifest */
-    eleventyConfig.addWatchTarget('docs/_data/customElementsManifests/@apollo-elements/**/*.json');
+        '@apollo-elements/components': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-client': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-client.js': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-mutation': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-mutation.js': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-query': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-query.js': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-subscription': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/components/apollo-subscription.js': `${IMPORT_MAP_BASE}/apollo-elements.js`,
 
-    eleventyConfig.addPlugin(customElementsManifest, {
-      imports: { keepExtension: false },
-      types: {
+        '@apollo-elements/core': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/index.js': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/apollo-mutation-controller': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/apollo-query-controller': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/apollo-subscription-controller': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/decorators': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/events': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+        '@apollo-elements/core/lib/has-all-variables': `${IMPORT_MAP_BASE}/apollo-elements.js`,
+
+        '@microsoft/fast-element': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast/apollo-query.js': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast/apollo-mutation.js': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast/apollo-subscription.js': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast/apollo-query': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast/apollo-mutation': `${IMPORT_MAP_BASE}/fast.js`,
+        '@apollo-elements/fast/apollo-subscription': `${IMPORT_MAP_BASE}/fast.js`,
+
+        '@apollo-elements/lit-apollo': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+        '@apollo-elements/lit-apollo/apollo-query.js': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+        '@apollo-elements/lit-apollo/apollo-mutation.js': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+        '@apollo-elements/lit-apollo/apollo-subscription.js': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+        '@apollo-elements/lit-apollo/apollo-query': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+        '@apollo-elements/lit-apollo/apollo-mutation': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+        '@apollo-elements/lit-apollo/apollo-subscription': `${IMPORT_MAP_BASE}/lit-apollo.js`,
+
+        '@apollo-elements/gluon': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/index.js': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/apollo-query.js': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/apollo-mutation.js': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/apollo-subscription.js': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/apollo-query': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/apollo-mutation': `${IMPORT_MAP_BASE}/gluon.js`,
+        '@apollo-elements/gluon/apollo-subscription': `${IMPORT_MAP_BASE}/gluon.js`,
+
+        '@apollo-elements/haunted': `${IMPORT_MAP_BASE}/haunted.js`,
+        '@apollo-elements/haunted/useQuery.js': `${IMPORT_MAP_BASE}/haunted.js`,
+        '@apollo-elements/haunted/useMutation.js': `${IMPORT_MAP_BASE}/haunted.js`,
+        '@apollo-elements/haunted/useSubscription.js': `${IMPORT_MAP_BASE}/haunted.js`,
+        '@apollo-elements/haunted/useQuery': `${IMPORT_MAP_BASE}/haunted.js`,
+        '@apollo-elements/haunted/useMutation': `${IMPORT_MAP_BASE}/haunted.js`,
+        '@apollo-elements/haunted/useSubscription': `${IMPORT_MAP_BASE}/haunted.js`,
+
+        '@apollo-elements/hybrids': `${IMPORT_MAP_BASE}/hybrids.js`,
+        '@apollo-elements/hybrids/factories/query.js': `${IMPORT_MAP_BASE}/hybrids.js`,
+        '@apollo-elements/hybrids/factories/mutation.js': `${IMPORT_MAP_BASE}/hybrids.js`,
+        '@apollo-elements/hybrids/factories/subscription.js': `${IMPORT_MAP_BASE}/hybrids.js`,
+        '@apollo-elements/hybrids/factories/query': `${IMPORT_MAP_BASE}/hybrids.js`,
+        '@apollo-elements/hybrids/factories/mutation': `${IMPORT_MAP_BASE}/hybrids.js`,
+        '@apollo-elements/hybrids/factories/subscription': `${IMPORT_MAP_BASE}/hybrids.js`,
+
+        '@apollo-elements/mixins': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/apollo-client-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/apollo-mutation-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/apollo-query-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/apollo-subscription-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/controller-host-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/graphql-script-child-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/type-policies-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+        '@apollo-elements/mixins/validate-variables-mixin': `${IMPORT_MAP_BASE}/mixins.js`,
+
+        '@apollo-elements/polymer': `${IMPORT_MAP_BASE}/polymer.js`,
+        '@apollo-elements/polymer/polymer-apollo-mutation': `${IMPORT_MAP_BASE}/polymer.js`,
+        '@apollo-elements/polymer/polymer-apollo-query': `${IMPORT_MAP_BASE}/polymer.js`,
+        '@apollo-elements/polymer/polymer-apollo-subscription': `${IMPORT_MAP_BASE}/polymer.js`,
+      },
+    }),
+
+    codeTabs({
+      collections: {
+        frameworks: {
+          'angular': { label: 'Angular', iconHref: '/_merged_assets/brand-logos/angular.svg' },
+          'preact': { label: 'Preact', iconHref: '/_merged_assets/brand-logos/preact.svg' },
+          'react': { label: 'React', iconHref: '/_merged_assets/brand-logos/react.svg' },
+          'svelte': { label: 'Svelte', iconHref: '/_merged_assets/brand-logos/svelte.svg' },
+          'vue': { label: 'Vue', iconHref: '/_merged_assets/brand-logos/vue.svg' },
+        },
+        packageManagers: {
+          'npm': { label: 'NPM', iconHref: '/_merged_assets/brand-logos/npm.svg' },
+          'yarn': { label: 'Yarn', iconHref: '/_merged_assets/brand-logos/yarn.svg' },
+          'pnpm': { label: 'PNPM', iconHref: '/_merged_assets/brand-logos/pnpm.svg' },
+        },
+        libraries: {
+          'html': { label: 'HTML', iconHref: '/_merged_assets/brand-logos/html5.svg' },
+          'lit': { label: 'Lit', iconHref: '/_merged_assets/brand-logos/lit.svg' },
+          'fast': { label: 'FAST', iconHref: '/_merged_assets/brand-logos/fast.svg' },
+          'gluon': { label: 'Gluon', iconHref: '/_merged_assets/brand-logos/js.svg' },
+          'haunted': { label: 'Haunted', iconHref: '/_merged_assets/brand-logos/haunted.svg' },
+          'hybrids': { label: 'Hybrids', iconHref: '/_merged_assets/brand-logos/hybrids.svg' },
+          'mixins': { label: 'Vanilla', iconHref: '/_merged_assets/brand-logos/js.svg' },
+          'polymer': { label: 'Polymer', iconHref: '/_merged_assets/brand-logos/polymer.svg' },
+        },
+      },
+    }),
+
+    customElementsManifestAPIDocs({
+      typeLinks: {
         ApolloElementElement: '/api/core/interfaces/element/',
         ApolloMutationElement: '/api/core/interfaces/mutation/',
         ApolloQueryElement: '/api/core/interfaces/query/',
@@ -102,104 +184,10 @@ export default ({
         WatchQueryOptions: 'https://github.com/apollographql/apollo-client/blob/d470c964db46728d8a5dfc63990859c550fa1656/src/core/watchQueryOptions.ts#L107-L118',
         ZenObservable: 'https://github.com/zenparsing/zen-observable',
       },
-    });
-    /* end custom-elements-manifest */
-
-    /* start blog */
-    eleventyConfig.addFilter('markdown', markdown);
-    eleventyConfig.addFilter('prettyJson', prettyJson);
-    eleventyConfig.addFilter('uniUrlFilter', x => encodeURI(x));
-    eleventyConfig.addLiquidTag('github', githubTag);
-    eleventyConfig.addLiquidTag('link', linkTag);
-    eleventyConfig.addFilter('getWebmentionsForUrl', getWebmentionsForUrl);
-    eleventyConfig.addFilter('icon', icon(eleventyConfig));
-    /* end blog */
-
-    /* start slides */
-    eleventyConfig.addFilter('dirname', pathname => pathname && path.dirname(pathname));
-    eleventyConfig.addFilter('joinPath', (pathname, ...to) => path.join(pathname, ...to));
-    eleventyConfig.addCollection('slides', function(collectionApi) {
-      return collectionApi.getFilteredByTag('slide').sort((a, b) => {
-        return (
-            a.template.inputPath < b.template.inputPath ? -1
-          : a.template.inputPath > b.template.inputPath ? 1
-          : 0
-        );
-      });
-    });
-    /* start slides */
-
-    /* start auto-import web components */
-    function importSpecifier(tagName) {
-      return isProd ?
-        '@apollo-elements/docs/components'
-      : `@apollo-elements/docs/${tagName}`;
-    }
-
-    eleventyConfig.addPlugin(addWebComponentDefinitions, {
-      quiet: true,
-      singleScript: true,
-      specifiers: {
-        'code-copy': importSpecifier,
-        'code-tabs': importSpecifier,
-        'wcd-snippet': importSpecifier,
-        'type-doc': importSpecifier,
-        'json-viewer': '@power-elements/json-viewer',
-        'codesandbox-button': '@power-elements/codesandbox-button',
-        'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
-        'docs-playground': '/_assets/_static/docs-playground.js',
-      },
-    });
-    /* end auto-import web components */
-
-    // one day
-    // eleventyConfig.addPlugin(mermaid);
-
-    // In some cases, 11ty is encoding `<noscript><link>`, in the `<head>`,
-    // even though that is legitimate HTML. This transform ensures the final
-    // HTML has noscript styles.
-    eleventyConfig.addPlugin(fixNoscript);
-  },
-
-  setupUnifiedPlugins: [
-    setupWrap({
-      'copy': () => ({ tagName: 'code-copy' }),
-      'wcd': ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
-      'tab': ([tab]) => wrapTab(tab),
-      'reveal': () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
-      'center': () => ({ tagName: 'div', attributes: { center: 'true' } }),
-      'playground': ([id, file]) => ({
-        tagName: 'docs-playground',
-        attributes: {
-          id,
-          file,
-        },
-      }),
-      'playground-file': ([id, name], node) => ({
-        tagName: 'template',
-        attributes: {
-          'data-playground-id': id,
-          'data-filename': name,
-          'data-lang': node.lang,
-        },
-      }),
-      'playground-hidden-file': ([id, name], node) => ({
-        tagName: 'template',
-        attributes: {
-          'data-playground-id': id,
-          'data-filename': name,
-          'data-hidden': true,
-          'data-lang': node.lang,
-        },
-      }),
-      'playground-import-map': ([id]) => ({
-        tagName: 'template',
-        attributes: {
-          'data-import-map': id,
-        },
-      }),
     }),
   ],
+
+  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
   devServer: {
     port: 9048,
@@ -219,24 +207,24 @@ export default ({
     ],
   },
 
-  setupBuildPlugins: [
-    addPlugin({
-      name: 'esbuild-rollup',
-      plugin: esbuildRollup,
-      options: {
-        minify: false,
-        tsconfig: './packages/docs/tsconfig.json',
-        include: 'packages/docs/*',
-        sourceMap: true,
-        loaders: {
-          '.ts': 'ts',
-          '.css': 'ts',
-          '.graphql': 'ts',
-        },
-      } }),
-    adjustPluginOptions('import-meta-assets', {
-      exclude: '**/node_modules/playground-elements/*',
-    }),
-  ],
+  // import esbuildRollup from 'rollup-plugin-esbuild';
+  // import { addPlugin } from 'plugins-manager';
+  // setupBuildPlugins: [
+  //   addPlugin({
+  //     name: 'esbuild-rollup',
+  //     plugin: esbuildRollup,
+  //     options: {
+  //       minify: false,
+  //       tsconfig: './packages/docs/tsconfig.json',
+  //       include: 'packages/docs/*',
+  //       sourceMap: true,
+  //       loaders: {
+  //         '.ts': 'ts',
+  //         '.css': 'ts',
+  //         '.graphql': 'ts',
+  //       },
+  //     },
+  //   }),
+  // ],
 
 });

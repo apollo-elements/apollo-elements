@@ -1,0 +1,5 @@
+{
+  "extends": "@pwrs",
+  "env": { "node": true },
+  "parser": "@typescript-eslint/parser"
+}

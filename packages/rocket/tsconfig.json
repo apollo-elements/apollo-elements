@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "es2020",
+    "module": "es2020",
+    "esModuleInterop": true,
+    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "moduleResolution": "Node"
+  }
+}

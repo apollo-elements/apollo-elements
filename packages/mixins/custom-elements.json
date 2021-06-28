@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "1.0.0",
   "readme": "",
   "modules": [
     {
@@ -90,14 +90,16 @@
             },
             {
               "kind": "field",
-              "name": "called"
+              "name": "called",
+              "default": "false"
             },
             {
               "kind": "field",
               "name": "mutation",
               "type": {
                 "text": "ComponentDocument<D> | null"
-              }
+              },
+              "default": "null"
             },
             {
               "kind": "field",
@@ -111,7 +113,8 @@
               "name": "refetchQueries",
               "type": {
                 "text": "RefetchQueriesType<D> | null"
-              }
+              },
+              "default": "null"
             },
             {
               "kind": "field",
@@ -129,7 +132,8 @@
             },
             {
               "kind": "field",
-              "name": "ignoreResults"
+              "name": "ignoreResults",
+              "default": "false"
             },
             {
               "kind": "method",

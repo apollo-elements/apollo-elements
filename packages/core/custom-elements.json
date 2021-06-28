@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "1.0.0",
   "readme": "",
   "modules": [
     {
@@ -29,7 +29,8 @@
               "privacy": "private",
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
-              }
+              },
+              "default": "null"
             },
             {
               "kind": "field",
@@ -37,7 +38,8 @@
               "privacy": "private",
               "type": {
                 "text": "ComponentDocument<D> | null"
-              }
+              },
+              "default": "null"
             },
             {
               "kind": "field",
@@ -51,6 +53,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "true",
               "type": {
                 "text": "boolean"
               }
@@ -61,7 +64,8 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "summary": "Latest data for the operation, or `null`."
+              "summary": "Latest data for the operation, or `null`.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -69,7 +73,8 @@
               "type": {
                 "text": "ApolloError | null"
               },
-              "summary": "Latest error from the operation, or `null`."
+              "summary": "Latest error from the operation, or `null`.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -77,12 +82,14 @@
               "type": {
                 "text": "readonly GraphQLError[]"
               },
-              "summary": "Latest errors from the operation, or `[]`."
+              "summary": "Latest errors from the operation, or `[]`.",
+              "default": "[]"
             },
             {
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in-flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -306,6 +313,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -441,6 +449,7 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -453,6 +462,7 @@
               "type": {
                 "text": "ComponentDocument<D> | null"
               },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -478,6 +488,7 @@
                 "text": "Data<D> | null"
               },
               "summary": "Latest data for the operation, or `null`.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -490,6 +501,7 @@
                 "text": "ApolloError | null"
               },
               "summary": "Latest error from the operation, or `null`.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -502,6 +514,7 @@
                 "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors from the operation, or `[]`.",
+              "default": "[]",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -511,6 +524,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in-flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -787,6 +801,7 @@
               "name": "partial",
               "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
               "summary": "True when the query returned partial data.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -795,6 +810,7 @@
               "kind": "field",
               "name": "#hasDisconnected",
               "privacy": "private",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -1148,6 +1164,7 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1160,6 +1177,7 @@
               "type": {
                 "text": "ComponentDocument<D> | null"
               },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1181,6 +1199,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "true",
               "type": {
                 "text": "boolean"
               },
@@ -1196,6 +1215,7 @@
                 "text": "Data<D> | null"
               },
               "summary": "Latest data for the operation, or `null`.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1208,6 +1228,7 @@
                 "text": "ApolloError | null"
               },
               "summary": "Latest error from the operation, or `null`.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1220,6 +1241,7 @@
                 "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors from the operation, or `[]`.",
+              "default": "[]",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1229,6 +1251,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in-flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -1396,6 +1419,7 @@
               "kind": "field",
               "name": "#hasDisconnected",
               "privacy": "private",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -1647,6 +1671,7 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1659,6 +1684,7 @@
               "type": {
                 "text": "ComponentDocument<D> | null"
               },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1680,6 +1706,7 @@
             {
               "kind": "field",
               "name": "called",
+              "default": "true",
               "type": {
                 "text": "boolean"
               },
@@ -1695,6 +1722,7 @@
                 "text": "Data<D> | null"
               },
               "summary": "Latest data for the operation, or `null`.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1707,6 +1735,7 @@
                 "text": "ApolloError | null"
               },
               "summary": "Latest error from the operation, or `null`.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1719,6 +1748,7 @@
                 "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors from the operation, or `[]`.",
+              "default": "[]",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1728,6 +1758,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in-flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },

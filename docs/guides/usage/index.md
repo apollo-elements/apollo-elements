@@ -117,7 +117,7 @@ The tabs below demonstrate multiple ways to write the same query component:
   </apollo-query>
   ```
 
-  ```js tab vanilla
+  ```js tab mixins
   import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin';
   import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
