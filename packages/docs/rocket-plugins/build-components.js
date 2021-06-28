@@ -142,3 +142,10 @@ export async function copyPlaygroundFiles() {
 
   console.log(chalk.green`Done!`)
 }
+
+export function copyDTs() {
+  console.log(chalk.blue`Copying playground .d.ts...`)
+  for (const p of ['@apollo', '@graphql-typed-document-node', '@graphql-tools', 'graphql-tag'])
+    copySync(`./node_modules/${p}/**/*.d.ts`, `./docs/_assets/_static/node_modules/${p}`);
+  console.log(chalk.green`Done!`)
+}

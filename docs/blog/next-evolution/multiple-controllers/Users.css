@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+mwc-linear-progress {
+  width: 100%;
+}

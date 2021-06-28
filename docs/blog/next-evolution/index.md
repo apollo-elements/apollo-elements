@@ -11,7 +11,7 @@ date: 2021-07-01
 updated: Last Modified
 ---
 
-# The Next Evolution of Apollo Elements
+# The Next Evolution of GraphQL Front Ends
 
 Apollo Elements has come a long way since its first release as `lit-apollo` in 2017. What started as a way to build GraphQL-querying LitElements has blossomed into a [multi-library](https://apolloelements.dev/api/libraries/), multi-paradigm project with [extensive docs](https://apolloelements.dev/api/).
 
@@ -146,7 +146,7 @@ The last release included support for the web components hooks library [haunted]
 
 With controllers at the core, and the [`useController`](https://github.com/matthewp/haunted#usecontroller) hook, you can use as many Apollo hooks as you want in your elements without clobbering each other or polluting the element interface.
 
-```js playground haunted-multiple-hooks query-hooks.js
+```js playground haunted-multiple-hooks healthy-snack.js
 import { useQuery, html, component } from '@apollo-elements/haunted';
 import { client } from './client.js';
 import { FruitsQuery } from './Fruits.query.graphql.js';
@@ -155,7 +155,7 @@ import { VeggiesQuery } from './Veggies.query.graphql.js';
 customElements.define('healthy-snack', component(function HealthySnack() {
   const { data: fruits } = useQuery(FruitsQuery, { client });
   const { data: veggies } = useQuery(VeggiesQuery, { client });
-  const snack = [ ...(fruits?.fruits ?? []), ...(veggies?.veggies ?? []) ];
+  const snack = [ ...fruits?.fruits ?? [], ...veggies?.veggies ?? [] ];
   return html`
     <link rel="stylesheet" href="healthy-snack.css"/>
     <ul>${snack.map(x => html`<li>${x}</li>`)}</ul>
@@ -164,6 +164,25 @@ customElements.define('healthy-snack', component(function HealthySnack() {
 ```
 
 The same is true of the [hybrids](https://hybrids.js.org) support, it now uses the controllers underneath the hood, letting you mix multiple operations in a single hybrid.
+
+```js playground hybrids-multiple-factories healthy-snack.js
+import { query, html, define } from '@apollo-elements/hybrids';
+import { client } from './client.js';
+import { FruitsQuery } from './Fruits.query.graphql.js';
+import { VeggiesQuery } from './Veggies.query.graphql.js';
+
+define('healthy-snack', {
+  fruits: query(FruitsQuery, { client }),
+  veggies: query(VeggiesQuery, { client }),
+  render(host) {
+    const snack = [ ...host.fruits.data?.fruits ?? [], ...host.veggies.data?.veggies ?? [] ];
+    return html`
+      <link rel="stylesheet" href="healthy-snack.css"/>
+      <ul>${snack.map(x => html`<li>${x}</li>`)}</ul>
+    `;
+  }
+});
+```
 
 ## Try it Out
 
@@ -180,16 +199,7 @@ Apollo Elements next is available in prerelease on [npm](https://npm.im/@apollo-
 
 ```js playground-file multiple-controllers Users.css.js
 import { css } from 'lit';
-
-export const style = css`
-  :host {
-    display: block;
-  }
-
-  mwc-linear-progress {
-    width: 100%;
-  }
-`;
+export const style = css`{% include ./multiple-controllers/Users.css | safe %}`;
 ```
 
 ```html playground-file multiple-controllers index.html
@@ -204,241 +214,68 @@ html, body {
 ```
 
 ```ts playground-file multiple-controllers graphql.documents.ts
-import { ApolloClient, InMemoryCache, gql, TypedDocumentNode } from '@apollo/client/core';
-import { SchemaLink } from '@apollo/client/link/schema';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-
-import '@material/mwc-textfield';
-import '@material/mwc-linear-progress';
-import '@material/mwc-list';
-import '@material/mwc-button';
-
-interface User {
-  id: number;
-  name: string;
-  picture?: string;
-}
-
-export const UsersQuery: TypedDocumentNode<{ users: User[] }> = gql`
-query Users {
-  users {
-    id
-    name
-    picture
-  }
-}
-`;
-export const AddUserMutation: TypedDocumentNode<{ addUser: User }, { name: string }> = gql`
-mutation AddUser($name: String) {
-  addUser(name: $name) {
-    id
-    name
-  }
-}
-`;
-
-async function randomDelay(range = 2000) {
-  await new Promise(r => setTimeout(r, Math.floor(Math.random() * range)));
-}
-
-const USERS: User[] = [
-  { id: 1, name: 'Neil', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Neil_Armstrong_pose.jpg/1024px-Neil_Armstrong_pose.jpg?1623601441968' },
-  { id: 2, name: 'Buzz', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Buzz_Aldrin.jpg/1024px-Buzz_Aldrin.jpg?1623601483170' },
-  { id: 3, name: 'Michael', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Michael_Collins_%28S69-31742%2C_restoration%29.jpg/1024px-Michael_Collins_%28S69-31742%2C_restoration%29.jpg?1623601522599' },
-];
-
-const nextID = () => (Math.max(...USERS.map(x => x.id)) ?? 0) + 1;
-
-window.__APOLLO_CLIENT__ = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new SchemaLink({
-    schema: makeExecutableSchema({
-      resolvers: {
-        User: {
-          async picture({ name, picture }) {
-            return picture ?? await fetch(`https://ui-avatars.com/api/?background=random&name=${name.replace(/\s/g, '+')}`).then(r => r.url)
-          },
-        },
-        Query: {
-          async users() {
-            await randomDelay();
-            return USERS;
-          },
-        },
-        Mutation: {
-          async addUser(_, { name }) {
-            const user = { name, id: nextID() };
-            USERS.push(user);
-            await randomDelay();
-            return user;
-          },
-        },
-      },
-      typeDefs: `
-        type User {
-          id: ID!
-          name: String!
-          picture: String
-        }
-
-        type Query {
-          users: [User]
-        }
-
-        type Mutation {
-          addUser(name: String!): User
-        }
-      `,
-    }),
-  }),
-});
+{% include ./multiple-controllers/graphql.documents.ts | safe %}
 ```
 
 ```graphql playground-file html-components Users.query.graphql
-query Users {
-  users {
-    id
-    name
-    picture
-  }
-}
+{% include ./html-components/Users.query.graphql | safe %}
 ```
 
 ```graphql playground-file html-components AddUser.mutation.graphql
-mutation AddUser($name: String) {
-  addUser(name: $name) {
-    id
-    name
-  }
-}
+{% include ./html-components/AddUser.mutation.graphql | safe %}
 ```
 
 ```js playground-file html-components components.js
-import '@apollo-elements/components';
-import '@material/mwc-textfield';
-import '@material/mwc-linear-progress';
-import '@material/mwc-list';
-import '@material/mwc-button';
-
-import { ApolloClient, InMemoryCache, gql, TypedDocumentNode } from '@apollo/client/core';
-import { SchemaLink } from '@apollo/client/link/schema';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-
-// The JS down here is to simulate a GraphQL server,
-// You could just as easily set the `uri` attr on
-// the `<apollo-client>` element
-
-async function randomDelay(range = 2000) {
-  await new Promise(r => setTimeout(r, Math.floor(Math.random() * range)));
-}
-
-const USERS = [
-  { id: 1, name: 'Neil', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Neil_Armstrong_pose.jpg/1024px-Neil_Armstrong_pose.jpg?1623601441968' },
-  { id: 2, name: 'Buzz', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Buzz_Aldrin.jpg/1024px-Buzz_Aldrin.jpg?1623601483170' },
-  { id: 3, name: 'Michael', picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Michael_Collins_%28S69-31742%2C_restoration%29.jpg/1024px-Michael_Collins_%28S69-31742%2C_restoration%29.jpg?1623601522599' },
-];
-
-const nextID = () => (Math.max(...USERS.map(x => x.id)) ?? 0) + 1;
-
-document.querySelector('apollo-client').client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new SchemaLink({
-    schema: makeExecutableSchema({
-      resolvers: {
-        User: {
-          async picture({ name, picture }) {
-            return picture ?? await fetch(`https://ui-avatars.com/api/?background=random&name=${name.replace(/\s/g, '+')}`).then(r => r.url)
-          }
-        },
-        Query: {
-          async users() {
-            await randomDelay();
-            return USERS;
-          },
-        },
-        Mutation: {
-          async addUser(_, { name }) {
-            const user = { name, id: nextID() };
-            USERS.push(user);
-            await randomDelay();
-            return user;
-          },
-        },
-      },
-      typeDefs: `
-        type User {
-          id: ID!
-          name: String!
-          picture: String
-        }
-
-        type Query {
-          users: [User]
-        }
-
-        type Mutation {
-          addUser(name: String!): User
-        }
-      `
-    }),
-  }),
-});
+{% include ./html-components/components.js | safe %}
 ```
 
 ```html playground-file haunted-multiple-hooks index.html
-<healthy-snack></healthy-snack>
-<script type="module" src="query-hooks.js"></script>
+{% include ./healthy-snack/index.html | safe %}
 ```
 
-<style data-helmet>
-#haunted-multiple-hooks {
-  --playground-ide-height: 320px;
-}
-</style>
+```html playground-file hybrids-multiple-factories index.html
+{% include ./healthy-snack/index.html | safe %}
+```
 
 ```css playground-file haunted-multiple-hooks healthy-snack.css
-ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 36px;
-  gap: 8px;
-}
+{% include ./healthy-snack/healthy-snack.css | safe %}
+```
+
+```css playground-file hybrids-multiple-factories healthy-snack.css
+{% include ./healthy-snack/healthy-snack.css | safe %}
 ```
 
 ```js playground-file haunted-multiple-hooks Fruits.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const FruitsQuery = gql`{ fruits }`;
+export const FruitsQuery = gql`{% include ./healthy-snack/Fruits.query.graphql | safe %}`;
 ```
 
 ```js playground-file haunted-multiple-hooks Veggies.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const VeggiesQuery = gql`{ veggies }`;
+export const VeggiesQuery = gql`{% include ./healthy-snack/Veggies.query.graphql %}`;
+```
+
+```js playground-file hybrids-multiple-factories Fruits.query.graphql.js
+import { gql } from '@apollo/client/core';
+export const FruitsQuery = gql`{% include ./healthy-snack/Fruits.query.graphql | safe %}`;
+```
+
+```js playground-file hybrids-multiple-factories Veggies.query.graphql.js
+import { gql } from '@apollo/client/core';
+export const VeggiesQuery = gql`{% include ./healthy-snack/Veggies.query.graphql %}`;
 ```
 
 ```js playground-file haunted-multiple-hooks client.js
-import { ApolloClient, InMemoryCache, gql, TypedDocumentNode } from '@apollo/client/core';
-import { SchemaLink } from '@apollo/client/link/schema';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-
-export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new SchemaLink({
-    schema: makeExecutableSchema({
-      resolvers: {
-        Query: {
-          fruits: () => ['🍒', '🍎', '🍌', '🍑', '🥭', '🍍', '🥝', '🥑'],
-          veggies: () => ['🥬', '🥒', '🌽', '🥕', '🍠', '🍅', '🥦', '🥔'],
-        },
-      },
-      typeDefs: `
-        type Query {
-          fruits: [String]
-          veggies: [String]
-        }
-      `
-    }),
-  }),
-});
+{% include ./healthy-snack/client.js | safe %}
 ```
+
+```js playground-file hybrids-multiple-factories client.js
+{% include ./healthy-snack/client.js | safe %}
+```
+
+<style data-helmet>
+#hybrids-multiple-factories,
+#haunted-multiple-hooks {
+  --playground-ide-height: 320px;
+}
+</style>

@@ -51,4 +51,5 @@ docs/_data/customElementsManifests
 packages/*/docs/*.yml
 
 docs/_assets/_static/*.js
+docs/_assets/_static/**/*.d.ts
 docs/_assets/_static/*.js.map
