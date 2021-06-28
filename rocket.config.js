@@ -50,7 +50,7 @@ export default ({
 
   eleventy(eleventyConfig) {
     eleventyConfig.addWatchTarget('packages/components/*.ts');
-    eleventyConfig.addPassthroughCopy(`_assets/_static/**/*`);
+    eleventyConfig.addPassthroughCopy('docs/_assets/_static/**/*');
     eleventyConfig.setTemplateFormats([
       'md',
       'njk',
