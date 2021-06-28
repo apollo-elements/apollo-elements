@@ -1,0 +1,9 @@
+{
+  "name": "esbuild-plugin-monorepo-resolve",
+  "version": "0.0.0",
+  "private": true,
+  "main": "resolve.js",
+  "type": "module",
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC"
+}

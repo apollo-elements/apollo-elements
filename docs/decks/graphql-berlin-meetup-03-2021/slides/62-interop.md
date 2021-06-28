@@ -42,7 +42,7 @@ frameworkDemos:
           data-id="{{ demo.framework }}"
           data-synonyms="{{ demo.frameworkAlt }}"
           data-label="{{ demo.frameworkAlt }}"
-          data-icon-href="/_merged_assets/framework-logos/{{ demo.framework }}.svg">
+          data-icon-href="/_merged_assets/brand-logos/{{ demo.framework }}.svg">
       <codesandbox-button sandbox-id="{{ demo.sandboxId }}" module="{{ demo.module }}">
         <span slot="button" hidden></span>
       </codesandbox-button>

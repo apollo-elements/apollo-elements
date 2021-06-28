@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "1.0.0",
   "readme": "",
   "modules": [
     {
@@ -18,7 +18,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "apollo-client",
+              "default": "'apollo-client'",
               "readonly": true
             },
             {
@@ -28,7 +28,8 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
-              "summary": "Private reference to the `ApolloClient` instance"
+              "summary": "Private reference to the `ApolloClient` instance",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -262,6 +263,7 @@
             {
               "kind": "field",
               "name": "readyToReceiveDocument",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -278,6 +280,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -288,7 +291,8 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "summary": "Latest Data."
+              "summary": "Latest Data.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -296,7 +300,8 @@
               "type": {
                 "text": "ComponentDocument<D> | null"
               },
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`"
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -304,7 +309,8 @@
               "type": {
                 "text": "Error | ApolloError | null"
               },
-              "summary": "Latest error"
+              "summary": "Latest error",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -312,7 +318,8 @@
               "type": {
                 "text": "readonly GraphQLError[]"
               },
-              "summary": "Latest errors"
+              "summary": "Latest errors",
+              "default": "[]"
             },
             {
               "kind": "field",
@@ -320,7 +327,8 @@
               "type": {
                 "text": "Variables<D, V> | null"
               },
-              "summary": "Operation variables."
+              "summary": "Operation variables.",
+              "default": "null"
             },
             {
               "kind": "method",
@@ -469,6 +477,7 @@
             {
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "fieldName": "loading"
             },
             {
@@ -541,7 +550,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "apollo-mutation",
+              "default": "'apollo-mutation'",
               "readonly": true
             },
             {
@@ -658,7 +667,8 @@
               "type": {
                 "text": "HTMLElement | null"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -727,7 +737,8 @@
                 "text": "string|null"
               },
               "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
-              "summary": "key to wrap variables in e.g. `input`."
+              "summary": "key to wrap variables in e.g. `input`.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -735,12 +746,14 @@
               "type": {
                 "text": "number | null"
               },
-              "summary": "Optional number of milliseconds to wait between calls"
+              "summary": "Optional number of milliseconds to wait between calls",
+              "default": "null"
             },
             {
               "kind": "field",
               "name": "called",
               "summary": "Whether the mutation was called",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -751,7 +764,8 @@
               "type": {
                 "text": "null | ComponentDocument<D>"
               },
-              "summary": "The mutation."
+              "summary": "The mutation.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -776,12 +790,14 @@
                 "text": "Variables<D, V> | null"
               },
               "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-              "summary": "Mutation variables."
+              "summary": "Mutation variables.",
+              "default": "null"
             },
             {
               "kind": "field",
               "name": "ignoreResults",
               "summary": "If true, the returned data property will not update with the mutation result.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -790,6 +806,7 @@
               "kind": "field",
               "name": "awaitRefetchQueries",
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -816,7 +833,8 @@
               "type": {
                 "text": "RefetchQueriesType<D> | null"
               },
-              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return."
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+              "default": "null"
             },
             {
               "kind": "method",
@@ -1015,6 +1033,7 @@
             {
               "kind": "field",
               "name": "readyToReceiveDocument",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -1039,6 +1058,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -1054,6 +1074,7 @@
                 "text": "Data<D> | null"
               },
               "summary": "Latest Data.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1066,6 +1087,7 @@
                 "text": "ComponentDocument<D> | null"
               },
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1078,6 +1100,7 @@
                 "text": "Error | ApolloError | null"
               },
               "summary": "Latest error",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1090,6 +1113,7 @@
                 "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors",
+              "default": "[]",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1277,6 +1301,7 @@
             {
               "name": "await-refetch-queries",
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "default": "false",
               "fieldName": "awaitRefetchQueries"
             },
             {
@@ -1301,6 +1326,7 @@
                 "text": "RefetchQueriesType<D> | null"
               },
               "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+              "default": "null",
               "fieldName": "refetchQueries"
             },
             {
@@ -1310,6 +1336,7 @@
               },
               "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
               "summary": "key to wrap variables in e.g. `input`.",
+              "default": "null",
               "fieldName": "inputKey"
             },
             {
@@ -1338,16 +1365,19 @@
             {
               "name": "called",
               "summary": "Whether the mutation was called",
+              "default": "false",
               "fieldName": "called"
             },
             {
               "name": "ignore-results",
               "summary": "If true, the returned data property will not update with the mutation result.",
+              "default": "false",
               "fieldName": "ignoreResults"
             },
             {
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "fieldName": "loading",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -1387,7 +1417,8 @@
           "superclass": {
             "name": "ApolloElement"
           },
-          "tagName": "apollo-mutation"
+          "tagName": "apollo-mutation",
+          "customElement": true
         }
       ],
       "exports": [
@@ -1430,7 +1461,7 @@
               "kind": "field",
               "name": "is",
               "static": true,
-              "default": "apollo-query",
+              "default": "'apollo-query'",
               "readonly": true,
               "type": {
                 "text": "string"
@@ -1447,6 +1478,7 @@
               "kind": "field",
               "name": "canAutoSubscribe",
               "summary": "Flags an element that's ready and able to auto subscribe",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -1473,7 +1505,8 @@
               "type": {
                 "text": "null | ComponentDocument<D>"
               },
-              "summary": "A GraphQL document containing a single query."
+              "summary": "A GraphQL document containing a single query.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -1488,6 +1521,7 @@
               "name": "partial",
               "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
               "summary": "True when the query returned partial data.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -1521,6 +1555,7 @@
               "kind": "field",
               "name": "noAutoSubscribe",
               "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -1529,6 +1564,7 @@
               "kind": "field",
               "name": "notifyOnNetworkStatusChange",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -1700,6 +1736,7 @@
             {
               "kind": "field",
               "name": "readyToReceiveDocument",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -1724,6 +1761,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -1739,6 +1777,7 @@
                 "text": "Data<D> | null"
               },
               "summary": "Latest Data.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1751,6 +1790,7 @@
                 "text": "ComponentDocument<D> | null"
               },
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1763,6 +1803,7 @@
                 "text": "Error | ApolloError | null"
               },
               "summary": "Latest error",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1775,6 +1816,7 @@
                 "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors",
+              "default": "[]",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1787,6 +1829,7 @@
                 "text": "Variables<D, V> | null"
               },
               "summary": "Operation variables.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1939,6 +1982,7 @@
             {
               "name": "no-auto-subscribe",
               "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "default": "false",
               "fieldName": "noAutoSubscribe"
             },
             {
@@ -1996,11 +2040,13 @@
             {
               "name": "notify-on-network-status-change",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "default": "false",
               "fieldName": "notifyOnNetworkStatusChange"
             },
             {
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "fieldName": "loading",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -2040,7 +2086,8 @@
           "superclass": {
             "name": "ApolloElement"
           },
-          "tagName": "apollo-query"
+          "tagName": "apollo-query",
+          "customElement": true
         }
       ],
       "exports": [
@@ -2075,7 +2122,7 @@
               "kind": "field",
               "name": "is",
               "static": true,
-              "default": "apollo-subscription",
+              "default": "'apollo-subscription'",
               "readonly": true,
               "type": {
                 "text": "string"
@@ -2102,7 +2149,8 @@
               "type": {
                 "text": "null | ComponentDocument<D>"
               },
-              "summary": "A GraphQL document containing a single subscription."
+              "summary": "A GraphQL document containing a single subscription.",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -2116,6 +2164,7 @@
               "kind": "field",
               "name": "noAutoSubscribe",
               "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -2124,6 +2173,7 @@
               "kind": "field",
               "name": "notifyOnNetworkStatusChange",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -2132,6 +2182,7 @@
               "kind": "field",
               "name": "shouldResubscribe",
               "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -2140,6 +2191,7 @@
               "kind": "field",
               "name": "skip",
               "summary": "If true, the query will be skipped entirely",
+              "default": "false",
               "type": {
                 "text": "boolean"
               }
@@ -2217,6 +2269,7 @@
             {
               "kind": "field",
               "name": "readyToReceiveDocument",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -2241,6 +2294,7 @@
               "kind": "field",
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "type": {
                 "text": "boolean"
               },
@@ -2256,6 +2310,7 @@
                 "text": "Data<D> | null"
               },
               "summary": "Latest Data.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2268,6 +2323,7 @@
                 "text": "ComponentDocument<D> | null"
               },
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2280,6 +2336,7 @@
                 "text": "Error | ApolloError | null"
               },
               "summary": "Latest error",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2292,6 +2349,7 @@
                 "text": "readonly GraphQLError[]"
               },
               "summary": "Latest errors",
+              "default": "[]",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2304,6 +2362,7 @@
                 "text": "Variables<D, V> | null"
               },
               "summary": "Operation variables.",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2456,6 +2515,7 @@
             {
               "name": "no-auto-subscribe",
               "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "default": "false",
               "fieldName": "noAutoSubscribe"
             },
             {
@@ -2469,16 +2529,19 @@
             {
               "name": "notify-on-network-status-change",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "default": "false",
               "fieldName": "notifyOnNetworkStatusChange"
             },
             {
               "name": "should-resubscribe",
               "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "default": "false",
               "fieldName": "shouldResubscribe"
             },
             {
               "name": "skip",
               "summary": "If true, the query will be skipped entirely",
+              "default": "false",
               "fieldName": "skip"
             },
             {
@@ -2500,6 +2563,7 @@
             {
               "name": "loading",
               "summary": "Whether a request is in flight.",
+              "default": "false",
               "fieldName": "loading",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -2539,7 +2603,8 @@
           "superclass": {
             "name": "ApolloElement"
           },
-          "tagName": "apollo-subscription"
+          "tagName": "apollo-subscription",
+          "customElement": true
         }
       ],
       "exports": [
@@ -2601,7 +2666,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "will-mutate"
+              "default": "'will-mutate'"
             },
             {
               "kind": "field",
@@ -2631,7 +2696,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "mutation-completed"
+              "default": "'mutation-completed'"
             },
             {
               "kind": "field",
@@ -2661,7 +2726,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "will-navigate"
+              "default": "'will-navigate'"
             },
             {
               "kind": "field",
@@ -2691,7 +2756,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "mutation-error"
+              "default": "'mutation-error'"
             },
             {
               "kind": "field",

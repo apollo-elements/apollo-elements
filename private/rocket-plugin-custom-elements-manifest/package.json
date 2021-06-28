@@ -1,0 +1,11 @@
+{
+  "name": "rocket-plugin-custom-elements-manifest",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Custom Elements Manifest API Docs for Rocket",
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "files": ["*.js", "preset"],
+  "keywords": ["rocket", "preset", "custom elements manifest"]
+}

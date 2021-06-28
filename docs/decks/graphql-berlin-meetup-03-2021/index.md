@@ -64,8 +64,6 @@ codesandbox-button[show-demo] {
 </style>
 
 <script type="module">
-  import '@power-elements/codesandbox-button';
-
   document.getElementById('deck')
     .shadowRoot
     .appendChild(document.createElement('style'))

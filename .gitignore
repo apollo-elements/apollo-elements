@@ -17,7 +17,7 @@ packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 
-packages/test/schema.ts
+private/test/schema.ts
 packages/components/README.md
 
 packages/hybrids/factories/*.d.ts
@@ -50,6 +50,9 @@ docs/_data/customElementsManifests
 *.draft.md
 packages/*/docs/*.yml
 
-docs/_assets/_static/*.js
-docs/_assets/_static/**/*.d.ts
-docs/_assets/_static/*.js.map
+docs/_assets/_static/code-tabs
+docs/_assets/_static/custom-elements-manifest
+docs/_assets/_static/playground-elements
+docs/_assets/_static/webcomponents-dev
+docs/_assets/_static/apollo-elements
+docs/_assets/_static/slide-decks
