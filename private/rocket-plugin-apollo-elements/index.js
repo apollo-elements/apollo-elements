@@ -78,6 +78,8 @@ export function apolloElements() {
           ...Array.isArray(options.ignore) ? options.ignore : [options.ignore].filter(Boolean),
           '**/_assets/**/*.html',
           '**/_merged_assets/**/*.html',
+          '**/_assets/**/*.js',
+          '**/_merged_assets/**/*.js',
         ],
       })),
     ],
