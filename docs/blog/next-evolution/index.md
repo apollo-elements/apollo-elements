@@ -199,7 +199,7 @@ Apollo Elements next is available in prerelease on [npm](https://npm.im/@apollo-
 
 ```js playground-file multiple-controllers Users.css.js
 import { css } from 'lit';
-export const style = css`{% include ./multiple-controllers/Users.css | safe %}`;
+export const style = css`{% include ./_assets/multiple-controllers/Users.css | safe %}`;
 ```
 
 ```html playground-file multiple-controllers index.html
@@ -214,63 +214,63 @@ html, body {
 ```
 
 ```ts playground-file multiple-controllers graphql.documents.ts
-{% include ./multiple-controllers/graphql.documents.ts | safe %}
+{% include ./_assets/multiple-controllers/graphql.documents.ts | safe %}
 ```
 
 ```graphql playground-file html-components Users.query.graphql
-{% include ./html-components/Users.query.graphql | safe %}
+{% include ./_assets/html-components/Users.query.graphql | safe %}
 ```
 
 ```graphql playground-file html-components AddUser.mutation.graphql
-{% include ./html-components/AddUser.mutation.graphql | safe %}
+{% include ./_assets/html-components/AddUser.mutation.graphql | safe %}
 ```
 
 ```js playground-file html-components components.js
-{% include ./html-components/components.js | safe %}
+{% include ./_assets/html-components/components.js | safe %}
 ```
 
 ```html playground-file haunted-multiple-hooks index.html
-{% include ./healthy-snack/index.html | safe %}
+{% include ./_assets/healthy-snack/index.html | safe %}
 ```
 
 ```html playground-file hybrids-multiple-factories index.html
-{% include ./healthy-snack/index.html | safe %}
+{% include ./_assets/healthy-snack/index.html | safe %}
 ```
 
 ```css playground-file haunted-multiple-hooks healthy-snack.css
-{% include ./healthy-snack/healthy-snack.css | safe %}
+{% include ./_assets/healthy-snack/healthy-snack.css | safe %}
 ```
 
 ```css playground-file hybrids-multiple-factories healthy-snack.css
-{% include ./healthy-snack/healthy-snack.css | safe %}
+{% include ./_assets/healthy-snack/healthy-snack.css | safe %}
 ```
 
 ```js playground-file haunted-multiple-hooks Fruits.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const FruitsQuery = gql`{% include ./healthy-snack/Fruits.query.graphql | safe %}`;
+export const FruitsQuery = gql`{% include ./_assets/healthy-snack/Fruits.query.graphql | safe %}`;
 ```
 
 ```js playground-file haunted-multiple-hooks Veggies.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const VeggiesQuery = gql`{% include ./healthy-snack/Veggies.query.graphql %}`;
+export const VeggiesQuery = gql`{% include ./_assets/healthy-snack/Veggies.query.graphql %}`;
 ```
 
 ```js playground-file hybrids-multiple-factories Fruits.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const FruitsQuery = gql`{% include ./healthy-snack/Fruits.query.graphql | safe %}`;
+export const FruitsQuery = gql`{% include ./_assets/healthy-snack/Fruits.query.graphql | safe %}`;
 ```
 
 ```js playground-file hybrids-multiple-factories Veggies.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const VeggiesQuery = gql`{% include ./healthy-snack/Veggies.query.graphql %}`;
+export const VeggiesQuery = gql`{% include ./_assets/healthy-snack/Veggies.query.graphql %}`;
 ```
 
 ```js playground-file haunted-multiple-hooks client.js
-{% include ./healthy-snack/client.js | safe %}
+{% include ./_assets/healthy-snack/client.js | safe %}
 ```
 
 ```js playground-file hybrids-multiple-factories client.js
-{% include ./healthy-snack/client.js | safe %}
+{% include ./_assets/healthy-snack/client.js | safe %}
 ```
 
 <style data-helmet>

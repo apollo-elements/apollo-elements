@@ -25,12 +25,28 @@ const isShortFirstWord = compose(isShort, getFirstWordLength);
 const isLongTitle = isLong;
 const isShortTitle = and(isShort, not(isLongFirstWord));
 
+function getFont() {
+  const fontPath = path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.077.woff2');
+  const woff2Buffer = fs.readFileSync(fontPath);
+  return woff2base64({
+    'Recursive_VF_1.077.woff2': woff2Buffer,
+  }, {
+    fontFamily: 'Recursive',
+  });
+}
+
+const cssFonts = getFont();
+
 async function createPageSocialImage(options) {
+  const { s } = await import('hastscript');
+  const { toHtml } = await import('hast-util-to-html');
+
   const {
     category = '',
     subcategory = '',
     subtitle = '',
     title = '',
+    fontFace = '',
   } = options
 
   console.time(`Generate image ${title}`);
@@ -43,19 +59,9 @@ async function createPageSocialImage(options) {
 
   const templateBuffer = await fs.promises.readFile(templatePath);
 
-  const fontPath = path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.072.woff2');
-  const woff2Buffer = await fs.promises.readFile(fontPath);
-  const cssFonts = woff2base64({
-    'Recursive_VF_1.072.woff2': woff2Buffer,
-  }, {
-    fontFamily: 'Recursive',
-  });
-
   let template = templateBuffer.toString();
 
   const width = 592;
-
-  const {s} = await import('hastscript');
 
   const boxOpts = {
     createElement: s,
@@ -101,7 +107,6 @@ async function createPageSocialImage(options) {
     height: 100,
   });
 
-  const { toHtml } = await import('hast-util-to-html');
   const backToAngleBrackets = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   const titleSVG = toHtml(titleBox.linebreak(backToAngleBrackets(title)).render(), { space: 'svg' });
   const subtitleSVG = toHtml(subtitleBox.linebreak(backToAngleBrackets(subtitle)).render(), { space: 'svg' });
@@ -111,7 +116,7 @@ async function createPageSocialImage(options) {
     subcategory,
     titleSVG,
     subtitleSVG,
-    fontFace: cssFonts.woff2,
+    fontFace,
   });
 
   const filetype = 'png';
@@ -151,6 +156,7 @@ module.exports = {
         category,
         subcategory,
         subtitle,
+        fontFace: cssFonts.woff2,
         title: title ?? 'Apollo Elements',
       });
     }

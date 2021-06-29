@@ -76,8 +76,8 @@ export function codeTabs({ collections }) {
         ...options,
         specifiers: {
           ...options.specifiers,
-          'code-copy': '/_assets/_static/code-tabs/code-copy.js',
-          'code-tabs': '/_assets/_static/code-tabs/code-tabs.js',
+          'code-copy': '/_merged_assets/_static/code-tabs/code-copy.js',
+          'code-tabs': '/_merged_assets/_static/code-tabs/code-tabs.js',
         },
       })),
 

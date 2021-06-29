@@ -1,6 +1,5 @@
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 import helmet from 'eleventy-plugin-helmet';
-import path from 'path';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { buildComponents } from './build-components.js';
@@ -65,11 +64,22 @@ export function apolloElements() {
         ...options ?? {},
         specifiers: {
           ...options?.specifiers,
-          'codesandbox-button': '/_assets/_static/sandbox.js',
+          'codesandbox-button': '/_merged_assets/_static/sandbox.js',
           'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
         },
       })),
 
+    ],
+
+    setupBuildPlugins: [
+      adjustPluginOptions('html', options => ({
+        ...options,
+        ignore: [
+          ...Array.isArray(options.ignore) ? options.ignore : [options.ignore].filter(Boolean),
+          '**/_assets/**/*.html',
+          '**/_merged_assets/**/*.html',
+        ],
+      })),
     ],
 
     setupUnifiedPlugins: [

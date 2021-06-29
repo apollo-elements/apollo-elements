@@ -11,6 +11,7 @@ import { playgroundElementsEleventyPlugin } from './eleventy/playground-elements
 export function playgroundElements({ importMap }) {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+
     setupEleventyPlugins: [
 
       addPlugin({
@@ -33,7 +34,7 @@ export function playgroundElements({ importMap }) {
         ...options ?? {},
         specifiers: {
           ...options?.specifiers,
-          'docs-playground': '/_assets/_static/playground-elements/docs-playground.js',
+          'docs-playground': '/_merged_assets/_static/playground-elements/docs-playground.js',
         },
       })),
 
@@ -71,12 +72,6 @@ export function playgroundElements({ importMap }) {
 
       } ),
     ],
-
-    // setupBuildPlugins: [
-    //   adjustPluginOptions('import-meta-assets', {
-    //     exclude: '**/node_modules/playground-elements/*',
-    //   }),
-    // ],
 
   };
 }

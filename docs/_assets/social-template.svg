@@ -30,10 +30,10 @@
     <use stroke="url(#social-template-d)" stroke-width="500" xlink:href="#social-template-a"/>
     <use fill="#212121" xlink:href="#social-template-e"/>
     <use fill="url(#social-template-f)" fill-opacity=".12" xlink:href="#social-template-e" style="mix-blend-mode:multiply"/>
-    <text fill="#FFF" font-family="RecursiveMonoLnr-Light, Recursive" font-size="78" font-style="italic" font-weight="300">
+    <text fill="#FFF" font-family="Recursive" font-size="78" font-style="italic" font-weight="300">
       <tspan x="127" y="245">title</tspan>
     </text>
-    <text fill="#FFF" font-family="RecursiveMonoLnr-Light, Recursive" font-size="24" font-style="italic" font-weight="300">
+    <text fill="#FFF" font-family="Recursive" font-size="24" font-style="italic" font-weight="300">
       <tspan x="127" y="354">Apollo Elements</tspan>
     </text>
     <g fill-rule="nonzero" transform="translate(739 237)">

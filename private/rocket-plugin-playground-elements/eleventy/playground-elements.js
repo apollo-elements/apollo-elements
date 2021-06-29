@@ -22,6 +22,8 @@ const ESBUILD_BUNDLED_PLAYGROUND_PREVIEW =
 export async function playgroundElementsEleventyPlugin(eleventyConfig, { importMap }) {
   let shouldBundlePlayground = true;
   eleventyConfig.addPassthroughCopy('docs/_assets/_static/playground-elements/*');
+  eleventyConfig.addPassthroughCopy(`docs/_assets/_static/playground-elements/playground-service-worker-proxy.html`);
+
   eleventyConfig.on('beforeBuild', async function bundleComponents() {
     const time = process.hrtime();
     console.log(chalk.yellow`[playground-elements] ${chalk.blue`Building ${chalk.bold`<docs-playground>`}${shouldBundlePlayground ? ` and ${chalk.bold`<playground-ide>`}` : ''}...`}`);

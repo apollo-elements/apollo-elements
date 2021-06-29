@@ -11,8 +11,7 @@ const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)));
 const NS_PER_SEC = 1e9;
 
 export async function codeTabsEleventyPlugin(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy('docs/_assets/_static/code-copy.js');
-  eleventyConfig.addPassthroughCopy('docs/_assets/_static/code-tabs.js');
+  eleventyConfig.addPassthroughCopy('docs/_assets/_static/code-tabs/**/*');
   eleventyConfig.on('beforeBuild', async function bundleComponents() {
     console.log(chalk.yellow`[code-tabs] ${chalk.blue`Building ${chalk.bold`<code-tabs>`} and ${chalk.bold`<code-copy>`}...`}`);
     const time = process.hrtime();

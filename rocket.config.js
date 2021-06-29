@@ -187,6 +187,10 @@ export default ({
     }),
   ],
 
+  eleventy(eleventyConfig) {
+    eleventyConfig.addPassthroughCopy('docs/_assets/_static/**/*');
+  },
+
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
   devServer: {
@@ -206,25 +210,5 @@ export default ({
       esbuildPlugin({ ts: true }),
     ],
   },
-
-  // import esbuildRollup from 'rollup-plugin-esbuild';
-  // import { addPlugin } from 'plugins-manager';
-  // setupBuildPlugins: [
-  //   addPlugin({
-  //     name: 'esbuild-rollup',
-  //     plugin: esbuildRollup,
-  //     options: {
-  //       minify: false,
-  //       tsconfig: './packages/docs/tsconfig.json',
-  //       include: 'packages/docs/*',
-  //       sourceMap: true,
-  //       loaders: {
-  //         '.ts': 'ts',
-  //         '.css': 'ts',
-  //         '.graphql': 'ts',
-  //       },
-  //     },
-  //   }),
-  // ],
 
 });

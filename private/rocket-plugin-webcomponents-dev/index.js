@@ -60,7 +60,7 @@ export function webcomponentsDev() {
         ...options ?? {},
         specifiers: {
           ...options?.specifiers,
-          'wcd-snippet': '/_assets/_static/webcomponents-dev/wcd-snippet.js',
+          'wcd-snippet': '/_merged_assets/_static/webcomponents-dev/wcd-snippet.js',
         },
       })),
 
