@@ -211,7 +211,8 @@
             }
           ],
           "superclass": {
-            "name": "EventTarget"
+            "name": "EventTarget",
+            "module": "factories/controller.ts"
           }
         },
         {
