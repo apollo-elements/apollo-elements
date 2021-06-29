@@ -18,7 +18,7 @@ export async function bundleComponents() {
     sourcemap: true,
     format: 'esm',
     target: 'es2020',
-    outdir: 'docs/_assets/_static/custom-elements-manifest',
+    outdir: 'docs/_merged_assets/_static/custom-elements-manifest',
     entryPoints: {
       'type-doc': path.join(__dirname, '..', 'components', 'type-doc', 'type-doc.ts'),
       'json-viewer': '@power-elements/json-viewer',

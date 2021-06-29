@@ -170,7 +170,7 @@ function nonContent(blocks) {
 
 export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.on('beforeBuild', bundleComponents);
-  eleventyConfig.addPassthroughCopy('docs/_assets/_static/custom-elements-manifest/**/*');
+  eleventyConfig.addPassthroughCopy('**/_static/custom-elements-manifest/**/*');
   eleventyConfig.addPairedShortcode('markdown', markdown);
 
   eleventyConfig.addWatchTarget(`docs/_data/customElementsManifests/**/*.json`);

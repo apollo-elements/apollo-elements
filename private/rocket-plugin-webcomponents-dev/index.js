@@ -19,7 +19,7 @@ export function webcomponentsDev() {
       addPlugin({
         name: 'webcomponents-dev',
         plugin(eleventyConfig) {
-          eleventyConfig.addPassthroughCopy('docs/_assets/_static/webcomponents-dev/**/*');
+          eleventyConfig.addPassthroughCopy('**/_static/webcomponents-dev/**/*');
           eleventyConfig.on('beforeBuild', async function buildComponents() {
             console.log(chalk.yellow`[webcomponents-dev] ${chalk.blue`Building ${chalk.bold`<wcd-snippet>`}...`}`);
             const time = process.hrtime();
@@ -30,7 +30,7 @@ export function webcomponentsDev() {
               sourcemap: true,
               format: 'esm',
               target: 'es2020',
-              outdir: 'docs/_assets/_static/webcomponents-dev',
+              outdir: 'docs/_merged_assets/_static/webcomponents-dev',
               entryPoints: {
                 'wcd-snippet': path.join(__dirname, 'components', 'wcd-snippet', 'wcd-snippet.ts'),
               },

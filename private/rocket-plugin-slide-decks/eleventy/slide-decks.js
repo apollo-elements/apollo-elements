@@ -19,7 +19,7 @@ function getSlidesCollection(collectionApi) {
 }
 
 export function slideDecksPlugin(eleventyConfig, options) {
-  eleventyConfig.addPassthroughCopy('docs/_assets/_static/slide-decks/**/*');
+  eleventyConfig.addPassthroughCopy('**/_static/slide-decks/**/*');
   eleventyConfig.addFilter('dirname', pathname => pathname && path.dirname(pathname));
   eleventyConfig.addFilter('joinPath', (pathname, ...to) => path.join(pathname, ...to));
   eleventyConfig.addCollection('slides', getSlidesCollection);
@@ -34,7 +34,7 @@ export function slideDecksPlugin(eleventyConfig, options) {
       sourcemap: true,
       format: 'esm',
       target: 'es2020',
-      outdir: 'docs/_assets/_static/slide-decks',
+      outdir: 'docs/_merged_assets/_static/slide-decks',
       entryPoints: {
         'slidem': path.join(__dirname, '..', 'entrypoints', 'slidem.js'),
       },
