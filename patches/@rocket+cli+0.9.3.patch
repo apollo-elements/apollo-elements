@@ -1,59 +1,42 @@
+diff --git a/node_modules/@rocket/cli/dist-types/types/main.d.ts b/node_modules/@rocket/cli/dist-types/types/main.d.ts
+index 315b671..b4eeb8f 100644
+--- a/node_modules/@rocket/cli/dist-types/types/main.d.ts
++++ b/node_modules/@rocket/cli/dist-types/types/main.d.ts
+@@ -41,6 +41,8 @@ export interface RocketCliOptions {
+ 
+   start?: RocketStartConfig;
+ 
++  checkLinks: Partial<import('check-html-links/dist-types/types/main').CheckHtmlLinksCliOptions>;
++
+   // TODO: improve all setup functions
+   setupUnifiedPlugins?: function[];
+   setupDevAndBuildPlugins: function[];
+diff --git a/node_modules/@rocket/cli/src/RocketBuild.js b/node_modules/@rocket/cli/src/RocketBuild.js
+index b42ce7c..7f7e181 100755
+--- a/node_modules/@rocket/cli/src/RocketBuild.js
++++ b/node_modules/@rocket/cli/src/RocketBuild.js
+@@ -29,7 +29,7 @@ async function productionBuild(config) {
+       name: 'copy',
+       plugin: copy,
+       options: {
+-        patterns: ['!(*.md|*.html)*', '_merged_assets/_static/**/*.{png,gif,jpg,json,css,svg,ico}'],
++        patterns: ['!(*.md|*.html)*', '_merged_assets/_static/**/*'],
+         rootDir: config.outputDevDir,
+       },
+     }),
 diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
-index 9883cfb..121c303 100755
+index 9883cfb..0d9e396 100755
 --- a/node_modules/@rocket/cli/src/RocketLint.js
 +++ b/node_modules/@rocket/cli/src/RocketLint.js
-@@ -49,15 +49,27 @@ export class RocketLint {
-     }
+@@ -50,14 +50,16 @@ export class RocketLint {
  
      const checkLinks = new CheckHtmlLinksCli();
--    checkLinks.setOptions({
--      rootDir: this.config.lintInputDir,
--      printOnError: false,
--      continueOnError: true,
--    });
-+checkLinks.setOptions({
-+  rootDir: this.config.lintInputDir,
-+  printOnError: false,
-+  continueOnError: true,
-+  ignoreLinkPatterns: [
-+    '*/_merged_assets/_static/**/*',
-+    '*_merged_assets/_static/**/*',
-+    '../_merged_assets/_static/**/*',
-+    '../../_merged_assets/_static/**/*',
-+    '../../../_merged_assets/_static/**/*',
-+    '../../../../_merged_assets/_static/**/*',
-+    '../../../../../_merged_assets/_static/**/*',
-+    '../../../../../../_merged_assets/_static/**/*',
-+    '../../../../../../../_merged_assets/_static/**/*',
-+    '*/_merged_assets/_static/*',
-+    '*_merged_assets/_static/*',
-+    '../_merged_assets/_static/*',
-+    '../../_merged_assets/_static/*',
-+    '../../../_merged_assets/_static/*',
-+    '../../../../_merged_assets/_static/*',
-+    '../../../../../_merged_assets/_static/*',
-+    '../../../../../../_merged_assets/_static/*',
-+    '../../../../../../../_merged_assets/_static/*',
-+    '*/_merged_assets/_static/*/*',
-+    '*_merged_assets/_static/*/*',
-+    '../_merged_assets/_static/*/*',
-+    '../../_merged_assets/_static/*/*',
-+    '../../../_merged_assets/_static/*/*',
-+    '../../../../_merged_assets/_static/*/*',
-+    '../../../../../_merged_assets/_static/*/*',
-+    '../../../../../../_merged_assets/_static/*/*',
-+    '../../../../../../../_merged_assets/_static/*/*',
-+    '*/_merged_assets/_static/*/*/*',
-+    '*_merged_assets/_static/*/*/*',
-+    '../_merged_assets/_static/*/*/*',
-+    '../../_merged_assets/_static/*/*/*',
-+    '../../../_merged_assets/_static/*/*/*',
-+    '../../../../_merged_assets/_static/*/*/*',
-+    '../../../../../_merged_assets/_static/*/*/*',
-+    '../../../../../../_merged_assets/_static/*/*/*',
-+    '../../../../../../../_merged_assets/_static/*/*/*',
-+  ],
-+});
+     checkLinks.setOptions({
++      ...this.config.checkLinks,
+       rootDir: this.config.lintInputDir,
+       printOnError: false,
+       continueOnError: true,
+     });
  
      const { errors, message } = await checkLinks.run();
 +
@@ -76,3 +59,32 @@ index 6eddc9e..6847f35 100644
            images.push({
              presetName,
              attributes,
+diff --git a/node_modules/@rocket/cli/src/eleventy-plugins/rocketCopy.cjs b/node_modules/@rocket/cli/src/eleventy-plugins/rocketCopy.cjs
+index f062d16..4eb2932 100644
+--- a/node_modules/@rocket/cli/src/eleventy-plugins/rocketCopy.cjs
++++ b/node_modules/@rocket/cli/src/eleventy-plugins/rocketCopy.cjs
+@@ -1,6 +1,6 @@
+ const rocketCopy = {
+-  configFunction: (eleventyConfig, { _inputDirCwdRelative, filesExtensionsToCopy }) => {
+-    eleventyConfig.addPassthroughCopy(`${_inputDirCwdRelative}/**/*.{${filesExtensionsToCopy}}`);
++  configFunction: (eleventyConfig, { _inputDirCwdRelative }) => {
++    eleventyConfig.addPassthroughCopy(`${_inputDirCwdRelative}/**/*`);
+   },
+ };
+ 
+diff --git a/node_modules/@rocket/cli/src/shared/.eleventy.cjs b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
+index 881aa10..4eaa98c 100644
+--- a/node_modules/@rocket/cli/src/shared/.eleventy.cjs
++++ b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
+@@ -30,10 +30,7 @@ module.exports = function (eleventyConfig) {
+     {
+       name: 'rocket-copy',
+       plugin: rocketCopy,
+-      options: {
+-        _inputDirCwdRelative,
+-        filesExtensionsToCopy: 'png,gif,jpg,jpeg,svg,css,xml,json,js',
+-      },
++      options: { _inputDirCwdRelative },
+     },
+     {
+       name: 'eleventy-plugin-mdjs-unified',
