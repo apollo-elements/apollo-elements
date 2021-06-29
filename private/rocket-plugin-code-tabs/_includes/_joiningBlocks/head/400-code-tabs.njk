@@ -1,0 +1,25 @@
+<noscript>
+  <style>
+  code-copy:not(:defined),
+  code-tab:not(:defined) {
+    opacity: 1 !important;
+  }
+
+  code-tab:not(:defined) pre {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  code-tab:not(:defined)::before {
+    content: attr(data-label);
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 5px;
+    background: var(--markdown-table-row-odd-background-color);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-size: 13px;
+    width: calc(100% - 10px);
+  }
+  </style>
+</noscript>
