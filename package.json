@@ -22,7 +22,7 @@
     "docs": "run-s build:codegen docs:*",
     "docs:analyze": "yarn analyze",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
-    "docs:failsafe": "cpx 'docs/_merged_assets/_static/**/*' _site/_merged_assets/_static",
+    "docs:failsafe": "cpx 'docs/_merged_assets/**/*' _site/_merged_assets",
     "lint": "run-s lint:*",
     "lint:clean": "rimraf packages/gluon/declaration.d.ts",
     "lint:eslint": "eslint .",

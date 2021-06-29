@@ -17,7 +17,7 @@ import { rocketBlog } from '@rocket/blog';
 import { rocketLaunch } from '@rocket/launch';
 import { rocketSearch } from '@rocket/search';
 
-const IMPORT_MAP_BASE = `{{ORIGIN}}/_assets/_static/apollo-elements`;
+const IMPORT_MAP_BASE = `{{ORIGIN}}/_merged_assets/_static/apollo-elements`;
 
 /** @type {import('@rocket/cli/dist-types/types/main').RocketCliOptions} */
 export default ({
