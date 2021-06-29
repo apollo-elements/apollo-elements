@@ -11,7 +11,6 @@ import { icon } from './icon.js';
 import { linkTag } from './liquid/link.js';
 import { setupMarkdownDirectives } from 'rocket-plugin-markdown-directives';
 
-
 export function apolloElements() {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
@@ -34,19 +33,6 @@ export function apolloElements() {
           eleventyConfig.addLiquidTag('github', githubTag);
           eleventyConfig.addLiquidTag('dev', linkTag);
           /* end blog */
-        },
-      }),
-
-      addPlugin({
-        name: 'fix-noscript',
-        location: 'bottom',
-        plugin(eleventyConfig) {
-          // In some cases, 11ty is encoding `<noscript><link>`, in the `<head>`,
-          // even though that is legitimate HTML. This transform ensures the final
-          // HTML has noscript styles.
-          // NOTE: the double-encoding may be happening in node_modules/@rocket/cli/src/eleventy-plugins/processLocalReferences.cjs
-          eleventyConfig.addTransform('fix-noscript-style', content =>
-            content.replace(/<noscript>\s*&.*;link/g, '<noscript><link'));
         },
       }),
 

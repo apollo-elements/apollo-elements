@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="{{ '/_assets/custom-elements-manifest/type-doc.css' | asset | url }}">
+
+<noscript>
+  <style>
+  type-doc:not(:defined) {
+    opacity: 1 !important;
+  }
+
+  type-doc {
+    background-color: var(--markdown-syntax-background-color);
+    position: relative;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    display: block;
+    border-radius: 6px;
+    padding: 6px 12px;
+  }
+
+  type-doc :is([slot="name"], [slot="type"], [slot="attribute"]) {
+    display: inline-flex !important;
+  }
+
+  type-doc[data-empty-body] header {
+    border-radius: 6px;
+  }
+
+  type-doc type-doc {
+    margin-bottom: 0;
+    background: transparent;
+    padding: 0.3rem 0.8rem;
+  }
+  </style>
+</noscript>
