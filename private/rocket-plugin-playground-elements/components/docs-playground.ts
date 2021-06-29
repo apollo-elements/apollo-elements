@@ -30,7 +30,7 @@ export class DocsPlayground extends HTMLElement {
     return this.getAttribute('file') ?? 'index.html';
   }
 
-  playgroundUrl = '/_assets/_static/playground-elements/playground.js';
+  playgroundUrl = '/_merged_assets/_static/playground-elements/playground.js';
 
   attributeChangedCallback(name: string, _: string, next: string): void {
     switch (name) {
@@ -48,7 +48,7 @@ export class DocsPlayground extends HTMLElement {
     if (url)
       this.playgroundIde.setAttribute('sandbox-base-url', new URL(url, location.origin).toString());
     else
-      this.playgroundIde.setAttribute('sandbox-base-url', `${location.origin}/_assets/_static/playground-elements/`);
+      this.playgroundIde.setAttribute('sandbox-base-url', `${location.origin}/_merged_assets/_static/playground-elements/`);
     this.button.addEventListener('click', this.show);
   }
 

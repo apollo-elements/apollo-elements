@@ -496,7 +496,7 @@
               "type": {
                 "text": "Boolean|string"
               },
-              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
               "name": "'no-shadow'",
               "inheritedFrom": {
                 "name": "StampinoRender",
@@ -505,7 +505,8 @@
             }
           ],
           "superclass": {
-            "name": "StampinoRender"
+            "name": "StampinoRender",
+            "module": "/stampino-render.js"
           }
         }
       ],
@@ -529,7 +530,8 @@
           "description": "",
           "name": "WillMutateError",
           "superclass": {
-            "name": "Error"
+            "name": "Error",
+            "module": "apollo-mutation.ts"
           }
         },
         {
@@ -1400,7 +1402,7 @@
               "type": {
                 "text": "Boolean|string"
               },
-              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
               "name": "'no-shadow'",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -1415,7 +1417,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElement"
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
           },
           "tagName": "apollo-mutation",
           "customElement": true
@@ -2069,7 +2072,7 @@
               "type": {
                 "text": "Boolean|string"
               },
-              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
               "name": "'no-shadow'",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -2084,7 +2087,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElement"
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
           },
           "tagName": "apollo-query",
           "customElement": true
@@ -2586,7 +2590,7 @@
               "type": {
                 "text": "Boolean|string"
               },
-              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
               "name": "'no-shadow'",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -2601,7 +2605,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElement"
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
           },
           "tagName": "apollo-subscription",
           "customElement": true
@@ -2651,7 +2656,8 @@
             }
           ],
           "superclass": {
-            "name": "CustomEvent"
+            "name": "CustomEvent",
+            "module": "events.ts"
           }
         },
         {
@@ -2681,7 +2687,8 @@
             }
           ],
           "superclass": {
-            "name": "MutationEvent"
+            "name": "MutationEvent",
+            "module": "events.ts"
           }
         },
         {
@@ -2711,7 +2718,8 @@
             }
           ],
           "superclass": {
-            "name": "MutationEvent"
+            "name": "MutationEvent",
+            "module": "events.ts"
           }
         },
         {
@@ -2741,7 +2749,8 @@
             }
           ],
           "superclass": {
-            "name": "MutationEvent"
+            "name": "MutationEvent",
+            "module": "events.ts"
           }
         },
         {
@@ -2771,7 +2780,8 @@
             }
           ],
           "superclass": {
-            "name": "MutationEvent"
+            "name": "MutationEvent",
+            "module": "events.ts"
           }
         }
       ],
@@ -3098,12 +3108,13 @@
               "type": {
                 "text": "Boolean|string"
               },
-              "description": "- When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
+              "description": "When set, the element will render to a `<div>` in its light DOM. If set with a string, the string will be the div's class name.",
               "name": "'no-shadow'"
             }
           ],
           "superclass": {
-            "name": "ReactiveElement"
+            "name": "ReactiveElement",
+            "package": "@lit/reactive-element"
           },
           "tagName": ""
         }

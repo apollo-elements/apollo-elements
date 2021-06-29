@@ -739,7 +739,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloController"
+            "name": "ApolloController",
+            "module": "/apollo-controller.js"
           }
         }
       ],
@@ -1368,7 +1369,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloController"
+            "name": "ApolloController",
+            "module": "/apollo-controller.js"
           }
         }
       ],
@@ -1875,7 +1877,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloController"
+            "name": "ApolloController",
+            "module": "/apollo-controller.js"
           }
         }
       ],
@@ -2066,7 +2069,8 @@
             }
           ],
           "superclass": {
-            "name": "CustomEvent"
+            "name": "CustomEvent",
+            "module": "events.ts"
           }
         },
         {
@@ -2105,7 +2109,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloEvent"
+            "name": "ApolloEvent",
+            "module": "events.ts"
           },
           "summary": "Fired when an ApolloElement connects to or disconnects from the DOM"
         },
@@ -2132,7 +2137,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloEvent"
+            "name": "ApolloEvent",
+            "module": "events.ts"
           }
         },
         {
@@ -2171,7 +2177,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloControllerEvent"
+            "name": "ApolloControllerEvent",
+            "module": "events.ts"
           },
           "summary": "Fired when a controlled element connects to the DOM"
         },
@@ -2211,7 +2218,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloControllerEvent"
+            "name": "ApolloControllerEvent",
+            "module": "events.ts"
           },
           "summary": "Fired when a controlled element disconnects from the DOM"
         }
@@ -2766,7 +2774,8 @@
             }
           ],
           "superclass": {
-            "name": "ControllerHost"
+            "name": "ControllerHost",
+            "module": "types.ts"
           }
         },
         {
@@ -3313,7 +3322,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElementElement"
+            "name": "ApolloElementElement",
+            "module": "types.ts"
           }
         },
         {
@@ -3995,7 +4005,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElementElement"
+            "name": "ApolloElementElement",
+            "module": "types.ts"
           }
         },
         {
@@ -4566,7 +4577,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElementElement"
+            "name": "ApolloElementElement",
+            "module": "types.ts"
           }
         }
       ],

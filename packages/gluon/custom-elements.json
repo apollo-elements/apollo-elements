@@ -55,7 +55,9 @@
               "package": "@apollo-elements/mixins/apollo-element-mixin"
             }
           ],
-          "superclass": {},
+          "superclass": {
+            "module": "apollo-element.ts"
+          },
           "tagName": ""
         }
       ],
@@ -111,7 +113,9 @@
               "package": "@apollo-elements/mixins/apollo-mutation-mixin"
             }
           ],
-          "superclass": {},
+          "superclass": {
+            "module": "apollo-mutation.ts"
+          },
           "tagName": ""
         }
       ],
@@ -167,7 +171,9 @@
               "package": "@apollo-elements/mixins/apollo-query-mixin"
             }
           ],
-          "superclass": {},
+          "superclass": {
+            "module": "apollo-query.ts"
+          },
           "tagName": ""
         }
       ],
@@ -223,7 +229,9 @@
               "package": "@apollo-elements/mixins/apollo-subscription-mixin"
             }
           ],
-          "superclass": {},
+          "superclass": {
+            "module": "apollo-subscription.ts"
+          },
           "tagName": ""
         }
       ],

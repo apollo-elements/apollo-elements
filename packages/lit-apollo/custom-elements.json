@@ -112,7 +112,8 @@
             }
           ],
           "superclass": {
-            "name": "LitElement"
+            "name": "LitElement",
+            "package": "lit"
           },
           "customElement": true
         }
@@ -421,7 +422,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElement"
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
           },
           "events": [
             {
@@ -913,7 +915,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElement"
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
           },
           "events": [
             {
@@ -1274,7 +1277,8 @@
             }
           ],
           "superclass": {
-            "name": "ApolloElement"
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
           },
           "events": [
             {
