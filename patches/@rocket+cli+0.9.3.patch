@@ -37,10 +37,10 @@ index 9883cfb..121c303 100755
        } else {
          throw new Error(message);
 diff --git a/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs b/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs
-index 349831f..4a2f4e8 100644
+index 6eddc9e..6847f35 100644
 --- a/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs
 +++ b/node_modules/@rocket/cli/src/eleventy-plugins/insertResponsiveImages.cjs
-@@ -99,7 +99,7 @@ function getImages(html) {
+@@ -100,7 +100,7 @@ function getImages(html) {
          const src = getAttribute(data, 'src');
          const title = getAttribute(data, 'title');
          const alt = getAttribute(data, 'alt');
