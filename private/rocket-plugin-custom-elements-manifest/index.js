@@ -39,11 +39,22 @@ export function customElementsManifestAPIDocs({ typeLinks = undefined } = {}) {
         ...options ?? {},
         specifiers: {
           ...options?.specifiers,
-          'type-doc': '/_assets/_static/custom-elements-manifest/type-doc.js',
-          'json-viewer': '/_assets/_static/custom-elements-manifest/json-viewer.js',
+          'type-doc': '/_merged_assets/_static/custom-elements-manifest/type-doc.js',
+          'json-viewer': '/_merged_assets/_static/custom-elements-manifest/json-viewer.js',
         },
       })),
 
     ],
+
+    setupBuildPlugins: [
+      adjustPluginOptions('html', options => ({
+        ...options,
+        ignore: [
+          ...Array.isArray(options.ignore) ? options.ignore : [options.ignore].filter(Boolean),
+          '**/playground-service-worker-proxy.html',
+        ],
+      })),
+    ],
+
   };
 }
