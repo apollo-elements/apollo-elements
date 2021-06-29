@@ -11,7 +11,7 @@ const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)));
 const NS_PER_SEC = 1e9;
 
 export async function codeTabsEleventyPlugin(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy('docs/_assets/_static/code-tabs/**/*');
+  eleventyConfig.addPassthroughCopy('**/_static/code-tabs/**/*');
   eleventyConfig.on('beforeBuild', async function bundleComponents() {
     console.log(chalk.yellow`[code-tabs] ${chalk.blue`Building ${chalk.bold`<code-tabs>`} and ${chalk.bold`<code-copy>`}...`}`);
     const time = process.hrtime();
@@ -22,7 +22,7 @@ export async function codeTabsEleventyPlugin(eleventyConfig) {
       sourcemap: true,
       format: 'esm',
       target: 'es2020',
-      outdir: 'docs/_assets/_static/code-tabs',
+      outdir: 'docs/_merged_assets/_static/code-tabs',
       plugins: [litCssPlugin()],
       entryPoints: {
         'code-copy': path.join(__dirname, '..', 'components', 'code-copy.ts'),

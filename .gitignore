@@ -49,10 +49,3 @@ _site
 docs/_data/customElementsManifests
 *.draft.md
 packages/*/docs/*.yml
-
-docs/_assets/_static/code-tabs
-docs/_assets/_static/custom-elements-manifest
-docs/_assets/_static/playground-elements
-docs/_assets/_static/webcomponents-dev
-docs/_assets/_static/apollo-elements
-docs/_assets/_static/slide-decks

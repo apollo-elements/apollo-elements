@@ -19,10 +19,10 @@ export function apolloElements() {
       addPlugin({
         name: 'apollo-elements',
         plugin(eleventyConfig) {
+          console.log(eleventyConfig.ignores);
           eleventyConfig.on('beforeBuild', buildComponents);
           eleventyConfig.addWatchTarget('packages/components/*.ts');
-          eleventyConfig.addPassthroughCopy('docs/_assets/_static/sandbox.js');
-          eleventyConfig.addPassthroughCopy('docs/_assets/_static/apollo-elements/**/*');
+          eleventyConfig.addPassthroughCopy('**/_static/apollo-elements/**/*');
           eleventyConfig.setTemplateFormats(['md', 'njk']);
 
           eleventyConfig.addPlugin(helmet);
@@ -64,24 +64,20 @@ export function apolloElements() {
         ...options ?? {},
         specifiers: {
           ...options?.specifiers,
-          'codesandbox-button': '/_merged_assets/_static/sandbox.js',
           'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
+          'codesandbox-button': '/_merged_assets/_static/apollo-elements/sandbox.js',
         },
       })),
 
     ],
 
     setupBuildPlugins: [
-      adjustPluginOptions('html', options => ({
-        ...options,
-        ignore: [
-          ...Array.isArray(options.ignore) ? options.ignore : [options.ignore].filter(Boolean),
-          '**/_assets/**/*.html',
-          '**/_merged_assets/**/*.html',
-          '**/_assets/**/*.js',
-          '**/_merged_assets/**/*.js',
-        ],
-      })),
+      adjustPluginOptions('html', ({ exclude, ...options }) => ({ ...options, exclude: [
+        ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
+        '**/{_assets,_merged_assets}/**/*.{html,js}',
+        '**/_static/apollo-elements/**/*',
+        '**/_static/apollo-elements/*',
+      ] })),
     ],
 
     setupUnifiedPlugins: [

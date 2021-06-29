@@ -47,13 +47,10 @@ export function customElementsManifestAPIDocs({ typeLinks = undefined } = {}) {
     ],
 
     setupBuildPlugins: [
-      adjustPluginOptions('html', options => ({
-        ...options,
-        ignore: [
-          ...Array.isArray(options.ignore) ? options.ignore : [options.ignore].filter(Boolean),
-          '**/playground-service-worker-proxy.html',
-        ],
-      })),
+      adjustPluginOptions('html', ({ exclude, ...options }) => ({ ...options, exclude: [
+        ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
+        '**/playground-service-worker-proxy.html',
+      ] })),
     ],
 
   };

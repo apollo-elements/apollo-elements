@@ -1,6 +1,6 @@
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { addPlugin } from 'plugins-manager';
+import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { slideDecksPlugin } from './eleventy/slide-decks.js';
 
 /**
@@ -9,11 +9,21 @@ import { slideDecksPlugin } from './eleventy/slide-decks.js';
 export function slideDecks() {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+
     setupEleventyPlugins: [
       addPlugin({
         name: 'slide-decks',
         plugin: slideDecksPlugin,
       }),
     ],
+
+    setupBuildPlugins: [
+      adjustPluginOptions('html', ({ exclude, ...options }) => ({ ...options, exclude: [
+        ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
+        '**/slide-decks/**/*',
+        '**/slide-decks/*',
+      ] })),
+    ],
+
   };
 }

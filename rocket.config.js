@@ -187,10 +187,6 @@ export default ({
     }),
   ],
 
-  eleventy(eleventyConfig) {
-    eleventyConfig.addPassthroughCopy('docs/_assets/_static/**/*');
-  },
-
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
 
   devServer: {

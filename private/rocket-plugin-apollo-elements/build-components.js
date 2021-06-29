@@ -14,20 +14,21 @@ const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)));
  * @param  {import('esbuild').BuildOptions} opts
  */
 async function build(opts) {
-  await esbuild.build({
+  return await esbuild.build({
     bundle: true,
     minify: process.env.CI === 'true',
     sourcemap: true,
     format: 'esm',
     target: 'es2020',
-    outdir: 'docs/_assets/_static/apollo-elements',
+    outdir: 'docs/_merged_assets/_static/apollo-elements',
     ...opts,
     plugins: [
       resolvePlugin(/* { external: opts.external }*/),
       litCssPlugin(),
       graphqlLoaderPlugin(),
     ],
-  }).catch(() => {
+  }).catch(e => {
+    console.error(e);
     process.exit(1);
   });
 }
