@@ -21,6 +21,14 @@ const IMPORT_MAP_BASE = `{{ORIGIN}}/_merged_assets/_static/apollo-elements`;
 
 /** @type {import('@rocket/cli/dist-types/types/main').RocketCliOptions} */
 export default ({
+  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
+
+  checkLinks: {
+    ignoreLinkPatterns: [
+      '**/blog/*/_assets/**/*',
+    ],
+  },
+
   presets: [
     rocketLaunch(),
     rocketBlog(),
@@ -148,11 +156,16 @@ export default ({
     }),
 
     customElementsManifestAPIDocs({
+      typeLinksNewTab: true,
       typeLinks: {
         ApolloElementElement: '/api/core/interfaces/element/',
         ApolloMutationElement: '/api/core/interfaces/mutation/',
         ApolloQueryElement: '/api/core/interfaces/query/',
         ApolloSubscriptionElement: '/api/core/interfaces/subscription/',
+        ApolloControllerOptions: '/api/core/controllers/controller/#options',
+        ApolloQueryControllerOptions: '/api/core/controllers/query/#options',
+        ApolloMutationControllerOptions: '/api/core/controllers/mutation/#options',
+        ApolloSubscriptionControllerOptions: '/api/core/controllers/subscription/#options',
         OptimisticResponseType: '/api/core/interfaces/mutation/#optimisticresponse',
 
         Hybrids: 'https://hybrids.js.org/#/misc/typescript',
@@ -187,7 +200,14 @@ export default ({
     }),
   ],
 
-  absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
+  eleventy(eleventyConfig) {
+    eleventyConfig.addTransform('fix-noscript', content =>
+      content
+        .replace(/&#x26;#x3C;(link|style)/g, '<$1')
+        .replace(/&#x26;(link|style)/g, '<$1')
+        .replace(/&#x3C;(link|style)/g, '<$1')
+    );
+  },
 
   devServer: {
     port: 9048,

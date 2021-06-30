@@ -9,7 +9,6 @@
   opacity: 0;
 }
 
-.markdown-body code-copy:not(:defined), /* code-copy is fouc-safe */
 .markdown-body :not(a):defined {
   opacity: 1;
   transition: opacity 0.15s ease-in;

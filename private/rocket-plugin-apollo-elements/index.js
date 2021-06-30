@@ -18,10 +18,9 @@ export function apolloElements() {
       addPlugin({
         name: 'apollo-elements',
         plugin(eleventyConfig) {
-          console.log(eleventyConfig.ignores);
           eleventyConfig.on('beforeBuild', buildComponents);
           eleventyConfig.addWatchTarget('packages/components/*.ts');
-          eleventyConfig.addPassthroughCopy('**/_static/apollo-elements/**/*');
+          eleventyConfig.addPassthroughCopy('_merged_assets/_static/apollo-elements/**/*');
           eleventyConfig.setTemplateFormats(['md', 'njk']);
 
           eleventyConfig.addPlugin(helmet);

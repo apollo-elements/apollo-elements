@@ -20,8 +20,8 @@ export function customElementsManifestAPIDocs({ typeLinks = undefined } = {}) {
         name: 'custom-elements-manifest',
         plugin: customElementsManifest,
         options: {
+          typeLinks,
           imports: { keepExtension: false },
-          types: typeLinks,
         },
       }),
 

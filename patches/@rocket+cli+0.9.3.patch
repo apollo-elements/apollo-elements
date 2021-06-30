@@ -1,16 +1,3 @@
-diff --git a/node_modules/@rocket/cli/dist-types/types/main.d.ts b/node_modules/@rocket/cli/dist-types/types/main.d.ts
-index 315b671..b4eeb8f 100644
---- a/node_modules/@rocket/cli/dist-types/types/main.d.ts
-+++ b/node_modules/@rocket/cli/dist-types/types/main.d.ts
-@@ -41,6 +41,8 @@ export interface RocketCliOptions {
- 
-   start?: RocketStartConfig;
- 
-+  checkLinks: Partial<import('check-html-links/dist-types/types/main').CheckHtmlLinksCliOptions>;
-+
-   // TODO: improve all setup functions
-   setupUnifiedPlugins?: function[];
-   setupDevAndBuildPlugins: function[];
 diff --git a/node_modules/@rocket/cli/src/RocketBuild.js b/node_modules/@rocket/cli/src/RocketBuild.js
 index b42ce7c..7f7e181 100755
 --- a/node_modules/@rocket/cli/src/RocketBuild.js
@@ -25,21 +12,12 @@ index b42ce7c..7f7e181 100755
        },
      }),
 diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
-index 9883cfb..0d9e396 100755
+index 9883cfb..3769f36 100755
 --- a/node_modules/@rocket/cli/src/RocketLint.js
 +++ b/node_modules/@rocket/cli/src/RocketLint.js
-@@ -50,14 +50,16 @@ export class RocketLint {
- 
-     const checkLinks = new CheckHtmlLinksCli();
-     checkLinks.setOptions({
-+      ...this.config.checkLinks,
-       rootDir: this.config.lintInputDir,
-       printOnError: false,
-       continueOnError: true,
-     });
+@@ -57,7 +57,7 @@ export class RocketLint {
  
      const { errors, message } = await checkLinks.run();
-+
      if (errors.length > 0) {
 -      if (this.config.command === 'start') {
 +      if (this.config.command === 'start' || process.env.CI) {

@@ -19,7 +19,7 @@ function getSlidesCollection(collectionApi) {
 }
 
 export function slideDecksPlugin(eleventyConfig, options) {
-  eleventyConfig.addPassthroughCopy('**/_static/slide-decks/**/*');
+  eleventyConfig.addPassthroughCopy('_merged_assets/_static/slide-decks/**/*');
   eleventyConfig.addFilter('dirname', pathname => pathname && path.dirname(pathname));
   eleventyConfig.addFilter('joinPath', (pathname, ...to) => path.join(pathname, ...to));
   eleventyConfig.addCollection('slides', getSlidesCollection);

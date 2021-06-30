@@ -19,7 +19,7 @@ export function webcomponentsDev() {
       addPlugin({
         name: 'webcomponents-dev',
         plugin(eleventyConfig) {
-          eleventyConfig.addPassthroughCopy('**/_static/webcomponents-dev/**/*');
+          eleventyConfig.addPassthroughCopy('_merged_assets/_static/webcomponents-dev/**/*');
           eleventyConfig.on('beforeBuild', async function buildComponents() {
             console.log(chalk.yellow`[webcomponents-dev] ${chalk.blue`Building ${chalk.bold`<wcd-snippet>`}...`}`);
             const time = process.hrtime();

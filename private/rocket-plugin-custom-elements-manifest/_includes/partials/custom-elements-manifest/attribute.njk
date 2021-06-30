@@ -10,7 +10,7 @@
 
   {{ inheritance(attribute) }}
 
-  <span slot="type">{{ codeBlock(attribute.type | getTypeString) }}</span>
+  <span slot="type">{{ codeBlock(attribute.type | getTypeString) | linkToTypes | safe }}</span>
 
   {% if attribute.summary %}
     {% markdown %}{{ attribute.summary | safe }}{% endmarkdown %}

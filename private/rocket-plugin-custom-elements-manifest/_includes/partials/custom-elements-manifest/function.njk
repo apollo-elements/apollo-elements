@@ -26,7 +26,7 @@
   {% if declaration.return %}
     <type-doc kind="return">
       {{ linkHeading('Returns', prefix=declaration.name, slot='name', class=return) }}
-      <span slot="type">{{ codeBlock(declaration.return.type | getTypeString) }}</span>
+      <span slot="type">{{ codeBlock(declaration.return.type | getTypeString) | linkToTypes | safe }}</span>
       {% if declaration.return.summary %}
         {% markdown %}{{ declaration.return.summary | safe }}{% endmarkdown %}
       {% endif %}
