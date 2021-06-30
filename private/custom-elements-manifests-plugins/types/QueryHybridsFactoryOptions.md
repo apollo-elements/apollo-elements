@@ -1,6 +1,6 @@
 | Option | Type | Description |
 | ------ | ---- | ----------- |
-| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |
+| query | `DocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |
 | variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |
 | context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |
 | errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the query. See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |

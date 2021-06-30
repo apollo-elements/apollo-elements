@@ -9,6 +9,7 @@
   "files": ["*.js", "preset"],
   "keywords": ["rocket", "preset", "tabs"],
   "dependencies": {
-    "@pwrs/mixins": "0.2.0"
+    "@pwrs/mixins": "0.2.0",
+    "hirestime": "6.1.0"
   }
 }

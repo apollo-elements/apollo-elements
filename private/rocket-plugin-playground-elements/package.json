@@ -11,6 +11,7 @@
   "dependencies": {
     "@web/rollup-plugin-copy": "^0.3.0",
     "esbuild-plugin-replace": "^1.0.6",
+    "hirestime": "6.1.0",
     "playground-elements": "^0.9.4"
   }
 }

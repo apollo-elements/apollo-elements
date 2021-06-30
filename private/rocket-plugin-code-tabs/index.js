@@ -1,52 +1,19 @@
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
+import chalk from 'chalk';
+import esbuild from 'esbuild';
+import hirestime from 'hirestime';
 
-import { setupMarkdownDirectives } from 'rocket-plugin-markdown-directives';
-import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { dirname, join, resolve } from 'path';
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
+import { litCssPlugin } from 'esbuild-plugin-lit-css';
+import { markdownDirectives } from 'rocket-plugin-markdown-directives';
 import { codeTabsEleventyPlugin } from './eleventy/code-tabs.js';
-import { bundleComponents } from './bundle-components.js';
-
-export function createTab(tab, collections, { node, page, parent }) {
-  let idx = parent.children.findIndex(x => x === node);
-  while (parent.children[idx]?.type !== 'html')
-    idx--;
-
-  if (idx < 0 || !parent.children[idx])
-    throw new Error(`Could not find parent element for ${tab}. Make sure all tab directives are wrapped in a <code-tabs> element`);
-
-  const collectionName =
-    parent.children[idx]
-      .value
-      .match(/collection="(\w|-)+"/)[0]
-      ?.replace(/collection="(.*)"/, '$1');
-
-  const collection = collections.get(collectionName);
-
-  if (!collection)
-    throw new Error(`Could not find tab collection ${collectionName}`);
-
-  const tagName = 'code-tab';
-
-  if (!collection)
-    throw new Error(`Unknown collection for ${tab}`);
-
-  try {
-    const { id, label, iconHref } = collection.get(tab);
-    return {
-      tagName,
-      attributes: {
-        'data-id': id,
-        'data-icon-href': iconHref,
-        'data-label': label,
-      },
-    };
-  } catch {
-    throw new Error(`Could not get tab collection for ${tab}`);
-  }
-}
+import { createTab } from './lib/createTab.js';
 
 const dash = str => str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
+
+const path = resolve(dirname(fileURLToPath(import.meta.url)));
 
 /**
  * @return {Partial<import('@rocket/cli/dist-types/types/main').RocketPreset>}
@@ -58,8 +25,29 @@ export function codeTabs({ collections }) {
   ]));
 
   return {
-    path: resolve(dirname(fileURLToPath(import.meta.url))),
-    before11ty: bundleComponents,
+    path,
+    async before11ty() {
+      console.log(chalk.yellow`[code-tabs] ${chalk.blue`Building ${chalk.bold`<code-tabs>`} and ${chalk.bold`<code-copy>`}...`}`);
+      const time = hirestime.default();
+
+      await esbuild.build({
+        bundle: true,
+        minify: process.env.CI === 'true',
+        sourcemap: true,
+        format: 'esm',
+        target: 'es2020',
+        outdir: 'docs/_merged_assets/_static/code-tabs',
+        plugins: [litCssPlugin()],
+        entryPoints: {
+          'code-copy': join(path, 'components', 'code-copy.ts'),
+          'code-tabs': join(path, 'components', 'code-tabs.ts'),
+        },
+      }).catch(() => {
+        process.exit(1);
+      });
+
+      console.log(chalk.yellow`[code-tabs] ${chalk.green`Done in ${time.seconds()}s`}`);
+    },
     setupEleventyPlugins: [
       addPlugin({ name: 'code-tabs', plugin: codeTabsEleventyPlugin }),
 
@@ -87,7 +75,7 @@ export function codeTabs({ collections }) {
     setupUnifiedPlugins: [
       addPlugin({
         name: 'markdown-directives',
-        plugin: setupMarkdownDirectives,
+        plugin: markdownDirectives,
         location: 'top',
       }),
 

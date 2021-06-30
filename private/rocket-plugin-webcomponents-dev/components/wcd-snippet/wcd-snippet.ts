@@ -96,23 +96,23 @@ template.innerHTML = `
 `;
 
 export class WcdSnippet extends HTMLElement {
-  static get observedAttributes() {
+  static get observedAttributes(): string[] {
     return ['live', 'data-id', 'file'];
   }
+
+  declare iframe: HTMLIFrameElement;
+  declare button: HTMLButtonElement;
 
   constructor() {
     super();
     this.show = this.show.bind(this);
     this.attachShadow({ mode: 'open' }).append(template.content.cloneNode(true));
+    this.iframe = this.shadowRoot.querySelector('iframe') as HTMLIFrameElement;
+    this.button = this.shadowRoot.querySelector('button') as HTMLButtonElement;
     this.button.addEventListener('click', this.show);
   }
 
-  $(x: string) { return this.shadowRoot.querySelector(x); }
-
-  get iframe(): HTMLIFrameElement { return this.$('iframe') as HTMLIFrameElement; }
-  get button(): HTMLButtonElement { return this.$('button') as HTMLButtonElement; }
-
-  get url() {
+  get url(): URL {
     const { id } = this.dataset;
     const file = this.getAttribute('file');
     const url = new URL(`https://webcomponents.dev/edit/${id}`);
@@ -124,16 +124,16 @@ export class WcdSnippet extends HTMLElement {
     return url;
   }
 
-  attributeChangedCallback() {
+  attributeChangedCallback(): void {
     if (this.hasAttribute('live'))
       return this.load();
   }
 
-  show() {
+  show(): void {
     this.setAttribute('live', '');
   }
 
-  load() {
+  load(): void {
     const { title = 'Snippet' } = this.dataset;
     this.iframe.title = title;
     this.iframe.src = this.url.toString();

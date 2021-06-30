@@ -8,7 +8,7 @@
 | shouldResubscribe      | `boolean`{lang=ts}                          | Determines if your subscription should be unsubscribed and subscribed again |
 | shouldSubscribe        |                                             | Predicate which determines whether to automatically subscribe. See [shouldSubscribe](/api/core/interfaces/subscription/#shouldsubscribe) |
 | skip                   | `boolean`{lang=ts}                          | When true, the subscription will not fetch at all. |
-| subscription           | `DocumentNode | TypedDocumentNode`{lang=ts} | Subscription GraphQL Document |
+| subscription           | `DocumentNode`{lang=ts} | Subscription GraphQL Document |
 | variables              | `Variables<D, V>`{lang=ts}                  | Subscription variables |
 
 Inherits from [ApolloControllerOptions](/api/core/controllers/controller#options)

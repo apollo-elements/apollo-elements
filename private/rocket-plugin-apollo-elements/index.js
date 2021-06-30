@@ -1,20 +1,35 @@
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
+import chalk from 'chalk';
+import execa from 'execa';
 import helmet from 'eleventy-plugin-helmet';
+import hirestime from 'hirestime';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
-import { buildComponents } from './build-components.js';
-import { dirname, resolve } from 'path';
+import { buildComponents } from './lib/build-components.js';
+import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { getWebmentionsForUrl } from './webmentions.js';
 import { githubTag } from './liquid/github.js';
-import { icon } from './icon.js';
+import { icon } from './lib/icon.js';
 import { linkTag } from './liquid/link.js';
-import { setupMarkdownDirectives } from 'rocket-plugin-markdown-directives';
+import { markdownDirectives } from 'rocket-plugin-markdown-directives';
+
+const path = resolve(dirname(fileURLToPath(import.meta.url)));
 
 export function apolloElements() {
   return {
-    path: resolve(dirname(fileURLToPath(import.meta.url))),
-    before11ty: buildComponents,
+    path,
+    async before11ty() {
+      console.log(chalk.yellow`[apollo-elements] ${chalk.blue`Analyzing ${chalk.bold`Apollo Elements`} packages...`}`);
+      const atime = hirestime.default();
+      console.log(chalk.yellow`[apollo-elements] ${chalk.green`Done in ${atime.seconds()}s`}`);
+      await execa('yarn', ['analyze']);
+
+      console.log(chalk.yellow`[apollo-elements] ${chalk.blue`Building ${chalk.bold`Apollo Elements`} packages...`}`);
+      const btime = hirestime.default();
+      await buildComponents();
+      console.log(chalk.yellow`[apollo-elements] ${chalk.green`Done in ${btime.seconds()}s`}`);
+    },
     setupEleventyPlugins: [
       addPlugin({
         name: 'apollo-elements',
@@ -66,7 +81,7 @@ export function apolloElements() {
     ],
 
     setupUnifiedPlugins: [
-      addPlugin({ name: 'markdown-directives', plugin: setupMarkdownDirectives, location: 'top' }),
+      addPlugin({ name: 'markdown-directives', plugin: markdownDirectives, location: 'top' }),
       adjustPluginOptions('markdown-directives', {
         'reveal': () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
         'center': () => ({ tagName: 'div', attributes: { center: 'true' } }),

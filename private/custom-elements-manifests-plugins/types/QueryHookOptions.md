@@ -11,7 +11,7 @@
 | onError | See [`onError`](/api/core/interfaces/query/#onerror) | Callback for when an error occurs. |
 | partialRefetch | `boolean`{lang=ts} | See [`partialRefetch`](/api/core/interfaces/query/#partialrefetch) |
 | pollInterval | `number`{lang=ts} | See [`pollInterval`](/api/core/interfaces/query/#pollinterval) |
-| query | `DocumentNode | TypedDocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |
+| query | `DocumentNode`{lang=ts} | A GraphQL document that consists of a single query to be sent down to the server. |
 | returnPartialData | `boolean`{lang=ts} | See [`returnPartialData`](/api/core/interfaces/query/#returnpartialdata) |
 | shouldSubscribe | See [`shouldSubscribe`](/api/core/interfaces/query/#shouldsubscribe) | Predicate which determines whether or not to automatically subscribe |
 | variables | `Variables<D, V>`{lang=ts} | A map going from variable name to variable value, where the variables are used within the GraphQL query. |

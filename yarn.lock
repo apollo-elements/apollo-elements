@@ -8649,6 +8649,11 @@ header-case@^2.0.4:
     capital-case "^1.0.4"
     tslib "^2.0.3"
 
+hirestime@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/hirestime/-/hirestime-6.1.0.tgz#10bb2041cb9caffbfe7cf12a26ac38c0c9f42ee3"
+  integrity sha512-sCVxYT/2iSUanrRuiUspZaF78crKojzmVz2mI+gjq1/N+7RPCyZu8S0KyBlE4O+Aq/YmtTzJWGxLxByZvCiKPA==
+
 hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
