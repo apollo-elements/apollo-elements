@@ -9,6 +9,7 @@
   "files": ["*.js", "preset"],
   "keywords": ["rocket", "preset", "slides"],
   "dependencies": {
+    "hirestime": "6.1.0",
     "slidem": "^1.2.8"
   }
 }

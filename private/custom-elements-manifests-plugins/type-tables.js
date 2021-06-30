@@ -88,7 +88,11 @@ function replaceDescriptionUsingTables(moduleDoc, member) {
 
     const { description: orig } = member;
 
-    member.description = (orig ? `${orig}\n\n` : '') + (typeDescription);
+    member.description =
+      (orig ? `${orig}\n\n` : '') +
+      // herefollows lame attempt to deal with ts unions in markdown tables.
+      // typeDescription.replace(/`(\w+) \\\|/g, '$1 \\|');
+      typeDescription;
 
     if (member.description !== orig)
       console.log(chalk.blue`Replaced description for ${chalk.bold(foundMemberTypeName)} in ${moduleDoc.path}`);

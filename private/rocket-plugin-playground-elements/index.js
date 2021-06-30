@@ -4,7 +4,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { playgroundElementsEleventyPlugin } from './eleventy/playground-elements.js';
-import { bundleComponents } from './bundle-components.js';
+import { bundleComponents } from './lib/bundle-components.js';
 
 /**
  * @return {Partial<import('@rocket/cli/dist-types/types/main').RocketPreset>}

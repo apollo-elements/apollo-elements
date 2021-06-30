@@ -1,5 +1,3 @@
-/* eslint-disable easy-loops/easy-loops */
-
 import { visit } from 'unist-util-visit';
 
 function toAttr(attr, value) {
@@ -10,9 +8,10 @@ function toAttr(attr, value) {
   );
 }
 
-export function setupMarkdownDirectives({ page, rocketConfig, ...config }) {
+export function markdownDirectives({ page, rocketConfig, ...config }) {
   return function transformer(tree, file, next) {
     visit(tree, 'code', function markdownDirectives(node, index, parent) {
+      // eslint-disable-next-line easy-loops/easy-loops
       for (const [command, fn] of Object.entries(config)) {
         if (typeof node.meta === 'string') {
           const [directive, ...args] = node.meta

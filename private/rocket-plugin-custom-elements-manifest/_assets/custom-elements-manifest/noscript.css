@@ -3,13 +3,41 @@ type-doc {
   position: relative;
   max-width: 100%;
   margin-bottom: 1rem;
-  display: block;
   border-radius: 6px;
   padding: 6px 12px;
+  display: grid;
+  grid-template: 'name type' 'inheritance inheritance' 'content content' auto / min-content 1fr;
+  overflow: hidden;
 }
 
-type-doc :is([slot="name"], [slot="type"], [slot="attribute"]) {
+type-doc[kind="method"],
+type-doc[kind="property"] {
+  position: relative;
+}
+
+type-doc[kind="method"]::before,
+type-doc[kind="property"]::before {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 0;
+  background: var(--markdown-table-row-odd-background-color);
+  right: 0;
+  left: 0;
+  height: 37px;
+}
+
+type-doc :is([slot="name"], [slot="type"], [slot="attribute"], [slot="inheritance"]) {
   display: inline-flex !important;
+}
+
+type-doc[data-empty-body] {
+  padding-bottom: 0;
+}
+
+type-doc[data-empty-body][kind="method"]::before,
+type-doc[data-empty-body][kind="property"]::before {
+  height: 100%;
 }
 
 type-doc[data-empty-body] header {
@@ -24,4 +52,43 @@ type-doc type-doc {
 
 type-doc:not(:defined) {
   opacity: 1 !important;
+}
+
+type-doc > [slot="name"],
+type-doc > [slot="type"],
+type-doc > [slot="inheritance"] {
+  background: var(--markdown-table-row-odd-background-color);
+  position: relative;
+  padding: 0 12px 6px 0;
+  z-index: 1;
+}
+
+type-doc > [slot="inheritance"] {
+  grid-area: inheritance;
+  width: calc(100% + 24px);
+  left: -12px;
+  padding: 6px 12px;
+}
+
+type-doc > [slot="name"] {
+  border-top-left-radius: 6px;
+  width: max-content;
+}
+
+type-doc > [slot="type"] {
+  border-top-right-radius: 6px;
+  grid-area: type;
+  align-items: center;
+}
+
+type-doc[kind="parameter"] > :is([slot="name"], [slot="type"]) {
+  background: none;
+}
+
+type-doc[kind="return"] :is([slot="type"], [slot="name"]) {
+  background: none;
+}
+
+type-doc [slot="type"]::before {
+  content: 'type:';
 }

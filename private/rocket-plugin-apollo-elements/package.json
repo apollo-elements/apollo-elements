@@ -11,6 +11,7 @@
   "dependencies": {
     "@graphql-tools/schema": "^7.1.5",
     "@graphql-tools/utils": "^7.10.0",
-    "@power-elements/codesandbox-button": "0.0.8"
+    "@power-elements/codesandbox-button": "0.0.8",
+    "hirestime": "6.1.0"
   }
 }
