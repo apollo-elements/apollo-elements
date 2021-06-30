@@ -2,6 +2,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { slideDecksPlugin } from './eleventy/slide-decks.js';
+import { bundleComponents } from './bundle-components.js';
 
 /**
  * @return {Partial<import('@rocket/cli/dist-types/types/main').RocketPreset>}
@@ -9,6 +10,8 @@ import { slideDecksPlugin } from './eleventy/slide-decks.js';
 export function slideDecks() {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+
+    before11ty: bundleComponents,
 
     setupEleventyPlugins: [
       addPlugin({

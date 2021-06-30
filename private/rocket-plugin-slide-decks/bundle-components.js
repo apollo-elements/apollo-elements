@@ -1,8 +1,8 @@
 import path from 'path';
 import esbuild from 'esbuild';
 import chalk from 'chalk';
+
 import { fileURLToPath } from 'url';
-import { litCssPlugin } from 'esbuild-plugin-lit-css';
 
 const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -10,7 +10,7 @@ const NS_PER_SEC = 1e9;
 
 export async function bundleComponents() {
   const time = process.hrtime();
-  console.log(chalk.yellow`[custom-elements-manifest] ${chalk.blue`Building ${chalk.bold`<type-doc>`} and ${chalk.bold`<json-viewer>`}...`}`);
+  console.log(chalk.yellow`[slide-decks] ${chalk.blue`Building ${chalk.bold`<slidem-deck>`} and ${chalk.bold`<slidem-slide>`}...`}`);
 
   await esbuild.build({
     bundle: true,
@@ -18,12 +18,10 @@ export async function bundleComponents() {
     sourcemap: true,
     format: 'esm',
     target: 'es2020',
-    outdir: 'docs/_merged_assets/_static/custom-elements-manifest',
+    outdir: 'docs/_merged_assets/_static/slide-decks',
     entryPoints: {
-      'type-doc': path.join(__dirname, '..', 'components', 'type-doc', 'type-doc.ts'),
-      'json-viewer': '@power-elements/json-viewer',
+      'slidem': path.join(__dirname, 'entrypoints', 'slidem.js'),
     },
-    plugins: [litCssPlugin()],
   }).catch(() => {
     process.exit(1);
   });
@@ -31,5 +29,5 @@ export async function bundleComponents() {
   const [s, ns] = process.hrtime(time);
   const durationNs = s * NS_PER_SEC + ns;
 
-  console.log(chalk.yellow`[custom-elements-manifest] ${chalk.green`Done in ${durationNs / NS_PER_SEC}s`}`);
+  console.log(chalk.yellow`[slide-decks] ${chalk.green`Done in ${durationNs / NS_PER_SEC}s`}`);
 }

@@ -11,6 +11,19 @@ index b42ce7c..7f7e181 100755
          rootDir: config.outputDevDir,
        },
      }),
+diff --git a/node_modules/@rocket/cli/src/RocketCli.js b/node_modules/@rocket/cli/src/RocketCli.js
+index a7f8d44..5fff5cc 100644
+--- a/node_modules/@rocket/cli/src/RocketCli.js
++++ b/node_modules/@rocket/cli/src/RocketCli.js
+@@ -31,6 +31,8 @@ export class RocketEleventy extends Eleventy {
+ 
+   async write() {
+     await this.__rocketCli.mergePresets();
++    for (const fn of this.__rocketCli.config.__before11tyFunctions)
++      await fn();
+     await super.write();
+     await this.__rocketCli.update();
+   }
 diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
 index 9883cfb..3769f36 100755
 --- a/node_modules/@rocket/cli/src/RocketLint.js
@@ -50,6 +63,32 @@ index f062d16..4eb2932 100644
    },
  };
  
+diff --git a/node_modules/@rocket/cli/src/normalizeConfig.js b/node_modules/@rocket/cli/src/normalizeConfig.js
+index 1cc9927..7a8e2f7 100644
+--- a/node_modules/@rocket/cli/src/normalizeConfig.js
++++ b/node_modules/@rocket/cli/src/normalizeConfig.js
+@@ -142,6 +142,10 @@ export async function normalizeConfig(inConfig) {
+     if (preset.setupCliPlugins) {
+       config.setupCliPlugins = [...config.setupCliPlugins, ...preset.setupCliPlugins];
+     }
++
++    if (typeof preset.before11ty === 'function') {
++      config.__before11tyFunctions.push(preset.before11ty)
++    }
+   }
+   // add "local" preset
+   config._presetPathes.push(path.resolve(_inputDirCwdRelative));
+@@ -169,6 +173,10 @@ export async function normalizeConfig(inConfig) {
+     plugins.push(pluginInst);
+   }
+ 
++  if (typeof config.before11ty === 'function') {
++    config.__before11tyFunctions.push(config.before11ty)
++  }
++
+   // TODO: check pathPrefix to NOT have a '/' at the end as it will mean it may get ignored by 11ty 🤷‍♂️
+ 
+   return {
 diff --git a/node_modules/@rocket/cli/src/shared/.eleventy.cjs b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
 index 881aa10..4eaa98c 100644
 --- a/node_modules/@rocket/cli/src/shared/.eleventy.cjs

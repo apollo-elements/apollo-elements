@@ -5,6 +5,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { customElementsManifest } from './eleventy/custom-elements-manifest.js';
+import { bundleComponents } from './bundle-components.js';
 
 /**
  * @return {Partial<import('@rocket/cli/dist-types/types/main').RocketPreset>}
@@ -12,6 +13,7 @@ import { customElementsManifest } from './eleventy/custom-elements-manifest.js';
 export function customElementsManifestAPIDocs({ typeLinks = undefined } = {}) {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+    before11ty: bundleComponents,
     setupEleventyPlugins: [
 
       addPlugin({ name: 'footnotes', plugin: footnotes }),
