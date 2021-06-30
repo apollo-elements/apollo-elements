@@ -26,7 +26,10 @@ export function copyPlugin(configUrl) {
 
       const { name } = readJSONSync(pkgJsonPath);
 
-      const { pathname: to } = new URL(`../../../docs/_data/customElementsManifests/${name}/`, import.meta.url);
+      // TODO: get package root here.
+      const { pathname: to } = new URL(`../../docs/_data/customElementsManifests/${name}/`, import.meta.url);
+
+      console.log(to);
 
       fs.mkdirSync(to, { recursive: true });
 
