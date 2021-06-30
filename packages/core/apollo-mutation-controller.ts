@@ -12,7 +12,6 @@ import type {
 
 import type {
   ApolloError,
-  ErrorPolicy,
   FetchPolicy,
   FetchResult,
   MutationOptions,
@@ -33,15 +32,12 @@ export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerO
   refetchQueries?: RefetchQueriesType<D> | null,
   context?: Record<string, unknown>,
   optimisticResponse?: OptimisticResponseType<D, V>,
-  errorPolicy?: ErrorPolicy;
   fetchPolicy?: Extract<FetchPolicy, 'no-cache'>,
   awaitRefetchQueries?: boolean,
+  ignoreResults?: boolean,
   onCompleted?(data: Data<D>|null): void,
   onError?(error: Error): void,
-  update?(
-    ...p: Parameters<MutationUpdaterFn<Data<D>>>
-  ): ReturnType<MutationUpdaterFn<Data<D>>>,
-  ignoreResults?: boolean,
+  update?(...p: Parameters<MutationUpdaterFn<Data<D>>>): ReturnType<MutationUpdaterFn<Data<D>>>,
 }
 
 export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>

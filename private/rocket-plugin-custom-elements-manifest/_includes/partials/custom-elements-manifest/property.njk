@@ -23,7 +23,7 @@
     {% endfor %}
   {% endif %}
 
-  <span slot="type">{{ codeBlock(property.type | getTypeString) }}</span>
+  <span slot="type">{{ codeBlock(property.type | getTypeString) | linkToTypes | safe }}</span>
 
   {% if property.summary %}
     {% markdown %}{{ property.summary | safe }}{% endmarkdown %}

@@ -26,7 +26,7 @@
     {% for param in method.parameters %}
       <type-doc kind="parameter" data-parameter="{{ param.name }}">
         <h4 slot="name">{{ param.name }}</h4>
-        <span slot="type">{{ codeBlock(param.type | getTypeString) }}</span>
+        <span slot="type">{{ codeBlock(param.type | getTypeString) | linkToTypes | safe }}</span>
         {% if param.summary %}
           {% markdown %}{{ param.summary | safe }}{% endmarkdown %}
         {% endif %}
@@ -40,7 +40,7 @@
   {% if method.return %}
     <type-doc kind="return">
       {{ linkHeading('Returns', prefix=method.name, slot='name', class=return) }}
-      <span slot="type">{{ codeBlock(method.return.type | getTypeString) }}</span>
+      <span slot="type">{{ codeBlock(method.return.type | getTypeString) | linkToTypes | safe }}</span>
       {% if method.return.summary %}
         {% markdown %}{{ method.return.summary | safe }}{% endmarkdown %}
       {% endif %}

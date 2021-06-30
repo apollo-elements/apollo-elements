@@ -1,4 +1,3 @@
-/* eslint-env node */
 /* eslint-disable easy-loops/easy-loops */
 
 import { visit } from 'unist-util-visit';
@@ -9,14 +8,6 @@ function toAttr(attr, value) {
     : value === true ? attr
     : `${attr}="${value}"`
   );
-}
-
-/**
- * @param  {import('unist').Node}  node
- * @return {node is import('unist').Node & { meta: string }}
- */
-function hasMeta(node) {
-  return !!node.meta;
 }
 
 export function setupMarkdownDirectives({ page, rocketConfig, ...config }) {

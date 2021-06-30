@@ -21,7 +21,7 @@ const ESBUILD_BUNDLED_PLAYGROUND_PREVIEW =
 
 export async function playgroundElementsEleventyPlugin(eleventyConfig, { importMap }) {
   let shouldBundlePlayground = true;
-  eleventyConfig.addPassthroughCopy('**/_static/playground-elements/*');
+  eleventyConfig.addPassthroughCopy('_merged_assets/_static/playground-elements/*');
   eleventyConfig.addPassthroughCopy(`_merged_assets/_static/playground-elements/playground-service-worker-proxy.html`);
 
   eleventyConfig.on('beforeBuild', async function bundleComponents() {
@@ -56,17 +56,9 @@ export async function playgroundElementsEleventyPlugin(eleventyConfig, { importM
     shouldBundlePlayground = null;
 
     const OUT = 'docs/_merged_assets/_static/playground-elements/';
-    // const SITE = '_site/_merged_assets/_static/playground-elements/';
-    // const DEV = '_site-dev/_merged_assets/_static/playground-elements/';
-
-    // eslint-disable-next-line easy-loops/easy-loops
-    // for (const base of [OUT, DEV, SITE]) {
-    for (const base of [OUT]) {
-      await mkdirp(base);
-      copySync('node_modules/playground-elements/playground-service-worker-proxy.html', base);
-      copySync('node_modules/playground-elements/playground-service-worker.js', base);
-      copySync('node_modules/playground-elements/playground-typescript-worker.js', base);
-    }
+    copySync('node_modules/playground-elements/playground-service-worker-proxy.html', OUT);
+    copySync('node_modules/playground-elements/playground-service-worker.js', OUT);
+    copySync('node_modules/playground-elements/playground-typescript-worker.js', OUT);
 
     const [s, ns] = process.hrtime(time);
     const durationNs = s * NS_PER_SEC + ns;

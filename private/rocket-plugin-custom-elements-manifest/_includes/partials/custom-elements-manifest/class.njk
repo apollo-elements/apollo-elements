@@ -119,7 +119,7 @@
       {% for event in (events | sortClassMembers) %}
         <tr>
           <td>{{ event.name }}</td>
-          <td>{{ codeBlock(event.type.text) }}</td>
+          <td>{{ codeBlock(event.type.text) | linkToTypes | safe }}</td>
           <td>{% markdown %}{{ event.description | safe }}{% endmarkdown %}</td>
         </tr>
       {% endfor %}

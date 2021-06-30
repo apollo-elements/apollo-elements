@@ -2,8 +2,8 @@ import githubUrl from 'get-github-url';
 
 import { join } from 'path';
 import { markdown } from './markdown.js';
-import { externalTypeLinks } from './link-to-type.js';
 import { prettyJson } from './prettyJson.js';
+import { linkToTypes } from './linkToTypes.js';
 import { bundleComponents } from './bundle-components.js';
 
 /** @typedef {import('custom-elements-manifest/schema').Module} Module */
@@ -170,10 +170,12 @@ function nonContent(blocks) {
 
 export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.on('beforeBuild', bundleComponents);
-  eleventyConfig.addPassthroughCopy('**/_static/custom-elements-manifest/**/*');
+  eleventyConfig.addPassthroughCopy('_merged_assets/_static/custom-elements-manifest/**/*');
   eleventyConfig.addPairedShortcode('markdown', markdown);
 
   eleventyConfig.addWatchTarget(`docs/_data/customElementsManifests/**/*.json`);
+
+  eleventyConfig.addFilter('linkToTypes', linkToTypes(options));
 
   eleventyConfig.addFilter('prettyJson', prettyJson);
   eleventyConfig.addFilter('split', split);
@@ -203,5 +205,4 @@ export function customElementsManifest(eleventyConfig, options) {
   eleventyConfig.addFilter('nonContent', nonContent);
 
   eleventyConfig.addPlugin(manifestModuleImports, options.imports);
-  eleventyConfig.addPlugin(externalTypeLinks, options.types);
 }
