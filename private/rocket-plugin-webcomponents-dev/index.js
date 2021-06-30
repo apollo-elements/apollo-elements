@@ -15,34 +15,35 @@ const NS_PER_SEC = 1e9;
 export function webcomponentsDev() {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+    before11ty: async function buildComponents() {
+      console.log(chalk.yellow`[webcomponents-dev] ${chalk.blue`Building ${chalk.bold`<wcd-snippet>`}...`}`);
+      const time = process.hrtime();
+
+      await esbuild.build({
+        bundle: true,
+        minify: process.env.CI === 'true',
+        sourcemap: true,
+        format: 'esm',
+        target: 'es2020',
+        outdir: 'docs/_merged_assets/_static/webcomponents-dev',
+        entryPoints: {
+          'wcd-snippet': path.join(__dirname, 'components', 'wcd-snippet', 'wcd-snippet.ts'),
+        },
+      }).catch(() => {
+        process.exit(1);
+      });
+
+      const [s, ns] = process.hrtime(time);
+      const durationNs = s * NS_PER_SEC + ns;
+
+      console.log(chalk.yellow`[webcomponents-dev] ${chalk.green`Done in ${durationNs / NS_PER_SEC}s`}`);
+    },
+
     setupEleventyPlugins: [
       addPlugin({
         name: 'webcomponents-dev',
         plugin(eleventyConfig) {
           eleventyConfig.addPassthroughCopy('_merged_assets/_static/webcomponents-dev/**/*');
-          eleventyConfig.on('beforeBuild', async function buildComponents() {
-            console.log(chalk.yellow`[webcomponents-dev] ${chalk.blue`Building ${chalk.bold`<wcd-snippet>`}...`}`);
-            const time = process.hrtime();
-
-            await esbuild.build({
-              bundle: true,
-              minify: process.env.CI === 'true',
-              sourcemap: true,
-              format: 'esm',
-              target: 'es2020',
-              outdir: 'docs/_merged_assets/_static/webcomponents-dev',
-              entryPoints: {
-                'wcd-snippet': path.join(__dirname, 'components', 'wcd-snippet', 'wcd-snippet.ts'),
-              },
-            }).catch(() => {
-              process.exit(1);
-            });
-
-            const [s, ns] = process.hrtime(time);
-            const durationNs = s * NS_PER_SEC + ns;
-
-            console.log(chalk.yellow`[webcomponents-dev] ${chalk.green`Done in ${durationNs / NS_PER_SEC}s`}`);
-          });
         },
       }),
 

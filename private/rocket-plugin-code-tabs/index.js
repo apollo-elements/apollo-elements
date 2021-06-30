@@ -1,11 +1,11 @@
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 
-import { setupMarkdownDirectives } from 'rocket-plugin-markdown-directives/setupMarkdownDirectives.js';
-
+import { setupMarkdownDirectives } from 'rocket-plugin-markdown-directives';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { codeTabsEleventyPlugin } from './eleventy/code-tabs.js';
+import { bundleComponents } from './bundle-components.js';
 
 export function createTab(tab, collections, { node, page, parent }) {
   let idx = parent.children.findIndex(x => x === node);
@@ -59,6 +59,7 @@ export function codeTabs({ collections }) {
 
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+    before11ty: bundleComponents,
     setupEleventyPlugins: [
       addPlugin({ name: 'code-tabs', plugin: codeTabsEleventyPlugin }),
 

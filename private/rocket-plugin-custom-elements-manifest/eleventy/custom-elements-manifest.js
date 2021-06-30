@@ -4,7 +4,6 @@ import { join } from 'path';
 import { markdown } from './markdown.js';
 import { prettyJson } from './prettyJson.js';
 import { linkToTypes } from './linkToTypes.js';
-import { bundleComponents } from './bundle-components.js';
 
 /** @typedef {import('custom-elements-manifest/schema').Module} Module */
 /** @typedef {import('custom-elements-manifest/schema').ClassMember} ClassMember */
@@ -169,7 +168,6 @@ function nonContent(blocks) {
  */
 
 export function customElementsManifest(eleventyConfig, options) {
-  eleventyConfig.on('beforeBuild', bundleComponents);
   eleventyConfig.addPassthroughCopy('_merged_assets/_static/custom-elements-manifest/**/*');
   eleventyConfig.addPairedShortcode('markdown', markdown);
 

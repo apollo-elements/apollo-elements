@@ -14,11 +14,11 @@ import { setupMarkdownDirectives } from 'rocket-plugin-markdown-directives';
 export function apolloElements() {
   return {
     path: resolve(dirname(fileURLToPath(import.meta.url))),
+    before11ty: buildComponents,
     setupEleventyPlugins: [
       addPlugin({
         name: 'apollo-elements',
         plugin(eleventyConfig) {
-          eleventyConfig.on('beforeBuild', buildComponents);
           eleventyConfig.addWatchTarget('packages/components/*.ts');
           eleventyConfig.addPassthroughCopy('_merged_assets/_static/apollo-elements/**/*');
           eleventyConfig.setTemplateFormats(['md', 'njk']);
