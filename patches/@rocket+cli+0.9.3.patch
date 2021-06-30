@@ -64,10 +64,20 @@ index f062d16..4eb2932 100644
  };
  
 diff --git a/node_modules/@rocket/cli/src/normalizeConfig.js b/node_modules/@rocket/cli/src/normalizeConfig.js
-index 1cc9927..7a8e2f7 100644
+index 1cc9927..e1a195e 100644
 --- a/node_modules/@rocket/cli/src/normalizeConfig.js
 +++ b/node_modules/@rocket/cli/src/normalizeConfig.js
-@@ -142,6 +142,10 @@ export async function normalizeConfig(inConfig) {
+@@ -45,6 +45,9 @@ export async function normalizeConfig(inConfig) {
+     devServer: {},
+ 
+     ...inConfig,
++
++    __before11tyFunctions: [],
++
+     imagePresets: {
+       responsive: {
+         widths: [600, 900, 1640],
+@@ -142,6 +145,10 @@ export async function normalizeConfig(inConfig) {
      if (preset.setupCliPlugins) {
        config.setupCliPlugins = [...config.setupCliPlugins, ...preset.setupCliPlugins];
      }
@@ -78,7 +88,7 @@ index 1cc9927..7a8e2f7 100644
    }
    // add "local" preset
    config._presetPathes.push(path.resolve(_inputDirCwdRelative));
-@@ -169,6 +173,10 @@ export async function normalizeConfig(inConfig) {
+@@ -169,6 +176,10 @@ export async function normalizeConfig(inConfig) {
      plugins.push(pluginInst);
    }
  
