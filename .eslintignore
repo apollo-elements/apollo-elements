@@ -9,7 +9,7 @@ packages/**/*.js
 packages/*/*.js
 packages/**/*.d.ts
 packages/*/*.d.ts
-test/test/schema.ts
+test/schema.ts
 
 packages/create/template
 
