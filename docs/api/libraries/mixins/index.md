@@ -12,15 +12,15 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 <code-tabs collection="package-managers" default-tab="npm">
 
   ```bash tab npm
-  npm i -S @apollo-elements/mixins
+  npm i -S @apollo-elements/mixins@next
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/mixins
+  yarn add @apollo-elements/mixins@next
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/mixins
+  pnpm add @apollo-elements/mixins@next
   ```
 
 </code-tabs>

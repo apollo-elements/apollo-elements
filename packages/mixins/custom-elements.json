@@ -82,15 +82,23 @@
             {
               "kind": "field",
               "name": "documentType",
-              "static": true
+              "static": true,
+              "type": {
+                "text": "'mutation'"
+              },
+              "default": "'mutation'"
             },
             {
               "kind": "field",
-              "name": "controller"
+              "name": "controller",
+              "default": "ApolloMutationController"
             },
             {
               "kind": "field",
               "name": "called",
+              "type": {
+                "text": "boolean"
+              },
               "default": "false"
             },
             {
@@ -133,6 +141,9 @@
             {
               "kind": "field",
               "name": "ignoreResults",
+              "type": {
+                "text": "boolean"
+              },
               "default": "false"
             },
             {

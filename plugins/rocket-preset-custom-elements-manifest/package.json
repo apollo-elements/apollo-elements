@@ -1,0 +1,18 @@
+{
+  "name": "rocket-preset-custom-elements-manifest",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Custom Elements Manifest API Docs for Rocket",
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "files": ["*.js", "preset"],
+  "keywords": ["rocket", "preset", "custom elements manifest"],
+  "dependencies": {
+    "hast-util-from-parse5": "7.0.0",
+    "hast-util-is-element": "2.1.0",
+    "hirestime": "6.1.0",
+    "parse5": "6.0.1",
+    "unist-util-visit": "3.1.0"
+  }
+}

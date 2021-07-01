@@ -17,7 +17,7 @@ packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 
-private/test/schema.ts
+test/test/schema.ts
 packages/components/README.md
 
 packages/hybrids/factories/*.d.ts
