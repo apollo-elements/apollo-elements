@@ -1,0 +1,8 @@
+{
+  "extends": "@pwrs",
+  "env": { "node": true },
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "valid-jsdoc": "off"
+  }
+}

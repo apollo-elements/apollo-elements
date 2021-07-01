@@ -9,6 +9,22 @@ The core of Apollo Elements is a set of JavaScript classes that implement the [R
 
 This also introduces a separation between GraphQL operations (like queries or mutations) and the web components which host them. Previous versions of Apollo Elements strongly tied each GraphQL document to a single custom element, meaning if you wanted to have several queries in one component, the component either needed to define those queries as children, or combine the queries into a single document.
 
+<code-tabs collection="package-managers" default-tab="npm">
+
+```bash tab npm
+npm i -S @apollo-elements/core@next
+```
+
+```bash tab yarn
+yarn add @apollo-elements/core@next
+```
+
+```bash tab pnpm
+pnpm add @apollo-elements/core@next
+```
+
+</code-tabs>
+
 ```ts playground controller-host profile-home.ts
 import {
   ApolloMutationController,

@@ -1,9 +1,0 @@
-{
-  "name": "esbuild-plugin-lit-css",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "main": "lit-css.js",
-  "author": "Benny Powers <web@bennypowers.com>",
-  "license": "ISC"
-}

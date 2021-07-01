@@ -11,15 +11,15 @@ package: '@apollo-elements/fast'
 <code-tabs collection="package-managers" default-tab="npm">
 
   ```bash tab npm
-  npm i -S @apollo-elements/fast
+  npm i -S @apollo-elements/fast@next
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/fast
+  yarn add @apollo-elements/fast@next
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/fast
+  pnpm add @apollo-elements/fast@next
   ```
 
 </code-tabs>

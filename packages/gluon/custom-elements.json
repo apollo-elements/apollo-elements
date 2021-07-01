@@ -46,7 +46,8 @@
               "name": "updateComplete",
               "type": {
                 "text": "Promise<boolean>"
-              }
+              },
+              "readonly": true
             }
           ],
           "mixins": [

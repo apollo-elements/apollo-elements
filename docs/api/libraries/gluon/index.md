@@ -7,15 +7,15 @@ Gluon is a minimalist web components base class that templates components with `
 <code-tabs collection="package-managers" default-tab="npm">
 
   ```bash tab npm
-  npm i -S @apollo-elements/gluon
+  npm i -S @apollo-elements/gluon@next
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/gluon
+  yarn add @apollo-elements/gluon@next
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/gluon
+  pnpm add @apollo-elements/gluon@next
   ```
 
 </code-tabs>

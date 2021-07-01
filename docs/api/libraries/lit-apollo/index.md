@@ -18,15 +18,15 @@ Looking for reactive Apollo controllers? See [`@apollo-elements/core`](/api/core
 <code-tabs collection="package-managers" default-tab="npm">
 
   ```bash tab npm
-  npm i -S @apollo-elements/lit-apollo
+  npm i -S @apollo-elements/lit-apollo@next
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/lit-apollo
+  yarn add @apollo-elements/lit-apollo@next
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/lit-apollo
+  pnpm add @apollo-elements/lit-apollo@next
   ```
 
 </code-tabs>

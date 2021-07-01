@@ -5,15 +5,15 @@ Utility components that help you factor your graphql-based app.
 <code-tabs collection="package-managers" default-tab="npm">
 
 ```bash tab npm
-npm i -S @apollo-elements/components
+npm i -S @apollo-elements/components@next
 ```
 
 ```bash tab yarn
-yarn add @apollo-elements/components
+yarn add @apollo-elements/components@next
 ```
 
 ```bash tab pnpm
-pnpm add @apollo-elements/components
+pnpm add @apollo-elements/components@next
 ```
 
 </code-tabs>

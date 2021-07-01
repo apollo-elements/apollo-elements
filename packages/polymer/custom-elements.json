@@ -101,7 +101,8 @@
             },
             {
               "kind": "field",
-              "name": "[last]"
+              "name": "[last]",
+              "default": "Map"
             },
             {
               "kind": "field",
@@ -151,10 +152,10 @@
             {
               "kind": "field",
               "name": "loading",
-              "default": "false",
               "type": {
                 "text": "boolean"
-              }
+              },
+              "default": "false"
             },
             {
               "kind": "method",
@@ -240,20 +241,20 @@
             {
               "kind": "field",
               "name": "is",
-              "static": true,
-              "default": "'polymer-apollo-mutation'",
-              "readonly": true,
               "type": {
                 "text": "string"
-              }
+              },
+              "static": true,
+              "default": "'polymer-apollo-mutation'",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "called",
-              "default": "false",
               "type": {
                 "text": "boolean"
-              }
+              },
+              "default": "false"
             }
           ],
           "events": [
@@ -316,19 +317,20 @@
             {
               "kind": "field",
               "name": "is",
-              "static": true,
-              "default": "'polymer-apollo-query'",
-              "readonly": true,
               "type": {
                 "text": "string"
-              }
+              },
+              "static": true,
+              "default": "'polymer-apollo-query'",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "networkStatus",
               "type": {
                 "text": "NetworkStatus"
-              }
+              },
+              "default": "NetworkStatus"
             }
           ],
           "events": [
@@ -391,12 +393,12 @@
             {
               "kind": "field",
               "name": "is",
-              "static": true,
-              "default": "'polymer-apollo-subscription'",
-              "readonly": true,
               "type": {
                 "text": "string"
-              }
+              },
+              "static": true,
+              "default": "'polymer-apollo-subscription'",
+              "readonly": true
             }
           ],
           "events": [
