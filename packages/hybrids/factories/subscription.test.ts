@@ -22,7 +22,7 @@ describe('[hybrids] subscription factory', function() {
     afterEach(teardownClient);
 
     describe(`with NullableParamSubscription controller at "subscription" key and "noAutoSubscribe" option`, function() {
-      interface H {
+      interface H extends HTMLElement {
         subscription: ApolloSubscriptionController<typeof S.NullableParamSubscription>
       }
 

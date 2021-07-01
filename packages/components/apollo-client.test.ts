@@ -10,7 +10,7 @@ import type {
   NoParamQueryVariables,
 } from '@apollo-elements/test';
 
-import type { ApolloQueryElement } from '@apollo-elements/core';
+import type { ApolloQueryController, ApolloQueryElement } from '@apollo-elements/core';
 
 import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
@@ -416,7 +416,7 @@ describe('<apollo-client>', function() {
       Hybrids.define(TAG_NAMES.hybrids, {
         render: host => Hybrids.html`${JSON.stringify(host.query.data)}`,
         query: Hybrids.query(TagNameQuery, { variables: { tagName: TAG_NAMES.hybrids } }),
-      } as Hybrids.Hybrids<{ query: ApolloQueryElement['controller'] }>);
+      } as Hybrids.Hybrids<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
 
       Object.values(TAG_NAMES).forEach(tagName => {
         describe(tagName, function() {

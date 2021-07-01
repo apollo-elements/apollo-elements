@@ -20,7 +20,7 @@
   },
   "overrides": [
     {
-      "files": ["packages/**/*.test.ts", "packages/test/**/*.ts"],
+      "files": ["packages/**/*.test.ts", "test/**/*.ts"],
       "rules": {
         "@typescript-eslint/no-unused-vars": [
           "warn",

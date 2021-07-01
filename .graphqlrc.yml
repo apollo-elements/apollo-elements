@@ -15,15 +15,15 @@ extensions:
       useIndexSignature: true
 
     generates:
-      test/test/schema.ts:
-        schema: test/test/graphql/test.schema.graphql
+      test/schema.ts:
+        schema: test/graphql/test.schema.graphql
         plugins:
           - typescript
           - typescript-operations
           - typed-document-node
 
         documents:
-          - test/test/graphql/*.query.graphql
-          - test/test/graphql/*.mutation.graphql
-          - test/test/graphql/*.subscription.graphql
-          - test/test/graphql/*.fragment.graphql
+          - test/graphql/*.query.graphql
+          - test/graphql/*.mutation.graphql
+          - test/graphql/*.subscription.graphql
+          - test/graphql/*.fragment.graphql
