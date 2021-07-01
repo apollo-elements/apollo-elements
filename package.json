@@ -49,7 +49,7 @@
   "workspaces": [
     "packages/*",
     "plugins/*",
-    "test/*",
+    "test",
     "docs"
   ],
   "devDependencies": {

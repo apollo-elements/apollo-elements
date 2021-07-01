@@ -3,7 +3,7 @@ import type * as I from '@apollo-elements/core/types';
 
 import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
-import { setupClient, teardownClient } from '../test/client';
+import { setupClient, teardownClient } from '@apollo-elements/test/client';
 
 import {
   describeSubscription,

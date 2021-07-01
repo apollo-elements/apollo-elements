@@ -69,7 +69,7 @@ describe('[hybrids] controller factory', function() {
       define(name, {
         clock: controller(ClockController, 100000000),
         render: host => html`<output>${host.clock.value.getSeconds()}</output>`,
-      } as Hybrids<{ clock: ClockController }>);
+      } as Hybrids<typeof element>);
 
       element = await fixture(`<${name}></${name}>`);
     });

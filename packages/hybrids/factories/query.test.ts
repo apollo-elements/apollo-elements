@@ -22,7 +22,7 @@ describe('[hybrids] query factory', function() {
     afterEach(teardownClient);
 
     describe(`with NullableParamQuery controller at "query" key and "noAutoSubscribe" option`, function() {
-      interface H {
+      interface H extends HTMLElement {
         query: ApolloQueryController<typeof S.NullableParamQuery>
       }
 
