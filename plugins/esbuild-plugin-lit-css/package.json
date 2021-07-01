@@ -1,0 +1,20 @@
+{
+  "name": "esbuild-plugin-lit-css",
+  "description": "import css files as tagged-template-literals",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "lit-css.js",
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
+    "directory": "plugins/esbuild-plugin-lit-css"
+  },
+  "keywords": ["esbuild", "plugin", "lit", "css"]
+}

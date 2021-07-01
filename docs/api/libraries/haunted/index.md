@@ -11,15 +11,15 @@ package: '@apollo-elements/haunted'
 <code-tabs collection="package-managers" default-tab="npm">
 
   ```bash tab npm
-  npm i -S @apollo-elements/haunted
+  npm i -S @apollo-elements/haunted@next
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/haunted
+  yarn add @apollo-elements/haunted@next
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/haunted
+  pnpm add @apollo-elements/haunted@next
   ```
 
 </code-tabs>

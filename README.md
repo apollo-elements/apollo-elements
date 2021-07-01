@@ -25,7 +25,8 @@ npm init @apollo-elements
 ## 🗺 Guides and Docs
 If you just want to see the API Docs, check them out for all our packages at [apolloelements.dev](https://apolloelements.dev)
 
-- [🧱 Components](https://apolloelements.dev/api/libraries/components/)
+- [🥑 Core](https://apolloelements.dev/api/core/)
+- [🧱 Components](https://apolloelements.dev/api/components/)
 - [🍸 Mixins](https://apolloelements.dev/api/libraries/mixins/)
 - [🔥 lit-apollo](https://apolloelements.dev/api/libraries/lit-apollo/)
 - [🏁 FAST](https://apolloelements.dev/api/libraries/fast/)
@@ -45,19 +46,43 @@ Elements created with Apollo Elements work in any framework. Write GraphQL compo
 - [Vue 💚 Apollo Elements](https://codesandbox.io/s/apollo-elements-in-vue-cq769?file=/src/components/ApolloElementsDemo.vue)
 
 ## 📦 Packages
-Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
+Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project and keep your bundle size small, or mix and match different libraries and approaches in the same app.
 
-### 🧱 Components
+### 🥑 Core
 
-Utility components that help you factor your graphql-based app.
-
-- `<apollo-client>` provides all it's children (even across open shadow roots) with a client instance.
-- `<apollo-mutation>` lets you write declarative mutation components without subclassing.
+Reactive GraphQL controllers contain sharable, reusable, and stackable logic.
 
 <code-copy>
 
 ```
-npm i -S @apollo-elements/components
+npm i -S @apollo-elements/core@next
+```
+
+</code-copy>
+
+<code-copy>
+
+```js
+import '@apollo-elements/core/apollo-query-controller';
+import '@apollo-elements/core/apollo-mutation-controller';
+import '@apollo-elements/core/apollo-subscription-controller';
+```
+
+</code-copy>
+
+### 🧱 Components
+
+Write GraphQL apps in HTML.
+
+- `<apollo-client>` provides all it's children (even across open shadow roots) with a client instance.
+- `<apollo-query>` write GraphQL queries and their templates in HTML.
+- `<apollo-mutation>` declarative mutation components in HTML.
+- `<apollo-subscription>` write realtime GraphQL subscriptions and their templates in HTML.
+
+<code-copy>
+
+```
+npm i -S @apollo-elements/components@next
 ```
 
 </code-copy>
@@ -66,7 +91,9 @@ npm i -S @apollo-elements/components
 
 ```js
 import '@apollo-elements/components/apollo-client';
+import '@apollo-elements/components/apollo-query';
 import '@apollo-elements/components/apollo-mutation';
+import '@apollo-elements/components/apollo-subscription';
 ```
 
 </code-copy>
@@ -80,7 +107,7 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/mixins
+npm i -S @apollo-elements/mixins@next
 ```
 
 </code-copy>
@@ -103,7 +130,7 @@ These base classes extend from [`LitElement`](https://lit.dev), so you can quick
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/lit-apollo
+npm i -S @apollo-elements/lit-apollo@next
 ```
 
 </code-copy>
@@ -126,7 +153,7 @@ These base classes extend from [`FASTElement`](https://fast.design), with all it
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/fast
+npm i -S @apollo-elements/fast@next
 ```
 
 </code-copy>
@@ -150,7 +177,7 @@ Apollo hooks for web components, with [haunted](https://github.com/matthewp/haun
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/haunted
+npm i -S @apollo-elements/haunted@next
 ```
 
 </code-copy>
@@ -174,7 +201,7 @@ Descriptor factories and object spreads you can roll into your [hybrids](https:/
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/hybrids
+npm i -S @apollo-elements/hybrids@next
 ```
 
 </code-copy>
@@ -182,10 +209,7 @@ npm i -S @apollo-elements/hybrids
 <code-copy>
 
 ```js
-import { client, query, mutation, subscription } from '@apollo-elements/hybrids';
-import { ApolloQuery } from '@apollo-elements/hybrids/apollo-query';
-import { ApolloMutation } from '@apollo-elements/hybrids/apollo-mutation';
-import { ApolloSubscription } from '@apollo-elements/hybrids/apollo-subscription';
+import { query, mutation, subscription } from '@apollo-elements/hybrids';
 ```
 
 </code-copy>
@@ -198,7 +222,7 @@ These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonj
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/gluon
+npm i -S @apollo-elements/gluon@next
 ```
 
 </code-copy>
@@ -222,7 +246,7 @@ These custom elements fire [polymer](https://polymer-library.polymer-project.org
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/polymer
+npm i -S @apollo-elements/polymer@next
 ```
 
 </code-copy>
@@ -230,9 +254,9 @@ npm i -S @apollo-elements/polymer
 <code-copy>
 
 ```js
-import '@apollo-elements/polymer/apollo-query';
-import '@apollo-elements/polymer/apollo-mutation';
-import '@apollo-elements/polymer/apollo-subscription';
+import '@apollo-elements/polymer/polymer-apollo-query';
+import '@apollo-elements/polymer/polymer-apollo-mutation';
+import '@apollo-elements/polymer/polymer-apollo-subscription';
 ```
 
 </code-copy>

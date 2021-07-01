@@ -5,12 +5,12 @@ import litcss from 'rollup-plugin-lit-css';
 
 import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 
-import { codeTabs } from 'rocket-plugin-code-tabs';
-import { apolloElements } from 'rocket-plugin-apollo-elements';
-import { customElementsManifestAPIDocs } from 'rocket-plugin-custom-elements-manifest';
-import { playgroundElements } from 'rocket-plugin-playground-elements';
-import { slideDecks } from 'rocket-plugin-slide-decks';
-import { webcomponentsDev } from 'rocket-plugin-webcomponents-dev';
+import { codeTabs } from 'rocket-preset-code-tabs';
+import { apolloElements } from 'rocket-preset-apollo-elements';
+import { customElementsManifestAPIDocs } from 'rocket-preset-custom-elements-manifest';
+import { playgroundElements } from 'rocket-preset-playground-elements';
+import { slideDecks } from 'rocket-preset-slide-decks';
+import { webcomponentsDev } from 'rocket-preset-webcomponents-dev';
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
 import { rocketBlog } from '@rocket/blog';
@@ -26,6 +26,9 @@ export default ({
   checkLinks: {
     ignoreLinkPatterns: [
       '**/blog/*/_assets/**/*',
+      '**/healthy-snack.js',
+      '/blog/next-evolution/_assets/healthy-snack/healthy-snack.js',
+      'healthy-snack.js',
     ],
   },
 
