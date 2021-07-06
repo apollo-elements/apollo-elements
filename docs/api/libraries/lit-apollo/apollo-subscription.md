@@ -10,7 +10,7 @@ module: apollo-subscription.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Lit >> ApolloSubscription || 40
+# Web Component Libraries >> lit-apollo >> ApolloSubscription || 40
 
 <inline-notification type="tip">
 

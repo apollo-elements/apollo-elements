@@ -10,7 +10,7 @@ module: apollo-mutation.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Lit >> ApolloMutation || 30
+# Web Component Libraries >> lit-apollo >> ApolloMutation || 30
 
 <inline-notification type="tip">
 

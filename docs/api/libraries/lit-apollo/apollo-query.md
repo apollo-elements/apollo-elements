@@ -10,7 +10,7 @@ module: apollo-query.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Lit >> ApolloQuery || 20
+# Web Component Libraries >> lit-apollo >> ApolloQuery || 20
 
 <inline-notification type="tip">
 
