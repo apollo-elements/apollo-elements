@@ -2,9 +2,10 @@ svg a {
   text-decoration: 1px underline dotted;
 }
 
-.actor { fill: var(--markdown-table-row-odd-background-color); }
+.actor { fill: var(--markdown-table-row-odd-background-color, #f6f8fa); }
+rect.actor { stroke: var(--footer-background); }
 .actor-line { stroke: var(--primary-lines-color); }
-.messageText { stroke: var(--text-color); }
+.messageText { stroke: none; }
 
 text.actor,
 .messageText { fill: var(--text-color); }
@@ -13,6 +14,7 @@ text.actor,
 #crosshead path,
 .messageLine0,
 .messageLine1 { stroke: var(--markdown-link-color); }
+#arrowhead { fill: var(--markdown-link-color); }
 
 .messageLine0 {
   stroke-width: 1.5;
@@ -25,7 +27,7 @@ text.actor,
 }
 
 .classGroup {
-  fill: var(--markdown-table-row-odd-background-color);
+  fill: var(--markdown-table-row-odd-background-color, #f6f8fa);
 }
 
 g.classGroup text {

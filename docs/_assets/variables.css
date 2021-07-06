@@ -109,7 +109,7 @@
   --playground-code-callee-color: var(--markdown-syntax-function-color);
   --playground-code-keyword-color: var(--markdown-syntax-keyword-color);
   --playground-code-variable-2-color: var(--markdown-syntax-attr-name-color);
-  --playground-code-selection-background: var(--markdown-table-row-odd-background-color);
+  --playground-code-selection-background: var(--markdown-table-row-odd-background-color, #f6f8fa);
   --playground-code-cursor-color: var(--markdown-syntax-color);
   --playground-code-background: var(--markdown-syntax-background-color);
   --playground-tab-bar-background: var(--page-background);
