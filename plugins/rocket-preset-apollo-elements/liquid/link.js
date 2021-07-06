@@ -1,12 +1,12 @@
 import fetch from 'node-fetch';
 
-export function linkTag(engine) {
+export function linkTag() {
   return {
-    parse(tagToken, remainingTokens) {
+    parse(tagToken) {
       this.url = tagToken.args;
     },
 
-    async render(scope, hash) {
+    async render() {
       const [username, slug] = this.url.replace(/^https?:\/\/dev\.to\//, '').split('/');
       const url = new URL(`/api/articles/${username}/${slug}`, 'https://dev.to/');
       const { title, readable_publish_date: date, tags, user } = await fetch(url.toString())

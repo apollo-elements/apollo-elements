@@ -1,3 +1,0 @@
-docs-playground:not(:defined) {
-  opacity: 1 !important;
-}

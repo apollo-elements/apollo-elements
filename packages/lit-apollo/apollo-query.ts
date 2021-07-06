@@ -104,7 +104,7 @@ export class ApolloQuery<
   @controlled() @state() query: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, any>;
+  @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   /**
    * If data was read from the cache with missing fields,

@@ -1,6 +1,8 @@
 // @ts-expect-error: it's not typescript
 import graphqlLoaderPlugin from '@luckycatfactory/esbuild-graphql-loader/lib/index.mjs';
 import esbuild from 'esbuild';
+import chalk from 'chalk';
+import hirestime from 'hirestime';
 
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
@@ -32,7 +34,10 @@ async function build(opts) {
   });
 }
 
-export async function buildComponents() {
+export async function bundle() {
+  console.log(chalk.yellow`[apollo-elements] ${chalk.blue`Building ${chalk.bold`Apollo Elements`} packages...`}`);
+  const btime = hirestime.default();
+
   await Promise.all([
     build({
       external: ['https://*', 'http://*'],
@@ -64,4 +69,6 @@ export async function buildComponents() {
       },
     }),
   ]);
+
+  console.log(chalk.yellow`[apollo-elements] ${chalk.green`Done in ${btime.seconds()}s`}`);
 }

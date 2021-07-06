@@ -1,11 +1,11 @@
 import fetch from 'node-fetch';
 
-export function githubTag(engine) {
+export function githubTag() {
   return {
     parse(tagToken) {
       this.repo = tagToken.args;
     },
-    async render(scope, hash) {
+    async render() {
       const url = new URL(`/repos/${this.repo}`, 'https://api.github.com/');
       const headers = { 'Accept': 'application/vnd.github.v3+json' };
       const repo = await fetch(url.toString(), { headers }).then(x => x.json());

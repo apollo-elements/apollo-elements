@@ -1,6 +1,0 @@
-{% from "partials/custom-elements-manifest/macros.njk" import exports, linkHeading %}
-
-{%- if moduleData -%}
-  {{- linkHeading('Exports', level=(exportsHeading or 2)) -}}
-  {{- exports(moduleData, packageName=package) -}}
-{%- endif -%}

@@ -69,11 +69,6 @@ table pre[class*="language-"] {
   order: initial !important;
 }
 
-body[layout='layout-api'] #sidebar,
-body[layout='layout-api-index'] #sidebar {
-  display: block;
-}
-
 docs-playground {
   margin-bottom: 16px;
 }
