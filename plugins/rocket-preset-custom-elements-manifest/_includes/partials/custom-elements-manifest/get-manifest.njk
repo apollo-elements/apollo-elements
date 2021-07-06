@@ -1,8 +1,0 @@
-{% set pkgParts = (package | split('/')) %}
-{% if (pkgParts | length) > 1 %}
-  {% set manifest = (customElementsManifests[pkgParts | first][pkgParts | last]['custom-elements']) %}
-  {% set packageJson = (customElementsManifests[pkgParts | first][pkgParts | last]['package']) %}
-{% else %}
-  {% set manifest = (customElementsManifests[pkgParts | first]['custom-elements']) %}
-  {% set packageJson = (customElementsManifests[pkgParts | first]['package']) %}
-{% endif %}

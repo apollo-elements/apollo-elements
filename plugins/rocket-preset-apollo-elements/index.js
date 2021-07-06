@@ -1,10 +1,8 @@
 import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
-import chalk from 'chalk';
 import helmet from 'eleventy-plugin-helmet';
-import hirestime from 'hirestime';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
-import { buildComponents } from './lib/build-components.js';
+import { bundle } from './lib/build-components.js';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { getWebmentionsForUrl } from './webmentions.js';
@@ -19,17 +17,13 @@ export function apolloElements() {
   return {
     path,
     async before11ty() {
-      console.log(chalk.yellow`[apollo-elements] ${chalk.blue`Building ${chalk.bold`Apollo Elements`} packages...`}`);
-      const btime = hirestime.default();
-      await buildComponents();
-      console.log(chalk.yellow`[apollo-elements] ${chalk.green`Done in ${btime.seconds()}s`}`);
+      await bundle();
     },
     setupEleventyPlugins: [
       addPlugin({
         name: 'apollo-elements',
         plugin(eleventyConfig) {
           eleventyConfig.addWatchTarget('packages/components/*.ts');
-          eleventyConfig.addPassthroughCopy('_merged_assets/_static/apollo-elements/**/*');
           eleventyConfig.setTemplateFormats(['md', 'njk']);
 
           eleventyConfig.addPlugin(helmet);

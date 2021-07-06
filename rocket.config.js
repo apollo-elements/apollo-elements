@@ -7,7 +7,7 @@ import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 
 import { codeTabs } from 'rocket-preset-code-tabs';
 import { apolloElements } from 'rocket-preset-apollo-elements';
-import { customElementsManifestAPIDocs } from 'rocket-preset-custom-elements-manifest';
+import { customElementsManifest } from 'rocket-preset-custom-elements-manifest';
 import { playgroundElements } from 'rocket-preset-playground-elements';
 import { slideDecks } from 'rocket-preset-slide-decks';
 import { webcomponentsDev } from 'rocket-preset-webcomponents-dev';
@@ -36,6 +36,7 @@ export default ({
     rocketLaunch(),
     rocketBlog(),
     rocketSearch(),
+
     apolloElements(),
     webcomponentsDev(),
     slideDecks(),
@@ -134,31 +135,31 @@ export default ({
     codeTabs({
       collections: {
         frameworks: {
-          'angular': { label: 'Angular', iconHref: '/_merged_assets/brand-logos/angular.svg' },
-          'preact': { label: 'Preact', iconHref: '/_merged_assets/brand-logos/preact.svg' },
-          'react': { label: 'React', iconHref: '/_merged_assets/brand-logos/react.svg' },
-          'svelte': { label: 'Svelte', iconHref: '/_merged_assets/brand-logos/svelte.svg' },
-          'vue': { label: 'Vue', iconHref: '/_merged_assets/brand-logos/vue.svg' },
+          angular: { label: 'Angular', iconHref: '/_merged_assets/brand-logos/angular.svg' },
+          preact: { label: 'Preact', iconHref: '/_merged_assets/brand-logos/preact.svg' },
+          react: { label: 'React', iconHref: '/_merged_assets/brand-logos/react.svg' },
+          svelte: { label: 'Svelte', iconHref: '/_merged_assets/brand-logos/svelte.svg' },
+          vue: { label: 'Vue', iconHref: '/_merged_assets/brand-logos/vue.svg' },
         },
         packageManagers: {
-          'npm': { label: 'NPM', iconHref: '/_merged_assets/brand-logos/npm.svg' },
-          'yarn': { label: 'Yarn', iconHref: '/_merged_assets/brand-logos/yarn.svg' },
-          'pnpm': { label: 'PNPM', iconHref: '/_merged_assets/brand-logos/pnpm.svg' },
+          npm: { label: 'NPM', iconHref: '/_merged_assets/brand-logos/npm.svg' },
+          yarn: { label: 'Yarn', iconHref: '/_merged_assets/brand-logos/yarn.svg' },
+          pnpm: { label: 'PNPM', iconHref: '/_merged_assets/brand-logos/pnpm.svg' },
         },
         libraries: {
-          'html': { label: 'HTML', iconHref: '/_merged_assets/brand-logos/html5.svg' },
-          'lit': { label: 'Lit', iconHref: '/_merged_assets/brand-logos/lit.svg' },
-          'fast': { label: 'FAST', iconHref: '/_merged_assets/brand-logos/fast.svg' },
-          'gluon': { label: 'Gluon', iconHref: '/_merged_assets/brand-logos/js.svg' },
-          'haunted': { label: 'Haunted', iconHref: '/_merged_assets/brand-logos/haunted.svg' },
-          'hybrids': { label: 'Hybrids', iconHref: '/_merged_assets/brand-logos/hybrids.svg' },
-          'mixins': { label: 'Vanilla', iconHref: '/_merged_assets/brand-logos/js.svg' },
-          'polymer': { label: 'Polymer', iconHref: '/_merged_assets/brand-logos/polymer.svg' },
+          html: { label: 'HTML', iconHref: '/_merged_assets/brand-logos/html5.svg' },
+          lit: { label: 'Lit', iconHref: '/_merged_assets/brand-logos/lit.svg' },
+          fast: { label: 'FAST', iconHref: '/_merged_assets/brand-logos/fast.svg' },
+          gluon: { label: 'Gluon', iconHref: '/_merged_assets/brand-logos/js.svg' },
+          haunted: { label: 'Haunted', iconHref: '/_merged_assets/brand-logos/haunted.svg' },
+          hybrids: { label: 'Hybrids', iconHref: '/_merged_assets/brand-logos/hybrids.svg' },
+          mixins: { label: 'Vanilla', iconHref: '/_merged_assets/brand-logos/js.svg' },
+          polymer: { label: 'Polymer', iconHref: '/_merged_assets/brand-logos/polymer.svg' },
         },
       },
     }),
 
-    customElementsManifestAPIDocs({
+    customElementsManifest({
       typeLinksNewTab: true,
       typeLinks: {
         ApolloElementElement: '/api/core/interfaces/element/',
@@ -204,6 +205,7 @@ export default ({
   ],
 
   eleventy(eleventyConfig) {
+    eleventyConfig.addWatchTarget('_assets/**/*.css');
     eleventyConfig.addTransform('fix-noscript', content =>
       content
         .replace(/&#x26;#x3C;(link|style)/g, '<$1')

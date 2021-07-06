@@ -64,7 +64,7 @@
   --code-button-focus-background: var(--grey-200);
   --code-button-focus-color: var(--text-color);
   --code-button: var(--page-background);
-  --code-tabs-background: transparent;
+  --code-tabs-tabs-background: transparent;
   --wcd-snippet-button-background: var(--code-button);
   --wcd-snippet-button-focus-background: var(--code-button-focus-background);
   --wcd-snippet-button-focus-color: var(--code-button-focus-color);
@@ -118,6 +118,12 @@
   --playground-preview-toolbar-foreground-color: var(--primary-text-color);
   --playground-highlight-color: var(--primary-color);
   --playground-code-builtin-color: var(--markdown-blockquote-color);
+
+  /* typography */
+  --primary-font-family: 'Open Sans', sans-serif;
+  --secondary-font-family: 'Montserrat', sans-serif;
+  --monospace-font-family: 'Recursive', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+  --type-doc-header-font-family: 'Recursive';
 }
 
 @media (prefers-color-scheme: dark) {
@@ -143,7 +149,7 @@
     --code-button-focus-background: #333;
     --code-button-focus-color: white;
     --code-button: var(--page-background);
-    --code-tabs-background: transparent;
+    --code-tabs-tabs-background: transparent;
     --wcd-snippet-button-background: var(--code-button);
     --wcd-snippet-button-focus-background: var(--code-button-focus-background);
     --wcd-snippet-button-focus-color: var(--code-button-focus-color);
@@ -201,7 +207,7 @@ body[theme="dark"] {
   --footer-background: #151515;
 
   /* code blocks */
-  --code-tabs-background: transparent;
+  --code-tabs-tabs-background: transparent;
   --code-button: var(--page-background);
   --code-button-focus-color: white;
   --code-button-focus-background: #333;

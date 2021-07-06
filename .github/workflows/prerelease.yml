@@ -18,7 +18,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install packages
-        run: sudo yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Codegen
         run: yarn build:codegen
