@@ -63,9 +63,10 @@
   /* code blocks */
   --code-button-focus-background: var(--grey-200);
   --code-button-focus-color: var(--text-color);
-  --code-button: var(--page-background);
+  --code-button-background: var(--page-background);
   --code-tabs-tabs-background: transparent;
-  --wcd-snippet-button-background: var(--code-button);
+  --code-tabs-selected-highlight-color: var(--markdown-link-decoration);
+  --wcd-snippet-button-background: var(--code-button-background);
   --wcd-snippet-button-focus-background: var(--code-button-focus-background);
   --wcd-snippet-button-focus-color: var(--code-button-focus-color);
   --wcd-snippet-outer-background-color: var(--page-background);
@@ -121,7 +122,7 @@
 
   /* typography */
   --primary-font-family: 'Open Sans', sans-serif;
-  --secondary-font-family: 'Montserrat', sans-serif;
+  --secondary-font-family: 'Recursive', sans-serif;
   --monospace-font-family: 'Recursive', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
   --type-doc-header-font-family: 'Recursive';
 }
@@ -148,9 +149,10 @@
     /* code blocks */
     --code-button-focus-background: #333;
     --code-button-focus-color: white;
-    --code-button: var(--page-background);
+    --code-button-background: var(--page-background);
     --code-tabs-tabs-background: transparent;
-    --wcd-snippet-button-background: var(--code-button);
+    --code-tabs-selected-highlight-color: transparent;
+    --wcd-snippet-button-background: var(--code-button-background);
     --wcd-snippet-button-focus-background: var(--code-button-focus-background);
     --wcd-snippet-button-focus-color: var(--code-button-focus-color);
 
@@ -192,58 +194,4 @@
     --markdown-table-border-color: var(--markdown-table-background-color);
     --markdown-table-row-odd-background-color: var(--blue-grey-900);
   }
-}
-
-body[theme="dark"] {
-  --primary-text-color: var(--grey-200);
-
-  /* Text colors */
-  --text-color: white;
-  --text-contrast-color: var(--contrast-color-light);
-  --sidebar-tag-background-color: var(--code-button-focus-background);
-
-  /* background-colors */
-  --page-background: var(--near-black);
-  --footer-background: #151515;
-
-  /* code blocks */
-  --code-tabs-tabs-background: transparent;
-  --code-button: var(--page-background);
-  --code-button-focus-color: white;
-  --code-button-focus-background: #333;
-  --wcd-snippet-button-background: var(--code-button);
-  --wcd-snippet-button-focus-color: var(--code-button-focus-color);
-  --wcd-snippet-button-focus-background: var(--code-button-focus-background);
-
-  /* search */
-  --rocket-search-background-color: var(--code-button-focus-background);
-  --rocket-search-highlight-color: var(--primary-color-lighter);
-  --rocket-search-fill-color: var(--primary-lines-color);
-  --rocket-search-hover-background-color: var(--near-black);
-  --rocket-search-input-border-color: var(--page-background);
-  --rocket-search-input-overlay-border-color: var(--page-background);
-
-  /* markdown */
-  --markdown-syntax-keyword-color: var(--light-blue-300);
-  --markdown-syntax-color: white;
-  --markdown-syntax-punctuation-color: var(--cyan-600);
-  --markdown-syntax-class-name-color: var(--deep-orange-200);
-  --markdown-syntax-string-color: var(--deep-orange-200);
-  --markdown-syntax-function-color: var(--cyan-400);
-  --markdown-syntax-operator-color: var(--light-blue-300);
-  --markdown-syntax-comment-color: #66bb6a;
-  --markdown-syntax-number-color: var(--light-blue-300);
-  --markdown-syntax-boolean-color: var(--light-blue-300);
-  --markdown-syntax-tag-color: var(--cyan-400);
-  --markdown-syntax-variable-color: var(--deep-orange-200);
-  --markdown-syntax-attr-name-color: var(--light-blue-500);
-  --markdown-octicon-link: white;
-  --markdown-syntax-background-color: var(--grey-900);
-  --markdown-pre-background-color: var(--grey-900);
-  --markdown-link-color: var(--pink-a200);
-  --markdown-link-decoration: var(--pink-900);
-  --markdown-blockquote-color: var(--blue-100);
-  --markdown-table-background-color: var(--grey-900);
-  --markdown-table-border-color: var(--markdown-table-background-color);
-  --markdown-table-row-odd-background-color: var(--blue-grey-900);
 }
