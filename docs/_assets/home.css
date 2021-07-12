@@ -1,3 +1,7 @@
+.markdown-body .call-to-action {
+  font-variation-settings: "CASL" 0, "MONO" 0, "slnt" -5, "CRSV" 1;
+}
+
 .markdown-body .call-to-action:nth-of-type(2) {
   --primary-color: #222;
   --primary-color-lighter: #333;
@@ -23,4 +27,8 @@ h2:not(:first-of-type) {
     right: -463px;
     transform: rotate(45deg);
   }
+}
+
+code-tab::part(content) {
+  width: 100%;
 }
