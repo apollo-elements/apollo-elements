@@ -61,7 +61,7 @@
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
-  "homepage": "https://apolloelements.dev/modules/_apollo_elements_lit_apollo.html",
+  "homepage": "https://apolloelements.dev/api/libraries/lit-apollo/",
   "dependencies": {
     "@apollo-elements/core": "^0.0.1-next.3",
     "lit": "^2.0.0-rc.2",
