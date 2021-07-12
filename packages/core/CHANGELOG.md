@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 0.0.1-next.3
+
+### Patch Changes
+
+- 87a0e907: Update manifests
+
 ## 0.0.1-next.2
 
 ### Patch Changes

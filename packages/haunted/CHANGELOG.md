@@ -1,5 +1,13 @@
 # @apollo-elements/haunted
 
+## 2.0.0-next.2
+
+### Patch Changes
+
+- 87a0e907: Update manifests
+- Updated dependencies [87a0e907]
+  - @apollo-elements/core@0.0.1-next.3
+
 ## 2.0.0-next.1
 
 ### Patch Changes
