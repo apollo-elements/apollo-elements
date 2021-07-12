@@ -169,7 +169,7 @@ export class ApolloQuery<
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: this['controller']['options']['errorPolicy'];
+  errorPolicy?: C.ErrorPolicy;
 
   /**
    * Determines where the client may return a result from. The options are:
@@ -186,7 +186,7 @@ export class ApolloQuery<
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+  fetchPolicy?: C.WatchQueryFetchPolicy;
 
   /**
    * When someone chooses cache-and-network or network-only as their

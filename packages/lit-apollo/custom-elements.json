@@ -55,7 +55,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "Data<D>|null"
+                "text": "Data<D> | null"
               },
               "default": "null",
               "summary": "Latest Data."
@@ -64,7 +64,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D>|null"
+                "text": "ComponentDocument<D> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`"
@@ -73,7 +73,7 @@
               "kind": "field",
               "name": "error",
               "type": {
-                "text": "Error|ApolloError|null"
+                "text": "Error | ApolloError | null"
               },
               "default": "null",
               "summary": "Latest error"
@@ -91,7 +91,7 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "Variables<D, V>|null"
+                "text": "Variables<D, V> | null"
               },
               "default": "null",
               "summary": "Operation variables."
@@ -144,7 +144,13 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "description": "Latest mutation data."
+              "default": "null",
+              "summary": "Latest Data.",
+              "description": "Latest mutation data.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
@@ -152,13 +158,25 @@
               "type": {
                 "text": "Variables<D, V> | null"
               },
+              "default": "null",
+              "summary": "Mutation variables.",
               "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-              "summary": "Mutation variables."
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
               "name": "controller",
-              "default": "ApolloMutationController"
+              "type": {
+                "text": "ApolloController<D, V>"
+              },
+              "default": "new ApolloMutationController<D, V>(this, null, {\n    onCompleted: data => this.onCompleted?.(data),\n    onError: error => this.onError?.(error),\n  })",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
@@ -184,7 +202,11 @@
               "type": {
                 "text": "Record<string, unknown>"
               },
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
@@ -209,23 +231,26 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default."
+              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "attribute": "await-refetch-queries"
             },
             {
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "C.ErrorPolicy"
               },
-              "description": "Specifies the ErrorPolicy to be used for this mutation."
+              "description": "Specifies the ErrorPolicy to be used for this mutation.",
+              "attribute": "error-policy"
             },
             {
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "'no-cache'"
               },
-              "description": "Specifies the FetchPolicy to be used for this mutation."
+              "description": "Specifies the FetchPolicy to be used for this mutation.",
+              "attribute": "fetch-policy"
             },
             {
               "kind": "field",
@@ -234,7 +259,8 @@
                 "text": "RefetchQueriesType<D> | null"
               },
               "default": "null",
-              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return."
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+              "attribute": "refetch-queries"
             },
             {
               "kind": "method",
@@ -286,7 +312,7 @@
                 {
                   "name": "data",
                   "type": {
-                    "text": "Data<D>|null"
+                    "text": "Data<D> | null"
                   }
                 }
               ],
@@ -351,7 +377,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D>|null"
+                "text": "ComponentDocument<D> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
@@ -364,7 +390,7 @@
               "kind": "field",
               "name": "error",
               "type": {
-                "text": "Error|ApolloError|null"
+                "text": "Error | ApolloError | null"
               },
               "default": "null",
               "summary": "Latest error",
@@ -399,7 +425,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "C.ErrorPolicy"
               },
               "description": "Specifies the ErrorPolicy to be used for this mutation.",
               "fieldName": "errorPolicy"
@@ -407,7 +433,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "'no-cache'"
               },
               "description": "Specifies the FetchPolicy to be used for this mutation.",
               "fieldName": "fetchPolicy"
@@ -476,7 +502,13 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "description": "Latest query data."
+              "default": "null",
+              "summary": "Latest Data.",
+              "description": "Latest query data.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
@@ -484,16 +516,25 @@
               "type": {
                 "text": "Variables<D, V> | null"
               },
+              "default": "null",
+              "summary": "Query variables.",
               "description": "An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.",
-              "summary": "Query variables."
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloQueryController<D, V>"
+                "text": "ApolloController<D, V>"
               },
-              "default": "ApolloQueryController"
+              "default": "new ApolloQueryController<D, V>(this, null, {\n    shouldSubscribe: options => this.readyToReceiveDocument && this.shouldSubscribe(options),\n    onData: data => this.onData?.(data),\n    onError: error => this.onError?.(error), /* c8 ignore next */ // covered\n  })",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "method",
@@ -534,10 +575,6 @@
             {
               "kind": "field",
               "name": "networkStatus",
-              "type": {
-                "text": "NetworkStatus"
-              },
-              "default": "NetworkStatus",
               "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however."
             },
             {
@@ -553,9 +590,13 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, any>"
+                "text": "Record<string, unknown>"
               },
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
@@ -599,7 +640,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so."
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "attribute": "no-auto-subscribe"
             },
             {
               "kind": "field",
@@ -613,19 +655,21 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "C.ErrorPolicy"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
-              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query."
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
+              "attribute": "error-policy"
             },
             {
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "C.WatchQueryFetchPolicy"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
-              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query."
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
+              "attribute": "fetch-policy"
             },
             {
               "kind": "field",
@@ -634,7 +678,8 @@
                 "text": "this['controller']['options']['nextFetchPolicy']"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
-              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`."
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
+              "attribute": "next-fetch-policy"
             },
             {
               "kind": "method",
@@ -846,7 +891,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D>|null"
+                "text": "ComponentDocument<D> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
@@ -859,7 +904,7 @@
               "kind": "field",
               "name": "error",
               "type": {
-                "text": "Error|ApolloError|null"
+                "text": "Error | ApolloError | null"
               },
               "default": "null",
               "summary": "Latest error",
@@ -895,7 +940,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "C.ErrorPolicy"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
@@ -904,7 +949,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "C.WatchQueryFetchPolicy"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -981,7 +1026,14 @@
             {
               "kind": "field",
               "name": "controller",
-              "default": "ApolloSubscriptionController"
+              "type": {
+                "text": "ApolloController<D, V>"
+              },
+              "default": "new ApolloSubscriptionController<D, V>(this, null, {\n    shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),\n    onData: data => this.onSubscriptionData?.(data),\n    onComplete: () => this.onSubscriptionComplete?.(),\n    onError: error => this.onError?.(error),\n  })",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
             },
             {
               "kind": "field",
@@ -1008,7 +1060,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "If true, the element will not begin querying data until you manually call `subscribe`"
+              "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "attribute": "no-auto-subscribe"
             },
             {
               "kind": "field",
@@ -1040,7 +1093,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "C.ErrorPolicy"
               },
               "summary": "Error policy for the subscription"
             },
@@ -1048,9 +1101,10 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "C.FetchPolicy"
               },
-              "summary": "Specifies the FetchPolicy to be used for this subscription."
+              "summary": "Specifies the FetchPolicy to be used for this subscription.",
+              "attribute": "fetch-policy"
             },
             {
               "kind": "field",
@@ -1206,7 +1260,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "Data<D>|null"
+                "text": "Data<D> | null"
               },
               "default": "null",
               "summary": "Latest Data.",
@@ -1219,7 +1273,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D>|null"
+                "text": "ComponentDocument<D> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
@@ -1232,7 +1286,7 @@
               "kind": "field",
               "name": "error",
               "type": {
-                "text": "Error|ApolloError|null"
+                "text": "Error | ApolloError | null"
               },
               "default": "null",
               "summary": "Latest error",
@@ -1258,7 +1312,7 @@
               "kind": "field",
               "name": "variables",
               "type": {
-                "text": "Variables<D, V>|null"
+                "text": "Variables<D, V> | null"
               },
               "default": "null",
               "summary": "Operation variables.",
@@ -1281,7 +1335,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "C.FetchPolicy"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "fieldName": "fetchPolicy"

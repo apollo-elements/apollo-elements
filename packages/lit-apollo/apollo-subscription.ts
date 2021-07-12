@@ -79,7 +79,7 @@ export class ApolloSubscription<
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: this['controller']['options']['errorPolicy'];
+  errorPolicy?: C.ErrorPolicy;
 
   /**
    * @summary Specifies the FetchPolicy to be used for this subscription.
@@ -87,7 +87,7 @@ export class ApolloSubscription<
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+  fetchPolicy?: C.FetchPolicy;
 
   /**
    * @summary The time interval (in milliseconds) on which this subscription should be refetched from the server.

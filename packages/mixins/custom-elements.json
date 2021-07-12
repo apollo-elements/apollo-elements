@@ -17,6 +17,7 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject>"
               },
+              "default": "client",
               "description": "The client specified with `ApolloClientMixin`."
             }
           ],
@@ -83,15 +84,15 @@
               "kind": "field",
               "name": "documentType",
               "static": true,
+              "default": "'mutation'",
               "type": {
                 "text": "'mutation'"
-              },
-              "default": "'mutation'"
+              }
             },
             {
               "kind": "field",
               "name": "controller",
-              "default": "ApolloMutationController"
+              "default": "new ApolloMutationController<D, V>(this, null, {\n      update: this.updater,\n      onCompleted: data => data && this.onCompleted?.(data),\n      onError: error => this.onError?.(error),\n    })"
             },
             {
               "kind": "field",
@@ -615,6 +616,11 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "shouldSubscribe",
+              "default": "(x?: Partial<SubscriptionOptions>) =>\n        (shouldSubscribe?.(x) ?? true) && this.shouldSubscribe(x)"
             }
           ],
           "parameters": [

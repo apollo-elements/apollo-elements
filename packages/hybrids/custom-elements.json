@@ -78,13 +78,13 @@
               "kind": "field",
               "name": "#controllers",
               "privacy": "private",
-              "default": "Set"
+              "default": "new Set<ReactiveController>()"
             },
             {
               "kind": "field",
               "name": "#keys",
               "privacy": "private",
-              "default": "Map"
+              "default": "new Map<string|number|symbol, ControllerRecord>()"
             },
             {
               "kind": "method",

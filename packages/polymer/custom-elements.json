@@ -101,11 +101,6 @@
             },
             {
               "kind": "field",
-              "name": "[last]",
-              "default": "Map"
-            },
-            {
-              "kind": "field",
               "name": "client",
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject>"
@@ -329,8 +324,7 @@
               "name": "networkStatus",
               "type": {
                 "text": "NetworkStatus"
-              },
-              "default": "NetworkStatus"
+              }
             }
           ],
           "events": [
