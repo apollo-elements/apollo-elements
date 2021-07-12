@@ -1,5 +1,14 @@
 # @apollo-elements/components
 
+## 2.0.0-next.5
+
+### Patch Changes
+
+- 87a0e907: Update manifests
+- Updated dependencies [87a0e907]
+  - @apollo-elements/core@0.0.1-next.3
+  - @apollo-elements/mixins@4.0.0-next.3
+
 ## 2.0.0-next.4
 
 ### Patch Changes
