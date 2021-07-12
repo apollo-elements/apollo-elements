@@ -27,7 +27,7 @@ jobs:
           node-version: '15'
       - uses: c-hive/gha-yarn-cache@v1
       - name: Install Dependencies
-        run: sudo yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Codegen
         run: yarn build:codegen
@@ -53,7 +53,7 @@ jobs:
           node-version: '15'
       - uses: c-hive/gha-yarn-cache@v1
       - name: Install Dependencies
-        run: sudo yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Build
         run: yarn build
@@ -68,7 +68,7 @@ jobs:
           node-version: '15'
       - uses: c-hive/gha-yarn-cache@v1
       - name: Install Dependencies
-        run: sudo yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Build Docs
         run: yarn docs
