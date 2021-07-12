@@ -22,6 +22,7 @@
               "type": {
                 "text": "ApolloControllerOptions<D, V>"
               },
+              "default": "{}",
               "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n"
             },
             {
@@ -309,9 +310,14 @@
               "kind": "field",
               "name": "options",
               "type": {
-                "text": "ApolloMutationControllerOptions<D, V>"
+                "text": "ApolloControllerOptions<D, V>"
               },
-              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| variables           | `Variables<D, V>`{lang=ts}               | Operation variables. See [variables](/api/core/interfaces/mutation/#variables). |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}  | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| fetchPolicy         | `ErrorPolicy`{lang=ts}                   | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| refetchQueries      | `RefetchQueriesType<D> | null`{lang=ts}` | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) | |\n| awaitRefetchQueries | `boolean`{lang=ts}                       | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| update              | `MutationUpdaterFn<Data<D>>`{lang=ts}    | Function used to update the client cache following the mutation. See [updater](/api/core/interfaces/mutation/#updater). |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+              "summary": "Options for the operation and controller.",
+              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| variables           | `Variables<D, V>`{lang=ts}               | Operation variables. See [variables](/api/core/interfaces/mutation/#variables). |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}  | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| fetchPolicy         | `ErrorPolicy`{lang=ts}                   | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| refetchQueries      | `RefetchQueriesType<D> | null`{lang=ts}` | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) | |\n| awaitRefetchQueries | `boolean`{lang=ts}                       | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| update              | `MutationUpdaterFn<Data<D>>`{lang=ts}    | Function used to update the client cache following the mutation. See [updater](/api/core/interfaces/mutation/#updater). |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "field",
@@ -319,7 +325,11 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "field",
@@ -440,6 +450,7 @@
               "type": {
                 "text": "ApolloControllerOptions<D, V>"
               },
+              "default": "{}",
               "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n",
               "inheritedFrom": {
                 "name": "ApolloController",
@@ -788,18 +799,18 @@
               "kind": "field",
               "name": "options",
               "type": {
-                "text": "ApolloQueryControllerOptions<D, V>"
+                "text": "ApolloControllerOptions<D, V>"
               },
               "summary": "Options to customize the query and to interface with the controller.",
-              "description": "| Option          | Type | Description |\n| --------------- | ---- | ----------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves. |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs. |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+              "description": "| Option          | Type | Description |\n| --------------- | ---- | ----------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves. |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs. |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "field",
               "name": "networkStatus",
-              "type": {
-                "text": "NetworkStatus"
-              },
-              "default": "NetworkStatus",
               "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however."
             },
             {
@@ -855,7 +866,11 @@
                   "text": "void"
                 }
               },
-              "summary": "initializes or reinitializes the query"
+              "summary": "initializes or reinitializes the query",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "method",
@@ -864,6 +879,10 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
               }
             },
             {
@@ -972,6 +991,20 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "parameters": [
+                {
+                  "name": "client",
+                  "optional": true,
+                  "type": {
+                    "text": "ApolloClient<NormalizedCacheObject> | null"
+                  }
+                }
+              ],
+              "summary": "callback for when the Apollo client changes.",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
               }
             },
             {
@@ -991,7 +1024,12 @@
                     "text": "ComponentDocument<D> | null"
                   }
                 }
-              ]
+              ],
+              "summary": "callback for when the GraphQL document changes.",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "method",
@@ -1010,7 +1048,12 @@
                     "text": "Variables<D, V>"
                   }
                 }
-              ]
+              ],
+              "summary": "callback for when the GraphQL variables change.",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "method",
@@ -1159,6 +1202,7 @@
               "type": {
                 "text": "ApolloControllerOptions<D, V>"
               },
+              "default": "{}",
               "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n",
               "inheritedFrom": {
                 "name": "ApolloController",
@@ -1421,9 +1465,14 @@
               "kind": "field",
               "name": "options",
               "type": {
-                "text": "ApolloSubscriptionControllerOptions<D, V>"
+                "text": "ApolloControllerOptions<D, V>"
               },
-              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client                 | `ApolloClient`{lang=ts}                     | ApolloClient instance for the subscription. |\n| fetchPolicy            | `FetchPolicy`{lang=ts}                      | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| noAutoSubscribe        | `boolean`{lang=ts}                          | If set, the component will not subscribe until called explicitly. See [noAutoSubscribe](/api/core/interfaces/subscription/#noautosubscribe) |\n| onSubscriptionComplete |                                             | Callback that fires when the subscription ends. See [onSubscriptionComplete](/api/core/interfaces/subscription/#onsubscriptioncomplete) |\n| onSubscriptionData     |                                             | Callback for when subscription produces new data. See [onSubscriptionData](/api/core/interfaces/subscription/#onsubscriptiondata) |\n| shouldResubscribe      | `boolean`{lang=ts}                          | Determines if your subscription should be unsubscribed and subscribed again |\n| shouldSubscribe        |                                             | Predicate which determines whether to automatically subscribe. See [shouldSubscribe](/api/core/interfaces/subscription/#shouldsubscribe) |\n| skip                   | `boolean`{lang=ts}                          | When true, the subscription will not fetch at all. |\n| subscription           | `DocumentNode`{lang=ts} | Subscription GraphQL Document |\n| variables              | `Variables<D, V>`{lang=ts}                  | Subscription variables |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+              "summary": "Options for the operation and controller.",
+              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client                 | `ApolloClient`{lang=ts}                     | ApolloClient instance for the subscription. |\n| fetchPolicy            | `FetchPolicy`{lang=ts}                      | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| noAutoSubscribe        | `boolean`{lang=ts}                          | If set, the component will not subscribe until called explicitly. See [noAutoSubscribe](/api/core/interfaces/subscription/#noautosubscribe) |\n| onSubscriptionComplete |                                             | Callback that fires when the subscription ends. See [onSubscriptionComplete](/api/core/interfaces/subscription/#onsubscriptioncomplete) |\n| onSubscriptionData     |                                             | Callback for when subscription produces new data. See [onSubscriptionData](/api/core/interfaces/subscription/#onsubscriptiondata) |\n| shouldResubscribe      | `boolean`{lang=ts}                          | Determines if your subscription should be unsubscribed and subscribed again |\n| shouldSubscribe        |                                             | Predicate which determines whether to automatically subscribe. See [shouldSubscribe](/api/core/interfaces/subscription/#shouldsubscribe) |\n| skip                   | `boolean`{lang=ts}                          | When true, the subscription will not fetch at all. |\n| subscription           | `DocumentNode`{lang=ts} | Subscription GraphQL Document |\n| variables              | `Variables<D, V>`{lang=ts}                  | Subscription variables |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "field",
@@ -1466,6 +1515,10 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
               }
             },
             {
@@ -1475,6 +1528,10 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
               }
             },
             {
@@ -1591,6 +1648,20 @@
                 "type": {
                   "text": "void"
                 }
+              },
+              "parameters": [
+                {
+                  "name": "client",
+                  "optional": true,
+                  "type": {
+                    "text": "ApolloClient<NormalizedCacheObject> | null"
+                  }
+                }
+              ],
+              "summary": "callback for when the Apollo client changes.",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
               }
             },
             {
@@ -1610,7 +1681,12 @@
                     "text": "ComponentDocument<D> | null"
                   }
                 }
-              ]
+              ],
+              "summary": "callback for when the GraphQL document changes.",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "method",
@@ -1629,7 +1705,12 @@
                     "text": "Variables<D, V>"
                   }
                 }
-              ]
+              ],
+              "summary": "callback for when the GraphQL variables change.",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
             },
             {
               "kind": "method",
@@ -1670,6 +1751,7 @@
               "type": {
                 "text": "ApolloControllerOptions<D, V>"
               },
+              "default": "{}",
               "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n",
               "inheritedFrom": {
                 "name": "ApolloController",
@@ -2092,18 +2174,27 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "ApolloElementEventType"
+                "text": "ApolloEventType"
               },
               "privacy": "public",
-              "static": true
+              "static": true,
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              }
             },
             {
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "ApolloElementEventType"
+                "text": "ApolloEventType"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "static": true,
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              }
             },
             {
               "kind": "field",
@@ -2135,15 +2226,23 @@
               "type": {
                 "text": "ApolloController"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              }
             },
             {
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "ApolloControllerEventType"
+                "text": "ApolloEventType"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              }
             }
           ],
           "superclass": {
@@ -2159,20 +2258,30 @@
             {
               "kind": "field",
               "name": "type",
-              "privacy": "public",
-              "static": true,
               "type": {
-                "text": "'apollo-controller-connected'"
+                "text": "ApolloEventType"
               },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              },
+              "static": true,
               "default": "'apollo-controller-connected'"
             },
             {
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'apollo-controller-connected'"
+                "text": "ApolloEventType"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              },
+              "static": true,
+              "default": "'apollo-controller-connected'"
             },
             {
               "kind": "field",
@@ -2182,7 +2291,7 @@
               },
               "privacy": "public",
               "inheritedFrom": {
-                "name": "ApolloControllerEvent",
+                "name": "ApolloEvent",
                 "module": "events.js"
               }
             }
@@ -2201,20 +2310,30 @@
             {
               "kind": "field",
               "name": "type",
-              "privacy": "public",
-              "static": true,
               "type": {
-                "text": "'apollo-controller-disconnected'"
+                "text": "ApolloEventType"
               },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              },
+              "static": true,
               "default": "'apollo-controller-disconnected'"
             },
             {
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'apollo-controller-disconnected'"
+                "text": "ApolloEventType"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloEvent",
+                "module": "events.js"
+              },
+              "static": true,
+              "default": "'apollo-controller-disconnected'"
             },
             {
               "kind": "field",
@@ -2224,7 +2343,7 @@
               },
               "privacy": "public",
               "inheritedFrom": {
-                "name": "ApolloControllerEvent",
+                "name": "ApolloEvent",
                 "module": "events.js"
               }
             }
@@ -2562,7 +2681,8 @@
                 "text": "string"
               },
               "privacy": "public",
-              "summary": "Fetch Policy for the operation."
+              "summary": "Fetch Policy for the operation.",
+              "attribute": "fetch-policy"
             },
             {
               "kind": "field",
@@ -2581,7 +2701,8 @@
               },
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
-              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation."
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "attribute": "error-policy"
             },
             {
               "kind": "field",
@@ -2801,18 +2922,26 @@
               "kind": "field",
               "name": "documentType",
               "type": {
-                "text": "'mutation'"
+                "text": "'document'|'query'|'mutation'|'subscription'"
               },
               "static": true,
-              "readonly": true
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloMutationController<D, V>"
+                "text": "ApolloController<D, V>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -2821,7 +2950,11 @@
                 "text": "Data<D> | null"
               },
               "privacy": "public",
-              "summary": "Latest mutation data"
+              "summary": "Latest mutation data",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -2830,8 +2963,12 @@
                 "text": "Variables<D, V> | null"
               },
               "privacy": "public",
+              "summary": "Mutation variables.",
               "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
-              "summary": "Mutation variables."
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -2840,7 +2977,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default."
+              "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
+              "attribute": "await-refetch-queries"
             },
             {
               "kind": "field",
@@ -2856,10 +2994,16 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "Extract<FetchPolicy, 'no-cache'>"
+                "text": "string"
               },
               "privacy": "public",
-              "description": "If set to 'no-cache', the mutation result will not update the Apollo cache."
+              "summary": "Fetch Policy for the operation.",
+              "attribute": "fetch-policy",
+              "description": "If set to 'no-cache', the mutation result will not update the Apollo cache.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -2895,7 +3039,8 @@
                 "text": "RefetchQueriesType<D> | null"
               },
               "privacy": "public",
-              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return."
+              "description": "A list of query names which will be refetched once this mutation has returned.\nThis is often used if you have a set of queries which may be affected by a mutation and will have to update.\nRather than writing a mutation query reducer (i.e. `updateQueries`) for this,\nyou can refetch the queries that will be affected\nand achieve a consistent store once these queries return.",
+              "attribute": "refetch-queries"
             },
             {
               "kind": "field",
@@ -3073,6 +3218,7 @@
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "attribute": "error-policy",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3162,7 +3308,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3183,7 +3329,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3204,7 +3350,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3216,7 +3362,7 @@
               },
               "readonly": true,
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3238,7 +3384,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3260,7 +3406,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             }
@@ -3309,10 +3455,15 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "Extract<FetchPolicy, 'no-cache'>"
+                "text": "string"
               },
+              "summary": "Fetch Policy for the operation.",
+              "fieldName": "fetchPolicy",
               "description": "If set to 'no-cache', the mutation result will not update the Apollo cache.",
-              "fieldName": "fetchPolicy"
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
             },
             {
               "name": "refetch-queries",
@@ -3350,18 +3501,26 @@
               "kind": "field",
               "name": "documentType",
               "type": {
-                "text": "'mutation'"
+                "text": "'document'|'query'|'mutation'|'subscription'"
               },
               "static": true,
-              "readonly": true
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloQueryController<D, V>"
+                "text": "ApolloController<D, V>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -3370,7 +3529,11 @@
                 "text": "Data<D> | null"
               },
               "privacy": "public",
-              "summary": "The latest query data."
+              "summary": "The latest query data.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -3379,18 +3542,27 @@
                 "text": "Variables<D, V> | null"
               },
               "privacy": "public",
+              "summary": "Query variables.",
               "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
-              "summary": "Query variables."
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "WatchQueryFetchPolicy"
+                "text": "string"
               },
               "privacy": "public",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
+              "attribute": "fetch-policy",
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
-              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query."
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -3428,7 +3600,8 @@
               },
               "privacy": "public",
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
-              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`."
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
+              "attribute": "next-fetch-policy"
             },
             {
               "kind": "field",
@@ -3437,7 +3610,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so."
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "attribute": "no-auto-subscribe"
             },
             {
               "kind": "field",
@@ -3756,6 +3930,7 @@
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "attribute": "error-policy",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3845,7 +4020,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3866,7 +4041,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3887,7 +4062,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3899,7 +4074,7 @@
               },
               "readonly": true,
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3921,7 +4096,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -3943,7 +4118,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             }
@@ -3984,11 +4159,15 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "WatchQueryFetchPolicy"
+                "text": "string"
               },
-              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
-              "fieldName": "fetchPolicy"
+              "fieldName": "fetchPolicy",
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
             },
             {
               "name": "next-fetch-policy",
@@ -4035,18 +4214,26 @@
               "kind": "field",
               "name": "documentType",
               "type": {
-                "text": "'subscription'"
+                "text": "'document'|'query'|'mutation'|'subscription'"
               },
               "static": true,
-              "readonly": true
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloSubscriptionController<D, V>"
+                "text": "ApolloController<D, V>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -4055,7 +4242,12 @@
                 "text": "Data<D> | null"
               },
               "privacy": "public",
-              "description": "Latest subscription data."
+              "summary": "Latest Data.",
+              "description": "Latest subscription data.",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -4064,8 +4256,12 @@
                 "text": "Variables<D, V> | null"
               },
               "privacy": "public",
+              "summary": "Subscription variables.",
               "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\n\nSetting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
-              "summary": "Subscription variables."
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -4090,10 +4286,15 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "FetchPolicy"
+                "text": "string"
               },
               "privacy": "public",
-              "summary": "Specifies the FetchPolicy to be used for this subscription."
+              "summary": "Specifies the FetchPolicy to be used for this subscription.",
+              "attribute": "fetch-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.js"
+              }
             },
             {
               "kind": "field",
@@ -4111,7 +4312,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "If true, the element will not begin querying data until you manually call `subscribe`"
+              "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
+              "attribute": "no-auto-subscribe"
             },
             {
               "kind": "field",
@@ -4340,6 +4542,7 @@
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "attribute": "error-policy",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4429,7 +4632,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -4450,7 +4653,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -4471,7 +4674,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -4483,7 +4686,7 @@
               },
               "readonly": true,
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -4505,7 +4708,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             },
@@ -4527,7 +4730,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "ApolloElementElement",
+                "name": "ControllerHost",
                 "module": "types.js"
               }
             }
@@ -4568,10 +4771,14 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "FetchPolicy"
+                "text": "string"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
-              "fieldName": "fetchPolicy"
+              "fieldName": "fetchPolicy",
+              "inheritedFrom": {
+                "name": "ApolloElementElement",
+                "module": "types.ts"
+              }
             },
             {
               "name": "no-auto-subscribe",

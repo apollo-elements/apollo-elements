@@ -2,7 +2,7 @@ import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-defini
 import helmet from 'eleventy-plugin-helmet';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
-import { bundle } from './lib/build-components.js';
+import { bundle } from './lib/bundle.js';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { getWebmentionsForUrl } from './webmentions.js';

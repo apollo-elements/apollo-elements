@@ -101,7 +101,7 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: this['controller']['options']['errorPolicy'];
+  errorPolicy?: C.ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
@@ -109,7 +109,7 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+  fetchPolicy?: 'no-cache';
 
   /**
    * A list of query names which will be refetched once this mutation has returned.
@@ -159,7 +159,7 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
   /**
    * Callback for when a mutation is completed.
    */
-  onCompleted?(data: Data<D>|null): void
+  onCompleted?(data: Data<D> | null): void
 
   /**
    * Callback for when an error occurs in mutation.

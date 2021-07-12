@@ -65,21 +65,21 @@ export class ApolloElement<
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;
 
   /** @summary Latest Data. */
-  @controlled() @state() data: Data<D>|null = null;
+  @controlled() @state() data: Data<D> | null = null;
 
   /**
    * @summary Operation document.
    * GraphQL operation document i.e. query, subscription, or mutation.
    * Must be a parsed GraphQL `DocumentNode`
    */
-  @controlled() @state() document: ComponentDocument<D>|null = null;
+  @controlled() @state() document: ComponentDocument<D> | null = null;
 
   /** @summary Latest error */
-  @controlled() @state() error: Error|ApolloError|null = null;
+  @controlled() @state() error: Error | ApolloError | null = null;
 
   /** @summary Latest errors */
   @controlled() @state() errors: readonly GraphQLError[] = [];
 
   /** @summary Operation variables. */
-  @controlled() @state() variables: Variables<D, V>|null = null;
+  @controlled() @state() variables: Variables<D, V> | null = null;
 }

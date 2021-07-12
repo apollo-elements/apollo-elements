@@ -281,8 +281,7 @@
               "name": "networkStatus",
               "type": {
                 "text": "NetworkStatus"
-              },
-              "default": "NetworkStatus"
+              }
             },
             {
               "kind": "field",
@@ -319,7 +318,6 @@
               "type": {
                 "text": "NetworkStatus"
               },
-              "default": "NetworkStatus",
               "fieldName": "networkStatus"
             },
             {
