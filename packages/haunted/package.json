@@ -56,7 +56,7 @@
   ],
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
-  "homepage": "https://apolloelements.dev/modules/_apollo_elements_haunted.html",
+  "homepage": "https://apolloelements.dev/api/libraries/haunted/",
   "dependencies": {
     "@apollo-elements/core": "^0.0.1-next.0",
     "haunted": "^4.8.1"

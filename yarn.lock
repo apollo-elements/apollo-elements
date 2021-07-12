@@ -160,6 +160,15 @@
   dependencies:
     tslib "~2.0.1"
 
+"@atomico/hooks@^3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@atomico/hooks/-/hooks-3.9.1.tgz#0ef9349e5393ff58d92685249ae096fc592a4bd0"
+  integrity sha512-BVuK+U/QE4PuDrMHU+90Puf5qdfShHQYSKdOfGxbPiZUKDNgy0YOQX1anU8G7Bffoo75ovgHRYYOWSJOSdqlOQ==
+  dependencies:
+    "@uppercod/css-to-object" latest
+    "@uppercod/exp-route" latest
+    atomico latest
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -3975,6 +3984,16 @@
   resolved "https://registry.yarnpkg.com/@ungap/event-target/-/event-target-0.2.2.tgz#6543122625a0a793c5fa265f45717cd096b0fb7c"
   integrity sha512-z0bsRd8APns6CDBVEPEj3p82TiFc1UY8uWNhL+T0ydpQqnpHyPVwwgJ4FC5KP85sLbg80+g+h644UTatwKNi/g==
 
+"@uppercod/css-to-object@latest":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uppercod/css-to-object/-/css-to-object-1.1.1.tgz#b2689387e73ef8e247315833851065296472bc1a"
+  integrity sha512-dCTxxolI6fu28lzNRVwd7CzJV8EbARITFyCbP/JqLHYLfWHY7GJqXHDdk0GbtfXvsZosPCvjOE4dOIMT4XDFZQ==
+
+"@uppercod/exp-route@latest":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uppercod/exp-route/-/exp-route-1.3.0.tgz#cad6f3927e2063baced1213fc8deb7430984a3dc"
+  integrity sha512-S3snkUhr93a0kq0wfJRVH0pdsE2zAxIHw3BFu41vNYuBCCfbK701ll+nfOVQajNfZV6Wg4WvkOeluprUgOvROg==
+
 "@web/browser-logs@^0.2.1", "@web/browser-logs@^0.2.2":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@web/browser-logs/-/browser-logs-0.2.3.tgz#6ecfb6b115e357fcd0972563ac1ad085c35a2cd1"
@@ -4772,6 +4791,11 @@ atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
+atomico@^1.26.1, atomico@latest:
+  version "1.26.1"
+  resolved "https://registry.yarnpkg.com/atomico/-/atomico-1.26.1.tgz#ce20c16280e2cd1b7c51e8a72e9a2fdee3fe6eae"
+  integrity sha512-PUm9hcupmv5ZeB0MVhQQRWFaS1+nEbYpYHHKwXuMiPPWh1zFlK1YmNhLKDjyGZSgSkeIuSPTcsnOoscUnSa+Sg==
 
 auto-bind@~4.0.0:
   version "4.0.0"
