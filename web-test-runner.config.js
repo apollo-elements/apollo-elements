@@ -14,11 +14,10 @@ const cjsIncludes = [
   '**/graphql-tag/src/index.js',
   '**/zen-observable/**/*.js',
   '**/incremental-dom/dist/*cjs.js',
-  '**/bind-decorator/index.js',
 ];
 
-/** @type {import('@web/test-runner').TestRunnerConfig} */
-const config = {
+/** @type {Partial<import('@web/test-runner').TestRunnerConfig>} */
+export default ({
   nodeResolve: {
     exportConditions: ['default', 'esbuild', 'import'],
     extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
@@ -74,6 +73,4 @@ const config = {
     esbuildPlugin({ ts: true }),
     sendKeysPlugin(),
   ],
-};
-
-export default config;
+});
