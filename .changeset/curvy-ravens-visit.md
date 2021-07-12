@@ -9,10 +9,6 @@
 "@apollo-elements/lit-apollo": patch
 "@apollo-elements/mixins": patch
 "@apollo-elements/polymer": patch
-"@apollo-elements/cem-preset": patch
-"esbuild-plugin-monorepo-resolve": patch
-"rocket-preset-apollo-elements": patch
-"@apollo-elements/test": patch
 ---
 
 Update manifests
