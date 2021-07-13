@@ -28,7 +28,7 @@ query HelloQuery {
 
 Apollo Elements give you three ways to define query components:
 1. Using the `<apollo-query>` HTML element
-2. With [`ApolloQueryController`](/api/core/controllers/query/) reactive controller, `useQuery` [haunted hook](/api/libraries/haunted/useQuery/), or `query` [hybrids factory](/api/libraries/hybrids/query/)
+2. With [`ApolloQueryController`](/api/core/controllers/query/) reactive controller; `useQuery` hook for [haunted](/api/libraries/haunted/useQuery/) or [atomico](/api/libraries/atomico/useQuery/); or `query` [hybrids factory](/api/libraries/hybrids/query/)
 3. By defining a custom element that extends from {%footnoteref "querymixin" 'or applies <a href="/api/libraries/mixins/apollo-query-mixin/"><code>ApolloQueryMixin</code></a>'%}{%endfootnoteref%}
 
 ## HTML Queries
@@ -94,15 +94,15 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
         hello { name greeting }
       }
     </script>
-    <template>
-      <article class="{%raw%}{{ loading ? 'skeleton' : '' }}{%endraw%}">
-        <p id="error" ?hidden="{%raw%}{{ !error }}{%endraw%}">{%raw%}{{ error.message }}{%endraw%}</p>
+    <template>{%raw%}
+      <article class="{{ loading ? 'skeleton' : '' }}">
+        <p id="error" ?hidden="{{ !error }}">{{ error.message }}</p>
         <p>
-          {%raw%}{{ data.greeting || 'Hello' }}{%endraw%},
-          {%raw%}{{ data.name || 'Friend' }}{%endraw%}
+          {{ data.greeting || 'Hello' }},
+          {{ data.name || 'Friend' }}
         </p>
       </article>
-    </template>
+    {%endraw%}</template>
   </apollo-query>
   ```
 
@@ -184,8 +184,8 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
       const greeting = this.query.data?.greeting ?? 'Hello';
       const name = this.query.data?.name ?? 'Friend';
       return html`
-        <article class="${classMap({ skeleton: this.query.loading })}">
-          <p id="error" ?hidden="${!this.query.error}">${this.query.error?.message}</p>
+        <article class=${classMap({ skeleton: this.query.loading })}>
+          <p id="error" ?hidden=${!this.query.error}>${this.query.error?.message}</p>
           <p>
             ${this.query.data?.greeting ?? 'Hello'},
             ${this.query.data?.name ?? 'Friend'}
@@ -201,8 +201,8 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
   import { HelloQuery } from './Hello.query.graphql';
 
   const template = html<HelloQueryElement>`
-    <article class="${x => x.loading ? 'skeleton' : ''})}">
-      <p id="error" ?hidden="${!x => x.error}">${x => x.error?.message}</p>
+    <article class=${x => x.loading ? 'skeleton' : ''}>
+      <p id="error" ?hidden=${!x => x.error}>${x => x.error?.message}</p>
       <p>
         ${x => x.data?.hello?.greeting ?? 'Hello'},
         ${x => x.data?.hello?.name ?? 'Friend'}
@@ -228,14 +228,37 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
     const name = data?.hello?.name ?? 'Friend';
 
     return html`
-      <article class="${classMap({ loading })})}">
-        <p id="error" ?hidden="${!error}">${error?.message}</p>
+      <article class=${classMap({ loading })}>
+        <p id="error" ?hidden=${!error}>${error?.message}</p>
         <p>${greeting}, ${name}!</p>
       </article>
     `;
   }
 
   customElements.define('hello-query', component(Hello));
+  ```
+
+  ```jsx tab atomico
+  import { useQuery, c } from '@apollo-elements/atomico';
+  import { HelloQuery } from './Hello.query.graphql';
+
+  function HelloQueryElement() {
+    const { data, loading, error } = useQuery(HelloQuery, { noAutoSubscribe: true });
+
+    const greeting = data?.hello?.greeting ?? 'Hello';
+    const name = data?.hello?.name ?? 'Friend';
+
+    return (
+      <host shadowDom>
+        <article class={loading ? 'loading' : ''}>
+          <p id="error" hidden={!error}>{error?.message}</p>
+          <p>{greeting}, {name}!</p>
+        </article>
+      </host>
+    );
+  }
+
+  customElements.define('hello-query', c(Hello));
   ```
 
   ```ts tab hybrids
@@ -246,8 +269,8 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
     client: client(),
     query: query(HelloQuery),
     render: ({ data, error, loading }) => html`
-      <article class="${loading ? 'skeleton' : ''})}">
-        <p id="error" ?hidden="${!error}">${error?.message}</p>
+      <article class=${loading ? 'skeleton' : ''}>
+        <p id="error" hidden=${!error}>${error?.message}</p>
         <p>
           ${data?.hello?.greeting ?? 'Hello'},
           ${data?.hello?.name ?? 'Friend'}
@@ -297,15 +320,15 @@ For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can appl
         "name": "Dude"
       }
     </script>
-    <template>
-      <article class="{%raw%}{{ loading ? 'skeleton' : '' }}{%endraw%}">
-        <p id="error" ?hidden="{%raw%}{{ !error }}{%endraw%}">{%raw%}{{ error.message }}{%endraw%}</p>
+    <template>{%raw%}
+      <article class="{{ loading ? 'skeleton' : '' }}">
+        <p id="error" ?hidden="{{ !error }}">{{ error.message }}</p>
         <p>
-          {%raw%}{{ data.greeting || 'Hello' }}{%endraw%},
-          {%raw%}{{ data.name || 'Friend' }}{%endraw%}
+          {{ data.greeting || 'Hello' }},
+          {{ data.name || 'Friend' }}
         </p>
       </article>
-    </template>
+    {%endraw%}</template>
   </apollo-query>
   ```
 
@@ -351,6 +374,18 @@ For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can appl
         name: 'Dude'
       }
     });
+  }
+  ```
+
+  ```jsx tab atomico
+  function Hello() {
+    const { data } = useQuery(HelloQuery, {
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      }
+    });
+    return <host>...</host>;
   }
   ```
 
@@ -430,6 +465,17 @@ If you want to keep your element from automatically subscribing, you can opt out
     return html`
       <p>${greeting}, ${name}!</p>
     `;
+  }
+  ```
+
+  ```tsx tab atomico
+  function Hello() {
+    const { data } = useQuery(HelloQuery, { noAutoSubscribe: true });
+
+    const greeting = data?.greeting ?? 'Hello';
+    const name = data?.name ?? 'Friend';
+
+    return <host><p>{greeting}, {name}!</p></host>;
   }
   ```
 
@@ -551,6 +597,21 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
   }
   ```
 
+  ```ts tab atomico
+  function PageQueryElement() {
+    const { data } = useQuery(PageQuery, {
+      /**
+       * Prevent fetching if the URL contains a `?noAutoFetch` query param
+       */
+      shouldSubscribe(): boolean {
+        const { searchParams } = new URL(location.href);
+        return !searchParams.has('noAutoFetch');
+      }
+    });
+    return <host>...</host>
+  }
+  ```
+
   ```ts tab hybrids
   define('page-query', {
     query: query(PageQuery, {
@@ -615,6 +676,15 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
   }
   ```
 
+  ```tsx tab atomico
+  function HeavySlowQueryElement() {
+    const { data } = useQuery(HeavySlowQuery, {
+      fetchPolicy: 'cache-only',
+    });
+    return <host>...</host>;
+  }
+  ```
+
   ```ts tab hybrids
   define('heavy-slow-query', {
     query: query(HeavySlowQuery, {
@@ -636,10 +706,10 @@ You can also use the `fetch-policy` attribute on individual elements (if they im
     }
   </script>
   <template>
-    <h2>Latest Message:</h2>
-    <template type="if" if="{%raw%}{{ data }}{%endraw%}">
-      <p>{%raw%}{{ data.messages[0].message }}{%endraw%}</p>
-    </template>
+    <h2>Latest Message:</h2>{%raw%}
+    <template type="if" if="{{ data }}">
+      <p>{{ data.messages[0].message }}</p>
+    </template>{%endraw%}
   </template>
 </apollo-query>
 ```

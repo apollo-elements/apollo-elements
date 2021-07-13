@@ -1,6 +1,6 @@
 ---
 layout: layout-api
-package: '@apollo-elements/haunted'
+package: '@apollo-elements/atomico'
 module: useSubscription.js
 ---
 <!-- ----------------------------------------------------------------------------------------
@@ -10,14 +10,14 @@ module: useSubscription.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Haunted >> useSubscription || 30
+# Web Component Libraries >> Atomico >> useSubscription || 30
 
 Apollo `useSubscription` hook for web components.
 
-Read the [subscription components guides](/guides/usage/subscriptions/) for examples and tips.
+Read the [subscription component guides](/guides/usage/subscriptions/) for examples and tips.
 
 ```ts playground subscription-factory user-added.ts
-import { useSubscription, useState, component, html } from '@apollo-elements/hybrids';
+import { useSubscription, useState, c, html } from '@apollo-elements/hybrids';
 
 import { UserAddedSubscription } from './UserAdded.subscription.graphql.js';
 
@@ -35,17 +35,19 @@ function UserAdded() {
   });
 
   return html`
-    <link rel="stylesheet" href="user-added.css">
-    <mwc-snackbar
-        labeltext="${data?.name} Joined!"
-        open="${opened}"
-        @MDCSnackbar:closed="${() => setOpened(false)}"
-        @MDCSnackbar:opened="${() => setOpened(true)}"
-    ></mwc-snackbar>
+    <host shadowDom>
+      <link rel="stylesheet" href="user-added.css">
+      <mwc-snackbar
+          labeltext="${data?.name} Joined!"
+          open="${opened}"
+          onMDCSnackbar:closed="${() => setOpened(false)}"
+          onMDCSnackbar:opened="${() => setOpened(true)}"
+      ></mwc-snackbar>
+    </host>
   `,
 });
 
-customElements.define('user-added', component(UserAdded));
+customElements.define('user-added', c(UserAdded));
 ```
 
 ```css playground-file subscription-factory user-added.css

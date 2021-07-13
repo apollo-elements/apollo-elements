@@ -530,6 +530,71 @@ function onWillMutate(event) {
   customElements.define('all-sites', component(AllSites));
   ```
 
+  ```tsx tab atomico
+  import type { ApolloMutationElement, WillMutateEvent } from '@apollo-elements/components';
+
+  import { useQuery, c } from '@apollo-elements/atomico';
+
+  import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
+
+  import { SitesQuery } from './Sites.query.graphql';
+
+  import '@apollo-elements/components/apollo-mutation';
+
+  type CreateNetworkMutator = ApolloMutationElement<typeof CreateNetworkMutation>;
+
+  interface ItemDetail {
+    itemId: string;
+    selected: boolean;
+  }
+
+  function AllSites() {
+    const { data, client } = useQuery(SitesQuery);
+
+    function onSelectedChanged(event: CustomEvent<ItemDetail>) {
+      client.writeFragment({
+        id: `Site:${event.detail.itemId}`,
+        fragment: gql`
+          fragment siteSelected on Site {
+            selected @client
+          }
+        `,
+        data: {
+          selected: event.detail.selected
+        }
+      })
+    }
+
+    function onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
+      event.target.variables = {
+        sites: data.sites
+          .filter(x => x.selected)
+          .map(x => x.id); // string[]
+      }
+    }
+
+    return (
+      <host shadowDom>
+        <select-list>{data.sites.map(site => (
+          <select-item
+              item-id={site.id}
+              item-name={site.name}
+              selected={site.selected}
+              onselect={onSelectedChanged}
+          ></select-item>))}
+        </select-list>
+        <apollo-mutation
+            mutation={CreateNetworkMutation}
+            onwill-mutate={this.onWillMutate}>
+          <button trigger>Create</button>
+        </apollo-mutation>
+      </host>
+    );
+  }
+
+  customElements.define('all-sites', c(AllSites));
+  ```
+
   ```ts tab hybrids
   import type { ApolloQueryController } from '@apollo-elements/core';
   import type { ApolloMutation } from '@apollo-elements/components';

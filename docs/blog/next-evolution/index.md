@@ -125,6 +125,37 @@ Here's the demo app from above, but written in HTML:
 
 There's a tonne of potential here and we're very keen to see what you come up with using these new components. Bear in mind that the stampino API isn't stable yet: there may be changes coming down the pipe in the future, but we'll do our best to keep those changes private.
 
+## Atomico support
+
+On the heels of the controllers release, we're happy to add a new package to the roster. Apollo Elements now has first-class support for [Atomico](https://atomico.gitbook.io), a new hooks-based web components library with JSX or template-string templating.
+
+```jsx
+import { useQuery, c } from '@apollo-elements/atomico';
+import { LaunchesQuery } from './Launches.query.graphql.js';
+
+function Launches() {
+  const { data } = useQuery(LaunchesQuery, { variables: { limit: 3 } });
+
+  const launches = data?.launchesPast ?? [];
+
+  return (
+    <host shadowDom>
+      <link rel="stylesheet" href="launches.css"/>
+      <ol>{launches.map(x => (
+        <li>
+          <article>
+            <span>{x.mission_name}</span>
+            <img src={x.links.mission_patch_small} alt="Badge" role="presentation"/>
+          </article>
+        </li>))}
+      </ol>
+    </host>
+  );
+}
+
+customElements.define('spacex-launches', c(Launches));
+```
+
 ## New and Improved Docs
 It wouldn't be an Apollo Elements release without some docs goodies. This time, in addition to new and update docs and guides for components and controllers, we've replaced our webcomponents.dev iframes with `<playground-ide>` elements. All the "Edit Live" demos on this site, including the ones in this blog post, are running locally in your browser via a service worker. Talk about serverless, _amirite_?
 
