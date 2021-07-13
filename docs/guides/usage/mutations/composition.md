@@ -298,6 +298,44 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   customElements.define('profile-page', component(ProfilePage));
   ```
 
+  ```tsx tab atomico
+  import '@apollo-elements/components/apollo-mutation';
+  import { useQuery, c } from '@apollo-elements/atomico';
+
+  import { ProfileQuery } from './Profile.query.graphql';
+  import { UpdateProfileMutation } from 'UpdateProfile.mutation.graphql';
+
+  function ProfilePage() {
+    const { data, loading } = useQuery(ProfileQuery);
+
+    return (
+      <host shadowDom>
+        <h2>Profile</h2>
+        <dl hidden={loading || !data}>
+          <dt>Name</dt>
+          <dd>{data?.name}</dd>
+          <dt>Picture</dt>
+          <dd><img src="{data?.picture}"/></dd>
+          <dt>Birthday</dt>
+          <dd>{data?.birthday}</dd>
+        </dl>
+        <form hidden="{!data?.isMe}">
+          <h3>Edit</h3>
+          <apollo-mutation mutation="{UpdateProfileMutation}" input-key="input">
+            <label>Name <input data-variable="name"></label>
+            <label>Picture (URL) <input data-variable="picture"></label>
+            <label>Birthday <input data-variable="birthday" type="date"/></label>
+            <button trigger>Save</button>
+          </apollo-mutation>
+        </form>
+      </host>
+    );
+
+  }
+
+  customElements.define('profile-page', c(ProfilePage));
+  ```
+
   ```ts tab hybrids
   import '@apollo-elements/components/apollo-mutation';
   import { query, define, html } from '@apollo-elements/hybrids';
@@ -545,6 +583,46 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   }
 
   customElements.define('profile-page', component(ProfilePage));
+  ```
+
+  ```tsx tab atomico
+  import '@apollo-elements/components/apollo-mutation';
+  import { useQuery, useMutation, useState, c } from '@apollo-elements/atomico';
+
+  import { ProfileQuery } from './Profile.query.graphql';
+  import { UpdateProfileMutation } from 'UpdateProfile.mutation.graphql';
+
+  function ProfilePage() {
+    const { data, loading } = useQuery(ProfileQuery);
+    const [updateProfile, result] = useMutation(UpdateProfileMutation);
+    const [input, setInput] = useState({})
+
+    const onVariableInput = e => setInput({ ...input, [e.target.id]: e.target.value });
+
+    return (
+      <host shadowDom>
+        <h2>Profile</h2>
+        <dl hidden={loading || !data}>
+          <dt>Name</dt>
+          <dd>${data?.name}</dd>
+          <dt>Picture</dt>
+          <dd><img src={data?.picture}/></dd>
+          <dt>Birthday</dt>
+          <dd>${data?.birthday}</dd>
+        </dl>
+        <form hidden={!data?.isMe}>
+          <h3>Edit</h3>
+          <label>Name <input id="name" oninput={onVariableInput}></label>
+          <label>Picture (URL) <input id="picture" oninput={onVariableInput}></label>
+          <label>Birthday <input id="birthday" oninput={onVariableInput} type="date"/></label>
+          <button onclick={() => updateProfile({ variables: { input } })}>Save</button>
+        </form>
+      </host>
+    );
+
+  }
+
+  customElements.define('profile-page', c(ProfilePage));
   ```
 
   ```ts tab hybrids

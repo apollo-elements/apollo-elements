@@ -341,6 +341,56 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   customElements.define('messages-query', component(Messages));
   ```
 
+  ```jsx tab atomico
+  import { useQuery, c } from '@apollo-elements/atomico';
+
+  import { client } from './client';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
+  import { MessagesQuery } from './Messages.query.graphql.js';
+
+  function formatDate(iso) {
+    try { return new Date(iso).toDateString(); }
+    catch { return ''; }
+  }
+
+  function Messages() {
+    const { data, subscribeToMore } = useQuery(MessagesQuery, { client });
+
+    useEffect(() => {
+      subscribeToMore({
+        document: MessageSentSubscription,
+        updateQuery(prev, { subscriptionData }) {
+          if (!subscriptionData.data) return prev;
+          return {
+            ...prev,
+            messages: [...prev.messages, subscriptionData.data.messageSent]
+          };
+        },
+      });
+    }, []);
+
+    const messages = data?.messages ?? [];
+
+    return (
+      <host shadowDom>
+        <ol>
+          {messages.map(({ date, user, message }) => (
+          <li>
+            <h4>
+              <time datetime={date}>{formatDate(date)}</time>
+              <span class="user">{user} said:</span>
+            </h4>
+            <p>{message}</p>
+          </li>
+          ))}
+        </ol>
+      </host>
+    );
+  }
+
+  customElements.define('messages-query', c(Messages));
+  ```
+
   ```js tab hybrids
   import { define, query, html } from '@apollo-elements/hybrids';
 
@@ -612,6 +662,61 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
     `;
   }
   customElements.define('messages-query', component(Messages));
+  ```
+
+  ```jsx tab atomico
+  import { useQuery, useSubscription, useEffect, useHost, c } from '@apollo-elements/atomico';
+  import { client } from './client';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
+  import { MessagesQuery } from './Messages.query.graphql.js';
+
+  import '@material/mwc-snackbar';
+
+  function formatDate(iso) {
+    try { return new Date(iso).toDateString(); }
+    catch { return ''; }
+  }
+
+  function Messages() {
+    const ref = useHost();
+    const { data } = useQuery(MessagesQuery, { client });
+    const { data: subscriptionData } = useSubscription(MessageSentSubscription, { client,
+      onData: async ({ subscriptionResult: { data: { messageSent } } }) => {
+        // update the query element
+        const cached = client.readQuery({ query: MessagesQuery });
+        client.writeQuery({
+          query: MessagesQuery ,
+          data: { messages: [...cached.messages, messageSent] }
+        });
+      }
+    });
+
+    useEffect(() => {
+      ref.current.shadowRoot.querySelector('mwc-snackbar').labelText =
+        `${messageSent.user} sent a message!`
+      ref.current.shadowRoot.querySelector('mwc-snackbar').show();
+    }, [subscriptionData])
+
+    const messages = data?.messages ?? [];
+
+    return (
+      <host shadowDom>
+        <mwc-snackbar></mwc-snackbar>
+        <ol>
+          {messages.map(({ date, user, message }) => (
+          <li>
+            <h4>
+              <time datetime={date}>{formatDate(date)}</time>
+              <span class="user">{user} said:</span>
+            </h4>
+            <p>{message}</p>
+          </li>
+          ))}
+        </ol>
+      </host>
+    );
+  }
+  customElements.define('messages-query', c(Messages));
   ```
 
   ```js tab hybrids

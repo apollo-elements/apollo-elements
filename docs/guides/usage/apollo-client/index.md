@@ -97,6 +97,16 @@ Pass the `client` param to controllers to specify the client instance
   }
   ```
 
+  ```tsx tab atomico
+  import { useQuery } from '@apollo-elements/atomico';
+  import { client } from './specific-apollo-client';
+
+  function ConnectedQuery() {
+    const { data } = useQuery(gql`query ConnectedQuery { connected }`, { client });
+    return <host>...</host>;
+  }
+  ```
+
   ```ts tab hybrids
   import { query, define, html } from '@apollo-elements/hybrids';
   import { client as apolloClient } from './specific-apollo-client';
@@ -176,6 +186,19 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
 
   function ConnectedQuery() {
     const { data } = useQuery(gql`query ConnectedQuery { connected }`, { client });
+  }
+  ```
+
+  ```tsx tab atomico
+  import { useQuery } from '@apollo-elements/atomico';
+  import { client } from './specific-apollo-client';
+
+  // There is no ApolloClientMixin for Haunted, rather
+  // the `useQuery`, `useMutation`, and `useSubscription` hooks accept a client option.
+
+  function ConnectedQuery() {
+    const { data } = useQuery(gql`query ConnectedQuery { connected }`, { client });
+    return <host>...</host>;
   }
   ```
 

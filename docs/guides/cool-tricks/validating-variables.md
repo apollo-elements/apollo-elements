@@ -175,6 +175,23 @@ With this approach, you can control on a per-component basis when to subscribe.
   customElements.define('blog-post', component(BlogPost));
   ```
 
+  ```tsx tab atomico
+  import { useQuery, c } from '@apollo-elements/atomico';
+  import { PostQuery } from './Post.query.graphql';
+  import { routeVar } from '../variables';
+
+  function BlogPost() {
+    const { data } = useQuery(PostQuery, {
+      shouldSubscribe() {
+        return !!(routeVar().params?.postId)
+      },
+    });
+    return <host>...</host>;
+  }
+
+  customElements.define('blog-post', c(BlogPost));
+  ```
+
   ```ts tab hybrids
   import { define, query } from '@apollo-elements/hybrids';
   import { PostQuery } from './Post.query.graphql';
@@ -254,6 +271,9 @@ The old variable-validating behaviour is still available, but you have to opt-in
   > There's no `ValidateVariablesMixin` for haunted, so use one of the other techniques.
   ```
 
+  ```md tab haunted
+  > There's no `ValidateVariablesMixin` for atomico, so use one of the other techniques.
+  ```
 
   ```md tab hybrids
   > There's no `ValidateVariablesMixin` for hybrids, so use one of the other techniques.
