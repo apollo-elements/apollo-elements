@@ -1,5 +1,13 @@
 # @apollo-elements/components
 
+## 2.0.0-next.6
+
+### Patch Changes
+
+- 41bc768c: fix homepage link in package.json
+- Updated dependencies [41bc768c]
+  - @apollo-elements/mixins@4.0.0-next.4
+
 ## 2.0.0-next.5
 
 ### Patch Changes

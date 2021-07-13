@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/atomico",
-  "version": "0.0.0-next.0",
+  "version": "0.0.0-next.1",
   "description": "👩‍🚀 Atomico Hooks for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",

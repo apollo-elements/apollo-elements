@@ -1,5 +1,11 @@
 # @apollo-elements/mixins
 
+## 4.0.0-next.4
+
+### Patch Changes
+
+- 41bc768c: fix homepage link in package.json
+
 ## 4.0.0-next.3
 
 ### Patch Changes
