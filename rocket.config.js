@@ -73,6 +73,15 @@ export default ({
         '@apollo-elements/core/events': `${IMPORT_MAP_BASE}/apollo-elements.js`,
         '@apollo-elements/core/lib/has-all-variables': `${IMPORT_MAP_BASE}/apollo-elements.js`,
 
+        'atomico': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico/useQuery.js': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico/useMutation.js': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico/useSubscription.js': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico/useQuery': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico/useMutation': `${IMPORT_MAP_BASE}/atomico.js`,
+        '@apollo-elements/atomico/useSubscription': `${IMPORT_MAP_BASE}/atomico.js`,
+
         '@microsoft/fast-element': `${IMPORT_MAP_BASE}/fast.js`,
         '@apollo-elements/fast': `${IMPORT_MAP_BASE}/fast.js`,
         '@apollo-elements/fast/apollo-query.js': `${IMPORT_MAP_BASE}/fast.js`,
@@ -152,6 +161,7 @@ export default ({
           fast: { label: 'FAST', iconHref: '/_merged_assets/brand-logos/fast.svg' },
           gluon: { label: 'Gluon', iconHref: '/_merged_assets/brand-logos/js.svg' },
           haunted: { label: 'Haunted', iconHref: '/_merged_assets/brand-logos/haunted.svg' },
+          atomico: { label: 'Atomico', iconHref: '/_merged_assets/brand-logos/atomico.svg' },
           hybrids: { label: 'Hybrids', iconHref: '/_merged_assets/brand-logos/hybrids.svg' },
           mixins: { label: 'Vanilla', iconHref: '/_merged_assets/brand-logos/js.svg' },
           polymer: { label: 'Polymer', iconHref: '/_merged_assets/brand-logos/polymer.svg' },

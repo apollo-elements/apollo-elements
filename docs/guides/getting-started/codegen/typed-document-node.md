@@ -138,6 +138,19 @@ These examples assume you followed the first approach outlined above. If you are
   }
   ```
 
+  ```tsx tab atomico
+  import { useQuery } from '@apollo-elements/atomico';
+  import { TypedQuery } from './Typed.query.graphql';
+
+  function TypedQueryElement() {
+    const { data } = useQuery(TypedQuery);
+
+    if (data !== null)
+      console.assert(typeof data.name === 'string');
+    return <host>...</host>;
+  }
+  ```
+
   ```ts tab hybrids
   import { define, query, html } from '@apollo-elements/hybrids';
   import { TypedQuery } from './Typed.query.graphql';

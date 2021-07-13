@@ -53,6 +53,10 @@ libraries:
     name: Haunted
     logo: haunted
 
+  - lib: atomico
+    name: Atomico
+    logo: atomico
+
   - lib: hybrids
     name: Hybrids
     logo: hybrids
@@ -182,7 +186,20 @@ Define **custom** query, mutation, or subscription components in JavaScript or T
 Apollo Elements comes with support for popular web components libraries.
 Components built using different libraries can coexist seamlessly in the same app.
 
-{% include 'partials/libraries.njk' %}
+<ul id="libraries">
+{%- for library in libraries -%}
+  {%- set path = './_assets/brand-logos/' + library.logo + '.svg' -%}
+  <li>
+    <a href="./api/libraries/{{ library.lib }}/" class="library {{ library.lib }}">
+      <figure>
+        {%- include path -%}
+        <figcaption>{{ library.name }}</figcaption>
+      </figure>
+    </a>
+  </li>
+{%- endfor -%}
+</ul>
+
 
 ## Interoperable
 

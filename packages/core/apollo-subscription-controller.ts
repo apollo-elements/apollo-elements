@@ -118,11 +118,11 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
     if (!client) /* c8 ignore start */ // covered
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
 
-
     if ((this.observable && !shouldResubscribe) || skip)
       return; /* c8 ignore stop */
 
     const query = params?.subscription ?? this.subscription as DocumentNode; /* c8 ignore next */
+
     this.#lastSubscriptionDocument = query;
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error

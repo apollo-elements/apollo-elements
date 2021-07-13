@@ -50,6 +50,7 @@ export async function bundle() {
     build({
       external: ['https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*'],
       entryPoints: {
+        'atomico': join(__dirname, '..', 'entrypoints/atomico.ts'),
         'fast': join(__dirname, '..', 'entrypoints/fast.ts'),
         'gluon': join(__dirname, '..', 'entrypoints/gluon.ts'),
         'haunted': join(__dirname, '..', 'entrypoints/haunted.ts'),

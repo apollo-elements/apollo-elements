@@ -192,6 +192,33 @@ Let's define a custom element that displays a button to toggle the theme.
   customElements.define('theme-toggle', component(ThemeToggle));
   ```
 
+  ```tsx tab atomico
+  import { useQuery, c } from '@apollo-elements/atomico';
+
+  type Theme = 'dark'|'light';
+  type Data = { theme: Theme };
+
+  function ThemeToggle() {
+    const { data } = useQuery(ThemeToggleQuery);
+
+    const nextTheme = data?.theme === 'dark' ? 'light' : 'dark';
+
+    function toggleTheme(host) {
+      // TBD
+    }
+
+    return (
+      <host>
+        <button onclick={toggleTheme}>
+          Change to {nextTheme} theme
+        </button>
+      </host>
+    );
+  }
+
+  customElements.define('theme-toggle', c(ThemeToggle));
+  ```
+
   ```ts tab hybrids
   import { query, define, html } from '@apollo-elements/hybrids';
 
@@ -341,6 +368,37 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   }
   ```
 
+  ```tsx tab atomico
+  import { useQuery, useEffect, c } from '@apollo-elements/atomico';
+  import { typePolicies } from './typePolicies';
+
+  function ThemeToggle() {
+    const { client, data } = useQuery(ThemeToggleQuery);
+
+    /**
+     * There's no TypePoliciesMixin for atomico,
+     * but you can use the `useEffect` hook to do the same
+     */
+    useEffect(({ host: { client } }) => {
+      client.cache.policies.addTypePolicies(typePolicies);
+    }, [client]);
+
+    const nextTheme = data?.theme === 'dark' ? 'light' : 'dark';
+
+    function toggleTheme() {
+      // TBD
+    }
+
+    return (
+      <host>
+        <button onclick={toggleTheme}>
+          Change to {nextTheme} theme
+        </button>
+      </host>
+    );
+  }
+  ```
+
   ```ts tab hybrids
   import { typePolicies } from './typePolicies';
 
@@ -429,6 +487,16 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
+  ```tsx tab atomico
+  function toggleTheme() {
+    const theme = nextTheme;
+    client.writeQuery({
+      query: ToggleThemeQuery,
+      data: { theme },
+    });
+  }
+  ```
+
   ```ts tab hybrids
   function toggleTheme(host) {
     const theme = host.nextTheme;
@@ -501,6 +569,12 @@ Last, we'll refactor the `toggleTheme` method to directly update the value of `t
   }
   ```
 
+  ```tsx tab atomico
+  function toggleTheme() {
+    themeVar(nextTheme);
+  }
+  ```
+
   ```ts tab hybrids
   function toggleTheme(host) {
     themeVar(host.nextTheme);
@@ -560,6 +634,13 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   ```ts tab haunted
+  function toggleTheme() {
+    localStorage.setItem('theme', nextTheme);
+    client.cache.evict({ fieldName: 'theme' });
+  }
+  ```
+
+  ```ts tab atomico
   function toggleTheme() {
     localStorage.setItem('theme', nextTheme);
     client.cache.evict({ fieldName: 'theme' });

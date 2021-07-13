@@ -222,6 +222,42 @@ And this component definition:
   customElements.define('blog-post', component(BlogPost));
   ```
 
+  ```tsx tab atomico
+  import { useMutation, useState, c } from '@apollo-elements/atomico';
+
+  import { BlogPostMutation } from './BlogPost.mutation.graphql';
+
+  function BlogPost() {
+    const [content, setContent] = useState('');
+
+    const [addBlogPost, { data, loading }] =
+      useMutation(BlogPostMutation, {
+        onCompleted: () => setContent(''),
+      });
+
+    const variables = { content };
+
+    return (
+      <host shadowDom>
+        <loading-overlay active={loading}></loading-overlay>
+        <label>New Post
+          <textarea oninput={e => setContent(e.target.value)}></textarea>
+        </label>
+        <button
+            hidden={!!data}
+            onclick={() => addBlogPost({ variables })}
+        >Post!</button>
+        <article hidden={!data}>
+          <strong>Post Succeeded!</strong>
+          <p>{data?.summary}</p>
+        </article>
+      </host>
+    );
+  }
+
+  customElements.define('blog-post', c(BlogPost));
+  ```
+
   ```ts tab hybrids
   import { mutation, define, html } from '@apollo-elements/fast';
 
@@ -415,6 +451,41 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   }
   ```
 
+  ```tsx tab atomico
+  import type { ResultOf } from '@graphql-typed-document-node/core';
+  /**
+   * update function which reads a cached query result, merges
+   * it with the mutation result, and then writes it back to the cache.
+   */
+  function update(
+    cache: ApolloCache<NormalizedCacheObject>,
+    result: FetchResult<ResultOf<typeof BlogPostMutation>>
+  ) {
+    // 1: Read the cache synchronously to get the current list of posts
+    const query = LatestPostsQuery;
+    const cached = cache.readQuery({ query: LatestPostsQuery });
+
+    // 2: Calculate the expected result of LatestPostsQuery,
+    //    considering the mutation result
+    const data = { posts: [result.data.postBlogPost, ...cached.posts] }
+
+    // 3: Perform the cache update by calling `writeQuery`
+    cache.writeQuery({ query, data });
+  }
+
+  function BlogPost() {
+    const [content, setContent] = useState('');
+
+    const [addBlogPost, { data, loading }] =
+      useMutation(BlogPostMutation, {
+        onCompleted: () => setContent(''),
+        update,
+      });
+
+    return <host>...</host>;
+  }
+  ```
+
   ```ts tab hybrids
   define('blog-post', {
     mutation: mutation(BlogPostMutation, {
@@ -542,6 +613,50 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
       >Post!</button>
 
       <article ?hidden="${!data}">
+        <strong>Post Succeeded!</strong>
+        <p>${data?.summary}</p>
+      </article>
+    `;
+  }
+  ```
+
+  ```ts tab haunted
+  function BlogPost() {
+    const [datePosted, setDatePosted] = useState(new Date().toISOString());
+    const [content, setContent] = useState('');
+
+    const [addBlogPost, { data, loading }] =
+      useMutation<Data, Variables>(BlogPostMutation, {
+        onCompleted: () => setContent(''),
+        update,
+        optimisticResponse: variables => ({
+          postBlogPost: {
+            __typename: 'BlogPost',
+            url: '#',
+            // implementation left as an exercise to the reader
+            summary: summarize(variables.content),
+            datePosted,
+            content,
+          },
+        }),
+      });
+
+    const variables = { content };
+
+    return html`
+      <loading-overlay active="${loading}"></loading-overlay>
+
+      <label>New Post textarea oninput="${e => setContent(e.target.value)}"</textarea></label>
+
+      <button
+          hidden="${!!data}"
+          onclick="${() => {
+            setDatePosted(new Date().toISOString());
+            addBlogPost({ variables });
+          }}"
+      >Post!</button>
+
+      <article hidden="${!data}">
         <strong>Post Succeeded!</strong>
         <p>${data?.summary}</p>
       </article>

@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./useQuery.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./useMutation.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./useSubscription.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "atomico"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "useMutation.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "useMutation",
+          "return": {
+            "type": {
+              "text": "[\n  (params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>) => Promise<FetchResult<Data<D>>>,\n  ApolloMutationController<D, V>\n]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "mutation",
+              "type": {
+                "text": "ComponentDocument<D>"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "ApolloMutationControllerOptions<D, V>"
+              },
+              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| variables           | `Variables<D, V>`{lang=ts}               | Operation variables. See [variables](/api/core/interfaces/mutation/#variables). |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}  | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| fetchPolicy         | `ErrorPolicy`{lang=ts}                   | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| refetchQueries      | `RefetchQueriesType<D> | null`{lang=ts}` | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) | |\n| awaitRefetchQueries | `boolean`{lang=ts}                       | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| update              | `MutationUpdaterFn<Data<D>>`{lang=ts}    | Function used to update the client cache following the mutation. See [updater](/api/core/interfaces/mutation/#updater). |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "useMutation",
+          "declaration": {
+            "name": "useMutation",
+            "module": "useMutation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "useQuery.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "useQuery",
+          "return": {
+            "type": {
+              "text": "ApolloQueryController<D, V>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "query",
+              "type": {
+                "text": "ComponentDocument<D>"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "ApolloQueryControllerOptions<D, V>"
+              },
+              "description": "| Option          | Type | Description |\n| --------------- | ---- | ----------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves. |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs. |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "useQuery",
+          "declaration": {
+            "name": "useQuery",
+            "module": "useQuery.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "useSubscription.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "useSubscription",
+          "return": {
+            "type": {
+              "text": "ApolloSubscriptionController<D, V>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "query",
+              "type": {
+                "text": "ComponentDocument<D>"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "ApolloSubscriptionControllerOptions<D, V>"
+              },
+              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client                 | `ApolloClient`{lang=ts}                     | ApolloClient instance for the subscription. |\n| fetchPolicy            | `FetchPolicy`{lang=ts}                      | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| noAutoSubscribe        | `boolean`{lang=ts}                          | If set, the component will not subscribe until called explicitly. See [noAutoSubscribe](/api/core/interfaces/subscription/#noautosubscribe) |\n| onSubscriptionComplete |                                             | Callback that fires when the subscription ends. See [onSubscriptionComplete](/api/core/interfaces/subscription/#onsubscriptioncomplete) |\n| onSubscriptionData     |                                             | Callback for when subscription produces new data. See [onSubscriptionData](/api/core/interfaces/subscription/#onsubscriptiondata) |\n| shouldResubscribe      | `boolean`{lang=ts}                          | Determines if your subscription should be unsubscribed and subscribed again |\n| shouldSubscribe        |                                             | Predicate which determines whether to automatically subscribe. See [shouldSubscribe](/api/core/interfaces/subscription/#shouldsubscribe) |\n| skip                   | `boolean`{lang=ts}                          | When true, the subscription will not fetch at all. |\n| subscription           | `DocumentNode`{lang=ts} | Subscription GraphQL Document |\n| variables              | `Variables<D, V>`{lang=ts}                  | Subscription variables |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "useSubscription",
+          "declaration": {
+            "name": "useSubscription",
+            "module": "useSubscription.js"
+          }
+        }
+      ]
+    }
+  ]
+}

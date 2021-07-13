@@ -32,3 +32,79 @@ h2:not(:first-of-type) {
 code-tab::part(content) {
   width: 100%;
 }
+
+#libraries {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 140px);
+  grid-template-rows: repeat(auto-fit, 140px);
+  gap: 20px;
+  list-style-type: none;
+  place-content: center;
+}
+
+.library svg {
+  filter: brightness(1);
+}
+
+.library.atomico svg path {
+  fill: currentColor !important;
+}
+
+:is(.library:hover, .library:focus) svg {
+  filter: brightness(1.5);
+  transition: transform 0.2s ease-in, filter 0.2s ease-in;
+  transform: scale(1.0618);
+  transform-origin: center;
+}
+
+#libraries li,
+#libraries {
+  margin: 0;
+  padding: 0;
+}
+
+#libraries li {
+  display: contents;
+}
+
+#libraries a {
+  color: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.9;
+  padding: 20px;
+  display: flex;
+  text-decoration: none;
+  border-radius: 100%;
+  transition: background 0.2s ease-in-out;
+  height: 100%;
+  outline: none;
+}
+
+#libraries figure {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 100px min-content;
+}
+
+#libraries figcaption {
+  text-align: center;
+}
+
+#libraries svg {
+  width: 100px;
+  height: 100px;
+}
+
+#libraries a:hover figcaption,
+#libraries a:focus figcaption {
+  color: var(--primary-color-lighter);
+  text-shadow: 2px 2px 2px var(--footer-background);
+}
+
+@media (prefers-color-scheme: dark) {
+  #libraries a:hover figcaption,
+  #libraries a:focus figcaption {
+    text-shadow: 2px 2px 2px var(--primary-color-darker);
+  }
+}

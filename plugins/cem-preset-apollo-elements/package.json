@@ -9,7 +9,7 @@
   "files": ["*.js", "preset"],
   "keywords": ["custom-elements-manifest", "preset"],
   "dependencies": {
-    "cem-plugin-async-function": "^0.0.1",
+    "cem-plugin-async-function": "^0.0.2",
     "cem-plugin-module-file-extensions": "^0.0.1",
     "cem-plugin-type-descriptions-markdown": "^0.0.1",
     "cem-plugin-readonly": "^0.0.1",
