@@ -7,6 +7,7 @@ const image = require('@11ty/eleventy-img');
 const nunjucks = require('nunjucks');
 const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
+const woff2base64 = require('woff2base64');
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
 const and = (p, q) => x => p(x) && q(x);
@@ -24,17 +25,17 @@ const isShortFirstWord = compose(isShort, getFirstWordLength);
 const isLongTitle = isLong;
 const isShortTitle = and(isShort, not(isLongFirstWord));
 
-let fontloaded = false;
-
-async function loadFont() {
-  const fontPath = path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.077.woff2')
-  console.time(`Loaded ${fontPath}`);
-  const FontConfig = await require('fontconfig');
-  const fontConfig = new FontConfig();
-  await fontConfig.addFont(fontPath);
-  fontloaded = true;
-  console.timeEnd(`Loaded ${fontPath}`);
+function getFont() {
+  const fontPath = path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.077.woff2');
+  const woff2Buffer = fs.readFileSync(fontPath);
+  return woff2base64({
+    'Recursive_VF_1.077.woff2': woff2Buffer,
+  }, {
+    fontFamily: 'Recursive',
+  });
 }
+
+const cssFonts = getFont();
 
 async function createPageSocialImage(options) {
   const { s } = await import('hastscript');
@@ -45,12 +46,10 @@ async function createPageSocialImage(options) {
     subcategory = '',
     subtitle = '',
     title = '',
+    fontFace = '',
   } = options
 
-  console.time(`Generate image ${title}`);
-
-  if (!fontloaded)
-    await loadFont()
+  console.time(`Generated image ${title}`);
 
   const rocketConfig = getComputedConfig();
 
@@ -117,19 +116,26 @@ async function createPageSocialImage(options) {
     subcategory,
     titleSVG,
     subtitleSVG,
+    fontFace,
   });
 
   const filetype = 'png';
+  const urlPath = '/_merged_assets/11ty-img/';
+  const sourceUrl = `${title}${subtitle}${category}${subcategory}.svg`
+
+  await fs.promises.mkdir(path.join(__dirname, '..', urlPath), { recursive: true });
+  await fs.promises.writeFile(path.join(__dirname, '..', urlPath, sourceUrl), svgString, 'utf8');
 
   const { [filetype]: [{ url }] } = await image(Buffer.from(svgString), {
     widths: [1000],
     formats: [filetype],
     outputDir,
-    urlPath: '/_merged_assets/11ty-img/',
-    sourceUrl: `${title}${subtitle}${category}${subcategory}`, // This is only used to generate the output filename hash
+    urlPath,
+    sourceUrl, // This is only used to generate the output filename hash
   });
+  
   console.timeEnd(`Generate image ${title}`);
-  console.log(title, url);
+  console.log(url);
 
   return url;
 }
@@ -157,6 +163,7 @@ module.exports = {
         category,
         subcategory,
         subtitle,
+        fontFace: cssFonts.woff2,
         title: title ?? 'Apollo Elements',
       });
     }
