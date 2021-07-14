@@ -45,7 +45,7 @@ function UserAdded() {
       ></mwc-snackbar>
     </host>
   `,
-});
+};
 
 customElements.define('user-added', c(UserAdded));
 ```
