@@ -63,7 +63,7 @@ function AddUser() {
 customElements.define('add-user', component(AddUser));
 ```
 
-```graphql playground-file use-mutation AddUser.mutation.graphql.js
+```ts playground-file use-mutation AddUser.mutation.graphql.ts
 import { gql, TypedDocumentNode } from '@apollo/client/core';
 
 interface Data {

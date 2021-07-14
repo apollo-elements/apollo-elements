@@ -43,7 +43,7 @@ function UserAdded() {
         @MDCSnackbar:opened="${() => setOpened(true)}"
     ></mwc-snackbar>
   `,
-});
+};
 
 customElements.define('user-added', component(UserAdded));
 ```
