@@ -28,6 +28,78 @@ const isShortTitle = and(isShort, not(isLongFirstWord));
 
 const CACHE = new Map();
 
+/** @type {import('puppeteer').Browser} */
+let browser;
+/** @type {import('puppeteer').Page} */
+let puppeteerPage;
+let stillGoing = false;
+
+async function getPage() {
+  if (!puppeteerPage) {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--font-render-hinting=none']
+    });
+    puppeteerPage = await browser.newPage();
+  }
+  return puppeteerPage;
+}
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing. The function also has a property 'clear'
+ * that is a function which will clear the timer to prevent previously scheduled executions.
+ *
+ * @source underscore.js
+ * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+ * @param {Function} function to wrap
+ * @param {Number} timeout in ms (`100`)
+ * @param {Boolean} whether to execute at the beginning (`false`)
+ * @api public
+ */
+function debounce(func, wait, immediate){
+  var timeout, args, context, timestamp, result;
+  if (null == wait) wait = 100;
+
+  function later() {
+    var last = Date.now() - timestamp;
+
+    if (last < wait && last >= 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+    }
+  };
+
+  var debounced = function(){
+    context = this;
+    args = arguments;
+    timestamp = Date.now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
+
+  return debounced;
+};
+
+const clearBrowser = debounce(async function clearBrowser() {
+  await browser.close();
+  browser = undefined;
+  puppeteerPage = undefined;
+}, 2000, false);
+
 async function createPageSocialImage(options) {
   const { s } = await import('hastscript');
   const { toHtml } = await import('hast-util-to-html');
@@ -36,7 +108,7 @@ async function createPageSocialImage(options) {
     category = '',
     subcategory = '',
     subtitle = '',
-    title = '',
+    title = 'Apollo Elements',
   } = options
 
   const sourceUrl = `${title}${subtitle}${category}${subcategory}.svg`
@@ -51,7 +123,7 @@ async function createPageSocialImage(options) {
 
     const outputDir = path.join(rocketConfig.outputDevDir, '_merged_assets', '11ty-img');
 
-    const templatePath = path.join(rocketConfig._inputDirCwdRelative, '_assets/social-template.njk');
+    const templatePath = path.join(rocketConfig._inputDirCwdRelative, '_assets', 'social-template.njk');
 
     const templateBuffer = await fs.promises.readFile(templatePath);
 
@@ -125,11 +197,7 @@ async function createPageSocialImage(options) {
     await fs.promises.writeFile(svgSourcePath, svgString, 'utf8');
 
     try {
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--font-render-hinting=none']
-      });
-      const page = await browser.newPage();
+      const page = await getPage();
       await page.goto('file://' + svgSourcePath);
       const svgElement = await page.$('svg');
       await svgElement.screenshot({
@@ -141,6 +209,7 @@ async function createPageSocialImage(options) {
       throw e;
     }
 
+    console.time('11ty-img')
     const { [filetype]: [{ url }] } = await image(await fs.promises.readFile(svgOutputPath), {
       widths: [1000],
       formats: [filetype],
@@ -148,12 +217,15 @@ async function createPageSocialImage(options) {
       urlPath,
       sourceUrl,
     });
+    console.timeEnd('11ty-img')
 
     console.timeEnd(consoleTimeLabel);
+    console.log('\t', url);
 
     CACHE.set(sourceUrl, url);
   }
 
+  await clearBrowser();
   return CACHE.get(sourceUrl);
 }
 
@@ -180,7 +252,7 @@ module.exports = {
         category,
         subcategory,
         subtitle,
-        title: title ?? 'Apollo Elements',
+        title,
       });
     }
   },
