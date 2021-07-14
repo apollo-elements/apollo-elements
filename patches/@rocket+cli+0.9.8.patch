@@ -1,0 +1,74 @@
+diff --git a/node_modules/@rocket/cli/package.json b/node_modules/@rocket/cli/package.json
+index d2613d6..9b90c93 100644
+--- a/node_modules/@rocket/cli/package.json
++++ b/node_modules/@rocket/cli/package.json
+@@ -73,6 +73,7 @@
+     "fs-extra": "^9.0.1",
+     "micromatch": "^4.0.2",
+     "plugins-manager": "^0.2.4",
++    "puppeteer": "10.1.0",
+     "slash": "^3.0.0",
+     "utf8": "^3.0.0",
+     "workbox-window": "^6.1.5"
+diff --git a/node_modules/@rocket/cli/src/RocketCli.js b/node_modules/@rocket/cli/src/RocketCli.js
+index 19a0fa9..cb66442 100644
+--- a/node_modules/@rocket/cli/src/RocketCli.js
++++ b/node_modules/@rocket/cli/src/RocketCli.js
+@@ -120,6 +120,7 @@ export class RocketCli {
+ 
+       const config = new TemplateConfig(null, relCwdPathToConfig);
+       elev.config = config.getConfig();
++
+       /** @type {*} */
+       (elev).resetConfig();
+       elev.setConfigPathOverride(relCwdPathToConfig);
+diff --git a/node_modules/@rocket/cli/src/getPuppeteerBrowser.js b/node_modules/@rocket/cli/src/getPuppeteerBrowser.js
+new file mode 100644
+index 0000000..d37b81e
+--- /dev/null
++++ b/node_modules/@rocket/cli/src/getPuppeteerBrowser.js
+@@ -0,0 +1,8 @@
++import puppeteer from 'puppeteer';
++
++export async function getPuppeteerBrowser() {
++  return puppeteer.launch({
++    headless: true,
++    args: ['--no-sandbox', '--font-render-hinting=none']
++  });
++}
+diff --git a/node_modules/@rocket/cli/src/normalizeConfig.js b/node_modules/@rocket/cli/src/normalizeConfig.js
+index 65b5d52..0705b4d 100644
+--- a/node_modules/@rocket/cli/src/normalizeConfig.js
++++ b/node_modules/@rocket/cli/src/normalizeConfig.js
+@@ -15,6 +15,7 @@ import { readConfig } from '@web/config-loader';
+ import { RocketStart } from './RocketStart.js';
+ import { RocketBuild } from './RocketBuild.js';
+ import { RocketLint } from './RocketLint.js';
++import { getPuppeteerBrowser } from './getPuppeteerBrowser.js';
+ 
+ import { fileURLToPath } from 'url';
+ 
+@@ -63,6 +64,8 @@ export async function normalizeConfig(inConfig) {
+ 
+     ...inConfig,
+ 
++    puppeteerBrowser: inConfig.puppeteerBrowser ?? await getPuppeteerBrowser(),
++
+     /** @type{RocketCliOptions['before11ty'][]} */
+     __before11tyFunctions: [],
+ 
+diff --git a/node_modules/@rocket/cli/src/shared/.eleventy.cjs b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
+index 4eaa98c..67c273a 100644
+--- a/node_modules/@rocket/cli/src/shared/.eleventy.cjs
++++ b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
+@@ -19,6 +19,10 @@ const defaultSetupUnifiedPlugins = [
+ module.exports = function (eleventyConfig) {
+   const config = getComputedConfig();
+ 
++  eleventyConfig.on('afterBuild', async () => {
++    await config.puppeteerBrowser?.close?.();
++  });
++
+   const { pathPrefix, _inputDirCwdRelative, outputDevDir } = config;
+ 
+   let metaPlugins = [
