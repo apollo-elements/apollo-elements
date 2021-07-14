@@ -8,6 +8,8 @@ const nunjucks = require('nunjucks');
 const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
 const woff2base64 = require('woff2base64');
+const puppeteer = require('puppeteer');
+const util = require('util');
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
 const and = (p, q) => x => p(x) && q(x);
@@ -49,7 +51,8 @@ async function createPageSocialImage(options) {
     fontFace = '',
   } = options
 
-  console.time(`Generated image ${title}`);
+  const consoleTimeLabel = `Generated image for ${title} in`;
+  console.time(consoleTimeLabel);
 
   const rocketConfig = getComputedConfig();
 
@@ -119,23 +122,43 @@ async function createPageSocialImage(options) {
     fontFace,
   });
 
-  const filetype = 'png';
-  const urlPath = '/_merged_assets/11ty-img/';
   const sourceUrl = `${title}${subtitle}${category}${subcategory}.svg`
+  const urlPath = '/_merged_assets/11ty-img/';
 
-  await fs.promises.mkdir(path.join(__dirname, '..', urlPath), { recursive: true });
-  await fs.promises.writeFile(path.join(__dirname, '..', urlPath, sourceUrl), svgString, 'utf8');
+  const filetype = 'png';
 
-  const { [filetype]: [{ url }] } = await image(Buffer.from(svgString), {
+  const svgSourcePath = path.join(__dirname, '..', urlPath, sourceUrl);
+  const svgOutputPath = path.join(__dirname, '..', urlPath, sourceUrl.replace('.svg', '.png').replace(/[\s,:]/g, '-'));
+
+  await fs.promises.mkdir(path.dirname(svgSourcePath), { recursive: true });
+  await fs.promises.writeFile(svgSourcePath, svgString, 'utf8');
+
+  try {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--font-render-hinting=none']
+    });
+    const page = await browser.newPage();
+    await page.goto('file://' + svgSourcePath);
+    const svgElement = await page.$('svg');
+    await svgElement.screenshot({
+      path: svgOutputPath,
+      omitBackground: true,
+    })
+  } catch(e) {
+    console.error(e)
+    throw e;
+  }
+
+  const { [filetype]: [{ url }] } = await image(await fs.promises.readFile(svgOutputPath), {
     widths: [1000],
     formats: [filetype],
     outputDir,
     urlPath,
-    sourceUrl, // This is only used to generate the output filename hash
+    sourceUrl,
   });
-  
-  console.timeEnd(`Generate image ${title}`);
-  console.log(url);
+
+  console.timeEnd(consoleTimeLabel);
 
   return url;
 }
