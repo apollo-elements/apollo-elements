@@ -153,11 +153,13 @@
     "rollup-plugin-terser": "^7.0.2",
     "sanitize-html": "^2.4.0",
     "slidem": "^1.2.8",
+    "svgexport": "^0.4.2",
     "ts-node": "^10.1.0",
     "ts-sinon": "^2.0.1",
     "typescript": "^4.3.5",
     "unist-util-map": "^3.0.0",
     "web-component-analyzer": "^1.1.6",
+    "woff2base64": "^2.0.0",
     "wsrun": "^5.2.4"
   },
   "dependencies": {
