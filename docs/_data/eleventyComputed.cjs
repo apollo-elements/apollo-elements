@@ -3,12 +3,12 @@ const { getComputedConfig, generateEleventyComputed } = require('@rocket/cli');
 
 const path = require('path');
 const fs = require('fs');
-const image = require('@11ty/eleventy-img');
 const nunjucks = require('nunjucks');
 const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
 const puppeteer = require('puppeteer');
-const util = require('util');
+const crypto = require('crypto');
+const { blue, bold, green, yellow } = require('chalk');
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
 const and = (p, q) => x => p(x) && q(x);
@@ -100,6 +100,24 @@ const clearBrowser = debounce(async function clearBrowser() {
   puppeteerPage = undefined;
 }, 2000, false);
 
+function checksumFile(path, hashName = 'md5') {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash(hashName);
+    const stream = fs.createReadStream(path);
+    stream.on('error', err => reject(err));
+    stream.on('data', chunk => hash.update(chunk));
+    stream.on('end', () => resolve(hash.digest('hex')));
+  });
+}
+
+const BUFFERS = new Map();
+
+async function getTemplate(templatePath) {
+  if (!BUFFERS.has(templatePath))
+    BUFFERS.set(templatePath, await fs.promises.readFile(templatePath));
+  return BUFFERS.get(templatePath);
+}
+
 async function createPageSocialImage(options) {
   const { s } = await import('hastscript');
   const { toHtml } = await import('hast-util-to-html');
@@ -111,22 +129,23 @@ async function createPageSocialImage(options) {
     title = 'Apollo Elements',
   } = options
 
-  const sourceUrl = `${title}${subtitle}${category}${subcategory}.svg`
+  const sourceUrl = `${title}-${subtitle}-${category}-${subcategory}.svg`.replace(/[\s,:]/g, '-').replace(/-+/g, '-').toLowerCase();
 
   if (!CACHE.get(sourceUrl)) {
 
-    const consoleTimeLabel = `Generated image for ${title} in`;
+    const consoleTimeLabel = yellow`[social] ` + blue`Generated image for ` + bold(blue(title)) + blue` in`;
 
     console.time(consoleTimeLabel);
 
     const rocketConfig = getComputedConfig();
 
-    const outputDir = path.join(rocketConfig.outputDevDir, '_merged_assets', '11ty-img');
+    const outputDir = path.join(rocketConfig.outputDevDir, '_merged_assets', 'social');
+    const urlPath = '/_merged_assets/social/';
+    const svgSourcePath = path.join(__dirname, '..', urlPath, sourceUrl);
+    const pngFilePath = path.join(outputDir, sourceUrl.replace('.svg', '.png'));
 
     const templatePath = path.join(rocketConfig._inputDirCwdRelative, '_assets', 'social-template.njk');
-
-    const templateBuffer = await fs.promises.readFile(templatePath);
-
+    const templateBuffer = await getTemplate(templatePath);
     let template = templateBuffer.toString();
 
     const width = 592;
@@ -186,14 +205,8 @@ async function createPageSocialImage(options) {
       subtitleSVG,
     });
 
-    const urlPath = '/_merged_assets/11ty-img/';
-
-    const filetype = 'png';
-
-    const svgSourcePath = path.join(__dirname, '..', urlPath, sourceUrl);
-    const svgOutputPath = path.join(__dirname, '..', urlPath, sourceUrl.replace('.svg', '.png').replace(/[\s,:]/g, '-'));
-
     await fs.promises.mkdir(path.dirname(svgSourcePath), { recursive: true });
+    await fs.promises.mkdir(outputDir, { recursive: true });
     await fs.promises.writeFile(svgSourcePath, svgString, 'utf8');
 
     try {
@@ -201,7 +214,7 @@ async function createPageSocialImage(options) {
       await page.goto('file://' + svgSourcePath);
       const svgElement = await page.$('svg');
       await svgElement.screenshot({
-        path: svgOutputPath,
+        path: pngFilePath,
         omitBackground: true,
       })
     } catch(e) {
@@ -209,18 +222,13 @@ async function createPageSocialImage(options) {
       throw e;
     }
 
-    console.time('11ty-img')
-    const { [filetype]: [{ url }] } = await image(await fs.promises.readFile(svgOutputPath), {
-      widths: [1000],
-      formats: [filetype],
-      outputDir,
-      urlPath,
-      sourceUrl,
-    });
-    console.timeEnd('11ty-img')
+    const hash = await checksumFile(pngFilePath);
+    const hashedPath = pngFilePath.replace('.png', `-${hash}.png`).replace(/-+/g, '-');
+    const url = hashedPath.replace('_site-dev', '');
+    await fs.promises.rename(pngFilePath, hashedPath);
 
     console.timeEnd(consoleTimeLabel);
-    console.log('\t', url);
+    console.log('         ' + blue('URL is'), green(url));
 
     CACHE.set(sourceUrl, url);
   }
