@@ -2,15 +2,15 @@
   <defs>
 
     <style>
-      /* latin */
-      @font-face {
-        font-family: 'Recursive';
-        font-style: oblique 0deg 15deg;
-        font-weight: 300 1000;
-        font-display: swap;
-        src: url(https://fonts.gstatic.com/s/recursive/v26/8vIK7wMr0mhh-RQChyHuE2ZaGf_4-g.woff2) format('woff2');
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-      }
+    /* latin */
+    @font-face {
+      font-family: 'Recursive';
+      font-style: oblique 0deg 15deg;
+      font-weight: 300 1000;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/recursive/v26/8vIK7wMr0mhh-RQChyHuE2ZaGf_4-g.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
     </style>
 
     <linearGradient id="social-template-b" x1="68.634%" x2="97.022%" y1="58.82%" y2="41.18%">
@@ -46,12 +46,12 @@
     <use fill="url(#social-template-f)" fill-opacity=".12" xlink:href="#social-template-e" style="mix-blend-mode:multiply"/>
 
     <svg id="title" fill="#FFF" x="127" y="62" width="592" height="268">
-      <g font-weight="400">
-        {{ titleSVG | safe }}!
+      <g font-weight="600">
+        {{ titleSVG | safe }}
       </g>
     </svg>
 
-    <svg id="subtitle" fill="#FFF" x="127" y="230" width="592" height="100">
+    <svg id="subtitle" fill="#FFF" x="127" y="270" width="592" height="100">
       <g font-weight="300">
         {{ subtitleSVG | safe }}
       </g>
