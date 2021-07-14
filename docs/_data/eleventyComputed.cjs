@@ -7,7 +7,6 @@ const image = require('@11ty/eleventy-img');
 const nunjucks = require('nunjucks');
 const { capital } = require('case');
 const Textbox = require('@borgar/textbox');
-const woff2base64 = require('woff2base64');
 const puppeteer = require('puppeteer');
 const util = require('util');
 
@@ -27,17 +26,18 @@ const isShortFirstWord = compose(isShort, getFirstWordLength);
 const isLongTitle = isLong;
 const isShortTitle = and(isShort, not(isLongFirstWord));
 
-function getFont() {
-  const fontPath = path.resolve(__dirname, '../_assets/fonts/Recursive_VF_1.077.woff2');
-  const woff2Buffer = fs.readFileSync(fontPath);
-  return woff2base64({
-    'Recursive_VF_1.077.woff2': woff2Buffer,
-  }, {
-    fontFamily: 'Recursive',
-  });
-}
+let puppeteerPage;
 
-const cssFonts = getFont();
+async function getPage() {
+  if (!puppeteerPage) {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--font-render-hinting=none']
+    });
+    puppeteerPage = await browser.newPage();
+  }
+  return puppeteerPage;
+}
 
 async function createPageSocialImage(options) {
   const { s } = await import('hastscript');
@@ -48,7 +48,6 @@ async function createPageSocialImage(options) {
     subcategory = '',
     subtitle = '',
     title = '',
-    fontFace = '',
   } = options
 
   const consoleTimeLabel = `Generated image for ${title} in`;
@@ -119,7 +118,6 @@ async function createPageSocialImage(options) {
     subcategory,
     titleSVG,
     subtitleSVG,
-    fontFace,
   });
 
   const sourceUrl = `${title}${subtitle}${category}${subcategory}.svg`
@@ -134,11 +132,7 @@ async function createPageSocialImage(options) {
   await fs.promises.writeFile(svgSourcePath, svgString, 'utf8');
 
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--font-render-hinting=none']
-    });
-    const page = await browser.newPage();
+    const page = await getPage();
     await page.goto('file://' + svgSourcePath);
     const svgElement = await page.$('svg');
     await svgElement.screenshot({
@@ -186,7 +180,6 @@ module.exports = {
         category,
         subcategory,
         subtitle,
-        fontFace: cssFonts.woff2,
         title: title ?? 'Apollo Elements',
       });
     }
