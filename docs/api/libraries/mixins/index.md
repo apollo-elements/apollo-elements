@@ -9,7 +9,7 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 
 ## Installation
 
-<code-tabs collection="package-managers" default-tab="npm">
+<code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
   npm i -S @apollo-elements/mixins@next

@@ -8,7 +8,7 @@ package: '@apollo-elements/fast'
 
 ## Installation
 
-<code-tabs collection="package-managers" default-tab="npm">
+<code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
   npm i -S @apollo-elements/fast@next

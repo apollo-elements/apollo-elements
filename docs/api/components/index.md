@@ -2,7 +2,7 @@
 
 Utility components that help you factor your graphql-based app.
 
-<code-tabs collection="package-managers" default-tab="npm">
+<code-tabs collection="package-managers" default-tab="npm" align="end">
 
 ```bash tab npm
 npm i -S @apollo-elements/components@next
