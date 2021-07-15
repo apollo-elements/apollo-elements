@@ -8,7 +8,7 @@ package: '@apollo-elements/atomico'
 
 ## Installing
 
-<code-tabs collection="package-managers" default-tab="npm">
+<code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
   npm i -S @apollo-elements/atomico@next

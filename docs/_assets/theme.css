@@ -66,11 +66,17 @@
   --code-button-background: var(--page-background);
   --code-tabs-tabs-background: transparent;
   --code-tabs-selected-highlight-color: var(--markdown-link-decoration);
+  --code-tabs-border-color: var(--page-background);
   --wcd-snippet-button-background: var(--code-button-background);
   --wcd-snippet-button-focus-background: var(--code-button-focus-background);
   --wcd-snippet-button-focus-color: var(--code-button-focus-color);
   --wcd-snippet-outer-background-color: var(--page-background);
   --wcd-snippet-focus-border-color: var(--primary-color);
+  --playground-snippet-button-background: var(--code-button-background);
+  --playground-snippet-button-focus-background: var(--code-button-focus-background);
+  --playground-snippet-button-focus-color: var(--code-button-focus-color);
+  --playground-snippet-outer-background-color: var(--page-background);
+  --playground-snippet-focus-border-color: var(--primary-color);
 
   /* markdown */
   --markdown-blockquote-color: var(--light-blue-900);

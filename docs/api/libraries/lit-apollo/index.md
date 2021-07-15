@@ -15,7 +15,7 @@ Looking for reactive Apollo controllers? See [`@apollo-elements/core`](/api/core
 
 ## Installation
 
-<code-tabs collection="package-managers" default-tab="npm">
+<code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
   npm i -S @apollo-elements/lit-apollo@next

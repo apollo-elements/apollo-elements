@@ -45,7 +45,7 @@ Circular flow chart showing the essential UI loop for Apollo Elements apps: [Que
 
 Apollo Elements comes with an app and component generator. Start the generator with this command:
 
-<code-tabs collection="package-managers" default-tab="npm">
+<code-tabs collection="package-managers" default-tab="npm" align="end">
 
 ```bash tab npm
 npm init @apollo-elements
