@@ -157,7 +157,6 @@
     --code-button-focus-color: white;
     --code-button-background: var(--page-background);
     --code-tabs-tabs-background: transparent;
-    --code-tabs-selected-highlight-color: transparent;
     --wcd-snippet-button-background: var(--code-button-background);
     --wcd-snippet-button-focus-background: var(--code-button-focus-background);
     --wcd-snippet-button-focus-color: var(--code-button-focus-color);
@@ -200,4 +199,10 @@
     --markdown-table-border-color: var(--markdown-table-background-color);
     --markdown-table-row-odd-background-color: var(--blue-grey-900);
   }
+}
+
+code-tabs:hover,
+code-tabs:focus,
+code-tabs:focus-within {
+  --code-tabs-selected-highlight-color: var(--primary-color) !important;
 }
