@@ -38,8 +38,8 @@ import '@apollo-elements/components';
 import { useQuery, component, html } from '@apollo-elements/haunted';
 import { IntrospectionQueriesQuery } from './IntrospectionQueries.query.graphql.js';
 
-customElements.define('introspection-queries', component(function IntrospectionQueries() {
-  const { data } = useQuery(IntrospectionQueriesQuery, { hostElement: this });
+function IntrospectionQueries(hostElement) {
+  const { data } = useQuery(IntrospectionQueriesQuery, { hostElement });
   const fields = data?.__type?.fields ?? [];
   return html`
     <link rel="stylesheet" href="introspection-queries.css"/>
@@ -52,7 +52,9 @@ customElements.define('introspection-queries', component(function IntrospectionQ
     `)}
     </ul>
   `;
-}));
+}
+
+customElements.define('introspection-queries', component(IntrospectionQueries));
 ```
 
 ```css playground-file client-demo introspection-queries.css

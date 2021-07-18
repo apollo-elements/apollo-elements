@@ -108,3 +108,45 @@ code-tab::part(content) {
     text-shadow: 2px 2px 2px var(--primary-color-darker);
   }
 }
+
+#demos {
+  --code-tabs-min-height: 505px;
+}
+
+#demos #default-tab {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  justify-content: center;
+  height: var(--code-tabs-min-height);
+  gap: 20px;
+  align-items: center;
+}
+
+#demos #default-tab svg {
+  fill: currentColor;
+  width: 100px;
+  transform: rotate(30deg);
+}
+
+#demos #default-tab p {
+  font-size: 48px;
+}
+
+#demos code-tab[selected] {
+  height: var(--code-tabs-min-height, 505px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+codesandbox-button[show-demo] {
+  flex: 1;
+}
+
+.reasons {
+  margin-bottom: 36px;
+}
+
+#query-spacex {
+  --playground-ide-height: 25em;
+}
