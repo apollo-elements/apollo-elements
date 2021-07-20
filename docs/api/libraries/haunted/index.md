@@ -2,7 +2,7 @@
 layout: layout-api-index
 package: '@apollo-elements/haunted'
 ---
-# Web Component Libraries >> Haunted || 40
+# Web Component Libraries >> Haunted
 
 [Haunted](https://github.com/matthewp/haunted) is an implementation of the React hooks API for web components.
 

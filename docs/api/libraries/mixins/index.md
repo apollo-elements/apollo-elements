@@ -3,7 +3,7 @@ layout: layout-api-index
 package: '@apollo-elements/mixins'
 ---
 
-# Web Component Libraries >> Class Mixins || 10
+# Web Component Libraries >> Class Mixins
 
 These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/) give you all the features you need to connect your components to your Apollo cache without imposing a specific component library.
 

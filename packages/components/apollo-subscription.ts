@@ -21,47 +21,47 @@ declare global { interface HTMLElementTagNameMap {
 /**
  * Render a GraphQL subscription to the DOM
  *
- * @example Render a subscription to Shadow DOM
+ * @example <caption>Render a subscription to Shadow DOM</caption>
  * ```html
- * <apollo-subscription>
- *   <script type="application/graphql">
- *     subscription NewMessages {
- *       messageAdded { id author content }
- *     }
- *   </script>
- *   <template>
- *     <article>
- *       <span class="author-name">{{ data.author.name }}</span>
- *       <mark-down>{{ data.content }}</mark-down>
- *     </article>
- *   </template>
- * </apollo-subscription>
+ *          <apollo-subscription>
+ *            <script type="application/graphql">
+ *              subscription NewMessages {
+ *                messageAdded { id author content }
+ *              }
+ *            </script>
+ *            <template>
+ *              <article>
+ *                <span class="author-name">{{ data.author.name }}</span>
+ *                <mark-down>{{ data.content }}</mark-down>
+ *              </article>
+ *            </template>
+ *          </apollo-subscription>
  * ```
  *
- * @example Setting subscription and variables using the DOM
+ * @example <caption>Setting subscription and variables using the DOM</caption>
  * ```html
- * <apollo-subscription id="subscription-element" template="message-template"></apollo-subscription>
+ *          <apollo-subscription id="subscription-element" template="message-template"></apollo-subscription>
  *
- * <template id="message-template">
- *   <article>
- *     <span class="author-name">{{ data.author.name }}</span>
- *     <mark-down>{{ data.content }}</mark-down>
- *   </article>
- * </template>
+ *          <template id="message-template">
+ *            <article>
+ *              <span class="author-name">{{ data.author.name }}</span>
+ *              <mark-down>{{ data.content }}</mark-down>
+ *            </article>
+ *          </template>
  *
- * <script type="module">
- *   import { gql } from '@apollo/client/core';
- *   const el = document.getElementById('subscription-element');
- *   el.subscription = gql`
- *     subscription NewMessages($limit: Int) {
- *       messagesAdded {
- *         messages { id author content }
- *         hasMore
- *       }
- *     }
- *   `;
- *   el.variables = { limit: 10 };
- * </script>
+ *          <script type="module">
+ *            import { gql } from '@apollo/client/core';
+ *            const el = document.getElementById('subscription-element');
+ *            el.subscription = gql`
+ *              subscription NewMessages($limit: Int) {
+ *                messagesAdded {
+ *                  messages { id author content }
+ *                  hasMore
+ *                }
+ *              }
+ *            `;
+ *            el.variables = { limit: 10 };
+ *          </script>
  * ```
  */
 @customElement('apollo-subscription')

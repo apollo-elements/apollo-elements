@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Provides an ApolloClient instance to all nested ApolloElement children,\neven across (open) shadow boundaries.\n\n## Examples\n\n### Generate a simple ApolloClient instance\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### Prevent network calls when required variables are absent\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### Providing a client to a tree of Nodes\n```html\n<apollo-client id=\"client-a\">\n<apollo-mutation>\n<!--...-->\n</apollo-mutation>\n</apollo-client>\n```\n\n### Nesting separate clients\n```html\n<apollo-client id=\"client-a\">\n<query-element>\n<!-- This element queries from client-a's endpoint -->\n</query-element>\n<apollo-client id=\"client-b\">\n<query-element>\n<!-- This element queries from client-b's endpoint -->\n</query-element>\n</apollo-client>\n</apollo-client>\n```",
+          "description": "Provides an ApolloClient instance to all nested ApolloElement children,\neven across (open) shadow boundaries.\n\n## Examples\n\n### <caption>Generate a simple ApolloClient instance</caption>\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### <caption>Prevent network calls when required variables are absent</caption>\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### <caption>Providing a client to a tree of Nodes</caption>\n```html\n<apollo-client id=\"client-a\">\n  <apollo-mutation>\n    <!--...-->\n  </apollo-mutation>\n</apollo-client>\n```\n\n### <caption>Nesting separate clients</caption>\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```",
           "name": "ApolloClientElement",
           "members": [
             {
@@ -29,7 +29,8 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "default": "null",
-              "summary": "Private reference to the `ApolloClient` instance"
+              "summary": "Private reference to the `ApolloClient` instance",
+              "description": ""
             },
             {
               "kind": "field",
@@ -39,7 +40,8 @@
                 "text": "Set<ApolloController>"
               },
               "default": "new Set()",
-              "summary": "Private storage of child `ApolloController`s"
+              "summary": "Private storage of child `ApolloController`s",
+              "description": ""
             },
             {
               "kind": "field",
@@ -49,7 +51,8 @@
                 "text": "TypePolicies | undefined"
               },
               "default": "undefined",
-              "summary": "Private storage for the Type Policies"
+              "summary": "Private storage for the Type Policies",
+              "description": ""
             },
             {
               "kind": "field",
@@ -106,7 +109,8 @@
                 }
               },
               "summary": "Creates an Apollo client and assigns it to child elements",
-              "async": true
+              "async": true,
+              "description": ""
             },
             {
               "kind": "method",
@@ -279,7 +283,8 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
-              "summary": "The Apollo Client instance."
+              "summary": "The Apollo Client instance.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -290,7 +295,8 @@
               "default": "false",
               "summary": "Whether a request is in flight.",
               "attribute": "loading",
-              "reflects": true
+              "reflects": true,
+              "description": ""
             },
             {
               "kind": "field",
@@ -299,7 +305,8 @@
                 "text": "Data<D> | null"
               },
               "default": "null",
-              "summary": "Latest Data."
+              "summary": "Latest Data.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -308,7 +315,8 @@
                 "text": "ComponentDocument<D> | null"
               },
               "default": "null",
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`"
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": ""
             },
             {
               "kind": "field",
@@ -317,7 +325,8 @@
                 "text": "Error | ApolloError | null"
               },
               "default": "null",
-              "summary": "Latest error"
+              "summary": "Latest error",
+              "description": ""
             },
             {
               "kind": "field",
@@ -326,7 +335,8 @@
                 "text": "readonly GraphQLError[]"
               },
               "default": "[]",
-              "summary": "Latest errors"
+              "summary": "Latest errors",
+              "description": ""
             },
             {
               "kind": "field",
@@ -335,7 +345,8 @@
                 "text": "Variables<D, V> | null"
               },
               "default": "null",
-              "summary": "Operation variables."
+              "summary": "Operation variables.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -539,7 +550,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\n## Examples\n\n### Using data attributes\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n<mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n```\n\n### Using data attributes and variables\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n<mwc-button trigger label=\"OK\"></mwc-button>\n<mwc-textfield\ndata-variable=\"name\"\nvalue=\"Neil\"\nlabel=\"Name\"></mwc-textfield>\n<mwc-textarea\ndata-variable=\"comment\"\nvalue=\"That's one small step...\"\nlabel=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"name\": \"Neil\",\n\"comment\": \"That's one small step...\",\n\"type\": \"Quote\",\n\"action\": \"FLUB\"\n}\n```\n\n### Using data attributes and variables with input property\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n<mwc-button trigger label=\"OK\"></mwc-button>\n<mwc-textfield\ndata-variable=\"comment\"\nvalue=\"Hey!\"\nlabel=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n\"actionInput\": {\n\"comment\": \"Hey!\",\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n}\n```\n\n### Using DOM properties\n```html\n<apollo-mutation id=\"mutation\">\n<mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\ndocument.getElementById('mutation').mutation = SomeMutation;\ndocument.getElementById('mutation').variables = {\ntype: \"Type\",\naction: \"ACTION\"\n};\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n\"type\": \"Type\",\n\"action\": \"ACTION\"\n}\n```",
+          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\n## Examples\n\n### <caption>Using data attributes</caption>\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n### <caption>Using data attributes and variables</caption>\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n### <caption>Using data attributes and variables with input property</caption>\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n### <caption>Using DOM properties</caption>\n```html\n<apollo-mutation id=\"mutation\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\n  document.getElementById('mutation').mutation = SomeMutation;\n  document.getElementById('mutation').variables = {\n    type: \"Type\",\n    action: \"ACTION\"\n  };\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```",
           "name": "ApolloMutationElement",
           "slots": [
             {
@@ -751,7 +762,7 @@
                 "text": "string|null"
               },
               "default": "null",
-              "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property",
+              "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n\n### Examples\n\n#### <caption>Using the input-key attribute</caption>\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n  console.log(a.variables) // { variable: 'var' }\n  console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```",
               "summary": "key to wrap variables in e.g. `input`.",
               "attribute": "input-key",
               "reflects": true
@@ -763,7 +774,8 @@
                 "text": "number | null"
               },
               "default": "null",
-              "summary": "Optional number of milliseconds to wait between calls"
+              "summary": "Optional number of milliseconds to wait between calls",
+              "description": ""
             },
             {
               "kind": "field",
@@ -774,7 +786,8 @@
               "default": "false",
               "summary": "Whether the mutation was called",
               "attribute": "called",
-              "reflects": true
+              "reflects": true,
+              "description": ""
             },
             {
               "kind": "field",
@@ -783,7 +796,8 @@
                 "text": "null | ComponentDocument<D>"
               },
               "default": "null",
-              "summary": "The mutation."
+              "summary": "The mutation.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -791,7 +805,8 @@
               "type": {
                 "text": "Record<string, unknown>"
               },
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -823,7 +838,8 @@
               },
               "default": "false",
               "summary": "If true, the returned data property will not update with the mutation result.",
-              "attribute": "ignore-results"
+              "attribute": "ignore-results",
+              "description": ""
             },
             {
               "kind": "field",
@@ -887,7 +903,7 @@
                   "description": "the trigger element which triggered this mutation"
                 }
               ],
-              "description": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger."
+              "description": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger.\n\n### Examples\n\n#### Navigate to a post's page after creating it\n```html\n<apollo-mutation id=\"mutation\">\n  <script type=\"application/graphql\">\n    mutation CreatePostMutation($title: String, $content: String) {\n      createPost(title: $title, content: $content) {\n        slug\n      }\n    }\n  </script>\n  <mwc-textfield label=\"Post title\" data-variable=\"title\"></mwc-textfield>\n  <mwc-textarea label=\"Post Content\" data-variable=\"content\"></mwc-textarea>\n</apollo-mutation>\n\n<script>\n  document.getElementById('mutation').resolveURL =\n    data => `/posts/${data.createPost.slug}/`;\n</script>\n```"
             },
             {
               "kind": "method",
@@ -1080,6 +1096,7 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1095,6 +1112,7 @@
               "summary": "Whether a request is in flight.",
               "attribute": "loading",
               "reflects": true,
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1108,6 +1126,7 @@
               },
               "default": "null",
               "summary": "Latest Data.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1121,6 +1140,7 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1134,6 +1154,7 @@
               },
               "default": "null",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1147,6 +1168,7 @@
               },
               "default": "[]",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1498,7 +1520,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Render a GraphQL query to the DOM\n\n## Examples\n\n### Render a query to Shadow DOM\n```html\n<apollo-query>\n<script type=\"application/graphql\">\nquery MyProfile {\nprofile { name picture }\n}\n</script>\n<template>\n<img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n</apollo-query>\n```\n\n### Setting query and variables using the DOM\n```html\n<apollo-query id=\"query-element\" template=\"avatar-template\"></apollo-query>\n\n<template id=\"avatar-template\">\n<img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n\n<script type=\"module\">\nimport { gql } from '@apollo/client/core';\nconst el = document.getElementById('query-element');\nel.query = gql`\nquery MyProfile($size: Int) {\nprofile { name picture(size: $size) }\n}\n`;\nel.variables = { size: 48 };\n</script>\n```",
+          "description": "Render a GraphQL query to the DOM\n\n## Examples\n\n### <caption>Render a query to Shadow DOM</caption>\n```html\n<apollo-query>\n  <script type=\"application/graphql\">\n    query MyProfile {\n      profile { name picture }\n    }\n  </script>\n  <template>\n    <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n  </template>\n</apollo-query>\n```\n\n### <caption>Setting query and variables using the DOM</caption>\n```html\n<apollo-query id=\"query-element\" template=\"avatar-template\"></apollo-query>\n\n<template id=\"avatar-template\">\n  <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('query-element');\n  el.query = gql`\n    query MyProfile($size: Int) {\n      profile { name picture(size: $size) }\n    }\n  `;\n  el.variables = { size: 48 };\n</script>\n```",
           "name": "ApolloQueryElement",
           "members": [
             {
@@ -1530,7 +1552,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Flags an element that's ready and able to auto subscribe"
+              "summary": "Flags an element that's ready and able to auto subscribe",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1553,7 +1576,8 @@
                 "text": "null | ComponentDocument<D>"
               },
               "default": "null",
-              "summary": "A GraphQL document containing a single query."
+              "summary": "A GraphQL document containing a single query.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1561,7 +1585,8 @@
               "type": {
                 "text": "Record<string, any>"
               },
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1590,7 +1615,8 @@
                 "text": "number"
               },
               "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
-              "attribute": "poll-interval"
+              "attribute": "poll-interval",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1619,7 +1645,8 @@
               },
               "default": "false",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
-              "attribute": "notify-on-network-status-change"
+              "attribute": "notify-on-network-status-change",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1807,6 +1834,7 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1822,6 +1850,7 @@
               "summary": "Whether a request is in flight.",
               "attribute": "loading",
               "reflects": true,
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1835,6 +1864,7 @@
               },
               "default": "null",
               "summary": "Latest Data.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1848,6 +1878,7 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1861,6 +1892,7 @@
               },
               "default": "null",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1874,6 +1906,7 @@
               },
               "default": "[]",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1887,6 +1920,7 @@
               },
               "default": "null",
               "summary": "Operation variables.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2188,7 +2222,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Render a GraphQL subscription to the DOM\n\n## Examples\n\n### Render a subscription to Shadow DOM\n```html\n<apollo-subscription>\n<script type=\"application/graphql\">\nsubscription NewMessages {\nmessageAdded { id author content }\n}\n</script>\n<template>\n<article>\n<span class=\"author-name\">{{ data.author.name }}</span>\n<mark-down>{{ data.content }}</mark-down>\n</article>\n</template>\n</apollo-subscription>\n```\n\n### Setting subscription and variables using the DOM\n```html\n<apollo-subscription id=\"subscription-element\" template=\"message-template\"></apollo-subscription>\n\n<template id=\"message-template\">\n<article>\n<span class=\"author-name\">{{ data.author.name }}</span>\n<mark-down>{{ data.content }}</mark-down>\n</article>\n</template>\n\n<script type=\"module\">\nimport { gql } from '@apollo/client/core';\nconst el = document.getElementById('subscription-element');\nel.subscription = gql`\nsubscription NewMessages($limit: Int) {\nmessagesAdded {\nmessages { id author content }\nhasMore\n}\n}\n`;\nel.variables = { limit: 10 };\n</script>\n```",
+          "description": "Render a GraphQL subscription to the DOM\n\n## Examples\n\n### <caption>Render a subscription to Shadow DOM</caption>\n```html\n<apollo-subscription>\n  <script type=\"application/graphql\">\n    subscription NewMessages {\n      messageAdded { id author content }\n    }\n  </script>\n  <template>\n    <article>\n      <span class=\"author-name\">{{ data.author.name }}</span>\n      <mark-down>{{ data.content }}</mark-down>\n    </article>\n  </template>\n</apollo-subscription>\n```\n\n### <caption>Setting subscription and variables using the DOM</caption>\n```html\n<apollo-subscription id=\"subscription-element\" template=\"message-template\"></apollo-subscription>\n\n<template id=\"message-template\">\n  <article>\n    <span class=\"author-name\">{{ data.author.name }}</span>\n    <mark-down>{{ data.content }}</mark-down>\n  </article>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('subscription-element');\n  el.subscription = gql`\n    subscription NewMessages($limit: Int) {\n      messagesAdded {\n        messages { id author content }\n        hasMore\n      }\n    }\n  `;\n  el.variables = { limit: 10 };\n</script>\n```",
           "name": "ApolloSubscriptionElement",
           "members": [
             {
@@ -2229,7 +2263,8 @@
                 "text": "null | ComponentDocument<D>"
               },
               "default": "null",
-              "summary": "A GraphQL document containing a single subscription."
+              "summary": "A GraphQL document containing a single subscription.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2237,7 +2272,8 @@
               "type": {
                 "text": "Record<string, any>"
               },
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2247,7 +2283,8 @@
               },
               "default": "false",
               "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
-              "attribute": "no-auto-subscribe"
+              "attribute": "no-auto-subscribe",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2257,7 +2294,8 @@
               },
               "default": "false",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
-              "attribute": "notify-on-network-status-change"
+              "attribute": "notify-on-network-status-change",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2267,7 +2305,8 @@
               },
               "default": "false",
               "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
-              "attribute": "should-resubscribe"
+              "attribute": "should-resubscribe",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2277,7 +2316,8 @@
               },
               "default": "false",
               "summary": "If true, the query will be skipped entirely",
-              "attribute": "skip"
+              "attribute": "skip",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2286,7 +2326,8 @@
                 "text": "this['controller']['options']['errorPolicy']"
               },
               "summary": "Error policy for the subscription",
-              "attribute": "error-policy"
+              "attribute": "error-policy",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2295,7 +2336,8 @@
                 "text": "this['controller']['options']['fetchPolicy']"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
-              "attribute": "fetch-policy"
+              "attribute": "fetch-policy",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2304,7 +2346,8 @@
                 "text": "number"
               },
               "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
-              "attribute": "poll-interval"
+              "attribute": "poll-interval",
+              "description": ""
             },
             {
               "kind": "method",
@@ -2322,7 +2365,8 @@
                   }
                 }
               ],
-              "summary": "Resets the observable and subscribes."
+              "summary": "Resets the observable and subscribes.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -2332,7 +2376,8 @@
                   "text": "void"
                 }
               },
-              "summary": "Cancels and clears the subscription"
+              "summary": "Cancels and clears the subscription",
+              "description": ""
             },
             {
               "kind": "method",
@@ -2371,6 +2416,7 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2386,6 +2432,7 @@
               "summary": "Whether a request is in flight.",
               "attribute": "loading",
               "reflects": true,
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2399,6 +2446,7 @@
               },
               "default": "null",
               "summary": "Latest Data.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2412,6 +2460,7 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2425,6 +2474,7 @@
               },
               "default": "null",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2438,6 +2488,7 @@
               },
               "default": "[]",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -2451,6 +2502,7 @@
               },
               "default": "null",
               "summary": "Operation variables.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"

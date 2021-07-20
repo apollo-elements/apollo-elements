@@ -2,7 +2,7 @@
 layout: layout-api-index
 package: '@apollo-elements/atomico'
 ---
-# Web Component Libraries >> Atomico || 40
+# Web Component Libraries >> Atomico
 
 [Atomico](https://atomico.gitbook.io) is a hooks-based web components library.
 

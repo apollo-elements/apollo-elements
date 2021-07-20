@@ -39,38 +39,38 @@ declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryEl
 /**
  * Render a GraphQL query to the DOM
  *
- * @example Render a query to Shadow DOM
+ * @example <caption>Render a query to Shadow DOM</caption>
  * ```html
- * <apollo-query>
- *   <script type="application/graphql">
- *     query MyProfile {
- *       profile { name picture }
- *     }
- *   </script>
- *   <template>
- *     <img loading="lazy" src="{{ data.profile.picture }}" alt="{{ data.profile.name }}"/>
- *   </template>
- * </apollo-query>
+ *          <apollo-query>
+ *            <script type="application/graphql">
+ *              query MyProfile {
+ *                profile { name picture }
+ *              }
+ *            </script>
+ *            <template>
+ *              <img loading="lazy" src="{{ data.profile.picture }}" alt="{{ data.profile.name }}"/>
+ *            </template>
+ *          </apollo-query>
  * ```
  *
- * @example Setting query and variables using the DOM
+ * @example <caption>Setting query and variables using the DOM</caption>
  * ```html
- * <apollo-query id="query-element" template="avatar-template"></apollo-query>
+ *          <apollo-query id="query-element" template="avatar-template"></apollo-query>
  *
- * <template id="avatar-template">
- *   <img loading="lazy" src="{{ data.profile.picture }}" alt="{{ data.profile.name }}"/>
- * </template>
+ *          <template id="avatar-template">
+ *            <img loading="lazy" src="{{ data.profile.picture }}" alt="{{ data.profile.name }}"/>
+ *          </template>
  *
- * <script type="module">
- *   import { gql } from '@apollo/client/core';
- *   const el = document.getElementById('query-element');
- *   el.query = gql`
- *     query MyProfile($size: Int) {
- *       profile { name picture(size: $size) }
- *     }
- *   `;
- *   el.variables = { size: 48 };
- * </script>
+ *          <script type="module">
+ *            import { gql } from '@apollo/client/core';
+ *            const el = document.getElementById('query-element');
+ *            el.query = gql`
+ *              query MyProfile($size: Int) {
+ *                profile { name picture(size: $size) }
+ *              }
+ *            `;
+ *            el.variables = { size: 48 };
+ *          </script>
  * ```
  */
 @customElement('apollo-query')

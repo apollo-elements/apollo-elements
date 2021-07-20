@@ -1,4 +1,4 @@
-# Web Component Libraries >> Gluon || 60
+# Web Component Libraries >> Gluon
 
 Gluon is a minimalist web components base class that templates components with `lit-html`.
 

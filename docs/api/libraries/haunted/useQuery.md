@@ -14,52 +14,30 @@ module: useQuery.js
 
 Apollo `useQuery` hook for web components.
 
-Read the [query component guides](/guides/usage/queries/) for examples and tips.
-
-<style data-helmet>
-#use-query {
-  --playground-ide-height: 350px;
-}
-</style>
-
-```graphql playground-file use-query Launches.query.graphql.js
-import { gql } from '@apollo/client/core';
-export const LaunchesQuery = gql`
-query LaunchesQuery($limit: Int) {
-  launchesPast(limit: $limit) {
-    mission_name
-    links { mission_patch_small }
-  }
-}
-`;
-```
-
-```html playground-file use-query index.html
-<script type="module" src="client.js"></script>
-<script type="module" src="launches.js"></script>
-<spacex-launches></spacex-launches>
-```
+## Demo
 
 ```js playground use-query launches.js
 import { useQuery, component, html } from '@apollo-elements/haunted';
 import { LaunchesQuery } from './Launches.query.graphql.js';
+import '@apollo-elements/components/apollo-client';
 
-function Launches({ document = null, variables = null }) {
-  const { data } = useQuery(LaunchesQuery, { variables: { limit: 3 } });
+function Launches(hostElement) {
+  const { data } = useQuery(LaunchesQuery, {
+    hostElement,
+    variables: { limit: 3 }
+  });
 
   const launches = data?.launchesPast ?? [];
 
   return html`
     <link rel="stylesheet" href="launches.css"/>
-    <ol>
-      ${launches.map(x => html`
-        <li>
-          <article>
-            <span>${x.mission_name}</span>
-            <img .src="${x.links.mission_patch_small}" alt="Badge" role="presentation"/>
-          </article>
-        </li>
-      `)}
+    <ol>${launches.map(x => html`
+      <li>
+        <article>
+          <span>${x.mission_name}</span>
+          <img .src="${x.links.mission_patch_small}" alt="Badge" role="presentation"/>
+        </article>
+      </li>`)}
     </ol>
   `;
 }
@@ -67,28 +45,16 @@ function Launches({ document = null, variables = null }) {
 customElements.define('spacex-launches', component(Launches));
 ```
 
+```html playground-file use-query index.html
+{% include ../_assets/index.spacex-launches.html %}
+```
+
+```graphql playground-file use-query Launches.query.graphql.ts
+{% include ../_assets/Launches.query.graphql.ts %}
+```
+
 ```css playground-file use-query launches.css
-:host {
-  --image-size: 40px;
-}
-
-li img {
-  height: var(--image-size);
-  width: auto;
-}
-
-li article {
-  height: var(--image-size);
-  display: flex;
-  justify-content: space-between;
-}
+{% include ../_assets/SpacexLaunches.css %}
 ```
 
-```js playground-file use-query client.js
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
-
-window.__APOLLO_CLIENT__ = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({ uri: 'https://api.spacex.land/graphql' }),
-});
-```
+Read the [query component guides](/guides/usage/queries/) for examples and tips.

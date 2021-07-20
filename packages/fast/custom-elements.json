@@ -41,7 +41,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Whether a request is in flight."
+              "summary": "Whether a request is in flight.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -49,7 +50,8 @@
               "type": {
                 "text": "C.ApolloClient<C.NormalizedCacheObject> | null"
               },
-              "summary": "The Apollo Client instance"
+              "summary": "The Apollo Client instance",
+              "description": ""
             },
             {
               "kind": "field",
@@ -58,7 +60,8 @@
                 "text": "Data<D>|null"
               },
               "default": "null",
-              "summary": "Latest Data."
+              "summary": "Latest Data.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -67,7 +70,8 @@
                 "text": "Error | C.ApolloError | null"
               },
               "default": "null",
-              "summary": "Latest error"
+              "summary": "Latest error",
+              "description": ""
             },
             {
               "kind": "field",
@@ -76,7 +80,8 @@
                 "text": "readonly GraphQLError[]"
               },
               "default": "[]",
-              "summary": "Latest errors"
+              "summary": "Latest errors",
+              "description": ""
             },
             {
               "kind": "field",
@@ -152,7 +157,8 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "summary": "Latest mutation data."
+              "summary": "Latest mutation data.",
+              "description": ""
             },
             {
               "kind": "field",

@@ -1,4 +1,5 @@
 api/types/*.md
 _includes
+api/*/_assets/**/*
 blog/*/_assets/**/*
 type-tables

@@ -29,14 +29,14 @@ export function isSubscription(x: unknown): x is ZenObservable.Subscription {
  * @param x value to check
  * @template T type to check against
  *
- * @example
+ * @example <caption>Using assertType</caption>
  * ```ts
- * class Checked {
- *   field = 2;
- * }
+ *         class Checked {
+ *           field = 2;
+ *         }
  *
- * const checked = new Checked();
- * assertType<number>(checked.field)
+ *         const checked = new Checked();
+ *         assertType<number>(checked.field)
  * ```
  */
 export function assertType<T>(x: T): asserts x is T { x; }

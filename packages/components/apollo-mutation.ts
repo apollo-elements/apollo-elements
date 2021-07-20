@@ -73,86 +73,86 @@ export class WillMutateError extends Error {}
  *
  * See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events
  *
- * @example Using data attributes
+ * @example <caption>Using data attributes</caption>
  * ```html
- * <apollo-mutation data-type="Type" data-action="ACTION">
- *   <mwc-button trigger>OK</mwc-button>
- * </apollo-mutation>
+ *          <apollo-mutation data-type="Type" data-action="ACTION">
+ *            <mwc-button trigger>OK</mwc-button>
+ *          </apollo-mutation>
  * ```
  * Will mutate with the following as `variables`:
  * ```json
- * {
- *   "type": "Type",
- *   "action": "ACTION"
- * }
+ *          {
+ *            "type": "Type",
+ *            "action": "ACTION"
+ *          }
  * ```
  *
- * @example Using data attributes and variables
+ * @example <caption>Using data attributes and variables</caption>
  * ```html
- * <apollo-mutation data-type="Quote" data-action="FLUB">
- *   <mwc-button trigger label="OK"></mwc-button>
- *   <mwc-textfield
- *       data-variable="name"
- *       value="Neil"
- *       label="Name"></mwc-textfield>
- *   <mwc-textarea
- *       data-variable="comment"
- *       value="That's one small step..."
- *       label="comment"></mwc-textarea>
- * </apollo-mutation>
+ *          <apollo-mutation data-type="Quote" data-action="FLUB">
+ *            <mwc-button trigger label="OK"></mwc-button>
+ *            <mwc-textfield
+ *                data-variable="name"
+ *                value="Neil"
+ *                label="Name"></mwc-textfield>
+ *            <mwc-textarea
+ *                data-variable="comment"
+ *                value="That's one small step..."
+ *                label="comment"></mwc-textarea>
+ *          </apollo-mutation>
  * ```
  * Will mutate with the following as `variables`:
  * ```json
- * {
- *   "name": "Neil",
- *   "comment": "That's one small step...",
- *   "type": "Quote",
- *   "action": "FLUB"
- * }
+ *          {
+ *            "name": "Neil",
+ *            "comment": "That's one small step...",
+ *            "type": "Quote",
+ *            "action": "FLUB"
+ *          }
  * ```
  *
- * @example Using data attributes and variables with input property
+ * @example <caption>Using data attributes and variables with input property</caption>
  * ```html
- * <apollo-mutation data-type="Type" data-action="ACTION" input-key="actionInput">
- *   <mwc-button trigger label="OK"></mwc-button>
- *   <mwc-textfield
- *       data-variable="comment"
- *       value="Hey!"
- *       label="comment"></mwc-textfield>
- * </apollo-mutation>
+ *          <apollo-mutation data-type="Type" data-action="ACTION" input-key="actionInput">
+ *            <mwc-button trigger label="OK"></mwc-button>
+ *            <mwc-textfield
+ *                data-variable="comment"
+ *                value="Hey!"
+ *                label="comment"></mwc-textfield>
+ *          </apollo-mutation>
  * ```
  * Will mutate with the following as `variables`:
  * ```json
- * {
- *   "actionInput": {
- *     "comment": "Hey!",
- *     "type": "Type",
- *     "action": "ACTION"
- *   }
- * }
+ *          {
+ *            "actionInput": {
+ *              "comment": "Hey!",
+ *              "type": "Type",
+ *              "action": "ACTION"
+ *            }
+ *          }
  * ```
  *
- * @example Using DOM properties
+ * @example <caption>Using DOM properties</caption>
  * ```html
- * <apollo-mutation id="mutation">
- *   <mwc-button trigger label="OK"></mwc-button>
- * </apollo-mutation>
- * <script>
- *   document.getElementById('mutation').mutation = SomeMutation;
- *   document.getElementById('mutation').variables = {
- *     type: "Type",
- *     action: "ACTION"
- *   };
- * </script>
+ *          <apollo-mutation id="mutation">
+ *            <mwc-button trigger label="OK"></mwc-button>
+ *          </apollo-mutation>
+ *          <script>
+ *            document.getElementById('mutation').mutation = SomeMutation;
+ *            document.getElementById('mutation').variables = {
+ *              type: "Type",
+ *              action: "ACTION"
+ *            };
+ *          </script>
  * ```
  *
  * Will mutate with the following as `variables`:
  *
  * ```json
- * {
- *   "type": "Type",
- *   "action": "ACTION"
- * }
+ *          {
+ *            "type": "Type",
+ *            "action": "ACTION"
+ *          }
  * ```
  */
 @customElement('apollo-mutation')
@@ -246,13 +246,14 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
   /**
    * When set, variable data attributes will be packed into an
    * object property with the name of this property
-   * @example ```html
-   * <apollo-mutation id="a" data-variable="var"></apollo-mutation>
-   * <apollo-mutation id="b" input-key="input" data-variable="var"></apollo-mutation>
-   * <script>
-   *   console.log(a.variables) // { variable: 'var' }
-   *   console.log(b.variables) // { input: { variable: 'var' } }
-   * </script>
+   * @example <caption>Using the input-key attribute</caption>
+   * ```html
+   *          <apollo-mutation id="a" data-variable="var"></apollo-mutation>
+   *          <apollo-mutation id="b" input-key="input" data-variable="var"></apollo-mutation>
+   *          <script>
+   *            console.log(a.variables) // { variable: 'var' }
+   *            console.log(b.variables) // { input: { variable: 'var' } }
+   *          </script>
    * ```
    * @summary key to wrap variables in e.g. `input`.
    */
@@ -353,22 +354,22 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    * If this function is not defined, will navigate to the `href` property of the link trigger.
    * @example Navigate to a post's page after creating it
    * ```html
-   * <apollo-mutation id="mutation">
-   *   <script type="application/graphql">
-   *     mutation CreatePostMutation($title: String, $content: String) {
-   *       createPost(title: $title, content: $content) {
-   *         slug
-   *       }
-   *     }
-   *   </script>
-   *   <mwc-textfield label="Post title" data-variable="title"></mwc-textfield>
-   *   <mwc-textarea label="Post Content" data-variable="content"></mwc-textarea>
-   * </apollo-mutation>
+   *          <apollo-mutation id="mutation">
+   *            <script type="application/graphql">
+   *              mutation CreatePostMutation($title: String, $content: String) {
+   *                createPost(title: $title, content: $content) {
+   *                  slug
+   *                }
+   *              }
+   *            </script>
+   *            <mwc-textfield label="Post title" data-variable="title"></mwc-textfield>
+   *            <mwc-textarea label="Post Content" data-variable="content"></mwc-textarea>
+   *          </apollo-mutation>
    *
-   * <script>
-   *   document.getElementById('mutation').resolveURL =
-   *     data => `/posts/${data.createPost.slug}/`;
-   * </script>
+   *          <script>
+   *            document.getElementById('mutation').resolveURL =
+   *              data => `/posts/${data.createPost.slug}/`;
+   *          </script>
    * ```
    * @param data mutation data
    * @param trigger the trigger element which triggered this mutation

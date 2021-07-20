@@ -96,7 +96,8 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "summary": "Latest mutation data."
+              "summary": "Latest mutation data.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -154,7 +155,8 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "summary": "Latest query data."
+              "summary": "Latest query data.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -212,7 +214,8 @@
               "type": {
                 "text": "Data<D> | null"
               },
-              "summary": "Latest subscription data."
+              "summary": "Latest subscription data.",
+              "description": ""
             },
             {
               "kind": "field",

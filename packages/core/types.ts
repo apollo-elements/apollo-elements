@@ -455,7 +455,6 @@ export declare class ApolloQueryElement<
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
-   * @override
    */
   public shouldSubscribe(
     options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>

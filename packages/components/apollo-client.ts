@@ -51,37 +51,37 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
  *
  * @fires {CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>} client-changed When the client changes
  *
- * @example Generate a simple ApolloClient instance
+ * @example <caption>Generate a simple ApolloClient instance</caption>
  * ```html
- * <apollo-client uri="/graphql"></apollo-client>
+ *          <apollo-client uri="/graphql"></apollo-client>
  * ```
  *
- * @example Prevent network calls when required variables are absent
+ * @example <caption>Prevent network calls when required variables are absent</caption>
  * ```html
- * <apollo-client uri="/graphql" validate-variables></apollo-client>
+ *          <apollo-client uri="/graphql" validate-variables></apollo-client>
  * ```
  *
- * @example Providing a client to a tree of Nodes
+ * @example <caption>Providing a client to a tree of Nodes</caption>
  * ```html
- * <apollo-client id="client-a">
- *   <apollo-mutation>
- *     <!--...-->
- *   </apollo-mutation>
- * </apollo-client>
+ *          <apollo-client id="client-a">
+ *            <apollo-mutation>
+ *              <!--...-->
+ *            </apollo-mutation>
+ *          </apollo-client>
  * ```
  *
- * @example Nesting separate clients
+ * @example <caption>Nesting separate clients</caption>
  * ```html
- * <apollo-client id="client-a">
- *   <query-element>
- *     <!-- This element queries from client-a's endpoint -->
- *   </query-element>
- *   <apollo-client id="client-b">
- *     <query-element>
- *       <!-- This element queries from client-b's endpoint -->
- *     </query-element>
- *   </apollo-client>
- * </apollo-client>
+ *          <apollo-client id="client-a">
+ *            <query-element>
+ *              <!-- This element queries from client-a's endpoint -->
+ *            </query-element>
+ *            <apollo-client id="client-b">
+ *              <query-element>
+ *                <!-- This element queries from client-b's endpoint -->
+ *              </query-element>
+ *            </apollo-client>
+ *          </apollo-client>
  * ```
  */
 export class ApolloClientElement extends HTMLElement {

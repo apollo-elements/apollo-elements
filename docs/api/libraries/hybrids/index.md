@@ -3,7 +3,7 @@ layout: layout-api-index
 package: '@apollo-elements/hybrids'
 ---
 
-# Web Component Libraries >> Hybrids || 50
+# Web Component Libraries >> Hybrids
 
 Hybrids is a unique web components framework which combines aspects of functional and object-oriented paradigms into something entirely it's own.
 
