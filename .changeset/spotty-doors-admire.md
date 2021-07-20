@@ -14,7 +14,7 @@ Removes the ability to read GraphQL documents (i.e. `query`, `mutation`, or `sub
 
 You can opt-back in to this behaviour by applying the `GraphQLScriptChildMixin` from `@apollo-elements/mixins`.
 
-`<apollo-*>` components all still have this facility. Be careful when accepting user-generated HTML, as it means users can make arbitrary queries by adding HTML to the document.
+`<apollo-*>` components and the Polymer components all still have this facility. Be careful when accepting user-generated HTML, as it means users can make arbitrary queries by adding HTML to the document.
 
 Read [the docs](https://apolloelements.dev/api/libraries/mixins/graphql-script-child-mixin/) for more info
 

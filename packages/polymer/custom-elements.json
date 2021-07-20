@@ -203,6 +203,10 @@
           ],
           "mixins": [
             {
+              "name": "GraphQLScriptChildMixin",
+              "package": "@apollo-elements/mixins/graphql-script-child-mixin"
+            },
+            {
               "name": "ApolloElementMixin",
               "package": "@apollo-elements/mixins/apollo-element-mixin"
             }
@@ -230,7 +234,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### Use in a Polymer template\n\n```html\n<polymer-apollo-mutation id=\"userMutation\"\ndata=\"{{data}}\"\nmutation=\"[[UserMutation]]\"\n></polymer-apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```",
+          "description": "## Examples\n\n### <caption>Use in a Polymer template</caption>\n\n```html\n<polymer-apollo-mutation id=\"userMutation\"\n    data=\"{{data}}\"\n    mutation=\"[[UserMutation]]\"\n></polymer-apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```",
           "name": "PolymerApolloMutation",
           "members": [
             {
@@ -306,7 +310,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### ```html\n<polymer-apollo-query\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    query=\"[[UserQuery]]\"\n></polymer-apollo-query>\n\n<paper-icon-item>\n  <iron-image slot=\"item-icon\">[[data.user.picture]]</iron-image>\n  [[data.user.name]]\n</paper-icon-item>\n```",
+          "description": "## Examples\n\n### <caption>Querying for Data</caption>\n```html\n<polymer-apollo-query\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    query=\"[[UserQuery]]\"\n></polymer-apollo-query>\n\n<paper-icon-item>\n  <iron-image slot=\"item-icon\">[[data.user.picture]]</iron-image>\n  [[data.user.name]]\n</paper-icon-item>\n```",
           "name": "PolymerApolloQuery",
           "members": [
             {
@@ -381,7 +385,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### ```html\n<polymer-apollo-subscription\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    subscription=\"[[UserJoinedSubscription]]\"\n    on-data-changed=\"toast\"\n></polymer-apollo-subscription>\n\n<paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n  <iron-image>[[data.userJoined.picture]]</iron-image>\n</paper-toast>\n```",
+          "description": "## Examples\n\n### <caption>Subscribing for Updates</caption>\n```html\n<polymer-apollo-subscription\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    subscription=\"[[UserJoinedSubscription]]\"\n    on-data-changed=\"toast\"\n></polymer-apollo-subscription>\n\n<paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n  <iron-image>[[data.userJoined.picture]]</iron-image>\n</paper-toast>\n```",
           "name": "PolymerApolloSubscription",
           "members": [
             {
