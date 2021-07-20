@@ -50,7 +50,8 @@
                 "text": "EventTarget"
               },
               "privacy": "protected",
-              "summary": "The event emitter to use when firing events, usually the host element."
+              "summary": "The event emitter to use when firing events, usually the host element.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -67,7 +68,8 @@
                 "text": "Data<D> | null"
               },
               "default": "null",
-              "summary": "Latest data for the operation, or `null`."
+              "summary": "Latest data for the operation, or `null`.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -76,7 +78,8 @@
                 "text": "ApolloError | null"
               },
               "default": "null",
-              "summary": "Latest error from the operation, or `null`."
+              "summary": "Latest error from the operation, or `null`.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -85,7 +88,8 @@
                 "text": "readonly GraphQLError[]"
               },
               "default": "[]",
-              "summary": "Latest errors from the operation, or `[]`."
+              "summary": "Latest errors from the operation, or `[]`.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -94,7 +98,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Whether a request is in-flight."
+              "summary": "Whether a request is in-flight.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -147,7 +152,8 @@
                   }
                 }
               ],
-              "summary": "requests an update on the host."
+              "summary": "requests an update on the host.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -167,7 +173,8 @@
                   }
                 }
               ],
-              "summary": "callback for when the GraphQL document changes."
+              "summary": "callback for when the GraphQL document changes.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -187,7 +194,8 @@
                   }
                 }
               ],
-              "summary": "callback for when the GraphQL variables change."
+              "summary": "callback for when the GraphQL variables change.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -207,7 +215,8 @@
                   }
                 }
               ],
-              "summary": "callback for when the Apollo client changes."
+              "summary": "callback for when the Apollo client changes.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -226,7 +235,8 @@
                   }
                 }
               ],
-              "summary": "Notifies about updated properties."
+              "summary": "Notifies about updated properties.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -245,7 +255,8 @@
                   }
                 }
               ],
-              "summary": "Assigns the controller's variables and GraphQL document."
+              "summary": "Assigns the controller's variables and GraphQL document.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -254,7 +265,8 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "description": ""
             },
             {
               "kind": "method",
@@ -263,7 +275,8 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "description": ""
             }
           ]
         }
@@ -359,7 +372,8 @@
                 }
               ],
               "summary": "Fires a mutation\nThis resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
-              "async": true
+              "async": true,
+              "description": ""
             },
             {
               "kind": "method",
@@ -491,6 +505,7 @@
               },
               "privacy": "protected",
               "summary": "The event emitter to use when firing events, usually the host element.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -504,6 +519,7 @@
               },
               "default": "null",
               "summary": "Latest data for the operation, or `null`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -517,6 +533,7 @@
               },
               "default": "null",
               "summary": "Latest error from the operation, or `null`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -530,6 +547,7 @@
               },
               "default": "[]",
               "summary": "Latest errors from the operation, or `[]`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -543,6 +561,7 @@
               },
               "default": "false",
               "summary": "Whether a request is in-flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -603,6 +622,7 @@
                 }
               ],
               "summary": "requests an update on the host.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -627,6 +647,7 @@
                 }
               ],
               "summary": "callback for when the GraphQL document changes.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -651,6 +672,7 @@
                 }
               ],
               "summary": "callback for when the GraphQL variables change.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -675,6 +697,7 @@
                 }
               ],
               "summary": "callback for when the Apollo client changes.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -698,6 +721,7 @@
                 }
               ],
               "summary": "Notifies about updated properties.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -721,6 +745,7 @@
                 }
               ],
               "summary": "Assigns the controller's variables and GraphQL document.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -734,6 +759,7 @@
                   "text": "void"
                 }
               },
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -747,6 +773,7 @@
                   "text": "void"
                 }
               },
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -866,6 +893,7 @@
                   "text": "void"
                 }
               },
+              "description": "",
               "summary": "initializes or reinitializes the query",
               "inheritedFrom": {
                 "name": "ApolloController",
@@ -880,6 +908,7 @@
                   "text": "void"
                 }
               },
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1002,6 +1031,7 @@
                 }
               ],
               "summary": "callback for when the Apollo client changes.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1026,6 +1056,7 @@
                 }
               ],
               "summary": "callback for when the GraphQL document changes.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1050,6 +1081,7 @@
                 }
               ],
               "summary": "callback for when the GraphQL variables change.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1139,7 +1171,8 @@
                 }
               ],
               "summary": "Executes a Query once and updates the with the result",
-              "async": true
+              "async": true,
+              "description": ""
             },
             {
               "kind": "method",
@@ -1182,7 +1215,8 @@
                   "description": "milliseconds to wait between fetches"
                 }
               ],
-              "summary": "Start polling this query"
+              "summary": "Start polling this query",
+              "description": ""
             },
             {
               "kind": "method",
@@ -1193,7 +1227,8 @@
                   "text": "void"
                 }
               },
-              "summary": "Stop polling this query"
+              "summary": "Stop polling this query",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1243,6 +1278,7 @@
               },
               "privacy": "protected",
               "summary": "The event emitter to use when firing events, usually the host element.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1268,6 +1304,7 @@
               },
               "default": "null",
               "summary": "Latest data for the operation, or `null`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1281,6 +1318,7 @@
               },
               "default": "null",
               "summary": "Latest error from the operation, or `null`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1294,6 +1332,7 @@
               },
               "default": "[]",
               "summary": "Latest errors from the operation, or `[]`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1307,6 +1346,7 @@
               },
               "default": "false",
               "summary": "Whether a request is in-flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1367,6 +1407,7 @@
                 }
               ],
               "summary": "requests an update on the host.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1390,6 +1431,7 @@
                 }
               ],
               "summary": "Notifies about updated properties.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1413,6 +1455,7 @@
                 }
               ],
               "summary": "Assigns the controller's variables and GraphQL document.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1516,6 +1559,7 @@
                   "text": "void"
                 }
               },
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1529,6 +1573,7 @@
                   "text": "void"
                 }
               },
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1659,6 +1704,7 @@
                 }
               ],
               "summary": "callback for when the Apollo client changes.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1683,6 +1729,7 @@
                 }
               ],
               "summary": "callback for when the GraphQL document changes.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1707,6 +1754,7 @@
                 }
               ],
               "summary": "callback for when the GraphQL variables change.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1731,7 +1779,8 @@
                   "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
                 }
               ],
-              "summary": "Starts the subscription"
+              "summary": "Starts the subscription",
+              "description": ""
             },
             {
               "kind": "method",
@@ -1742,7 +1791,8 @@
                   "text": "void"
                 }
               },
-              "summary": "Ends the subscription"
+              "summary": "Ends the subscription",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1792,6 +1842,7 @@
               },
               "privacy": "protected",
               "summary": "The event emitter to use when firing events, usually the host element.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1817,6 +1868,7 @@
               },
               "default": "null",
               "summary": "Latest data for the operation, or `null`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1830,6 +1882,7 @@
               },
               "default": "null",
               "summary": "Latest error from the operation, or `null`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1843,6 +1896,7 @@
               },
               "default": "[]",
               "summary": "Latest errors from the operation, or `[]`.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1856,6 +1910,7 @@
               },
               "default": "false",
               "summary": "Whether a request is in-flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1916,6 +1971,7 @@
                 }
               ],
               "summary": "requests an update on the host.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1939,6 +1995,7 @@
                 }
               ],
               "summary": "Notifies about updated properties.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1962,6 +2019,7 @@
                 }
               ],
               "summary": "Assigns the controller's variables and GraphQL document.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -2088,7 +2146,8 @@
               "description": "Options for the controlled field\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| path | `'options'`{lang=ts} | Optional. When set, the field will reflect the property at the specified path, i.e. `controller.options`. |\n| readonly | `boolean`{lang=ts} | Optional. When set, setting the field will have no effect. |\n| onSet | `(x: unknown) => void`{lang=ts} | Optional. When defined, setting the field will have no effect. |\n"
             }
           ],
-          "summary": "Class field decorator for controlled properties\n\nControlled properties are element class fields which defer to and reflect that property on the element's `controller` property, which is a `ReactiveController`."
+          "summary": "Class field decorator for controlled properties\n\nControlled properties are element class fields which defer to and reflect that property on the element's `controller` property, which is a `ReactiveController`.",
+          "description": ""
         }
       ],
       "exports": [
@@ -2609,7 +2668,8 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "privacy": "public",
-              "summary": "The Apollo Client instance."
+              "summary": "The Apollo Client instance.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2636,7 +2696,8 @@
                 "text": "Data<D> | null"
               },
               "privacy": "public",
-              "summary": "Latest Data."
+              "summary": "Latest Data.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2645,7 +2706,8 @@
                 "text": "Variables<D, V> | null"
               },
               "privacy": "public",
-              "summary": "Operation variables."
+              "summary": "Operation variables.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2654,7 +2716,8 @@
                 "text": "Error | ApolloError | null"
               },
               "privacy": "public",
-              "summary": "Latest error"
+              "summary": "Latest error",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2663,7 +2726,8 @@
                 "text": "readonly GraphQLError[]"
               },
               "privacy": "public",
-              "summary": "Latest errors"
+              "summary": "Latest errors",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2672,7 +2736,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "Whether a request is in flight."
+              "summary": "Whether a request is in flight.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2682,7 +2747,8 @@
               },
               "privacy": "public",
               "summary": "Fetch Policy for the operation.",
-              "attribute": "fetch-policy"
+              "attribute": "fetch-policy",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2691,7 +2757,8 @@
                 "text": "Record<string, unknown>"
               },
               "privacy": "public",
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -2711,7 +2778,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "True when the element is connected and ready to receive its GraphQL document"
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "description": ""
             },
             {
               "kind": "method",
@@ -2951,6 +3019,7 @@
               },
               "privacy": "public",
               "summary": "Latest mutation data",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -2988,7 +3057,8 @@
               },
               "privacy": "public",
               "summary": "Whether the mutation was called.",
-              "readonly": true
+              "readonly": true,
+              "description": ""
             },
             {
               "kind": "field",
@@ -3012,7 +3082,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "If true, the returned data property will not update with the mutation result."
+              "summary": "If true, the returned data property will not update with the mutation result.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -3021,7 +3092,8 @@
                 "text": "ComponentDocument<D> | null"
               },
               "privacy": "public",
-              "summary": "The mutation."
+              "summary": "The mutation.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -3138,6 +3210,7 @@
               },
               "privacy": "public",
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3165,6 +3238,7 @@
               },
               "privacy": "public",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3178,6 +3252,7 @@
               },
               "privacy": "public",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3191,6 +3266,7 @@
               },
               "privacy": "public",
               "summary": "Whether a request is in flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3204,6 +3280,7 @@
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3232,6 +3309,7 @@
               },
               "privacy": "public",
               "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3530,6 +3608,7 @@
               },
               "privacy": "public",
               "summary": "The latest query data.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3620,7 +3699,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "Whether or not updates to the network status should trigger next on the observer of this query."
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -3650,7 +3730,8 @@
                 "text": "number"
               },
               "privacy": "public",
-              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server."
+              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -3659,7 +3740,8 @@
                 "text": "DocumentNode | ComponentDocument<D> | null"
               },
               "privacy": "public",
-              "summary": "A GraphQL document containing a single query."
+              "summary": "A GraphQL document containing a single query.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -3850,6 +3932,7 @@
               },
               "privacy": "public",
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3877,6 +3960,7 @@
               },
               "privacy": "public",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3890,6 +3974,7 @@
               },
               "privacy": "public",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3903,6 +3988,7 @@
               },
               "privacy": "public",
               "summary": "Whether a request is in flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3916,6 +4002,7 @@
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -3944,6 +4031,7 @@
               },
               "privacy": "public",
               "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4270,7 +4358,8 @@
                 "text": "ComponentDocument<D> | null"
               },
               "privacy": "public",
-              "summary": "A GraphQL document containing a single subscription."
+              "summary": "A GraphQL document containing a single subscription.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -4291,6 +4380,7 @@
               "privacy": "public",
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "attribute": "fetch-policy",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4303,7 +4393,8 @@
                 "text": "number"
               },
               "privacy": "public",
-              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server."
+              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -4313,7 +4404,8 @@
               },
               "privacy": "public",
               "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
-              "attribute": "no-auto-subscribe"
+              "attribute": "no-auto-subscribe",
+              "description": ""
             },
             {
               "kind": "field",
@@ -4322,7 +4414,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription."
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -4341,7 +4434,8 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "summary": "If true, the query will be skipped entirely"
+              "summary": "If true, the query will be skipped entirely",
+              "description": ""
             },
             {
               "kind": "field",
@@ -4420,7 +4514,8 @@
                   "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
                 }
               ],
-              "summary": "Resets the subscription and subscribes."
+              "summary": "Resets the subscription and subscribes.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -4431,7 +4526,8 @@
                   "text": "void"
                 }
               },
-              "summary": "Cancels and clears the subscription"
+              "summary": "Cancels and clears the subscription",
+              "description": ""
             },
             {
               "kind": "method",
@@ -4462,6 +4558,7 @@
               },
               "privacy": "public",
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4489,6 +4586,7 @@
               },
               "privacy": "public",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4502,6 +4600,7 @@
               },
               "privacy": "public",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4515,6 +4614,7 @@
               },
               "privacy": "public",
               "summary": "Whether a request is in flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4528,6 +4628,7 @@
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"
@@ -4556,6 +4657,7 @@
               },
               "privacy": "public",
               "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.js"

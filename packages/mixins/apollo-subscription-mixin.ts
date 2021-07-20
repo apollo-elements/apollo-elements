@@ -103,7 +103,6 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
     /**
      * Determines whether the element should attempt to subscribe automatically
      * Override to prevent subscribing unless your conditions are met
-     * @override
      */
     shouldSubscribe(
       options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>

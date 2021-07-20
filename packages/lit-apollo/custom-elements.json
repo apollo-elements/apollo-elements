@@ -32,7 +32,8 @@
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
-              "summary": "The Apollo Client instance."
+              "summary": "The Apollo Client instance.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -40,7 +41,8 @@
               "type": {
                 "text": "Record<string, unknown>"
               },
-              "summary": "Context passed to the link execution chain."
+              "summary": "Context passed to the link execution chain.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -49,7 +51,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Whether a request is in flight."
+              "summary": "Whether a request is in flight.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -58,7 +61,8 @@
                 "text": "Data<D> | null"
               },
               "default": "null",
-              "summary": "Latest Data."
+              "summary": "Latest Data.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -67,7 +71,8 @@
                 "text": "ComponentDocument<D> | null"
               },
               "default": "null",
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`"
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": ""
             },
             {
               "kind": "field",
@@ -76,7 +81,8 @@
                 "text": "Error | ApolloError | null"
               },
               "default": "null",
-              "summary": "Latest error"
+              "summary": "Latest error",
+              "description": ""
             },
             {
               "kind": "field",
@@ -85,7 +91,8 @@
                 "text": "readonly GraphQLError[]"
               },
               "default": "[]",
-              "summary": "Latest errors"
+              "summary": "Latest errors",
+              "description": ""
             },
             {
               "kind": "field",
@@ -94,7 +101,8 @@
                 "text": "Variables<D, V> | null"
               },
               "default": "null",
-              "summary": "Operation variables."
+              "summary": "Operation variables.",
+              "description": ""
             }
           ],
           "events": [
@@ -185,7 +193,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Whether the mutation was called"
+              "summary": "Whether the mutation was called",
+              "description": ""
             },
             {
               "kind": "field",
@@ -194,7 +203,8 @@
                 "text": "ComponentDocument<D> | null"
               },
               "default": "null",
-              "summary": "The mutation."
+              "summary": "The mutation.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -203,6 +213,7 @@
                 "text": "Record<string, unknown>"
               },
               "summary": "Context passed to the link execution chain.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -223,7 +234,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "If true, the returned data property will not update with the mutation result."
+              "summary": "If true, the returned data property will not update with the mutation result.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -355,6 +367,7 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -368,6 +381,7 @@
               },
               "default": "false",
               "summary": "Whether a request is in flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -381,6 +395,7 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -394,6 +409,7 @@
               },
               "default": "null",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -407,6 +423,7 @@
               },
               "default": "[]",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -562,7 +579,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Flags an element that's ready and able to auto subscribe"
+              "summary": "Flags an element that's ready and able to auto subscribe",
+              "description": ""
             },
             {
               "kind": "field",
@@ -584,7 +602,8 @@
                 "text": "null | ComponentDocument<D>"
               },
               "default": "null",
-              "summary": "A GraphQL document containing a single query."
+              "summary": "A GraphQL document containing a single query.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -593,6 +612,7 @@
                 "text": "Record<string, unknown>"
               },
               "summary": "Context passed to the link execution chain.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -623,7 +643,8 @@
               "type": {
                 "text": "number"
               },
-              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server."
+              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -649,7 +670,8 @@
               "type": {
                 "text": "boolean"
               },
-              "summary": "Whether or not updates to the network status should trigger next on the observer of this query."
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -869,6 +891,7 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -882,6 +905,7 @@
               },
               "default": "false",
               "summary": "Whether a request is in flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -895,6 +919,7 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -908,6 +933,7 @@
               },
               "default": "null",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -921,6 +947,7 @@
               },
               "default": "[]",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1051,7 +1078,8 @@
                 "text": "ComponentDocument<D> | null"
               },
               "default": "null",
-              "summary": "A GraphQL document containing a single subscription."
+              "summary": "A GraphQL document containing a single subscription.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1061,7 +1089,8 @@
               },
               "default": "false",
               "summary": "If true, the element will not begin querying data until you manually call `subscribe`",
-              "attribute": "no-auto-subscribe"
+              "attribute": "no-auto-subscribe",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1069,7 +1098,8 @@
               "type": {
                 "text": "boolean"
               },
-              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription."
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1078,7 +1108,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "Determines if your subscription should be unsubscribed and subscribed again."
+              "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1087,7 +1118,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "summary": "If true, the query will be skipped entirely"
+              "summary": "If true, the query will be skipped entirely",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1095,7 +1127,8 @@
               "type": {
                 "text": "C.ErrorPolicy"
               },
-              "summary": "Error policy for the subscription"
+              "summary": "Error policy for the subscription",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1104,7 +1137,8 @@
                 "text": "C.FetchPolicy"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
-              "attribute": "fetch-policy"
+              "attribute": "fetch-policy",
+              "description": ""
             },
             {
               "kind": "field",
@@ -1112,7 +1146,8 @@
               "type": {
                 "text": "number"
               },
-              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server."
+              "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -1130,7 +1165,8 @@
                   }
                 }
               ],
-              "summary": "Resets the observable and subscribes."
+              "summary": "Resets the observable and subscribes.",
+              "description": ""
             },
             {
               "kind": "method",
@@ -1140,7 +1176,8 @@
                   "text": "void"
                 }
               },
-              "summary": "Cancels and clears the subscription"
+              "summary": "Cancels and clears the subscription",
+              "description": ""
             },
             {
               "kind": "method",
@@ -1226,6 +1263,7 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1238,6 +1276,7 @@
                 "text": "Record<string, unknown>"
               },
               "summary": "Context passed to the link execution chain.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1251,6 +1290,7 @@
               },
               "default": "false",
               "summary": "Whether a request is in flight.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1264,6 +1304,7 @@
               },
               "default": "null",
               "summary": "Latest Data.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1277,6 +1318,7 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1290,6 +1332,7 @@
               },
               "default": "null",
               "summary": "Latest error",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1303,6 +1346,7 @@
               },
               "default": "[]",
               "summary": "Latest errors",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"
@@ -1316,6 +1360,7 @@
               },
               "default": "null",
               "summary": "Operation variables.",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
                 "module": "apollo-element.js"

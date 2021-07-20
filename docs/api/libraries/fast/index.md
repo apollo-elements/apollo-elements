@@ -2,7 +2,7 @@
 layout: layout-api-index
 package: '@apollo-elements/fast'
 ---
-# Web Component Libraries >> FAST || 30
+# Web Component Libraries >> FAST
 
 [FAST](https://fast.design) is a new and innovative web component library and design system from Microsoft. It features statically typed template literals and a flexible reactivity model.
 

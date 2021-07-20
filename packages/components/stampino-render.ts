@@ -22,12 +22,12 @@ export class StampinoRender extends ReactiveElement implements ReactiveControlle
    *
    * Templates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)
    * @attr {string} template
-   * @example Referencing a template by ID
+   * @example <caption>Referencing a template by ID</caption>
    * ```html
-   * <stampino-render template="tpl"></stampino-render>
-   * <template id="tpl">
-   *   <p>Hi, {{ data.name }}</p>
-   * </template>
+   *          <stampino-render template="tpl"></stampino-render>
+   *          <template id="tpl">
+   *            <p>Hi, {{ data.name }}</p>
+   *          </template>
    * ```
    */
   get template(): HTMLTemplateElement | null {

@@ -3,7 +3,7 @@ layout: layout-api-index
 package: '@apollo-elements/polymer'
 ---
 
-# Web Component Libraries >> Polymer || 70
+# Web Component Libraries >> Polymer
 
 Polymer is the <abbr title="original gangsta">OG</abbr> web components library, and while it's now in maintenance ([the library, not the project](https://dev.to/bennypowers/lets-build-web-components-part-4-polymer-library-4dk2#the-polymer-project)), it's still in use all over the web.
 

@@ -183,8 +183,6 @@ describe('[atomico] useQuery', function() {
     describe('fetchMore', function() {
       let element: HTMLElement & { updated: Promise<void>; };
 
-      const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
-
       const onError = spy();
       const onData = spy();
 

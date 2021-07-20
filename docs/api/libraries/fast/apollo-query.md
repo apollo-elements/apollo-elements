@@ -14,7 +14,7 @@ module: apollo-query.js
 
 `ApolloQuery` inherits from `ApolloElement` and implements the [`ApolloQueryInterface`](/api/core/interfaces/query/).
 
-Read the [query component guides](/guides/usage/queries/) for examples and tips.
+## Demo
 
 ```ts playground fast-query launches.ts
 import { ApolloQuery, customElement, html, repeat } from '@apollo-elements/fast';
@@ -36,15 +36,13 @@ const getPatch = compose(propOr('mission_patch_small'), propOr('links'));
   name: 'spacex-launches',
   styles,
   template: html<Launches>`
-    <ol>
-      ${repeat(compose(getLaunches), html`
-        <li>
-          <article>
-            <span>${propOr('mission_name', '')}</span>
-            <img :src="${getPatch}" alt="Badge" role="presentation"/>
-          </article>
-        </li>
-      `)}
+    <ol>${repeat(compose(getLaunches), html`
+      <li>
+        <article>
+          <span>${propOr('mission_name', '')}</span>
+          <img :src="${getPatch}" alt="Badge" role="presentation"/>
+        </article>
+      </li>`)}
     </ol>
   `,
 })
@@ -69,50 +67,17 @@ export const map = f => xs => xs?.map?.(f) ?? [];
 export const unary = f => x => f(x);
 ```
 
-```graphql playground-file fast-query Launches.query.graphql.js
-import { gql } from '@apollo/client/core';
-export const LaunchesQuery = gql`
-query LaunchesQuery($limit: Int) {
-  launchesPast(limit: $limit) {
-    mission_name
-    links { mission_patch_small }
-  }
-}
-`;
-```
-
 ```html playground-file fast-query index.html
-<script type="module" src="launches.js"></script>
-<apollo-client uri="https://api.spacex.land/graphql">
-  <spacex-launches></spacex-launches>
-</apollo-client>
+{% include ../_assets/index.spacex-launches.html %}
 ```
 
 ```js playground-file fast-query launches.css.js
 import { css } from '@microsoft/fast-element';
-export const styles = css`
-  :host {
-    --image-size: 40px;
-  }
-
-  li img {
-    height: var(--image-size);
-    width: auto;
-  }
-
-  li article {
-    height: var(--image-size);
-    display: flex;
-    justify-content: space-between;
-  }
-`;
+export const styles = css`{% include ../_assets/SpacexLaunches.css %}`;
 ```
 
-```js playground-file fast-query client.js
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
-
-window.__APOLLO_CLIENT__ = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({ uri: 'https://api.spacex.land/graphql' }),
-});
+```graphql playground-file fast-query Launches.query.graphql.ts
+{% include ../_assets/Launches.query.graphql.ts %};
 ```
+
+Read the [query component guides](/guides/usage/queries/) for more examples and tips.

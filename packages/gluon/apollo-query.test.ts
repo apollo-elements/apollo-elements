@@ -1,6 +1,8 @@
 import type * as C from '@apollo/client/core';
 import type * as I from '@apollo-elements/core/types';
 
+import * as S from '@apollo-elements/test/schema';
+
 import { NetworkStatus } from '@apollo/client/core';
 
 import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
@@ -11,9 +13,9 @@ import { html } from 'lit-html';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-import { defineCE, expect, fixture } from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { spy } from 'sinon';
+import { spy, SinonSpy } from 'sinon';
 
 import { GluonElement } from '@gluon/gluon';
 
@@ -52,9 +54,7 @@ describe('[gluon] ApolloQuery', function() {
     let element: ApolloQuery;
     beforeEach(async function() {
       const tag = defineCE(class extends ApolloQuery {
-        static get is() {
-          return 'apollo-query';
-        }
+        static get is() { return 'apollo-query'; }
       });
       element = await fixture<ApolloQuery>(`<${tag}></${tag}>`);
       spy(element, 'render');
@@ -78,6 +78,51 @@ describe('[gluon] ApolloQuery', function() {
       it('caches', function() {
         expect(element.networkStatus).to.equal(0);
       });
+    });
+
+    describe('setting query to NullableParamQuery', function() {
+      beforeEach(function() {
+        element.query = S.NullableParamQuery;
+      });
+
+      beforeEach(nextFrame);
+
+      beforeEach(function() {
+        spy(element.controller, 'subscribe');
+      });
+
+      afterEach(function() {
+        (element.controller.subscribe as SinonSpy).restore();
+      });
+
+      it('sets query on the controller', function() {
+        expect(element.controller.query)
+          .to.equal(element.document, 'element.document').and
+          .to.equal(element.controller.document, 'element.controller.document').and
+          .to.equal(element.query, 'element.query').and
+          .to.equal(S.NullableParamQuery, 'S.NullableParamQuery');
+      });
+    });
+  });
+
+  describe('subclassing with query', function() {
+    let element: ApolloQuery;
+    beforeEach(async function() {
+      const tag = defineCE(class extends ApolloQuery {
+        static get is() { return 'apollo-query'; }
+        query = S.NullableParamQuery;
+      });
+      element = await fixture<ApolloQuery>(`<${tag}></${tag}>`);
+    });
+
+    beforeEach(nextFrame);
+
+    it('sets query on the controller', function() {
+      expect(element.controller.query)
+        .to.equal(element.document, 'element.document').and
+        .to.equal(element.controller.document, 'element.controller.document').and
+        .to.equal(element.query, 'element.query').and
+        .to.equal(S.NullableParamQuery, 'S.NullableParamQuery');
     });
   });
 });
