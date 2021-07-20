@@ -10,18 +10,18 @@ import { PolymerApolloElement } from './polymer-apollo-element.js';
  *
  * See [ApolloSubscriptionInterface](/api/core/interfaces/subscription/) for more information.
  *
- * @example
+ * @example <caption>Subscribing for Updates</caption>
  * ```html
- * <polymer-apollo-subscription
- *     data="{{data}}"
- *     variables="[[variables]]"
- *     subscription="[[UserJoinedSubscription]]"
- *     on-data-changed="toast"
- * ></polymer-apollo-subscription>
+ *          <polymer-apollo-subscription
+ *              data="{{data}}"
+ *              variables="[[variables]]"
+ *              subscription="[[UserJoinedSubscription]]"
+ *              on-data-changed="toast"
+ *          ></polymer-apollo-subscription>
  *
- * <paper-toast duration="5000" text="A wild [[data.userJoined.name]] approaches!">
- *   <iron-image>[[data.userJoined.picture]]</iron-image>
- * </paper-toast>
+ *          <paper-toast duration="5000" text="A wild [[data.userJoined.name]] approaches!">
+ *            <iron-image>[[data.userJoined.picture]]</iron-image>
+ *          </paper-toast>
  * ```
  *
  * @fires data-changed

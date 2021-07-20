@@ -11,6 +11,7 @@ import type { ApolloController } from '@apollo-elements/core';
 import { getInitialProps, getInitialProp } from '@apollo-elements/core/decorators';
 import { notify, PolymerChangeEvent } from './notify-decorator.js';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
+import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
 const last = Symbol('PolymerElement last known');
 
@@ -26,7 +27,7 @@ const last = Symbol('PolymerElement last known');
 export abstract class PolymerApolloElement<
   D extends MaybeTDN = MaybeTDN,
   V = MaybeVariables<D>
-> extends ApolloElementMixin(HTMLElement)<D, V> {
+> extends GraphQLScriptChildMixin(ApolloElementMixin(HTMLElement))<D, V> {
   static readonly is: `polymer-apollo-${'mutation'|'query'|'subscription'}`;
 
   /** @ignore */

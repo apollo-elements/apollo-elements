@@ -12,17 +12,17 @@ import { notify } from './notify-decorator.js';
  *
  * See [ApolloMutationInterface](/api/core/interfaces/mutation/) for more information.
  *
- * @example Use in a Polymer template
+ * @example <caption>Use in a Polymer template</caption>
  *
  * ```html
- * <polymer-apollo-mutation id="userMutation"
- *     data="{{data}}"
- *     mutation="[[UserMutation]]"
- * ></polymer-apollo-mutation>
+ *          <polymer-apollo-mutation id="userMutation"
+ *              data="{{data}}"
+ *              mutation="[[UserMutation]]"
+ *          ></polymer-apollo-mutation>
  *
- * <paper-input label="Name" value="{{name}}"></paper-input>
- * <paper-input label="Picture URL" value="{{picture}}"></paper-input>
- * <paper-button on-click="mutate">Submit</paper-button>
+ *          <paper-input label="Name" value="{{name}}"></paper-input>
+ *          <paper-input label="Picture URL" value="{{picture}}"></paper-input>
+ *          <paper-button on-click="mutate">Submit</paper-button>
  * ```
  *
  * @fires data-changed

@@ -13,18 +13,18 @@ import { notify } from './notify-decorator.js';
  *
  * See [ApolloQueryInterface](/api/core/interfaces/query/) for more information.
  *
- * @example
+ * @example <caption>Querying for Data</caption>
  * ```html
- * <polymer-apollo-query
- *     data="{{data}}"
- *     variables="[[variables]]"
- *     query="[[UserQuery]]"
- * ></polymer-apollo-query>
+ *          <polymer-apollo-query
+ *              data="{{data}}"
+ *              variables="[[variables]]"
+ *              query="[[UserQuery]]"
+ *          ></polymer-apollo-query>
  *
- * <paper-icon-item>
- *   <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
- *   [[data.user.name]]
- * </paper-icon-item>
+ *          <paper-icon-item>
+ *            <iron-image slot="item-icon">[[data.user.picture]]</iron-image>
+ *            [[data.user.name]]
+ *          </paper-icon-item>
  * ```
  *
  * @fires data-changed
