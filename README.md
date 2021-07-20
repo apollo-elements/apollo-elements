@@ -194,6 +194,30 @@ import { useSubscription } from '@apollo-elements/haunted/useSubscription';
 
 [Read More](https://apolloelements.dev/api/libraries/haunted/)
 
+### ⚛️ Atomico
+
+Alternate hooks implementation for web components, with [atomico](https://atomico.gitbook.io/doc/)!
+
+<code-copy>
+
+```bash
+npm i -S @apollo-elements/atomico@next
+```
+
+</code-copy>
+
+<code-copy>
+
+```js
+import { useQuery } from '@apollo-elements/atomico/useQuery';
+import { useMutation } from '@apollo-elements/atomico/useMutation';
+import { useSubscription } from '@apollo-elements/atomico/useSubscription';
+```
+
+</code-copy>
+
+[Read More](https://apolloelements.dev/api/libraries/atomico/)
+
 ### 🦄 Hybrids
 
 Descriptor factories and object spreads you can roll into your [hybrids](https://hybrids.js.org) to make it easier to connect to your Apollo cache.
