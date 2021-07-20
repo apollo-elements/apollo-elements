@@ -63,9 +63,9 @@ npm i -S @apollo-elements/core@next
 <code-copy>
 
 ```js
-import '@apollo-elements/core/apollo-query-controller';
-import '@apollo-elements/core/apollo-mutation-controller';
-import '@apollo-elements/core/apollo-subscription-controller';
+import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
+import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
+import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
 ```
 
 </code-copy>
