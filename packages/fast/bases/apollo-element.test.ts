@@ -34,9 +34,8 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     const name = 'renders-when-client-is-set';
     // @ts-expect-error: just testing assignment and rendering
     const template = html<Test>`${x => x.client?.test ?? 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloElement {
-      declare shadowRoot: ShadowRoot;
-    }
+    @customElement({ name, template })
+    class Test extends ApolloElement { declare shadowRoot: ShadowRoot; }
     const tag = unsafeStatic(name);
     const element = await fixture<Test>(h`<${tag}></${tag}>`);
     // @ts-expect-error: just testing assignment and rendering

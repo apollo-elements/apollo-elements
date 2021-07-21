@@ -18,6 +18,14 @@
     "./*.js": {
       "esbuild": "./*.ts",
       "default": "./*.js"
+    },
+    "./bases/*": {
+      "esbuild": "./bases/*.ts",
+      "default": "./bases/*.js"
+    },
+    "./bases/*.js": {
+      "esbuild": "./bases/*.ts",
+      "default": "./bases/*.js"
     }
   },
   "files": [

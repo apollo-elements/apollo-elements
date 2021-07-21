@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/fast'
-module: apollo-subscription.js
+module: apollo-subscription-behavior.js
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,8 +10,8 @@ module: apollo-subscription.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> FAST >> ApolloSubscription || 40
+# Web Component Libraries >> FAST >> ApolloSubscriptionBehavior || 40
 
-`ApolloSubscription` inherits from `ApolloElement` and implements the [`ApolloSubscriptionInterface`](/api/core/interfaces/subscription/).
+`ApolloSubscriptionBehavior` extends [`ApolloSubscriptionController`](/api/core/controllers/query/) and implements the [`Behavior`](https://www.fast.design/docs/api/fast-element.behavior) interface.
 
-Read the [subscription component guides](../../../../guides/usage/subscriptions/) for examples and tips.
+Read the [subscription component guides](/guides/usage/subscriptions/) for examples and tips.

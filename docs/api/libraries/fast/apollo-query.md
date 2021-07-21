@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/fast'
-module: apollo-query.js
+module: apollo-query-behavior.js
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,70 +10,100 @@ module: apollo-query.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> FAST >> ApolloQuery || 20
+# Web Component Libraries >> FAST >> ApolloQueryBehavior || 20
 
-`ApolloQuery` inherits from `ApolloElement` and implements the [`ApolloQueryInterface`](/api/core/interfaces/query/).
+`ApolloQueryBehavior` extends [`ApolloQueryController`](/api/core/controllers/query/) and implements the [`Behavior`](https://www.fast.design/docs/api/fast-element.behavior) interface.
 
 ## Demo
 
 ```ts playground fast-query launches.ts
-import { ApolloQuery, customElement, html, repeat } from '@apollo-elements/fast';
+import type { Binding, ViewTemplate } from '@apollo-elements/fast';
+import { FASTElement, customElement, html, repeat } from '@apollo-elements/fast';
+import { ApolloQueryBehavior } from '@apollo-elements/fast';
 import { styles } from './launches.css.js';
-import { LaunchesQuery } from './Launches.query.graphql.js';
-import { compose, map, propOr, unary } from './fp-helpers.js';
+import { LaunchesQuery, Launch } from './Launches.query.graphql.js';
 
 import '@apollo-elements/components/apollo-client';
 
-const getLaunches = compose(
-  unary(Array.from),
-  propOr('launchesPast', []),
-  propOr('data', null)
-);
+const name = 'spacex-launches';
 
-const getPatch = compose(propOr('mission_patch_small'), propOr('links'));
+const getLaunches:    Binding<Launches> = x => Array.from(x.launches.data?.launchesPast ?? []);
+const getMissionName: Binding<Launch>   = x => x.mission_name ?? ''
+const getPatch:       Binding<Launches> = x => x.links?.mission_patch_small;
+const onLimitChange:  Binding<Launches> = (x, { event }) => x.onLimitChange(event);
 
-@customElement({
-  name: 'spacex-launches',
-  styles,
-  template: html<Launches>`
-    <ol>${repeat(compose(getLaunches), html`
+const template: ViewTemplate<Launches> = html`
+  <fast-card>
+    <h2>Launches</h2>
+    <fast-number-field min=1 max=50 value=3 @change=${onLimitChange}}>
+      Limit
+    </fast-number-field>
+    <fast-divider></fast-divider>
+    <ol>${repeat(getLaunches, html`
       <li>
         <article>
-          <span>${propOr('mission_name', '')}</span>
+          <span>${getMissionName}</span>
           <img :src="${getPatch}" alt="Badge" role="presentation"/>
         </article>
-      </li>`)}
+      </li>` as ViewTemplate<Launch>)}
     </ol>
-  `,
-})
-class Launches extends ApolloQuery<typeof LaunchesQuery> {
-  query = LaunchesQuery;
+  </fast-card>
+`;
 
-  variables = { limit: 3 };
+@customElement({ name, styles, template })
+class Launches extends FASTElement {
+  launches = new ApolloQueryBehavior(this, LaunchesQuery, {
+    variables: { limit: 3 }
+  });
+
+  onLimitChange(event) {
+    this.launches.variables = {
+      limit: parseInt(event.target.value)
+    };
+  }
 }
 ```
 
-```js playground-file fast-query fp-helpers.js
-/** right-to-left function composition */
-export const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
-
-/** safe property access */
-export const propOr = (name, or) => o => o?.[name] ?? or;
-
-/** safe point-free array map */
-export const map = f => xs => xs?.map?.(f) ?? [];
-
-/** nary function to unary function */
-export const unary = f => x => f(x);
-```
 
 ```html playground-file fast-query index.html
+<script type="module" src="https://unpkg.com/@microsoft/fast-components"></script>
+<fast-design-system-provider use-defaults>
 {% include ../_assets/index.spacex-launches.html %}
+</fast-design-system-provider>
+```
+
+```css playground-file fast-query style.css
+body {
+  display: grid;
+  background-color: #111;
+  color: white;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  place-items: center center;
+  height: 100vh;
+}
+
+apollo-client,
+fast-design-system-provider {
+  height: 100%;
+}
 ```
 
 ```js playground-file fast-query launches.css.js
 import { css } from '@microsoft/fast-element';
-export const styles = css`{% include ../_assets/SpacexLaunches.css %}`;
+export const styles = css`
+{% include ../_assets/SpacexLaunches.css %}
+
+fast-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 10px;
+}
+
+h2 {
+  margin: 0;
+}
+`;
 ```
 
 ```graphql playground-file fast-query Launches.query.graphql.ts
