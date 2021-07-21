@@ -110,7 +110,7 @@ implements ReactiveController {
     else if (!document)
       this.#document = null; /* c8 ignore next */ // covered
     else if (!isValidGql(document)) { /* c8 ignore next */ // covered
-      const name = (this.constructor.name).replace(/Apollo(\w+)Controller/, '$1');
+      const name = (this.constructor.name).replace(/Apollo(\w+)(Controller|Behavior)/, '$1');
       throw new TypeError(`${name} must be a parsed GraphQL document.`);
     } else {
       this.#document = document;

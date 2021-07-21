@@ -28,7 +28,7 @@ export interface ControlledPropertyDeclaration extends PropertyDeclaration {
 /**
  * `ApolloElement`
  *
- * 🚀 Custom element base class for apollo lit elements.
+ * 🚀 Single-operation custom-element base class for apollo lit elements.
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  */
@@ -58,28 +58,42 @@ export class ApolloElement<
   @state()
   client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
-  /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;
-
-  /** @summary Whether a request is in flight. */
-  @controlled() @property({ reflect: true, type: Boolean }) loading = false;
-
-  /** @summary Latest Data. */
-  @controlled() @state() data: Data<D> | null = null;
-
   /**
    * @summary Operation document.
    * GraphQL operation document i.e. query, subscription, or mutation.
    * Must be a parsed GraphQL `DocumentNode`
    */
-  @controlled() @state() document: ComponentDocument<D> | null = null;
+  @controlled()
+  @state()
+  document: ComponentDocument<D> | null = null;
 
-  /** @summary Latest error */
-  @controlled() @state() error: Error | ApolloError | null = null;
+  /** @summary Context passed to the link execution chain. */
+  @controlled({ path: 'options' })
+  @state()
+  context?: Record<string, unknown>;
 
-  /** @summary Latest errors */
-  @controlled() @state() errors: readonly GraphQLError[] = [];
+  /** @summary Whether a request is in flight. */
+  @controlled()
+  @property({ reflect: true, type: Boolean })
+  loading = false;
+
+  /** @summary Latest Data. */
+  @controlled()
+  @state()
+  data: Data<D> | null = null;
 
   /** @summary Operation variables. */
-  @controlled() @state() variables: Variables<D, V> | null = null;
+  @controlled()
+  @state()
+  variables: Variables<D, V> | null = null;
+
+  /** @summary Latest error */
+  @controlled()
+  @state()
+  error: Error | ApolloError | null = null;
+
+  /** @summary Latest errors */
+  @controlled()
+  @state()
+  errors: readonly GraphQLError[] = [];
 }

@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/core/types';
-import type { ApolloMutationElement } from '@apollo-elements/core';
 import type * as S from './schema';
+import type { ApolloMutationElement } from '@apollo-elements/core';
 
 import { ApolloClient, ApolloError, InMemoryCache } from '@apollo/client/core';
 
