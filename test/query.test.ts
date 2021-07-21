@@ -461,7 +461,6 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
       });
 
-
       describe('with fetch-policy attribute set', function() {
         let element: ApolloQueryElement;
 
@@ -1255,6 +1254,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           beforeEach(waitForRender(() => element));
           beforeEach(nextFrame);
+          beforeEach(waitForRender(() => element));
 
           it('updates data', function() {
             expect(element.data?.nullableParam?.nullable).to.equal('new args');
@@ -1387,6 +1387,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               error = e;
             }
           });
+
+          beforeEach(() => element.updateComplete);
 
           it('updates error with the error', function() {
             expect(element!.error).to.equal(error);
