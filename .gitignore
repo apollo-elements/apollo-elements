@@ -32,6 +32,14 @@ packages/gluon/helpers/*.d.ts
 packages/gluon/helpers/*.js
 packages/gluon/helpers/*.js.map
 
+packages/core/lib/*.d.ts
+packages/core/lib/*.js
+packages/core/lib/*.js.map
+
+packages/fast/bases/*.d.ts
+packages/fast/bases/*.js
+packages/fast/bases/*.js.map
+
 !custom-elements-manifest.config.js
 
 !packages/*/global.d.ts
