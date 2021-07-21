@@ -21,7 +21,7 @@
 Apollo elements' `fast` is distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your computer](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
 ```bash
-npm install --save @apollo-elements/fast
+npm install --save @apollo-elements/fast@next
 ```
 
 ## 👩‍🚀 Usage
@@ -40,53 +40,44 @@ query HelloQuery {
 
 > Read our [docs on working with GraphQL files during development](https://apolloelements.dev/guides/getting-started/buildless-development/) and [in production](https://apolloelements.dev/guides/getting-started/building-for-production/) for more info, and be sure to read about [generating TypeScript types from GraphQL](https://apolloelements.dev/guides/getting-started/codegen/) to enhance your developer experience and reduce bugs.
 
-Next, we'll define our UI component. Import the base class and helpers, query, and types:
+Next, we'll define our UI component. Import the base class and helpers, query, and types, then define your component's template. Add an `ApolloQueryBehavior` with a query to automatically subscribe when your element connects.
 
-<details>
-
-<summary>Imports</summary>
+> Read more about [working with Queries](https://apolloelements.dev/guides/usage/queries)
 
 <code-copy>
 
 ```ts
-import { ApolloQuery, html, customElement } from '@apollo-elements/fast';
+import type { Binding, ViewTemplate } from '@apollo-elements/fast';
 
-import HelloQuery from './Hello.query.graphql';
+import { ApolloQueryBehavior } from '@apollo-elements/fast';
+import { FASTElement, customElement, html, when } from '@apollo-elements/fast';
 
-import type {
-  HelloQueryData as Data,
-  HelloQueryVariables as Variables
-} from '../codegen/schema';
-```
+import { HelloQuery } from './Hello.query.graphql';
 
-</code-copy>
+import { not } from 'fp-ts/function';
 
-</details>
+type B = Binding<HelloQueryElement>;
+const isLoading: B = x => x.hello.loading;
+const hasError: B = x => !!x.hello.error;
+const getErrorMessage: B = x => x.hello.error.message;
+const getDataPropOr = (prop: string, or: string): B => x =>
+  x.hello.data?.helloWorld?.[prop] ?? or;
 
-Then define your component's template. Make sure to set the `query` field, so your component starts fetching data automatically.
-
-> Read more about [working with Queries](https://apolloelements.dev/pages/using%20apollo/queries)
-
-<code-copy>
-
-```ts
-const template = html<HelloQueryElement>`
-    <what-spin-such-loader ?active="${x => x.loading}"></what-spin-such-loader>
-  ${x => (
-    x.error ? html`
-      <h1>😢 Such Sad, Very Error! 😰</h1>
-      <pre><code>${error.message}</code></pre>`
-  : html`
-      <p>
-        ${x.data?.helloWorld?.greeting ?? 'Hello'},
-        ${x.data?.helloWorld?.name ?? 'Friend'}!
-      </p>`
-  )}
+const template: ViewTemplate<HelloQueryElement> = html`
+  <what-spin-such-loader ?active="${isLoading}"></what-spin-such-loader>
+  ${when(hasError, html`
+    <h1>😢 Such Sad, Very Error! 😰</h1>
+    <pre><code>${getErrorMessage}</code></pre>`)}
+  ${when(not(hasError), html`
+    <p>
+      ${getDataPropOr('greeting', 'Hello')},
+      ${getDataPropOr('name', 'Friend')}!
+    </p>`)}
 `;
 
 @customElement({ name: 'hello-query', template })
-export class HelloQueryElement extends ApolloQuery<Data, Variables> {
-  query = HelloQuery;
+export class HelloQueryElement extends FASTElement {
+  hello = new ApolloQueryBehavior(this, HelloQuery);
 }
 ```
 
