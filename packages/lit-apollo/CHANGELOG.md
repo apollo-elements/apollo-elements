@@ -1,5 +1,13 @@
 # @apollo-elements/lit-apollo
 
+## 4.0.0-next.6
+
+### Patch Changes
+
+- bf3279ce: Refactor and update docs
+- Updated dependencies [bf3279ce]
+  - @apollo-elements/core@0.0.1-next.4
+
 ## 4.0.0-next.5
 
 ### Patch Changes

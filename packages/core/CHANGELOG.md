@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 0.0.1-next.4
+
+### Patch Changes
+
+- bf3279ce: Refactor and update docs
+
 ## 0.0.1-next.3
 
 ### Patch Changes
