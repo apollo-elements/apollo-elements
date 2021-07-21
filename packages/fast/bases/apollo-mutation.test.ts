@@ -49,7 +49,7 @@ class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVaria
   declare shadowRoot: ShadowRoot;
 
   async hasRendered(): Promise<this> {
-    await this.updateComplete;
+    await DOM.nextUpdate();
     return this;
   }
 

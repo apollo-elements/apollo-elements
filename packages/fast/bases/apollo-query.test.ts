@@ -38,7 +38,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   extends ApolloQuery<D, V>
   implements TestableElement {
   async hasRendered() {
-    await this.updateComplete;
+    await DOM.nextUpdate();
     return this;
   }
 

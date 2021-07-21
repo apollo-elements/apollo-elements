@@ -1,7 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/fast'
-module: apollo-mutation.js
+module: apollo-mutation-behavior.js
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,68 +10,65 @@ module: apollo-mutation.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> FAST >> ApolloMutation || 30
+# Web Component Libraries >> FAST >> ApolloMutationBehavior || 30
 
-`ApolloMutation` inherits from `ApolloElement` and implements the [`ApolloMutationInterface`](/api/core/interfaces/mutation/).
+`ApolloMutationBehavior` extends [`ApolloMutationController`](/api/core/controllers/mutation/) and implements the [`Behavior`](https://www.fast.design/docs/api/fast-element.behavior) interface.
 
 Read the [mutation component guides](/guides/usage/mutations/) for examples and tips.
 
 ## Live Demo
 
 ```ts playground fast-mutation AddUser.ts
-import { ApolloMutation, Binding, customElement, html } from '@apollo-elements/fast';
+import type { Binding, ViewTemplate } from '@microsoft/fast-element';
+import { FASTElement, customElement, html, when } from '@microsoft/fast-element';
+import { ApolloMutationBehavior } from '@apollo-elements/fast';
 import { AddUserMutation } from './AddUser.mutation.graphql.js';
-import { compose, propOr } from './fp-helpers.js';
-
-import '@power-elements/card';
-import '@material/mwc-button';
-import '@material/mwc-textfield';
-
-const getAddedUser: Binding<AddUser> = x => x.data?.insertUsers?.returning?.[0];
+import { client } from './client.js';
+import { styles } from './add-user.css.js';
 
 const format = x => { try { return new Date(x).toDateString(); } catch { return ''; } };
 
-@customElement({ name: 'add-user', template: html<AddUser>`
-  <p-card>
-    <h2 slot="heading">Add User</h2>
+const name = 'add-user';
 
-    ${x => (!x.called || !x.data) ? '' : html<AddUser>`
-    <dl>
-      <dt>Name</dt>  <dd>${compose(propOr('name', ''), getAddedUser)}</dd>
-      <dt>Added</dt> <dd>${compose(format, propOr('timestamp', null), getAddedUser)}</dd>
-    </dl>
-    `}
+const getAddedUser: Binding<AddUser> = x => x.addUser.data?.insertUsers?.returning?.[0];
+const getLoading:   Binding<AddUser> = x => x.addUser.loading;
+const getTimestamp: Binding<AddUser> = x => format(getAddedUser(x)?.timestamp);
+const getUserName:  Binding<AddUser> = x => getAddedUser(x)?.name ?? '';
+const hasData:      Binding<AddUser> = x => x.addUser.called || !!x.addUser.data;
+const onClick:      Binding<AddUser> = x => x.addUser.mutate();
+const onInput:      Binding<AddUser> = (x, { event }) => x.onInput(event);
 
-    <mwc-textfield slot="actions"
-        label="User Name"
-        outlined
-        ?disabled="${propOr('loading')}"
-        @input="${(x, { event }) => x.onInput(event.target.value)}"></mwc-textfield>
-    <mwc-button slot="actions"
-        label="Add User"
-        ?disabled="${propOr('loading')}"
-        @click="${x => x.mutate()}"></mwc-button>
-  </p-card>
-` })
-class AddUser extends ApolloMutation<typeof AddUserMutation> {
-  mutation = AddUserMutation;
+const dataTemplate: ViewTemplate<AddUser> = html`
+<dl>
+  <dt>Name</dt>  <dd>${getUserName}</dd>
+  <dt>Added</dt> <dd>${getTimestamp}</dd>
+</dl>`;
 
-  onInput(name): boolean {
-    this.variables = { name }
+const template: ViewTemplate<AddUser> = html`
+  <fast-card>
+    <h2>Add User</h2>
+    ${when(hasData, dataTemplate)}
+    <fast-text-field ?disabled="${getLoading}" @input="${onInput}">
+      User Name
+    </fast-text-field>
+    <fast-button ?disabled="${getLoading}" @click="${onClick}">
+      Add User
+    </fast-button>
+  </fast-card>
+`;
+@customElement({ name, template, styles })
+class AddUser extends FASTElement {
+  addUser = new ApolloMutationBehavior(this, AddUserMutation, { client });
+
+  onInput(event: Event & { target: HTMLInputElement }): boolean {
+    const name = event.target.value
+    this.addUser.variables = { name }
     return true;
   }
 }
 ```
 
-```js playground-file fast-mutation fp-helpers.js
-/** right-to-left function composition */
-export const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
-
-/** safe property access */
-export const propOr = (name, or) => o => o?.[name] ?? or;
-```
-
-```graphql playground-file fast-mutation AddUser.mutation.graphql.js
+```graphql playground-file fast-mutation AddUser.mutation.graphql.ts
 import { gql, TypedDocumentNode } from '@apollo/client/core';
 
 interface Data {
@@ -98,14 +95,48 @@ export const AddUserMutation: TypedDocumentNode<Data, { name: string }> = gql`
 ```
 
 ```html playground-file fast-mutation index.html
-<script type="module" src="client.js"></script>
+<script type="module" src="https://unpkg.com/@microsoft/fast-components"></script>
 <script type="module" src="AddUser.js"></script>
-<add-user></add-user>
+<fast-design-system-provider use-defaults>
+  <add-user></add-user>
+</fast-design-system-provider>
+```
+
+```css playground-file fast-mutation style.css
+body {
+  display: grid;
+  background-color: #111;
+  color: white;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  place-items: center center;
+  height: 100vh;
+}
+
+fast-design-system-provider {
+  height: 100%;
+  width: 100%;
+}
+```
+
+```js playground-file fast-mutation add-user.css.js
+import { css} from '@microsoft/fast-element';
+export const styles = css`
+fast-card {
+  display: grid;
+  padding: 10px;
+  gap: 10px;
+  align-content: start;
+}
+
+fast-text-field {
+  width: auto;
+}
+`;
 ```
 
 ```js playground-file fast-mutation client.js
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
-window.__APOLLO_CLIENT__ = new ApolloClient({
+export const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({ uri: 'https://api.spacex.land/graphql' }),
 });
