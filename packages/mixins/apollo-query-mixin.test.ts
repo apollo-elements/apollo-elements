@@ -70,7 +70,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
   }
 
   async hasRendered() {
-    await this.updateComplete;
+    await this.controller.host.updateComplete;
     await nextFrame();
     return this;
   }

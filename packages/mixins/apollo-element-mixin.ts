@@ -15,7 +15,7 @@ import type {
   Variables,
 } from '@apollo-elements/core/types';
 
-import type { ApolloController, ApolloElementElement } from '@apollo-elements/core';
+import type { ApolloController, ApolloElementElement, ControllerHost } from '@apollo-elements/core';
 
 import { ControllerHostMixin } from './controller-host-mixin.js';
 
@@ -26,7 +26,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 type MixinInstance<B extends Constructor<HTMLElement>> = B & {
   new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>():
-    ApolloElementElement<D, V>;
+    ControllerHost & ApolloElementElement<D, V>;
   documentType: 'document'|'mutation'|'query'|'subscription';
   observedAttributes?: string[];
 }

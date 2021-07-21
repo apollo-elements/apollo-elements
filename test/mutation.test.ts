@@ -599,7 +599,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             element.mutate({ optimisticResponse, variables, update });
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           it('uses element\'s mutation', function() {
             expect(element.client!.mutate).to.have.been
@@ -893,7 +893,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               element = await fixture<Test>(`<${tag}></${tag}>`);
             });
 
-            beforeEach(() => element.updateComplete);
+            beforeEach(() => element.controller.host.updateComplete);
 
             beforeEach(function spyMethods() {
               spies = {

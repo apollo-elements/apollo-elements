@@ -3,6 +3,7 @@ import type * as C from '@apollo/client/core';
 import type {
   ComponentDocument,
   Constructor,
+  ControllerHost,
   Data,
   MaybeTDN,
   MaybeVariables,
@@ -22,7 +23,7 @@ import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-
 
 type MixinInstance<B extends Constructor> = B & {
   new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>():
-    InstanceType<B> & ApolloMutationElement<D, V>;
+    ControllerHost & InstanceType<B> & ApolloMutationElement<D, V>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
