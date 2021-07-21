@@ -96,7 +96,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         disconnectEvent = undefined;
       });
 
-      beforeEach(() => element.updateComplete);
+      beforeEach(() => element.controller.host.updateComplete);
 
       afterEach(function teardownElement() {
         element.remove?.();
@@ -164,21 +164,21 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         const client = new ApolloClient({ cache: new InMemoryCache(), connectToDevTools: false });
         element.client = client;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.client, 'client')
           .to.equal(client)
           .and
           .to.equal(element.controller.client);
 
         element.client = null;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.client, 'client')
           .to.be.null
           .and
           .to.equal(element.controller.client);
 
         element.data = { data: 'data' };
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.data, 'data')
           .to.deep.equal({ data: 'data' })
           .and
@@ -189,7 +189,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           throw new Error('error');
         } catch (e) { err = e; }
         element.error = err;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.error, 'error')
           .to.equal(err)
           .and
@@ -197,35 +197,35 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         const errs = [new GraphQLError('HAH')];
         element.errors = errs;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.errors, 'errors')
           .to.equal(errs)
           .and
           .to.equal(element.controller.errors);
 
         element.loading = true;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.loading, 'loading')
           .to.equal(true)
           .and
           .to.equal(element.controller.loading);
 
         element.loading = false;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.loading, 'loading')
           .to.equal(false)
           .and
           .to.equal(element.controller.loading);
 
         element.networkStatus = 1;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.networkStatus, 'networkStatus')
           .to.equal(1)
           .and
           .to.equal(element.controller.networkStatus);
 
         element.networkStatus = 2;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.networkStatus, 'networkStatus')
           .to.equal(2)
           .and
@@ -233,14 +233,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         const query = gql`{ __schema { __typename } }`;
         element.query = query;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.query, 'query')
           .to.equal(query)
           .and
           .to.equal(element.controller.query);
 
         element.query = null;
-        await element.updateComplete;
+        await element.controller.host.updateComplete;
         expect(element.query, 'query')
           .to.be.null
           .and
@@ -604,7 +604,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element!.query = S.NullableParamQuery;
             });
 
-            beforeEach(() => element.updateComplete);
+            beforeEach(() => element.controller.host.updateComplete);
 
             it('does not call subscribe', function() {
               expect(element.subscribe).to.not.have.been.called;
@@ -615,7 +615,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
                 element!.variables = { nullable: '✈' };
               });
 
-              beforeEach(() => element.updateComplete);
+              beforeEach(() => element.controller.host.updateComplete);
 
               it('does not call subscribe', function() {
                 expect(element.subscribe).to.not.have.been.called;
@@ -713,7 +713,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element!.query = S.NullableParamQuery;
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           it('calls subscribe', function() {
             expect(element.client?.watchQuery).to.have.been.calledOnce;
@@ -724,7 +724,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element!.variables = { nullable: '✈' };
             });
 
-            beforeEach(() => element.updateComplete);
+            beforeEach(() => element.controller.host.updateComplete);
 
             it('calls refetch', function() {
               element!.variables = { nullable: '✈' };
@@ -860,7 +860,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
         });
 
-        beforeEach(() => element.updateComplete);
+        beforeEach(() => element.controller.host.updateComplete);
 
         afterEach(restoreSpies(() => spies));
 
@@ -1286,7 +1286,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           beforeEach(() => element.executeQuery());
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           it('calls client.query with element properties', function() {
             const { errorPolicy, fetchPolicy, query } = element!;
@@ -1388,7 +1388,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             }
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           it('updates error with the error', function() {
             expect(element!.error).to.equal(error);
@@ -1422,7 +1422,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<ApolloQueryElement>(`<${tag}></${tag}>`);
         });
 
-        beforeEach(() => element.updateComplete);
+        beforeEach(() => element.controller.host.updateComplete);
 
         it('sets client', function() {
           expect(element.client).to.equal(client);
@@ -1463,7 +1463,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element = await fixture<ApolloQueryElement>(`<${tag}></${tag}>`);
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           it('sets client', function() {
             expect(element.client).to.equal(client);
@@ -1507,7 +1507,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = undefined;
         });
 
-        beforeEach(() => element.updateComplete);
+        beforeEach(() => element.controller.host.updateComplete);
 
         it('has no-auto-subscribe attribute', function() {
           expect(element.hasAttribute('no-auto-subscribe')).to.be.true;
@@ -1518,7 +1518,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.noAutoSubscribe = false;
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           it('removes the no-auto-subscribe attribute', function() {
             expect(element.hasAttribute('no-auto-subscribe')).to.be.false;
@@ -1602,7 +1602,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             .to.have.been.calledWithMatch({ variables: { nullable: 'nullable' } });
         });
 
-        beforeEach(() => element.updateComplete);
+        beforeEach(() => element.controller.host.updateComplete);
 
         beforeEach(() => spy(element.controller, 'refetch'));
         afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
@@ -1745,7 +1745,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           element = await fixture<I.ApolloQueryElement>(`<${tag}></${tag}>`);
-          await element.updateComplete;
+          await element.controller.host.updateComplete;
         });
 
         beforeEach(() => spy(element.client!['queryManager'], 'watchQuery'));
@@ -1793,7 +1793,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element = await fixture<Test>(`<${tag}></${tag}>`);
           });
 
-          beforeEach(() => element.updateComplete);
+          beforeEach(() => element.controller.host.updateComplete);
 
           beforeEach(function spyMethods() {
             spies = {
@@ -1831,7 +1831,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             beforeEach(() => element.executeQuery({ variables }));
 
-            beforeEach(() => element.updateComplete);
+            beforeEach(() => element.controller.host.updateComplete);
 
             it('calls onData', function() {
               expect(element.onData).to.have.been.calledWithMatch({

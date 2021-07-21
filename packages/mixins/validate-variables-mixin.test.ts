@@ -16,7 +16,7 @@ describe('ValidateVariablesMixin', function() {
   function setQuery(query: DocumentNode|null) {
     return function() {
       element.query = query;
-      return element.updateComplete;
+      return element.controller.host.updateComplete;
     };
   }
 

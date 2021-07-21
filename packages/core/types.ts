@@ -167,7 +167,7 @@ export declare class ControllerHost extends HTMLElement implements ReactiveContr
 export declare class ApolloElementElement<
   D extends MaybeTDN = MaybeTDN,
   V = MaybeVariables<D>
-> extends ControllerHost {
+> extends CustomElement {
   static readonly documentType: 'document'|'query'|'mutation'|'subscription';
   static get observedAttributes(): string[]
   /** @summary The Apollo Client instance. */

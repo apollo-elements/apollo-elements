@@ -1,4 +1,4 @@
-import type { ApolloElementElement } from '@apollo-elements/core/types';
+import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
 import {
   ApolloClient,
   InMemoryCache,
@@ -26,7 +26,7 @@ describe('ApolloClientMixin', function() {
       element = fixtureSync<Test<TypedDocumentNode>>(`<${tag}></${tag}>`);
     });
 
-    beforeEach(() => element.updateComplete);
+    beforeEach(() => element.controller.host.updateComplete);
 
     it('provides access to the client', function() {
       expect(element.client).to.equal(client);
@@ -44,7 +44,10 @@ import * as FAST from '@apollo-elements/fast';
 import { FASTElement } from '@microsoft/fast-element';
 
 type D = TypedDocumentNode<{ a: 'a' }, { a: 'a' }>;
-class TypeCheckFAST extends ApolloClientMixin(client, FAST.ApolloQuery)<D> {
+class TypeCheckFAST extends ApolloClientMixin(
+  client,
+  FAST.ApolloQuery
+)<D> {
   check() {
     assertType<FASTElement>(this);
     assertType<ApolloElementElement>(this);

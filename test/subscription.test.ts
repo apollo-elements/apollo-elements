@@ -752,7 +752,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element!.shouldResubscribe = true;
           });
 
-          beforeEach(() => element?.updateComplete);
+          beforeEach(() => element?.controller.host.updateComplete);
 
           describe('subscribe({ fetchPolicy, variables })', function() {
             const fetchPolicy = 'network-only';
@@ -1005,7 +1005,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element = await fixture<Test>(`<${tag}></${tag}>`);
           });
 
-          beforeEach(() => element?.updateComplete);
+          beforeEach(() => element?.controller.host.updateComplete);
 
           it('sets fetchPolicy', function() {
             expect(element?.fetchPolicy).to.equal('cache-only');
