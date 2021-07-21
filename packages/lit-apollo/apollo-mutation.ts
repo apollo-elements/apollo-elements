@@ -18,16 +18,6 @@ import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-
 
 import { ApolloElement } from './apollo-element.js';
 
-type P<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
-  ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
-  ? Parameters<ApolloMutationController<D, V>[K]>
-  : never
-
-type R<D extends MaybeTDN, V, K extends keyof ApolloMutationController<D, V>> =
-  ApolloMutationController<D, V>[K] extends (...args:any[]) => unknown
-  ? ReturnType<ApolloMutationController<D, V>[K]>
-  : never
-
 /**
  * `ApolloMutation`
  *
@@ -58,13 +48,14 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
   /**
    * @summary Whether the mutation was called
    */
-  @controlled() @property({ type: Boolean, reflect: true }) called = false;
+  @controlled()
+  @property({ type: Boolean, reflect: true })
+  called = false;
 
   /** @summary The mutation. */
-  @controlled() @state() mutation: ComponentDocument<D> | null = null;
-
-  /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;
+  @controlled()
+  @state()
+  mutation: ComponentDocument<D> | null = null;
 
   /**
    * An object that represents the result of this mutation that
@@ -75,7 +66,9 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
    * the result of a mutation immediately, and update the UI later if any errors
    * appear.
    */
-  @controlled({ path: 'options' }) @state() optimisticResponse?: OptimisticResponseType<D, V>;
+  @controlled({ path: 'options' })
+  @state()
+  optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
    * @summary If true, the returned data property will not update with the mutation result.
@@ -149,7 +142,9 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
     ...params: Parameters<C.MutationUpdaterFn<Data<D>>>
   ): ReturnType<C.MutationUpdaterFn<Data<D>>>;
 
-  public mutate(params?: P<D, V, 'mutate'>[0]): R<D, V, 'mutate'> {
+  public mutate(
+    params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>
+  ): Promise<C.FetchResult<Data<D>>> {
     return this.controller.mutate({
       ...params,
       update: params?.update ?? this.updater,

@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloElement`\n\n🚀 Custom element base class for apollo lit elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
+          "description": "`ApolloElement`\n\n🚀 Single-operation custom-element base class for apollo lit elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
           "name": "ApolloElement",
           "members": [
             {
@@ -33,6 +33,16 @@
                 "text": "ApolloClient<NormalizedCacheObject> | null"
               },
               "summary": "The Apollo Client instance.",
+              "description": ""
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "default": "null",
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
               "description": ""
             },
             {
@@ -66,12 +76,12 @@
             },
             {
               "kind": "field",
-              "name": "document",
+              "name": "variables",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "Variables<D, V> | null"
               },
               "default": "null",
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "summary": "Operation variables.",
               "description": ""
             },
             {
@@ -92,16 +102,6 @@
               },
               "default": "[]",
               "summary": "Latest errors",
-              "description": ""
-            },
-            {
-              "kind": "field",
-              "name": "variables",
-              "type": {
-                "text": "Variables<D, V> | null"
-              },
-              "default": "null",
-              "summary": "Operation variables.",
               "description": ""
             }
           ],
@@ -208,19 +208,6 @@
             },
             {
               "kind": "field",
-              "name": "context",
-              "type": {
-                "text": "Record<string, unknown>"
-              },
-              "summary": "Context passed to the link execution chain.",
-              "description": "",
-              "inheritedFrom": {
-                "name": "ApolloElement",
-                "module": "apollo-element.js"
-              }
-            },
-            {
-              "kind": "field",
               "name": "optimisticResponse",
               "type": {
                 "text": "OptimisticResponseType<D, V>"
@@ -299,7 +286,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "R<D, V, 'mutate'>"
+                  "text": "Promise<C.FetchResult<Data<D>>>"
                 }
               },
               "parameters": [
@@ -307,7 +294,7 @@
                   "name": "params",
                   "optional": true,
                   "type": {
-                    "text": "P<D, V, 'mutate'>[0]"
+                    "text": "Partial<C.MutationOptions<Data<D>, Variables<D, V>>>"
                   }
                 }
               ]
@@ -375,12 +362,12 @@
             },
             {
               "kind": "field",
-              "name": "loading",
+              "name": "document",
               "type": {
-                "text": "boolean"
+                "text": "ComponentDocument<D> | null"
               },
-              "default": "false",
-              "summary": "Whether a request is in flight.",
+              "default": "null",
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -389,12 +376,25 @@
             },
             {
               "kind": "field",
-              "name": "document",
+              "name": "context",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "Record<string, unknown>"
               },
-              "default": "null",
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "summary": "Context passed to the link execution chain.",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "summary": "Whether a request is in flight.",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -604,19 +604,6 @@
               "default": "null",
               "summary": "A GraphQL document containing a single query.",
               "description": ""
-            },
-            {
-              "kind": "field",
-              "name": "context",
-              "type": {
-                "text": "Record<string, unknown>"
-              },
-              "summary": "Context passed to the link execution chain.",
-              "description": "",
-              "inheritedFrom": {
-                "name": "ApolloElement",
-                "module": "apollo-element.js"
-              }
             },
             {
               "kind": "field",
@@ -899,12 +886,12 @@
             },
             {
               "kind": "field",
-              "name": "loading",
+              "name": "document",
               "type": {
-                "text": "boolean"
+                "text": "ComponentDocument<D> | null"
               },
-              "default": "false",
-              "summary": "Whether a request is in flight.",
+              "default": "null",
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -913,12 +900,25 @@
             },
             {
               "kind": "field",
-              "name": "document",
+              "name": "context",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "Record<string, unknown>"
               },
-              "default": "null",
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "summary": "Context passed to the link execution chain.",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "summary": "Whether a request is in flight.",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -1037,7 +1037,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.\n\nSee [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events",
+          "description": "`ApolloSubscription`\n\n🚀 LitElement base class that updates with an Apollo GraphQL subscription.\n\nSee [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events",
           "name": "ApolloSubscription",
           "members": [
             {
@@ -1271,6 +1271,20 @@
             },
             {
               "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D> | null"
+              },
+              "default": "null",
+              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "context",
               "type": {
                 "text": "Record<string, unknown>"
@@ -1312,12 +1326,12 @@
             },
             {
               "kind": "field",
-              "name": "document",
+              "name": "variables",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "Variables<D, V> | null"
               },
               "default": "null",
-              "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "summary": "Operation variables.",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",
@@ -1346,20 +1360,6 @@
               },
               "default": "[]",
               "summary": "Latest errors",
-              "description": "",
-              "inheritedFrom": {
-                "name": "ApolloElement",
-                "module": "apollo-element.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "variables",
-              "type": {
-                "text": "Variables<D, V> | null"
-              },
-              "default": "null",
-              "summary": "Operation variables.",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",

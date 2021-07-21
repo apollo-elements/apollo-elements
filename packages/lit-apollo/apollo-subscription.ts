@@ -1,3 +1,5 @@
+import type * as C from '@apollo/client/core';
+
 import type {
   ComponentDocument,
   Data,
@@ -6,8 +8,6 @@ import type {
   OnSubscriptionDataParams,
   Variables,
 } from '@apollo-elements/core/types';
-
-import type * as C from '@apollo/client/core';
 
 import { ApolloElement } from './apollo-element.js';
 
@@ -20,7 +20,7 @@ import { state, property } from '@lit/reactive-element/decorators.js';
 /**
  * `ApolloSubscription`
  *
- * 🚀 Custom element base class that updates with an Apollo GraphQL subscription.
+ * 🚀 LitElement base class that updates with an Apollo GraphQL subscription.
  *
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
@@ -44,7 +44,9 @@ export class ApolloSubscription<
   /**
    * @summary A GraphQL document containing a single subscription.
    */
-  @controlled() @state() subscription: ComponentDocument<D> | null = null;
+  @controlled()
+  @state()
+  subscription: ComponentDocument<D> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`

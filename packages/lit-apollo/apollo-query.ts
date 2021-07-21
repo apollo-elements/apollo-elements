@@ -63,7 +63,9 @@ export class ApolloQuery<
   }
 
   /** @summary Flags an element that's ready and able to auto subscribe */
-  @controlled({ readonly: true }) @state() canAutoSubscribe = false;
+  @controlled({ readonly: true })
+  @state()
+  canAutoSubscribe = false;
 
   get options(): ApolloQueryControllerOptions<D, V> {
     return this.controller.options;
@@ -95,15 +97,16 @@ export class ApolloQuery<
    * replace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.
    * It is recommended that you use `loading`, however.
    */
-  @controlled() @state() networkStatus = NetworkStatus.ready;
+  @controlled()
+  @state()
+  networkStatus = NetworkStatus.ready;
 
   /**
    * @summary A GraphQL document containing a single query.
    */
-  @controlled() @state() query: null | ComponentDocument<D> = null;
-
-  /** @summary Context passed to the link execution chain. */
-  @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  @controlled()
+  @state()
+  query: null | ComponentDocument<D> = null;
 
   /**
    * If data was read from the cache with missing fields,
@@ -111,7 +114,9 @@ export class ApolloQuery<
    *
    * @summary True when the query returned partial data.
    */
-  @controlled() @state() partial = false;
+  @controlled()
+  @state()
+  partial = false;
 
   /**
    * If true, perform a query refetch if the query result is marked as being partial,

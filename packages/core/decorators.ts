@@ -63,9 +63,9 @@ function defineOnReactiveElement<T extends ReactiveElement & {
   Class.createProperty(name, Class.getPropertyOptions(name));
 }
 
-function defineOnHTMLElement<T extends HTMLElement & ReactiveControllerHost & {
+function defineOnHTMLElement<T extends HTMLElement & {
   controller: ApolloController;
-  requestUpdate(name?: string, old?: unknown): void;
+  requestUpdate?(name?: string, old?: unknown): void;
 }>(
   proto: T,
   name: string & keyof T,
@@ -119,7 +119,7 @@ function isReactiveElement(
  * @param  options Options for the controlled field
  */
 export function controlled(options: DefineOptions = {}) {
-  return function<T extends HTMLElement & ReactiveControllerHost & {
+  return function<T extends HTMLElement & {
   controller: ApolloController;
 }>(
     proto: T,
