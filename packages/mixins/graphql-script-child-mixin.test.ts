@@ -433,7 +433,7 @@ describe('GraphQLScriptChildMixin', function() {
       }
 
       async hasRendered() {
-        await this.updateComplete;
+        await this.controller.host.updateComplete;
         return this;
       }
 
@@ -603,7 +603,7 @@ describe('GraphQLScriptChildMixin', function() {
       declare shadowRoot: ShadowRoot;
 
       async hasRendered() {
-        await this.updateComplete;
+        await this.controller.host.updateComplete;
         return this;
       }
 

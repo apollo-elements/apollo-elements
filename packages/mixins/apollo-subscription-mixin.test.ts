@@ -59,7 +59,7 @@ class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeV
   }
 
   async hasRendered() {
-    await this.updateComplete;
+    await this.controller.host.updateComplete;
     return this;
   }
 }
