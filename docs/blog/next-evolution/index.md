@@ -75,7 +75,7 @@ If you're working on an existing app that uses Apollo Elements' base classes, no
 
 We hope you have as much fun using Apollo Elements controllers as we've had writing them.
 
-## Dynamic GraphQL templates in HTML
+## Dynamic GraphQL Templates in HTML
 The previous major version of `@apollo-elements/components` included `<apollo-client>` and `<apollo-mutation>`. Those are still here and they're better than ever, but now they're part of a set with `<apollo-query>` and `<apollo-subscription>` as well.
 
 With these new elements, and their older sibling `<apollo-mutation>`, you can write entire GraphQL apps in nothing but HTML. You read that right, declarative, data-driven GraphQL apps in HTML. You still have access to the Apollo Client API, so feel free to sprinkle in a little JS here and there for added spice.
@@ -156,8 +156,36 @@ function Launches() {
 customElements.define('spacex-launches', c(Launches));
 ```
 
+## FAST Behaviors
+
+[FAST](https://fast.design) is an innovative web component library and design system from Microsoft. Apollo Elements added support for FAST in 2020, in the form of `Apollo*` base classes. The latest release transitions to FAST [Behaviors](https://www.fast.design/docs/api/fast-element.controller.addbehaviors), which are analogous to Lit `ReactiveControllers`.
+
+```ts
+@customElement({ name, styles, template })
+class UserProfile extends FASTElement {
+  profile = new ApolloQueryBehavior(this, MyProfileQuery);
+  updateProfile = new ApolloMutationBehavior(this, UpdateProfileMutation, {
+    update(cache, result) {
+      cache.writeQuery({
+        query: MyProfileQuery,
+        data: { profile: result.data.updateProfile },
+      });
+    },
+  });
+}
+```
+
+The FAST team were instrumental in getting this feature over the line, so many thanks to them.
+
+If you're already using `@apollo-elements/fast`, we recommend migrating your code to behaviors as soon as you're able, but you can continue to use the element base classes, just change your import paths to `/bases`. These may be removed in the _next_ major release, though.
+
+```ts
+// import { ApolloQuery } from '@apollo-elements/fast/apollo-query';
+   import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
+```
+
 ## New and Improved Docs
-It wouldn't be an Apollo Elements release without some docs goodies. This time, in addition to new and update docs and guides for components and controllers, we've replaced our webcomponents.dev iframes with `<playground-ide>` elements. All the "Edit Live" demos on this site, including the ones in this blog post, are running locally in your browser via a service worker. Talk about serverless, _amirite_?
+It wouldn't be an Apollo Elements release without some docs goodies. This time, in addition to new and updated docs and guides for components and controllers, we've replaced our webcomponents.dev iframes with `<playground-ide>` elements. All the "Edit Live" demos on this site, including the ones in this blog post, are running locally in your browser via a service worker. Talk about serverless, _amirite_?
 
 The docs also got a major upgrade care of Pascal Schilp's untiring work in the [Webcomponents Community Group](https://www.w3.org/community/webcomponents/) to get the custom elements manifest v1 published. This latest iteration of the API docs generates package manifests directly from source code, and converts them to API docs via [Rocket](https://rocket.modern-web.dev).
 
@@ -167,7 +195,7 @@ Bringing this release into the light involved more than just refactoring and upd
 
 - [Stampino](https://github.com/justinfagnani/stampino/pulls?q=is%3Apr+is%3Aclosed+merged%3A%3C2021-06-01+merged%3A%3E2021-01+) and [jexpr](https://github.com/justinfagnani/jexpr/pulls?q=is%3Apr+is%3Aclosed+merged%3A%3E2021-01), to iron out bugs, decrease bundle size, and add features
 - [Hybrids](https://github.com/hybridsjs/hybrids/pull/167), to add support for reactive controllers
-- [Haunted](https://github.com/matthewp/haunted/pull/239), to add the `useController` hook that `@apollo-elements/haunted` is based on
+- [Atomico](https://github.com/atomicojs/hooks/pull/7) and [Haunted](https://github.com/matthewp/haunted/pull/239), to add the `useController` hook which underlies `useQuery` and co.
 
 Additionally, here in apollo-elements, we added the [`ControllerHostMixin`](/api/libraries/mixins/controller-host-mixin/) as a way to maintain the previous element-per-graphql-document API without breaking backwards (too much). You can use this generic mixin to add controller support to any web component.
 
