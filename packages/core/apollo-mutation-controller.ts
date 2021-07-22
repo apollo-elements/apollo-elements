@@ -52,6 +52,7 @@ export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVa
 
   called = false;
 
+  /** @summary The GraphQL mutation document */
   get mutation(): ComponentDocument<D> | null { return this.document; }
 
   set mutation(document: ComponentDocument<D> | null) { this.document = document; }

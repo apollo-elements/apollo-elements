@@ -18,13 +18,13 @@ const last = Symbol('PolymerElement last known');
 /**
  * See [ApolloElementInterface](/api/core/interfaces/element/) for more information.
  *
- * @fires data-changed
- * @fires variables-changed
- * @fires error-changed
- * @fires errors-changed
- * @fires loading-changed
+ * @fires {PolymerChangeEvent<Data<D>>} data-changed
+ * @fires {PolymerChangeEvent<Variables<D, V>>} variables-changed
+ * @fires {PolymerChangeEvent<Error>} error-changed
+ * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
+ * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export abstract class PolymerApolloElement<
+export class PolymerApolloElement<
   D extends MaybeTDN = MaybeTDN,
   V = MaybeVariables<D>
 > extends GraphQLScriptChildMixin(ApolloElementMixin(HTMLElement))<D, V> {

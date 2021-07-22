@@ -186,18 +186,33 @@
               }
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<Data<D>>"
+              },
               "name": "data-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<Variables<D, V>>"
+              },
               "name": "variables-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<Error>"
+              },
               "name": "error-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<readonly GraphQLError[]>"
+              },
               "name": "errors-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<boolean>"
+              },
               "name": "loading-changed"
             }
           ],
@@ -234,7 +249,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### <caption>Use in a Polymer template</caption>\n\n```html\n<polymer-apollo-mutation id=\"userMutation\"\n    data=\"{{data}}\"\n    mutation=\"[[UserMutation]]\"\n></polymer-apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```",
+          "description": "## Examples\n\n<figure class=\"example\"><figcaption>Use in a Polymer template</figcaption>\n\n```html\n<polymer-apollo-mutation id=\"userMutation\"\n    data=\"{{data}}\"\n    mutation=\"[[UserMutation]]\"\n></polymer-apollo-mutation>\n\n<paper-input label=\"Name\" value=\"{{name}}\"></paper-input>\n<paper-input label=\"Picture URL\" value=\"{{picture}}\"></paper-input>\n<paper-button on-click=\"mutate\">Submit</paper-button>\n```\n\n</figure>",
           "name": "PolymerApolloMutation",
           "members": [
             {
@@ -258,19 +273,34 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "PolymerChangeEvent<Data<D>>"
+              },
               "name": "data-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<Variables<D, V>>"
+              },
+              "name": "variables-changed"
+            },
+            {
+              "type": {
+                "text": "PolymerChangeEvent<Error>"
+              },
               "name": "error-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<readonly GraphQLError[]>"
+              },
               "name": "errors-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<boolean>"
+              },
               "name": "loading-changed"
-            },
-            {
-              "name": "called-changed"
             }
           ],
           "mixins": [
@@ -310,7 +340,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### <caption>Querying for Data</caption>\n```html\n<polymer-apollo-query\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    query=\"[[UserQuery]]\"\n></polymer-apollo-query>\n\n<paper-icon-item>\n  <iron-image slot=\"item-icon\">[[data.user.picture]]</iron-image>\n  [[data.user.name]]\n</paper-icon-item>\n```",
+          "description": "## Examples\n\n<figure class=\"example\"><figcaption>Querying for Data</figcaption>\n\n```html\n<polymer-apollo-query\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    query=\"[[UserQuery]]\"\n></polymer-apollo-query>\n\n<paper-icon-item>\n  <iron-image slot=\"item-icon\">[[data.user.picture]]</iron-image>\n  [[data.user.name]]\n</paper-icon-item>\n```\n\n</figure>",
           "name": "PolymerApolloQuery",
           "members": [
             {
@@ -333,19 +363,34 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "PolymerChangeEvent<Data<D>>"
+              },
               "name": "data-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<Variables<D, V>>"
+              },
+              "name": "variables-changed"
+            },
+            {
+              "type": {
+                "text": "PolymerChangeEvent<Error>"
+              },
               "name": "error-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<readonly GraphQLError[]>"
+              },
               "name": "errors-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<boolean>"
+              },
               "name": "loading-changed"
-            },
-            {
-              "name": "network-status-changed"
             }
           ],
           "mixins": [
@@ -385,7 +430,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "## Examples\n\n### <caption>Subscribing for Updates</caption>\n```html\n<polymer-apollo-subscription\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    subscription=\"[[UserJoinedSubscription]]\"\n    on-data-changed=\"toast\"\n></polymer-apollo-subscription>\n\n<paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n  <iron-image>[[data.userJoined.picture]]</iron-image>\n</paper-toast>\n```",
+          "description": "## Examples\n\n<figure class=\"example\"><figcaption>Subscribing for Updates</figcaption>\n\n```html\n<polymer-apollo-subscription\n    data=\"{{data}}\"\n    variables=\"[[variables]]\"\n    subscription=\"[[UserJoinedSubscription]]\"\n    on-data-changed=\"toast\"\n></polymer-apollo-subscription>\n\n<paper-toast duration=\"5000\" text=\"A wild [[data.userJoined.name]] approaches!\">\n  <iron-image>[[data.userJoined.picture]]</iron-image>\n</paper-toast>\n```\n\n</figure>",
           "name": "PolymerApolloSubscription",
           "members": [
             {
@@ -401,15 +446,33 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "PolymerChangeEvent<Data<D>>"
+              },
               "name": "data-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<Variables<D, V>>"
+              },
+              "name": "variables-changed"
+            },
+            {
+              "type": {
+                "text": "PolymerChangeEvent<Error>"
+              },
               "name": "error-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<readonly GraphQLError[]>"
+              },
               "name": "errors-changed"
             },
             {
+              "type": {
+                "text": "PolymerChangeEvent<boolean>"
+              },
               "name": "loading-changed"
             }
           ],

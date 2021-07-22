@@ -27,11 +27,11 @@ import { notify } from './notify-decorator.js';
  *          </paper-icon-item>
  * ```
  *
- * @fires data-changed
- * @fires error-changed
- * @fires errors-changed
- * @fires loading-changed
- * @fires network-status-changed
+ * @fires {PolymerChangeEvent<Data<D>>} data-changed
+ * @fires {PolymerChangeEvent<Variables<D, V>>} variables-changed
+ * @fires {PolymerChangeEvent<Error>} error-changed
+ * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
+ * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
 export class PolymerApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloQueryMixin(

@@ -62,16 +62,21 @@ export class WillMutateError extends Error {}
  * or if all your variables properties are strings,
  * you can use the element's data attributes
  *
- * @fires {WillMutateEvent} will-mutate When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`
- * @fires {WillNavigateEvent} will-navigate When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`
- * @fires {MutationCompletedEvent} mutation-completed When the mutation resolves. `detail` is `{ data: Data, element: this }`
- * @fires {MutationErrorEvent} mutation-error When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`
- * @fires {ApolloElementEvent} apollo-element-disconnected when the element disconnects from the dom
- * @fires {ApolloElementEvent} apollo-element-connected when the element connects to the dom
- *
- * @slot Mutations typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button.\n\nYou may also slot in input elements with the `data-variable=\"variableName\"` attribute. It's `value` property gets the value for the corresponding variable.
- *
  * See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events
+ *
+ * @fires {WillMutateEvent} will-mutate - The element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`
+ * @fires {WillNavigateEvent} will-navigate - The mutation resolved and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`
+ * @fires {MutationCompletedEvent} mutation-completed - The mutation resolves. `detail` is `{ data: Data, element: this }`
+ * @fires {MutationErrorEvent} mutation-error - The mutation rejected. `detail` is `{ error: ApolloError, element: this }`
+ * @fires {ApolloElementEvent} apollo-element-disconnected - The element disconnected from the DOM
+ * @fires {ApolloElementEvent} apollo-element-connected - The element connected to the DOM
+ *
+ * @slot - Mutations typically trigger when clicking a button.
+ *         Slot in an element with a `trigger` attribute to assign it as the element's trigger.
+ *         The triggering element. Must be a button or and anchor that wraps a button.
+ *
+ *         You may also slot in input elements with the `data-variable="variableName"` attribute.
+ *         It's `value` property gets the value for the corresponding variable.
  *
  * @example <caption>Using data attributes</caption>
  * ```html
@@ -352,7 +357,7 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    * Define this function to determine the URL to navigate to after a mutation.
    * Function can be synchronous or async.
    * If this function is not defined, will navigate to the `href` property of the link trigger.
-   * @example Navigate to a post's page after creating it
+   * @example <caption>Navigate to a post's page after creating it</caption>
    * ```html
    *          <apollo-mutation id="mutation">
    *            <script type="application/graphql">

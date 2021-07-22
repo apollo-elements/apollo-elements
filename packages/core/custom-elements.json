@@ -7,10 +7,6 @@
       "path": "apollo-controller.js",
       "declarations": [
         {
-          "kind": "variable",
-          "name": "update"
-        },
-        {
           "kind": "class",
           "description": "",
           "name": "ApolloController",
@@ -265,8 +261,7 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": ""
+              }
             },
             {
               "kind": "method",
@@ -275,21 +270,28 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "ApolloControllerConnectedEvent"
               },
-              "description": ""
+              "description": "The controller's host connected to the DOM.",
+              "name": "apollo-controller-connected"
+            },
+            {
+              "type": {
+                "text": "ApolloControllerDisconnectedEvent"
+              },
+              "description": "The controller's host disconnected from the DOM.",
+              "name": "apollo-controller-disconnected"
             }
           ]
         }
       ],
       "exports": [
-        {
-          "kind": "js",
-          "name": "update",
-          "declaration": {
-            "name": "update",
-            "module": "apollo-controller.js"
-          }
-        },
         {
           "kind": "js",
           "name": "ApolloController",
@@ -349,7 +351,8 @@
               "name": "mutation",
               "type": {
                 "text": "ComponentDocument<D> | null"
-              }
+              },
+              "summary": "The GraphQL mutation document"
             },
             {
               "kind": "method",
@@ -759,7 +762,6 @@
                   "text": "void"
                 }
               },
-              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -773,7 +775,6 @@
                   "text": "void"
                 }
               },
-              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -783,7 +784,31 @@
           "superclass": {
             "name": "ApolloController",
             "module": "/apollo-controller.js"
-          }
+          },
+          "events": [
+            {
+              "type": {
+                "text": "ApolloControllerConnectedEvent"
+              },
+              "description": "The controller's host connected to the DOM.",
+              "name": "apollo-controller-connected",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "ApolloControllerDisconnectedEvent"
+              },
+              "description": "The controller's host disconnected from the DOM.",
+              "name": "apollo-controller-disconnected",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.ts"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -893,8 +918,8 @@
                   "text": "void"
                 }
               },
-              "description": "",
               "summary": "initializes or reinitializes the query",
+              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -908,7 +933,6 @@
                   "text": "void"
                 }
               },
-              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1465,7 +1489,31 @@
           "superclass": {
             "name": "ApolloController",
             "module": "/apollo-controller.js"
-          }
+          },
+          "events": [
+            {
+              "type": {
+                "text": "ApolloControllerConnectedEvent"
+              },
+              "description": "The controller's host connected to the DOM.",
+              "name": "apollo-controller-connected",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "ApolloControllerDisconnectedEvent"
+              },
+              "description": "The controller's host disconnected from the DOM.",
+              "name": "apollo-controller-disconnected",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.ts"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -1559,7 +1607,6 @@
                   "text": "void"
                 }
               },
-              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1573,7 +1620,6 @@
                   "text": "void"
                 }
               },
-              "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -2029,7 +2075,31 @@
           "superclass": {
             "name": "ApolloController",
             "module": "/apollo-controller.js"
-          }
+          },
+          "events": [
+            {
+              "type": {
+                "text": "ApolloControllerConnectedEvent"
+              },
+              "description": "The controller's host connected to the DOM.",
+              "name": "apollo-controller-connected",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.ts"
+              }
+            },
+            {
+              "type": {
+                "text": "ApolloControllerDisconnectedEvent"
+              },
+              "description": "The controller's host disconnected from the DOM.",
+              "name": "apollo-controller-disconnected",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.ts"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -2818,143 +2888,22 @@
                 }
               ],
               "description": "Lifecycle callback that reacts to changes in the operation variables"
-            },
-            {
-              "kind": "method",
-              "name": "requestUpdate",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "name",
-                  "optional": true,
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "value",
-                  "optional": true,
-                  "type": {
-                    "text": "unknown"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "updateComplete",
-              "type": {
-                "text": "Promise<boolean>"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "update",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updated",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
             }
           ],
           "events": [
             {
-              "description": "when the element connects to the dom",
-              "name": "'apollo-element-connected'"
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element connected to the DOM",
+              "name": "apollo-element-connected"
             },
             {
-              "description": "when the element disconnects from the dom",
-              "name": "'apollo-element-disconnected'"
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element disconnected from the DOM",
+              "name": "apollo-element-disconnected"
             }
           ],
           "attributes": [
@@ -2977,7 +2926,7 @@
             }
           ],
           "superclass": {
-            "name": "ControllerHost",
+            "name": "CustomElement",
             "module": "types.ts"
           }
         },
@@ -3175,7 +3124,7 @@
                   }
                 }
               ],
-              "description": "A function which updates the apollo cache when the query responds.\nThis function will be called twice over the lifecycle of a mutation.\nOnce at the very beginning if an optimisticResponse was provided.\nThe writes created from the optimistic data will be rolled back before\nthe second time this function is called which is when the mutation has\nsuccesfully resolved. At that point update will be called with the actual\nmutation result and those writes will not be rolled back.\n\nThe reason a DataProxy is provided instead of the user calling the methods\ndirectly on ApolloClient is that all of the writes are batched together at\nthe end of the update, and it allows for writes generated by optimistic\ndata to be rolled back.",
+              "description": "A function which updates the apollo cache when the query responds.\nThis function will be called twice over the lifecycle of a mutation.\nOnce at the very beginning if an optimisticResponse was provided.\nThe writes created from the optimistic data will be rolled back before\nthe second time this function is called which is when the mutation has\nsuccesfully resolved. At that point update will be called with the actual\nmutation result and those writes will not be rolled back.\n\nThe reason a DataProxy is provided instead of the user calling the methods\ndirectly on ApolloClient is that all of the writes are batched together at\nthe end of the update, and it allows for writes generated by optimistic\ndata to be rolled back.\n\n### Examples\n\n<figure class=\"example\"><figcaption>Updating a query</figcaption>\n\n```js\nupdater(cache, result) {\n  cache.writeQuery({\n    query: MyProfileQuery,\n    data: { profile: result.data.updateMyProfile },\n  });\n}\n```\n\n</figure>",
               "type": {
                 "text": "ApolloMutationInterface<D, V>['updater']"
               }
@@ -3360,133 +3309,6 @@
                 "name": "ApolloElementElement",
                 "module": "types.js"
               }
-            },
-            {
-              "kind": "method",
-              "name": "requestUpdate",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "name",
-                  "optional": true,
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "value",
-                  "optional": true,
-                  "type": {
-                    "text": "unknown"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "updateComplete",
-              "type": {
-                "text": "Promise<boolean>"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "update",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updated",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
             }
           ],
           "events": [
@@ -3494,27 +3316,33 @@
               "type": {
                 "text": "CustomEvent<FetchResult<Data<D>>>"
               },
-              "description": "when the mutation resolves",
+              "description": "The mutation resolved",
               "name": "apollo-mutation-result"
             },
             {
               "type": {
                 "text": "CustomEvent<ApolloError>"
               },
-              "description": "when the mutation rejects",
+              "description": "The mutation rejected",
               "name": "apollo-error"
             },
             {
-              "description": "when the element connects to the dom",
-              "name": "'apollo-element-connected'",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element connected to the DOM",
+              "name": "apollo-element-connected",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.ts"
               }
             },
             {
-              "description": "when the element disconnects from the dom",
-              "name": "'apollo-element-disconnected'",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element disconnected from the DOM",
+              "name": "apollo-element-disconnected",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.ts"
@@ -4082,133 +3910,6 @@
                 "name": "ApolloElementElement",
                 "module": "types.js"
               }
-            },
-            {
-              "kind": "method",
-              "name": "requestUpdate",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "name",
-                  "optional": true,
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "value",
-                  "optional": true,
-                  "type": {
-                    "text": "unknown"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "updateComplete",
-              "type": {
-                "text": "Promise<boolean>"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "update",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updated",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
             }
           ],
           "events": [
@@ -4216,27 +3917,33 @@
               "type": {
                 "text": "CustomEvent<ApolloQueryResult<Data<D>>>"
               },
-              "description": "when the query resolves",
+              "description": "The query resolved",
               "name": "apollo-query-result"
             },
             {
               "type": {
                 "text": "CustomEvent<ApolloError>"
               },
-              "description": "when the query rejects",
+              "description": "The query rejected",
               "name": "apollo-error"
             },
             {
-              "description": "when the element connects to the dom",
-              "name": "'apollo-element-connected'",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element connected to the DOM",
+              "name": "apollo-element-connected",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.ts"
               }
             },
             {
-              "description": "when the element disconnects from the dom",
-              "name": "'apollo-element-disconnected'",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element disconnected from the DOM",
+              "name": "apollo-element-disconnected",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.ts"
@@ -4708,133 +4415,6 @@
                 "name": "ApolloElementElement",
                 "module": "types.js"
               }
-            },
-            {
-              "kind": "method",
-              "name": "requestUpdate",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "name",
-                  "optional": true,
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "value",
-                  "optional": true,
-                  "type": {
-                    "text": "unknown"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeController",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "controller",
-                  "type": {
-                    "text": "ReactiveController"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "updateComplete",
-              "type": {
-                "text": "Promise<boolean>"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "update",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updated",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "any[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ControllerHost",
-                "module": "types.js"
-              }
             }
           ],
           "events": [
@@ -4842,27 +4422,33 @@
               "type": {
                 "text": "ApolloSubscriptionResultEvent"
               },
-              "description": "when the subscription updates",
+              "description": "The subscription updated",
               "name": "apollo-subscription-result"
             },
             {
               "type": {
                 "text": "CustomEvent<ApolloError>"
               },
-              "description": "when the query rejects",
+              "description": "The subscription produced an error",
               "name": "apollo-error"
             },
             {
-              "description": "when the element connects to the dom",
-              "name": "'apollo-element-connected'",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element connected to the DOM",
+              "name": "apollo-element-connected",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.ts"
               }
             },
             {
-              "description": "when the element disconnects from the dom",
-              "name": "'apollo-element-disconnected'",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "description": "The element disconnected from the DOM",
+              "name": "apollo-element-disconnected",
               "inheritedFrom": {
                 "name": "ApolloElementElement",
                 "module": "types.ts"
