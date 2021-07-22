@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Provides an ApolloClient instance to all nested ApolloElement children,\neven across (open) shadow boundaries.\n\n## Examples\n\n### <caption>Generate a simple ApolloClient instance</caption>\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n### <caption>Prevent network calls when required variables are absent</caption>\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n### <caption>Providing a client to a tree of Nodes</caption>\n```html\n<apollo-client id=\"client-a\">\n  <apollo-mutation>\n    <!--...-->\n  </apollo-mutation>\n</apollo-client>\n```\n\n### <caption>Nesting separate clients</caption>\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```",
+          "description": "Provides an ApolloClient instance to all nested ApolloElement children,\neven across (open) shadow boundaries.\n\n## Examples\n\n<figure class=\"example\"><figcaption>Generate a simple ApolloClient instance</figcaption>\n\n```html\n<apollo-client uri=\"/graphql\"></apollo-client>\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Prevent network calls when required variables are absent</figcaption>\n\n```html\n<apollo-client uri=\"/graphql\" validate-variables></apollo-client>\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Providing a client to a tree of Nodes</figcaption>\n\n```html\n<apollo-client id=\"client-a\">\n  <apollo-mutation>\n    <!--...-->\n  </apollo-mutation>\n</apollo-client>\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Nesting separate clients</figcaption>\n\n```html\n<apollo-client id=\"client-a\">\n  <query-element>\n    <!-- This element queries from client-a's endpoint -->\n  </query-element>\n  <apollo-client id=\"client-b\">\n    <query-element>\n      <!-- This element queries from client-b's endpoint -->\n    </query-element>\n  </apollo-client>\n</apollo-client>\n```\n\n</figure>",
           "name": "ApolloClientElement",
           "members": [
             {
@@ -204,7 +204,7 @@
               "type": {
                 "text": "CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>"
               },
-              "description": "When the client changes",
+              "description": "The client changed",
               "name": "client-changed"
             }
           ],
@@ -550,12 +550,12 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\n## Examples\n\n### <caption>Using data attributes</caption>\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n### <caption>Using data attributes and variables</caption>\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n### <caption>Using data attributes and variables with input property</caption>\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n### <caption>Using DOM properties</caption>\n```html\n<apollo-mutation id=\"mutation\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\n  document.getElementById('mutation').mutation = SomeMutation;\n  document.getElementById('mutation').variables = {\n    type: \"Type\",\n    action: \"ACTION\"\n  };\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```",
+          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events\n\n## Examples\n\n<figure class=\"example\"><figcaption>Using data attributes</figcaption>\n\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using data attributes and variables</figcaption>\n\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using data attributes and variables with input property</figcaption>\n\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using DOM properties</figcaption>\n\n```html\n<apollo-mutation id=\"mutation\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\n  document.getElementById('mutation').mutation = SomeMutation;\n  document.getElementById('mutation').variables = {\n    type: \"Type\",\n    action: \"ACTION\"\n  };\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n</figure>",
           "name": "ApolloMutationElement",
           "slots": [
             {
-              "description": "typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button.\\n\\nYou may also slot in input elements with the `data-variable=\\\"variableName\\\"` attribute. It's `value` property gets the value for the corresponding variable. See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events",
-              "name": "Mutations"
+              "description": "Mutations typically trigger when clicking a button. Slot in an element with a `trigger` attribute to assign it as the element's trigger. The triggering element. Must be a button or and anchor that wraps a button. You may also slot in input elements with the `data-variable=\"variableName\"` attribute. It's `value` property gets the value for the corresponding variable.",
+              "name": ""
             }
           ],
           "members": [
@@ -762,7 +762,7 @@
                 "text": "string|null"
               },
               "default": "null",
-              "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n\n### Examples\n\n#### <caption>Using the input-key attribute</caption>\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n  console.log(a.variables) // { variable: 'var' }\n  console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```",
+              "description": "When set, variable data attributes will be packed into an\nobject property with the name of this property\n\n### Examples\n\n<figure class=\"example\"><figcaption>Using the input-key attribute</figcaption>\n\n```html\n<apollo-mutation id=\"a\" data-variable=\"var\"></apollo-mutation>\n<apollo-mutation id=\"b\" input-key=\"input\" data-variable=\"var\"></apollo-mutation>\n<script>\n  console.log(a.variables) // { variable: 'var' }\n  console.log(b.variables) // { input: { variable: 'var' } }\n</script>\n```\n\n</figure>",
               "summary": "key to wrap variables in e.g. `input`.",
               "attribute": "input-key",
               "reflects": true
@@ -903,7 +903,7 @@
                   "description": "the trigger element which triggered this mutation"
                 }
               ],
-              "description": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger.\n\n### Examples\n\n#### Navigate to a post's page after creating it\n```html\n<apollo-mutation id=\"mutation\">\n  <script type=\"application/graphql\">\n    mutation CreatePostMutation($title: String, $content: String) {\n      createPost(title: $title, content: $content) {\n        slug\n      }\n    }\n  </script>\n  <mwc-textfield label=\"Post title\" data-variable=\"title\"></mwc-textfield>\n  <mwc-textarea label=\"Post Content\" data-variable=\"content\"></mwc-textarea>\n</apollo-mutation>\n\n<script>\n  document.getElementById('mutation').resolveURL =\n    data => `/posts/${data.createPost.slug}/`;\n</script>\n```"
+              "description": "Define this function to determine the URL to navigate to after a mutation.\nFunction can be synchronous or async.\nIf this function is not defined, will navigate to the `href` property of the link trigger.\n\n### Examples\n\n<figure class=\"example\"><figcaption>Navigate to a post's page after creating it</figcaption>\n\n```html\n<apollo-mutation id=\"mutation\">\n  <script type=\"application/graphql\">\n    mutation CreatePostMutation($title: String, $content: String) {\n      createPost(title: $title, content: $content) {\n        slug\n      }\n    }\n  </script>\n  <mwc-textfield label=\"Post title\" data-variable=\"title\"></mwc-textfield>\n  <mwc-textarea label=\"Post Content\" data-variable=\"content\"></mwc-textarea>\n</apollo-mutation>\n\n<script>\n  document.getElementById('mutation').resolveURL =\n    data => `/posts/${data.createPost.slug}/`;\n</script>\n```\n\n</figure>"
             },
             {
               "kind": "method",
@@ -1315,42 +1315,42 @@
               "type": {
                 "text": "WillMutateEvent"
               },
-              "description": "When the element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`",
+              "description": "The element is about to mutate. Useful for setting variables. Prevent default to prevent mutation. Detail is `{ element: this }`",
               "name": "will-mutate"
             },
             {
               "type": {
                 "text": "WillNavigateEvent"
               },
-              "description": "When the mutation resolves and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`",
+              "description": "The mutation resolved and the element is about to navigate. cancel the event to handle navigation yourself e.g. using a client-side router. . `detail` is `{ data: Data, element: this }`",
               "name": "will-navigate"
             },
             {
               "type": {
                 "text": "MutationCompletedEvent"
               },
-              "description": "When the mutation resolves. `detail` is `{ data: Data, element: this }`",
+              "description": "The mutation resolves. `detail` is `{ data: Data, element: this }`",
               "name": "mutation-completed"
             },
             {
               "type": {
                 "text": "MutationErrorEvent"
               },
-              "description": "When the mutation is rejected. `detail` is `{ error: ApolloError, element: this }`",
+              "description": "The mutation rejected. `detail` is `{ error: ApolloError, element: this }`",
               "name": "mutation-error"
             },
             {
               "type": {
                 "text": "ApolloElementEvent"
               },
-              "description": "when the element disconnects from the dom",
+              "description": "The element disconnected from the DOM",
               "name": "apollo-element-disconnected"
             },
             {
               "type": {
                 "text": "ApolloElementEvent"
               },
-              "description": "when the element connects to the dom",
+              "description": "The element connected to the DOM",
               "name": "apollo-element-connected"
             }
           ],
@@ -1520,7 +1520,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Render a GraphQL query to the DOM\n\n## Examples\n\n### <caption>Render a query to Shadow DOM</caption>\n```html\n<apollo-query>\n  <script type=\"application/graphql\">\n    query MyProfile {\n      profile { name picture }\n    }\n  </script>\n  <template>\n    <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n  </template>\n</apollo-query>\n```\n\n### <caption>Setting query and variables using the DOM</caption>\n```html\n<apollo-query id=\"query-element\" template=\"avatar-template\"></apollo-query>\n\n<template id=\"avatar-template\">\n  <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('query-element');\n  el.query = gql`\n    query MyProfile($size: Int) {\n      profile { name picture(size: $size) }\n    }\n  `;\n  el.variables = { size: 48 };\n</script>\n```",
+          "description": "Render a GraphQL query to the DOM\n\n## Examples\n\n<figure class=\"example\"><figcaption>Render a query to Shadow DOM</figcaption>\n\n```html\n<apollo-query>\n  <script type=\"application/graphql\">\n    query MyProfile {\n      profile { name picture }\n    }\n  </script>\n  <template>\n    <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n  </template>\n</apollo-query>\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Setting query and variables using the DOM</figcaption>\n\n```html\n<apollo-query id=\"query-element\" template=\"avatar-template\"></apollo-query>\n\n<template id=\"avatar-template\">\n  <img loading=\"lazy\" src=\"{{ data.profile.picture }}\" alt=\"{{ data.profile.name }}\"/>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('query-element');\n  el.query = gql`\n    query MyProfile($size: Int) {\n      profile { name picture(size: $size) }\n    }\n  `;\n  el.variables = { size: 48 };\n</script>\n```\n\n</figure>",
           "name": "ApolloQueryElement",
           "members": [
             {
@@ -2222,7 +2222,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Render a GraphQL subscription to the DOM\n\n## Examples\n\n### <caption>Render a subscription to Shadow DOM</caption>\n```html\n<apollo-subscription>\n  <script type=\"application/graphql\">\n    subscription NewMessages {\n      messageAdded { id author content }\n    }\n  </script>\n  <template>\n    <article>\n      <span class=\"author-name\">{{ data.author.name }}</span>\n      <mark-down>{{ data.content }}</mark-down>\n    </article>\n  </template>\n</apollo-subscription>\n```\n\n### <caption>Setting subscription and variables using the DOM</caption>\n```html\n<apollo-subscription id=\"subscription-element\" template=\"message-template\"></apollo-subscription>\n\n<template id=\"message-template\">\n  <article>\n    <span class=\"author-name\">{{ data.author.name }}</span>\n    <mark-down>{{ data.content }}</mark-down>\n  </article>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('subscription-element');\n  el.subscription = gql`\n    subscription NewMessages($limit: Int) {\n      messagesAdded {\n        messages { id author content }\n        hasMore\n      }\n    }\n  `;\n  el.variables = { limit: 10 };\n</script>\n```",
+          "description": "Render a GraphQL subscription to the DOM\n\n## Examples\n\n<figure class=\"example\"><figcaption>Render a subscription to Shadow DOM</figcaption>\n\n```html\n<apollo-subscription>\n  <script type=\"application/graphql\">\n    subscription NewMessages {\n      messageAdded { id author content }\n    }\n  </script>\n  <template>\n    <article>\n      <span class=\"author-name\">{{ data.author.name }}</span>\n      <mark-down>{{ data.content }}</mark-down>\n    </article>\n  </template>\n</apollo-subscription>\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Setting subscription and variables using the DOM</figcaption>\n\n```html\n<apollo-subscription id=\"subscription-element\" template=\"message-template\"></apollo-subscription>\n\n<template id=\"message-template\">\n  <article>\n    <span class=\"author-name\">{{ data.author.name }}</span>\n    <mark-down>{{ data.content }}</mark-down>\n  </article>\n</template>\n\n<script type=\"module\">\n  import { gql } from '@apollo/client/core';\n  const el = document.getElementById('subscription-element');\n  el.subscription = gql`\n    subscription NewMessages($limit: Int) {\n      messagesAdded {\n        messages { id author content }\n        hasMore\n      }\n    }\n  `;\n  el.variables = { limit: 10 };\n</script>\n```\n\n</figure>",
           "name": "ApolloSubscriptionElement",
           "members": [
             {

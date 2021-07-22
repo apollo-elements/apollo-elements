@@ -24,15 +24,14 @@ import { PolymerApolloElement } from './polymer-apollo-element.js';
  *          </paper-toast>
  * ```
  *
- * @fires data-changed
- * @fires error-changed
- * @fires errors-changed
- * @fires loading-changed
+ * @fires {PolymerChangeEvent<Data<D>>} data-changed
+ * @fires {PolymerChangeEvent<Variables<D, V>>} variables-changed
+ * @fires {PolymerChangeEvent<Error>} error-changed
+ * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
+ * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
 export class PolymerApolloSubscription<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloSubscriptionMixin(
-    PolymerApolloElement as unknown as Constructor<PolymerApolloElement>
-  )<D, V> {
+  extends ApolloSubscriptionMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V> {
   static readonly is = 'polymer-apollo-subscription';
 }
 

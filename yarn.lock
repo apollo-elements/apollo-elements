@@ -3097,10 +3097,10 @@
     workbox-routing "^6.1.5"
     workbox-strategies "^6.1.5"
 
-"@rocket/cli@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@rocket/cli/-/cli-0.9.9.tgz#6fd8b618c68292188905923d362aaac9d473d8ae"
-  integrity sha512-RrL8iL4Od0Vzi2ZHZZEsENJqXf3H930gyUB57UtQP/3TwXdqegWke8a8ZouyOPMI59wBFQhODEtMMSrUZWjLMw==
+"@rocket/cli@^0.9.10":
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/@rocket/cli/-/cli-0.9.10.tgz#7c938aa9ce9f068b68c7af4729a35b6e1d34857d"
+  integrity sha512-+sBTROWa/HqCCRI86j1UlXtnIAWvviHtf1VceR1iu7pfKhA1bPTVR6TLHFo5ORzCjnu6MlqmpeRfwKu598PCrw==
   dependencies:
     "@11ty/eleventy" "^0.11.1"
     "@11ty/eleventy-img" "^0.9.0"
@@ -5424,10 +5424,10 @@ cem-plugin-copy@^0.0.1:
     globby "11.0.4"
     hirestime "^6.1.0"
 
-cem-plugin-jsdoc-example@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/cem-plugin-jsdoc-example/-/cem-plugin-jsdoc-example-0.0.4.tgz#543f0e39e8853af758515b87d44bc0c4f124eaba"
-  integrity sha512-g45kM+jpC1vw6kvUKUT51bwY1JT4SQ+wHFlne5bJDx/t0bGdLPfdiQkWqJZv1eQGA8hR20WeT45m+c2t5hDqVQ==
+cem-plugin-jsdoc-example@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/cem-plugin-jsdoc-example/-/cem-plugin-jsdoc-example-0.0.5.tgz#3567deb02dec895b1b61cc9e9b5ef3f55640ecba"
+  integrity sha512-Ye7boiSNkROogOUUFoPGo7gh8hq86G4yLGijXNYl6F99do/CwMb99rEtFgYwQxcLVP1QNzafGY6M44XeC7gIGA==
   dependencies:
     chalk "^4.1.1"
 
@@ -8946,10 +8946,10 @@ hast-util-to-html@^7.1.1, hast-util-to-html@^7.1.2:
     unist-util-is "^4.0.0"
     xtend "^4.0.0"
 
-hast-util-to-html@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/hast-util-to-html/-/hast-util-to-html-8.0.0.tgz#18a7a348d167eaf1ff5c2a1471d1ccdc7d5e1f9c"
-  integrity sha512-zgAl1RHlOxSoQ7wY0j4x9CF5vcgE3+l1Ru1MhskEgaWJKD09Z3zozfeGX4rVZWQKfRx/heAjMKA3InJCZzm/JQ==
+hast-util-to-html@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/hast-util-to-html/-/hast-util-to-html-8.0.1.tgz#05d2f37ca7979f474f2d23536ea4655e91ceecef"
+  integrity sha512-S1mTqXvWVGIxrWw0xOHHvmevwCBFTRGNvXWsjE32IyEAlMhbMkK+ZuP6CAqkQ6Vb7swrehaHpfXHEI6voGDh0w==
   dependencies:
     "@types/hast" "^2.0.0"
     ccount "^2.0.0"
@@ -13646,10 +13646,10 @@ rocket-preset-code-tabs@0.2.7:
     lit "^2.0.0-rc.2"
     rocket-preset-markdown-directives "^0.1.3"
 
-rocket-preset-custom-elements-manifest@0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/rocket-preset-custom-elements-manifest/-/rocket-preset-custom-elements-manifest-0.1.8.tgz#a6c14d66a01c2770689580aee74c3566d2d91927"
-  integrity sha512-1bVuZSoe3H9hyLDMHoZacZb0/oKqAc0SWYWMkIJcKrghk/fwvaeVtHQO1uZjLg9o1iGNcMYWIWcuGnv73qp0og==
+rocket-preset-custom-elements-manifest@0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/rocket-preset-custom-elements-manifest/-/rocket-preset-custom-elements-manifest-0.1.9.tgz#a2fe5772f94b96f55ec35b0006acc8dd5dadad31"
+  integrity sha512-1D8ME5VbKTlkz59fwuFlNIeRrTrZ2HgP0uRtvAae7aAqkzJiiFYdOP1rUzK7WVK9RmtappDfe3O4SdhotjggiQ==
   dependencies:
     "@power-elements/json-viewer" "2.1.1"
     eleventy-plugin-footnotes "0.9.0"
@@ -13741,10 +13741,10 @@ rollup@^2.35.1:
   optionalDependencies:
     fsevents "~2.3.1"
 
-rollup@^2.53.2:
-  version "2.53.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.53.2.tgz#3279f9bfba1fe446585560802e418c5fbcaefa51"
-  integrity sha512-1CtEYuS5CRCzFZ7SNW5528SlDlk4VDXIRGwbm/2POQxA/G4+7/crIqJwkmnj8Q/74hGx4oVlNvh4E1CJQ5hZ6w==
+rollup@^2.53.3:
+  version "2.53.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.53.3.tgz#14b0e57f0874d4ad23bdbb13050cf70bcd1eabf7"
+  integrity sha512-79QIGP5DXz5ZHYnCPi3tLz+elOQi6gudp9YINdaJdjG0Yddubo6JRFUM//qCZ0Bap/GJrsUoEBVdSOc4AkMlRA==
   optionalDependencies:
     fsevents "~2.3.2"
 

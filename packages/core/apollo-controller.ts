@@ -42,6 +42,7 @@ export interface ApolloControllerOptions<D, V> {
   [update]?(properties?: Record<string, unknown>): void;
 }
 
+/** @internal */
 export const update = Symbol('update');
 
 interface ReflectingReactiveControllerHost extends ReactiveControllerHost {
@@ -52,6 +53,10 @@ function isReflectingHost(host: ReactiveControllerHost): host is ReflectingReact
   return typeof (host as ReactiveControllerHost & { [update]: unknown })[update] === 'function';
 }
 
+/**
+ * @fires {ApolloControllerConnectedEvent} apollo-controller-connected - The controller's host connected to the DOM.
+ * @fires {ApolloControllerDisconnectedEvent} apollo-controller-disconnected - The controller's host disconnected from the DOM.
+ */
 export abstract class ApolloController<
   D extends MaybeTDN = MaybeTDN,
   V = MaybeVariables<D>
@@ -180,12 +185,10 @@ implements ReactiveController {
     this.document = document;
   }
 
-  /** @fires {ApolloControllerConnectedEvent} apollo-controller-connected when the controller's host connects to the document. */
   hostConnected(): void {
     this.emitter.dispatchEvent(new ApolloControllerConnectedEvent(this));
   }
 
-  /** @fires {ApolloControllerDisconnectedEvent} apollo-controller-disconnected when the controller's host disconnects from the document. */
   hostDisconnected(): void {
     this.emitter.dispatchEvent(new ApolloControllerDisconnectedEvent(this));
     window.dispatchEvent(new ApolloControllerDisconnectedEvent(this));

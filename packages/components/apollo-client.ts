@@ -49,7 +49,7 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
  *
  * @element apollo-client
  *
- * @fires {CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>} client-changed When the client changes
+ * @fires {CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>} client-changed - The client changed
  *
  * @example <caption>Generate a simple ApolloClient instance</caption>
  * ```html

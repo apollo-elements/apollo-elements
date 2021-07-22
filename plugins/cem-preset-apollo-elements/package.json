@@ -13,7 +13,7 @@
     "cem-plugin-module-file-extensions": "^0.0.1",
     "cem-plugin-type-descriptions-markdown": "^0.0.1",
     "cem-plugin-readonly": "^0.0.1",
-    "cem-plugin-jsdoc-example": "^0.0.4",
+    "cem-plugin-jsdoc-example": "^0.0.5",
     "cem-plugin-copy": "^0.0.1",
     "chalk": "^4.1.1"
   }

@@ -25,11 +25,11 @@ import { notify } from './notify-decorator.js';
  *          <paper-button on-click="mutate">Submit</paper-button>
  * ```
  *
- * @fires data-changed
- * @fires error-changed
- * @fires errors-changed
- * @fires loading-changed
- * @fires called-changed
+ * @fires {PolymerChangeEvent<Data<D>>} data-changed
+ * @fires {PolymerChangeEvent<Variables<D, V>>} variables-changed
+ * @fires {PolymerChangeEvent<Error>} error-changed
+ * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
+ * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
 export class PolymerApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
   extends ApolloMutationMixin(
