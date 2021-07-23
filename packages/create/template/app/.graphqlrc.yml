@@ -19,6 +19,7 @@ extensions:
         plugins:
           - typescript
           - typescript-operations
+          - typed-document-node
 
         documents:
           - src/**/*.fragment.graphql

@@ -1,23 +1,27 @@
 import type { AppOptions } from './options';
 
-import * as NCP from 'ncp';
+import NCP from 'ncp';
 
 import { promisify } from 'util';
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import execa from 'execa';
 
-import { codegen } from './codegen';
-import { readFile, processTemplate, writeFile } from './files';
+import { codegen } from './codegen.js';
+import { readFile, processTemplate, writeFile } from './files.js';
 
-import { cyan, greenBright } from 'chalk';
+import Chalk from 'chalk';
+const { cyan, greenBright } = Chalk;
 
 const cwd = process.cwd();
 
 const ncp = promisify(NCP.ncp);
 
 const rename = promisify(fs.rename);
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Copy the file structure from `template`, and rename the `__gitignore` file

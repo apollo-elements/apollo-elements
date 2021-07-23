@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { prompt } from './prompt';
+import { prompt } from './prompt.js';
 
 async function main() {
   try {

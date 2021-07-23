@@ -1,27 +1,24 @@
-import { <%= BASE_CLASS %>, html, TemplateResult } from '@apollo-elements/lit-apollo';
+import { LitElement, html, TemplateResult } from 'lit';
+import { <%= CONTROLLER_CLASS %> } from '@apollo-elements/core';
 import { customElement } from 'lit/decorators.js';
 
-import type {
-  <%= OPERATION_DATA_TYPE %>Data as Data,
-  <%= OPERATION_DATA_TYPE %>Variables as Variables,
-} from '<%= SCHEMA_PATH %>';
+import { <%= OPERATION_NAME %> } from '<%= SCHEMA_PATH %>';
 
 import style from './<%= UNPREFIXED %>.css';<%= CSS_IMPORT %>
-
-import <%= OPERATION_NAME %> from './<%= OPERATION_FILE_NAME %>';
 
 declare global { interface HTMLElementTagNameMap { '<%= TAG_NAME %>': <%= CLASS_NAME %> } }
 
 @customElement('<%= TAG_NAME %>')
-export class <%= CLASS_NAME %> extends <%= BASE_CLASS %><Data, Variables> {
+export class <%= CLASS_NAME %> extends LitElement {
   static readonly is = '<%= TAG_NAME %>';
 
   static readonly styles = <%= CSS_ARRAY %>;
 
-  <%= OPERATION_TYPE %> = <%= OPERATION_NAME %>;
+  <%= OPERATION_TYPE %> = new <%= CONTROLLER_CLASS %>(this, <%= OPERATION_NAME %>);
 
   render(): TemplateResult {
     return html`
+      <pre ?hidden="${!this.<%= OPERATION_TYPE %>.error}">${this.<%= OPERATION_TYPE %>.error?.message}</pre>
     `;
   }
 }
