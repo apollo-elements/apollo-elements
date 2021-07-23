@@ -1,4 +1,4 @@
-# Components || 30
+# Components || 20
 
 Utility components that help you factor your graphql-based app.
 

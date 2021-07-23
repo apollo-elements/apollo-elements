@@ -56,7 +56,7 @@
               "type": {
                 "text": "DefineOptions"
               },
-              "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| path | `'options'`{lang=ts} | Optional. When set, the field will reflect the property at the specified path, i.e. `controller.options`. |\n| readonly | `boolean`{lang=ts} | Optional. When set, setting the field will have no effect. |\n| onSet | `(x: unknown) => void`{lang=ts} | Optional. When defined, setting the field will have no effect. |\n"
+              "description": "| Property | Type                            | Description                                                                                               |\n| -------- | ------------------------------- | --------------------------------------------------------------------------------------------------------- |\n| path     | `'options'`{lang=ts}            | Optional. When set, the field will reflect the property at the specified path, i.e. `controller.options`. |\n| readonly | `boolean`{lang=ts}              | Optional. When set, setting the field will have no effect.                                                |\n| onSet    | `(x: unknown) => void`{lang=ts} | Optional. When defined, setting the field will have no effect.                                            |\n"
             }
           ],
           "description": "Decorator to fire a Polymer-Library-style `*-changed` event;"

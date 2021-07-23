@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-yarn changeset pre exit
-yarn clean
-yarn workspaces run prepublishOnly
+# not quite ready for that
+# yarn changeset pre exit
 
-yarn changeset publish
+npm run clean
+# yarn workspaces run prepublishOnly
+
+npx changeset publish
