@@ -1,5 +1,19 @@
 # @apollo-elements/create
 
+## 2.0.0-next.2
+
+### Major Changes
+
+- db4d9bfa: Moves to ESM, so add
+
+  ```json
+  "type": "module"
+  ```
+
+  to you package.json
+
+  Updates component and app templates to use controllers and TypedDocumentNode
+
 ## 1.5.0-next.1
 
 ### Patch Changes
