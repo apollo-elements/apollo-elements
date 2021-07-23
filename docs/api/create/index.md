@@ -1,4 +1,4 @@
-# Generator || 10
+# Generator || 30
 
 ![Screenshot of CLI Wizard](../../../packages/create/create-screenshot.png)
 

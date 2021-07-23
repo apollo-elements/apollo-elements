@@ -87,3 +87,19 @@ docs-playground {
 
 .before-after pre:first-child::before { content: 'Before'; }
 .before-after pre:last-child::before { content: 'After'; }
+
+figure.example {
+  margin: 0;
+}
+
+.markdown-body > figure.example figcaption {
+  background-color: var(--markdown-syntax-background-color);
+  padding: 8px 12px;
+  width: max-content;
+  border-start-start-radius: 6px;
+  border-start-end-radius: 6px;
+}
+
+.markdown-body > figure.example pre:first-of-type {
+  border-start-start-radius: 0;
+}

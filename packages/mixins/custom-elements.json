@@ -115,7 +115,8 @@
               "name": "optimisticResponse",
               "type": {
                 "text": "OptimisticResponseType<D, V>"
-              }
+              },
+              "description": "An object that represents the result of this mutation that will be optimistically\nstored before the server has actually returned a result, or a unary function that\ntakes the mutation's variables and returns such an object.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear."
             },
             {
               "kind": "field",

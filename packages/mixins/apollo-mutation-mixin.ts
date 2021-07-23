@@ -51,6 +51,25 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     @controlled() mutation: ComponentDocument<D> | null = null;
 
+    /**
+     * An object that represents the result of this mutation that will be optimistically
+     * stored before the server has actually returned a result, or a unary function that
+     * takes the mutation's variables and returns such an object.
+     *
+     * This is most often used for optimistic UI, where we want to be able to see
+     * the result of a mutation immediately, and update the UI later if any errors
+     * appear.
+     * @example <caption>Using a function</caption>
+     * ```ts
+     *         element.optimisticResponse = ({ name }: HelloMutationVariables) => ({
+     *           __typename: 'Mutation',
+     *           hello: {
+     *             __typename: 'Greeting',
+     *             name,
+     *           },
+     *         });
+     * ```
+     */
     @controlled({ path: 'options' }) optimisticResponse?: OptimisticResponseType<D, V>;
 
     @controlled({ path: 'options' }) refetchQueries: RefetchQueriesType<D> | null = null;

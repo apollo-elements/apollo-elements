@@ -227,10 +227,6 @@ export declare class ApolloElementElement<
  *
  * @fires {CustomEvent<FetchResult<Data<D>>>} apollo-mutation-result - The mutation resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The mutation rejected
- *
- * @prop {ApolloMutationInterface<D, V>['updater']} updater
- * @prop {ApolloMutationInterface<D, V>['onCompleted']} onCompleted
- * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare class ApolloMutationElement<
   D extends MaybeTDN = MaybeTDN,
@@ -338,9 +334,6 @@ export declare class ApolloMutationElement<
  *
  * @fires {CustomEvent<ApolloQueryResult<Data<D>>>} apollo-query-result - The query resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The query rejected
- *
- * @prop {ApolloMutationInterface<D, V>['onData']} onData
- * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare class ApolloQueryElement<
   D extends MaybeTDN = MaybeTDN,
@@ -518,10 +511,6 @@ export declare class ApolloQueryElement<
  *
  * @fires {ApolloSubscriptionResultEvent} apollo-subscription-result - The subscription updated
  * @fires {CustomEvent<ApolloError>} apollo-error - The subscription produced an error
- *
- * @prop {ApolloMutationInterface<D, V>['onSubscriptionData']} onSubscriptionData
- * @prop {ApolloMutationInterface<D, V>['onSubscriptionComplete']} onSubscriptionComplete
- * @prop {ApolloMutationInterface<D, V>['onError']} onError
  */
 export declare class ApolloSubscriptionElement<
   D extends MaybeTDN = MaybeTDN,
@@ -569,7 +558,7 @@ export declare class ApolloSubscriptionElement<
   /**
    * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
-  public shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'];
+  public shouldResubscribe: boolean | ((options: SubscriptionDataOptions<Data<D>, Variables<D, V>>) => boolean); // eslint-disable-line max-len
   /**
    * @summary If true, the query will be skipped entirely
    */

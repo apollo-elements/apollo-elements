@@ -19,7 +19,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "default": "{}",
-              "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n"
+              "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n"
             },
             {
               "kind": "field",
@@ -104,7 +104,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "summary": "Options for the operation and controller.",
-              "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n"
+              "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n"
             },
             {
               "kind": "field",
@@ -328,7 +328,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "summary": "Options for the operation and controller.",
-              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| variables           | `Variables<D, V>`{lang=ts}               | Operation variables. See [variables](/api/core/interfaces/mutation/#variables). |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}  | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| fetchPolicy         | `ErrorPolicy`{lang=ts}                   | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| refetchQueries      | `RefetchQueriesType<D> | null`{lang=ts}` | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) | |\n| awaitRefetchQueries | `boolean`{lang=ts}                       | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| update              | `MutationUpdaterFn<Data<D>>`{lang=ts}    | Function used to update the client cache following the mutation. See [updater](/api/core/interfaces/mutation/#updater). |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
+              "description": "| Option              | Type                                     | Description                                                                                                             |\n| ------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |\n| variables           | `Variables<D, V>`{lang=ts}               | Operation variables. See [variables](/api/core/interfaces/mutation/#variables).                                         |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}  | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse)                                             |\n| fetchPolicy         | `ErrorPolicy`{lang=ts}                   | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy)                                                           |\n| refetchQueries      | `RefetchQueriesType<D> \\| null`{lang=ts} | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries)                                                     |\n| awaitRefetchQueries | `boolean`{lang=ts}                       | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries)                                           |\n| update              | `MutationUpdaterFn<Data<D>>`{lang=ts}    | Function used to update the client cache following the mutation. See [updater](/api/core/interfaces/mutation/#updater). |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -362,7 +362,7 @@
                 "type": {
                   "text": "Promise<FetchResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
+                "description": "| Property   | Type                               | Description                                            |\n| ---------- | ---------------------------------- | ------------------------------------------------------ |\n| data       | `Data<D, V>`{lang=ts}              | The result of a successful execution of the mutation   |\n| errors     | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts}                 | Reserved for adding non-standard properties            |\n| context    | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context)   |\n"
               },
               "parameters": [
                 {
@@ -371,7 +371,7 @@
                   "type": {
                     "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
                   },
-                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode`{lang=ts} | See [mutation](/api/core/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/mutation/#variables) |\n"
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property            | Type                                                   | Description                                                                   |\n| ------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------- |\n| awaitRefetchQueries | `boolean`{lang=ts}                                     | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context             | `Record<string, unknown>`{lang=ts}                     | See [context](/api/core/interfaces/element/#context)                          |\n| errorPolicy         | `ErrorPolicy`{lang=ts}                                 | See [errorPolicy](/api/core/interfaces/element/#errorpolicy)                  |\n| fetchPolicy         | `FetchPolicy`{lang=ts}                                 | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy)                 |\n| mutation            | `DocumentNode`{lang=ts}                                | See [mutation](/api/core/interfaces/mutation/#mutation)                       |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}                | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse)   |\n| refetchQueries      | `RefetchQueriesType<D, V>`{lang=ts}                    | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries)           |\n| update              | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater)                         |\n| variables           | `Variables<D, V>`{lang=ts}                             | See [variables](/api/core/interfaces/mutation/#variables)                     |\n"
                 }
               ],
               "summary": "Fires a mutation\nThis resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.",
@@ -416,7 +416,7 @@
                 "type": {
                   "text": "FetchResult<Data<D>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
+                "description": "| Property   | Type                               | Description                                            |\n| ---------- | ---------------------------------- | ------------------------------------------------------ |\n| data       | `Data<D, V>`{lang=ts}              | The result of a successful execution of the mutation   |\n| errors     | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts}                 | Reserved for adding non-standard properties            |\n| context    | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context)   |\n"
               },
               "parameters": [
                 {
@@ -430,7 +430,7 @@
                   "type": {
                     "text": "FetchResult<Data<D>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
+                  "description": "| Property   | Type                               | Description                                            |\n| ---------- | ---------------------------------- | ------------------------------------------------------ |\n| data       | `Data<D, V>`{lang=ts}              | The result of a successful execution of the mutation   |\n| errors     | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts}                 | Reserved for adding non-standard properties            |\n| context    | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context)   |\n"
                 }
               ],
               "description": "Callback for when a mutation is completed."
@@ -468,7 +468,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "default": "{}",
-              "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n",
+              "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -854,7 +854,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "summary": "Options to customize the query and to interface with the controller.",
-              "description": "| Option          | Type | Description |\n| --------------- | ---- | ----------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves. |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs. |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
+              "description": "| Option          | Type                                                  | Description                                                                                                                               |\n| --------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.                             |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query.                                                                                                                  |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe`                                                     |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | Determines whether the element should attempt to subscribe automatically\\\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves.                                                                                              |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs.                                                                                               |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -954,7 +954,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ]
             },
@@ -974,7 +974,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ],
               "description": "Determines whether the element is able to automatically subscribe"
@@ -1014,7 +1014,7 @@
                   "type": {
                     "text": "ApolloQueryResult<Data<D>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                  "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
                 }
               ]
             },
@@ -1119,7 +1119,7 @@
                 "type": {
                   "text": "Promise<ApolloQueryResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
               },
               "parameters": [
                 {
@@ -1182,7 +1182,7 @@
                 "type": {
                   "text": "Promise<ApolloQueryResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
               },
               "parameters": [
                 {
@@ -1191,7 +1191,7 @@
                   "type": {
                     "text": "Partial<QueryOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Option      | Type                               | Description |\n| ----------- | ---------------------------------- | ----------- |\n| query       | `DocumentNode`{lang=ts}            | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables   | `Variables<D, V>`{lang=ts}         | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | Specifies the [`fetchPolicy`](/api/core/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | Specifies the [`ErrorPolicy`](/api/core/interfaces/element/#errorpolicy) to be used for this query. |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option      | Type                               | Description                                                                                              |\n| ----------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | A GraphQL document that consists of a single query to be sent down to the server.                        |\n| variables   | `Variables<D, V>`{lang=ts}         | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | Specifies the [`fetchPolicy`](/api/core/interfaces/query/#fetchpolicy) to be used for this query.        |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | Specifies the [`ErrorPolicy`](/api/core/interfaces/element/#errorpolicy) to be used for this query.      |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                  |\n"
                 }
               ],
               "summary": "Executes a Query once and updates the with the result",
@@ -1206,7 +1206,7 @@
                 "type": {
                   "text": "Promise<ApolloQueryResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
               },
               "parameters": [
                 {
@@ -1215,7 +1215,7 @@
                   "type": {
                     "text": "Partial<FetchMoreParams<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query       | `DocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts}                          | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables   | `Variables<D, V>`{lang=ts}                   | Query variables |\n| context     | `Record<string, unknown>`{lang=ts}           | Context object passed through the link execution chain. |\n"
+                  "description": "| Option      | Type                               | Description                                                                                                      |\n| ----------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | Query to fetch, defaults to `this.query`                                                                         |\n| updateQuery | `Function`{lang=ts}                | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables   | `Variables<D, V>`{lang=ts}         | Query variables                                                                                                  |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                          |\n"
                 }
               ],
               "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object.",
@@ -1262,7 +1262,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "default": "{}",
-              "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n",
+              "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1559,7 +1559,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "summary": "Options for the operation and controller.",
-              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client                 | `ApolloClient`{lang=ts}                     | ApolloClient instance for the subscription. |\n| fetchPolicy            | `FetchPolicy`{lang=ts}                      | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| noAutoSubscribe        | `boolean`{lang=ts}                          | If set, the component will not subscribe until called explicitly. See [noAutoSubscribe](/api/core/interfaces/subscription/#noautosubscribe) |\n| onSubscriptionComplete |                                             | Callback that fires when the subscription ends. See [onSubscriptionComplete](/api/core/interfaces/subscription/#onsubscriptioncomplete) |\n| onSubscriptionData     |                                             | Callback for when subscription produces new data. See [onSubscriptionData](/api/core/interfaces/subscription/#onsubscriptiondata) |\n| shouldResubscribe      | `boolean`{lang=ts}                          | Determines if your subscription should be unsubscribed and subscribed again |\n| shouldSubscribe        |                                             | Predicate which determines whether to automatically subscribe. See [shouldSubscribe](/api/core/interfaces/subscription/#shouldsubscribe) |\n| skip                   | `boolean`{lang=ts}                          | When true, the subscription will not fetch at all. |\n| subscription           | `DocumentNode`{lang=ts} | Subscription GraphQL Document |\n| variables              | `Variables<D, V>`{lang=ts}                  | Subscription variables |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
+              "description": "| Option                 | Type                                                           | Description                                                                                                                                 |\n| ---------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |\n| client                 | `ApolloClient`{lang=ts}                                        | ApolloClient instance for the subscription.                                                                                                 |\n| fetchPolicy            | `FetchPolicy`{lang=ts}                                         | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy)                                                                           |\n| noAutoSubscribe        | `boolean`{lang=ts}                                             | If set, the component will not subscribe until called explicitly. See [noAutoSubscribe](/api/core/interfaces/subscription/#noautosubscribe) |\n| onError                | `(error: ApolloError) => void`{lang=ts}                        | Callback for when subscription produces an error                                                                                            |\n| onSubscriptionComplete | `() => void`{lang=ts}                                          | Callback for when the subscription ends                                                                                                     |\n| onSubscriptionData     | `(result: OnSubscriptionDataParams<Data<D>>) => void`{lang=ts} | Callback for when subscription produces new data                                                                                            |\n| shouldResubscribe      | `boolean`{lang=ts}                                             | Determines if your subscription should be unsubscribed and subscribed again                                                                 |\n| shouldSubscribe        | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts}          | Predicate which determines whether to automatically subscribe. See [shouldSubscribe](/api/core/interfaces/subscription/#shouldsubscribe)    |\n| skip                   | `boolean`{lang=ts}                                             | When true, the subscription will not fetch at all.                                                                                          |\n| subscription           | `DocumentNode`{lang=ts}                                        | Subscription GraphQL Document                                                                                                               |\n| variables              | `Variables<D, V>`{lang=ts}                                     | Subscription variables                                                                                                                      |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -1641,7 +1641,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ],
               "description": "Determines whether the element is able to automatically subscribe"
@@ -1662,7 +1662,7 @@
                   "type": {
                     "text": "Partial<SubscriptionDataOptions<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                  "description": "| Option            | Type                               | Description                                                                                                                                    |\n| ----------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |\n| client            | `ApolloClient`{lang=ts}            | Apollo Client to use for the subscription.                                                                                                     |\n| context           | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                                                        |\n| errorPolicy       | `ErrorPolicy`{lang=ts}             | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy)                                        |\n| fetchPolicy       | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy)                                                                              |\n| shouldResubscribe | `boolean`{lang=ts}                 | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip              | `boolean`{lang=ts}                 | If skip is true, the subscription will be skipped entirely.                                                                                    |\n| subscription      | `DocumentNode`{lang=ts}            | GraphQL document with a single subscription.                                                                                                   |\n| variables         | `Variables<D, V>`{lang=ts}         | An object containing all of the variables your subscription needs to execute.                                                                  |\n"
                 }
               ]
             },
@@ -1676,7 +1676,7 @@
                   "type": {
                     "text": "FetchResult<Data<D>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
+                  "description": "| Property   | Type                               | Description                                            |\n| ---------- | ---------------------------------- | ------------------------------------------------------ |\n| data       | `Data<D, V>`{lang=ts}              | The result of a successful execution of the mutation   |\n| errors     | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts}                 | Reserved for adding non-standard properties            |\n| context    | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context)   |\n"
                 }
               ],
               "description": "Sets `data`, `loading`, and `error` on the instance when new subscription results arrive."
@@ -1727,7 +1727,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ]
             },
@@ -1822,7 +1822,7 @@
                   "type": {
                     "text": "Partial<SubscriptionDataOptions<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                  "description": "| Option            | Type                               | Description                                                                                                                                    |\n| ----------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |\n| client            | `ApolloClient`{lang=ts}            | Apollo Client to use for the subscription.                                                                                                     |\n| context           | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                                                        |\n| errorPolicy       | `ErrorPolicy`{lang=ts}             | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy)                                        |\n| fetchPolicy       | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy)                                                                              |\n| shouldResubscribe | `boolean`{lang=ts}                 | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip              | `boolean`{lang=ts}                 | If skip is true, the subscription will be skipped entirely.                                                                                    |\n| subscription      | `DocumentNode`{lang=ts}            | GraphQL document with a single subscription.                                                                                                   |\n| variables         | `Variables<D, V>`{lang=ts}         | An object containing all of the variables your subscription needs to execute.                                                                  |\n"
                 }
               ],
               "summary": "Starts the subscription",
@@ -1848,7 +1848,7 @@
                 "text": "ApolloControllerOptions<D, V>"
               },
               "default": "{}",
-              "description": "| Option      | Type                                           | Description |\n| ----------- | ---------------------------------------------- | ----------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller. |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation. |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events |\n",
+              "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n",
               "inheritedFrom": {
                 "name": "ApolloController",
                 "module": "apollo-controller.js"
@@ -2213,7 +2213,7 @@
               "type": {
                 "text": "DefineOptions"
               },
-              "description": "Options for the controlled field\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| path | `'options'`{lang=ts} | Optional. When set, the field will reflect the property at the specified path, i.e. `controller.options`. |\n| readonly | `boolean`{lang=ts} | Optional. When set, setting the field will have no effect. |\n| onSet | `(x: unknown) => void`{lang=ts} | Optional. When defined, setting the field will have no effect. |\n"
+              "description": "Options for the controlled field\n\n| Property | Type                            | Description                                                                                               |\n| -------- | ------------------------------- | --------------------------------------------------------------------------------------------------------- |\n| path     | `'options'`{lang=ts}            | Optional. When set, the field will reflect the property at the specified path, i.e. `controller.options`. |\n| readonly | `boolean`{lang=ts}              | Optional. When set, setting the field will have no effect.                                                |\n| onSet    | `(x: unknown) => void`{lang=ts} | Optional. When defined, setting the field will have no effect.                                            |\n"
             }
           ],
           "summary": "Class field decorator for controlled properties\n\nControlled properties are element class fields which defer to and reflect that property on the element's `controller` property, which is a `ReactiveController`.",
@@ -3051,7 +3051,7 @@
                 "text": "OptimisticResponseType<D, V>"
               },
               "privacy": "public",
-              "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.\n\nAn object that represents the result of this mutation that will be optimistically stored before the server has actually returned a result.\nThis is most often used for optimistic UI, where we want to be able to see the result of a mutation immediately, and update the UI later if any errors appear.\n\n```ts\nelement.optimisticResponse = ({ name }: HelloMutationVariables) => ({\n  __typename: 'Mutation',\n  hello: {\n    __typename: 'Greeting',\n    name,\n  },\n});\n```\n"
+              "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear."
             },
             {
               "kind": "field",
@@ -3064,7 +3064,7 @@
               "attribute": "refetch-queries"
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onCompleted",
               "privacy": "public",
               "return": {
@@ -3080,13 +3080,10 @@
                   }
                 }
               ],
-              "description": "Callback for when a mutation is completed.",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onCompleted']"
-              }
+              "description": "Callback for when a mutation is completed."
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onError",
               "privacy": "public",
               "return": {
@@ -3102,13 +3099,10 @@
                   }
                 }
               ],
-              "description": "Callback for when an error occurs in mutation.",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onError']"
-              }
+              "description": "Callback for when an error occurs in mutation."
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "updater",
               "privacy": "public",
               "return": {
@@ -3124,10 +3118,7 @@
                   }
                 }
               ],
-              "description": "A function which updates the apollo cache when the query responds.\nThis function will be called twice over the lifecycle of a mutation.\nOnce at the very beginning if an optimisticResponse was provided.\nThe writes created from the optimistic data will be rolled back before\nthe second time this function is called which is when the mutation has\nsuccesfully resolved. At that point update will be called with the actual\nmutation result and those writes will not be rolled back.\n\nThe reason a DataProxy is provided instead of the user calling the methods\ndirectly on ApolloClient is that all of the writes are batched together at\nthe end of the update, and it allows for writes generated by optimistic\ndata to be rolled back.\n\n### Examples\n\n<figure class=\"example\"><figcaption>Updating a query</figcaption>\n\n```js\nupdater(cache, result) {\n  cache.writeQuery({\n    query: MyProfileQuery,\n    data: { profile: result.data.updateMyProfile },\n  });\n}\n```\n\n</figure>",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['updater']"
-              }
+              "description": "A function which updates the apollo cache when the query responds.\nThis function will be called twice over the lifecycle of a mutation.\nOnce at the very beginning if an optimisticResponse was provided.\nThe writes created from the optimistic data will be rolled back before\nthe second time this function is called which is when the mutation has\nsuccesfully resolved. At that point update will be called with the actual\nmutation result and those writes will not be rolled back.\n\nThe reason a DataProxy is provided instead of the user calling the methods\ndirectly on ApolloClient is that all of the writes are batched together at\nthe end of the update, and it allows for writes generated by optimistic\ndata to be rolled back.\n\n### Examples\n\n<figure class=\"example\"><figcaption>Updating a query</figcaption>\n\n```js\nupdater(cache, result) {\n  cache.writeQuery({\n    query: MyProfileQuery,\n    data: { profile: result.data.updateMyProfile },\n  });\n}\n```\n\n</figure>"
             },
             {
               "kind": "method",
@@ -3137,7 +3128,7 @@
                 "type": {
                   "text": "Promise<FetchResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ----------- | ---- |\n| data | `Data<D, V>`{lang=ts} | The result of a successful execution of the mutation |\n| errors | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts} | Reserved for adding non-standard properties |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n"
+                "description": "| Property   | Type                               | Description                                            |\n| ---------- | ---------------------------------- | ------------------------------------------------------ |\n| data       | `Data<D, V>`{lang=ts}              | The result of a successful execution of the mutation   |\n| errors     | `readonly GraphQLError[]`{lang=ts} | included when any errors occurred as a non-empty array |\n| extensions | `boolean`{lang=ts}                 | Reserved for adding non-standard properties            |\n| context    | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context)   |\n"
               },
               "parameters": [
                 {
@@ -3146,7 +3137,7 @@
                   "type": {
                     "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
                   },
-                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property | Type | Description |\n| -------- | ---- | ----------- |\n| awaitRefetchQueries | `boolean`{lang=ts} | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context | `Record<string, unknown>`{lang=ts} | See [context](/api/core/interfaces/element/#context) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/element/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy) |\n| mutation | `DocumentNode`{lang=ts} | See [mutation](/api/core/interfaces/mutation/#mutation) |\n| optimisticResponse | `OptimisticResponseType<D, V>`{lang=ts} | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse) |\n| refetchQueries | `RefetchQueriesType<D, V>`{lang=ts} | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries) |\n| update | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/interfaces/mutation/#variables) |\n"
+                  "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property            | Type                                                   | Description                                                                   |\n| ------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------- |\n| awaitRefetchQueries | `boolean`{lang=ts}                                     | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context             | `Record<string, unknown>`{lang=ts}                     | See [context](/api/core/interfaces/element/#context)                          |\n| errorPolicy         | `ErrorPolicy`{lang=ts}                                 | See [errorPolicy](/api/core/interfaces/element/#errorpolicy)                  |\n| fetchPolicy         | `FetchPolicy`{lang=ts}                                 | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy)                 |\n| mutation            | `DocumentNode`{lang=ts}                                | See [mutation](/api/core/interfaces/mutation/#mutation)                       |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}                | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse)   |\n| refetchQueries      | `RefetchQueriesType<D, V>`{lang=ts}                    | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries)           |\n| update              | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater)                         |\n| variables           | `Variables<D, V>`{lang=ts}                             | See [variables](/api/core/interfaces/mutation/#variables)                     |\n"
                 }
               ],
               "description": "This resolves a single mutation according to the options specified and returns a\nPromise which is either resolved with the resulting data or rejected with an error."
@@ -3488,7 +3479,7 @@
                 "text": "ApolloQueryControllerOptions<D, V>"
               },
               "privacy": "public",
-              "description": "| Option          | Type | Description |\n| --------------- | ---- | ----------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query. |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query. |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe` |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | If true, the element will not begin querying data until you manually call `subscribe` | Determines whether the element should attempt to subscribe automatically\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves. |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs. |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+              "description": "| Option          | Type                                                  | Description                                                                                                                               |\n| --------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.                             |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query.                                                                                                                  |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe`                                                     |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | Determines whether the element should attempt to subscribe automatically\\\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves.                                                                                              |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs.                                                                                               |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
             },
             {
               "kind": "field",
@@ -3581,7 +3572,7 @@
               "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache."
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onData",
               "privacy": "public",
               "return": {
@@ -3598,13 +3589,10 @@
                   "description": "the query data."
                 }
               ],
-              "description": "Optional callback for when a query is completed.",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onData']"
-              }
+              "description": "Optional callback for when a query is completed."
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onError",
               "privacy": "public",
               "return": {
@@ -3621,10 +3609,7 @@
                   "description": "the error."
                 }
               ],
-              "description": "Optional callback for when an error occurs.",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onError']"
-              }
+              "description": "Optional callback for when an error occurs."
             },
             {
               "kind": "method",
@@ -3634,7 +3619,7 @@
                 "type": {
                   "text": "Promise<ApolloQueryResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
               },
               "parameters": [
                 {
@@ -3663,7 +3648,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ],
               "description": "Determines whether the element should attempt to subscribe i.e. begin querying\nOverride to prevent subscribing unless your conditions are met"
@@ -3684,7 +3669,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ],
               "description": "Resets the internal state of the query and subscribes."
@@ -3716,7 +3701,7 @@
                 "type": {
                   "text": "Promise<ApolloQueryResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
               },
               "parameters": [
                 {
@@ -3725,7 +3710,7 @@
                   "type": {
                     "text": "Partial<QueryOptions<Variables<D, V>, Data<D>>> | undefined"
                   },
-                  "description": "| Option      | Type                               | Description |\n| ----------- | ---------------------------------- | ----------- |\n| query       | `DocumentNode`{lang=ts}            | A GraphQL document that consists of a single query to be sent down to the server. |\n| variables   | `Variables<D, V>`{lang=ts}         | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | Specifies the [`fetchPolicy`](/api/core/interfaces/query/#fetchpolicy) to be used for this query. |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | Specifies the [`ErrorPolicy`](/api/core/interfaces/element/#errorpolicy) to be used for this query. |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Option      | Type                               | Description                                                                                              |\n| ----------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | A GraphQL document that consists of a single query to be sent down to the server.                        |\n| variables   | `Variables<D, V>`{lang=ts}         | A map going from variable name to variable value, where the variables are used within the GraphQL query. |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | Specifies the [`fetchPolicy`](/api/core/interfaces/query/#fetchpolicy) to be used for this query.        |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | Specifies the [`ErrorPolicy`](/api/core/interfaces/element/#errorpolicy) to be used for this query.      |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                  |\n"
                 }
               ],
               "description": "Executes a Query once and updates the component with the result"
@@ -3738,7 +3723,7 @@
                 "type": {
                   "text": "Promise<ApolloQueryResult<Data<D>>>"
                 },
-                "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| data | `Data<D>`{lang=ts} | If the query resolved, the data. |\n| error | `ApolloError`{lang=ts} | If the query rejected, the error. |\n| errors | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading | `boolean`{lang=ts} | Whether the operation is in-flight. |\n| partial | `boolean`{lang=ts} | Whether the query returned partial data. |\n| networkStatus | `NetworkStatus`{lang=ts} | See [NetworkStatus](#networkstatus). |\n"
+                "description": "| Property      | Type                               | Description                                                                       |\n| ------------- | ---------------------------------- | --------------------------------------------------------------------------------- |\n| data          | `Data<D>`{lang=ts}                 | If the query resolved, the data.                                                  |\n| error         | `ApolloError`{lang=ts}             | If the query rejected, the error.                                                 |\n| errors        | `readonly GraphQLError[]`{lang=ts} | If the query returned partials results, and some were errors, the list of errors. |\n| loading       | `boolean`{lang=ts}                 | Whether the operation is in-flight.                                               |\n| partial       | `boolean`{lang=ts}                 | Whether the query returned partial data.                                          |\n| networkStatus | `NetworkStatus`{lang=ts}           | See [NetworkStatus](#networkstatus).                                              |\n"
               },
               "parameters": [
                 {
@@ -3747,7 +3732,7 @@
                   "type": {
                     "text": "Partial<FetchMoreParams<D, V>> | undefined"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| query       | `DocumentNode`{lang=ts} | Query to fetch, defaults to `this.query` |\n| updateQuery | `Function`{lang=ts}                          | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables   | `Variables<D, V>`{lang=ts}                   | Query variables |\n| context     | `Record<string, unknown>`{lang=ts}           | Context object passed through the link execution chain. |\n"
+                  "description": "| Option      | Type                               | Description                                                                                                      |\n| ----------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | Query to fetch, defaults to `this.query`                                                                         |\n| updateQuery | `Function`{lang=ts}                | Function to determine how to update the cache when the query resolves. (deprecated - use field policies instead) |\n| variables   | `Variables<D, V>`{lang=ts}         | Query variables                                                                                                  |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                          |\n"
                 }
               ],
               "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object."
@@ -4128,11 +4113,11 @@
               "kind": "field",
               "name": "shouldResubscribe",
               "type": {
-                "text": "SubscriptionDataOptions['shouldResubscribe']"
+                "text": "boolean | ((options: SubscriptionDataOptions<Data<D>, Variables<D, V>>) => boolean)"
               },
               "privacy": "public",
               "summary": "Determines if your subscription should be unsubscribed and subscribed again.",
-              "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+              "description": ""
             },
             {
               "kind": "field",
@@ -4145,7 +4130,7 @@
               "description": ""
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onSubscriptionData",
               "privacy": "public",
               "return": {
@@ -4161,13 +4146,10 @@
                   }
                 }
               ],
-              "description": "Callback for when data is updated",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onSubscriptionData']"
-              }
+              "description": "Callback for when data is updated"
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onSubscriptionComplete",
               "privacy": "public",
               "return": {
@@ -4175,13 +4157,10 @@
                   "text": "void"
                 }
               },
-              "description": "Callback for when subscription completes.",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onSubscriptionComplete']"
-              }
+              "description": "Callback for when subscription completes."
             },
             {
-              "kind": "field",
+              "kind": "method",
               "name": "onError",
               "privacy": "public",
               "return": {
@@ -4197,10 +4176,7 @@
                   }
                 }
               ],
-              "description": "Callback for when error is updated",
-              "type": {
-                "text": "ApolloMutationInterface<D, V>['onError']"
-              }
+              "description": "Callback for when error is updated"
             },
             {
               "kind": "method",
@@ -4218,7 +4194,7 @@
                   "type": {
                     "text": "Partial<SubscriptionDataOptions<D, V>>"
                   },
-                  "description": "| Option | Type | Description |\n| ------ | ---- | ----------- |\n| client | `ApolloClient`{lang=ts} | Apollo Client to use for the subscription. |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n| errorPolicy | `ErrorPolicy`{lang=ts} | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy) |\n| shouldResubscribe | `boolean`{lang=ts} | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip | `boolean`{lang=ts} | If skip is true, the subscription will be skipped entirely. |\n| subscription | `DocumentNode`{lang=ts} | GraphQL document with a single subscription. |\n| variables | `Variables<D, V>`{lang=ts} | An object containing all of the variables your subscription needs to execute. |\n"
+                  "description": "| Option            | Type                               | Description                                                                                                                                    |\n| ----------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |\n| client            | `ApolloClient`{lang=ts}            | Apollo Client to use for the subscription.                                                                                                     |\n| context           | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.                                                                                        |\n| errorPolicy       | `ErrorPolicy`{lang=ts}             | Error policy to use for the subscription. See [errorPolicy](/api/core/interfaces/mutation/#errorpolicy)                                        |\n| fetchPolicy       | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/subscription/#fetchpolicy)                                                                              |\n| shouldResubscribe | `boolean`{lang=ts}                 | Boolean, or a predicate function of `SubscriptionDataOptions` that determines if your subscription should be unsubscribed and subscribed again |\n| skip              | `boolean`{lang=ts}                 | If skip is true, the subscription will be skipped entirely.                                                                                    |\n| subscription      | `DocumentNode`{lang=ts}            | GraphQL document with a single subscription.                                                                                                   |\n| variables         | `Variables<D, V>`{lang=ts}         | An object containing all of the variables your subscription needs to execute.                                                                  |\n"
                 }
               ],
               "summary": "Resets the subscription and subscribes.",
@@ -4252,7 +4228,7 @@
                   "type": {
                     "text": "Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>"
                   },
-                  "description": "| Property | Type | Description |\n| -------- | ---- | ----------- |\n| query | `DocumentNode`{lang=ts} | See [query](/api/core/controllers/query/#query) |\n| variables | `Variables<D, V>`{lang=ts} | See [variables](/api/core/controllers/query/#variables) |\n| fetchPolicy | `FetchPolicy`{lang=ts} | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts} | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain. |\n"
+                  "description": "| Property    | Type                               | Description                                                |\n| ----------- | ---------------------------------- | ---------------------------------------------------------- |\n| query       | `DocumentNode`{lang=ts}            | See [query](/api/core/controllers/query/#query)            |\n| variables   | `Variables<D, V>`{lang=ts}         | See [variables](/api/core/controllers/query/#variables)    |\n| fetchPolicy | `FetchPolicy`{lang=ts}             | See [fetchPolicy](/api/core/interfaces/query/#fetchpolicy) |\n| errorPolicy | `ErrorPolicy`{lang=ts}             | See [errorPolicy](/api/core/interfaces/query/#errorpolicy) |\n| context     | `Record<string, unknown>`{lang=ts} | Context object passed through the link execution chain.    |\n"
                 }
               ],
               "description": "Determines whether the element should attempt to subscribe automatically\nOverride to prevent subscribing unless your conditions are met"
