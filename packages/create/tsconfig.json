@@ -3,7 +3,7 @@
   "include": ["."],
   "exclude": ["node_modules", "template", "**/node_modules/**"],
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ES2020",
     "esModuleInterop": true
   }
 }

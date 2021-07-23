@@ -4,7 +4,7 @@
   "description": "Scaffold apps and components with GraphQL and Lit",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "main": "./index.js",
   "typings": ".index.d.ts",
   "bin": {

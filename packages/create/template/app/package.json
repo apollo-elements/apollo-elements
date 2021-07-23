@@ -3,6 +3,7 @@
   "private": true,
   "name": "apollo-elements-app",
   "version": "1.0.0",
+  "type": "module",
   "author": "",
   "license": "ISC",
   "description": "Apollo Elements App",
@@ -17,17 +18,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@apollo-elements/components": "^1.x",
-    "@apollo-elements/lit-apollo": "^3.x",
-    "@apollo-elements/mixins": "^3.x",
+    "@apollo-elements/components": "next",
+    "@apollo-elements/core": "next",
     "@apollo/client": "^3.x",
     "pwa-helpers": "^0.9"
   },
   "devDependencies": {
-    "@apollo-elements/rollup-plugin-graphql": "^1.x",
     "@graphql-codegen/cli": "^1.x",
     "@graphql-codegen/typescript": "^1.x",
     "@graphql-codegen/typescript-operations": "^1.x",
+    "@graphql-codegen/typed-document-node": "^1.x",
     "@open-wc/rollup-plugin-html": "^1.x",
     "@pwrs/eslint-config": "^0.x",
     "@rollup/plugin-commonjs": "^17.x",

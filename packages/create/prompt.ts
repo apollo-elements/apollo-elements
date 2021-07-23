@@ -1,13 +1,19 @@
 import type { BaseOptions, AppOptions, ComponentOptions } from './options';
 
-import { app } from './app';
-import { component } from './component';
+import { app } from './app.js';
+import { component } from './component.js';
 
 import prompts from 'prompts';
 
-import BANNER from './banner';
+import BANNER from './banner.js';
 
-import Yargs from 'yargs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const Yargs: typeof import('yargs') = require('yargs');
 
 export type PromptOptions<T> =
   Partial<T> & BaseOptions;

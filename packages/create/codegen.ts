@@ -1,7 +1,8 @@
 import execa, { ExecaReturnValue } from 'execa';
-import { AppOptions, BaseOptions, ComponentOptions } from './options';
-import { getOperationFileName, getUnprefixedTagName } from './component';
-import { blue, cyan, yellow, red, greenBright } from 'chalk';
+import { AppOptions, BaseOptions, ComponentOptions } from './options.js';
+import { getOperationFileName, getUnprefixedTagName } from './component.js';
+import Chalk from 'chalk';
+const { blue, cyan, yellow, red, greenBright } = Chalk;
 
 const cwd = process.cwd();
 

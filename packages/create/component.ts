@@ -1,22 +1,29 @@
 import type { ComponentOptions, Operation } from './options';
 
-import { capital, pascal, camel } from 'case';
+import Case from 'case';
 
 import { promisify } from 'util';
-import { join, relative } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, join, relative } from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 
-import { codegen } from './codegen';
-import { processTemplate, readFile, writeFile } from './files';
+import { codegen } from './codegen.js';
+import { processTemplate, readFile, writeFile } from './files.js';
 
-import { green, greenBright } from 'chalk';
+import Chalk from 'chalk';
 import prompts from 'prompts';
+
+const { green, greenBright } = Chalk;
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 type InterpolationKeys =
   'BASE_CLASS' |
+  'CONTROLLER_CLASS' |
   'CLASS_NAME' |
   'CSS_ARRAY' |
+  'CSS_IMPORT' |
   'CSS_IMPORT' |
   'OPERATION_DATA_TYPE' |
   'OPERATION_FIELDS' |
@@ -92,8 +99,11 @@ function memoize<T extends(...args: any[]) => unknown>(fn: T): T {
 
 const getBaseClass =
   memoize((options: ComponentOptions): string =>
-    `Apollo${capital(options.type)}`);
+    `Apollo${Case.capital(options.type)}`);
 
+const getControllerClass =
+  memoize((options: ComponentOptions): string =>
+    `Apollo${Case.capital(options.type)}Controller`);
 
 const getClassName =
   memoize((options: ComponentOptions): string =>
@@ -114,7 +124,7 @@ export const getUnprefixedTagName =
 const getOperation =
   memoize((options: ComponentOptions): string =>
     options.operationName ??
-    pascal(getUnprefixedTagName(options)));
+    Case.pascal(getUnprefixedTagName(options)));
 
 const getOperationName =
   memoize((options: ComponentOptions): string =>
@@ -198,7 +208,7 @@ const getFields =
     ({
       subscription: DEFAULT_SUBSCRIPTION_FIELDS,
       query: DEFAULT_QUERY_FIELDS,
-      mutation: `${camel(getOperation(options))}${getFieldArgs(options)} {\n\t\tid\n\t}`,
+      mutation: `${Case.camel(getOperation(options))}${getFieldArgs(options)} {\n\t\tid\n\t}`,
     })[options.type]);
 
 const getOperationFields =
@@ -211,12 +221,13 @@ export const getOperationFileName =
 
 const getOperationDataType =
   memoize((options: ComponentOptions): string =>
-    `${getOperationName(options)}${capital(options.type)}`);
+    `${getOperationName(options)}${Case.capital(options.type)}`);
 
 const getInterpolations =
   memoize((options: ComponentOptions): Interpolations =>
     ({
       BASE_CLASS: getBaseClass(options),
+      CONTROLLER_CLASS: getControllerClass(options),
       CLASS_NAME: getClassName(options),
       CSS_ARRAY: getCssArray(options),
       CSS_IMPORT: getCSSImport(options),

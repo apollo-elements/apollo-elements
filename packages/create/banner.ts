@@ -1,7 +1,7 @@
-import { bold, blue } from 'chalk';
-const TITLE = blue('Apollo Elements');
+import Chalk from 'chalk';
+const TITLE = Chalk.blue('Apollo Elements');
 
-export default bold(`
+export default Chalk.bold(`
 
                                     @@@@@@@@@
                                 @@@@@@@@@@@@@@@@@
