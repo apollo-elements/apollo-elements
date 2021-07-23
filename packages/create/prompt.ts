@@ -13,6 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Yargs: typeof import('yargs') = require('yargs');
 
 export type PromptOptions<T> =
