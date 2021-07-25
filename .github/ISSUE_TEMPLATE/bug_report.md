@@ -9,11 +9,17 @@ assignees: ''
 
 ## Package
 ﻿<!-- Which package did you encounter this bug in? -->
-<!--`@apollo-elements/mixins`-->
-<!--`@apollo-elements/lit-apollo`-->
+
+<!--`@apollo-elements/atomico`-->
+<!--`@apollo-elements/components`-->
+<!--`@apollo-elements/core`-->
+<!--`@apollo-elements/fast`-->
 <!--`@apollo-elements/gluon`-->
-<!--`@apollo-elements/polymer`-->
+<!--`@apollo-elements/haunted`-->
 <!--`@apollo-elements/hybrids`-->
+<!--`@apollo-elements/lit-apollo`-->
+<!--`@apollo-elements/mixins`-->
+<!--`@apollo-elements/polymer`-->
 
 ## Description
 <!-- A clear and concise description of what the bug is. -->
