@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.js",
   "module": "index.js",
+  "customElements": "custom-elements.json",
   "exports": {
     ".": {
       "esbuild": "./index.ts",
@@ -29,7 +30,7 @@
     "**/*.js.map"
   ],
   "scripts": {
-    "prepublishOnly": "yarn run-s prepublishOnly:*",
+    "prepublishOnly": "run-s prepublishOnly:*",
     "prepublishOnly:analyze": "npm run analyze",
     "prepublishOnly:build": "tsc -b .",
     "build": "tsc",
@@ -66,6 +67,5 @@
     "@apollo/client": "^3.3.21",
     "stampino": "^0.6.2",
     "tslib": "^2.3.0"
-  },
-  "customElements": "custom-elements.json"
+  }
 }

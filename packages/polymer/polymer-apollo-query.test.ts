@@ -23,7 +23,7 @@ import { PolymerApolloQuery } from './polymer-apollo-query';
 
 import { PolymerElement, html } from '@polymer/polymer';
 
-import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
+import * as S from '@apollo-elements/test/schema';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
@@ -136,7 +136,7 @@ describe('[polymer] <polymer-apollo-query>', function() {
           return {
             query: {
               type: Object,
-              value: () => NullableParamQuery,
+              value: () => S.NullableParamQuery,
             },
             variables: {
               type: Object,

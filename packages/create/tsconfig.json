@@ -4,6 +4,7 @@
   "exclude": ["node_modules", "template", "**/node_modules/**"],
   "compilerOptions": {
     "module": "ES2020",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   }
 }

@@ -6,12 +6,14 @@ import type {
   Variables,
 } from '@apollo-elements/core/types';
 
+import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
+
 import {
   ApolloSubscriptionController,
   ApolloSubscriptionControllerOptions,
 } from '@apollo-elements/core/apollo-subscription-controller';
 
-import { Behavior, FASTElement, Observable, observable } from '@microsoft/fast-element';
+import { Observable, observable } from '@microsoft/fast-element';
 import { FASTControllerHost } from './fast-controller-host';
 
 /**
@@ -52,8 +54,8 @@ export class ApolloSubscriptionBehavior<D extends MaybeTDN = MaybeTDN, V = Maybe
     hostElement.$fastController.addBehaviors([this]);
   }
 
-  bind(_source: FASTElement & HTMLElement, context: unknown): void {
-    this.options.context = { ...context as any, ...this.options.context };
+  bind(_source: FASTElement & HTMLElement, context: ExecutionContext): void {
+    this.options.context = { ...context, ...this.options.context };
     this.hostConnected();
   }
 

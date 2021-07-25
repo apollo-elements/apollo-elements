@@ -22,24 +22,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
-          node-version: '15'
-      - uses: c-hive/gha-yarn-cache@v1
+          node-version: '16'
+      - uses: c-hive/gha-npm-cache@v1
+
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Codegen
-        run: yarn build:codegen
+        run: npm run build:codegen
 
       - name: Check Types
-        run: yarn lint:types
+        run: npm run lint:types
 
       - name: Test
-        run: yarn test
+        run: npm run test
 
       - name: Publish Code Coverage
-        uses: paambaati/codeclimate-action@v2.7.3
+        uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
@@ -48,27 +49,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
-          node-version: '15'
-      - uses: c-hive/gha-yarn-cache@v1
+          node-version: '16'
+
+      - uses: c-hive/gha-npm-cache@v1
+
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
   docs:
     name: Build and Check Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
-          node-version: '15'
-      - uses: c-hive/gha-yarn-cache@v1
+          node-version: '16'
+      - uses: c-hive/gha-npm-cache@v1
+
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Build Docs
-        run: yarn docs
+        run: npm run docs
