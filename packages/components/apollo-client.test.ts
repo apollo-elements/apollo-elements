@@ -18,6 +18,7 @@ import { ApolloClient, TypedDocumentNode } from '@apollo/client/core';
 
 import { ApolloController } from '@apollo-elements/core';
 
+import * as S from '@apollo-elements/test/schema';
 import * as Core from '@apollo-elements/core';
 import * as FAST from '@apollo-elements/fast';
 import * as Lit from '@apollo-elements/lit-apollo';
@@ -45,9 +46,6 @@ import { makeClient } from '@apollo-elements/test';
 import { spy, stub, SinonStub } from 'sinon';
 
 import './apollo-client';
-
-import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
-import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
 function mockFetch() {
   stub(window, 'fetch');
@@ -89,7 +87,7 @@ describe('<apollo-client>', function() {
     }
 
     class QueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloQueryMixin(HTMLElement)<D, V> {
-      query = NoParamQuery;
+      query = S.NoParamQuery;
 
       constructor() {
         super();
@@ -324,7 +322,7 @@ describe('<apollo-client>', function() {
         element = await fixture<ApolloClientElement>(html`
           <apollo-client uri="/graphql" validate-variables>
             <${tagName}
-                .query="${NonNullableParamQuery}"
+                .query="${S.NonNullableParamQuery}"
                 .variables="${{ 'nullable': true }}"
             ></${tagName}>
           </apollo-client>

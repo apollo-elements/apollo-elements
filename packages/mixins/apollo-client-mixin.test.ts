@@ -1,4 +1,4 @@
-import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
+import type { ApolloElementElement } from '@apollo-elements/core/types';
 import {
   ApolloClient,
   InMemoryCache,

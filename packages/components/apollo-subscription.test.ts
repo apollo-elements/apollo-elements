@@ -12,9 +12,6 @@ import './apollo-subscription';
 
 import { ApolloSubscriptionElement } from './apollo-subscription';
 
-import NoParamSubscription from '@apollo-elements/test/graphql/NoParam.subscription.graphql';
-import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
-
 describe('[components] <apollo-subscription>', function describeApolloSubscription() {
   beforeEach(setupClient);
 
@@ -295,7 +292,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with template and subscription DOM and `no-shadow` attribute set', function() {
-    let element: ApolloSubscriptionElement<typeof NoParamSubscription>;
+    let element: ApolloSubscriptionElement<typeof S.NoParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -343,11 +340,11 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with `no-shadow` and `template` attributes set', function() {
-    let element: ApolloSubscriptionElement<typeof NoParamSubscription>;
+    let element: ApolloSubscriptionElement<typeof S.NoParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-subscription no-shadow template="tpl" .subscription="${NoParamSubscription}"></apollo-subscription>
+        <apollo-subscription no-shadow template="tpl" .subscription="${S.NoParamSubscription}"></apollo-subscription>
 
         <template id="tpl">
           <h1>Template</h1>
@@ -376,11 +373,11 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
   });
 
   describe('with template in DOM and a subscription property', function() {
-    let element: ApolloSubscriptionElement<typeof NoParamSubscription>;
+    let element: ApolloSubscriptionElement<typeof S.NoParamSubscription>;
 
     beforeEach(async function() {
       element = await fixture(html`
-        <apollo-subscription .subscription="${NoParamSubscription}">
+        <apollo-subscription .subscription="${S.NoParamSubscription}">
           <template>
             <h1>Template</h1>
             <span id="data">{{ data.noParam.noParam }}</span>
@@ -460,7 +457,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
     beforeEach(async function() {
       element = await fixture(html`
         <apollo-subscription
-            .subscription="${NullableParamSubscription}"
+            .subscription="${S.NullableParamSubscription}"
             .variables="${{ nullable: 'error' }}">
           <template>
             <h1>Template</h1>

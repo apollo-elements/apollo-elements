@@ -22,10 +22,6 @@
     "titleBar.inactiveForeground": "#15202b99"
   },
   "peacock.color": "#dddddd",
-  "npm.bin": "yarn",
-  "npm.packageManager": "yarn",
-  "eslint.packageManager": "yarn",
-  "stylelint.packageManager": "yarn",
   "lcov.path": [
     "coverage/lcov.info",
     "coverage-single/lcov.info"

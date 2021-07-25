@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # not quite ready for that
-# yarn changeset pre exit
+# npx changeset pre exit
 
 npm run clean
-# yarn workspaces run prepublishOnly
+# npm run --workspaces --if-present prepublishOnly
 
 npx changeset publish

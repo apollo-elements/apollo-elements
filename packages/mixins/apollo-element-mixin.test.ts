@@ -11,7 +11,7 @@ import { defineCE, fixture } from '@open-wc/testing';
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { assertType, isApolloError } from '@apollo-elements/test';
 
-import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
+import * as S from '@apollo-elements/test/schema';
 
 class XL extends HTMLElement {}
 class Test extends ApolloElementMixin(XL)<any, any> {
@@ -263,12 +263,12 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
       const tag = unsafeStatic(defineCE(class extends Test { }));
 
       element = await fixture<Test>(html`
-        <${tag} .document="${NoParamQuery}"></${tag}>
+        <${tag} .document="${S.NoParamQuery}"></${tag}>
       `);
     });
 
     it('sets the document property', function() {
-      expect(element.document).to.deep.equal(NoParamQuery);
+      expect(element.document).to.deep.equal(S.NoParamQuery);
     });
   });
 });

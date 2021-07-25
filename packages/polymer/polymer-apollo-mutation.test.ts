@@ -32,7 +32,7 @@ import { PolymerApolloMutation } from './polymer-apollo-mutation';
 import { PolymerElement, html } from '@polymer/polymer';
 import { flush } from '@polymer/polymer/lib/utils/flush';
 
-import NullableParamMutation from '@apollo-elements/test/graphql/NullableParam.mutation.graphql';
+import * as S from '@apollo-elements/test/schema';
 
 class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
   extends PolymerApolloMutation<D, V>
@@ -99,7 +99,7 @@ class WrapperElement extends PolymerElement {
 
   static get properties() {
     return {
-      mutation: { type: Object, value: () => NullableParamMutation },
+      mutation: { type: Object, value: () => S.NullableParamMutation },
       variables: { type: Object, value: () => ({ nullable: '🤡' }) },
     };
   }

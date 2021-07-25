@@ -1,15 +1,10 @@
-import type {
-  NonNullableParamQueryData,
-  NonNullableParamQueryVariables,
-} from '@apollo-elements/test';
+import * as S from '@apollo-elements/test/schema';
 
 import { createApolloClient } from './create-apollo-client';
 
 import { expect } from '@open-wc/testing';
 
 import { stub } from 'sinon';
-
-import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
 
 function mockApiResponse<T>(body: T = {} as T) {
   return new Response(JSON.stringify(body), {
@@ -35,7 +30,7 @@ describe('createApolloClient()', function() {
 
     describe('querying NonNull without params', function() {
       beforeEach(async function() {
-        client!.query({ query: NonNullableParamQuery });
+        client!.query({ query: S.NonNullableParamQuery });
       });
 
       it('fetches', function() {
@@ -60,7 +55,7 @@ describe('createApolloClient()', function() {
 
     describe('querying NonNull without params', function() {
       beforeEach(async function() {
-        client!.query({ query: NonNullableParamQuery });
+        client!.query({ query: S.NonNullableParamQuery });
       });
 
       it('does not fetch', function() {
@@ -70,8 +65,9 @@ describe('createApolloClient()', function() {
 
     describe('querying NonNull with params', function() {
       beforeEach(async function() {
-        client!.query<NonNullableParamQueryData, NonNullableParamQueryVariables>({
-          query: NonNullableParamQuery, variables: { nonNull: 'thing' },
+        client!.query<typeof S.NonNullableParamQuery>({
+          query: S.NonNullableParamQuery,
+          variables: { nonNull: 'thing' },
         }).catch(() => null);
       });
 

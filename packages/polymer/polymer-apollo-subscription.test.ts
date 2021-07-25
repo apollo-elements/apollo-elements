@@ -15,7 +15,7 @@ import { GraphQLError } from 'graphql';
 import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
 import { html, PolymerElement } from '@polymer/polymer';
 
-import NullableParamSubscription from '@apollo-elements/test/graphql/NullableParam.subscription.graphql';
+import * as S from '@apollo-elements/test/schema';
 
 import './polymer-apollo-subscription';
 
@@ -111,7 +111,7 @@ describe('[polymer] <polymer-apollo-subscription>', function() {
           return {
             subscription: {
               type: Object,
-              value: () => NullableParamSubscription,
+              value: () => S.NullableParamSubscription,
             },
             variables: {
               type: Object,

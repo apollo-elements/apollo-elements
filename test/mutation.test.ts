@@ -17,8 +17,7 @@ import { match, spy, SinonSpy } from 'sinon';
 
 import { setupClient, teardownClient } from './client';
 
-import NoParamMutation from './graphql/NoParam.mutation.graphql';
-import NullableParamMutation from './graphql/NullableParam.mutation.graphql';
+import { NoParamMutation, NullableParamMutation } from './schema';
 
 import { restoreSpies, stringify, waitForRender } from './helpers';
 import { TestableElement } from './types';

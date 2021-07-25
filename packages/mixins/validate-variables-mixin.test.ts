@@ -6,9 +6,7 @@ import { ValidateVariablesMixin } from './validate-variables-mixin';
 import { ApolloQueryMixin } from './apollo-query-mixin';
 import { setupClient, teardownClient } from '@apollo-elements/test';
 
-import NoParamQuery from '@apollo-elements/test/graphql/NoParam.query.graphql';
-import NullableParamQuery from '@apollo-elements/test/graphql/NullableParam.query.graphql';
-import NonNullableParamQuery from '@apollo-elements/test/graphql/NonNullableParam.query.graphql';
+import * as S from '@apollo-elements/test/schema';
 
 describe('ValidateVariablesMixin', function() {
   let element: ApolloQueryElement<any, any>;
@@ -45,7 +43,7 @@ describe('ValidateVariablesMixin', function() {
   });
 
   describe('when query has no params', function() {
-    beforeEach(setQuery(NoParamQuery));
+    beforeEach(setQuery(S.NoParamQuery));
     beforeEach(nextFrame);
     it('queries immediately', function() {
       expect(element.data, 'data').to.be.ok;
@@ -59,7 +57,7 @@ describe('ValidateVariablesMixin', function() {
   });
 
   describe('when query has only nullable params', function() {
-    beforeEach(setQuery(NullableParamQuery));
+    beforeEach(setQuery(S.NullableParamQuery));
     beforeEach(nextFrame);
     it('queries immediately', function() {
       expect(element.data, 'data').to.be.ok;
@@ -73,7 +71,7 @@ describe('ValidateVariablesMixin', function() {
   });
 
   describe('when query has only non-nullable params', function() {
-    beforeEach(setQuery(NonNullableParamQuery));
+    beforeEach(setQuery(S.NonNullableParamQuery));
     beforeEach(nextFrame);
     it('does not query', function() {
       expect(element.data, 'data').to.not.be.ok;
