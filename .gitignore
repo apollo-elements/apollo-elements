@@ -8,7 +8,6 @@ coverage
 forever*.log
 analysis.json
 lerna-debug.log
-package-lock.json
 yarn-error.log
 *.tgz
 
@@ -18,7 +17,9 @@ packages/*/*.d.ts
 packages/*/*.d.ts.map
 
 test/test/schema.ts
-packages/components/README.md
+test/*.js
+test/*.d.ts
+test/*.js.map
 
 packages/hybrids/factories/*.d.ts
 packages/hybrids/factories/*.js

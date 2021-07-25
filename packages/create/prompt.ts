@@ -7,12 +7,9 @@ import prompts from 'prompts';
 
 import BANNER from './banner.js';
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import m from 'module';
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+const require = m.createRequire(import.meta.url);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Yargs: typeof import('yargs') = require('yargs');
 

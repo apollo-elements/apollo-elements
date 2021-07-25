@@ -4,11 +4,7 @@ import type * as C from '@apollo/client/core';
 
 import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
-import type {
-  NoParamMutationData,
-  NonNullableParamMutationData,
-  NonNullableParamMutationVariables,
-} from '@apollo-elements/test';
+import * as S from '@apollo-elements/test';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
@@ -28,8 +24,6 @@ import { ApolloMutation } from './apollo-mutation';
 import { LitElement, html, TemplateResult } from 'lit';
 
 import { property } from 'lit/decorators.js';
-
-import NoParamMutation from '@apollo-elements/test/graphql/NoParam.mutation.graphql';
 
 import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 import { stringify } from '@apollo-elements/test';
@@ -105,8 +99,8 @@ describe('[lit-apollo] ApolloMutation', function() {
     describe('with update defined as a class method', function() {
       let element: Test;
 
-      class Test extends ApolloMutation<NoParamMutationData, unknown> {
-        mutation = NoParamMutation;
+      class Test extends ApolloMutation<S.NoParamMutationData, unknown> {
+        mutation = S.NoParamMutation;
 
         update(changed: Map<string|number|symbol, unknown>): void {
           super.update(changed);
@@ -246,8 +240,8 @@ class TDNTypeCheck extends ApolloMutation<TDN> {
 }
 
 class TypeCheckAccessor extends ApolloMutation<
-  NonNullableParamMutationData,
-  NonNullableParamMutationVariables
+  S.NonNullableParamMutationData,
+  S.NonNullableParamMutationVariables
 > {
   // @ts-expect-error: current typescript versions don't allow this type of override
   get variables() {
@@ -260,8 +254,8 @@ class TypeCheckAccessor extends ApolloMutation<
 }
 
 class TypeCheckProperty extends ApolloMutation<
-  NonNullableParamMutationData,
-  NonNullableParamMutationVariables
+  S.NonNullableParamMutationData,
+  S.NonNullableParamMutationVariables
 > {
   variables = { param: 'string' }
 }
