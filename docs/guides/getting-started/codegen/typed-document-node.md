@@ -112,17 +112,18 @@ These examples assume you followed the first approach outlined above. If you are
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
   import { TypedQuery } from './Typed.query.graphql';
 
   @customElement({ name: 'typed-element' })
-  class TypedQueryElement extends ApolloQuery<typeof TypedQuery> {
-    query = TypedQuery;
-
-    dataChanged(oldValue: this['data'], newValue: this['data']): void {
-      if (newValue !== null)
-        console.assert(typeof newValue.name === 'string');
-    }
+  class TypedQueryElement extends FASTElement {
+    query = new ApolloQueryBehavior(this, TypedQuery, {
+      onData(data) {
+        if (newValue !== null)
+          console.assert(typeof newValue.name === 'string');
+      }
+    });
   }
   ```
 

@@ -222,26 +222,27 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
 
   ```ts tab fast
   import '@apollo-elements/components/apollo-mutation';
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   import { ProfileQuery } from './Profile.query.graphql';
   import { UpdateProfileMutation } from 'UpdateProfile.mutation.graphql';
 
-  const template = html<ProfilePage>`
+  const template: ViewTemplate<ProfilePage> = html`
     <h2>Profile</h2>
 
-    dl ?hidden="${x => x.loading || !x.data}"
+    dl ?hidden="${x => x.query.loading || !x.query.data}"
       <dt>Name</dt>
-      <dd>${x => x.data?.name}</dd>
+      <dd>${x => x.query.data?.name}</dd>
 
       <dt>Picture</dt>
-      <dd><img src="${x => x.data?.picture ?? null}"/></dd>
+      <dd><img src="${x => x.query.data?.picture ?? null}"/></dd>
 
       <dt>Birthday</dt>
-      <dd>${x => x.data?.birthday}</dd>
+      <dd>${x => x.query.data?.birthday}</dd>
     </dl>
 
-    <form ?hidden="${!x => x.data?.isMe}">
+    <form ?hidden="${!x => x.query.data?.isMe}">
       <h3>Edit</h3>
       <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
         <label>Name <input data-variable="name"></label>
@@ -253,8 +254,8 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   `;
 
   @customElement({ name: 'profile-page', template })
-  export class ProfilePage extends ApolloQuery<typeof ProfileQuery> {
-    query = ProfileQuery;
+  export class ProfilePage extends FASTElement {
+    query = new ApolloQueryBehavior(this, ProfileQuery);
   }
   ```
 
@@ -451,7 +452,6 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   ```
 
   ```ts tab lit
-  import '@apollo-elements/components/apollo-mutation';
   import { ApolloQueryController, ApolloMutationController } from '@apollo-elements/core';
   import { LitElement, html } from 'lit';
   import { customElement, queryAll } from 'lit/decorators.js';
@@ -499,47 +499,55 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
           // collect the inputs and flatten them in to a variables object
           input: Object.fromEntries(Array.from(this.inputs, el => [el.id, el.value]))
         }
+      }
     });
   }
   ```
 
   ```ts tab fast
-  /* FAST doesn't yet have controller support, so we'll stick to the mutation component */
-
-  import '@apollo-elements/components/apollo-mutation';
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   import { ProfileQuery } from './Profile.query.graphql';
   import { UpdateProfileMutation } from 'UpdateProfile.mutation.graphql';
 
-  const template = html<ProfilePage>`
+  const template: ViewTemplate<ProfilePage> = html`
     <h2>Profile</h2>
 
-    dl ?hidden="${x => x.loading || !x.data}"
+    dl ?hidden="${x => x.query.loading || !x.query.data}"
       <dt>Name</dt>
-      <dd>${x => x.data?.name}</dd>
+      <dd>${x => x.query.data?.name}</dd>
 
       <dt>Picture</dt>
-      <dd><img src="${x => x.data?.picture ?? null}"/></dd>
+      <dd><img src="${x => x.query.data?.picture ?? null}"/></dd>
 
       <dt>Birthday</dt>
-      <dd>${x => x.data?.birthday}</dd>
+      <dd>${x => x.query.data?.birthday}</dd>
     </dl>
 
-    <form ?hidden="${!x => x.data?.isMe}">
+    <form ?hidden="${!x => x.query.data?.isMe}">
       <h3>Edit</h3>
-      <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
-        <label>Name <input data-variable="name"></label>
-        <label>Picture (URL) <input data-variable="picture"></label>
-        <label>Birthday <input data-variable="birthday" type="date"/></label>
-        <button trigger>Save</button>
-      </apollo-mutation>
+      <label>Name <input ?disabled="${x => x.mutation.loading}" id="name"></label>
+      <label>Picture (URL) <input ?disabled="${x => x.mutation.loading}" id="picture"></label>
+      <label>Birthday <input ?disabled="${x => x.mutation.loading}" id="birthday" type="date"/></label>
+      <button ?disabled="${x => x.mutation.loading}" @click="${(x, { event }) => x.onSave(event)}">Save</button>
     </form>
   `;
 
   @customElement({ name: 'profile-page', template })
-  export class ProfilePage extends ApolloQuery<typeof ProfileQuery> {
-    query = ProfileQuery;
+  export class ProfilePage extends FASTElement {
+    query = new ApolloQueryBehavior(this, ProfileQuery);
+    mutation = new ApolloQueryBehavior(this, UpdateProfileMutation);
+
+    onSave() {
+      const inputs = this.shadowRoot.querySelectorAll('input');
+      this.mutation.mutate({
+        variables: {
+          // collect the inputs and flatten them in to a variables object
+          input: Object.fromEntries(Array.from(inputs, el => [el.id, el.value]))
+        }
+      }
+    });
   }
   ```
 

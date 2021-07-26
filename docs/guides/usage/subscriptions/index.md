@@ -227,16 +227,14 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
     render() {
       const messages = this.query.data || [];
       return html`
-        <ol>
-          ${messages.map(({ date, user, message }) => html`
+        <ol>${messages.map(({ date, user, message }) => html`
           <li>
             <h4>
               <time datetime="${date}">${Messages.formatDate(date)}</time>
               <span class="user">${user} said:</span>
             </h4>
             <p>${message}</p>
-          </li>
-          `)}
+          </li>`)}
         </ol>
       `;
     }
@@ -244,7 +242,8 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement, html, repeat } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html, repeat } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   import { client } from './client';
   import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
@@ -252,25 +251,21 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
 
   import style from './messages.css.js';
 
-  @customElement({
-    name: 'messages-query',
-    style
-    template: html<Messages>`
-      <ol>
-        ${repeat(x => x.data?.messages ?? [], ({ date, user, message }) => html<Message>`
-        <li>
-          <h4>
-            <time datetime="${date}">${Message.formatDate(date)}</time>
-            <span class="user">${user} said:</span>
-          </h4>
-          <p>${message}</p>
-        </li>
-        `)}
-      </ol>
-    `,
-  })
+  const template: ViewTemplate<Messages> = html`
+    <ol>${repeat(x => x.query.data?.messages ?? [], ({ date, user, message }) => html`
+      <li>
+        <h4>
+          <time datetime="${date}">${Message.formatDate(date)}</time>
+          <span class="user">${user} said:</span>
+        </h4>
+        <p>${message}</p>
+      </li>` as ViewTemplate<Message>)}
+    </ol>
+  `;
+
+  @customElement({ name: 'messages-query', style template })
   class Messages extends ApolloQuery<typeof MessagesQuery> {
-    query = MessagesQuery;
+    query = new ApolloQueryBehavior(this, MessagesQuery);
 
     static formatDate(iso) {
       try { return new Date(iso).toDateString(); }
@@ -279,7 +274,7 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
 
     connectedCallback() {
       super.connectedCallback();
-      this.subscribeToMore({
+      this.query.subscribeToMore({
         document: MessageSentSubscription,
         updateQuery(prev, { subscriptionData }) {
           if (!subscriptionData.data) return prev;
@@ -581,7 +576,7 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
 
     query = new ApolloQueryController(this, MessagesQuery);
 
-    @query('mwc-snackbar'): Snackbar;
+    @query('mwc-snackbar') snackbar: Snackbar;
 
     subscription = new ApolloSubscriptionController(this, MessageSentSubscription, {
       onData: async ({ client, subscriptionResult: { data: { messageSent } } }) => {
@@ -607,9 +602,42 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   ```
 
   ```ts tab fast
-  /*
-    Apollo FAST doesn't support controllers yet. Stay Tuned!
-   */
+  import { FASTElement, customElement, html, ref, ViewTemplate } from 'lit';
+  import { ApolloQueryBehavior, ApolloSubscriptionBehavior } from '@apollo-elements/fast';
+
+  import { client } from './client';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
+  import { MessagesQuery } from './Messages.query.graphql.js';
+
+  import styles from './messages.css.js';
+
+  import { Snackbar } from '@material/mwc-snackbar';
+
+  const template: ViewTemplate<Messages> = html`...`;
+
+  @customElement({ name: 'messages-query', styles, template })
+  class Messages extends LitElement {
+    query = new ApolloQueryBehavior(this, MessagesQuery);
+
+    subscription = new ApolloSubscriptionController(this, MessageSentSubscription, {
+      onData: async ({ client, subscriptionResult: { data: { messageSent } } }) => {
+        // update the query element
+        const cached = client.readQuery({ query: MessagesQuery });
+        client.writeQuery({
+          query: MessagesQuery,
+          data: { messages: [...cached.messages, messageSent] }
+        });
+
+        // Display the notification
+        await this.updateComplete;
+        this.snackbar.labelText = `${messageSent.user} sent a message!`
+        this.snackbar.show();
+      }
+    });
+
+
+    static formatDate(iso) { /*...*/ }
+  }
   ```
 
   ```js tab haunted

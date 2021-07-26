@@ -85,7 +85,15 @@ Pass the `client` param to controllers to specify the client instance
   ```
 
   ```ts tab fast
-  /* FAST doesn't yet have Apollo behaviours. Stay tuned! */
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
+  import { FASTElement, customElement } from '@microsoft/fast-element';
+  import { MyQuery } from './My.query.graphql';
+  import { client } from './specific-apollo-client';
+
+  @customElement({ name: 'connected-query' })
+  export class ConnectedQuery extends FASTElement {
+    query = new ApolloQueryBehavior(this, MyQuery, { client });
+  }
   ```
 
   ```ts tab haunted
@@ -164,14 +172,15 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your c
 
   ```ts tab fast
   import { ApolloClientMixin } from '@apollo-elements/mixins/apollo-client-mixin';
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
+  import { customElement, ViewTemplate } from '@apollo-elements/fast';
   import { client } from './specific-apollo-client';
 
   const Base =
     ApolloClientMixin(client, ApolloQuery);
 
   const name = 'connected-query';
-  const template = html<ConnectedQuery>`...`;
+  const template: ViewTemplate<ConnectedQuery> = html`...`;
 
   @customElement({ name, template })
   export class ConnectedQuery extends Base<any> { /* ... */ }

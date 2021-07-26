@@ -203,35 +203,41 @@ The tabs below demonstrate multiple ways to write the same query component:
   ```
 
   ```ts tab fast
-  import { ApolloQuery } from '@apollo-elements/fast';
+  import type { TypedDocumentNode } from '@apollo/client/core';
+  import type { Binding, ViewTemplate } from '@microsoft/fast-element';
+
+  import { FASTElement, customElement, html } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   const getId: Binding<Astronaut> = x => x.id;
   const getName: Binding<Astronaut> = x => x.name;
   const getPicture: Binding<Astronaut> = x => x.picture;
-  const getAstronauts: Binding<Astronaut> = x => x.data?.users ?? [];
-  const astronautTemplate = html<Astronaut>`
+  const getAstronauts: Binding<Astronaut> = x => x.query.data?.users ?? [];
+  const astronautTemplate: ViewTemplate<Astronaut> = html`
     <astro-naut id="${getId}" name="${getName}">
       <img src="${getPicture}"
            alt="Portrait of ${getName}"/>
     </astro-naut>
   `;
 
-  const template = html<Astronauts>`
+  const template: ViewTemplate<Astronauts> = html`
     <h2>Astronauts</h2>
     ${repeat(getAstronauts, astronautTemplate)}
   `;
 
-  @customElement({ name: 'astro-nauts', template })
-  class Astronauts extends ApolloQuery<{ users: { id: string; name: string; picture: string } }> {
-    query = gql`
-      query Users {
-        users {
-          id
-          name
-          picture
-        }
+  const AstronautsQuery: TypedDocumentNode<{ users: { id: string; name: string; picture: string } }> = gql`
+    query Users {
+      users {
+        id
+        name
+        picture
       }
-    `;
+    }
+  `;
+
+  @customElement({ name: 'astro-nauts', template })
+  class Astronauts extends FASTElement {
+    query = new ApolloQueryBehavior(this, AstronautsQuery);
   }
   ```
 

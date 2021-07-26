@@ -222,50 +222,43 @@ As such, you can only expect your component's `data` property to be truthy once 
   ```
 
   ```ts tab fast
-  import { ApolloMutation } from '@apollo-elements/fast/apollo-mutation';
+  import type { Binding, ViewTemplate } from '@microsoft/fast-element';
 
-  import { customElement, html } from '@microsoft/fast-element';
+  import { ApolloMutationBehavior } from '@apollo-elements/fast';
+
+  import { FASTElement, customElement, html } from '@microsoft/fast-element';
 
   import { AddUserMutation } from './AddUser.mutation.graphql';
 
-  import type { Binding } from '@microsoft/fast-element';
-
   const getName: Binding<AddUserElement> =
      x =>
-       x.data?.name ?? ''
+       x.mutation.data?.name ?? ''
 
   const getTimestamp: Binding<AddUserElement> =
     x =>
-      x.data ? new Date(x.data.timestamp).toDateString() : '';
+      x.mutation.data ? new Date(x.mutation.data.timestamp).toDateString() : '';
 
   const setVariables: Binding<AddUserElement) =
     (x, { target: { value: name } }) => {
-      x.variables = { name };
+      x.mutation.variables = { name };
     }
 
-  @customElement({
-    name: 'add-user'
-    template: html<AddUserElement>`
-      <p-card>
-        <h2 slot="heading">Add User</h2>
+  const template: ViewTemplate<AddUserElement> = html`
+    <fast-card>
+      <h2>Add User</h2>
 
-        <dl ?hidden="${x => !x.data}">
-          <dt>Name</dt>  <dd>${getName}</dd>
-          <dt>Added</dt> <dd>${getTimestamp}</dd>
-        </dl>
+      <dl ?hidden="${x => !x.mutation.data}">
+        <dt>Name</dt>  <dd>${getName}</dd>
+        <dt>Added</dt> <dd>${getTimestamp}</dd>
+      </dl>
 
-        <mwc-textfield slot="actions"
-            label="User Name"
-            outlined
-            @input="${setVariables}"></mwc-textfield>
-        <mwc-button slot="actions"
-            label="Add User"
-            @input="${x => x.mutate()}"></mwc-button>
-      </p-card>
-    `,
-  })
-  export class AddUserElement extends ApolloMutation<typeof AddUserMutation> {
-    mutation = AddUserMutation;
+      <fast-text-field @input="${setVariables}">User Name</fast-text-field>
+      <fast-button @input="${x => x.mutation.mutate()}">Add User</fast-button>
+    </fast-card>
+  `;
+  @customElement({ name: 'add-user' template })
+  export class AddUserElement extends FASTElement {
+    mutation = new ApolloMutationBehavior(this, AddUserMutation);
   }
   ```
 

@@ -143,44 +143,45 @@ And this component definition:
   ```
 
   ```ts tab fast
-  import { ApolloMutation, html, ref } from '@apollo-elements/fast';
+  import { FASTElement, html, ref, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloMutationBehavior } from '@apollo-elements/fast';
 
   import { BlogPostMutation } from './BlogPost.mutation.graphql';
 
   const name = 'blog-post';
 
-  const template = html<BlogPost>`
-    <loading-overlay ?active="${x => x.loading}"></loading-overlay>
+  const template: ViewTemplate<BlogPost> = html`
+    <loading-overlay ?active="${x => x.mutation.loading}"></loading-overlay>
 
     <label> New Post
       <textarea ${ref('textarea')}
           @input="${(x, { event }) => x.onInput(event)}"></textarea>
     </label>
 
-    <button ?hidden="${x => x.data}" @click="${x => x.mutate()}">
+    <button ?hidden="${x => x.mutation.data}" @click="${x => x.mutate()}">
       Post!
     </button>
 
-    <article ?hidden="${x => !x.data}">
+    <article ?hidden="${x => !x.mutation.data}">
       <strong>Post Succeeded!</strong>
-      <p>${x => x.data?.summary}</p>
+      <p>${x => x.mutation.data?.summary}</p>
     </article>
   `;
   @customElement({ name, template })
-  class BlogPost extends ApolloMutation<typeof BlogPostMutation> {
+  class BlogPost extends FASTElement {
     static readonly is = name;
 
     declare textarea: HTMLTextAreaElement;
 
-    mutation = BlogPostMutation;
+    mutation = new ApolloMutationBehavior(this, BlogPostMutation, {
+      onCompleted: () => {
+        this.textarea.value = '';
+      },
+    });
 
     onInput(event) {
       const content = event.target.value;
       this.variables = { content };
-    }
-
-    onCompleted() {
-      this.textarea.value = '';
     }
   }
   ```
@@ -395,25 +396,27 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   ```
 
   ```ts tab fast
-  /**
-   * update function which reads a cached query result, merges
-   * it with the mutation result, and then writes it back to the cache.
-   */
-  updater(
-    cache: ApolloCache<NormalizedCacheObject>,
-    result: FetchResult<Data>
-  ) {
-    // 1: Read the cache synchronously to get the current list of posts
-    const query = LatestPostsQuery;
-    const cached = cache.readQuery({ query: LatestPostsQuery });
+  mutation = new ApolloMutationBehavior(this, BlogPostMutation, {
+    /**
+     * update function which reads a cached query result, merges
+     * it with the mutation result, and then writes it back to the cache.
+     */
+    update(
+      cache: ApolloCache<NormalizedCacheObject>,
+      result: FetchResult<Data>
+    ) {
+      // 1: Read the cache synchronously to get the current list of posts
+      const query = LatestPostsQuery;
+      const cached = cache.readQuery({ query: LatestPostsQuery });
 
-    // 2: Calculate the expected result of LatestPostsQuery,
-    //    considering the mutation result
-    const data = { posts: [result.data.postBlogPost, ...cached.posts] }
+      // 2: Calculate the expected result of LatestPostsQuery,
+      //    considering the mutation result
+      const data = { posts: [result.data.postBlogPost, ...cached.posts] }
 
-    // 3: Perform the cache update by calling `writeQuery`
-    cache.writeQuery({ query, data });
-  }
+      // 3: Perform the cache update by calling `writeQuery`
+      cache.writeQuery({ query, data });
+    }
+  });
   ```
 
   ```ts tab haunted
@@ -551,28 +554,32 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   ```
 
   ```ts tab lit
-  optimisticResponse = variables => ({
-    postBlogPost: {
-      __typename: 'BlogPost',
-      url: '#',
-      // implementation left as an exercise to the reader
-      summary: summarize(variables.content),
-      datePosted: new Date().toISOString(),
-      content,
-    },
+  mutation = new ApolloMutationController(this, BlogPostMutation, {
+    optimisticResponse: variables => ({
+      postBlogPost: {
+        __typename: 'BlogPost',
+        url: '#',
+        // implementation left as an exercise to the reader
+        summary: summarize(variables.content),
+        datePosted: new Date().toISOString(),
+        content,
+      },
+    }),
   });
   ```
 
   ```ts tab fast
-  optimisticResponse = variables => ({
-    postBlogPost: {
-      __typename: 'BlogPost',
-      url: '#',
-      // implementation left as an exercise to the reader
-      summary: summarize(variables.content),
-      datePosted: new Date().toISOString(),
-      content,
-    },
+  mutation = new ApolloMutationBehavior(this, BlogPostMutation, {
+    optimisticResponse: variables => ({
+      postBlogPost: {
+        __typename: 'BlogPost',
+        url: '#',
+        // implementation left as an exercise to the reader
+        summary: summarize(variables.content),
+        datePosted: new Date().toISOString(),
+        content,
+      },
+    }),
   });
   ```
 

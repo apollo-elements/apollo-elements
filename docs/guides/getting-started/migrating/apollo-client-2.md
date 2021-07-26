@@ -178,7 +178,7 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
 
   import { DetailsTypePolicies } from './typePolicies';
 
-  const template = html<ToggleViews>`
+  const template: ViewTemplate = html`
     <details id="eenie"
         ?open="${x => x.data?.eenieOpen ?? false}"
         @toggle="${(x, { event }) => x.onToggle(event)}">
