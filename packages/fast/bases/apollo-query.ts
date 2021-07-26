@@ -111,11 +111,6 @@ export class ApolloQuery<
   @controlled()
   query: ComponentDocument<D> | null = null;
 
-  /** @summary Context passed to the link execution chain. */
-  @hosted()
-  @controlled()
-  context?: Record<string, unknown>;
-
   /**
    * If data was read from the cache with missing fields,
    * partial will be true. Otherwise, partial will be falsy.
