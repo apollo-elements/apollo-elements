@@ -896,6 +896,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               element!.context = elContext;
             });
 
+            beforeEach(() => element.controller.host.updateComplete);
+
             describe('subscribe()', async function() {
               beforeEach(function() {
                 element.subscribe();

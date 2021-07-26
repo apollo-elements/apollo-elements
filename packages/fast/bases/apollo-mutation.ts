@@ -16,7 +16,7 @@ import { splitCommasAndTrim } from '@apollo-elements/core/lib/helpers';
 import { ApolloElement } from './apollo-element.js';
 import { ApolloMutationBehavior } from '../apollo-mutation-behavior.js';
 
-import { hosted } from '../decorators.js';
+import { hosted } from './decorators.js';
 import { update } from '@apollo-elements/core/apollo-controller';
 import { controlled } from '@apollo-elements/core/decorators';
 

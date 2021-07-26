@@ -13,6 +13,8 @@ import { unsafeStatic, html as h } from 'lit/static-html.js';
 import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client/core';
+import { describeQuery } from '@apollo-elements/test/query.test';
+import { spy, useFakeTimers, SinonSpy, SinonFakeTimers } from 'sinon';
 
 import {
   assertType,
@@ -22,8 +24,6 @@ import {
   stringify,
   TestableElement,
 } from '@apollo-elements/test';
-
-import { describeQuery } from '@apollo-elements/test/query.test';
 
 const template = html<TestableApolloQuery>`
   <output id="data">${x => stringify(x.data)}</output>
@@ -49,7 +49,7 @@ class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariable
 
 let counter = -1;
 
-describe('[fast] ApolloQuery', function() {
+describe('[FAST] ApolloQuery', function() {
   describeQuery({
     async setupFunction<T extends ApolloQueryElement>(opts?: SetupOptions<T>) {
       const name = `fast-setup-function-element-${counter++}`;
@@ -93,6 +93,39 @@ describe('[fast] ApolloQuery', function() {
     const tag = unsafeStatic(name);
     const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
     expect(element).shadowDom.to.equal('bar');
+  });
+
+  describe('polling', function() {
+    const name = 'polling-and-timers';
+    @customElement({ name })
+    class Test extends ApolloQuery { }
+    let element: ApolloQuery;
+    let clock: SinonFakeTimers;
+    beforeEach(async function() {
+      element = await fixture<Test>(`<${name}></${name}>`);
+    });
+    beforeEach(() => spy(element.controller, 'refetch'));
+    beforeEach(() => {
+      clock = useFakeTimers();
+    });
+    afterEach(() => clock.restore());
+    afterEach(() => {
+      (element.controller.refetch as SinonSpy).restore?.();
+    });
+    describe('calling startPolling(1000)', function() {
+      beforeEach(function startPolling() { element.startPolling(1000); });
+      beforeEach(() => { clock.tick(3500); });
+      it('refetches', function() {
+        expect(element.controller.refetch).to.have.been.calledThrice;
+      });
+      describe('then stopPolling', function() {
+        beforeEach(function stopPolling() { element.stopPolling(); });
+        beforeEach(() => { clock.tick(3500); });
+        it('stops calling refetch', function() {
+          expect(element.controller.refetch).to.have.been.calledThrice;
+        });
+      });
+    });
   });
 });
 

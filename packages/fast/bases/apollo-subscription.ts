@@ -13,7 +13,7 @@ import { ApolloElement } from './apollo-element.js';
 
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
 
-import { hosted } from '../decorators.js';
+import { hosted } from './decorators.js';
 import { ApolloSubscriptionBehavior } from '../apollo-subscription-behavior.js';
 import { controlled } from '@apollo-elements/core/decorators';
 

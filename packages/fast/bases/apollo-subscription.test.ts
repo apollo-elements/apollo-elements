@@ -4,15 +4,19 @@ import type * as I from '@apollo-elements/core/types';
 
 import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
 
+import * as S from '@apollo-elements/test/schema';
+
 import {
+  setupClient,
   SetupOptions,
   setupSpies,
   setupStubs,
   stringify,
+  teardownClient,
   TestableElement,
 } from '@apollo-elements/test';
 
-import { expect, fixture } from '@open-wc/testing';
+import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 
@@ -46,7 +50,7 @@ class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeV
 
 let counter = 1;
 
-describe('[fast] ApolloSubscription', function() {
+describe('[FAST] ApolloSubscription', function() {
   describeSubscription({
     async setupFunction<T extends ApolloSubscriptionElement>(opts?: SetupOptions<T>) {
       const name = `fast-setup-function-element-${counter++}`;
@@ -89,6 +93,21 @@ describe('[fast] ApolloSubscription', function() {
       const tag = unsafeStatic(name);
       const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
+    });
+
+    it('renders on error', async function() {
+      setupClient();
+      const name = 'renders-on-error';
+      const template = html<Test>`${x => x.error?.message ?? 'FAIL'}`;
+      @customElement({ name, template })
+      class Test extends ApolloSubscription<typeof S.NullableParamSubscription> {
+        subscription = S.NullableParamSubscription
+        variables = { nullable: 'error' }
+      }
+      const tag = unsafeStatic(name);
+      const element = await fixture<Test>(h`<${tag}></${tag}>`);
+      expect(element.shadowRoot?.textContent).to.be.ok.and.to.not.contain('FAIL');
+      teardownClient();
     });
   });
 });
