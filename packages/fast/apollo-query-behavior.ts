@@ -54,8 +54,7 @@ export class ApolloQueryBehavior<D extends MaybeTDN = MaybeTDN, V = MaybeVariabl
     hostElement.$fastController.addBehaviors([this]);
   }
 
-  bind(_source: FASTElement & HTMLElement, context: ExecutionContext): void {
-    this.options.context = { ...context, ...this.options.context };
+  bind(_source: FASTElement & HTMLElement, _context: ExecutionContext): void {
     this.hostConnected();
   }
 

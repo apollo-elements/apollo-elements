@@ -14,7 +14,7 @@ import { FASTElement, attr, observable } from '@microsoft/fast-element';
 import { ApolloController, update } from '@apollo-elements/core/apollo-controller';
 import { ApolloElementEvent } from '@apollo-elements/core/events';
 import { controlled } from '@apollo-elements/core/decorators';
-import { hosted } from '../decorators';
+import { hosted } from './decorators';
 
 /**
  * `ApolloElement`
