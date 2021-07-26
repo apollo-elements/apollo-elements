@@ -1134,19 +1134,6 @@
             },
             {
               "kind": "field",
-              "name": "context",
-              "type": {
-                "text": "Record<string, unknown>"
-              },
-              "summary": "Context passed to the link execution chain.",
-              "description": "",
-              "inheritedFrom": {
-                "name": "ApolloElement",
-                "module": "bases/apollo-element.js"
-              }
-            },
-            {
-              "kind": "field",
               "name": "partial",
               "type": {
                 "text": "boolean"
@@ -1432,6 +1419,19 @@
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloElement",
+                "module": "bases/apollo-element.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown>"
+              },
+              "summary": "Context passed to the link execution chain.",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloElement",

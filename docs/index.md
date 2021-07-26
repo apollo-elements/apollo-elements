@@ -15,26 +15,31 @@ frameworkDemos:
     frameworkAlt: Angular
     sandboxId: apollo-elements-in-angular-9smgl
     module: /src/app/app.component.html
+    color: '#dd0031'
 
   - framework: preact
     frameworkAlt: Preact
     sandboxId: apollo-elements-in-preact-yowom
     module: /src/components/LaunchesDemo.js
+    color: '#673ab8'
 
   - framework: react
     frameworkAlt: React
     sandboxId: apollo-elements-in-react-00ev3
     module: /src/LaunchesDemo.js
+    color: '#61dafb'
 
   - framework: svelte
     frameworkAlt: Svelte
     sandboxId: apollo-elements-in-svelte-u6js9
     module: /LaunchesDemo.svelte
+    color: '#ff3e00'
 
   - framework: vue
     frameworkAlt: Vue
     sandboxId: apollo-elements-in-vue-cq769
     module: /src/components/ApolloElementsDemo.vue
+    color: '#41b883'
 
 libraries:
   - lib: mixins
@@ -209,6 +214,7 @@ even in Angular, Preact, React, Svelte, or Vue apps.
 
 These demos all import the same Apollo Element component from NPM.
 
+<wibbler-wobbler>
 <code-tabs id="demos" collection="frameworks">
   <article id="default-tab" slot="default">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39.794 39.794">
@@ -221,6 +227,7 @@ These demos all import the same Apollo Element component from NPM.
           data-id="{{ demo.framework }}"
           data-synonyms="{{ demo.frameworkAlt }}"
           data-label="{{ demo.frameworkAlt }}"
+          data-color="{{ demo.color }}"
           data-icon-href="{{ ('/_assets/brand-logos/' + demo.framework + '.svg') | asset | url }}">
       <codesandbox-button sandbox-id="{{ demo.sandboxId }}" module="{{ demo.module }}">
         <span slot="button" hidden></span>
@@ -228,6 +235,7 @@ These demos all import the same Apollo Element component from NPM.
     </code-tab>
   {%- endfor -%}
 </code-tabs>
+</wibbler-wobbler>
 
 ```js script
 const demos = document.getElementById('demos');
@@ -239,4 +247,8 @@ function loadDemo() {
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   sandbox.showDemo = true;
 }
+```
+
+```js script
+import './wibbler.js';
 ```
