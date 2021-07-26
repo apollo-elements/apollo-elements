@@ -123,9 +123,19 @@ code-tab::part(content) {
 }
 
 #demos #default-tab svg {
-  fill: currentColor;
+  --ds: 1px;
+
   width: 100px;
-  transform: rotate(30deg);
+  transform: rotate(var(--deg, 30deg));
+  fill: currentColor;
+  filter:
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent));
+  transition: fill 0.2s ease;
+  will-change: transform, fill;
 }
 
 #demos #default-tab p {
