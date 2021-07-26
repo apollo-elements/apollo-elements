@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 0.0.1-next.5
+
+### Patch Changes
+
+- cd972e5: Allow for 3.4.0-rc clients
+
 ## 0.0.1-next.4
 
 ### Patch Changes
