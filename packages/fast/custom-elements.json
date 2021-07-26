@@ -67,7 +67,7 @@
                   }
                 },
                 {
-                  "name": "context",
+                  "name": "_context",
                   "type": {
                     "text": "ExecutionContext"
                   }
@@ -174,7 +174,7 @@
                   }
                 },
                 {
-                  "name": "context",
+                  "name": "_context",
                   "type": {
                     "text": "ExecutionContext"
                   }
@@ -281,7 +281,7 @@
                   }
                 },
                 {
-                  "name": "context",
+                  "name": "_context",
                   "type": {
                     "text": "ExecutionContext"
                   }
@@ -319,35 +319,6 @@
           "declaration": {
             "name": "ApolloSubscriptionBehavior",
             "module": "apollo-subscription-behavior.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "decorators.js",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "hosted",
-          "parameters": [
-            {
-              "name": "opts",
-              "optional": true,
-              "type": {
-                "text": "{ path?: string }"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "hosted",
-          "declaration": {
-            "name": "hosted",
-            "module": "decorators.js"
           }
         }
       ]
@@ -2128,6 +2099,35 @@
           "declaration": {
             "name": "ApolloSubscription",
             "module": "bases/apollo-subscription.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "bases/decorators.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "hosted",
+          "parameters": [
+            {
+              "name": "opts",
+              "optional": true,
+              "type": {
+                "text": "{ path?: string }"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hosted",
+          "declaration": {
+            "name": "hosted",
+            "module": "bases/decorators.js"
           }
         }
       ]
