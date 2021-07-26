@@ -14,7 +14,7 @@ import { ApolloElement } from './apollo-element.js';
 import { NetworkStatus } from '@apollo/client/core';
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
 
-import { hosted } from '../decorators.js';
+import { hosted } from './decorators.js';
 import { ApolloQueryBehavior } from '../apollo-query-behavior.js';
 import { ApolloQueryControllerOptions } from '@apollo-elements/core/apollo-query-controller';
 

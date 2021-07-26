@@ -3,9 +3,9 @@ import { Observable } from '@microsoft/fast-element';
 export function hosted(opts?: { path?: string }) {
   return function(target: unknown, key: string): void {
     const descriptor = Object.getOwnPropertyDescriptor(target, key);
-    const { get, set } = descriptor ?? {};
+    const { get, set } = descriptor ?? {}; /* c8 ignore next */
     if (!get || !set)
-      throw new Error(`${key} not described; call @controlled first`);
+      throw new Error(`${key} not described; call @controlled first`);/* c8 ignore next */
     Object.defineProperty(target, key, {
       get() {
         Observable.track(this, key);
