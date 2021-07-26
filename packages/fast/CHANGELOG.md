@@ -1,5 +1,14 @@
 # @apollo-elements/fast
 
+## 2.0.0-next.6
+
+### Patch Changes
+
+- 3297d05: Fix context property on base classes
+- Updated dependencies [cd972e5]
+  - @apollo-elements/core@0.0.1-next.5
+  - @apollo-elements/mixins@4.0.0-next.5
+
 ## 2.0.0-next.5
 
 ### Major Changes
