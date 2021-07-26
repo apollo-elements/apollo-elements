@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-[ -z ${NPM_TOKEN+x} ] && cat << EOF > "$HOME/.npmrc"
-  //registry.npmjs.org/:_authToken=$NPM_TOKEN
+[ -z ${NPM_TOKEN+x} ] && cat << EOF > ".npmrc"
   @apollo-elements:registry=//registry.npmjs.org/:_authToken=$NPM_TOKEN
+  //registry.npmjs.org/:_authToken=$NPM_TOKEN
 EOF;
 
 # Thanks, Westbrook
