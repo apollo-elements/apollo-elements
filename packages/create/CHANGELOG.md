@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.0-next.3
+
+### Patch Changes
+
+- cd972e5: Allow for 3.4.0-rc clients
+
 ## 2.0.0-next.2
 
 ### Major Changes

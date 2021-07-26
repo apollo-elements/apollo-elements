@@ -1,5 +1,13 @@
 # @apollo-elements/mixins
 
+## 4.0.0-next.5
+
+### Patch Changes
+
+- cd972e5: Allow for 3.4.0-rc clients
+- Updated dependencies [cd972e5]
+  - @apollo-elements/core@0.0.1-next.5
+
 ## 4.0.0-next.4
 
 ### Patch Changes
