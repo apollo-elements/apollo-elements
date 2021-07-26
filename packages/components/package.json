@@ -64,7 +64,7 @@
   "dependencies": {
     "@apollo-elements/core": "^0.0.1-next.3",
     "@apollo-elements/mixins": "^4.0.0-next.4",
-    "@apollo/client": "^3.3.21",
+    "@apollo/client": "^3.3.21 || ^3.4.0-rc",
     "stampino": "^0.6.2",
     "tslib": "^2.3.0"
   }
