@@ -20,7 +20,7 @@
   "dependencies": {
     "@apollo-elements/components": "next",
     "@apollo-elements/core": "next",
-    "@apollo/client": "^3.x",
+    "@apollo/client": "^3.4.0-rc.23",
     "pwa-helpers": "^0.9"
   },
   "devDependencies": {
