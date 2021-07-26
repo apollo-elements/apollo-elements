@@ -845,3 +845,16 @@ describe('[core] ApolloQueryController', function() {
     });
   });
 });
+
+class TypeCheck extends ReactiveElement {
+  c = new ApolloQueryController(this, S.NullableParamQuery, {
+    shouldSubscribe({ variables } = {}) {
+      return variables?.nullable === 'nullable';
+    },
+  });
+
+  a() {
+    // @ts-expect-error: nullable should be string
+    this.c.variables = { nullable: 1 };
+  }
+}

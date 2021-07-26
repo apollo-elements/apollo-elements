@@ -746,3 +746,16 @@ describe('[core] ApolloSubscriptionController', function() {
     });
   });
 });
+
+class TypeCheck extends ReactiveElement {
+  c = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
+    shouldSubscribe({ variables } = {}) {
+      return variables?.nullable === 'nullable';
+    },
+  });
+
+  a() {
+    // @ts-expect-error: nullable should be string
+    this.c.variables = { nullable: 1 };
+  }
+}
