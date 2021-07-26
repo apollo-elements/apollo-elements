@@ -39,10 +39,6 @@
     "analyze": "custom-elements-manifest analyze",
     "test": "echo \"Please run tests from the repository root\" && exit 1"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",

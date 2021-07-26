@@ -40,10 +40,6 @@
     "analyze": "custom-elements-manifest analyze --litelement",
     "test": "wtr --coverage --root-dir ../.."
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",

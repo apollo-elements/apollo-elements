@@ -6,10 +6,6 @@
   "type": "module",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
