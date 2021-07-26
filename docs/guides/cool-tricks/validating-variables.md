@@ -145,17 +145,18 @@ With this approach, you can control on a per-component basis when to subscribe.
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { FASTElement, customElement } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
   import { PostQuery } from './Post.query.graphql';
   import { routeVar } from '../variables';
 
   @customElement({ name: 'blog-post' })
-  class BlogPost extends ApolloQuery<typeof PostQuery> {
-    query = PostQuery;
-
-    shouldSubscribe() {
-      return !!(routeVar().params?.postId)
-    }
+  class BlogPost extends FASTElement {
+    query = new ApolloQueryBehavior(this, PostQuery, {
+      shouldSubscribe() {
+        return !!(routeVar().params?.postId)
+      }
+    });
   }
   ```
 
@@ -257,7 +258,8 @@ The old variable-validating behaviour is still available, but you have to opt-in
 
   ```ts tab fast
   import { ValidateVariablesMixin } from '@apollo-elements/mixins';
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { customElement } from '@microsoft/fast-element';
+  import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
 
   import { NonNullableQuery } from './NonNullable.query.graphql';
 

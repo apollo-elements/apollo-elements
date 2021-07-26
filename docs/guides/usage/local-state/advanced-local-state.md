@@ -402,8 +402,10 @@ function onWillMutate(event) {
 
   ```ts tab fast
   import type { WillMutateEvent } from '@apollo-elements/components';
+  import type { ViewTemplate } from '@microsoft/fast-element';
 
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   import { CreateNetworkMutation } from './CreateNetwork.mutation.graphql';
 
@@ -416,18 +418,16 @@ function onWillMutate(event) {
     selected: boolean;
   }
 
-  @customElement({
-    name: 'all-sites',
-    template: html<SitesElement>`
+  const template: ViewTemplate<SitesElement> = html`
       <select-list>
-        ${x => data.sites.map(site => html<SitesElement>`
+        ${x => x.query.data.sites.map(site => html`
         <select-item
             item-id="${site.id}"
             item-name="${site.name}"
             ?selected="${site.selected}"
             @select="${(x, { event }) => x.onSelectedChanged(event)}"
         ></select-item>
-        `)}
+        ` as ViewTemplate<SitesElement>)}
       </select-list>
 
       <apollo-mutation
@@ -435,13 +435,13 @@ function onWillMutate(event) {
           @will-mutate="${(x, { event }) => x.onWillMutate(event)}">
         <button trigger>Create</button>
       </apollo-mutation>
-    `,
-  })
-  class SitesElement extends ApolloQuery<Data, Variables> {
-    query = SitesQuery;
+    `
+  @customElement({ name: 'all-sites', template })
+  class SitesElement extends FASTElement {
+    query = new ApolloQueryBehavior(this, SitesQuery);
 
     onSelectedChanged(event: CustomEvent<ItemDetail>) {
-      this.client.writeFragment({
+      this.query.client.writeFragment({
         id: `Site:${event.detail.itemId}`,
         fragment: gql`
           fragment siteSelected on Site {
@@ -456,7 +456,7 @@ function onWillMutate(event) {
 
     onWillMutate(event: WillMutateEvent & { target: CreateNetworkMutator }) {
       event.target.variables = {
-        sites: this.data.sites
+        sites: this.query.data.sites
           .filter(x => x.selected)
           .map(x => x.id); // string[]
       }

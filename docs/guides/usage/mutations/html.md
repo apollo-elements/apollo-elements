@@ -205,16 +205,14 @@ In some cases you might want to prevent a mutation, for example, if clicking the
   ```
 
   ```ts tab fast
-  @customElement({
-    name: 'posts-dashboard',
-    template: html<PostsDashboard>`
-      <apollo-mutation
-          .mutation="${x => CreatePostMutation}"
-          @will-mutate="${(x, e) => x.onWillMutate(e)}">
-        <button>${x => x.postId ? 'Edit' : 'Publish'}</button>
-      </apollo-mutation>
-    `,
-  })
+  const template: ViewTemplate<PostsDashboard> = html`
+    <apollo-mutation
+        .mutation="${x => CreatePostMutation}"
+        @will-mutate="${(x, e) => x.onWillMutate(e)}">
+      <button>${x => x.postId ? 'Edit' : 'Publish'}</button>
+    </apollo-mutation>
+  `;
+  @customElement({ name: 'posts-dashboard', template })
   class PostsDashboard extends FASTElement {
     onWillMutate(event) {
       // Post exists, don't mutate.

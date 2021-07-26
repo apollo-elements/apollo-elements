@@ -197,22 +197,23 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { FASTElement, customElement, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
   import { HelloQuery } from './Hello.query.graphql';
 
-  const template = html<HelloQueryElement>`
-    <article class=${x => x.loading ? 'skeleton' : ''}>
-      <p id="error" ?hidden=${!x => x.error}>${x => x.error?.message}</p>
+  const template: ViewTemplate<HelloQueryElement> = html`
+    <article class=${x => x.query.loading ? 'skeleton' : ''}>
+      <p id="error" ?hidden=${!x => x.query.error}>${x => x.query.error?.message}</p>
       <p>
-        ${x => x.data?.hello?.greeting ?? 'Hello'},
-        ${x => x.data?.hello?.name ?? 'Friend'}
+        ${x => x.query.data?.hello?.greeting ?? 'Hello'},
+        ${x => x.query.data?.hello?.name ?? 'Friend'}
       </p>
     </article>
   `;
 
   @customElement({ name: 'hello-query', template })
-  export class HelloQueryElement extends ApolloQuery<typeof HelloQuery> {
-    query = HelloQuery;
+  export class HelloQueryElement extends FASTElement {
+    query = new ApolloQueryBehavior(this, HelloQuery);
   }
   ```
 
@@ -356,13 +357,13 @@ For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can appl
 
   ```ts tab fast
   @customElement({ name: 'hello-query', template })
-  export class HelloQueryElement extends ApolloQuery<typeof HelloQuery> {
-    query = HelloQuery;
-
-    variables = {
-      greeting: "How's it going",
-      name: 'Dude'
-    };
+  export class HelloQueryElement extends FASTElement {
+    query = new ApolloQueryBehavior(this, HelloQuery, {
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      },
+    });
   }
   ```
 
@@ -450,8 +451,14 @@ If you want to keep your element from automatically subscribing, you can opt out
   ```
 
   ```ts tab fast
-  class LazyGreeting extends HelloQueryElement {
-    noAutoSubscribe = true;
+  class LazyGreeting extends FASTElement {
+    query = new ApolloQueryController(this, HelloQuery, {
+      noAutoSubscribe: true,
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      },
+    });
   }
   ```
 
@@ -570,16 +577,21 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
   ```
 
   ```ts tab fast
-  class PageQueryElement extends ApolloQuery<typeof PageQuery> {
-    query = PageQuery;
+  class PageQueryElement extends FASTElement {
+    query = new ApolloQueryController(this, HelloQuery, {
+      variables: {
+        greeting: "How's it going",
+        name: 'Dude'
+      },
 
-    /**
-     * Prevent fetching if the URL contains a `?noAutoFetch` query param
-     */
-    override shouldSubscribe(): boolean {
-      const { searchParams } = new URL(location.href);
-      return !searchParams.has('noAutoFetch');
-    }
+      /**
+       * Prevent fetching if the URL contains a `?noAutoFetch` query param
+       */
+      shouldSubscribe(): boolean {
+        const { searchParams } = new URL(location.href);
+        return !searchParams.has('noAutoFetch');
+      }
+    });
   }
   ```
 
@@ -661,10 +673,10 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
   ```
 
   ```ts tab fast
-  class HeavySlowQueryElement extends ApolloQuery<typeof HeavySlowQuery> {
-    query = HeavySlowQuery;
-
-    fetchPolicy: FetchPolicy = 'cache-only';
+  class HeavySlowQueryElement extends FASTElement {
+    query = new ApolloQueryBehavior(this, HeavySlowQuery, {
+      fetchPolicy: 'cache-only',
+    });
   }
   ```
 

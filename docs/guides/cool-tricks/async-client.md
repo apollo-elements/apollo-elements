@@ -207,7 +207,8 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   import { UserSessionQuery } from './UserSession.query.graphql';
 
@@ -222,26 +223,25 @@ If for whatever reason you'd like to load your component files eagerly, set the 
     );
   }
 
-  @customElement({
-    name: 'async-element',
-    template: html<AsyncElement>`
-      <h1>👋 ${x => x.data?.userSession.name}!</h1>
-      <p>
-        <span>Your last activity was</span>
-        <time>${x => getTime(x.data?.userSession)}</time>
-      </p>
-    `
-  })
-  class AsyncElement extends ApolloQuery<typeof UserSessionQuery> {
+  const template: ViewTemplate<AsyncElement> = html`
+    <h1>👋 ${x => x.data?.userSession.name}!</h1>
+    <p>
+      <span>Your last activity was</span>
+      <time>${x => getTime(x.data?.userSession)}</time>
+    </p>
+  `;
+
+  @customElement({ name: 'async-element', template })
+  class AsyncElement extends FASTElement {
     noAutoSubscribe = true;
 
-    query = UserSessionQuery;
+    query = new ApolloQueryBehavior(this, UserSessionQuery);
 
     async connectedCallback() {
       super.connectedCallback();
       // asynchronously get a reference to the client
       // setting the client will start fetching the query
-      this.client = await getClient();
+      this.query.client = await getClient();
     }
   };
   ```

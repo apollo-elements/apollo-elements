@@ -106,7 +106,8 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
+  import { customElement } from '@microsoft/fast-element';
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
 
@@ -238,7 +239,8 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { customElement } from '@microsoft/fast-element';
+  import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
 

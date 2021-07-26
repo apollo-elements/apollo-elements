@@ -92,12 +92,13 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement } from '@apollo-elements/fast';
+  import { FASTElement, customElement } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
   import { HelloQuery } from './Hello.query.graphql';
 
   @customElement({ name: 'hello-world' })
-  class HelloWorld extends ApolloQuery<typeof HelloQuery> {
-    query = HelloQuery;
+  class HelloWorld extends FASTElement {
+    query = new ApolloQueryBehavior(this, HelloQuery);
   }
   ```
 

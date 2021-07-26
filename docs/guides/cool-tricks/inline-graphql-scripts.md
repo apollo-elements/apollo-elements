@@ -100,20 +100,17 @@ Say you had a `<greet-me>` element which extends `ApolloQuery`.
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { customElement, html, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
   import { GraphQLScriptChildMixin } from '@apollo-elements/mixins';
 
-  interface Data {
-    name: string;
-    greeting: string;
-  }
-
-  @customElement({ name, 'greet-me', template: html<GreetMe>`
+  const template: ViewTemplate<GreetMe> = html`
     <p>
       ${x => x.data?.greeting ?? 'Hello'},
       ${x => x.data?.name ?? 'friend'}
     </p>
-  ` })
+  `;
+  @customElement({ name, 'greet-me', template })
   class GreetMe extends GraphQLScriptChildMixin(ApolloQuery)<typeof HelloQuery> { }
   ```
 

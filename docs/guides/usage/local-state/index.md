@@ -142,23 +142,24 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   ```ts tab fast
-  import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
+  import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
+  import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
   type Theme = 'dark'|'light';
   type Data = { theme: Theme };
 
-  const template = html<ThemeToggle>`
+  const template: ViewTemplate<ThemeToggle> = html`
     <button @click="${x => x.toggleTheme()}">
       Change to ${x => x.nextTheme} theme
     </button>
   `;
 
   @customElement({ name: 'theme-toggle', template})
-  class ThemeToggle extends ApolloQuery<typeof ThemeToggleQuery> {
-    query = ThemeToggleQuery;
+  class ThemeToggle extends FASTElement {
+    query = new ApolloQueryBehavior(this, ThemeToggleQuery);
 
     get nextTheme(): Theme {
-      return this.data?.theme === 'dark' ? 'light' : 'dark';
+      return this.query.data?.theme === 'dark' ? 'light' : 'dark';
     }
 
     toggleTheme() {
@@ -332,10 +333,13 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   import { typePolicies } from './typePolicies';
 
   @customElement({ name: 'theme-toggle', template })
-  class ThemeToggle extends TypePoliciesMixin(ApolloQuery)<typeof ThemeToggleQuery> {
-    typePolicies = typePolicies;
+  class ThemeToggle extends FASTElement {
+    query = new ApolloQueryBehavior(this, ThemeToggleQuery);
 
-    // ...
+    connectedCallback() {
+      super.connectedCallback();
+      this.query.client.cache.policies.addTypePolicies(typePolicies);
+    }
   }
   ```
 
@@ -470,8 +474,8 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```ts tab fast
   toggleTheme() {
     const theme = this.nextTheme;
-    this.client.writeQuery({
-      query: this.query,
+    this.query.client.writeQuery({
+      query: this.query.query,
       data: { theme },
     });
   }
@@ -629,7 +633,7 @@ Now in order to update the theme, we need to perform two steps:
   ```ts tab fast
   toggleTheme() {
     localStorage.setItem('theme', this.nextTheme);
-    this.client.cache.evict({ fieldName: 'theme' });
+    this.query.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
