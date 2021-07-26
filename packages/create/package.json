@@ -33,10 +33,6 @@
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
   },
   "homepage": "https://apolloelements.dev/guides/getting-started/",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",

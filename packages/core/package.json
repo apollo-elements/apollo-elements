@@ -38,10 +38,6 @@
     "analyze": "custom-elements-manifest analyze",
     "test": "tsc --noEmit"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
