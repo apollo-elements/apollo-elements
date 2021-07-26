@@ -62,7 +62,7 @@ export class ApolloElement<
   document: ComponentDocument<D> | null = null;
 
   /** @summary Context passed to the link execution chain. */
-  @hosted()
+  @hosted({ path: 'options' })
   @controlled({ path: 'options' })
   context?: Record<string, unknown>;
 
