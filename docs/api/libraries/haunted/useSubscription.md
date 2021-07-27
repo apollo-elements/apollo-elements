@@ -29,7 +29,7 @@ function UserAdded() {
   const [opened, setOpened] = useState(false);
 
   const { data } = useSubscription(UserAddedSubscription, {
-    onSubscriptionData({ subscriptionData }) {
+    onData({ subscriptionData }) {
       setLast(subscriptionData.data.userAdded.name);
     }
   });

@@ -43,13 +43,10 @@ export default ({
 
     playgroundElements({
       importMap: {
-        '@apollo/client/core': `${IMPORT_MAP_BASE}/apollo-client.js`,
-        '@apollo/client/utilities': `${IMPORT_MAP_BASE}/apollo-client.js`,
-        '@apollo/client/utilities/graphql/storeUtils.js': `${IMPORT_MAP_BASE}/apollo-client.js`,
+        '@apollo/client/core': `https://unpkg.com/@apollo/client@3.4.0-rc.23/core/index.js?module`,
+        '@apollo/client/link/schema': `https://unpkg.com/@apollo/client@3.4.0-rc.23/link/schema/index.js?module`,
 
         'event-iterator': `${IMPORT_MAP_BASE}/schema-link.js`,
-        '@apollo/client/link/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
-        '@apollo/client/link/schema/index.esm.js': `${IMPORT_MAP_BASE}/schema-link.js`,
         '@graphql-tools/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
         '@graphql-tools/mock': `${IMPORT_MAP_BASE}/schema-link.js`,
         '@graphql-tools/tools': `${IMPORT_MAP_BASE}/schema-link.js`,
