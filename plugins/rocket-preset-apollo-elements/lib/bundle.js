@@ -43,7 +43,6 @@ export async function bundle() {
       external: ['https://*', 'http://*'],
       entryPoints: {
         'apollo-elements': join(__dirname, '..', 'entrypoints/apollo-elements.ts'),
-        'apollo-client': join(__dirname, '..', 'entrypoints/client.ts'),
       },
     }),
 

@@ -17,8 +17,8 @@ module: apollo-query-behavior.js
 ## Demo
 
 ```ts playground fast-query launches.ts
-import type { Binding, ViewTemplate } from '@apollo-elements/fast';
-import { FASTElement, customElement, html, repeat } from '@apollo-elements/fast';
+import type { Binding, ViewTemplate } from '@microsoft/fast-element';
+import { FASTElement, customElement, html, repeat } from '@microsoft/fast-element';
 import { ApolloQueryBehavior } from '@apollo-elements/fast';
 import { styles } from './launches.css.js';
 import { LaunchesQuery, Launch } from './Launches.query.graphql.js';
