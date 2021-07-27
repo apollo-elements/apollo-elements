@@ -6,13 +6,13 @@ import type {
   ComponentDocument,
   OptimisticResponseType,
   RefetchQueriesType,
+  MutationUpdaterFn,
 } from '@apollo-elements/core/types';
 
 import type { PropertyValues } from 'lit';
 
 import type {
   FetchResult,
-  MutationUpdaterFn,
   MutationOptions,
   ErrorPolicy,
 } from '@apollo/client/core';
@@ -565,11 +565,11 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    * data to be rolled back.
    */
   public updater?(
-    ...params: Parameters<MutationUpdaterFn<Data<D>>>
-  ): ReturnType<MutationUpdaterFn<Data<D>>>;
+    ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
 
   public mutate(
-    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>> | undefined
+    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
   ): Promise<FetchResult<Data<D>>> {
     return this.controller.mutate({ ...params, update: this.updater });
   }

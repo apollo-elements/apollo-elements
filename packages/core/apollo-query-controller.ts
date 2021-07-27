@@ -43,7 +43,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   private pollingInterval?: number;
 
-  /** @summary Options to customize the query and to interface with the controller. */ // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  /** @summary Options to customize the query and to interface with the controller. */
   declare options: ApolloQueryControllerOptions<D, V>;
 
   /**

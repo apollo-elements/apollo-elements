@@ -8,6 +8,7 @@ import type {
   MaybeVariables,
   ComponentDocument,
   OptimisticResponseType,
+  MutationUpdaterFn,
 } from '@apollo-elements/core/types';
 
 import { attr } from '@microsoft/fast-element';
@@ -161,8 +162,8 @@ export class ApolloMutation<
    * data to be rolled back.
    */
   public updater?(
-    ...params: Parameters<C.MutationUpdaterFn<Data<D>>>
-  ): ReturnType<C.MutationUpdaterFn<Data<D>>>;
+    ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
 
   public mutate(
     params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>

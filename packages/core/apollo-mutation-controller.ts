@@ -5,6 +5,7 @@ import type {
   Data,
   MaybeTDN,
   MaybeVariables,
+  MutationUpdaterFn,
   OptimisticResponseType,
   RefetchQueriesType,
   Variables,
@@ -15,7 +16,6 @@ import type {
   FetchPolicy,
   FetchResult,
   MutationOptions,
-  MutationUpdaterFn,
 } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
@@ -28,16 +28,16 @@ export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerO
    *
    * @summary Mutation variables.
    */
-  variables?: Variables<D, V>,
-  refetchQueries?: RefetchQueriesType<D> | null,
-  context?: Record<string, unknown>,
-  optimisticResponse?: OptimisticResponseType<D, V>,
-  fetchPolicy?: Extract<FetchPolicy, 'no-cache'>,
-  awaitRefetchQueries?: boolean,
-  ignoreResults?: boolean,
-  onCompleted?(data: Data<D>|null): void,
-  onError?(error: Error): void,
-  update?(...p: Parameters<MutationUpdaterFn<Data<D>>>): ReturnType<MutationUpdaterFn<Data<D>>>,
+  variables?: Variables<D, V>;
+  refetchQueries?: RefetchQueriesType<D> | null;
+  context?: Record<string, unknown>;
+  optimisticResponse?: OptimisticResponseType<D, V>;
+  fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
+  awaitRefetchQueries?: boolean;
+  ignoreResults?: boolean;
+  onCompleted?(data: Data<D>|null): void;
+  onError?(error: Error): void;
+  update?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 }
 
 export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
@@ -47,7 +47,7 @@ export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVa
    */
   private mostRecentMutationId = 0;
 
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  /** @summary Options to customize the mutation and to interface with the controller. */
   declare options: ApolloMutationControllerOptions<D, V>;
 
   called = false;

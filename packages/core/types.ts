@@ -7,11 +7,9 @@ import type {
   DocumentNode,
   ErrorPolicy,
   FetchMoreOptions,
-  FetchMoreQueryOptions,
   FetchPolicy,
   FetchResult,
   MutationOptions,
-  MutationUpdaterFn,
   NetworkStatus,
   NormalizedCacheObject,
   OperationVariables,
@@ -22,8 +20,6 @@ import type {
   WatchQueryFetchPolicy,
   WatchQueryOptions,
 } from '@apollo/client/core';
-
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 import type {
   ApolloController,
@@ -37,39 +33,7 @@ export type Value<T> = T[keyof T];
 
 export type Entries<T> = [keyof T, Value<T>][];
 
-export declare class CustomElement extends HTMLElement {
-  static readonly observedAttributes?: string[];
-
-  /**
-   * Called when one of the element's `observedAttributes` changes.
-   * @param name name of the observed attribute
-   * @param oldValue previous value of the attribute. null if it was nonexistent
-   * @param newValue current value of the attribute. null if removed.
-   */
-  attributeChangedCallback?(name: string, oldValue: string, newValue: string): void;
-
-  /**
-   * Called when the element is adopted to a document.
-   */
-  adoptedCallback?(): void;
-
-  /**
-   * Called when the element connects to a document, when the element has access to it's own DOM.
-   */
-  connectedCallback?(): void;
-
-  /**
-   * Called when the element is removed from a document.
-   */
-  disconnectedCallback?(): void;
-}
-
-/**
- * Type that represents a class
- */
-export type Constructor<T = CustomElement> = {
-  new (...a: any[]): T;
-}
+export type MutationUpdaterFn<D, V> = Required<MutationOptions<D, V>>['update'];
 
 export type GraphQLError = ApolloError['graphQLErrors'][number];
 
@@ -106,10 +70,7 @@ export type NextFetchPolicyFunction<D, V> =
     lastFetchPolicy: WatchQueryFetchPolicy
   ) => WatchQueryFetchPolicy
 
-export type RefetchQueriesType<D> =
-  RefetchQueryDescription |
-  ((result: FetchResult<Data<D>>) =>
-    RefetchQueryDescription);
+export type RefetchQueriesType<D = MaybeTDN> = MutationOptions<Data<D>>['refetchQueries'];
 
 export type OptimisticResponseType<D, V> =
   Data<D> |
@@ -117,8 +78,48 @@ export type OptimisticResponseType<D, V> =
     Data<D>);
 
 export type FetchMoreParams<D, V> =
-  FetchMoreQueryOptions<Variables<D, V>, keyof Variables<D, V>, Data<D>> &
+  FetchMoreQueryOptions<Variables<D, V>, Data<D>> &
   FetchMoreOptions<Data<D>, Variables<D, V>>
+
+export interface FetchMoreQueryOptions<TVariables, TData = any> {
+    query?: DocumentNode | TypedDocumentNode<TData, TVariables>;
+    variables?: Partial<TVariables>;
+    context?: any;
+}
+
+/**
+ * Type that represents a class
+ */
+export type Constructor<T = CustomElement> = {
+  new (...a: any[]): T;
+}
+
+export declare class CustomElement extends HTMLElement {
+  static readonly observedAttributes?: string[];
+
+  /**
+   * Called when one of the element's `observedAttributes` changes.
+   * @param name name of the observed attribute
+   * @param oldValue previous value of the attribute. null if it was nonexistent
+   * @param newValue current value of the attribute. null if removed.
+   */
+  attributeChangedCallback?(name: string, oldValue: string, newValue: string): void;
+
+  /**
+   * Called when the element is adopted to a document.
+   */
+  adoptedCallback?(): void;
+
+  /**
+   * Called when the element connects to a document, when the element has access to it's own DOM.
+   */
+  connectedCallback?(): void;
+
+  /**
+   * Called when the element is removed from a document.
+   */
+  disconnectedCallback?(): void;
+}
 
 export interface SubscriptionResult<TData> {
   /** whether the subscription is loading */
@@ -315,8 +316,8 @@ export declare class ApolloMutationElement<
    * ```
    */
   public updater?(
-    ...params: Parameters<MutationUpdaterFn<Data<D>>>
-  ): ReturnType<MutationUpdaterFn<Data<D>>>;
+    ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
 
   /**
    * This resolves a single mutation according to the options specified and returns a
