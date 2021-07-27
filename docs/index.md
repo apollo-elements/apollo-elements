@@ -98,19 +98,24 @@ libraries:
 ```js playground-file query-spacex type-policies.js
 import '@apollo-elements/components';
 
-document.querySelector('apollo-client').typePolicies = {
-  Launch: {
-    fields: {
-      launch_date_utc(next, options) {
-        try {
-          return new Date(next).toDateString();
-        } catch(e) {
-          return next;
+const client = document.querySelector('apollo-client');
+(async function() {
+  await customElements.whenDefined('apollo-client');
+  await client.updateComplete;
+  client.typePolicies = {
+    Launch: {
+      fields: {
+        launch_date_utc(next) {
+          try {
+            return new Date(next).toDateString();
+          } catch(e) {
+            return next;
+          }
         }
       }
     }
-  }
-};
+  };
+})();
 ```
 
 ```css playground-file query-spacex style.css
