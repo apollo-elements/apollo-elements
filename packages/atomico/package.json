@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/atomico",
-  "version": "0.0.0-next.1",
+  "version": "0.0.0-next.2",
   "description": "👩‍🚀 Atomico Hooks for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
@@ -54,7 +54,7 @@
   "license": "ISC",
   "homepage": "https://apolloelements.dev/api/libraries/atomico/",
   "dependencies": {
-    "@apollo-elements/core": "^0.0.1-next.0",
+    "@apollo-elements/core": "^0.0.1-next.6",
     "@atomico/hooks": "^3.10.5",
     "atomico": "^1.26.1"
   },
