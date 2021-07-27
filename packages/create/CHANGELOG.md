@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.0-next.4
+
+### Patch Changes
+
+- a7875be: Add missing dev dependency
+
 ## 2.0.0-next.3
 
 ### Patch Changes

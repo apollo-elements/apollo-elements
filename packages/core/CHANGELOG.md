@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 0.0.1-next.6
+
+### Patch Changes
+
+- 30a31ea: Fix TS types for cross-compatibility with client 3.3 and 3.4
+
 ## 0.0.1-next.5
 
 ### Patch Changes
