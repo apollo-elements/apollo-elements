@@ -245,10 +245,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
     <form ?hidden="${!x => x.query.data?.isMe}">
       <h3>Edit</h3>
       <apollo-mutation .mutation="${UpdateProfileMutation}" input-key="input">
-        <label>Name <input data-variable="name"></label>
-        <label>Picture (URL) <input data-variable="picture"></label>
-        <label>Birthday <input data-variable="birthday" type="date"/></label>
-        <button trigger>Save</button>
+        <fast-text-field data-variable="name>Name</fast-text-field>
+        <fast-text-field data-variable="picture>Picture (URL)</fast-text-field>
+        <fast-text-field data-variable="birthday" type="date">Birthday</fast-text-field>
+        <fast-button trigger>Save</fast-button>
       </apollo-mutation>
     </form>
   `;

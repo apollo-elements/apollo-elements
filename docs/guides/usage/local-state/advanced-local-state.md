@@ -419,16 +419,11 @@ function onWillMutate(event) {
   }
 
   const template: ViewTemplate<SitesElement> = html`
-      <select-list>
+      <fast-select @change="${(x, { event }) => x.onSelectedChanged(event)}">
         ${x => x.query.data.sites.map(site => html`
-        <select-item
-            item-id="${site.id}"
-            item-name="${site.name}"
-            ?selected="${site.selected}"
-            @select="${(x, { event }) => x.onSelectedChanged(event)}"
-        ></select-item>
+        <fast-option value="${x => x.id}">${x => s.site.name}</fast-option>
         ` as ViewTemplate<SitesElement>)}
-      </select-list>
+      </fast-select>
 
       <apollo-mutation
           .mutation="${CreateNetworkMutation}"
@@ -442,7 +437,7 @@ function onWillMutate(event) {
 
     onSelectedChanged(event: CustomEvent<ItemDetail>) {
       this.query.client.writeFragment({
-        id: `Site:${event.detail.itemId}`,
+        id: `Site:${event.target.value}`,
         fragment: gql`
           fragment siteSelected on Site {
             selected @client

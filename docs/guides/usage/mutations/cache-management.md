@@ -153,14 +153,13 @@ And this component definition:
   const template: ViewTemplate<BlogPost> = html`
     <loading-overlay ?active="${x => x.mutation.loading}"></loading-overlay>
 
-    <label> New Post
-      <textarea ${ref('textarea')}
-          @input="${(x, { event }) => x.onInput(event)}"></textarea>
-    </label>
+    <fast-text-area ${ref('textarea')} @input="${(x, { event }) => x.onInput(event)}">
+      New Post
+    </fast-text-area>
 
-    <button ?hidden="${x => x.mutation.data}" @click="${x => x.mutate()}">
+    <fast-button ?hidden="${x => x.mutation.data}" @click="${x => x.mutate()}">
       Post!
-    </button>
+    </fast-button>
 
     <article ?hidden="${x => !x.mutation.data}">
       <strong>Post Succeeded!</strong>

@@ -209,7 +209,7 @@ In some cases you might want to prevent a mutation, for example, if clicking the
     <apollo-mutation
         .mutation="${x => CreatePostMutation}"
         @will-mutate="${(x, e) => x.onWillMutate(e)}">
-      <button>${x => x.postId ? 'Edit' : 'Publish'}</button>
+      <fast-button>${x => x.postId ? 'Edit' : 'Publish'}</fast-button>
     </apollo-mutation>
   `;
   @customElement({ name: 'posts-dashboard', template })
