@@ -19,7 +19,7 @@ const cache =
           },
         },
       },
-    }
+    },
   });
 
 export const client =

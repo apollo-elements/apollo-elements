@@ -9,6 +9,7 @@ extensions:
       immutableTypes: true
       namingConvention: keep
       noSchemaStitching: true
+      documentVariableSuffix: ''
       operationResultSuffix: Data
       optionalResolveType: true
       useIndexSignature: true
