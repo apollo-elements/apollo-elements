@@ -16,7 +16,7 @@ import {
   TestableElement,
 } from '@apollo-elements/test';
 
-import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 

@@ -149,9 +149,9 @@ Let's define a custom element that displays a button to toggle the theme.
   type Data = { theme: Theme };
 
   const template: ViewTemplate<ThemeToggle> = html`
-    <button @click="${x => x.toggleTheme()}">
+    <fast-button @click="${x => x.toggleTheme()}">
       Change to ${x => x.nextTheme} theme
-    </button>
+    </fast-button>
   `;
 
   @customElement({ name: 'theme-toggle', template})
