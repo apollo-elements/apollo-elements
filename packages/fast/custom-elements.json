@@ -742,14 +742,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "ReturnType<C.MutationUpdaterFn<Data<D>>>"
+                  "text": "ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>"
                 }
               },
               "parameters": [
                 {
                   "name": "params",
                   "type": {
-                    "text": "Parameters<C.MutationUpdaterFn<Data<D>>>"
+                    "text": "Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>"
                   }
                 }
               ],

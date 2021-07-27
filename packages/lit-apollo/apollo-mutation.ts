@@ -8,6 +8,7 @@ import type {
   ComponentDocument,
   OptimisticResponseType,
   RefetchQueriesType,
+  MutationUpdaterFn,
 } from '@apollo-elements/core/types';
 
 import { controlled } from '@apollo-elements/core/decorators';
@@ -149,8 +150,8 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
    * data to be rolled back.
    */
   public updater?(
-    ...params: Parameters<C.MutationUpdaterFn<Data<D>>>
-  ): ReturnType<C.MutationUpdaterFn<Data<D>>>;
+    ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
+  ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
 
   public mutate(
     params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>
