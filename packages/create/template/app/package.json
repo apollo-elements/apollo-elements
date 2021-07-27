@@ -24,6 +24,7 @@
     "pwa-helpers": "^0.9"
   },
   "devDependencies": {
+    "@apollo-elements/rollup-plugin-graphql": "^1.x",
     "@graphql-codegen/cli": "^1.x",
     "@graphql-codegen/typescript": "^1.x",
     "@graphql-codegen/typescript-operations": "^1.x",
