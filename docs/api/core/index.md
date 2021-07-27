@@ -53,7 +53,7 @@ class ProfileHome extends LitElement {
   });
 
   friendCameOnline = new ApolloSubscriptionController(this, FriendCameOnlineSubscription, {
-    onSubscriptionData: () => this.snackbar.show(),
+    onData: () => this.snackbar.show(),
   });
 
   @query('mwc-snackbar') snackbar: Snackbar;

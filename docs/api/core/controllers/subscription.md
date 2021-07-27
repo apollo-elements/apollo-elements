@@ -35,7 +35,7 @@ import { Snackbar } from '@material/mwc-snackbar';
 @customElement('user-joined')
 class UserJoined extends LitElement {
   userJoined = new ApolloSubscriptionController(this, UserJoinedSubscription, {
-    onSubscriptionData: ({ subscriptionData }) => {
+    onData: ({ subscriptionData }) => {
       this.last = subscriptionData.userJoined,
       this.snackbar.show();
     }
