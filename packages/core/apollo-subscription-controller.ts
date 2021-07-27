@@ -27,7 +27,7 @@ import { bound } from './lib/bound.js';
 
 export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControllerOptions<D, V>,
           Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
-  variables?: Variables<D, V>,
+  variables?: Variables<D, V>;
   fetchPolicy?: FetchPolicy;
   noAutoSubscribe?: boolean;
   shouldSubscribe?: (options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>) => boolean;
@@ -48,7 +48,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
 
   private observableSubscription?: ZenObservable.Subscription;
 
-  // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/40220
+  /** @summary Options to customize the subscription and to interface with the controller. */
   declare options: ApolloSubscriptionControllerOptions<D, V>;
 
   #hasDisconnected = false;

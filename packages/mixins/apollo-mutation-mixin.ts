@@ -7,6 +7,7 @@ import type {
   Data,
   MaybeTDN,
   MaybeVariables,
+  MutationUpdaterFn,
   OptimisticResponseType,
   RefetchQueriesType,
   Variables,
@@ -85,8 +86,8 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
     onError?(_error: Error): void;
 
     updater?(
-      ...params: Parameters<C.MutationUpdaterFn<Data<D>>>
-    ): ReturnType<C.MutationUpdaterFn<Data<D>>>;
+      ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
+    ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
 
     override attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);

@@ -62,7 +62,18 @@ export abstract class ApolloController<
   V = MaybeVariables<D>
 >
 implements ReactiveController {
-  #options: ApolloControllerOptions<D, V> = {};
+  /** @internal */
+  static o(proto: ApolloController, _: string): void {
+    Object.defineProperty(proto, 'options', {
+      get() { return this.#options; },
+      set(v) {
+        const u = this.#options[update];
+        this.#options = { [update]: u, ...v };
+      },
+    });
+  }
+
+  #options: ApolloControllerOptions<D, V> = {}
 
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -86,14 +97,7 @@ implements ReactiveController {
   loading = false;
 
   /** @summary Options for the operation and controller. */
-  get options(): ApolloControllerOptions<D, V> {
-    return this.#options;
-  }
-
-  set options(v: ApolloControllerOptions<D, V>) {
-    const u = this.#options[update];
-    this.#options = { [update]: u, ...v };
-  }
+  @ApolloController.o options: ApolloControllerOptions<D, V>;
 
   /** @summary The `ApolloClient` instance for this controller. */
   get client(): ApolloClient<NormalizedCacheObject> | null {

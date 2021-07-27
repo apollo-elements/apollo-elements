@@ -1043,14 +1043,14 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "ReturnType<MutationUpdaterFn<Data<D>>>"
+                  "text": "ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>"
                 }
               },
               "parameters": [
                 {
                   "name": "params",
                   "type": {
-                    "text": "Parameters<MutationUpdaterFn<Data<D>>>"
+                    "text": "Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>"
                   }
                 }
               ],
@@ -1071,7 +1071,7 @@
                   "name": "params",
                   "optional": true,
                   "type": {
-                    "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>> | undefined"
+                    "text": "Partial<MutationOptions<Data<D>, Variables<D, V>>>"
                   },
                   "description": "All named arguments to mutate default to the element's corresponding instance property. So you can call `element.mutate()` without arguments and it will call using `element.mutation`, `element.variables`, etc. You can likewise override instance properties per-call by passing them in, e.g.\n\n```ts\nawait element.mutate({\n  fetchPolicy: 'network-only'\n  variables: {\n    ...element.variables,\n    name: 'overridden',\n  },\n});\n```\n\n| Property            | Type                                                   | Description                                                                   |\n| ------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------- |\n| awaitRefetchQueries | `boolean`{lang=ts}                                     | See [awaitRefetchQueries](/api/core/interfaces/mutation/#awaitrefetchqueries) |\n| context             | `Record<string, unknown>`{lang=ts}                     | See [context](/api/core/interfaces/element/#context)                          |\n| errorPolicy         | `ErrorPolicy`{lang=ts}                                 | See [errorPolicy](/api/core/interfaces/element/#errorpolicy)                  |\n| fetchPolicy         | `FetchPolicy`{lang=ts}                                 | See [fetchPolicy](/api/core/interfaces/mutation/#fetchpolicy)                 |\n| mutation            | `DocumentNode`{lang=ts}                                | See [mutation](/api/core/interfaces/mutation/#mutation)                       |\n| optimisticResponse  | `OptimisticResponseType<D, V>`{lang=ts}                | See [optimisticResponse](/api/core/interfaces/mutation/#optimisticresponse)   |\n| refetchQueries      | `RefetchQueriesType<D, V>`{lang=ts}                    | See [refetchQueries](/api/core/interfaces/mutation/#refetchqueries)           |\n| update              | `MutationUpdaterFn<Data<D>, Variables<D, V>>`{lang=ts} | See [updater](/api/core/interfaces/mutation/#updater)                         |\n| variables           | `Variables<D, V>`{lang=ts}                             | See [variables](/api/core/interfaces/mutation/#variables)                     |\n"
                 }

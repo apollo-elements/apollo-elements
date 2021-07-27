@@ -83,7 +83,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     if (typeof this.refetchQueries === 'function')
       assertType<(result: C.FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription|null>                (this.refetchQueries);
+      assertType<I.RefetchQueriesType<TypeCheckData>|null>    (this.refetchQueries);
 
     if (typeof this.optimisticResponse !== 'function')
       assertType<TypeCheckData>                               (this.optimisticResponse!);
