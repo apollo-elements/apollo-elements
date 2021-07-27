@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.0-next.5
+
+### Patch Changes
+
+- 553d305: Fix GraphQL codegen config and other dotfiles
+
 ## 2.0.0-next.4
 
 ### Patch Changes
