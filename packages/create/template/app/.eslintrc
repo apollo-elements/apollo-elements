@@ -1,1 +1,6 @@
-{ "extends": "@pwrs" }
+{
+  "extends": "@pwrs",
+  "rules": {
+    "no-invalid-this": "off"
+  }
+}
