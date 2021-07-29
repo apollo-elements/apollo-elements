@@ -48,10 +48,10 @@ export default ({
         '@apollo/client/utilities/graphql/storeUtils.js': `${IMPORT_MAP_BASE}/apollo-client.js`,
 
         '@apollo/client/link/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
-        'event-iterator': `${IMPORT_MAP_BASE}/schema-link.js`,
-        '@graphql-tools/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
         '@graphql-tools/mock': `${IMPORT_MAP_BASE}/schema-link.js`,
+        '@graphql-tools/schema': `${IMPORT_MAP_BASE}/schema-link.js`,
         '@graphql-tools/tools': `${IMPORT_MAP_BASE}/schema-link.js`,
+        'event-iterator': `${IMPORT_MAP_BASE}/schema-link.js`,
 
         '@apollo-elements/components': `${IMPORT_MAP_BASE}/apollo-elements.js`,
         '@apollo-elements/components/apollo-client': `${IMPORT_MAP_BASE}/apollo-elements.js`,
