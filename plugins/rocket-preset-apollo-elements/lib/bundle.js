@@ -40,14 +40,21 @@ export async function bundle() {
 
   await Promise.all([
     build({
-      external: ['https://*', 'http://*'],
       entryPoints: {
+        'apollo-client': join(__dirname, '..', 'entrypoints/client.ts'),
         'apollo-elements': join(__dirname, '..', 'entrypoints/apollo-elements.ts'),
       },
     }),
 
     build({
-      external: ['https://*', 'http://*', '@apollo-elements/core', '@apollo-elements/core/*'],
+      external: ['@apollo/client/*', '@apollo-elements/core', '@apollo-elements/core/*'],
+      entryPoints: {
+        'schema-link': join(__dirname, '..', 'entrypoints/schemalink.ts'),
+      },
+    }),
+
+    build({
+      external: ['@apollo-elements/core', '@apollo-elements/core/*'],
       entryPoints: {
         'atomico': join(__dirname, '..', 'entrypoints/atomico.ts'),
         'fast': join(__dirname, '..', 'entrypoints/fast.ts'),
@@ -59,13 +66,6 @@ export async function bundle() {
         'mixins': join(__dirname, '..', 'entrypoints/mixins.ts'),
         'polymer': join(__dirname, '..', 'entrypoints/polymer.ts'),
         'sandbox': '@power-elements/codesandbox-button',
-      },
-    }),
-
-    build({
-      external: ['https://*', 'http://*', '@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*'],
-      entryPoints: {
-        'schema-link': join(__dirname, '..', 'entrypoints/schemalink.ts'),
       },
     }),
   ]);
