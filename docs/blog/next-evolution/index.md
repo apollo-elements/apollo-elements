@@ -130,30 +130,7 @@ There's a tonne of potential here and we're very keen to see what you come up wi
 On the heels of the controllers release, we're happy to add a new package to the roster. Apollo Elements now has first-class support for [Atomico](https://atomico.gitbook.io), a new hooks-based web components library with JSX or template-string templating.
 
 ```jsx
-import { useQuery, c } from '@apollo-elements/atomico';
-import { LaunchesQuery } from './Launches.query.graphql.js';
-
-function Launches() {
-  const { data } = useQuery(LaunchesQuery, { variables: { limit: 3 } });
-
-  const launches = data?.launchesPast ?? [];
-
-  return (
-    <host shadowDom>
-      <link rel="stylesheet" href="launches.css"/>
-      <ol>{launches.map(x => (
-        <li>
-          <article>
-            <span>{x.mission_name}</span>
-            <img src={x.links.mission_patch_small} alt="Badge" role="presentation"/>
-          </article>
-        </li>))}
-      </ol>
-    </host>
-  );
-}
-
-customElements.define('spacex-launches', c(Launches));
+{% include ./atomico.jsx %}
 ```
 
 ## FAST Behaviors
@@ -189,6 +166,10 @@ It wouldn't be an Apollo Elements release without some docs goodies. This time, 
 
 The docs also got a major upgrade care of Pascal Schilp's untiring work in the [Webcomponents Community Group](https://www.w3.org/community/webcomponents/) to get the custom elements manifest v1 published. This latest iteration of the API docs generates package manifests directly from source code, and converts them to API docs via [Rocket](https://rocket.modern-web.dev).
 
+## SSR
+
+As part of the release, we updated our demo apps [leeway](https://leeway.apolloelements.dev) and [LaunchCTL](https://launchctl.apolloelements.dev). In the case of leeway, we took the opportunity to implement extensive SSR with the help of a new browser standard called [Declarative Shadow DOM](https://web.dev/declarative-shadow-dom/). It's early days for this technique but it's already looking very promising.
+
 ## Behind the Scenes
 
 Bringing this release into the light involved more than just refactoring and updating the `apollo-elements/apollo-elements` repo. It represents work across many projects, including PRs to
@@ -206,41 +187,13 @@ The last release included support for the web components hooks library [haunted]
 With controllers at the core, and the [`useController`](https://github.com/matthewp/haunted#usecontroller) hook, you can use as many Apollo hooks as you want in your elements without clobbering each other or polluting the element interface.
 
 ```js playground haunted-multiple-hooks healthy-snack.js
-import { useQuery, html, component } from '@apollo-elements/haunted';
-import { client } from './client.js';
-import { FruitsQuery } from './Fruits.query.graphql.js';
-import { VeggiesQuery } from './Veggies.query.graphql.js';
-
-customElements.define('healthy-snack', component(function HealthySnack() {
-  const { data: fruits } = useQuery(FruitsQuery, { client });
-  const { data: veggies } = useQuery(VeggiesQuery, { client });
-  const snack = [ ...fruits?.fruits ?? [], ...veggies?.veggies ?? [] ];
-  return html`
-    <link rel="stylesheet" href="healthy-snack.css"/>
-    <ul>${snack.map(x => html`<li>${x}</li>`)}</ul>
-  `;
-}));
+{% include ./haunted-healthy-snack.js %}
 ```
 
 The same is true of the [hybrids](https://hybrids.js.org) support, it now uses the controllers underneath the hood, letting you mix multiple operations in a single hybrid.
 
 ```js playground hybrids-multiple-factories healthy-snack.js
-import { query, html, define } from '@apollo-elements/hybrids';
-import { client } from './client.js';
-import { FruitsQuery } from './Fruits.query.graphql.js';
-import { VeggiesQuery } from './Veggies.query.graphql.js';
-
-define('healthy-snack', {
-  fruits: query(FruitsQuery, { client }),
-  veggies: query(VeggiesQuery, { client }),
-  render(host) {
-    const snack = [ ...host.fruits.data?.fruits ?? [], ...host.veggies.data?.veggies ?? [] ];
-    return html`
-      <link rel="stylesheet" href="healthy-snack.css"/>
-      <ul>${snack.map(x => html`<li>${x}</li>`)}</ul>
-    `;
-  }
-});
+{% include ./hybrids-healthy-snack.js %}
 ```
 
 ## Try it Out
