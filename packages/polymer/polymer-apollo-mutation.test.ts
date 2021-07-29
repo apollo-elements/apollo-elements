@@ -2,8 +2,6 @@ import type * as I from '@apollo-elements/core/types';
 
 import type * as C from '@apollo/client/core';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
 import { aTimeout, fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 
 import { gql } from '@apollo/client/core';
@@ -253,9 +251,9 @@ class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<Extract<C.FetchPolicy, 'no-cache'>>  (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
-      assertType<(result: C.FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+      assertType<(result: C.FetchResult<TypeCheckData>) => I.RefetchQueriesType>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription>(this.refetchQueries!);
+      assertType<I.RefetchQueriesType>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
       assertType<TypeCheckData>(this.optimisticResponse!);

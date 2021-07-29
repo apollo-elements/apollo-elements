@@ -2,8 +2,6 @@ import type * as I from '@apollo-elements/core/types';
 
 import type * as C from '@apollo/client/core';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
 import * as S from '@apollo-elements/test';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
@@ -218,9 +216,9 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<Extract<C.FetchPolicy, 'no-cache'>>  (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
-      assertType<(result: C.FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+      assertType<(result: C.FetchResult<TypeCheckData>) => I.RefetchQueriesType>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription>(this.refetchQueries!);
+      assertType<I.RefetchQueriesType>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
       assertType<TypeCheckData>(this.optimisticResponse!);

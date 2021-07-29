@@ -8,8 +8,6 @@ import type {
   TypedDocumentNode,
 } from '@apollo/client/core';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
 import type { GraphQLError } from '@apollo-elements/core/types';
 import type * as I from '@apollo-elements/core/types';
 
@@ -127,9 +125,9 @@ export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVa
     assertType<Extract<FetchPolicy, 'no-cache'>|undefined> (this.fetchPolicy);
 
     if (typeof this.refetchQueries === 'function')
-      assertType<(result: FetchResult<TypeCheckData>) => RefetchQueryDescription>(this.refetchQueries);
+      assertType<(result: FetchResult<TypeCheckData>) => I.RefetchQueriesType>(this.refetchQueries);
     else
-      assertType<RefetchQueryDescription|undefined>(this.refetchQueries!);
+      assertType<I.RefetchQueriesType|undefined>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
       assertType<TypeCheckData|undefined>(this.optimisticResponse);
