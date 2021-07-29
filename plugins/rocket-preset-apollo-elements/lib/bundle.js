@@ -47,7 +47,7 @@ export async function bundle() {
     }),
 
     build({
-      external: ['@apollo/client/*', '@apollo-elements/core', '@apollo-elements/core/*'],
+      external: ['@apollo/client/core/*', '@apollo-elements/core', '@apollo-elements/core/*'],
       entryPoints: {
         'schema-link': join(__dirname, '..', 'entrypoints/schemalink.ts'),
       },
