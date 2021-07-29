@@ -4,8 +4,6 @@ import type * as C from '@apollo/client/core';
 
 import type { LitElement } from 'lit';
 
-import type { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
-
 import type { SinonSpy } from 'sinon';
 
 import { spy } from 'sinon';
@@ -799,9 +797,9 @@ async function TypeCheck() {
       assertType<Extract<C.FetchPolicy, 'no-cache'>|undefined>(this.fetchPolicy);
 
       if (typeof this.refetchQueries === 'function')
-        assertType<(result: C.FetchResult<D>) => RefetchQueryDescription>(this.refetchQueries);
+        assertType<(result: C.FetchResult<D>) => I.RefetchQueriesType>(this.refetchQueries);
       else
-        assertType<RefetchQueryDescription|undefined>(this.refetchQueries!);
+        assertType<I.RefetchQueriesType|undefined>(this.refetchQueries!);
 
       if (typeof this.optimisticResponse !== 'function')
         assertType<D|undefined>(this.optimisticResponse);
