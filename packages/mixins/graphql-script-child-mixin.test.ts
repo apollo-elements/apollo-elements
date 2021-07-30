@@ -527,8 +527,8 @@ describe('GraphQLScriptChildMixin', function() {
             .to.equal(stringify({
               helloWorld: {
                 __typename: 'HelloWorld',
-                name: 'Chaver',
                 greeting: 'Shalom',
+                name: 'Chaver',
               },
             }));
         });
@@ -547,8 +547,8 @@ describe('GraphQLScriptChildMixin', function() {
               .to.equal(stringify({
                 helloWorld: {
                   __typename: 'HelloWorld',
-                  name: 'Aleichem',
                   greeting: 'Shalom',
+                  name: 'Aleichem',
                 },
               }));
           });
