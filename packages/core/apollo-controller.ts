@@ -69,6 +69,7 @@ implements ReactiveController {
       set(v) {
         const u = this.#options[update];
         this.#options = { [update]: u, ...v };
+        this.optionsChanged?.(v);
       },
     });
   }
@@ -177,6 +178,9 @@ implements ReactiveController {
 
   /** @summary callback for when the Apollo client changes. */
   protected clientChanged?(client?: ApolloClient<NormalizedCacheObject> | null): void;
+
+  /** @summary callback for when the options change. */
+  protected optionsChanged?(options?: ApolloControllerOptions<D, V>): void;
 
   /** @summary Notifies about updated properties. */
   protected notify(...keys: (keyof this)[]): void {
