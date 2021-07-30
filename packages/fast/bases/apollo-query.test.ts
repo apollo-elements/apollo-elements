@@ -4,7 +4,7 @@ import type * as I from '@apollo-elements/core/types';
 
 import type { ApolloQueryElement } from '@apollo-elements/core';
 
-import type { SetupOptions } from '@apollo-elements/test';
+import { makeClient, SetupOptions } from '@apollo-elements/test';
 
 import { fixture, expect } from '@open-wc/testing';
 
@@ -15,6 +15,8 @@ import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client/core';
 import { describeQuery } from '@apollo-elements/test/query.test';
 import { spy, useFakeTimers, SinonSpy, SinonFakeTimers } from 'sinon';
+
+import * as S from '@apollo-elements/test/schema';
 
 import {
   assertType,
@@ -98,11 +100,14 @@ describe('[FAST] ApolloQuery', function() {
   describe('polling', function() {
     const name = 'polling-and-timers';
     @customElement({ name })
-    class Test extends ApolloQuery { }
+    class Test extends ApolloQuery {
+      query = S.NullableParamQuery;
+    }
     let element: ApolloQuery;
     let clock: SinonFakeTimers;
     beforeEach(async function() {
       element = await fixture<Test>(`<${name}></${name}>`);
+      element.client = makeClient();
     });
     beforeEach(() => spy(element.controller, 'refetch'));
     beforeEach(() => {
@@ -114,7 +119,9 @@ describe('[FAST] ApolloQuery', function() {
     });
     describe('calling startPolling(1000)', function() {
       beforeEach(function startPolling() { element.startPolling(1000); });
-      beforeEach(() => { clock.tick(3500); });
+      beforeEach(() => {
+        clock.tick(3500);
+      });
       it('refetches', function() {
         expect(element.controller.refetch).to.have.been.calledThrice;
       });
