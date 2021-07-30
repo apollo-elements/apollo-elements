@@ -1,5 +1,21 @@
 # @apollo-elements/core
 
+## 0.1.0-next.7
+
+### Minor Changes
+
+- 702a304: Adds `optionsChanged` callback. This protected, optional callback allows for setting the `options` property on an ApolloQueryController to set options on the internal `ObservableQuery`. Use it by setting the options property. Setting internal properties will not initiate side effects.
+
+  ```js
+  class QueryElement extends ReactiveElement {
+    query = new ApolloQueryController(this, SomeQuery);
+  }
+
+  const el = new QueryElement();
+  el.query.options = { refetchWritePolicy: "merge" }; // will trigger `setOptions`
+  el.query.options.refetchWritePolicy = "merge"; // will *not* trigger `setOptions`
+  ```
+
 ## 0.0.1-next.6
 
 ### Patch Changes
