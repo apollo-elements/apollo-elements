@@ -290,55 +290,60 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
               it('renders data', function() {
                 expect(element).shadowDom.to.equal('1,2,3,4,5,6,7,8,9,10');
               });
-              describe('then calling refetch', function() {
-                beforeEach(async () => element.refetch({
-                  offset: (element.variables?.offset ?? 0) + 10,
-                }));
-                beforeEach(nextFrame);
-                it('renders next page', function() {
-                  expect(element).shadowDom.to.equal(`
-                    1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
-                  `);
+              describe('with refetchWritePolicy: \'merge\'', function() {
+                beforeEach(function() {
+                  element.options = { refetchWritePolicy: 'merge' };
                 });
-              });
-              describe('then calling fetchMore({ variables })', function() {
-                beforeEach(async () => element.fetchMore({
-                  variables: { offset: (element.variables?.offset ?? 0) + 10 },
-                }).catch(() => 0));
-                beforeEach(nextFrame);
-                it('renders next page', function() {
-                  expect(element).shadowDom.to.equal(`
-                    1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
-                  `);
+                describe('then calling refetch', function() {
+                  beforeEach(async () => element.refetch({
+                    offset: (element.variables?.offset ?? 0) + 10,
+                  }));
+                  beforeEach(nextFrame);
+                  it('renders next page', function() {
+                    expect(element).shadowDom.to.equal(`
+                      1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+                    `);
+                  });
                 });
-              });
-              describe('then calling subscribeToMore({ document, updateQuery })', function() {
-                beforeEach(() => element.subscribeToMore({
-                  document: S.PageAddedSubscription,
-                  updateQuery(_, { subscriptionData }) {
-                    return { pages: [subscriptionData.data!.pageAdded!] };
-                  },
-                }));
-                beforeEach(nextFrame);
-                it('renders data', function() {
-                  expect(element).shadowDom.to.equal('1,2,3,4,5,6,7,8,9,10,11');
+                describe('then calling fetchMore({ variables })', function() {
+                  beforeEach(async () => element.fetchMore({
+                    variables: { offset: (element.variables?.offset ?? 0) + 10 },
+                  }).catch(() => 0));
+                  beforeEach(nextFrame);
+                  it('renders next page', function() {
+                    expect(element).shadowDom.to.equal(`
+                      1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+                    `);
+                  });
                 });
-              });
-              describe('then calling startPolling(1000)', function() {
-                beforeEach(() => { clock = useFakeTimers(); });
-                beforeEach(() => spy(element.controller, 'refetch'));
-                afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
-                afterEach(() => clock.restore());
-                beforeEach(function startPolling() { element.startPolling(1000); });
-                beforeEach(() => { clock.tick(3500); });
-                it('refetches', function() {
-                  expect(element.controller.refetch).to.have.been.calledThrice;
+                describe('then calling subscribeToMore({ document, updateQuery })', function() {
+                  beforeEach(() => element.subscribeToMore({
+                    document: S.PageAddedSubscription,
+                    updateQuery(_, { subscriptionData }) {
+                      return { pages: [subscriptionData.data!.pageAdded!] };
+                    },
+                  }));
+                  beforeEach(nextFrame);
+                  it('renders data', function() {
+                    expect(element).shadowDom.to.equal('1,2,3,4,5,6,7,8,9,10,11');
+                  });
                 });
-                describe('then stopPolling', function() {
-                  beforeEach(function stopPolling() { element.stopPolling(); });
+                describe('then calling startPolling(1000)', function() {
+                  beforeEach(() => { clock = useFakeTimers(); });
+                  beforeEach(() => spy(element.controller, 'refetch'));
+                  afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
+                  afterEach(() => clock.restore());
+                  beforeEach(function startPolling() { element.startPolling(1000); });
                   beforeEach(() => { clock.tick(3500); });
-                  it('stops calling refetch', function() {
+                  it('refetches', function() {
                     expect(element.controller.refetch).to.have.been.calledThrice;
+                  });
+                  describe('then stopPolling', function() {
+                    beforeEach(function stopPolling() { element.stopPolling(); });
+                    beforeEach(() => { clock.tick(3500); });
+                    it('stops calling refetch', function() {
+                      expect(element.controller.refetch).to.have.been.calledThrice;
+                    });
                   });
                 });
               });

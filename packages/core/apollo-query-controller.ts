@@ -211,6 +211,10 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       this.subscribe({ variables });/* c8 ignore next */
   }
 
+  protected override optionsChanged(options: ApolloQueryControllerOptions<D, V>): void {
+    this.observableQuery?.setOptions?.(options);
+  }
+
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
    *
@@ -240,10 +244,11 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
-      pollInterval: this.options.pollInterval,
       notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
-      returnPartialData: this.options.returnPartialData,
       partialRefetch: this.options.partialRefetch,
+      pollInterval: this.options.pollInterval,
+      refetchWritePolicy: this.options.refetchWritePolicy,
+      returnPartialData: this.options.returnPartialData,
       ...params,
     });
 
