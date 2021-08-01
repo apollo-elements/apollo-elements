@@ -1,5 +1,11 @@
 # @apollo-elements/components
 
+## 2.0.0-next.10
+
+### Minor Changes
+
+- 8d0b2cb: Add default template to mutation component.
+
 ## 2.0.0-next.9
 
 ### Minor Changes
