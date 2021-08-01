@@ -20,6 +20,8 @@
     "@apollo-elements/atomico": "0.0.0-next.0"
   },
   "changesets": [
+    "big-terms-tease",
+    "brave-ligers-learn",
     "components-10-new-elements",
     "components-20-mutation-templates",
     "components-30-mutation-trigger-attr",

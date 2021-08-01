@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.0-next.6
+
+### Patch Changes
+
+- ff3eadd: Update docs
+
 ## 2.0.0-next.5
 
 ### Patch Changes
