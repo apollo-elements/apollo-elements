@@ -43,3 +43,5 @@ Similarly, to assign a button-like element as the trigger, add a `trigger` attri
   </label>
 </apollo-mutation>
 ```
+
+The default template contains a single anonymous slot element. If you do provide a result template, make sure to add at least one slot for the mutation content, if you want your mutation controls to appear after the mutation completes or errors.
