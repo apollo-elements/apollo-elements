@@ -54,6 +54,9 @@ interface InputLikeElement extends HTMLElement {
 /** @ignore */
 export class WillMutateError extends Error {}
 
+const defaultTemplate = document.createElement('template');
+defaultTemplate.innerHTML = `<slot></slot>`;
+
 /**
  * Simple Mutation component that takes a button or link-wrapped button as it's trigger.
  * When loading, it disables the button.
@@ -196,7 +199,7 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   private inFlightTrigger: HTMLElement | null = null;
 
-  private doMutate = (): void => void (this.controller.mutate().catch(() => void 0));
+  private doMutate = (): void => void (this.mutate().catch(() => void 0));
 
   private debouncedMutate = this.doMutate;
 
@@ -231,6 +234,10 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    */
   protected get inputs(): InputLikeElement[] {
     return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
+  }
+
+  get template(): HTMLTemplateElement {
+    return super.template ?? defaultTemplate;
   }
 
   controller: ApolloMutationController<D, V> = new ApolloMutationController<D, V>(this, null, {
