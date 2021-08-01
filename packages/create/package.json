@@ -40,6 +40,8 @@
   },
   "dependencies": {
     "@graphql-codegen/cli": "^1.21.7",
+    "@graphql-codegen/typescript": "^1.23.0",
+    "@graphql-codegen/typescript-operations": "^1.18.4",
     "case": "^1.6.3",
     "chalk": "^4.1.1",
     "execa": "^5.1.1",

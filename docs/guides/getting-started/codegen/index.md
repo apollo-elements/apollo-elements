@@ -34,15 +34,15 @@ schema: 'https://api.app.dev/graphql' # replace with url to your graphql server
 extensions:
   codegen:
     config: # season to taste
-      constEnums: true
-      declarationKind: interface
-      dedupeOperationSuffix: true
-      immutableTypes: true
-      namingConvention: keep
-      noSchemaStitching: true
-      operationResultSuffix: Data
-      optionalResolveType: true
-      useIndexSignature: true
+      constEnums: true            # use `const enum` to define unions
+      declarationKind: interface  # use `interface` keyword to define types
+      dedupeOperationSuffix: true # prevent `MyQueryQuery`
+      documentVariableSuffix: ''  # export `MyQuery` instead of `MyQueryDocument`
+      immutableTypes: true        # add `readonly` keyword to frozen objects
+      namingConvention: keep      # don't rename types
+      operationResultSuffix: Data # add `Data` suffix to result types
+      optionalResolveType: true   # make `__resolveType` field optional
+      useIndexSignature: true     # required for compatibility with apollo server
 
     generates:
       src/codegen/schema.ts: # replace with path to the file you wish to generate
@@ -50,6 +50,7 @@ extensions:
         plugins:
           - typescript
           - typescript-operations
+          - typescript-document-nodes
 
         documents:
           - src/components/*.query.graphql
