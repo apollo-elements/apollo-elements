@@ -50,8 +50,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       expect(element.shadowRoot).to.be.ok;
     });
 
-    it('doesn\'t render anything', function() {
-      expect(element).shadowDom.to.equal('');
+    it('uses default template', function() {
+      expect(element).shadowDom.to.equal('<slot></slot>');
     });
 
     it('has called: false', function() {
