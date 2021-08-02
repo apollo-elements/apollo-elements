@@ -216,6 +216,28 @@
             },
             {
               "kind": "method",
+              "name": "optionsChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "ApolloControllerOptions<D, V>"
+                  },
+                  "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n"
+                }
+              ],
+              "summary": "callback for when the options change.",
+              "description": ""
+            },
+            {
+              "kind": "method",
               "name": "notify",
               "privacy": "protected",
               "return": {
@@ -708,6 +730,32 @@
             },
             {
               "kind": "method",
+              "name": "optionsChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "ApolloControllerOptions<D, V>"
+                  },
+                  "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n"
+                }
+              ],
+              "summary": "callback for when the options change.",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
               "name": "notify",
               "privacy": "protected",
               "return": {
@@ -835,7 +883,7 @@
               "kind": "field",
               "name": "observableQuery",
               "type": {
-                "text": "ObservableQuery<Data<D>, Variables<D, V>>"
+                "text": "ObservableQuery<Data<D>, Variables<D, V>> | undefined"
               },
               "privacy": "private"
             },
@@ -843,7 +891,7 @@
               "kind": "field",
               "name": "pollingInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "privacy": "private"
             },
@@ -889,7 +937,7 @@
               "name": "#lastQueryDocument",
               "privacy": "private",
               "type": {
-                "text": "DocumentNode"
+                "text": "DocumentNode | undefined"
               }
             },
             {
@@ -1105,6 +1153,31 @@
                 }
               ],
               "summary": "callback for when the GraphQL variables change.",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "optionsChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "ApolloQueryControllerOptions<D, V>"
+                  },
+                  "description": "| Option          | Type                                                  | Description                                                                                                                               |\n| --------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |\n| fetchPolicy     | `WatchQueryFetchPolicy`{lang=ts}                      | The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.                             |\n| variables       | `Variables<D, V>`{lang=ts}                            | Variables for the query.                                                                                                                  |\n| noAutoSubscribe | `boolean`{lang=ts}                                    | If true, the element will not begin querying data until you manually call `subscribe`                                                     |\n| shouldSubscribe | `(op?: Partial<Operation<D, V>>) => boolean`{lang=ts} | Determines whether the element should attempt to subscribe automatically\\\\nOverride to prevent subscribing unless your conditions are met |\n| onData          | `(data: Data<D>) => void`{lang=ts}                    | Optional callback for when a query resolves.                                                                                              |\n| onError         | `(error: Error) => void`{lang=ts}                     | Optional callback for when an error occurs.                                                                                               |\n\nInherits from [ApolloControllerOptions](/api/core/controllers/controller/#options)\n"
+                }
+              ],
+              "summary": "callback for when the options change.",
               "description": "",
               "inheritedFrom": {
                 "name": "ApolloController",
@@ -1540,7 +1613,7 @@
               "kind": "field",
               "name": "observable",
               "type": {
-                "text": "Observable<FetchResult<Data<D>>>"
+                "text": "Observable<FetchResult<Data<D>>> | undefined"
               },
               "privacy": "private"
             },
@@ -1548,7 +1621,7 @@
               "kind": "field",
               "name": "observableSubscription",
               "type": {
-                "text": "ZenObservable.Subscription"
+                "text": "ZenObservable.Subscription | undefined"
               },
               "privacy": "private"
             },
@@ -1579,7 +1652,7 @@
               "name": "#lastSubscriptionDocument",
               "privacy": "private",
               "type": {
-                "text": "DocumentNode"
+                "text": "DocumentNode | undefined"
               }
             },
             {
@@ -2025,6 +2098,32 @@
             },
             {
               "kind": "method",
+              "name": "optionsChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "ApolloControllerOptions<D, V>"
+                  },
+                  "description": "| Option      | Type                                           | Description                                                                                                       |\n| ----------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |\n| client      | `ApolloClient<NormalizedCacheObject>`{lang=ts} | The `ApolloClient` instance for the controller.                                                                   |\n| variables   | `Variables<D, V>`{lang=ts}                     | Variables for the operation.                                                                                      |\n| context     | `any`{lang=ts}                                 | Context passed to the link execution chain.                                                                       |\n| errorPolicy | `ErrorPolicy`{lang=ts}                         | the [error policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation |\n| hostElement | `HTMLElement`{lang=ts}                         | When provided, the controller will fall back to this element to fire events                                       |\n"
+                }
+              ],
+              "summary": "callback for when the options change.",
+              "description": "",
+              "inheritedFrom": {
+                "name": "ApolloController",
+                "module": "apollo-controller.js"
+              }
+            },
+            {
+              "kind": "method",
               "name": "notify",
               "privacy": "protected",
               "return": {
@@ -2284,7 +2383,7 @@
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloController"
+                "text": "ApolloController | undefined"
               },
               "privacy": "public"
             }
@@ -2329,7 +2428,7 @@
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloController"
+                "text": "ApolloController | undefined"
               },
               "privacy": "public",
               "inheritedFrom": {
@@ -2353,7 +2452,7 @@
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloController"
+                "text": "ApolloController | undefined"
               },
               "privacy": "public",
               "inheritedFrom": {
@@ -2416,7 +2515,7 @@
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloController"
+                "text": "ApolloController | undefined"
               },
               "privacy": "public",
               "inheritedFrom": {
@@ -2468,7 +2567,7 @@
               "kind": "field",
               "name": "controller",
               "type": {
-                "text": "ApolloController"
+                "text": "ApolloController | undefined"
               },
               "privacy": "public",
               "inheritedFrom": {
@@ -2813,7 +2912,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "privacy": "public",
               "summary": "Fetch Policy for the operation.",
@@ -2824,7 +2923,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
@@ -2834,7 +2933,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
@@ -2910,7 +3009,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "summary": "Fetch Policy for the operation.",
               "fieldName": "fetchPolicy"
@@ -2918,7 +3017,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
@@ -2992,7 +3091,7 @@
               "kind": "field",
               "name": "awaitRefetchQueries",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "privacy": "public",
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
@@ -3013,7 +3112,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "privacy": "public",
               "summary": "Fetch Policy for the operation.",
@@ -3048,7 +3147,7 @@
               "kind": "field",
               "name": "optimisticResponse",
               "type": {
-                "text": "OptimisticResponseType<D, V>"
+                "text": "OptimisticResponseType<D, V> | undefined"
               },
               "privacy": "public",
               "description": "An object that represents the result of this mutation that\nwill be optimistically stored before the server has actually returned a\nresult.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear."
@@ -3216,7 +3315,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
@@ -3230,7 +3329,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
@@ -3344,7 +3443,7 @@
             {
               "name": "await-refetch-queries",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
               "fieldName": "awaitRefetchQueries"
@@ -3352,7 +3451,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "summary": "Fetch Policy for the operation.",
               "fieldName": "fetchPolicy",
@@ -3373,7 +3472,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
@@ -3451,7 +3550,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "privacy": "public",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -3494,7 +3593,7 @@
               "kind": "field",
               "name": "nextFetchPolicy",
               "type": {
-                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "privacy": "public",
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
@@ -3515,7 +3614,7 @@
               "kind": "field",
               "name": "notifyOnNetworkStatusChange",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "privacy": "public",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
@@ -3525,7 +3624,7 @@
               "kind": "field",
               "name": "partial",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "privacy": "public",
               "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
@@ -3536,7 +3635,7 @@
               "kind": "field",
               "name": "partialRefetch",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "privacy": "public",
               "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
@@ -3546,7 +3645,7 @@
               "kind": "field",
               "name": "pollInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "privacy": "public",
               "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
@@ -3566,7 +3665,7 @@
               "kind": "field",
               "name": "returnPartialData",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "privacy": "public",
               "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache."
@@ -3811,7 +3910,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
@@ -3825,7 +3924,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
@@ -3939,7 +4038,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
               "fieldName": "fetchPolicy",
@@ -3952,7 +4051,7 @@
             {
               "name": "next-fetch-policy",
               "type": {
-                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
               "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
@@ -3969,7 +4068,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
@@ -4067,7 +4166,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "privacy": "public",
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
@@ -4082,7 +4181,7 @@
               "kind": "field",
               "name": "pollInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "privacy": "public",
               "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
@@ -4103,7 +4202,7 @@
               "kind": "field",
               "name": "notifyOnNetworkStatusChange",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "privacy": "public",
               "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
@@ -4307,7 +4406,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "privacy": "public",
               "summary": "Context passed to the link execution chain.",
@@ -4321,7 +4420,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "privacy": "public",
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
@@ -4435,7 +4534,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "fieldName": "fetchPolicy",
@@ -4455,7 +4554,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "Much like `fetchPolicy`, `errorPolicy` allows you to control how GraphQL errors\nfrom the server are sent to your UI code. By default, the error policy treats any\nGraphQL Errors as network errors and ends the request chain.\nIt doesn't save any data in the cache, and renders your UI with the error property\nset to an `ApolloError`. By changing this policy per request, you can adjust how\nGraphQL Errors are managed by your UI. The possible options for `errorPolicy` are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",

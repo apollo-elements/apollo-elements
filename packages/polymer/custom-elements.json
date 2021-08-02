@@ -110,7 +110,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               }
             },
             {
