@@ -11,15 +11,15 @@ package: '@apollo-elements/atomico'
 <code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
-  npm i -S @apollo-elements/atomico@next
+  npm i -S @apollo-elements/atomico
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/atomico@next
+  yarn add @apollo-elements/atomico
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/atomico@next
+  pnpm add @apollo-elements/atomico
   ```
 
 </code-tabs>

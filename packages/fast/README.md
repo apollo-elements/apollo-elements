@@ -21,7 +21,7 @@
 Apollo elements' `fast` is distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your computer](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
 ```bash
-npm install --save @apollo-elements/fast@next
+npm install --save @apollo-elements/fast
 ```
 
 ## 👩‍🚀 Usage

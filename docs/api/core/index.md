@@ -12,15 +12,15 @@ This also introduces a separation between GraphQL operations (like queries or mu
 <code-tabs collection="package-managers" default-tab="npm" align="end">
 
 ```bash tab npm
-npm i -S @apollo-elements/core@next
+npm i -S @apollo-elements/core
 ```
 
 ```bash tab yarn
-yarn add @apollo-elements/core@next
+yarn add @apollo-elements/core
 ```
 
 ```bash tab pnpm
-pnpm add @apollo-elements/core@next
+pnpm add @apollo-elements/core
 ```
 
 </code-tabs>
