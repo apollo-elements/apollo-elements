@@ -550,7 +550,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events\n\n## Examples\n\n<figure class=\"example\"><figcaption>Using data attributes</figcaption>\n\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using data attributes and variables</figcaption>\n\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using data attributes and variables with input property</figcaption>\n\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using DOM properties</figcaption>\n\n```html\n<apollo-mutation id=\"mutation\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\n  document.getElementById('mutation').mutation = SomeMutation;\n  document.getElementById('mutation').variables = {\n    type: \"Type\",\n    action: \"ACTION\"\n  };\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n</figure>",
+          "description": "Simple Mutation component that takes a button or link-wrapped button as it's trigger.\nWhen loading, it disables the button.\nOn error, it toasts a snackbar with the error message.\nYou can pass a `variables` object property,\nor if all your variables properties are strings,\nyou can use the element's data attributes\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events\n\n## Examples\n\n<figure class=\"example\"><figcaption>Using data attributes</figcaption>\n\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\">\n  <mwc-button trigger>OK</mwc-button>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using data attributes and variables</figcaption>\n\n```html\n<apollo-mutation data-type=\"Quote\" data-action=\"FLUB\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"name\"\n      value=\"Neil\"\n      label=\"Name\"></mwc-textfield>\n  <mwc-textarea\n      data-variable=\"comment\"\n      value=\"That's one small step...\"\n      label=\"comment\"></mwc-textarea>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"name\": \"Neil\",\n  \"comment\": \"That's one small step...\",\n  \"type\": \"Quote\",\n  \"action\": \"FLUB\"\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using variable-for inputs</figcaption>\n\n```html\n<label>Comment <input variable-for=\"comment-mutation\" value=\"Hey!\"></label>\n<button trigger-for=\"comment-mutation\">OK</button>\n<apollo-mutation id=\"comment-mutation\"></apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{ \"comment\": \"Hey!\" }\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using data attributes and variables with input property</figcaption>\n\n```html\n<apollo-mutation data-type=\"Type\" data-action=\"ACTION\" input-key=\"actionInput\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n  <mwc-textfield\n      data-variable=\"comment\"\n      value=\"Hey!\"\n      label=\"comment\"></mwc-textfield>\n</apollo-mutation>\n```\nWill mutate with the following as `variables`:\n```json\n{\n  \"actionInput\": {\n    \"comment\": \"Hey!\",\n    \"type\": \"Type\",\n    \"action\": \"ACTION\"\n  }\n}\n```\n\n</figure>\n\n<figure class=\"example\"><figcaption>Using DOM properties</figcaption>\n\n```html\n<apollo-mutation id=\"mutation\">\n  <mwc-button trigger label=\"OK\"></mwc-button>\n</apollo-mutation>\n<script>\n  document.getElementById('mutation').mutation = SomeMutation;\n  document.getElementById('mutation').variables = {\n    type: \"Type\",\n    action: \"ACTION\"\n  };\n</script>\n```\n\nWill mutate with the following as `variables`:\n\n```json\n{\n  \"type\": \"Type\",\n  \"action\": \"ACTION\"\n}\n```\n\n</figure>",
           "name": "ApolloMutationElement",
           "slots": [
             {
@@ -692,7 +692,7 @@
               "kind": "field",
               "name": "doMutate",
               "privacy": "private",
-              "default": "(): void => void (this.controller.mutate().catch(() => void 0))"
+              "default": "(): void => void (this.mutate().catch(() => void 0))"
             },
             {
               "kind": "field",
@@ -704,20 +704,39 @@
               "name": "#buttonMO",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver"
+                "text": "MutationObserver | undefined"
               }
             },
             {
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new WeakMap<HTMLElement, string>()"
+              "default": "new WeakMap<Element, string>()"
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | Document | DocumentFragment | null"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "inputs",
+              "type": {
+                "text": "InputLikeElement[]"
+              },
+              "privacy": "protected",
+              "description": "Variable input nodes",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "triggers",
               "type": {
-                "text": "NodeListOf<HTMLElement>"
+                "text": "Element[]"
               },
               "privacy": "protected",
               "description": "Slotted trigger nodes",
@@ -735,13 +754,17 @@
             },
             {
               "kind": "field",
-              "name": "inputs",
+              "name": "template",
               "type": {
-                "text": "InputLikeElement[]"
+                "text": "HTMLTemplateElement | null"
               },
-              "privacy": "protected",
-              "description": "Variable input nodes",
-              "readonly": true
+              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
+              "attribute": "template",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "StampinoRender",
+                "module": "stampino-render.js"
+              }
             },
             {
               "kind": "field",
@@ -803,7 +826,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": ""
@@ -812,7 +835,7 @@
               "kind": "field",
               "name": "optimisticResponse",
               "type": {
-                "text": "OptimisticResponseType<D, V>"
+                "text": "OptimisticResponseType<D, V> | undefined"
               },
               "description": "An object that represents the result of this mutation that will be optimistically\nstored before the server has actually returned a result, or a unary function that\ntakes the mutation's variables and returns such an object.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.\n\n### Examples\n\n<figure class=\"example\"><figcaption>Using a function</figcaption>\n\n```ts\nelement.optimisticResponse = ({ name }: HelloMutationVariables) => ({\n __typename: 'Mutation',\n hello: {\n   __typename: 'Greeting',\n   name,\n },\n});\n```\n\n</figure>"
             },
@@ -855,7 +878,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "Specifies the ErrorPolicy to be used for this mutation.",
               "attribute": "error-policy"
@@ -864,7 +887,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "'no-cache'"
+                "text": "'no-cache' | undefined"
               },
               "description": "Specifies the FetchPolicy to be used for this mutation.",
               "attribute": "fetch-policy"
@@ -936,7 +959,7 @@
                 {
                   "name": "element",
                   "type": {
-                    "text": "HTMLElement"
+                    "text": "Element"
                   }
                 }
               ]
@@ -1209,20 +1232,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "template",
-              "type": {
-                "text": "HTMLTemplateElement | null"
-              },
-              "description": "Template element to render. Can either be a light-DOM child of the element,\nor referenced by ID with the `template` attribute.\n\nTemplates are [stampino](https://npm.im/stampino) templates using [jexpr](https://npm.im/jexpr)",
-              "attribute": "template",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "StampinoRender",
-                "module": "stampino-render.js"
-              }
-            },
-            {
               "kind": "method",
               "name": "getElementByIdFromRoot",
               "privacy": "private",
@@ -1368,7 +1377,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "Specifies the ErrorPolicy to be used for this mutation.",
               "fieldName": "errorPolicy",
@@ -1377,7 +1386,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "'no-cache'"
+                "text": "'no-cache' | undefined"
               },
               "description": "Specifies the FetchPolicy to be used for this mutation.",
               "fieldName": "fetchPolicy",
@@ -1583,7 +1592,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, any>"
+                "text": "Record<string, any> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": ""
@@ -1602,7 +1611,7 @@
               "kind": "field",
               "name": "partialRefetch",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
               "summary": "Set to retry any partial query results.",
@@ -1612,7 +1621,7 @@
               "kind": "field",
               "name": "pollInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
               "attribute": "poll-interval",
@@ -1622,7 +1631,7 @@
               "kind": "field",
               "name": "returnPartialData",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
               "attribute": "return-partial-data"
@@ -1652,7 +1661,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
@@ -1662,7 +1671,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "WatchQueryFetchPolicy"
+                "text": "WatchQueryFetchPolicy | undefined"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -1672,7 +1681,7 @@
               "kind": "field",
               "name": "nextFetchPolicy",
               "type": {
-                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
               "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
@@ -2085,7 +2094,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "ErrorPolicy"
+                "text": "ErrorPolicy | undefined"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
@@ -2095,7 +2104,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "WatchQueryFetchPolicy"
+                "text": "WatchQueryFetchPolicy | undefined"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -2105,7 +2114,7 @@
             {
               "name": "next-fetch-policy",
               "type": {
-                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
               "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
@@ -2115,7 +2124,7 @@
             {
               "name": "partial-refetch",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
               "summary": "Set to retry any partial query results.",
@@ -2124,7 +2133,7 @@
             {
               "name": "poll-interval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
               "fieldName": "pollInterval"
@@ -2132,7 +2141,7 @@
             {
               "name": "return-partial-data",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
               "fieldName": "returnPartialData"
@@ -2270,7 +2279,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, any>"
+                "text": "Record<string, any> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": ""
@@ -2323,7 +2332,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "this['controller']['options']['errorPolicy'] | undefined"
               },
               "summary": "Error policy for the subscription",
               "attribute": "error-policy",
@@ -2333,7 +2342,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "this['controller']['options']['fetchPolicy'] | undefined"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "attribute": "fetch-policy",
@@ -2343,7 +2352,7 @@
               "kind": "field",
               "name": "pollInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
               "attribute": "poll-interval",
@@ -2667,7 +2676,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "this['controller']['options']['fetchPolicy']"
+                "text": "this['controller']['options']['fetchPolicy'] | undefined"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "fieldName": "fetchPolicy",
@@ -2703,7 +2712,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "this['controller']['options']['errorPolicy']"
+                "text": "this['controller']['options']['errorPolicy'] | undefined"
               },
               "summary": "Error policy for the subscription",
               "fieldName": "errorPolicy"
@@ -2711,7 +2720,7 @@
             {
               "name": "poll-interval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
               "fieldName": "pollInterval"

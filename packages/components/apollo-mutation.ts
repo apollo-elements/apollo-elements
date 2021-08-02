@@ -119,6 +119,17 @@ defaultTemplate.innerHTML = `<slot></slot>`;
  *          }
  * ```
  *
+ * @example <caption>Using variable-for inputs</caption>
+ * ```html
+ *          <label>Comment <input variable-for="comment-mutation" value="Hey!"></label>
+ *          <button trigger-for="comment-mutation">OK</button>
+ *          <apollo-mutation id="comment-mutation"></apollo-mutation>
+ * ```
+ * Will mutate with the following as `variables`:
+ * ```json
+ *          { "comment": "Hey!" }
+ * ```
+ *
  * @example <caption>Using data attributes and variables with input property</caption>
  * ```html
  *          <apollo-mutation data-type="Type" data-action="ACTION" input-key="actionInput">
@@ -205,13 +216,32 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   #buttonMO?: MutationObserver;
 
-  #listeners = new WeakMap<HTMLElement, string>();
+  #listeners = new WeakMap<Element, string>();
+
+  get #root(): ShadowRoot | Document | DocumentFragment | null {
+    const root = this.getRootNode();
+    if (root instanceof ShadowRoot || root instanceof Document || root instanceof DocumentFragment)
+      return root;
+    else
+      return null;
+  }
+
+  /**
+   * Variable input nodes
+   */
+  protected get inputs(): InputLikeElement[] {
+    const forInputs = (this.id && this.#root ?
+      Array.from(this.#root.querySelectorAll(`[variable-for="${this.id}"]`)) : []) as InputLikeElement[];
+    return forInputs.concat(Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]')));
+  }
 
   /**
    * Slotted trigger nodes
    */
-  protected get triggers(): NodeListOf<HTMLElement> {
-    return this.querySelectorAll('[trigger]');
+  protected get triggers(): Element[] {
+    const forTriggers =
+      (this.id && this.#root) ? this.#root.querySelectorAll(`[trigger-for="${this.id}"]`) : [];
+    return Array.from(forTriggers).concat(Array.from(this.querySelectorAll('[trigger]')));
   }
 
   /**
@@ -220,20 +250,13 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    */
   protected get buttons(): ButtonLikeElement[] {
     const { isButton, isLink } = ApolloMutationElement;
-    return Array.from(this.triggers, x => {
+    return this.triggers.map(x => {
       if (isLink(x) && isButton(x.firstElementChild))
         /* c8 ignore next 3 */
         return x.firstElementChild;
       else
         return x;
     }).filter(isButton);
-  }
-
-  /**
-   * Variable input nodes
-   */
-  protected get inputs(): InputLikeElement[] {
-    return Array.from(this.querySelectorAll<InputLikeElement>('[data-variable]'));
   }
 
   get template(): HTMLTemplateElement {
@@ -449,7 +472,7 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       this.addTriggerListener(trigger);
   }
 
-  private addTriggerListener(element: HTMLElement) {
+  private addTriggerListener(element: Element) {
     const eventType = element?.getAttribute?.('trigger') || 'click';
 
     if (

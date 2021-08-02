@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+::slotted(button) {
+  font-weight: bold;
+  width: 100%;
+}
+
+.transparent {
+  opacity: 0;
+}
