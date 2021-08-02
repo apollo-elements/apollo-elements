@@ -114,7 +114,7 @@
               "kind": "field",
               "name": "optimisticResponse",
               "type": {
-                "text": "OptimisticResponseType<D, V>"
+                "text": "OptimisticResponseType<D, V> | undefined"
               },
               "description": "An object that represents the result of this mutation that will be optimistically\nstored before the server has actually returned a result, or a unary function that\ntakes the mutation's variables and returns such an object.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear."
             },
@@ -130,14 +130,14 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "Extract<C.FetchPolicy, 'no-cache'>"
+                "text": "Extract<C.FetchPolicy, 'no-cache'> | undefined"
               }
             },
             {
               "kind": "field",
               "name": "awaitRefetchQueries",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               }
             },
             {
@@ -333,7 +333,7 @@
               "kind": "field",
               "name": "mo",
               "type": {
-                "text": "MutationObserver"
+                "text": "MutationObserver | undefined"
               },
               "privacy": "private",
               "description": "Updates the element state in reaction to GraphQL or JSON script child changes."
@@ -564,7 +564,7 @@
               "kind": "field",
               "name": "typePolicies",
               "type": {
-                "text": "TypePolicies"
+                "text": "TypePolicies | undefined"
               },
               "description": "`TypePolicies` to lazy-load."
             }

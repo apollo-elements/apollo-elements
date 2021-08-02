@@ -514,7 +514,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": ""
@@ -686,7 +686,7 @@
               "kind": "field",
               "name": "optimisticResponse",
               "type": {
-                "text": "OptimisticResponseType<D, V>"
+                "text": "OptimisticResponseType<D, V> | undefined"
               },
               "description": "An object that represents the result of this mutation that will be optimistically\nstored before the server has actually returned a result, or a unary function that\ntakes the mutation's variables and returns such an object.\n\nThis is most often used for optimistic UI, where we want to be able to see\nthe result of a mutation immediately, and update the UI later if any errors\nappear.\n\n### Examples\n\n<figure class=\"example\"><figcaption>Using a function</figcaption>\n\n```ts\nelement.optimisticResponse = ({ name }: HelloMutationVariables) => ({\n __typename: 'Mutation',\n hello: {\n   __typename: 'Greeting',\n   name,\n },\n});\n```\n\n</figure>"
             },
@@ -704,7 +704,7 @@
               "kind": "field",
               "name": "awaitRefetchQueries",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
               "attribute": "await-refetch-queries"
@@ -713,7 +713,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "description": "Specifies the ErrorPolicy to be used for this mutation.",
               "attribute": "error-policy"
@@ -722,7 +722,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "'no-cache'"
+                "text": "'no-cache' | undefined"
               },
               "description": "Specifies the FetchPolicy to be used for this mutation.",
               "attribute": "fetch-policy"
@@ -853,7 +853,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": "",
@@ -909,7 +909,7 @@
             {
               "name": "await-refetch-queries",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
               "fieldName": "awaitRefetchQueries"
@@ -917,7 +917,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "description": "Specifies the ErrorPolicy to be used for this mutation.",
               "fieldName": "errorPolicy"
@@ -925,7 +925,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "'no-cache'"
+                "text": "'no-cache' | undefined"
               },
               "description": "Specifies the FetchPolicy to be used for this mutation.",
               "fieldName": "fetchPolicy"
@@ -954,7 +954,7 @@
             {
               "name": "await-refetch-queries",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Queries refetched as part of refetchQueries are handled asynchronously,\nand are not waited on before the mutation is completed (resolved).\nSetting this to true will make sure refetched queries are completed\nbefore the mutation is considered done. false by default.",
               "attribute": "await-refetch-queries",
@@ -963,7 +963,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "description": "Specifies the ErrorPolicy to be used for this mutation.",
               "attribute": "error-policy",
@@ -972,7 +972,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "'no-cache'"
+                "text": "'no-cache' | undefined"
               },
               "description": "Specifies the FetchPolicy to be used for this mutation.",
               "attribute": "fetch-policy",
@@ -1146,7 +1146,7 @@
               "kind": "field",
               "name": "partialRefetch",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
               "summary": "Set to retry any partial query results."
@@ -1155,7 +1155,7 @@
               "kind": "field",
               "name": "pollInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
               "description": ""
@@ -1164,7 +1164,7 @@
               "kind": "field",
               "name": "returnPartialData",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache."
             },
@@ -1182,7 +1182,7 @@
               "kind": "field",
               "name": "notifyOnNetworkStatusChange",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
               "description": ""
@@ -1191,7 +1191,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
@@ -1201,7 +1201,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "C.WatchQueryFetchPolicy"
+                "text": "C.WatchQueryFetchPolicy | undefined"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -1211,7 +1211,7 @@
               "kind": "field",
               "name": "nextFetchPolicy",
               "type": {
-                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
               "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
@@ -1429,7 +1429,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": "",
@@ -1494,7 +1494,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
@@ -1503,7 +1503,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "C.WatchQueryFetchPolicy"
+                "text": "C.WatchQueryFetchPolicy | undefined"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -1512,7 +1512,7 @@
             {
               "name": "next-fetch-policy",
               "type": {
-                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
               "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
@@ -1534,7 +1534,7 @@
             {
               "name": "partial-refetch",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
               "summary": "Set to retry any partial query results.",
@@ -1543,7 +1543,7 @@
             {
               "name": "poll-interval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this query should be refetched from the server.",
               "fieldName": "pollInterval"
@@ -1551,7 +1551,7 @@
             {
               "name": "return-partial-data",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache.",
               "fieldName": "returnPartialData"
@@ -1569,7 +1569,7 @@
             {
               "name": "notify-on-network-status-change",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "summary": "Whether or not updates to the network status should trigger next on the observer of this query.",
               "fieldName": "notifyOnNetworkStatusChange"
@@ -1577,7 +1577,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
               "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the query.",
@@ -1587,7 +1587,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "C.WatchQueryFetchPolicy"
+                "text": "C.WatchQueryFetchPolicy | undefined"
               },
               "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
               "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
@@ -1597,7 +1597,7 @@
             {
               "name": "next-fetch-policy",
               "type": {
-                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>"
+                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
               },
               "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
               "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
@@ -1728,7 +1728,7 @@
               "kind": "field",
               "name": "notifyOnNetworkStatusChange",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
               "description": ""
@@ -1757,7 +1757,7 @@
               "kind": "field",
               "name": "errorPolicy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "summary": "Error policy for the subscription",
               "description": ""
@@ -1766,7 +1766,7 @@
               "kind": "field",
               "name": "fetchPolicy",
               "type": {
-                "text": "C.FetchPolicy"
+                "text": "C.FetchPolicy | undefined"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "attribute": "fetch-policy",
@@ -1776,7 +1776,7 @@
               "kind": "field",
               "name": "pollInterval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
               "description": ""
@@ -1919,7 +1919,7 @@
               "kind": "field",
               "name": "context",
               "type": {
-                "text": "Record<string, unknown>"
+                "text": "Record<string, unknown> | undefined"
               },
               "summary": "Context passed to the link execution chain.",
               "description": "",
@@ -1984,7 +1984,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "C.FetchPolicy"
+                "text": "C.FetchPolicy | undefined"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "fieldName": "fetchPolicy"
@@ -2002,7 +2002,7 @@
             {
               "name": "notify-on-network-status-change",
               "type": {
-                "text": "boolean"
+                "text": "boolean | undefined"
               },
               "summary": "Whether or not updates to the network status should trigger next on the observer of this subscription.",
               "fieldName": "notifyOnNetworkStatusChange"
@@ -2028,7 +2028,7 @@
             {
               "name": "error-policy",
               "type": {
-                "text": "C.ErrorPolicy"
+                "text": "C.ErrorPolicy | undefined"
               },
               "summary": "Error policy for the subscription",
               "fieldName": "errorPolicy"
@@ -2036,7 +2036,7 @@
             {
               "name": "fetch-policy",
               "type": {
-                "text": "C.FetchPolicy"
+                "text": "C.FetchPolicy | undefined"
               },
               "summary": "Specifies the FetchPolicy to be used for this subscription.",
               "attribute": "fetch-policy",
@@ -2045,7 +2045,7 @@
             {
               "name": "poll-interval",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "summary": "The time interval (in milliseconds) on which this subscription should be refetched from the server.",
               "fieldName": "pollInterval"
