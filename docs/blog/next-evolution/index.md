@@ -7,7 +7,7 @@ tags:
 published: true
 cover_image: /blog/next-evolution/social@2x.png
 socialMediaImage: /blog/next-evolution/social@2x.png
-date: 2021-07-01
+date: 2021-08-02
 updated: Last Modified
 ---
 
@@ -125,6 +125,65 @@ Here's the demo app from above, but written in HTML:
 
 There's a tonne of potential here and we're very keen to see what you come up with using these new components. Bear in mind that the stampino API isn't stable yet: there may be changes coming down the pipe in the future, but we'll do our best to keep those changes private.
 
+## More Flexible HTML Mutations
+The `<apollo-mutation>` component lets you declare GraphQL mutations in HTML. Now, the latest version gives you more options to layout your pages. Add a stampino template to render the mutation result into the light or shadow DOM. Use the `variable-for="<id>"` and `trigger-for="<id>"` attributes on sibling elements to better integrate with 3rd-party components, and specify the event which triggers the mutation by specifying a value to the `trigger` attribute.
+
+<figure>
+
+```html playground shoelace index.html
+<link rel="stylesheet" href="https://unpkg.com/@shoelace-style/shoelace@2.0.0-beta.47/dist/themes/base.css">
+<script src="https://unpkg.com/@shoelace-style/shoelace@2.0.0-beta.47/dist/shoelace.js?module" type="module"></script>
+
+<sl-button id="toggle">Add a User</sl-button>
+
+<sl-dialog label="Add User">
+  <sl-input label="What is your name?"
+            variable-for="add-user-mutation"
+            data-variable="name"></sl-input>
+  <sl-button slot="footer"
+             type="primary"
+             trigger-for="add-user-mutation">Add</sl-button>
+</sl-dialog>
+
+<apollo-mutation id="add-user-mutation">
+  <script type="application/graphql" src="AddUser.mutation.graphql"></script>
+  <template>{%raw%}
+    <sl-alert type="primary" duration="3000" closable ?open="{{ data }}">
+      <sl-icon slot="icon" name="info-circle"></sl-icon>
+      <p>Added {{ data.addUser.name }}</p>
+    </sl-alert>
+  {%endraw%}</template>
+</apollo-mutation>
+<script type="module" src="imports.js"></script>
+
+<script type="module">
+  const toggle = document.getElementById('toggle');
+  const dialog = document.querySelector('sl-dialog');
+  const mutation = document.getElementById('add-user-mutation');
+  toggle.addEventListener('click', () => dialog.show());
+  mutation.addEventListener('mutation-completed', () => dialog.hide());
+</script>
+```
+
+```js playground-file shoelace imports.js
+import '@apollo-elements/components';
+
+{% include ./_assets/html-components/client.js | safe %}
+
+document.getElementById('add-user-mutation').client = client;
+```
+
+```graphql playground-file shoelace AddUser.mutation.graphql
+{% include ./_assets/html-components/AddUser.mutation.graphql | safe %}
+```
+
+<figcaption>
+
+Demonstrating how to use `<apollo-mutation>` with [Shoelace](https://shoelace.style) web components.
+
+</figcaption>
+</figure>
+
 ## Atomico support
 
 On the heels of the controllers release, we're happy to add a new package to the roster. Apollo Elements now has first-class support for [Atomico](https://atomico.gitbook.io), a new hooks-based web components library with JSX or template-string templating.
@@ -168,7 +227,7 @@ The docs also got a major upgrade care of Pascal Schilp's untiring work in the [
 
 ## SSR
 
-As part of the release, we updated our demo apps [leeway](https://leeway.apolloelements.dev) and [LaunchCTL](https://launchctl.apolloelements.dev). In the case of leeway, we took the opportunity to implement extensive SSR with the help of a new browser standard called [Declarative Shadow DOM](https://web.dev/declarative-shadow-dom/). It's early days for this technique but it's already looking very promising.
+As part of the release, we updated our demo apps [leeway](https://leeway.apolloelements.dev) and [LaunchCTL](https://launchctl.apolloelements.dev). In the case of leeway, we took the opportunity to implement extensive SSR with the help of a new browser standard called [Declarative Shadow DOM](https://web.dev/declarative-shadow-dom/). It's early days for this technique but it's already looking very promising. You can try it out in any chromium browser (Chrome, Brave, Edge, Opera) by disabling JavaScript and visiting [https://leeway.apolloelements.dev](https://leeway.apolloelements.dev).
 
 ## Behind the Scenes
 
@@ -239,6 +298,10 @@ html, body {
 
 ```js playground-file html-components components.js
 {% include ./_assets/html-components/components.js | safe %}
+
+{% include ./_assets/html-components/client.js | safe %}
+
+document.querySelector('apollo-client').client = client;
 ```
 
 ```html playground-file haunted-multiple-hooks index.html
@@ -286,6 +349,9 @@ export const VeggiesQuery = gql`{% include ./_assets/healthy-snack/Veggies.query
 ```
 
 <style data-helmet>
+figure {
+  margin-inline: 0;
+}
 #hybrids-multiple-factories,
 #haunted-multiple-hooks {
   --playground-ide-height: 320px;
