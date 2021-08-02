@@ -324,9 +324,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement>(html`
-        <apollo-mutation></apollo-mutation>
-      `);
+      element = await fixture(html`<apollo-mutation></apollo-mutation>`);
     });
 
     it('does not set variables', function() {
@@ -356,7 +354,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     let element: ApolloMutationElement;
 
     beforeEach(async function() {
-      element = await fixture<ApolloMutationElement>(html`
+      element = await fixture(html`
         <apollo-mutation refetch-queries="A, B,C  ,   D  ,E"></apollo-mutation>
       `);
     });
@@ -598,6 +596,42 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         varB: 'variable-b',
         varC: 'variable-c',
         varD: 'variable-d',
+      });
+    });
+  });
+
+  describe('with `variables-for` and `trigger-for` sibling nodes', function() {
+    let container: HTMLElement;
+    let element: ApolloMutationElement;
+    beforeEach(async function() {
+      container = await fixture(`
+        <div>
+          <button trigger-for="my-mutation">Launch</button>
+          <label>Name <input variable-for="my-mutation" data-variable="name" value="Neil"/></label>
+          <apollo-mutation id="my-mutation" data-id="1">
+            <label>Email <input type="email" data-variable="email" value="neil@nasa.gov"/></label>
+          </apollo-mutation>
+        </div>
+      `);
+      element = container.querySelector('apollo-mutation') as ApolloMutationElement;
+      spy(element, 'mutate');
+      await element.updateComplete;
+    });
+
+    it('reads variables from the root node', function() {
+      expect(element.variables).to.deep.equal({
+        id: '1',
+        name: 'Neil',
+        email: 'neil@nasa.gov',
+      });
+    });
+
+    describe('clicking the sibling trigger', function() {
+      beforeEach(function() {
+        container.querySelector('button')!.click();
+      });
+      it('calls mutate on the element', function() {
+        expect(element.mutate).to.have.been.calledOnce;
       });
     });
   });

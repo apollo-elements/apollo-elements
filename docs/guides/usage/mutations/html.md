@@ -80,23 +80,41 @@ Templates use [stampino](https://npm.im/stampino) and [jexpr](https://npm.im/jex
 
 </inline-notification>
 
-```html copy
+```html playground add-user index.html
 <apollo-mutation>
+  <script type="application/graphql" src="AddUser.mutation.graphql"></script>
+  <label>Name <input data-variable="name"/></label>
+  <button trigger>Add</button>
   <template>
-    <style>
-      .transparent {
-        opacity: 0;
-      }
-    </style>
-
-    <link rel="stylesheet" href="/components/user-added.css">
-
+    <link rel="stylesheet" href="add-user.css">
+    <slot></slot>
     <output class="{%raw%}{{ data ? 'resolved' : 'transparent' }}{%endraw%}">
       <p>You have added {%raw%}{{ data.addUser.name }}{%endraw%}.</p>
     </output>
   </template>
 </apollo-mutation>
+<script type="module" src="client.js"></script>
 ```
+
+```css playground-file add-user add-user.css
+{% include ./_assets/add-user.css %}
+```
+
+```graphql playground-file add-user AddUser.mutation.graphql
+mutation AddUser($name: String!) {
+  addUser(name: $name) { name }
+}
+```
+
+```js playground-file add-user client.js
+{% include ./_assets/client.js %}
+```
+
+<inline-notification type="tip">
+
+When using shadow DOM templates, be sure you either add a `<slot>` element or use `variables-for` and `trigger-for` attribute on sibling nodes, so that your controls remain visible.
+
+</inline-notification>
 
 Learn more about template expressions and bindings in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/#template-expressions)
 
