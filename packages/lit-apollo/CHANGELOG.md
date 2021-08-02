@@ -10,12 +10,12 @@
 
   ```bash
   npm r -S lit-element lit-html
-  npm i -S @apollo-elements/lit-apollo@next
+  npm i -S lit @apollo-elements/lit-apollo@latest
   ```
 
   ```bash
   yarn remove lit-element lit-html
-  yarn add @apollo-elements/lit-apollo@next
+  yarn add lit @apollo-elements/lit-apollo@latest
   ```
 
 - 4cb497a4: Makes GraphQL script children opt-in
