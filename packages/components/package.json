@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/components",
-  "version": "2.0.0-next.11",
+  "version": "2.0.0",
   "description": "👩‍🚀🌛 Web component helpers for Apollo GraphQL 🚀👨‍🚀",
   "type": "module",
   "main": "index.js",
@@ -58,8 +58,8 @@
   },
   "homepage": "https://apolloelements.dev/api/components/",
   "dependencies": {
-    "@apollo-elements/core": "^0.1.0-next.7",
-    "@apollo-elements/mixins": "^4.0.0-next.7",
+    "@apollo-elements/core": "^1.0.0",
+    "@apollo-elements/mixins": "^4.0.0",
     "@apollo/client": "^3.3.21 || ^3.4.0-rc",
     "stampino": "^0.6.2",
     "tslib": "^2.3.0"
