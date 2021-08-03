@@ -1,0 +1,60 @@
+<h1>Apollo Elements Blog</h1>
+
+<style data-helmet>
+  .articles {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: masonry;
+    width: 100%;
+  }
+
+  .articles {
+    display:block;
+  }
+
+  .articles article {
+    border-radius: 6px;
+    box-shadow: none;
+    margin: 0;
+    display: grid;
+    grid-template-areas: 't h' 't c';
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  @media (min-width: 600px) {
+    .articles article {
+      grid-template-rows: 50% 50%;
+      grid-template-columns: 400px 1fr;
+      column-gap: 16px;
+    }
+  }
+
+  .articles article:hover,
+  .articles article:focus-within {
+    background: var(--markdown-code-background-color);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .articles article header {
+    padding: 6px 10px;
+  }
+
+  .articles article aside {
+    grid-area: t;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .articles article h2 {
+    padding-top: 0;
+  }
+
+  time {
+    font-size: 14px;
+    font-family: var(--monospace-font-family);
+  }
+</style>

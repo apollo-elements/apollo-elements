@@ -214,6 +214,8 @@ export default ({
   ],
 
   eleventy(eleventyConfig) {
+    eleventyConfig.addFilter('formatDate', date =>
+      date instanceof Date ? date.toDateString() : date);
     eleventyConfig.addWatchTarget('_assets/**/*.css');
     eleventyConfig.addTransform('fix-noscript', content =>
       content

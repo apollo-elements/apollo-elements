@@ -1,0 +1,23 @@
+<div class="articles">
+  {% for post in posts %}
+    {% if post.data.published %}
+    {{ post.data | log }}
+      {% set cover = post.data.cover_image or post.data.socialMediaImage %}
+      <article>
+        <aside style="background-image: url({{ cover | url }});">
+          {%- if cover -%}
+            <a href="{{ post.url | url }}" class="thumbnail" aria-label="read more"></a>
+          {%- endif -%}
+        </aside>
+        <header>
+          <h2><a href="{{ post.url | url }}">{{ post.data.title }}</a></h2>
+          <time datetime="{{ post.date }}">{{ post.date | formatDate }}</time>
+        </header>
+        <div class="content">
+          <p>{{ post.data.description }}</p>
+          <a class="read" href="{{ post.url | url }}">...read more</a>
+        </div>
+      </article>
+    {% endif %}
+  {% endfor %}
+</div>
