@@ -1,8 +1,6 @@
-#!/usr/bin/env node
-
 import { prompt } from './prompt.js';
 
-async function main() {
+export async function main(): Promise<void> {
   try {
     await prompt();
   } catch (e) {
@@ -10,4 +8,3 @@ async function main() {
       console.error(e);
   }
 }
-main();
