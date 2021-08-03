@@ -7,7 +7,6 @@ if [ -f .changeset/pre.json ]; then
   git config user.name "github-actions[bot]"
   git config user.email "github-actions[bot]@users.noreply.github.com"
   git commit --message "chore: exit prerelease"
-  git push
 else
   echo "Not in prerelease mode"
 fi
