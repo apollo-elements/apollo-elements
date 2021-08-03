@@ -28,7 +28,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 async function initFiles(options: AppOptions) {
   console.log(`\n${cyan('Scaffolding App Files')}...\n`);
-  const templatePath = path.resolve(__dirname, 'template/app');
+  const templatePath = path.resolve(__dirname, 'template', 'app');
   await ncp(templatePath, cwd);
   await rename(path.join(cwd, '__gitignore'), path.join(cwd, '.gitignore'));
 
@@ -40,7 +40,7 @@ async function initFiles(options: AppOptions) {
 
   const FILE_NAMES = {
     rc: '.graphqlrc.yml',
-    client: 'src/client.ts',
+    client: path.join('src', 'client.ts'),
   };
 
   async function write(key: keyof typeof FILE_NAMES) {

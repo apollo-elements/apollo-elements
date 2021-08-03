@@ -5,10 +5,9 @@
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
   "type": "module",
-  "main": "./index.js",
-  "typings": ".index.d.ts",
+  "typings": "./index.d.ts",
   "bin": {
-    "create-app": "index.js"
+    "create-app": "bin/main.js"
   },
   "keywords": [
     "generator",
@@ -21,8 +20,8 @@
   ],
   "scripts": {
     "🚨__COMMENT__🚨": "echo 'The next two lines are a workaround for https://github.com/npm/cli/issues/2632'",
-    "preinstall": "touch index.js",
-    "postinstall": "[ -s index.js ] || rm -f index.js",
+    "preinstall": "node bin/hack.js pre",
+    "postinstall": "node bin/hack.js post",
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
     "lint": "run-s lint:*",
