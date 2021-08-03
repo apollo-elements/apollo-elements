@@ -66,13 +66,13 @@ const TEMPLATE_BASENAMES: Record<FileKey, string> = {
   index: 'index.ts',
 };
 
-const DEFAULT_QUERY_FIELDS = `# replace with your fields
-__schema {
-  types {
-    name
-    kind
-  }
-}`;
+const DEFAULT_QUERY_FIELDS = `  # replace with your fields
+  __schema {
+    types {
+      name
+      kind
+    }
+  }`;
 
 const DEFAULT_SUBSCRIPTION_FIELDS = DEFAULT_QUERY_FIELDS;
 
@@ -274,7 +274,7 @@ async function shouldWriteToDir(options: ComponentOptions): Promise<boolean> {
 
 async function getTemplate(key: FileKey): Promise<string> {
   const TEMPLATE_DIR =
-    join(__dirname, 'template/component');
+    join(__dirname, 'template', 'component');
 
   return await readFile(join(TEMPLATE_DIR, TEMPLATE_BASENAMES[key]), 'utf8');
 }

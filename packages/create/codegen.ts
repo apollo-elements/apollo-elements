@@ -1,3 +1,4 @@
+import path from 'path';
 import execa, { ExecaReturnValue } from 'execa';
 import { AppOptions, BaseOptions, ComponentOptions } from './options.js';
 import { getOperationFileName, getUnprefixedTagName } from './component.js';
@@ -13,7 +14,12 @@ interface ExecaError {
 
 function getFailedFilename(options: ComponentOptions): string {
   try {
-    return `src/components/${getUnprefixedTagName(options)}/${getOperationFileName(options)}`;
+    return path.join(
+      'src',
+      'components',
+      getUnprefixedTagName(options),
+      getOperationFileName(options)
+    );
   } catch {
     return 'the generated operation file';
   }
