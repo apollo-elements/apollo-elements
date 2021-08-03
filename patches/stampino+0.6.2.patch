@@ -1,0 +1,24 @@
+diff --git a/node_modules/stampino/stampino.js b/node_modules/stampino/stampino.js
+index 3021718..2eab5e8 100644
+--- a/node_modules/stampino/stampino.js
++++ b/node_modules/stampino/stampino.js
+@@ -245,9 +245,7 @@ const makeLitTemplate = (template) => {
+                 const attributeNames = element.getAttributeNames();
+                 for (const attributeName of attributeNames) {
+                     const attributeValue = element.getAttribute(attributeName);
+-                    // TODO: use alternative to negative lookbehind
+-                    // (but it's so convenient!)
+-                    const splitValue = attributeValue.split(/(?<!\\){{(.*?)(?:(?<!\\)}})/g);
++                    const splitValue = attributeValue.split(/(?!\\){{(.*?)(?:(?!\\)}})/g);
+                     if (splitValue.length === 1) {
+                         continue;
+                     }
+@@ -290,7 +288,7 @@ const makeLitTemplate = (template) => {
+         else if (node.nodeType === Node.TEXT_NODE) {
+             const textNode = node;
+             const text = textNode.textContent;
+-            const strings = text.split(/(?<!\\){{(.*?)(?:(?<!\\)}})/g);
++            const strings = text.split(/(?!\\){{(.*?)(?:(?!\\)}})/g);
+             if (strings.length > 1) {
+                 textNode.textContent = strings[0].replace('\\{{', '{{');
+             }
