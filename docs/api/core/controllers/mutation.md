@@ -24,6 +24,7 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 </inline-notification>
 
 ```ts playground mutation-controller add-user.ts
+import '@apollo-elements/components/apollo-client';
 import { ApolloMutationController } from '@apollo-elements/core';
 import { customElement, state, query } from 'lit/decorators.js';
 import { css, html, LitElement } from 'lit';
@@ -77,7 +78,6 @@ mutation AddUser($name: String) {
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { EventIterator } from 'event-iterator';
 
 const USERS = [ ];
 
