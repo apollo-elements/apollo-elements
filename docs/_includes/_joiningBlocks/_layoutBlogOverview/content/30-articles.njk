@@ -4,9 +4,11 @@
     {{ post.data | log }}
       {% set cover = post.data.cover_image or post.data.socialMediaImage %}
       <article>
-        <aside style="background-image: url({{ cover | url }});">
+        <aside>
           {%- if cover -%}
-            <a href="{{ post.url | url }}" class="thumbnail" aria-label="read more"></a>
+            <a href="{{ post.url | url }}" class="thumbnail" aria-label="read more">
+              <img src="{{ cover | url }}" alt="read more"></a>
+            </a>
           {%- endif -%}
         </aside>
         <header>
