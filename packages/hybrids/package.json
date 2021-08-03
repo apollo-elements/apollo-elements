@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/hybrids",
-  "version": "4.0.0-next.5",
+  "version": "4.0.0",
   "description": "👩‍🚀 Hybrids Starter Cultures for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
@@ -54,7 +54,7 @@
   "license": "ISC",
   "homepage": "https://apolloelements.dev/api/libraries/hybrids",
   "dependencies": {
-    "@apollo-elements/core": "^0.1.0-next.7",
+    "@apollo-elements/core": "^1.0.0",
     "@lit/reactive-element": "^1.0.0-rc.2",
     "hybrids": "^5.4.0",
     "tslib": "^2.3.0"

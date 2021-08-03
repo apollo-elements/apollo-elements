@@ -12,15 +12,15 @@ Hybrids is a unique web components framework which combines aspects of functiona
 <code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
-  npm i -S @apollo-elements/hybrids@next
+  npm i -S @apollo-elements/hybrids
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/hybrids@next
+  yarn add @apollo-elements/hybrids
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/hybrids@next
+  pnpm add @apollo-elements/hybrids
   ```
 
 </code-tabs>

@@ -257,7 +257,7 @@ The same is true of the [hybrids](https://hybrids.js.org) support, it now uses t
 
 ## Try it Out
 
-Apollo Elements next is available in prerelease on [npm](https://npm.im/@apollo-elements/core@next). We hope you enjoy using it and look forward to seeing what you come up with.
+Apollo Elements next is available in prerelease on [npm](https://npm.im/@apollo-elements/core). We hope you enjoy using it and look forward to seeing what you come up with.
 
 > Are you using Apollo Elements at work? Consider [sponsoring the project via Open Collective](https://opencollective.com/apollo-elements) to receive perks like priority support.
 

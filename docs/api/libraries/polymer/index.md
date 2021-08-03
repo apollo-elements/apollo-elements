@@ -12,15 +12,15 @@ Polymer is the <abbr title="original gangsta">OG</abbr> web components library, 
 <code-tabs collection="package-managers" default-tab="npm" align="end">
 
   ```bash tab npm
-  npm i -S @apollo-elements/polymer@next
+  npm i -S @apollo-elements/polymer
   ```
 
   ```bash tab yarn
-  yarn add @apollo-elements/polymer@next
+  yarn add @apollo-elements/polymer
   ```
 
   ```bash tab pnpm
-  pnpm add @apollo-elements/polymer@next
+  pnpm add @apollo-elements/polymer
   ```
 
 </code-tabs>
