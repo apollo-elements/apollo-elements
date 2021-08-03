@@ -4,7 +4,8 @@
 
 ### Patch Changes
 
-- 38c1b3a: Fixes for Windows users
+- 821a0ec8: Workaround for an [npm bug](https://github.com/npm/cli/issues/2632)
+- 38c1b3a4: Fixes for Windows users
 
 ## 2.0.0
 
