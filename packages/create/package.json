@@ -19,9 +19,6 @@
     "apollo"
   ],
   "scripts": {
-    "🚨__COMMENT__🚨": "echo 'The next two lines are a workaround for https://github.com/npm/cli/issues/2632'",
-    "preinstall": "node bin/hack.js pre",
-    "postinstall": "node bin/hack.js post",
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
     "lint": "run-s lint:*",
