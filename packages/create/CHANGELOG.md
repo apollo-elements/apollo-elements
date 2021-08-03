@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.1-next.2
+
+### Patch Changes
+
+- dc9235b2: Better error logging
+
 ## 2.0.1-next.1
 
 ### Patch Changes
