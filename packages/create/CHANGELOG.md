@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.1-next.0
+
+### Patch Changes
+
+- 7bdcfa2: Fixes for Windows users
+
 ## 2.0.0
 
 ### Major Changes
