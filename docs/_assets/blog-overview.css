@@ -1,0 +1,103 @@
+.articles {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: masonry;
+  width: 100%;
+}
+
+.articles {
+  display:block;
+}
+
+.articles article {
+  border-radius: 6px;
+  box-shadow: none;
+  margin: 0;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.articles .content {
+  display: grid;
+}
+
+.articles article:hover,
+.articles article:focus-within {
+  background: var(--markdown-code-background-color);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.articles article .content,
+.articles article header {
+  padding-inline:10px;
+}
+
+.articles article header {
+  padding-block-start: 6px;
+}
+
+.articles article .content {
+  padding-block-end: 6px;
+}
+
+.articles article h2 {
+  padding-top: 0;
+}
+
+time {
+  font-size: 14px;
+  font-family: var(--monospace-font-family);
+}
+
+.articles .read {
+  background: var(--primary-color);
+  border-radius: 6px;
+  color: var(--page-background);
+  font-family: var(--monospace-font-family);
+  font-weight: bold;
+  padding: 9px 12px;
+  text-decoration: none;
+  width: max-content;
+  justify-self: end;
+  height: min-content;
+}
+
+.articles .read:is(:hover, :focus) {
+  background: var(--primary-color-darker);
+  box-shadow: 2px 2px 4px var(--page-background);
+}
+
+.articles .read:active {
+  transform: translate(2px, 2px);
+}
+
+.articles article .thumbnail {
+  height: initial;
+}
+
+@media (min-width: 600px) {
+  .articles article {
+    display: grid;
+    grid-template-areas: 't h' 't c';
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 400px 1fr;
+    column-gap: 16px;
+  }
+
+  .articles article aside {
+    grid-area: t;
+  }
+
+  .articles article .thumbnail {
+    display: contents;
+  }
+
+  .thumbnail img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+}
