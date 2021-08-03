@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 2.0.1-next.1
+
+### Patch Changes
+
+- b5cb790: Workaround for an [npm bug](https://github.com/npm/cli/issues/2632)
+
 ## 2.0.1-next.0
 
 ### Patch Changes
