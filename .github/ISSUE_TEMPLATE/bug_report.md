@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: 'Apollo Elements Bug'
+title: Apollo Elements Bug
 labels: bug
 assignees: ''
-
 ---
 
 ## Package
@@ -13,6 +12,7 @@ assignees: ''
 <!--`@apollo-elements/atomico`-->
 <!--`@apollo-elements/components`-->
 <!--`@apollo-elements/core`-->
+<!--`@apollo-elements/create`-->
 <!--`@apollo-elements/fast`-->
 <!--`@apollo-elements/gluon`-->
 <!--`@apollo-elements/haunted`-->
