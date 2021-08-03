@@ -18,7 +18,5 @@
     "rocket-preset-apollo-elements": "0.0.0",
     "@apollo-elements/test": "1.3.0"
   },
-  "changesets": [
-    "silent-plants-glow"
-  ]
+  "changesets": [ ]
 }
