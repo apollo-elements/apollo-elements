@@ -40,7 +40,7 @@
     "start:tsc": "npm run --workspaces --if-present start --pretty",
     "start:docs": "run-s docs:analyze start:docs:rocket",
     "start:docs:rocket": "rocket start",
-    "test": "wtr --coverage",
+    "test": "wtr",
     "watch:test": "wtr --watch",
     "watch:eslint": "esw",
     "watch:codegen": "graphql-codegen --watch",
