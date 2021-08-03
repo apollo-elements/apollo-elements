@@ -4,6 +4,7 @@ coverage
 .netlify
 .nyc_output
 .npmrc
+cc-reporter
 
 forever*.log
 analysis.json
