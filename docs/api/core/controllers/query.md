@@ -24,6 +24,7 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 </inline-notification>
 
 ```ts playground query-controller profile-home.ts
+import '@apollo-elements/components/apollo-client';
 import { ApolloQueryController } from '@apollo-elements/core';
 import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
