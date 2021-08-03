@@ -6,7 +6,7 @@ on:
       - next
 
 jobs:
-  release:
+  prerelease:
     # Prevents changesets action from creating a PR on forks
     if: github.repository == 'apollo-elements/apollo-elements'
     runs-on: ubuntu-latest
@@ -14,8 +14,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: 16
           registry-url: https://registry.npmjs.org
+          cache: npm
 
       - name: Install packages
         run: npm ci
@@ -29,7 +30,7 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Create Release Pull Request or Publish to npm
+      - name: Create Prerelease Pull Request or Publish next tag to npm
         id: changesets
         uses: changesets/action@master
         with:
@@ -38,5 +39,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
