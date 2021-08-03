@@ -1,7 +1,6 @@
 <div class="articles">
   {% for post in posts %}
     {% if post.data.published %}
-    {{ post.data | log }}
       {% set cover = post.data.cover_image or post.data.socialMediaImage %}
       <article>
         <aside>
@@ -17,7 +16,7 @@
         </header>
         <div class="content">
           <p>{{ post.data.description }}</p>
-          <a class="read" href="{{ post.url | url }}">...read more</a>
+          <a class="read" href="{{ post.url | url }}">Read more</a>
         </div>
       </article>
     {% endif %}

@@ -6,6 +6,8 @@ Thank you for your interest in Apollo Elements. If you'd like to make a bug fix 
 
 - 👇 [Skip to Bug Fixes](#bug-fixes)
 - 👇 [Skip to Feature Requests](#new-features)
+- 👇 [Skip to Pull Request Checklist](#pull-request-checklist)
+- 👇 [Skip to Release Workflow](#release-workflow)
 
 ### Subdirectories
 
@@ -57,3 +59,20 @@ If you notice a bug in Apollo Elements, please [first search the open issues](ht
 ## New Features
 
 If you'd like to add a new feature to Apollo Elements, please open a feature request issue to discuss the feature before making a pull request.
+
+## Pull Request Checklist
+- Keep your pull request small and scoped to a single issue
+- Test your changes
+- Add or update documentation (inline, in `/docs`, or both)
+- Add a changeset by running
+  ```bash
+  npx changeset
+  ```
+
+## Release Workflow
+
+To make changes that target the `next` dist-tag on npm, make a pull request to the `next` branch. Make sure that tests pass, and that the docs site builds and propertly displays your change. When the PR gets merged, the changesets action will create or update a "Version Packages" PR. Merging _that_ PR will publish the packages with the `next` dist-tag.
+
+Merging `next` into `main` will exit prerelease mode and create a "Versions Packages" PR which graduates the changes per-package according to the highlest semver level changeset added since the last `latest` release. Once _that_ PR is merged, the changes will publish to npm with the `latest` dist tag.
+
+At that point, **`next` must be manually rebased to `main`** in order to make way for the next prerelease cycle.
