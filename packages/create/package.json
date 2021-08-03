@@ -19,6 +19,7 @@
     "apollo"
   ],
   "scripts": {
+    "preprepublishOnly": "node ./hack.js prepublish",
     "prepublishOnly": "tsc -b .",
     "build": "tsc",
     "lint": "run-s lint:*",
