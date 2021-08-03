@@ -1,5 +1,13 @@
 # @apollo-elements/create
 
+## 2.0.1
+
+### Patch Changes
+
+- d8b7e52: Workaround for an [npm bug](https://github.com/npm/cli/issues/2632)
+- f802cdf: Better error logging
+- 4249e3a: Fixes for Windows users
+
 ## 2.0.1-next.2
 
 ### Patch Changes
