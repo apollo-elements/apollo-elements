@@ -103,5 +103,16 @@ export async function app(options: AppOptions): Promise<void> {
   await execInstall(options);
   if (options.install)
     await codegen(options);
-  await execStart(options);
+  try {
+    await execStart(options);
+  } catch (e) {
+    await writeFile(path.join(cwd, 'start-error.log'), e.stderr, 'utf-8');
+    console.log(
+      'Something went wrong starting the app.\n',
+      'An error log was written to start-error.log\n',
+      'Please try running npm start again\n',
+      'if the error persists, please file an issue with the log file at\n',
+      '\thttps://github.com/apollo-elements/apollo-elements/issues/new?assignees=&labels=bug&template=bug_report.md&title=Apollo+Elements+Bug',
+    );
+  }
 }
