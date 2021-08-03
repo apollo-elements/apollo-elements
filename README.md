@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./logo.svg" alt="Apollo Elements" width="256" height="256"/>
+  <img src="./docs/logo.svg" alt="Apollo Elements" width="256" height="256"/>
   <h1>🚀 Apollo Elements 👩‍🚀</h1>
   <p><strong>🌑 Custom elements meet Apollo GraphQL 🌜</strong></p>
   <p><strong>👩‍🚀 It's one small step for a dev, one giant leap for the web platform! 👨‍🚀</strong></p>
