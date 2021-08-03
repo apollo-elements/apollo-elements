@@ -23,6 +23,7 @@
     "clean:test": "rimraf test/*.{js,d.ts,js.map}",
     "release": "sh scripts/release.sh",
     "release:prerelease": "sh scripts/prerelease.sh",
+    "release:version": "sh scripts/version.sh",
     "postrelease": "npm run clean",
     "docs": "run-s build:codegen docs:*",
     "docs:analyze": "npm run analyze",

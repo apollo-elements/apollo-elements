@@ -38,6 +38,7 @@ jobs:
         uses: changesets/action@master
         with:
           publish: npm run release
+          version: npm run release:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
