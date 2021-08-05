@@ -47,6 +47,7 @@ You can declaratively define mutations using the `<apollo-mutation>` HTML elemen
   <button trigger>Add User</button>
 
   <template>
+    <slot></slot>
     <template type="if" if="{%raw%}{{ data }}{%endraw%}">
       <p>{%raw%}{{ data.user.name }}{%endraw%} added!</p>
     </template>

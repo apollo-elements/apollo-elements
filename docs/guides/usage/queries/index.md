@@ -571,7 +571,7 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
       shouldSubscribe(): boolean {
         const { searchParams } = new URL(location.href);
         return !searchParams.has('noAutoFetch');
-      }
+      },
     });
   }
   ```
@@ -590,7 +590,7 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
       shouldSubscribe(): boolean {
         const { searchParams } = new URL(location.href);
         return !searchParams.has('noAutoFetch');
-      }
+      },
     });
   }
   ```
@@ -735,7 +735,7 @@ As we've seen query elements set their `data` property whenever the query resolv
 
 If you want to run other side effects, here are some options:
 
-- use your library's reactivity system, e.g. `updated` for Lit or `dataChanged` for FAST
+- use your library's reactivity system, e.g. `updated` for Lit
 - define [`onData`](/api/core/interfaces/query/lifecycle/#ondata) callback
 - listen for the `apollo-query-result` and `apollo-error` [events](/api/core/interfaces/query/lifecycle/#events)
 - call the [`executeQuery`](/api/core/interfaces/query/#executequery) method and `await` it's result.

@@ -124,8 +124,6 @@ Then we'll define a component `create-network` which fetches and displays the li
 </select-list>
 ```
 
-## Managing the UI State Locally
-
 The `<select-list>` element (hypothetically) fires a `select` event whenever the selected item changes, so we'll attach a listener to keep each site's local state in sync. When our user clicks on the checkboxes in the list of `<select-item>`s, we'll update that `Site`'s client-side `selected @client` field, which in turn will be read to determine whether a site's corresponding `<select-item>` component will be marked selected.
 
 <figure>
@@ -138,6 +136,8 @@ fragment siteSelected on Site {
 ```
 
 </figure>
+
+Our UI component will use that fragment to update the specific sites selected.
 
 ## Create Mutation Component
 
