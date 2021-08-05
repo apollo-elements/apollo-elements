@@ -1,1 +1,74 @@
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -10 669 416">
+  <title>Sequence Diagram</title>
+  <line id="actor0" x1="75" y1="5" x2="75" y2="405" class="actor-line" stroke-width="0.5px"></line>
+  <rect x="0" y="0" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+  <text x="75" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor" text-anchor="middle">
+    <tspan x="75" dy="0">Apollo Cache</tspan>
+  </text>
+  <line id="actor1" x1="275" y1="5" x2="275" y2="405" class="actor-line" stroke-width="0.5px"></line>
+  <rect x="200" y="0" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+  <text x="275" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor" text-anchor="middle">
+    <tspan x="275" dy="0">&lt;create-network&gt;</tspan>
+  </text>
+  <line id="actor2" x1="494" y1="5" x2="494" y2="405" class="actor-line" stroke-width="0.5px"></line>
+  <rect x="419" y="0" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+  <text x="494" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor" text-anchor="middle">
+    <tspan x="494" dy="0">&lt;select-item&gt;</tspan>
+  </text>
+  <defs>
+    <marker id="arrowhead" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z"></path>
+    </marker>
+  </defs>
+  <defs>
+    <marker id="crosshead" markerWidth="15" markerHeight="8" orient="auto" refX="16" refY="4">
+      <path style="stroke-dasharray: 0px, 0px;" stroke-width="1px" d="M 9,2 V 6 L16,4 Z"></path>
+      <path style="stroke-dasharray: 0px, 0px;" stroke-width="1px" d="M 0,1 L 6,7 M 6,1 L 0,7"></path>
+    </marker>
+  </defs>
+  <defs>
+    <marker id="filled-head" refX="18" refY="7" markerWidth="20" markerHeight="28" orient="auto">
+      <path d="M 18,7 L9,13 L14,7 L9,1 Z"></path>
+    </marker>
+  </defs>
+  <defs>
+    <marker id="sequencenumber" refX="15" refY="15" markerWidth="60" markerHeight="40" orient="auto">
+      <circle cx="15" cy="15" r="6"></circle>
+    </marker>
+  </defs>
+  <text x="175" y="125" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em">AllSitesQuery</text>
+  <line x1="75" y1="160" x2="275" y2="160" class="messageLine0" stroke-width="2" stroke="none" style="fill: none;" marker-end="url(#arrowhead)"></line>
+  <text x="385" y="175" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em">Property Assignment</text>
+  <line x1="275" y1="210" x2="494" y2="210" style="stroke-dasharray: 3px, 3px; fill: none;" class="messageLine1" stroke-width="2" stroke="none" marker-end="url(#arrowhead)"></line>
+  <text x="385" y="225" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em">Select Event</text>
+  <line x1="494" y1="260" x2="275" y2="260" class="messageLine0" stroke-width="2" stroke="none" style="fill: none;" marker-end="url(#arrowhead)"></line>
+  <text x="175" y="275" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em">writeFragment</text>
+  <line x1="275" y1="310" x2="75" y2="310" style="stroke-dasharray: 3px, 3px; fill: none;" class="messageLine1" stroke-width="2" stroke="none" marker-end="url(#arrowhead)"></line>
+  <line x1="65" y1="75" x2="504" y2="75" class="loopLine"></line>
+  <line x1="504" y1="75" x2="504" y2="320" class="loopLine"></line>
+  <line x1="65" y1="320" x2="504" y2="320" class="loopLine"></line>
+  <line x1="65" y1="75" x2="65" y2="320" class="loopLine"></line>
+  <polygon points="65,75 115,75 115,88 106.6,95 65,95" class="labelBox"></polygon>
+  <text x="90" y="88" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="labelText">loop</text>
+  <text x="309.5" y="93" text-anchor="middle" class="loopText">
+    <tspan x="309.5">[One-Way Data Flow]</tspan>
+  </text>
+  <g>
+    <rect x="0" y="340" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="75" y="372.5" dominant-baseline="central" alignment-baseline="central" class="actor" text-anchor="middle">
+      <tspan x="75" dy="0">Apollo Cache</tspan>
+    </text>
+  </g>
+  <g>
+    <rect x="200" y="340" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="275" y="372.5" dominant-baseline="central" alignment-baseline="central" class="actor" text-anchor="middle">
+      <tspan x="275" dy="0">&lt;create-network&gt;</tspan>
+    </text>
+  </g>
+  <g>
+    <rect x="419" y="340" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="494" y="372.5" dominant-baseline="central" alignment-baseline="central" class="actor" text-anchor="middle">
+      <tspan x="494" dy="0">&lt;select-item&gt;</tspan>
+    </text>
+  </g>
+</svg>

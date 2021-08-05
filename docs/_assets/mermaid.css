@@ -5,10 +5,21 @@ svg a {
 .actor { fill: var(--markdown-table-row-odd-background-color, #f6f8fa); }
 rect.actor { stroke: var(--footer-background); }
 .actor-line { stroke: var(--primary-lines-color); }
+
+.labelText,
 .messageText { stroke: none; }
 
 text.actor,
 .messageText { fill: var(--text-color); }
+
+.loopLine,
+.labelBox { fill: var(--primary-color-accent); }
+.loopText { fill: var(--primary-text-color); }
+.loopLine {
+  stroke-width: 2px;
+  stroke-dasharray: 2,2;
+  stroke: var(--primary-lines-color);
+}
 
 #arrowhead path,
 #crosshead path,

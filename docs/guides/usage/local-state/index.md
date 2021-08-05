@@ -661,3 +661,6 @@ Now in order to update the theme, we need to perform two steps:
 </code-tabs>
 
 Note that type policy read functions *must be synchronous*. If you need to perform async work to read a value, you'll need some helper that uses reactive variables underneath. See the [issue on apollo-client](https://github.com/apollographql/apollo-client/issues/6852) which discusses the reason why and provides a workaround.
+
+Next Steps:
+ - [Advanced Local State](./advanced-local-state.md)

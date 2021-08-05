@@ -1,0 +1,54 @@
+<apollo-query id="create-network">
+  <script type="application/graphql">
+    query AllSites {
+      sites {
+        id
+        name
+        selected @client
+      }
+    }
+  </script>
+  <template>
+    <select-list @change="{%raw%}{{ onSelectedChanged }}{%endraw%}">
+      <template type="repeat" repeat="{%raw%}{{ data.sites }}{%endraw%}">
+        <select-item
+            item-id="{%raw%}{{ item.id }}{%endraw%}"
+            item-name="{%raw%}{{ item.name }}{%endraw%}"
+            ?selected="{%raw%}{{ item.selected }}{%endraw%}"
+        ></select-item>
+      </template>
+    </select-list>
+
+    <apollo-mutation @will-mutate="{%raw%}{{ onWillMutate }}{%endraw%}">
+      <script type="application/graphql">
+        mutation CreateNetworkMutation($sites: Site[]) {
+          createNetwork(sites: $sites)
+        }
+      </script>
+      <button trigger>Create</button>
+    </apollo-mutation>
+  </template>
+</apollo-query>
+
+<script type="module">
+  const createNetwork = document.querySelector('#create-network');
+
+  createNetwork.onSelectedChanged = function onSelectedChanged(event) {
+    const selectListEl = event.target;
+    const itemId = selectListEl.selected.itemId;
+    client.writeFragment({
+      id: `Site:${itemId}`,
+      fragment,
+      data: {
+        selected: event.detail.selected
+      },
+    });
+  };
+
+  createNetwork.onWillMutate = function onWillMutate(event) {
+    const sites = createNetwork.data.sites
+      .filter(x => x.selected)
+      .map(x => x.id);
+    event.target.variables = { sites };
+  };
+</script>
