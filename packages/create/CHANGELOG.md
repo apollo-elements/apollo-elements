@@ -1,5 +1,16 @@
 # @apollo-elements/create
 
+## 3.0.0
+
+### Major Changes
+
+- bd0f528: Changes `--yes` flag to `--overwrite` and `--package-defaults`
+  Changes `--skip-codegen` flag to `--no-codegen`
+  Adds `--silent` flag
+  Adds `--editor` and `--no-editor` flags (replaces `--fields` and `--variables` in most cases)
+  Uses `near-operation-file` graphql-codegen preset instead of importing types from `schema.ts`
+  Adds tests for app and component generators
+
 ## 2.0.1
 
 ### Patch Changes
