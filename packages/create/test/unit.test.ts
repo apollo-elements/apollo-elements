@@ -34,7 +34,7 @@ const EXPECTED_COMPONENT_FILES = [
 let cwd: string;
 
 test('setup', async function(t) {
-  cwd = await mkdtemp(os.tmpdir());
+  cwd = await mkdtemp(normalize(`${os.tmpdir()}/`));
   t.end();
 });
 
