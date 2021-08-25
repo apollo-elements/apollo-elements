@@ -1,4 +1,4 @@
-schema: <%= GRAPHQL_URI %>
+schema: schema.graphql
 
 extensions:
   codegen:
@@ -17,10 +17,16 @@ extensions:
       src/schema.ts:
         schema: src/client.schema.graphql
         plugins:
-          - typescript
+          - typescript-operations
+      src/:
+        schema: src/client.schema.graphql
+        preset: near-operation-file
+        presetConfig:
+          baseTypesPath: schema.ts
+          extension: .graphql.ts
+        plugins:
           - typescript-operations
           - typed-document-node
-
         documents:
           - src/**/*.fragment.graphql
           - src/**/*.mutation.graphql

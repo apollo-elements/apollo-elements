@@ -24,7 +24,9 @@
     "build": "tsc",
     "lint": "run-s lint:*",
     "lint:types": "tsc --noEmit",
-    "start": "tsc -w"
+    "start": "tsc -w",
+    "test": "run-s build test:unit",
+    "test:unit": "tape-es test/unit.test.js | tap-spec"
   },
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
@@ -42,10 +44,14 @@
     "case": "^1.6.3",
     "chalk": "^4.1.1",
     "execa": "^5.1.1",
+    "inquirer": "^7.3.3",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
-    "prompts": "^2.4.0",
     "tslib": "^2.3.0",
     "yargs": "^17.0.1"
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   }
 }

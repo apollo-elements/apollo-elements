@@ -3,7 +3,7 @@ import type { BaseOptions, AppOptions, ComponentOptions } from './options';
 import { app } from './app.js';
 import { component } from './component.js';
 
-import prompts from 'prompts';
+import inquirer from 'inquirer';
 
 import BANNER from './banner.js';
 
@@ -22,27 +22,32 @@ const ERR_BAD_CE_TAG_NAME =
 export async function promptApp(options: PromptOptions<AppOptions>): Promise<AppOptions> {
   return {
     ...options,
-    ...await prompts([{
-      type: () => options?.uri == null ? 'text' : null,
+    ...await inquirer.prompt([{
+      type: 'input',
       name: 'uri',
       message: 'What is the URI to your GraphQL endpoint?',
-      initial: options?.uri ?? '/graphql',
+      default: '/graphql',
     }, {
-      type: () => options?.yes == null ? 'confirm' : null,
-      name: 'yes',
-      message: 'Use default package.json fields (e.g. author, license, etc)',
-      initial: options?.yes ?? true,
+      type: 'checkbox',
+      name: 'overwrite',
+      message: 'Overwrite existing files?',
+      default: false,
     }, {
-      type: () => options?.install == null ? 'confirm' : null,
+      type: 'checkbox',
+      name: 'package-defaults',
+      message: 'Use default package.json fields (e.g. author, license, etc)?',
+      default: true,
+    }, {
+      type: 'checkbox',
       name: 'install',
       message: 'Install dependencies?',
-      initial: true,
+      default: true,
     }, {
-      type: () => options?.start == null ? 'confirm' : null,
+      type: 'checkbox',
       name: 'start',
       message: 'Launch when ready?',
-      initial: true,
-    }]),
+      default: true,
+    }], options),
   };
 }
 
@@ -51,28 +56,34 @@ export async function promptComponent(
 ): Promise<ComponentOptions> {
   return {
     ...options,
-    ...await prompts([{
-      type: () => options?.type == null ? 'select' : null,
+    ...await inquirer.prompt([{
+      type: 'list',
       name: 'type',
       message: 'What kind of component is it?',
-      initial: 0,
       choices: [
-        { title: 'Query', value: 'query' },
-        { title: 'Mutation', value: 'mutation' },
-        { title: 'Subscription', value: 'subscription' },
+        { name: 'Query', value: 'query' },
+        { name: 'Mutation', value: 'mutation' },
+        { name: 'Subscription', value: 'subscription' },
       ],
     }, {
-      type: () => options?.name == null ? 'text' : null,
+      type: 'input',
       name: 'name',
       message: 'What is the component\'s tag name?',
-      initial: options?.name ?? '',
       validate: name => name.includes('-') || ERR_BAD_CE_TAG_NAME,
     }, {
-      type: () => options?.subdir == null ? 'text' : null,
+      type: 'input',
       name: 'subdir',
-      initial: options?.subdir ?? '',
       message: 'Sub directory. Leave blank to scaffold to src/components',
-    }]),
+    }, {
+      when: () => !options?.operationName && options?.edit === true,
+      name: 'operationName',
+      message: 'Enter your operation name e.g. AllItems',
+    }, {
+      type: 'editor',
+      name: 'operation',
+      message: 'Enter your GraphQL operation.',
+      when: () => options?.edit,
+    }], { ...options, subdir: options && options.subdir || '' }),
   } as ComponentOptions;
 }
 
@@ -96,11 +107,21 @@ export async function prompt(): Promise<void> {
       demandOption: false,
       description: `Optional schema path for imports. Use to import from a package or specific file.`,
     })
-    .option('skipCodegen', {
+    .option('codegen', {
+      type: 'boolean',
+      default: true,
+      description: 'Run codegen after scaffolding files',
+    })
+    .option('silent', {
       type: 'boolean',
       default: false,
+      description: 'Do not log anything to stdout',
+    })
+    .option('directory', {
+      type: 'string',
+      default: process.cwd(),
       demandOption: false,
-      description: 'Skip the codegen phase',
+      description: 'Output directory',
     })
     .command<AppOptions>('app', 'Generate an Apollo Elements Skeleton App', yargs => void yargs
       .option('uri', {
@@ -108,10 +129,13 @@ export async function prompt(): Promise<void> {
         type: 'string',
         description: 'URI to your GraphQL endpoint',
       })
-      .option('yes', {
-        alias: 'y',
+      .option('package-defaults', {
         type: 'boolean',
         description: 'Use default package.json fields (e.g. author, license)',
+      })
+      .option('overwrite', {
+        type: 'boolean',
+        description: 'Overwrite existing files',
       })
       .option('install', {
         alias: 'i',
@@ -130,11 +154,6 @@ export async function prompt(): Promise<void> {
         type: 'string',
         description: 'Custom element tag name',
       })
-      .option('operationName', {
-        alias: 'o',
-        type: 'string',
-        description: 'GraphQL Operation name',
-      })
       .option('subdir', {
         alias: 'd',
         type: 'string',
@@ -145,29 +164,36 @@ export async function prompt(): Promise<void> {
         type: 'string',
         choices: ['query', 'mutation', 'subscription'],
         description: 'Element Type',
-        default: 'query',
       })
-      .option('yes', {
+      .option('overwrite', {
         type: 'boolean',
-        alias: 'y',
         default: false,
         description: 'Overwrite files without prompting',
       })
+      .option('edit', {
+        type: 'boolean',
+        default: true,
+        description: 'Open the default editor to define the operation',
+      })
+      .option('operationName', {
+        alias: 'o',
+        type: 'string',
+        description: 'GraphQL Operation name',
+      })
       .option('fields', {
         type: 'string',
-        default: null,
         demandOption: false,
         description: 'Optional custom fields e.g. `id name picture { alt url }`',
+        implies: ['operationName'],
       })
       .option('variables', {
         type: 'string',
-        default: null,
         demandOption: false,
         description: 'Optional custom variables e.g. `input: $UpdateUserInput`',
+        implies: ['operationName', 'fields'],
       })
       .option('sharedCssPath', {
         type: 'string',
-        default: null,
         demandOption: false,
         description: `Optional path for shared CSS file. Use empty string '' to disable`,
       })
@@ -188,18 +214,18 @@ export async function prompt(): Promise<void> {
     else {
       console.log(BANNER);
 
-      const { generate } = await prompts({
+      const { generate } = await inquirer.prompt({
         name: 'generate',
         message: 'What would you like to generate?',
-        type: 'select',
+        type: 'list',
         choices: [{
-          title: 'App',
+          name: 'App',
           value: 'app',
-          description: 'Scaffold an app project',
+          short: 'Scaffold an app project',
         }, {
-          title: 'Component',
+          name: 'Component',
           value: 'component',
-          description: 'Scaffold a component for an existing app',
+          short: 'Scaffold a component for an existing app',
         }],
       });
 

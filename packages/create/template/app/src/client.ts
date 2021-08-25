@@ -1,5 +1,3 @@
-import type { NormalizedCacheObject } from '@apollo/client/core';
-
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
 import { locationVar } from './router';
@@ -24,9 +22,3 @@ const cache =
 
 export const client =
   new ApolloClient({ cache, link });
-
-declare global {
-  interface Window {
-    __APOLLO_CLIENT__?: ApolloClient<NormalizedCacheObject>;
-  }
-}

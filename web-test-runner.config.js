@@ -26,7 +26,7 @@ export default ({
   rootDir: '../..',
 
   files: [
-    'packages/!(test)/**/*.test.ts',
+    'packages/!(create)/**/*.test.ts',
   ],
 
   mimeTypes: {

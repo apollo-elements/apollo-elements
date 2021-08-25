@@ -18,17 +18,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@apollo-elements/components": "next",
-    "@apollo-elements/core": "next",
-    "@apollo/client": "^3.4.0-rc.23",
+    "@apollo-elements/components": "^2.0.0",
+    "@apollo-elements/core": "^1.0.0",
+    "@apollo/client": "^3.4.5",
     "pwa-helpers": "^0.9"
   },
   "devDependencies": {
-    "@apollo-elements/rollup-plugin-graphql": "^1.x",
+    "@apollo-elements/create": "^2.x",
     "@graphql-codegen/cli": "^1.x",
     "@graphql-codegen/typescript": "^1.x",
     "@graphql-codegen/typescript-operations": "^1.x",
     "@graphql-codegen/typed-document-node": "^1.x",
+    "@graphql-codegen/near-operation-file-preset": "^2.x",
     "@open-wc/rollup-plugin-html": "^1.x",
     "@pwrs/eslint-config": "^0.x",
     "@rollup/plugin-commonjs": "^17.x",

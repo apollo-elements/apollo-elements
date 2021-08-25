@@ -1,14 +1,10 @@
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
-
-import _graphql from '@apollo-elements/rollup-plugin-graphql';
-import _commonjs from '@rollup/plugin-commonjs';
+import { resolveCodegenPlugin } from '@apollo-elements/create/helpers.js';
 
 import _litcss from 'rollup-plugin-lit-css';
 
-const commonjs = fromRollup(_commonjs);
 const litcss = fromRollup(_litcss);
-const graphql = fromRollup(_graphql);
 
 export default {
   nodeResolve: true,
@@ -16,17 +12,15 @@ export default {
   appIndex: 'index.html',
   rootDir: '.',
   mimeTypes: {
-    'src/**/*.graphql': 'js',
     'src/components/**/*.css': 'js',
     'src/style.css': 'css',
   },
   plugins: [
     esbuildPlugin({ ts: true }),
-    commonjs(),
-    graphql({ include: '**/*.graphql' }),
+    resolveCodegenPlugin({ ts: true }),
     litcss({
       include: 'src/components/**/*.css',
-      exclude: 'src/style.css',
+      exclude: ['src/style.css'],
     }),
   ],
 };
