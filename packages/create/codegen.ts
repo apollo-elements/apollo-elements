@@ -58,34 +58,51 @@ function getCLIArgs(options: BaseOptions): string[] {
 }
 
 function logNameError(options: BaseOptions, error: ExecaError): void {
-  console.log(`${red('ERROR:')} Code generation failed.`);
+  if (!options.silent)
+    console.log(`${red('ERROR:')} Code generation failed.`);
   const uri = isAppOptions(options) ? cyan(options.uri) : 'the specified URI';
-  console.log(`       Is your graphql server running at ${uri}?`);
-  console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '), '\n');
+  if (!options.silent) {
+    console.log(
+      `       Is your graphql server running at ${uri}?`,
+      `\n${red('ORIGINAL ERROR:')}\n`,
+      error.stdout.split('\n').join('\n  '),
+      '\n'
+    );
+  }
 }
 
 function logListrError(options: BaseOptions, error: ExecaError): void {
-  console.log(`${red('ERROR:')} Code generation failed.`);
-  console.log(`\n${red('ORIGINAL ERROR:')}\n`);
+  if (options.silent)
+    return;
+  console.log(
+    `${red('ERROR:')} Code generation failed.`,
+    `\n${red('ORIGINAL ERROR:')}\n`
+  );
   error.errors.forEach((e: Error) => console.log(e.message));
 }
 
 function logError(options: BaseOptions, error: ExecaError): void {
+  if (options.silent) return;
   const filename = getFilename(options);
-  console.log(`${yellow('WARNING:')} Code generation failed. Do the generated GraphQL operations match your schema?`);
-  console.log(`         Check ${filename}`);
-  console.log(`\n${red('ORIGINAL ERROR:')}\n`, error.stdout.split('\n').join('\n  '));
+  console.log(
+    `${yellow('WARNING:')} Code generation failed. Do the generated GraphQL operations match your schema?`,
+    `         Check ${filename}`,
+    `\n${red('ORIGINAL ERROR:')}\n`,
+    error.stdout.split('\n').join('\n  '),
+  );
 }
 
 /**
  * Run GraphQL codegen to develop an initial TypeScript schema
  */
 export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|void> {
-  if (options.skipCodegen) return;
-  console.log(`\n${cyan('Generating types from schema')}...\n`);
+  if (!options.codegen) return;
+  if (!options.silent)
+    console.log(`\n${cyan('Generating types from schema')}...\n`);
   try {
     await execa(options.pkgManager, getCLIArgs(options), { cwd, all: true });
-    console.log(greenBright('Done!'));
+    if (!options.silent)
+      console.log(greenBright('Done!'));
   } catch (error) {
     if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
       logNameError(options, error);

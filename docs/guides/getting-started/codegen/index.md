@@ -45,19 +45,26 @@ extensions:
       useIndexSignature: true     # required for compatibility with apollo server
 
     generates:
-      src/codegen/schema.ts: # replace with path to the file you wish to generate
-        schema: src/client.schema.graphql # replace with path to client-side schema
+      # generate the base schema types for client-side documents
+      src/schema.ts:
+        schema: src/client.schema.graphql
         plugins:
-          - typescript
           - typescript-operations
-          - typescript-document-nodes
-
+      # generate `.ts` files colocated with each `.graphql` operation
+      src/:
+        schema: src/client.schema.graphql
+        preset: near-operation-file
+        presetConfig:
+          baseTypesPath: schema.ts
+          extension: .graphql.ts
+        plugins:
+          - typescript-operations
+          - typed-document-node
         documents:
-          - src/components/*.query.graphql
-          - src/components/*.mutation.graphql
-          - src/components/*.subscription.graphql
-          - src/components/*.fragment.graphql
-
+          - src/**/*.fragment.graphql
+          - src/**/*.mutation.graphql
+          - src/**/*.query.graphql
+          - src/**/*.subscription.graphql
 ```
 
 Now, to automatically generate typings, run

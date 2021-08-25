@@ -17,6 +17,11 @@ packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 
+packages/create/test/*.js
+packages/create/test/*.js.map
+packages/create/test/*.d.ts
+packages/create/test/*.d.ts.map
+
 test/test/schema.ts
 test/*.js
 test/*.d.ts

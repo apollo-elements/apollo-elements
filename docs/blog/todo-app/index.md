@@ -18,10 +18,12 @@ To-Do apps are *de rigueur* when it comes to demonstrating web app tech stacks. 
 
 ## The Plan
 
-The typical to-do app has a backend which contains the authoritative database of to-dos, and a frontend which displays the list and exposes UI for operations like adding, editing, or deleting to-dos. We'll build our 'frontend' out of a single GraphQL query and some GraphQL mutations.
+The typical to-do app has a backend which contains the authoritative database of to-dos, and a frontend which displays the list and exposes UI for operations like adding, editing, or deleting to-dos. We'll build our frontend out of a single GraphQL query and some GraphQL mutations, and our backend using Apollo server and Koa, with an in-memory "database" consisting of a javascript object.
+
+We'll use [Shoelace](https://shoelace.style) for our UI components, and [Lit](https://lit.dev) as our web component base, so if you want to catch up or take a refresher, check out my [blog post](https://dev.to/bennypowers/lets-build-web-components-part-5-litelement-906).
 
 ### Non-Goals
-For the purposes of this blog post, we're focusing solely on the frontend side, so a proper backend server and database is out of scope. Instead, we'll implement a fake 'backend' that uses localStorage to persist our todo list. We're still going to write GraphQL resolver functions, though, so we could copy parts of our mocked backend into a server running on NodeJS and with some small modifications it would still work.
+For the purposes of this blog post, we're focusing solely on the frontend side, so a proper backend server and database is out of scope. Instead, we'll implement a backend server that plugs in to [web dev server](https://modern-web.dev/guides/dev-server/getting-started/). We're still going to write GraphQL resolver functions though, so we could copy parts of our mock backend into a NodeJS server and with some small modifications it would still work.
 
 We also won't be doing any fancy footwork like pagination or advanced cache management. We're assuming a short todo list that fits on one screen.
 
@@ -33,103 +35,62 @@ Let's use the [Apollo Elements generator](/api/create/app/) to scaffold an app t
 mkdir todo-apollo
 cd todo-apollo
 npm init @apollo-elements -- \
-    app \
+  app \
   --uri /graphql \
   --install \
-  --yes
+  --overwrite \
+  --package-defaults
 ```
 
-After installing via `npm` the app will launch on localhost. The generator prepares a typical SPA with a router and an app-root component. We won't be needing those, so go ahead and delete `src/router.ts` and `src/components/app`.
+Once that's done, let's install our dependencies.
 
 ```bash copy
-rm src/router.ts
-rm -rf src/components/app
+npm i -S apollo-server-koa urlpattern-polyfill
 ```
 
-Copy in our page CSS.
+And let's add shoelace UI's styles and scripts to `/index.html`:
 
-<details>
-  <summary><code>style.css</code></summary>
+```html copy
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.48/dist/themes/base.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.48/dist/shoelace.js"></script>
+```
 
-  ```css copy
-  :root {
-    --mdc-theme-primary: #81D4FA;
-    --mdc-theme-secondary: #80CBC4;
-    --mdc-theme-text-primary-on-background: white;
-    --mdc-checkbox-unchecked-color: white;
-    --mdc-checkbox-ink-color: var(--p-card-background-elevation1);
-    --mdc-text-field-ink-color: white;
-    --mdc-text-field-outlined-idle-border-color: white;
-    --mdc-text-field-label-ink-color: white;
-    --mdc-text-field-outlined-hover-border-color: #ddd;
-    --p-card-background-elevation1: #222;
-    --p-card-divider: #333;
-  }
+And some initial styles in `/style.css`:
 
-  body {
-    background-color: #111;
-    color: white;
-    font-family: "Open Sans", Arial, Helvetica, sans-serif;
-    place-items: center center;
-    height: 100vh;
-  }
+<details open><summary><code>/style.css</code></summary>
 
-  a {
-    color: var(--mdc-theme-primary);
-  }
+```css
+html {
+  font-family: var(--sl-font-sans);
+}
 
-  a:visited {
-    color: var(--mdc-theme-secondary);
-  }
+main {
+  display: flex;
+  place-content: start center;
+}
 
-  p-card::part(content) {
-    display: grid;
-    gap: 8px;
-  }
-
-  h3,
-  #how,
-  todo-list {
-    grid-column: 1 / -1;
-  }
-  ```
+apollo-app {
+  width: clamp(400px, 90vw, 90vw);
+}
+```
 
 </details>
 
-Also, remove the line `import './components/app'` from `main.ts`. Then, in `index.html`, remove the `<apollo-app>` element.
-
-```html copy
-<body>
-  <main>
-    <apollo-client id="client">
-    </apollo-client>
-  </main>
-</body>
-```
-
-Keep the [`<apollo-client>`](/api/components/apollo-client/) element, though, it will propagate our client instance to our query and mutation elements across shadow roots.
-
-Last, install some UI components and dependencies. We'll go with material.
-
-```bash copy
-npm i -S \
-  @power-elements/card \
-  @material/mwc-button \
-  @material/mwc-icon-button \
-  @material/mwc-checkbox \
-  @material/mwc-textfield \
-  @material/mwc-formfield
-```
-
 With our boilerplate ready, we're ready to start on our mock backend.
 
-## The 'Backend'
+## The Backend
 
 Let's define our backend first, starting with the GraphQL schema.
 
 ### The Schema
 
-GraphQL apps resolve around their [*schema*](https://graphql.org/learn/schema/), so let's define that now. We'll need a type to represent each to-do, and a corresponding input type for mutations.
+GraphQL apps resolve around their [*schema*](https://graphql.org/learn/schema/), so let's define that now. We'll need a type to represent each to-do, and a corresponding input type for mutations. We'll also define our operations, or all the actions our app's users can perform. Those actions are:
+
+1. Reading the list of to-dos
+2. Creating a new to-do
+3. Editing an existing to-do
+4. Deleting an existing to-do
+
 
 ```graphql copy
 type Todo {
@@ -143,36 +104,29 @@ input TodoInput {
   name: String
   complete: Boolean
 }
-```
 
-We'll also define our operations, or all the actions our app's users can perform. Those actions are:
-
-1. Reading the list of to-dos
-2. Creating a new to-do
-3. Editing an existing to-do
-4. Deleting an existing to-do
-
-```graphql copy
 type Query {
   todos: [Todo]
+  todo(todoId: ID): Todo
 }
 
 type Mutation {
-  createTodo(input: TodoInput): Todo
-  updateTodo(input: TodoInput): Todo
-  deleteTodo(input: TodoInput): [Todo]
+  createTodo(input: TodoInput!): Todo
+  updateTodo(input: TodoInput!): Todo
+  toggleTodo(todoId: ID!): Todo
+  deleteTodo(input: TodoInput!): [Todo]
 }
 ```
 
 In a larger app we might have defined different input types to get stronger input validation for each operation. For the sake of this demo though, a single input with no required fields does the trick.
 
-Copy both of the above snippets in to `src/client.schema.graphql`.
+Copy the above snippets in to `/schema.graphql`.
 
 ### The Database
 
-Next, we need a database to store our todos and some initial content. We'll use browser local storage as an *ad hoc* database. We're going to cut a few corners for the sake of brevity, so don't take this as an example of inspired database design.
+Next, we need a database to store our todos and some initial content. For demo purposes, we'll store the todo list in-memory. We're going to cut a few corners for the sake of brevity, so don't take this as an example of inspired database design.
 
-We do try to hide our shame somewhat though by exporting only four `async` functions, corresponding to our four <abbr>CRUD</abbr> operations. We'll call those functions to perform our DB operations in our GraphQL resolvers. Asides from ferrying JSON in and out of local storage, our mocked database also simulated network lag by delaying reponses by some random number of milliseconds.
+We do try to hide our shame somewhat though by keeping our four <abbr>CRUD</abbr> operations in the server's context. We'll call those functions to perform our DB operations in our GraphQL resolvers. We also will simulate network lag, delaying reponses some random number of milliseconds.
 
 <inline-notification type="warning">
 
@@ -180,87 +134,97 @@ Our purpose here isn't to write the most efficient backend code, so don't take l
 
 </inline-notification>
 
-Create a file `src/context.ts` and copy the following snippet in.
+Create a file `/server.js` and copy the following snippet in.
 
 <details>
-  <summary><code>src/context.ts</code></summary>
+  <summary><code>/server.js</code></summary>
 
   ```ts copy
-  export interface Todo {
-    id: string;
-    name: string;
-    complete: boolean;
-  }
+  /* eslint-env node */
+  /* eslint-disable no-console */
 
-  let TODOS: Todo[];
+  import { ApolloServer } from 'apollo-server-koa';
 
-  const LS_KEY = 'apollo-elements-todo-list';
+  import { readFileSync } from 'fs';
 
-  const INITIAL_TODOS: Todo[] = [
+  let TODOS;
+
+  const INITIAL_TODOS = [
     { id: '0', name: 'Get Milk', complete: false },
     { id: '1', name: 'Get Bread', complete: false },
     { id: '2', name: 'Try to Take Over the World', complete: false },
   ];
 
-  function initTodos(): void {
-    const stored = localStorage.getItem(LS_KEY);
-    TODOS = stored ? JSON.parse(stored) : [...INITIAL_TODOS];
+  function initTodos() {
+    TODOS = [...INITIAL_TODOS];
+  }
+
+  function byId(id) {
+    return x => x.id === id;
+  }
+
+  function getNextId() {
+    const last = TODOS.map(x => x.id).sort().pop();
+    return (parseInt(last ?? '-1') + 1).toString();
+  }
+
+  async function randomSleep(max = 800) {
+    await new Promise(r => setTimeout(r, Math.random() * max));
   }
 
   initTodos();
 
-  function byId(id: string): <T extends { id: string }>(x: T) => boolean {
-    return x => x.id === id;
-  }
+  const server = new ApolloServer({
+    typeDefs: readFileSync(new URL('schema.graphql', import.meta.url), 'utf-8'),
+    context: {
+      getTodo(id) {
+        const todo = TODOS.find(byId(id));
+        if (!todo)
+          throw new Error(`TODO ${id} not found`);
+        return todo;
+      },
 
-  function updateStorage(): void {
-    localStorage.setItem(LS_KEY, JSON.stringify(TODOS));
-  }
+      async getTodos() {
+        await randomSleep();
+        return TODOS;
+      },
 
-  function getNextId(): string {
-    const last = TODOS.map(x => x.id).sort().pop();
-    return (parseInt(last) + 1).toString();
-  }
+      async addTodo({ name, complete }) {
+        await randomSleep();
+        const todo = { id: getNextId(), name, complete };
+        TODOS.push(todo);
+        return todo;
+      },
 
-  function getTodo(id: string): Todo {
-    const todo = TODOS.find(byId(id));
-    if (!todo)
-      throw new Error(`TODO ${id} not found`);
-    return todo;
-  }
+      async updateTodo({ id, name, complete }) {
+        await randomSleep();
+        const todo = server.context.getTodo(id);
+        todo.name = name ?? todo.name;
+        todo.complete = complete ?? todo.complete;
+        return todo;
+      },
 
-  async function randomSleep() {
-    await new Promise(r => setTimeout(r, Math.random() * 1000));
-  }
+      async deleteTodo(id) {
+        await randomSleep();
+        server.context.getTodo(id);
+        TODOS = TODOS.filter(x => x.id !== id);
+        return TODOS;
+      },
+    },
+    resolvers: {
+    },
+  });
 
-  export async function getTodos(): Promise<Todo[]> {
-    await randomSleep();
-    return TODOS;
-  }
-
-  export async function addTodo({ name, complete }: Omit<Todo, 'id'>): Promise<Todo> {
-    await randomSleep();
-    const todo = { id: getNextId(), name, complete };
-    TODOS.push(todo);
-    updateStorage();
-    return todo;
-  }
-
-  export async function updateTodo({ id, name, complete }: Todo): Promise<Todo> {
-    await randomSleep();
-    const todo = getTodo(id);
-    todo.name = name ?? todo.name;
-    todo.complete = complete ?? todo.complete;
-    updateStorage();
-    return todo;
-  }
-
-  export async function deleteTodo(id: string): Promise<Todo[]> {
-    await randomSleep();
-    getTodo(id);
-    TODOS = TODOS.filter(x => x.id !== id);
-    updateStorage();
-    return TODOS;
+  /** Attaches the Apollo server to web dev server */
+  export function graphqlTodoPlugin() {
+    return {
+      name: 'graphql-todo-plugin',
+      async serverStart({ app, config }) {
+        await server.start();
+        server.applyMiddleware({ app });
+        console.log(`🚀 GraphQL Dev Server ready at http://localhost:${config.port}${server.graphqlPath}`);
+      },
+    };
   }
   ```
 
@@ -268,138 +232,185 @@ Create a file `src/context.ts` and copy the following snippet in.
 
 ### The Resolvers
 
-With that accomplished, our next task is to define resolvers for each of the operations in our schema: `todos`, `createTodo`, `updateTodo`, and `deleteTodo`. Let's import the `makeExecutableSchema` helper from [`graphql-tools`](https://graphql-tools.com). This function takes our schema as a `typeDefs` string, and an object called `resolvers` which deeply maps from operation name to GraphQL type in the schema.
+With that accomplished, our next task is to define resolvers for each of the operations in our schema: `todos`, `createTodo`, `updateTodo`, and `deleteTodo`.
 
-Create a file called `src/resolvers.ts` and copy in this snippet:
+Ccopy the following snippet into the `resolvers` block of `server.js`:
 
 ```ts copy
-import { makeExecutableSchema } from '@graphql-tools/schema';
-
-import Schema from './client.schema.graphql';
-
-import type * as context from './context';
-
-export const schema = makeExecutableSchema<typeof context>({
-  typeDefs: Schema.loc.source.body,
-  resolvers: {
-    Query: {
-      async todos(_, __, context) {
-        return context.getTodos();
-      },
-    },
-    Mutation: {
-      async createTodo(_, { input: { name, complete = false } }, context) {
-        return context.addTodo({ name, complete });
-      },
-      async updateTodo(_, { input: { todoId, name, complete } }, context) {
-        return context.updateTodo({ id: todoId, name, complete });
-      },
-      async deleteTodo(_, { input: { todoId } }, context) {
-        await context.deleteTodo(todoId);
-        return context.getTodos();
-      },
-    },
+Query: {
+  async todo(_, { todoId }, context) {
+    await randomSleep();
+    return todoId ? context.getTodo(todoId) : null;
   },
-});
+  async todos(_, __, context) {
+    return context.getTodos();
+  },
+},
+Mutation: {
+  async createTodo(_, { input: { name, complete = false } }, context) {
+    return context.addTodo({ name, complete });
+  },
+  async updateTodo(_, { input: { todoId, name, complete } }, context) {
+    return context.updateTodo({ id: todoId, name, complete });
+  },
+  async toggleTodo(_, { todoId }, context) {
+    const todo = await context.getTodo(todoId)
+    return context.updateTodo({ ...todo, complete: !todo.complete });
+  },
+  async deleteTodo(_, { input: { todoId } }, context) {
+    await context.deleteTodo(todoId);
+    return context.getTodos();
+  },
+},
 ```
 
-Since we're relying on the `context` functions we defined earlier, our resolvers can stay simple. Assuming the signature of the context stays the same, you could copy the `resolvers` object verbatim into a GraphQL server running on NodeJS.
+Since we're relying on the `context` functions we defined earlier, our resolvers can stay simple.
 
-Our 'backend' code is almost ready to go, all we have to do is hook it up to our frontend.
+### The Server
+
+Our backend code is almost ready to go, all we have to do is hook it up to our frontend via the dev server. We need to add two custom dev server plugins:
+
+1. `graphqlTodoPlugin`, which loads our graphql server code on the `/graphql` route, and
+1. `resolveCodegenPlugin` to make sure the dev server loads graphql operations from the code-generated typescript files instead of their graphql sources. `@apollo-elements/create/helpers.js` exports this one for your convenience.
+
+Replace the contents of `web-dev-server.config.js` with the following snippet:
+
+```js copy
+import { esbuildPlugin } from '@web/dev-server-esbuild';
+import { fromRollup } from '@web/dev-server-rollup';
+import { graphqlTodoPlugin } from './server.js';
+import { resolveCodegenPlugin } from '@apollo-elements/create/helpers.js';
+
+import _litcss from 'rollup-plugin-lit-css';
+
+const litcss = fromRollup(_litcss);
+
+export default {
+  nodeResolve: true,
+  port: 8004,
+  appIndex: 'index.html',
+  rootDir: '.',
+  mimeTypes: {
+    'src/components/**/*.css': 'js',
+  },
+  plugins: [
+    esbuildPlugin({ ts: true }),
+    resolveCodegenPlugin({ ts: true }),
+    graphqlTodoPlugin(),
+    litcss({
+      include: 'src/components/**/*.css',
+      exclude: 'src/style.css',
+    }),
+  ],
+};
+```
 
 ## The Apollo Client
 
-In a normal GraphQL app, the apollo client would use [`HttpLink`](https://www.apollographql.com/docs/react/networking/advanced-http-networking/#the-httplink-object) to connect to the backend server. Since our app doesn't have a backend, we won't bring in `HttpLink`, but use [`SchemaLink`](https://www.apollographql.com/docs/react/api/link/apollo-link-schema/) instead, to simulate a GraphQL server.
+Our Apollo Client uses [`HttpLink`](https://www.apollographql.com/docs/react/networking/advanced-http-networking/#the-httplink-object) to connect to the backend server.
 
-<inline-notification type="danger">
-
-`SchemaLink` is meant for server-side use, not client-side. It imports the entire full-fat `graphql` library, adding **>180kb** of JavaScript. If you copy this snippet into production code, replace `SchemaLink` with `HttpLink`, and implement your schema in a proper GraphQL server.
-
-</inline-notification>
-
-Replace the contents of `src/client.ts` with the following snippet, which creates an Apollo client using `SchemaLink`, and defines a [type policy](https://www.apollographql.com/docs/react/caching/cache-configuration/#typepolicy-fields) which replaces the entire cached todo list every time the `todos` query updates:
+To make sure the todo-list renders the latest data, define a [type policy](https://www.apollographql.com/docs/react/caching/cache-configuration/#typepolicy-fields) which replaces the entire cached todo list every time the `todos` query updates. Replace the `typePolicies` config object with:
 
 ```ts copy
-import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
-import { SchemaLink } from '@apollo/client/link/schema';
-
-import { schema } from './resolvers';
-import * as context from './context';
-
-export const client = new ApolloClient<NormalizedCacheObject>({
-  link: new SchemaLink({ schema, context }),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          todos: {
-            /** overwrite previous array when updating todos. */
-            merge(_prev, next) {
-              return next;
-            },
-          },
+typePolicies: {
+  Query: {
+    fields: {
+      location(): Location {
+        return locationVar();
+      },
+      todos: {
+        /** overwrite previous array when updating todos. */
+        merge(_, next) {
+          return next;
         },
       },
     },
-  }),
-});
+  },
+},
 ```
 
-<inline-notification type="tip">
+## The App Shell
+Next we'll use the [`URLPattern` proposal](https://github.com/WICG/urlpattern/blob/main/explainer.md#urlpattern) polyfill to set up some client-side routing. Open up `src/router.ts` and paste in the following.
 
-Note how we're passing in the `context` object from our mocked backend. This is what lets the resolvers in our executable schema call our database functions. You'd do something similar to set up an [Apollo Server](https://www.apollographql.com/docs/apollo-server/api/apollo-server/#context), for example.
+```ts copy
+import { makeVar } from '@apollo/client/core';
+import { installRouter } from 'pwa-helpers/router';
+import { URLPattern } from 'urlpattern-polyfill';
 
-</inline-notification>
+const pattern = new URLPattern({
+  pathname: '/todos/:todoId',
+});
+
+function makeLocation(location = window.location) {
+  const { assign, reload, replace, toString, valueOf, ...rest } = location;
+  return {
+    __typename: 'Location',
+    ...rest,
+    todoId: pattern.exec(new URL(rest.href))?.pathname?.groups?.todoId ?? null,
+  };
+}
+
+function update(location = window.location) {
+  locationVar(makeLocation(location));
+}
+
+export const locationVar = makeVar(makeLocation());
+
+export async function go(path: string): Promise<void> {
+  history.pushState(null, 'next', new URL(path, location.origin).toString());
+  await new Promise(r => requestAnimationFrame(r));
+  update();
+}
+
+installRouter(update);
+```
 
 Now we're ready to start writing our UI components.
 
 ## Reading Todos
 
-Let's define a [query component](/guides/usage/queries/) to display our list. We'll use lit-element as our web component base, so if you want to catch up or take a refresher, check out my [blog post](https://dev.to/bennypowers/lets-build-web-components-part-5-litelement-906).
+Let's define a [query](/guides/usage/queries/) to display our list. Edit `/src/components/app/App.query.graphql` so that our app shell gets the list of todos:
 
-Use the [Apollo Elements generator](/api/create/component/) to scaffold a component:
-
-```bash copy
-npm init @apollo-elements -- \
-    component \
-  --name todo-list \
-  --type query \
-  --operation-name Todos \
-  --fields 'todos\ \{\ id\ name\ complete\ \}' \
-  --subdir '' \
-  --yes
+```graphql copy
+query AppQuery {
+  location @client { pathname }
+  todos {
+    id
+    name
+    complete
+  }
+}
 ```
 
-<inline-notification type="tip">
-
-Commands here are escaped for the Bash shell. `fish` users can remove the backslashes.
-
-</inline-notification>
-
-Next let's define the component's template in `src/components/todos/todos.ts`,
+Our next step is to add the query operation to our app shell component and render it's data.
+Next let's define the component's template in `src/components/list/list.ts`,
 
 ```ts copy
 render(): TemplateResult {
-  const todos = this.data?.todos ?? [];
+  const todos = this.query.data?.todos ?? [];
   return html`
-    <ol>
-      ${todos.map(({ name, id, complete }) => html`
-      <li data-id="${id}">
-        <todo-edit todo-id="${id}" ?complete="${complete}">
-          ${name}
-        </todo-edit>
-      </li>
-      `)}
+  <sl-card>
+    <h2 slot="header">To-Do List</h2>
+    <ol>${todos.map(({ name, id, complete }) => html`
+      <li>
+        <sl-icon name="${complete ? 'check-square' : 'square'}"></sl-icon>
+        <a href="/todos/${id}">${name}</a>
+      </li>`)}
     </ol>
+  </sl-card>
   `;
 }
 ```
 
-add some styles in `src/components/todos/todos.css`,
+add some styles in `src/components/app/app.css`,
+
+<details><summary<code>src/components/app/app.css</code></summary>
 
 ```css copy
 :host {
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, auto));
+  gap: 12px;
 }
 
 ol {
@@ -407,24 +418,34 @@ ol {
   list-style-type: none;
   padding: 0;
 }
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+sl-card {
+  width: 100%;
+}
+
+sl-card, sl-card::part(base) {
+  height: 100%;
+}
+
+sl-card::part(header) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 ```
+
+</details>
 
 And don't forget to load the module in `src/main.ts`.
 
 ```ts copy
-import './components/todos';
-```
-
-Now, if we add `<todo-todos>` to our HTML, we should be able to see the todo items on screen.
-
-```html copy
-<body>
-  <main>
-    <apollo-client id="client">
-      <todo-todos></todo-todos>
-    </apollo-client>
-  </main>
-</body>
+import './components/list';
 ```
 
 We've fulfilled the first of our requirements: we can read the list of todos!
@@ -434,131 +455,85 @@ We've fulfilled the first of our requirements: we can read the list of todos!
 3. [ ] Edit todos
 4. [ ] Delete todos
 
-Now we'll move on to the next step and implement our first mutation in the `<todo-add>` component.
+Now we'll move on to the next step by adding a mutation operation to our component.
 
 ## Adding Todos
 
-Our first mutation component will be `<todo-add>`, which lets the user add a new item to the list. Fire up the old component generator to scaffold the files.
+Let's define our operation in `src/components/app/CreateTodo.mutation.graphql`. The `createTodo` operation takes a `TodoInput` object and returns a `Todo`.
 
-```bash copy
-npm init @apollo-elements -- \
-    component \
-  --name todo-add \
-  --type mutation \
-  --operation-name CreateTodo \
-  --variables '\$input\:\ TodoInput!' \
-  --fields 'createTodo\(input:\ $input\)\ \{\ id\ name\ complete\ \}' \
-  --subdir '' \
-  --yes
+```graphql copy
+mutation CreateTodo($input: TodoInput!) {
+  createTodo(input: $input) {
+    id
+    name
+    complete
+  }
+}
 ```
 
-And like before, set up the template, in this case a single input element:
+Add that mutation to our component by importing and instantiating an `ApolloMutationController` with an `update` function that appends the new todo to the cached list. For the UI, let's add an icon-button to the header of our main card, and have it toggle a dialog with a form for the new item.
+
 
 ```ts copy
+@query('sl-input') input: HTMLInputElement;
+@query('#new-dialog') newDialog: SLDialog;
+
+query = new ApolloQueryController(this, AppQuery);
+
+mutation = new ApolloMutationController(this, CreateTodo, {
+  update: (cache, result) => {
+    const cached = cache.readQuery({ query: AppQuery, returnPartialData: true });
+    cache.writeQuery({
+      query: AppQuery,
+      data: {
+        ...cached,
+        todos: [
+          ...cached.todos,
+          result.data.createTodo,
+        ],
+      },
+    });
+  },
+});
+
 render(): TemplateResult {
+  const todos = this.query.data?.todos ?? [];
   return html`
-    <mwc-textfield outlined
-        ?disabled="${this.loading}"
-        label="New To-Do Item"
-        @input="${this.setVariables}"
-        @keyup="${this.onKeyup}"></mwc-textfield>
+  <sl-card>
+    <h2 slot="header">To-Do List</h2>
+    <sl-tooltip slot="header" content="Add Todo">
+      <sl-icon-button name="plus-circle"
+                      label="Add Todo"
+                      @click="${() => this.newDialog.show()}"></sl-icon-button>
+    </sl-tooltip>
+    <ol>${todos.map(({ name, id, complete }) => html`
+      <li>
+        <sl-icon name="${complete ? 'check-square' : 'square'}"></sl-icon>
+        <a href="/todos/${id}">${name}</a>
+      </li>`)}
+    </ol>
+  </sl-card>
+
+  <sl-dialog id="new-dialog" label="New To-Do Item">
+    <sl-input ?disabled="${this.mutation.loading}"></sl-input>
+    <sl-button slot="footer" @click="${this.addTodo}">Add Todo</sl-button>
+  </sl-dialog>
   `;
 }
-```
 
-This component has some private methods and properties we'll need to implement. Add `query` to the imports from lit-element's decorators. It gives us easy references to shadow DOM elements, which we'll need to get the user's input.
-
-```ts copy
-import { customElement, query } from 'lit-element/lib/decorators';
-import type { TextField } from '@material/mwc-textfield';
-```
-
-Then we'll implement `setVariables`, which will update the element's `variables` property on each keypress; and `onCompleted`, a [mutation component lifecycle callback](/api/core/interfaces/mutation/lifecycle/) which fires whenever a mutation completes, which we'll use to clear the input.
-
-```ts copy
-@query('mwc-textfield') private input: TextField;
-
-private setVariables(): void {
-  this.variables = {
-    input: {
-      name: this.input.value,
-    },
-  };
-}
-
-private onKeyup(event: KeyboardEvent) {
-  this.setVariables();
-  if (event.key === 'Enter')
-    this.mutate();
-}
-
-onCompleted(): void {
-  this.input.value = '';
+private async addTodo() {
+  try {
+    await this.mutation.mutate({
+      variables: { input: { name: this.input.value } },
+    });
+    this.input.value = '';
+    this.input.blur();
+    this.newDialog.hide();
+  } catch (e) {
+    console.error(e);
+  }
 }
 ```
-
-`setVariables` calculates the `variables` object and sets it. Why not use a getter? In a JS project, that works fine, but overriding with a getter will produce TypeScript errors, so we're doing it imperatively here.
-
-Don't forget to import our dependencies, including the new component, in `src/main.ts`:
-
-```ts copy
-import '@material/mwc-button';
-import '@material/mwc-checkbox';
-import '@material/mwc-formfield';
-import '@material/mwc-textfield';
-import '@power-elements/card';
-
-import './components/add';
-import './components/todos';
-```
-
-and add some style:
-
-```css copy
-:host {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-mwc-textfield {
-  flex: 1 0 auto;
-}
-
-mwc-formfield {
-  flex: 1 1 auto;
-}
-```
-
-We didn't add a `submit` button to the element's shadow root because we're going to slot it into a parent card component's actions footer. So instead, we'll write a few bytes of JS in `src/main.ts` to link them up:
-
-```js copy
-import '@power-elements/card';
-
-document.getElementById('submit')
-  .addEventListener('click', () =>
-    document.querySelector('todo-add').mutate());
-```
-
-While we're at it, let's go ahead and add that card component, the submit button, and our new `<todo-add>` element to our HTML.
-
-```html copy
-<body>
-  <main>
-    <apollo-client id="client">
-      <p-card>
-        <h2 slot="heading">To-Do List</h2>
-        <todo-todos></todo-todos>
-        <todo-add refetch-queries="Todos"></todo-add>
-        <mwc-button id="submit" slot="actions" label="Add Todo"></mwc-button>
-      </p-card>
-    </apollo-client>
-  </main>
-</body>
-```
-
-That `refetch-queries` attribute instructs Apollo to refetch the `Todos` query every time `CreateTodo` resolves.
 
 Nice! Two requirements down, two to go:
 
@@ -567,170 +542,165 @@ Nice! Two requirements down, two to go:
 3. [ ] Edit todos
 4. [ ] Delete todos
 
+## Toggling Todos
+
+Our todo-list will have two different ways to update a todo, toggling it's `complete` status, and editing it's content. For the toggle operation, let's create and import `ToggleTodo.mutation.graphql`:
+
+```graphql copy
+mutation ToggleTodo($todoId: ID!) {
+  toggleTodo(todoId: $todoId) {
+    id
+    name
+    complete
+  }
+}
+```
+
+And for the UI, let's import `@apollo-elements/components/apollo-mutation` for a quick one-off. This component will sit in place of the complete icon in our app's template. We'll add a `data-todo-id` attribute on `<apollo-mutation>` to define a single `todoId` variable for the element, and we'll set `refetch-queries` and `await-refetch-queries` attributes to tell Apollo client to update the list of Todos after mutating, and to keep `loading` true until that request resolves. We could do without those, but this way the user gets a nicer experience. `refetch-queries` is a declarative alternative to a mutation update function. See the finished code for an example using `updater`.
+The `trigger` attribute on the slotted button tells `<apollo-mutation>` to execute when the user clicks, the element will also manage the `disabled` state of the button for you. Check out the [`<apollo-mutation>` docs](https://apolloelements.dev/api/components/apollo-mutation/) for more info.
+
+```html copy
+<li>
+  <apollo-mutation data-todo-id="${id}"
+                  .mutation="${ToggleTodo}"
+                  .optimisticResponse={{ toggleTodo: { __typename: 'Todo', complete: !complete, id, name } }}>
+    <sl-icon-button trigger name="${complete ? 'check-square' : 'square'}"></sl-icon-button>
+  </apollo-mutation>
+  <a href="/todos/${id}">${name}</a>
+</li>
+```
+
 ## Editing Todos
 
-The `<todo-edit>` element will do most of the heavy lifting in our app, so it will be the most involved of all our components, both in terms of it's template and it's methods. By now you should know the drill: fire up the good old generator to scaffold the files:
+So far we've been adding on to the app shell component for each new feature. At this point our `app.ts` file is over 100 lines long. Not terrible, but starting to approach the area we'd want to break it up. For our editing feature, let's define a new `<todo-edit>` element with its own mutation operation. We'll fire up the good old generator to scaffold the files:
 
 ```bash copy
 npm init @apollo-elements -- \
     component \
   --name todo-edit \
   --type mutation \
-  --operation-name UpdateTodo \
-  --variables '\$input\:\ TodoInput!' \
-  --fields 'updateTodo\(input:\ $input\)\ \{\ id\ name\ complete\ \}' \
+  --operation-name UpdateTodo
   --subdir '' \
-  --yes
+  --overwrite \
 ```
 
-Just like before, we'll define the template and styles. The component features an input field for the text of the todo with a toggle button that shows or hides the input, and a checkbox to indicate the todo's status.
+At the editor prompt, paste in the following:
+
+```graphql copy
+mutation UpdateTodo($input: TodoInput!) {
+  updateTodo(input: $input) {
+    id
+    name
+    complete
+  }
+}
+```
+
+Just like before, we'll define the template and styles. The component features an input field for the text of the todo with a checkbox to indicate the todo's status. Hitting the enter key on or blurring the input, or toggling the checkbox initiates the mutation.
 
 ```ts copy
-render() {
-  const name = this.textContent.trim();
+@property({ attribute: 'data-id' }) todoId?: string;
+@property({ attribute: 'data-name' }) todoName?: string;
+@property({ attribute: 'data-complete', type: Boolean }) complete?: boolean;
+
+@query('sl-input') input: HTMLInputElement;
+@query('sl-checkbox') checkbox: HTMLInputElement;
+
+render(): TemplateResult {
   return html`
-    <mwc-textfield
-        label="Edit"
-        value="${name}"
-        outlined
-        @input="${this.onChange}"
-        @keyup="${this.onKeyup}"></mwc-textfield>
-
-    <mwc-formfield label="${name}">
-      <mwc-checkbox
-          ?checked="${this.complete}"
-          @change="${this.onChange}"></mwc-checkbox>
-    </mwc-formfield>
-
-    <mwc-icon-button
-        icon="edit"
-        label="Edit"
-        @click="${this.toggleEditing}"></mwc-icon-button>
+    <sl-input label="To-Do Item"
+              value="${this.todoName}"
+              @keyup="${event => event.key === 'Enter' && this.mutate()}"
+              ?disabled="${this.mutation.loading}"></sl-input>
+    <sl-checkbox ?checked="${this.complete}"
+                 ?disabled="${this.mutation.loading}"
+                 @click="${this.mutate}">Complete</sl-checkbox>
   `;
+}
+
+mutate(): void {
+  this.mutation.mutate({
+    variables: {
+      input: {
+        todoId: this.todoId,
+        name: this.input.value,
+        complete: this.checkbox.checked,
+      },
+    },
+  });
 }
 ```
 
 ```css copy
 :host {
-  display: flex;
-  align-items: center;
-  min-height: 56px;
+  display: grid;
   gap: 12px;
-  min-width: 292px;
-  width: 100%;
-}
-
-:host([editing]) mwc-textfield {
-  display: inline;
-}
-
-:host([editing]) mwc-formfield {
-  display: none;
-}
-
-mwc-icon-button {
-  margin-inline-start: auto;
-}
-
-mwc-textfield {
-  flex: 1;
-  display: none;
 }
 ```
 
-See those `:host([editing])` selectors? That's selecting for the host element when it has an `editing` boolean attribute. State management in CSS! Lit-element decorators make defining that attribute a snap:
+We opted to pass our todo item's properties as attributes into the component in this case, but note that we could have just as well passed the todo object as a DOM property in the app shell's template. Both approaches have their pros and cons.
+
+Let's take a moment to write an update function for our mutation, like the one we wrote for `ToggleTodo`. In this case, if we wrote our updater function with `readQuery` and `writeQuery`, we'd have to manage the entire `todos` array ourselves, which would be error-prone and poorly performing. let's use `writeFragment` instead. Create a new file at `src/components/edit/todo.fragment.graphql` and give it the following content:
+
+```graphql copy
+fragment todo on Todo {
+  id
+  name
+  complete
+}
+```
+
+[GraphQL fragments](https://graphql.org/learn/queries/#fragments) are pretty much just what they sound like, bits of a larger document. The `on` clause of the document declaration tells GraphQL which type this fragment belongs to. If we wanted, we could use fancy footwork like importing that `todo` fragment into our other operation files, but that's beyond the scope of this tutorial.
+
+Import the fragment into `edit.ts` and add this `update` function to the mutation controller.
 
 ```ts copy
-@property({ type: Boolean }) complete = false;
-
-@property({ type: Boolean, reflect: true }) editing = false;
-
-@property({ type: Number, attribute: 'todo-id' }) todoId: number;
-
-@query('mwc-textfield') input: TextField;
-
-@query('mwc-checkbox') checkbox: Checkbox;
+mutation = new ApolloMutationController(this, UpdateTodo, {
+  update: (cache, result) =>
+    cache.writeFragment({
+      fragment: todoFragmentDoc,
+      id: cache.identify({ __typename: 'Todo', id: this.todoId }),
+      data: result.data.updateTodo,
+    }),
+});
 ```
 
-We opted to pass our todo item's properties as attributes into the component in this case, but note that we could have just as well passed the todo object as a DOM property in the `<todo-todos>` template. Both approaches have their pros and cons.
+<inline-notification type="tip" title="this reference">
 
-Now let's hook up the element's behaviours with some methods:
-
-```ts copy
-private async toggleEditing() {
-  this.editing = !this.editing;
-  await this.input.updateComplete;
-  if (this.editing)
-    this.input.focus();
-  else
-    this.input.blur();
-}
-
-private setVariables() {
-  this.variables = {
-    input: {
-      name: this.input.value,
-      complete: this.checkbox.checked,
-      todoId: this.todoId,
-    },
-  };
-}
-
-private onKeyup(event: KeyboardEvent) {
-  this.setVariables();
-  if (!(event instanceof KeyboardEvent)) return;
-  switch (event.key) {
-    case 'Enter':
-    case 'Escape': this.editing = false; break;
-    default: return;
-  }
-}
-
-private onChange() {
-  this.setVariables();
-  this.mutate();
-}
-```
-
-<inline-notification type="warning">
-
-When coding against a server, consider debouncing the mutation calls.
+Be sure to define the `update` option as an arrow function, so that the `this` binding refers to the element, not the options object.
 
 </inline-notification>
 
-Import your component in `src/main.ts`
+Ok, we've defined our component but we can't _use_ it yet. To view the edit component, we'll put our client-side router to work in the app shell. Open up `src/components/app/app.ts` then add an `onData` callback to the query controller that sets a `view` property and lazy-loads the edit component.
 
 ```ts copy
-import './components/edit';
+@state() view = '';
+
+query = new ApolloQueryController(this, AppQuery, {
+  onData: data => {
+    this.view = data?.location?.todoId ? 'edit' : 'list';
+    if (this.view === 'edit')
+      import('../edit');
+  },
+});
 ```
 
-And don't forget to add imports to the top of the file
+`onData` gets called whenever the data changes, with the new data as it's argument. Like above, make sure to use an arrow function so we can access the app shell's state on `this`.
 
-<details>
-<summary><code>src/components/edit/edit.ts</code></summary>
+We'll also add a second `<sl-card>` to display the editor, as a sibling to the first card.
 
-```ts copy
-import type { ApolloCache, FetchResult } from '@apollo/client/core';
-import type { TextField } from '@material/mwc-textfield';
-import type { Checkbox } from '@material/mwc-checkbox';
-import type {
-  UpdateTodoMutationData as Data,
-  UpdateTodoMutationVariables as Variables,
-} from '../../schema';
-
-import '@material/mwc-icon-button';
-import '@material/mwc-checkbox';
-import '@material/mwc-formfield';
-import '@material/mwc-textfield';
-
-import { ApolloMutation } from '@apollo-elements/lit-apollo';
-import { html, css } from 'lit-element';
-import { customElement, property, query } from 'lit-element/lib/decorators';
-
-import UpdateTodoMutation from './UpdateTodo.mutation.graphql';
+```html copy
+<sl-card ?hidden="${this.view !== 'edit'}">
+  <h2 slot="header">Edit Todo</h2>
+  <sl-icon-button slot="header" name="x" label="Close" href="/"></sl-icon-button>
+  <todo-edit data-id="${this.query.data?.todo?.id}"
+             data-name="${this.query.data?.todo?.name}"
+             ?data-complete="${this.query.data?.todo?.complete}"
+             ?hidden="${this.view !== 'edit'}"></todo-edit>
+</sl-card>
 ```
 
-</details>
+The way our client-side routing works is simple but effective. Whenever the route changes, we lazy-load the desired view component, and we hide the edit card in our template unless the route matches.
 
 By this point, you should be able to add an edit todos, which brings us 3/4 of the way there.
 
@@ -741,9 +711,9 @@ By this point, you should be able to add an edit todos, which brings us 3/4 of t
 
 ## Deleting Todos
 
-For our last component let's change things up a little bit. Rather than generating a new component that `extends ApolloMutation`, let's use the `<apollo-mutation>` element to declaratively build our delete mutation in HTML.
+For our last component let's change things up a little bit. Rather than adding a controller or an `<apollo-mutation>` element, we'll call the Apollo client's `mutate` method directly.
 
-First, create `src/components/edit/DeleteTodo.mutation.graphql` with the following contents, and add `DeleteTodoMutationData` to the type imports from the code-generated schema.
+First, create `src/components/edit/DeleteTodo.mutation.graphql` with the following contents, and be sure to import it into `edit.ts`.
 
 ```graphql copy
 mutation DeleteTodo($input: TodoInput) {
@@ -758,39 +728,51 @@ mutation DeleteTodo($input: TodoInput) {
 Add the following to the `<todo-edit>` template:
 
 ```html copy
-<apollo-mutation
-    input-key="input"
-    data-todo-id="${this.todoId}"
-    .mutation="${DeleteTodoMutation}"
-    .updater="${this.deleteUpdater}">
-  <mwc-icon-button trigger icon="delete" label="delete"></mwc-icon-button>
-</apollo-mutation>
+<sl-button type="danger" @click="${this.deleteTodo}">Delete Todo</sl-button>
 ```
 
-`<apollo-mutation>` is robust enough to handle even some quite advanced cases, and it pairs well with query components when you want to compose operations together in your DOM templates. See the [composing mutations](/guides/usage/mutations/composition/) docs for more info.
+When the user clicks the "Delete Todo" button, four things need to happen in sequence:
+1. Update the `loading` state of the form. We can accomplish this either by calling `requestUpdate` imperatively or by defining a state property on the element and having the template check if that _or_ the mutation controller's loading property is set.
+2. Borrow a reference to the Apollo client from the existing mutation controller and call `mutate()` it, passing the `DeleteTodo` document and variables.
+3. Update the cache to remove the deleted todo and update the list of todos.
+4. Navigate back to the todo list, which causes the "Edit Todo" card to hide.
 
-Now import the dependencies:
-
-```ts copy
-import '@apollo-elements/components/apollo-mutation';
-
-import TodosQuery from '../todos/Todos.query.graphql';
-import DeleteTodoMutation from './DeleteTodo.mutation.graphql';
-```
-
-Last but not least, let's define that `deleteUpdater` method, which will make sure to remove the deleted todo from the list. In our case, this amounts to replacing the list with the result of the `deleteTodo` operation. See [the apollo docs](https://www.apollographql.com/docs/react/caching/garbage-collection/#cacheevict) for a more advanced approach.
+Let's do all four of those in the `deleteTodo` method, importing the `go` helper from `router.ts`.
 
 ```ts copy
-deleteUpdater(
-  cache: ApolloCache<any>,
-  result: FetchResult<DeleteTodoMutationData>
-): void {
-  cache.writeQuery({
-    query: TodosQuery,
-    data: {
-      todos: result.data.deleteTodo,
-    }
-  })
+private async deleteTodo(): Promise<void> {
+  const { todoId } = this;
+  // 1: set loading state
+  this.loading = true;
+  try {
+    // 2: call the mutation imperatively
+    await this.mutation.client.mutate({
+      mutation: DeleteTodo,
+      variables: { input: { todoId } },
+      /**
+       * 3: The mutation returns the updated list of todos.
+       * Overwriting the todos array causes the cache GC
+       * To remove the missing entry.
+       */
+      update(cache, result) {
+        const query = AppQuery;
+        const variables = { todoId };
+        cache.writeQuery({
+          query,
+          variables,
+          data: {
+            ...cache.readQuery({ query, variables }),
+            todos: result.data.deleteTodo,
+          },
+        });
+      },
+    });
+    // 4: navigate back to the list
+    await go('/');
+  } finally {
+    // clean up loading state.
+    this.loading = false;
+  }
 }
 ```
 
@@ -826,7 +808,6 @@ The final product gives us:
 - *Create*, *Update*, and *Delete* operations via GraphQL mutations
 - *Read* operation via GraphQL query
 - Declarative, maintainable code
-- An upgrade path to implementing a GraphQL server
 
 Code reviewers (or future us) or will be able to get an at-a-glance perspective on what our code does by reading our GraphQL operation documents. Since we used web components for the UI, we'll be able to incrementally update or swap out our front-end framework with ease (or get rid of it altogether in favour of imperative vanilla JS).
 
@@ -834,10 +815,10 @@ Along the way we learned how to:
 - Generate components with `npm init @apollo-elements`
 - Render a query using the element's `data` property
 - Fire a mutation to change the data in our graph
-- Use boolean attributes to handle some UI state in CSS
-- Compose mutation components with queries two ways
-  1. By extending from `ApolloMutation`
+- Compose mutation components with queries three ways
+  1. By adding an `ApolloMutationController` to the host element
   2. By using the `<apollo-mutation>` component.
+  3. By imperatively calling `client.mutate()`
 - Update the client side state following a mutation two ways:
   1. with `refetchQueries`
   2. with `updater`

@@ -27,7 +27,9 @@ jobs:
         run: npm run lint
 
       - name: Test
-        run: npm test -- --coverage
+        run: |
+          npm test -- --coverage
+          npm test --prefix package/create
 
       - name: Publish Code Coverage
         uses: paambaati/codeclimate-action@v2.7.5

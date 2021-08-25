@@ -1,9 +1,6 @@
-import { promisify } from 'util';
+import { promises as fs } from 'fs';
 
-import fs from 'fs';
-
-export const readFile = promisify(fs.readFile);
-export const writeFile = promisify(fs.writeFile);
+export const { readFile, writeFile } = fs;
 
 export function getInterpolationRegExp(string?: string): RegExp {
   if (typeof string === 'string')

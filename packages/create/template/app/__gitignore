@@ -4,3 +4,5 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
 !src/declaration.d.ts
+src/**/*.graphql.ts
+src/schema.ts

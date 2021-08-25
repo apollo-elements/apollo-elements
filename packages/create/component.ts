@@ -12,28 +12,27 @@ import { codegen } from './codegen.js';
 import { processTemplate, readFile, writeFile } from './files.js';
 
 import Chalk from 'chalk';
-import prompts from 'prompts';
+import inquirer from 'inquirer';
 
 const { green, greenBright } = Chalk;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 type InterpolationKeys =
-  'BASE_CLASS' |
-  'CONTROLLER_CLASS' |
-  'CLASS_NAME' |
-  'CSS_ARRAY' |
-  'CSS_IMPORT' |
-  'CSS_IMPORT' |
-  'OPERATION_DATA_TYPE' |
-  'OPERATION_FIELDS' |
-  'OPERATION_FILE_NAME' |
-  'OPERATION_NAME' |
-  'OPERATION_TYPE' |
-  'OPERATION_VARIABLES' |
-  'SCHEMA_PATH' |
-  'TAG_NAME' |
-  'UNPREFIXED'
+  | 'BASE_CLASS'
+  | 'CONTROLLER_CLASS'
+  | 'CLASS_NAME'
+  | 'CSS_ARRAY'
+  | 'CSS_IMPORT'
+  | 'CSS_IMPORT'
+  | 'OPERATION'
+  | 'OPERATION_FILE_NAME'
+  | 'OPERATION_NAME'
+  | 'OPERATION_TYPE'
+  | 'OPERATION_VARIABLES'
+  | 'SCHEMA_PATH'
+  | 'TAG_NAME'
+  | 'UNPREFIXED'
 
 type Interpolations =
   Record<InterpolationKeys, string>;
@@ -44,9 +43,6 @@ enum FileKey {
   operation = 'operation',
   index = 'index'
 }
-
-const cwd =
-  process.cwd();
 
 const stat =
   promisify(fs.stat);
@@ -151,17 +147,17 @@ const getOperationArgs =
     return args && `(${args})`;
   });
 
-const getComponentPathFromCWD =
+const getComponentPathFromDirectoryOption =
   memoize((options: ComponentOptions): string =>
     join('src', 'components', options.subdir ?? '', getUnprefixedTagName(options)));
 
 const getComponentAbsPath =
   memoize((options: ComponentOptions): string =>
-    join(cwd, getComponentPathFromCWD(options)));
+    join(options.directory, getComponentPathFromDirectoryOption(options)));
 
 const getSchemaPath =
   memoize((options: ComponentOptions): string =>
-    options.schemaPath ?? relative(getComponentAbsPath(options), join(cwd, 'src', 'schema')));
+    options.schemaPath ?? `./${options.operationName}.${options.type}.graphql`);
 
 const getCSSImport =
   memoize(function getCSSImport(options: ComponentOptions): string {
@@ -172,7 +168,10 @@ const getCSSImport =
       return (
         `\nimport shared from '${(
           options.sharedCssPath ??
-        relative(getComponentAbsPath(options), join(cwd, 'src', 'components', 'shared.css'))
+        relative(
+          getComponentAbsPath(options),
+          join(options.directory, 'src', 'components', 'shared.css')
+        )
         )}';`
       );
     }
@@ -215,13 +214,15 @@ const getOperationFields =
   memoize((options: ComponentOptions): string =>
     options.fields ?? getFields(options));
 
+const getOperationString =
+  memoize((options: ComponentOptions): string =>
+    `${options.type} ${options.operationName}${getOperationVariables(options)} {
+  ${getOperationFields(options)}
+}`);
+
 export const getOperationFileName =
   memoize((options: ComponentOptions): string =>
     `${getOperation(options)}.${options.type}.graphql`);
-
-const getOperationDataType =
-  memoize((options: ComponentOptions): string =>
-    `${getOperationName(options)}${Case.capital(options.type)}`);
 
 const getInterpolations =
   memoize((options: ComponentOptions): Interpolations =>
@@ -231,8 +232,7 @@ const getInterpolations =
       CLASS_NAME: getClassName(options),
       CSS_ARRAY: getCssArray(options),
       CSS_IMPORT: getCSSImport(options),
-      OPERATION_DATA_TYPE: getOperationDataType(options),
-      OPERATION_FIELDS: getOperationFields(options),
+      OPERATION: options.operation ?? getOperationString(options),
       OPERATION_FILE_NAME: getOperationFileName(options),
       OPERATION_NAME: getOperationName(options),
       OPERATION_TYPE: options.type,
@@ -260,14 +260,14 @@ function getFilePath(key: FileKey, options: ComponentOptions): string {
 }
 
 async function shouldWriteToDir(options: ComponentOptions): Promise<boolean> {
-  if (options.yes || !await exists(getComponentAbsPath(options)))
+  if (options.overwrite || !await exists(getComponentAbsPath(options)))
     return true;
   else {
-    return await prompts([{
+    return await inquirer.prompt([{
       type: 'confirm',
       name: 'overwrite',
-      initial: false,
-      message: `Directory ${getComponentPathFromCWD(options)} exists. Overwrite?`,
+      default: false,
+      message: `Directory ${getComponentPathFromDirectoryOption(options)} exists. Overwrite?`,
     }]).then(({ overwrite = false }) => overwrite);
   }
 }
@@ -287,21 +287,24 @@ async function writeComponentFile(key: FileKey, options: ComponentOptions) {
     processTemplate(await getTemplate(key), getInterpolations(options));
 
   await writeFile(PATH, OUTPUT, 'utf-8');
-  console.log(`\tWrote ${green(relative(cwd, PATH))}`);
+  if (!options.silent)
+    console.log(`\tWrote ${green(relative(options.directory, PATH))}`);
 }
 
 async function writeComponent(options: ComponentOptions) {
   if (!await shouldWriteToDir(options))
     return;
 
-  console.log(`\nCreating ${green(options.name)} in ${getComponentPathFromCWD(options)}\n`);
+  if (!options.silent)
+    console.log(`\nCreating ${green(options.name)} in ${getComponentPathFromDirectoryOption(options)}\n`);
 
   await mkdirp(getComponentAbsPath(options));
 
   for (const key of Object.keys(FileKey) as FileKey[])
     await writeComponentFile(key, options);
 
-  console.log(`\n${greenBright('Done!')}`);
+  if (!options.silent)
+    console.log(`\n${greenBright('Done!')}`);
 }
 
 /**
@@ -311,7 +314,7 @@ export async function component(options: ComponentOptions): Promise<void> {
   if (!options) return; // ctrl-c
 
   try {
-    fs.statSync(join(cwd, 'package.json'));
+    fs.statSync(join(options.directory, 'package.json'));
   } catch (error) {
     return console.log('‼️ No package.json found.', '👉 Scaffold an app first');
   }
