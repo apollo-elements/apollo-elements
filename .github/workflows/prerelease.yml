@@ -28,7 +28,9 @@ jobs:
         run: npm run lint
 
       - name: Test
-        run: npm test
+        run: |
+          npm test -- --coverage
+          npm test --prefix packages/create
 
       - name: Create Prerelease Pull Request or Publish next tag to npm
         id: changesets
