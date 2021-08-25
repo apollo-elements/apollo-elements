@@ -42,7 +42,7 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 import { ApolloQueryMixin, ApolloMutationMixin } from '@apollo-elements/mixins';
 
 import { ApolloClientElement } from './apollo-client';
-import { makeClient } from '@apollo-elements/test';
+import { makeClient, teardownClient } from '@apollo-elements/test';
 import { spy, stub, SinonStub } from 'sinon';
 
 import './apollo-client';
@@ -344,6 +344,7 @@ describe('<apollo-client>', function() {
     const TagNameQuery: TypedDocumentNode<{ tagName: string }, { tagName: string }> =
     gql`query TagNameQuery($tagName: String!) { tagName(tagName: $tagName) { tagName } }`;
 
+    beforeEach(teardownClient);
     beforeEach(mockFetch);
     afterEach(restoreFetch);
 
@@ -385,39 +386,46 @@ describe('<apollo-client>', function() {
     });
 
     describe('that implement an ApolloQuery controller', function() {
-      const TAG_NAMES = {
-        haunted: 'haunted-use-query',
-        lit: 'lit-apollo-query-controller',
-        hybrids: 'hybrids-apollo-query-controller',
+      const FIXTURES = {
+
+        haunted: {
+          tagName: 'haunted-use-query',
+          register: () => {
+            const { tagName } = FIXTURES.haunted;
+            customElements.define(tagName, Haunted.component(
+              function HauntedApolloQuery(this: HTMLElement) {
+                const { data } = Haunted.useQuery(TagNameQuery, { hostElement: this, variables: { tagName } });
+                return JSON.stringify(data);
+              } as any));
+          },
+        },
+
+        lit: {
+          tagName: 'lit-apollo-query-controller',
+          register: () => {
+            const { tagName } = FIXTURES.lit;
+            @LitDeco.customElement(tagName) class LitApolloQueryController extends Lit.LitElement {
+              query = new Core.ApolloQueryController(this, TagNameQuery, { variables: { tagName } });
+            }
+          },
+        },
+
+        hybrids: {
+          tagName: 'hybrids-apollo-query-controller',
+          register: () => {
+            const { tagName } = FIXTURES.hybrids;
+            Hybrids.define(tagName, {
+              render: host => Hybrids.html`${JSON.stringify(host.query.data)}`,
+              query: Hybrids.query(TagNameQuery, { variables: { tagName } }),
+            } as Hybrids.Hybrids<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
+          },
+        },
+
       };
 
-      @LitDeco.customElement(TAG_NAMES.lit) class LitApolloQueryController extends Lit.LitElement {
-        query = new Core.ApolloQueryController(this, TagNameQuery, {
-          variables: {
-            tagName: this.localName,
-          },
-        });
-      }
-
-      customElements.define(TAG_NAMES.haunted, Haunted.component(
-        function HauntedApolloQuery(this: HTMLElement) {
-          const { data } = Haunted.useQuery(TagNameQuery, {
-            hostElement: this,
-            variables: {
-              tagName: this.localName,
-            },
-          });
-
-          return JSON.stringify(data);
-        } as any));
-
-      Hybrids.define(TAG_NAMES.hybrids, {
-        render: host => Hybrids.html`${JSON.stringify(host.query.data)}`,
-        query: Hybrids.query(TagNameQuery, { variables: { tagName: TAG_NAMES.hybrids } }),
-      } as Hybrids.Hybrids<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
-
-      Object.values(TAG_NAMES).forEach(tagName => {
+      Object.values(FIXTURES).forEach(({ tagName, register }) => {
         describe(tagName, function() {
+          beforeEach(register);
           beforeEach(async function() {
             await fixture(`
               <apollo-client uri="/graphql">
