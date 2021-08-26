@@ -16,6 +16,12 @@ updated: Last Modified
 
 To-Do apps are *de rigueur* when it comes to demonstrating web app tech stacks. Writing one lets you see how the stack handles <abbr title="create, read, update, delete">CRUD</abbr> operations, giving you a feel for how it would handle larger, more complex apps. In this post, we'll learn how to write a to-do app using [Apollo Elements](https://apolloelements.dev), the GraphQL web component library.
 
+<inline-notification title="Take Me to the Code">
+
+View the completed project [on GitHub](https://github.com/apollo-elements/todo-app)
+
+</inline-notification>
+
 ## The Plan
 
 The typical to-do app has a backend which contains the authoritative database of to-dos, and a frontend which displays the list and exposes UI for operations like adding, editing, or deleting to-dos. We'll build our frontend out of a single GraphQL query and some GraphQL mutations, and our backend using Apollo server and Koa, with an in-memory "database" consisting of a javascript object.
@@ -35,7 +41,7 @@ Let's use the [Apollo Elements generator](/api/create/app/) to scaffold an app t
 mkdir todo-apollo
 cd todo-apollo
 npm init @apollo-elements -- \
-  app \
+    app \
   --uri /graphql \
   --install \
   --overwrite \
