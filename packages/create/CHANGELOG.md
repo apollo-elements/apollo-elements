@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 3.0.1
+
+### Patch Changes
+
+- 10af788: Add back missing helpers.js file
+
 ## 3.0.0
 
 ### Major Changes
