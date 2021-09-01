@@ -1,0 +1,65 @@
+diff --git a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
+index 70b81ff..04329ac 100644
+--- a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
++++ b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
+@@ -6,6 +6,11 @@ import { dirname, join, resolve } from 'path';
+ import { fileURLToPath } from 'url';
+ import { addPlugin, adjustPluginOptions } from 'plugins-manager';
+ import { slideDecksPlugin } from './eleventy/slide-decks.js';
++import { markdownDirectives } from 'rocket-preset-markdown-directives';
++import remarkDirective from 'remark-directive';
++import visit from 'unist-util-visit';
++// import { visit } from 'unist-util-visit';
++import { h } from 'hastscript';
+ 
+ const path = resolve(dirname(fileURLToPath(import.meta.url)));
+ 
+@@ -54,5 +59,48 @@ export function slideDecks() {
+       }),
+     ],
+ 
++    setupUnifiedPlugins: [
++      addPlugin({
++        name: 'markdown-directives',
++        plugin: markdownDirectives,
++        location: 'top',
++      }),
++      addPlugin({
++        name: 'remark-directive',
++        plugin: remarkDirective,
++        location: 'top',
++      }),
++      addPlugin({
++        name: 'slide-decks-remark-directives',
++        plugin() {
++          return tree => {
++            visit(tree, node => {
++              switch (node.type) {
++                case 'textDirective':
++                case 'leafDirective':
++                case 'containerDirective': {
++                  try {
++                  const data = node.data || (node.data = {});
++                  const hast = h(node.name, node.attributes)
++                  data.hName = hast.tagName;
++                  data.hProperties = hast.properties;
++                  console.log(node.type, node.name, data)
++                }catch(e) {console.error(e)}
++                }
++              }
++            })
++          }
++        },
++        location: 'remark-directive',
++        how: 'after',
++      }),
++      adjustPluginOptions(
++        'markdown-directives',
++        /** @type{import('rocket-preset-markdown-directives').Config} */
++        ({
++          reveal: () => ({ tagName: 'section', attributes: { reveal: true } }),
++        })
++      ),
++    ],
+   };
+ }
