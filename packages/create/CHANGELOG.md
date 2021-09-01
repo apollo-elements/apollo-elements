@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 3.0.3
+
+### Patch Changes
+
+- 127d9b8: update app template dependencies
+
 ## 3.0.2
 
 ### Patch Changes
