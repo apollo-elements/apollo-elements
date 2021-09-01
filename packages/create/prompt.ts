@@ -28,22 +28,22 @@ export async function promptApp(options: PromptOptions<AppOptions>): Promise<App
       message: 'What is the URI to your GraphQL endpoint?',
       default: '/graphql',
     }, {
-      type: 'checkbox',
+      type: 'confirm',
       name: 'overwrite',
       message: 'Overwrite existing files?',
       default: false,
     }, {
-      type: 'checkbox',
+      type: 'confirm',
       name: 'package-defaults',
       message: 'Use default package.json fields (e.g. author, license, etc)?',
       default: true,
     }, {
-      type: 'checkbox',
+      type: 'confirm',
       name: 'install',
       message: 'Install dependencies?',
       default: true,
     }, {
-      type: 'checkbox',
+      type: 'confirm',
       name: 'start',
       message: 'Launch when ready?',
       default: true,
