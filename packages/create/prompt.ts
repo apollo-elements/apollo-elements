@@ -244,7 +244,7 @@ export async function prompt(): Promise<void> {
       }
     }
   } catch (error) {
-    if (error.command.includes('build:codegen'))
+    if (error?.command?.includes?.('build:codegen'))
       return;
     else
       console.error(error);
