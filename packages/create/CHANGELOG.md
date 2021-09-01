@@ -1,5 +1,12 @@
 # @apollo-elements/create
 
+## 3.0.2
+
+### Patch Changes
+
+- 46c6439: safer error handling
+- 5746761: Uses confirm prompt for boolean generator options
+
 ## 3.0.1
 
 ### Patch Changes
