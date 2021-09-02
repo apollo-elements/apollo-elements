@@ -5,7 +5,7 @@ attrs: fade-out
 
 ## lit-apollo
 
-<div class="progressive">
+<div progressive>
 
 ```typescript
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';

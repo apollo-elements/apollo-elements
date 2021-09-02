@@ -5,7 +5,7 @@ name: mutations-optimistic
 
 ## Mutations - Optimistic UI
 
-<div class="progressive">
+<div progressive>
 
 ```js
 

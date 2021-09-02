@@ -4,7 +4,7 @@ name: custom-elements
 
 ## Web Components
 
-<div class="progressive">
+<div progressive>
 
 ```js
 class PersonElement extends HTMLElement {
@@ -24,7 +24,7 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHtml = `
+    this.attachShadow({ mode: 'open' }).innerHTML = `
       <span id="emoji">${this.getAttribute('emoji')}</span>
       <p id="friends"></p>
     `;
@@ -38,7 +38,7 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHtml = `
+    this.attachShadow({ mode: 'open' }).innerHTML = `
       <span id="emoji">${this.getAttribute('emoji')}</span>
       <p id="friends"></p>
     `;
@@ -52,7 +52,7 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHtml = `
+    this.attachShadow({ mode: 'open' }).innerHTML = `
       <span id="emoji">${this.getAttribute('emoji')}</span>
       <p id="friends"></p>
     `;

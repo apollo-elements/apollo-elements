@@ -7,13 +7,11 @@ cover_image: https://apolloelements.dev/graphql-in-html/images/poster.png
 templateEngineOverride: njk,md
 ---
 
-
-<style data-helmet>
-:root {
-  --markdown-syntax-background-color: black;
-}
-
-slidem-deck::part(progress) {
-  height: 30px;
-  }
-</style>
+<link data-helmet
+      rel="stylesheet"
+      href="{{ '/_assets/graphql-in-html.css' | asset | url }}"/>
+<link data-helmet
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.50/dist/themes/dark.css">
+<script data-helmet type="module"
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.50/dist/shoelace.js"></script>

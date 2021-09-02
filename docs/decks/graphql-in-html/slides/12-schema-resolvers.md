@@ -6,7 +6,7 @@ name: Schema Resolvers
 
 The GraphQL Schema tells your server the type of each object.
 
-<section class="progressive">
+<section progressive>
 
 ```graphql
 type Person {
@@ -40,7 +40,7 @@ type Person {
 
 The resolvers define the contents of each field.
 
-<section id="resolvers" class="progressive">
+<section id="resolvers" progressive>
 
 ```js reveal
 export const PersonResolvers = {
@@ -75,14 +75,3 @@ export const PersonResolvers = {
 </section>
 
 </section>
-
-<style data-helmet>
-[name="Schema Resolvers"]::part(content) {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 1em;
-}
-#resolvers pre {
-  font-size: 60%;
-}
-</style>

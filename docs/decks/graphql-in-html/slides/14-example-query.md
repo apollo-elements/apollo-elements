@@ -4,7 +4,7 @@ name: Example Query
 
 ## Queries
 
-<section class="progressive">
+<section progressive>
 
 ```graphql
 query PersonQuery           {
@@ -83,9 +83,3 @@ query PersonQuery($id: ID!) {
 ```
 
 </section>
-
-<style data-helmet>
-[name="Example Query"] [reveal]:last-of-type {
-  margin-block-start: -3em;
-}
-</style>

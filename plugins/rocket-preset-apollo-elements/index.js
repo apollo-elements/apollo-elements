@@ -11,6 +11,16 @@ import { icon } from './lib/icon.js';
 import { linkTag } from './liquid/link.js';
 import { markdownDirectives } from 'rocket-preset-markdown-directives';
 
+import hirestime from 'hirestime';
+import { writeFile, readFile } from 'fs/promises';
+
+import postcssPresetEnv from 'postcss-preset-env';
+import postcss from 'postcss';
+
+const css = postcss([
+  postcssPresetEnv({ features: { 'nesting-rules': true } }),
+]);
+
 const path = resolve(dirname(fileURLToPath(import.meta.url)));
 
 export function apolloElements() {
@@ -35,6 +45,19 @@ export function apolloElements() {
           eleventyConfig.addLiquidTag('github', githubTag);
           eleventyConfig.addLiquidTag('dev', linkTag);
           /* end blog */
+
+          eleventyConfig.on('afterBuild', async () => {
+            const end = hirestime.default();
+            try {
+              const path = new URL('_site-dev/_merged_assets/graphql-in-html.css', import.meta.url);
+              const src = await readFile(path, 'utf-8');
+              const { css: out } = await css.process(src, { to: path.pathname });
+              await writeFile(path, out, 'utf-8');
+            } catch (error) {
+              console.error(error);
+            }
+            console.log('Processing CSS took', end.ms(), 'ms');
+          });
         },
       }),
 

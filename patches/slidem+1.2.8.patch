@@ -17,3 +17,44 @@ index 503d779..834cd27 100644
        <gluon-keybinding id="timerToggle" key="t"></gluon-keybinding>
        <gluon-keybinding id="presenterToggle" key="p"></gluon-keybinding>
        <div id="forward">
+diff --git a/node_modules/slidem/slidem-slide-base.js b/node_modules/slidem/slidem-slide-base.js
+index a36279d..feeb441 100644
+--- a/node_modules/slidem/slidem-slide-base.js
++++ b/node_modules/slidem/slidem-slide-base.js
+@@ -20,6 +20,7 @@ const slidemStyle = html`
+       flex-direction: row;
+       overflow: hidden;
+       align-items: center;
++      background: var(--background);
+       background-size: cover;
+       background-position: center;
+     }
+diff --git a/node_modules/slidem/slidem-slide.js b/node_modules/slidem/slidem-slide.js
+index 4cdc5a1..903d622 100644
+--- a/node_modules/slidem/slidem-slide.js
++++ b/node_modules/slidem/slidem-slide.js
+@@ -28,13 +28,8 @@ export class SlidemSlide extends SlidemSlideBase {
+     super.connectedCallback();
+     const background = this.getAttribute('background');
+     if (background) {
+-      if (background.match(/^--[a-zA-Z-]*$/)) {
+-        // Workaround for IE11 lacking CSS variables
+-        if (window.ShadyCSS && window.ShadyCSS.variables) {
+-          this.style.background = window.ShadyCSS.variables[background];
+-        } else {
+-          this.style.background = `var(${background})`;
+-        }
++      if (background.match(/^--/)) {
++        this.style.setProperty('--background', `var(${background})`);
+       } else if (background.match(/^(http|\/|\.)/)) {
+         let image = `url(${background})`;
+         const darken = this.getAttribute('darken-background');
+@@ -43,7 +38,7 @@ export class SlidemSlide extends SlidemSlideBase {
+         }
+         this.style.backgroundImage = image;
+       } else {
+-        this.style.background = background;
++        this.style.setProperty('--background', background);
+       }
+     }
+ 

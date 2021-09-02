@@ -1,8 +1,10 @@
 ---
 name: Example Web Component
+background: --blue-grey-900
+attrs: progressive
 ---
 
-<div class="progressive">
+## 'Vanilla' Web Component 🍦
 
 ```js
 class PersonElement extends HTMLElement {
@@ -22,9 +24,9 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHtml = `
-      <span id="emoji">${this.getAttribute('emoji')}</span>
-      <p id="friends"></p>
+    this.attachShadow({ mode: 'open' }).innerHTML = `
+      <span id="emoji">${this.getAttribute('emoji')} says:</span>
+      <slot></slot>
     `;
   }
 }
@@ -36,9 +38,9 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHtml = `
-      <span id="emoji">${this.getAttribute('emoji')}</span>
-      <p id="friends"></p>
+    this.attachShadow({ mode: 'open' }).innerHTML = `
+      <span id="emoji">${this.getAttribute('emoji')} says:</span>
+      <slot></slot>
     `;
   }
 }
@@ -50,9 +52,9 @@ class PersonElement extends HTMLElement {
 class PersonElement extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHtml = `
-      <span id="emoji">${this.getAttribute('emoji')}</span>
-      <p id="friends"></p>
+    this.attachShadow({ mode: 'open' }).innerHTML = `
+      <span id="emoji">${this.getAttribute('emoji')} says:</span>
+      <slot></slot>
     `;
   }
 }
@@ -65,14 +67,12 @@ customElements.define('person-element', PersonElement);
   <h1>Web Components, huh?</h1>
 </header>
 
-<person-element emoji="👩‍🔬"></person-element>
+<person-element emoji="👩‍🔬">
+  <blockquote>
+    <p>Every web component is an HTML Element.</p>
 
-<p>Every web component is an HTML Element.</p>
-
-<p>And you get to define how it behaves.</p>
-
-
+    <p>And you get to define how it behaves.</p>
+  </blockquote>
+</person-element>
 
 ```
-
-</div>

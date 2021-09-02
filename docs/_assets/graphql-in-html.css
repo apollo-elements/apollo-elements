@@ -1,0 +1,287 @@
+section[reveal] {
+  margin-block-start: 1em;
+}
+
+section[reveal] pre {
+  margin-block-start: 0;
+}
+
+[name="intro"] {
+  &::part(content) {
+    display: grid;
+    gap: 2em;
+    grid-template:
+      'main' 4fr
+      'foot' 1fr;
+  }
+
+  & #intro-header {
+    margin-block-start: 4em;
+  }
+
+  & #keys-legend {
+    font-size: 3vw;
+    text-align: center;
+  }
+
+  & #h1 {
+    font-size: 20vw;
+  }
+
+  & #h1-graphql {
+    --wght: 650;
+    color: var(--secondary);
+    line-height: 0.6;
+  }
+
+  & #h1-in-html {
+    --wght: 100;
+
+    font-size: 18vw;
+    margin-inline-start: 0.3em;
+  }
+
+  & #h1-html {
+    --slnt:-12;
+    --wght: 900;
+    --casl: 0;
+
+    color:var(--primary);
+    font-size: 20vw;
+  }
+
+}
+
+[name="Schema Resolvers"] {
+  &::part(content) {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 1em;
+  }
+}
+
+#resolvers pre {
+  font-size: 60%;
+}
+
+[name="Queries and Mutations"] {
+  &::part(content) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  & dl.analogy {
+    display: grid;
+    grid-template-columns: min-content auto;
+    gap: 1em;
+    align-items: end;
+
+    & :is(dt, dd) {
+      display: inline-block;
+    }
+
+    & dd::before {
+      content: '⇒';
+      margin-inline-end: 1em
+    }
+  }
+}
+
+[name="Example Query"] {
+  & [reveal]:last-of-type {
+    margin-block-start: -3em;
+  }
+}
+
+[name="GraphQL Frontends"] {
+  & h2 {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+
+[name="UI f query"] {
+  & figure {
+    margin: 0;
+    --casl:1;
+  }
+
+  & figcaption {
+    font-size:20vh;
+  }
+
+  & dl {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  & dl pre {
+    margin: 0;
+  }
+
+  & dl div {
+    grid-column: 2/3;
+  }
+
+  & dd::before {
+    content: '⇒';
+    font-size: 4rem;
+    place-self: center;
+    grid-row: -1/1;
+    grid-column: 1/2;
+  }
+
+  & dl dd {
+    display: grid;
+    grid-template-columns:  1fr 1.5fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+
+  & .fake-user {
+    width: 100%;
+    grid-column: 2/3;
+  }
+
+  & .fake-user .name {
+    height: 2rem;
+    width: calc(90% * var(--b, 1));
+    align-self: center;
+  }
+
+  & .fake-user::part(body) {
+    display: grid;
+    gap: 1rem;
+    grid-template:
+      'a n' 3rem
+      'b b' auto
+      'b b' auto
+      'b b' auto / 3rem auto;
+  }
+
+  & sl-skeleton:nth-last-child(-n+3) {
+    grid-column: -1/1;
+  }
+
+  & sl-skeleton:last-child {
+    width: calc(80% * var(--a, 1));
+  }
+
+  & sl-skeleton.avatar {
+    width: 3rem;
+    height: 3rem;
+  }
+
+}
+
+[name="Web Components"] {
+  & svg {
+    height: 512px;
+    width: auto;
+  }
+}
+
+[name="Example Web Component"] {
+  & h2 {
+    float: right;
+    z-index: 1;
+    position: relative;
+    font-size: 0.8em;
+  }
+}
+
+[name="Shadow DOM"] {
+  & [grid] {
+    grid-template: 1fr 1fr / 1fr 1fr;
+  }
+
+  & blockquote {
+    margin-block: 0.25em;
+  }
+
+  & person-element {
+    grid-column: span 2;
+  }
+
+  & pre {
+    margin: 0;
+    font-size: .7em;
+  }
+}
+
+[name="Apollo Elements"] {
+  & h2 {
+    --slnt: 0;
+    --casl: 0;
+    --mono: 0;
+    line-height: .9;
+
+    & span {
+      &:first-of-type {
+        --wght: 100;
+      }
+
+      &:last-of-type {
+        --wght: 900;
+        color: var(--primary);
+      }
+    }
+  }
+}
+
+[name="Glue"] {
+  & ol li {
+    margin-block-end: 0.5em;
+  }
+
+  & ul {
+    gap: 1em;
+    list-style-type: none;
+    justify-content: space-between;
+    & li {
+      display: contents;
+      & a {
+        color: inherit;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.9;
+        display: block;
+        text-decoration: none;
+        border-radius: 100%;
+        transition: background 0.2s ease-in-out;
+        height: 100%;
+        outline: none;
+        width: 12vw;
+        height: 12vw;
+        & svg {
+          font-size: initial;
+          width: auto;
+          height: 100%;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+}
+
+[name="HTML Queries"] {
+  & h2 {
+    float: right;
+    position: relative;
+    z-index: 2;
+    font-size: 80%;
+  }
+
+  & docs-playground {
+    z-index: 3;
+    height: 100%;
+    &::part(playground-ide) {
+      height: 100%;
+      --playground-code-font-size: 36px;
+    }
+  }
+}

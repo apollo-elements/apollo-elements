@@ -22,6 +22,14 @@
     "slnt" var(--slnt);
 }
 
+slidem-deck::part(progress) {
+  height: 30px;
+}
+
+slidem-slide {
+  --markdown-syntax-background-color: var(--background, black);
+}
+
 em {
   --slnt: -15;
 }
@@ -152,19 +160,25 @@ img[middle][center] { margin: auto auto; }
 slidem-slide[flex]::part(content) { display: flex; }
 slidem-slide[column]::part(content) { flex-flow: column; }
 
-.progressive {
+slidem-slide [progressive]::part(content) {
   position: relative;
   margin: 0;
 }
 
-.progressive > * {
+slidem-slide [progressive] {
+  position: relative;
+  margin: 0;
+}
+
+slidem-slide [progressive] [reveal],
+slidem-slide[progressive] [reveal] {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
 }
 
-.progressive > :not(:first-of-type) {
+slidem-slide [progressive] > :not(:first-of-type) {
   box-shadow: none;
 }
 
