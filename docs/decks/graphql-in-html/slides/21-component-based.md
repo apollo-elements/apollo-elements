@@ -1,7 +1,6 @@
 ---
 name: Component Based Frontends
-attrs: spaced
-background: --blue-grey-900
+attrs: alt spaced
 ---
 
 On the **server**, GraphQL lends itself to *deeply nested*, *networked* data.

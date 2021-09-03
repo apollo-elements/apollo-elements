@@ -1,5 +1,6 @@
 ---
 name: Example Query
+attrs: float-header
 ---
 
 ## Queries

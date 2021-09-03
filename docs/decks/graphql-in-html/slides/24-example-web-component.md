@@ -1,10 +1,11 @@
 ---
 name: Example Web Component
-background: --blue-grey-900
-attrs: progressive
+attrs: alt float-header
 ---
 
 ## 'Vanilla' Web Component 🍦
+
+<section progressive>
 
 ```js
 class PersonElement extends HTMLElement {
@@ -76,3 +77,5 @@ customElements.define('person-element', PersonElement);
 </person-element>
 
 ```
+
+</section>

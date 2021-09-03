@@ -1,0 +1,13 @@
+diff --git a/node_modules/rocket-preset-playground-elements/components/docs-playground/docs-playground.html b/node_modules/rocket-preset-playground-elements/components/docs-playground/docs-playground.html
+index f8418ab..8958b74 100644
+--- a/node_modules/rocket-preset-playground-elements/components/docs-playground/docs-playground.html
++++ b/node_modules/rocket-preset-playground-elements/components/docs-playground/docs-playground.html
+@@ -102,7 +102,7 @@ button:hover {
+ 
+ <div id="snippet"><slot></slot></div>
+ 
+-<playground-ide part="playground-ide"></playground-ide>
++<playground-ide part="playground-ide" exportparts="lhs,rhs"></playground-ide>
+ 
+ <button part="button">
+   <span id="edit">▶️ Edit Live</span>

@@ -1,6 +1,6 @@
 ---
 name: UI f query
-background: --blue-grey-900
+attrs: alt
 ---
 
 <figure class="sl-theme-dark">

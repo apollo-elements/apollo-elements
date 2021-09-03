@@ -37,7 +37,7 @@ export default ({
     rocketBlog(),
     rocketSearch(),
 
-    apolloElements(),
+    apolloElements({ transformCSS: 'decks/**/*.css' }),
     webcomponentsDev(),
     slideDecks(),
 

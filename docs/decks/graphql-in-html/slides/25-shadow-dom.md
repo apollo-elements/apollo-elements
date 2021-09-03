@@ -1,6 +1,6 @@
 ---
 name: Shadow DOM
-background: --blue-grey-900
+attrs: alt float-header
 ---
 
 ## Shadow DOM 🦇
@@ -34,19 +34,28 @@ document.querySelector('person-element')
 }
 ```
 
-<div reveal>
-
-```html
+```html reveal
 <person-element emoji="🧙‍♂️">
   <blockquote>Hello World!</blockquote>
 </person-element>
+<blockquote id="emoji">
+  Shadow DOM makes components safe to use
+</blockquote>
 ```
 
+<output reveal>
+
 <person-element emoji="🧙‍♂️">
   <blockquote>Hello World!</blockquote>
 </person-element>
 
-</div>
+<blockquote id="emoji">
+  Shadow DOM makes components safe to use
+</blockquote>
+
+</output>
+
+</section>
 
 </section>
 

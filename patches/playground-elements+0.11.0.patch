@@ -1,0 +1,22 @@
+diff --git a/node_modules/playground-elements/playground-ide.js b/node_modules/playground-elements/playground-ide.js
+index 2a8c02d..4ebc224 100644
+--- a/node_modules/playground-elements/playground-ide.js
++++ b/node_modules/playground-elements/playground-ide.js
+@@ -173,7 +173,7 @@ let PlaygroundIde = class PlaygroundIde extends LitElement {
+         <slot></slot>
+       </playground-project>
+ 
+-      <div id="lhs">
++      <div id="lhs" part="lhs">
+         <playground-tab-bar
+           part="tab-bar"
+           .project=${projectId}
+@@ -192,7 +192,7 @@ let PlaygroundIde = class PlaygroundIde extends LitElement {
+         </playground-file-editor>
+       </div>
+ 
+-      <div id="rhs">
++      <div id="rhs" part="rhs">
+         ${this.resizable
+             ? html `<div
+               id="resizeBar"

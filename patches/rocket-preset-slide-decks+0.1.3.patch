@@ -1,5 +1,5 @@
 diff --git a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
-index 70b81ff..04329ac 100644
+index 70b81ff..6d3e680 100644
 --- a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 +++ b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 @@ -6,6 +6,11 @@ import { dirname, join, resolve } from 'path';
@@ -14,7 +14,7 @@ index 70b81ff..04329ac 100644
  
  const path = resolve(dirname(fileURLToPath(import.meta.url)));
  
-@@ -54,5 +59,48 @@ export function slideDecks() {
+@@ -54,5 +59,47 @@ export function slideDecks() {
        }),
      ],
  
@@ -43,7 +43,6 @@ index 70b81ff..04329ac 100644
 +                  const hast = h(node.name, node.attributes)
 +                  data.hName = hast.tagName;
 +                  data.hProperties = hast.properties;
-+                  console.log(node.type, node.name, data)
 +                }catch(e) {console.error(e)}
 +                }
 +              }

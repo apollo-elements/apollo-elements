@@ -1,7 +1,25 @@
+slidem-slide[float-header] {
+  & h2:first-of-type {
+    float: right;
+    z-index: 1;
+    position: relative;
+    font-size: 0.8em;
+  }
+}
+
+section[progressive] > section[reveal] {
+  margin-block-start: 0;
+}
+
 section[reveal] {
   margin-block-start: 1em;
 }
 
+slidem-slide[alt] {
+  background: var(--blue-grey-900);
+  primary: var(--light-blue-400);
+  secondary: var(--yellow-300);
+}
 section[reveal] pre {
   margin-block-start: 0;
 }
@@ -58,10 +76,10 @@ section[reveal] pre {
     grid-template-rows: 1fr 1fr;
     gap: 1em;
   }
-}
 
-#resolvers pre {
-  font-size: 60%;
+  & #resolvers pre {
+    font-size: 60%;
+  }
 }
 
 [name="Queries and Mutations"] {
@@ -102,7 +120,6 @@ section[reveal] pre {
     flex-wrap: wrap;
   }
 }
-
 
 [name="UI f query"] {
   & figure {
@@ -186,30 +203,39 @@ section[reveal] pre {
 }
 
 [name="Example Web Component"] {
-  & h2 {
-    float: right;
-    z-index: 1;
-    position: relative;
-    font-size: 0.8em;
-  }
+  /* & pre:first-of-type {
+    margin-block: -1em;
+  } */
 }
 
 [name="Shadow DOM"] {
   & [grid] {
-    grid-template: 1fr 1fr / 1fr 1fr;
+    grid-template: repeat(2, min-content) / 1fr 1fr;
+    gap: 0.5em;
   }
 
   & blockquote {
     margin-block: 0.25em;
   }
 
-  & person-element {
-    grid-column: span 2;
-  }
-
   & pre {
     margin: 0;
     font-size: .7em;
+  }
+
+  & section[reveal]:not(:first-of-type) {
+    margin-block: 0;
+  }
+
+  & output {
+    background: #0007;
+    border-radius: .5em;
+    display: grid;
+    grid-column: span 2;
+    padding: 0.3em 0.1em;
+    place-content: center;
+    grid-template-columns: max-content max-content;
+    width: max-content;
   }
 }
 
@@ -269,19 +295,55 @@ section[reveal] pre {
 }
 
 [name="HTML Queries"] {
-  & h2 {
-    float: right;
-    position: relative;
-    z-index: 2;
-    font-size: 80%;
+  & pre {
+    margin-block: 0;
+  }
+
+  & [progressive] {
+    & > [reveal] {
+      &:nth-of-type(1) {
+        & code.language-html > span.token:is(
+          /* client open  */:nth-child(-n+1),
+          /* client close */:nth-child(n+7)
+        ) {
+          opacity: 0.5;
+        }
+      }
+      &:nth-of-type(2) {
+        & code.language-html > span.token:is(
+          /* until script */:nth-child(-n+2),
+          /* after script */:nth-child(n+6)
+        ) {
+          opacity: 0.5;
+        }
+      }
+      &:nth-of-type(3) {
+        & code.language-html > span.token:is(
+          /* until template */:nth-child(-n+5),
+          /* after template */:nth-child(n+16)
+        ) {
+          opacity: 0.5;
+        }
+      }
+    }
   }
 
   & docs-playground {
     z-index: 3;
     height: 100%;
     &::part(playground-ide) {
-      height: 100%;
       --playground-code-font-size: 36px;
+      --playground-preview-width: 100%;
+      height: 100%;
+      flex-flow: row wrap;
+    }
+    &::part(lhs) {
+      width: 100%;
+      height: 75%;
+    }
+    &::part(rhs) {
+      width: 100%;
+      height: 25%;
     }
   }
 }

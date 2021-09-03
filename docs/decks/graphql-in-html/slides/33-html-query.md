@@ -1,11 +1,29 @@
 ---
 name: HTML Queries
-attrs: progressive
+attrs: float-header
 ---
 
 ## HTML Queries
 
+<section progressive>
+
 ```html
+<apollo-client uri="https://api.spacex.land/graphql">
+
+
+
+
+
+
+
+
+
+
+
+</apollo-client>
+```
+
+```html reveal
 <apollo-client uri="https://api.spacex.land/graphql">
   <apollo-query>
     <script type="application/graphql">
@@ -43,7 +61,7 @@ attrs: progressive
     <script type="application/graphql" src="NextLaunch.query.graphql"></script>
 
     <template>{%raw%}
-      <h2>{{ data.launchNext.mission_name }}</h2>
+      <h1 part="mission">{{ data.launchNext.mission_name }}</h1>
       <p>launches from
          <em>{{ data.launchNext.launch_site.site_name }}</em> aboard
          <em>{{ data.launchNext.rocket.rocket_name }}</em></p>
@@ -61,7 +79,7 @@ attrs: progressive
     <script type="application/graphql" src="NextLaunch.query.graphql"></script>
 
     <template>{%raw%}
-      <h2>{{ data.launchNext.mission_name }}</h2>
+      <h1 part="mission">{{ data.launchNext.mission_name }}</h1>
       <p>launches from
          <em>{{ data.launchNext.launch_site.site_name }}</em> aboard
          <em>{{ data.launchNext.rocket.rocket_name }}</em></p>
@@ -93,6 +111,10 @@ html {
   color: white;
   font-size: 48px;
 }
+apollo-query::part(mission) {
+  font-size: 1.5em;
+  margin-block: 0;
+}
 ```
 
 ```js playground-file apollo-query-example main.js
@@ -102,3 +124,17 @@ import '@apollo-elements/components';
 </div>
 
 </div>
+
+</section>
+
+<script type="module">
+await customElements.whenDefined('docs-playground');
+await customElements.whenDefined('playground-ide');
+const dp = document.getElementById('apollo-query-example');
+await dp.updateComplete;
+const pi = dp.shadowRoot.querySelector('playground-ide');
+pi.shadowRoot.getElementById('lhs').part = 'lhs';
+pi.shadowRoot.getElementById('rhs').part = 'rhs';
+dp.show();
+pi.blur();
+</script>
