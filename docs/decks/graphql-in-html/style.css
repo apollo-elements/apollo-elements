@@ -16,10 +16,11 @@ section[reveal] {
 }
 
 slidem-slide[alt] {
-  background: var(--blue-grey-900);
-  primary: var(--light-blue-400);
-  secondary: var(--yellow-300);
+  --background: var(--blue-grey-900);
+  --primary: var(--light-blue-400);
+  --secondary: var(--yellow-300);
 }
+
 section[reveal] pre {
   margin-block-start: 0;
 }

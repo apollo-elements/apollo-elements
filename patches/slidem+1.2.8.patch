@@ -1,8 +1,8 @@
 diff --git a/node_modules/slidem/slidem-deck.js b/node_modules/slidem/slidem-deck.js
-index 503d779..834cd27 100644
+index 503d779..ec33af2 100644
 --- a/node_modules/slidem/slidem-deck.js
 +++ b/node_modules/slidem/slidem-deck.js
-@@ -78,11 +78,11 @@ document.head.appendChild(styleNode);
+@@ -78,23 +78,32 @@ document.head.appendChild(styleNode);
  export class SlidemDeck extends GluonElement {
    get template() {
      return html`
@@ -14,9 +14,30 @@ index 503d779..834cd27 100644
 -      <div id="timer"></div>
 +      <div id="progress" part="progress"></div>
 +      <div id="timer" part="timer"></div>
++      ${this.hasAttribute('unbind') ? html`
++      <button hidden id="timerToggle"></button>
++      <button hidden id="presenterToggle"></button>
++      ` : html`
        <gluon-keybinding id="timerToggle" key="t"></gluon-keybinding>
        <gluon-keybinding id="presenterToggle" key="p"></gluon-keybinding>
++      `}
        <div id="forward">
++      ${this.hasAttribute('unbind') ? '' : html`
+         <gluon-keybinding key="PageDown"></gluon-keybinding>
+         <gluon-keybinding key="ArrowRight"></gluon-keybinding>
+         <gluon-keybinding key="Right"></gluon-keybinding>
++      `}
+         <slot name="forward"></slot>
+       </div>
+       <div id="backward">
++      ${this.hasAttribute('unbind') ? '' : html`
+         <gluon-keybinding key="PageUp"></gluon-keybinding>
+         <gluon-keybinding key="ArrowLeft"></gluon-keybinding>
+         <gluon-keybinding key="Left"></gluon-keybinding>
++      `}
+         <slot name="backward"></slot>
+       </div>
+       <style>
 diff --git a/node_modules/slidem/slidem-slide-base.js b/node_modules/slidem/slidem-slide-base.js
 index a36279d..feeb441 100644
 --- a/node_modules/slidem/slidem-slide-base.js

@@ -126,15 +126,3 @@ import '@apollo-elements/components';
 </div>
 
 </section>
-
-<script type="module">
-await customElements.whenDefined('docs-playground');
-await customElements.whenDefined('playground-ide');
-const dp = document.getElementById('apollo-query-example');
-await dp.updateComplete;
-const pi = dp.shadowRoot.querySelector('playground-ide');
-pi.shadowRoot.getElementById('lhs').part = 'lhs';
-pi.shadowRoot.getElementById('rhs').part = 'rhs';
-dp.show();
-pi.blur();
-</script>

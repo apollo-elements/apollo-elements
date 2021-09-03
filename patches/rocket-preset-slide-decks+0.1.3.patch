@@ -1,3 +1,56 @@
+diff --git a/node_modules/rocket-preset-slide-decks/_includes/_joiningBlocks/_layoutDeck/content/10-content.njk b/node_modules/rocket-preset-slide-decks/_includes/_joiningBlocks/_layoutDeck/content/10-content.njk
+index 350b5cd..f8ed737 100644
+--- a/node_modules/rocket-preset-slide-decks/_includes/_joiningBlocks/_layoutDeck/content/10-content.njk
++++ b/node_modules/rocket-preset-slide-decks/_includes/_joiningBlocks/_layoutDeck/content/10-content.njk
+@@ -1,12 +1 @@
+ {{ content | safe }}
+-
+-<script async defer>
+-  addEventListener('keyup', event => {
+-    if (event.key !== 'f')
+-      return;
+-    else if (document.fullscreen)
+-      document.exitFullscreen();
+-    else
+-      document.body.requestFullscreen();
+-  });
+-</script>
+diff --git a/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk b/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
+index 3a74498..0f26cc4 100644
+--- a/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
++++ b/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
+@@ -28,13 +28,16 @@
+                  transition="{{ transition or 'slide-in slide-out' }}"
+                  itemscope
+                  itemtype="http://schema.org/PresentationDigitalDocument"
++                 {{ 'unbind' if unbind }}
+                  loading>
++      {% if not unbind %}
+       <gluon-keybinding key="Backspace" slot="backward"></gluon-keybinding>
+       <gluon-keybinding key=" " slot="forward"></gluon-keybinding>
+       <gluon-keybinding key="h" slot="backward"></gluon-keybinding>
+       <gluon-keybinding key="j" slot="forward"></gluon-keybinding>
+       <gluon-keybinding key="k" slot="backward"></gluon-keybinding>
+       <gluon-keybinding key="l" slot="forward"></gluon-keybinding>
++      {% endif %}
+ 
+       {% for slide in collections.slides %}
+         {% set isPageSlide =
+@@ -58,3 +61,14 @@
+   {% include 'partials/bottom.njk' %}
+   </body>
+ </html>
++
++<script async defer>
++  addEventListener('keyup', event => {
++    if (event.defaultPrevented || event.key !== 'f')
++      return;
++    else if (document.fullscreen)
++      document.exitFullscreen();
++    else
++      document.body.requestFullscreen();
++  });
++</script>
 diff --git a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 index 70b81ff..6d3e680 100644
 --- a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
