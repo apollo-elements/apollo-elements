@@ -62,7 +62,7 @@ attrs: float-header
 
     <template>{%raw%}
       <h1 part="mission">{{ data.launchNext.mission_name }}</h1>
-      <p>launches from
+      <p .hidden="{{ loading }}">launches from
          <em>{{ data.launchNext.launch_site.site_name }}</em> aboard
          <em>{{ data.launchNext.rocket.rocket_name }}</em></p>
     </template>{%endraw%}
@@ -80,7 +80,7 @@ attrs: float-header
 
     <template>{%raw%}
       <h1 part="mission">{{ data.launchNext.mission_name }}</h1>
-      <p>launches from
+      <p .hidden="{{ loading }}">launches from
          <em>{{ data.launchNext.launch_site.site_name }}</em> aboard
          <em>{{ data.launchNext.rocket.rocket_name }}</em></p>
     </template>{%endraw%}

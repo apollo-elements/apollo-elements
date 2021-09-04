@@ -22,14 +22,12 @@ const deck = document.querySelector('slidem-deck');
 const dp = document.getElementById('apollo-query-example');
 await customElements.whenDefined('docs-playground');
 await customElements.whenDefined('playground-ide');
-await dp.updateComplete;
-const pi = dp.shadowRoot.querySelector('playground-ide');
 document.body.addEventListener('keydown', event => {
-  if (event.defaultPrevented || event.composedPath().includes(pi))
+  if (event.defaultPrevented || event.composedPath().some(x => x.localName === 'playground-ide'))
     return;
   switch (event.key) {
     case 'f':
-      else if (document.fullscreen)
+      if (document.fullscreen)
         document.exitFullscreen();
       else
         document.body.requestFullscreen();
@@ -53,8 +51,12 @@ document.body.addEventListener('keydown', event => {
   }
 });
 
-pi.shadowRoot.getElementById('lhs').part = 'lhs';
-pi.shadowRoot.getElementById('rhs').part = 'rhs';
-dp.show();
-pi.blur();
+for (const dp of document.querySelectorAll('docs-playground')) {
+  await dp.updateComplete;
+  const pi = dp.shadowRoot.querySelector('playground-ide');
+  pi.shadowRoot.getElementById('lhs').part = 'lhs';
+  pi.shadowRoot.getElementById('rhs').part = 'rhs';
+  dp.show();
+  pi.blur();
+}
 </script>

@@ -46,6 +46,20 @@ class PersonElement extends HTMLElement {
   }
 }
 
+
+```
+
+```js reveal
+class PersonElement extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }).innerHTML = `
+      <span id="emoji">${this.getAttribute('emoji')} says:</span>
+      <slot></slot>
+    `;
+  }
+}
+
 // TODO: use <template> for performance
 ```
 

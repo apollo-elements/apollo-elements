@@ -71,12 +71,13 @@ query PersonQuery($id: ID!) {
 {
   "data": {
     "person": {
+      "__typename": "Person",
       "name": "Boris Johnson",
       "picture": "https://www.pri.org/file/london-mayor-boris-johnson-zip-line-2012-01-08jpg",
       "friends": [
-        { "name": "Dominic Raab" },
-        { "name": "Sajid Javid" },
-        { "name": "Priti Patel" }
+        { "__typename": "Person", "name": "Dominic Raab" },
+        { "__typename": "Person", "name": "Sajid Javid" },
+        { "__typename": "Person", "name": "Priti Patel" }
       ]
     }
   }

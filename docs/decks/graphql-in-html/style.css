@@ -204,9 +204,14 @@ section[reveal] pre {
 }
 
 [name="Example Web Component"] {
-  /* & pre:first-of-type {
-    margin-block: -1em;
-  } */
+  & [reveal]:nth-of-type(2) {
+    & code.language-js > span.token:is(
+      /* until this */:nth-of-type(-n+13),
+      /* after this */:nth-of-type(n+23),
+    ) {
+      opacity: 0.5;
+    }
+  }
 }
 
 [name="Shadow DOM"] {
@@ -234,7 +239,7 @@ section[reveal] pre {
     display: grid;
     grid-column: span 2;
     padding: 0.3em 0.1em;
-    place-content: center;
+    place-items: center;
     grid-template-columns: max-content max-content;
     width: max-content;
   }
@@ -295,11 +300,35 @@ section[reveal] pre {
   }
 }
 
-[name="HTML Queries"] {
+[name^="HTML "] {
+  &:not([float-header]) {
+    & h2 {
+      --casl: 0;
+      --slnt: 0;
+      line-height: 0.9;
+      & span:first-of-type {
+        --slnt: -15;
+        color: var(--primary);
+      }
+    }
+  }
+
   & pre {
     margin-block: 0;
   }
 
+  & docs-playground {
+    z-index: 3;
+    height: 100%;
+    &::part(playground-ide) {
+      --playground-code-font-size: 36px;
+      height: 100%;
+      flex-flow: row wrap;
+    }
+  }
+}
+
+[name="HTML Queries"] {
   & [progressive] {
     & > [reveal] {
       &:nth-of-type(1) {
@@ -330,14 +359,7 @@ section[reveal] pre {
   }
 
   & docs-playground {
-    z-index: 3;
-    height: 100%;
-    &::part(playground-ide) {
-      --playground-code-font-size: 36px;
-      --playground-preview-width: 100%;
-      height: 100%;
-      flex-flow: row wrap;
-    }
+    --playground-preview-width: 100%;
     &::part(lhs) {
       width: 100%;
       height: 75%;
@@ -346,5 +368,15 @@ section[reveal] pre {
       width: 100%;
       height: 25%;
     }
+  }
+}
+
+[name="HTML Mutations"] {
+  & pre {
+    font-size: 70%;
+    background: transparent;
+  }
+  & [past] {
+    opacity: 0.5;
   }
 }
