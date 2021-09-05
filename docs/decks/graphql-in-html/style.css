@@ -7,6 +7,10 @@ slidem-slide[float-header] {
   }
 }
 
+[progressive] > :not([current]) {
+  pointer-events: none;
+}
+
 section[progressive] > section[reveal] {
   margin-block-start: 0;
 }
@@ -23,6 +27,23 @@ slidem-slide[alt] {
 
 section[reveal] pre {
   margin-block-start: 0;
+}
+
+docs-playground {
+  &::part(playground-ide) {
+    --playground-code-background: black;
+    --playground-code-font-family: Recursive;
+    --playground-code-padding: 0 12px;
+    --playground-tab-bar-background: black;
+    --playground-code-font-size: 72% !important;
+    --playground-code-line-height: 1.71em;
+    --playground-code-font-family: Recursive;
+    --mono: 1;
+    --wght: 400;
+    --casl: 0;
+    font-variation-settings: "wght" var(--wght), "CASL" var(--casl), "MONO" var(--mono), "slnt" var(--slnt);
+    font-feature-settings: "ss01", "ss05", "dlig";
+  }
 }
 
 [name="intro"] {
@@ -229,6 +250,10 @@ section[reveal] pre {
     font-size: .7em;
   }
 
+  & [past] {
+    opacity: 0.5;
+  }
+
   & section[reveal]:not(:first-of-type) {
     margin-block: 0;
   }
@@ -318,12 +343,12 @@ section[reveal] pre {
   }
 
   & docs-playground {
+    transform: translateY(-24px);
     z-index: 3;
     height: 100%;
     &::part(playground-ide) {
       --playground-code-font-size: 36px;
       height: 100%;
-      flex-flow: row wrap;
     }
   }
 }
@@ -359,7 +384,10 @@ section[reveal] pre {
   }
 
   & docs-playground {
-    --playground-preview-width: 100%;
+    /* --playground-preview-width: 100%; */
+    &::part(playground-ide) {
+      flex-flow: row wrap;
+    }
     &::part(lhs) {
       width: 100%;
       height: 75%;
@@ -372,11 +400,34 @@ section[reveal] pre {
 }
 
 [name="HTML Mutations"] {
+  & docs-playground {
+    --playground-code-font-size: 59.5% !important;
+  }
   & pre {
     font-size: 70%;
     background: transparent;
   }
   & [past] {
     opacity: 0.5;
+  }
+  & [step="5"] {
+    & code.language-html > .token .token {
+      opacity: 0.5;
+      &.attr-name:nth-of-type(2),
+      &.attr-value:nth-of-type(3) {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+[name="Update Functions"] {
+  & pre {
+    font-size: 70%;
+    position: absolute;
+    margin-top: 1em !important;
+    top: 0;
+    right: 0;
+    left: 0;
   }
 }

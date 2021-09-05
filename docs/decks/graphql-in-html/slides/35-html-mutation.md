@@ -87,6 +87,25 @@ attrs: float-header
 
 ```
 
+```html reveal
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <sl-input data-variable="name" label="User name"></sl-input>
+    <sl-button trigger label="Add user"></sl-button>
+
+
+```
 <div reveal fullheight>
 
 ```html playground apollo-mutation-example index.html
@@ -143,6 +162,7 @@ html {
   background-color: black;
   color: white;
   font-size: 48px;
+  padding: 12px;
 }
 ```
 

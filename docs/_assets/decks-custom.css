@@ -76,7 +76,8 @@ kbd {
   width: 1em;
 }
 
-code {
+.markdown-body code,
+code[class*="language-"], pre[class*="language-"] {
   font-family: Recursive;
   font-feature-settings: "ss01", "ss05", "dlig";
   --wght: 400;
