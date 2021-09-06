@@ -431,3 +431,24 @@ docs-playground {
     left: 0;
   }
 }
+
+[name="HTML Summary"] {
+  font-size: 200%;
+  & ol {
+    padding-inline-start: 1.5em;
+  }
+}
+
+[name="Reactive Controllers"] {
+  & h2 span {
+    color: var(--secondary);
+    --slnt:-20;
+    &:first-of-type {
+      color: var(--primary);
+      --mono:1;
+      --casl:0;
+      --slnt:0;
+      --wght:900;
+    }
+  }
+}
