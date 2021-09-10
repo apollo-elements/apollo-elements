@@ -4,8 +4,8 @@ attrs: alt progressive
 ---
 
 ```js
-
 import { MyController } from './my-controller.js';
+
 
 class MyElement extends LitElement {
   myController = new MyController(this);
@@ -19,8 +19,23 @@ class MyElement extends LitElement {
 ```
 
 ```js reveal
-import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin.js';
 import { MyController } from './my-controller.js';
+import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin.js';
+
+class MyElement extends ControllerHostMixin(HTMLElement) {
+  myController = new MyController(this);
+
+
+
+
+
+
+}
+```
+
+```js reveal
+import { MyController } from './my-controller.js';
+import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin.js';
 
 class MyElement extends ControllerHostMixin(HTMLElement) {
   myController = new MyController(this);

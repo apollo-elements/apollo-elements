@@ -164,6 +164,16 @@ html {
   font-size: 48px;
   padding: 12px;
 }
+
+apollo-mutation {
+  display: grid;
+  gap: 12px;
+  max-width: 90vw;
+}
+
+sl-input {
+  width: 90vw;
+}
 ```
 
 ```js playground-file apollo-mutation-example main.js

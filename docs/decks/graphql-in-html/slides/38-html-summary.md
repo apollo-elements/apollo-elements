@@ -2,7 +2,7 @@
 name: HTML Summary
 ---
 
-## Apollo Elements components are...
+## Apollo Elements <span>components</span> are...
 
 <ol>
   <li>Declarative</li>

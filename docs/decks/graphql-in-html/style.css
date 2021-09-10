@@ -30,12 +30,14 @@ section[reveal] pre {
 }
 
 docs-playground {
+  height: 100%;
+  --playground-ide-height: 100%;
   &::part(playground-ide) {
     --playground-code-background: black;
     --playground-code-font-family: Recursive;
     --playground-code-padding: 0 12px;
     --playground-tab-bar-background: black;
-    --playground-code-font-size: 72% !important;
+    --playground-code-font-size: 72%;
     --playground-code-line-height: 1.71em;
     --playground-code-font-family: Recursive;
     --mono: 1;
@@ -347,7 +349,6 @@ docs-playground {
     z-index: 3;
     height: 100%;
     &::part(playground-ide) {
-      --playground-code-font-size: 36px;
       height: 100%;
     }
   }
@@ -386,6 +387,8 @@ docs-playground {
   & docs-playground {
     /* --playground-preview-width: 100%; */
     &::part(playground-ide) {
+      --playground-code-font-size: 36px;
+      /* --playground-code-font-size: 72% !important; */
       flex-flow: row wrap;
     }
     &::part(lhs) {
@@ -400,8 +403,8 @@ docs-playground {
 }
 
 [name="HTML Mutations"] {
-  & docs-playground {
-    --playground-code-font-size: 59.5% !important;
+  & docs-playground::part(playground-ide) {
+    --playground-code-font-size: 59.5%;
   }
   & pre {
     font-size: 70%;
@@ -422,6 +425,19 @@ docs-playground {
 }
 
 [name="Update Functions"] {
+  & [progressive] {
+    & > [reveal] {
+      &:nth-of-type(1) {
+        --markdown-syntax-background-color: rgba(0,0,0,0.5);
+        & code.language-html > .token.tag > .token:is(
+          /* client open  */:nth-child(-n+1),
+          /* client close */:nth-child(n+5)
+        ) {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
   & pre {
     font-size: 70%;
     position: absolute;
@@ -434,8 +450,15 @@ docs-playground {
 
 [name="HTML Summary"] {
   font-size: 200%;
+  & h3 span { color: var(--primary); }
+  & reveal:last-of-type { text-align: right; }
   & ol {
     padding-inline-start: 1.5em;
+    & li {
+      &:first-of-type { --wght: 300; }
+      --wght: 500;
+      &:last-of-type { --wght: 600 }
+    }
   }
 }
 
@@ -450,5 +473,12 @@ docs-playground {
       --slnt:0;
       --wght:900;
     }
+  }
+}
+
+[name="ControllerHostMixin"] {
+  & [step]:not([step="1"]) > pre {
+    position: relative;
+    top: -8px;
   }
 }

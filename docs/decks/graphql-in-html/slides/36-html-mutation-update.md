@@ -27,6 +27,45 @@ attrs: float-header
 ```
 
 ```html reveal
+<apollo-mutation refetch-queries="LatestUsers" await-refetch-queries>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+```html reveal
+<apollo-mutation><!-- ... --></apollo-mutation>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+```html reveal
 <apollo-mutation><!-- ... --></apollo-mutation>
 <script type="module">
   const muttnEl = document.querySelector('apollo-mutation');
@@ -45,5 +84,4 @@ attrs: float-header
     }
 </script>
 ```
-
 </section>
