@@ -1,7 +1,7 @@
 ---
 name: ReactiveControllerHost
 attrs: alt
+templateEngineOverride: njk,md
 ---
 
-<!-- TODO: diagram showing controller plugging in to host-->
-<!-- Use SVG and reveal to layer host on to plugin, then ReactiveElement to host -->
+{% include '../_assets/reactive-controller-host.svg' %}

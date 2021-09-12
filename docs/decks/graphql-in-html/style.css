@@ -476,6 +476,23 @@ docs-playground {
   }
 }
 
+[name="ReactiveControllerHost"] {
+  & svg {
+    & path[marker-end="url(#Arrow1Mend)"] {
+      transform: translateX(-5px);
+    }
+    & text {
+      font-family: Recursive;
+      font-variant-caps:normal;
+      font-variant-east-asian:normal;
+      font-variant-ligatures:normal;
+      font-variant-numeric:normal;
+      font-variation-settings:'MONO' 1, 'wght' 400;
+      fill: currentColor;
+    }
+  }
+}
+
 [name="ControllerHostMixin"] {
   & [step]:not([step="1"]) > pre {
     position: relative;
