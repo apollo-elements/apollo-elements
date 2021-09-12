@@ -1,3 +1,7 @@
+:root {
+  --rhodamine: #e10098;
+}
+
 slidem-slide[float-header] {
   & h2:first-of-type {
     float: right;
@@ -78,20 +82,36 @@ docs-playground {
 
   & #h1-in-html {
     --wght: 100;
+    --casl: 1;
 
     font-size: 18vw;
     margin-inline-start: 0.3em;
   }
 
   & #h1-html {
-    --slnt:-12;
-    --wght: 900;
-    --casl: 0;
+    --slnt: -16;
+    --wght: 750;
+    --casl: 0.5;
+    --mono: 0.25;
 
-    color:var(--primary);
+    color: var(--primary);
     font-size: 20vw;
+    font-family: inherit;
   }
+}
 
+[name="graphql"] {
+  & header {
+    gap: 0.3em;
+    align-items: center;
+    color: var(--rhodamine);
+    font-family: Rubik;
+    font-size: 12vw;
+    & svg {
+      fill: currentColor;
+      max-height: 1em;
+    }
+  }
 }
 
 [name="Schema Resolvers"] {
@@ -142,6 +162,23 @@ docs-playground {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+  }
+}
+
+[name="Component Based Frontends"] {
+  &::part(content) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  & section[reveal] {
+    margin-block: 0;
+    &:nth-of-type(2) {
+      & img {
+        align-self: center;
+        transform: scale(0.9);
+        transform-origin: top center;
+      }
+    }
   }
 }
 
@@ -462,7 +499,7 @@ docs-playground {
   }
 }
 
-[name="Reactive Controllers"] {
+[name$=" Controllers"] {
   & h2 span {
     color: var(--secondary);
     --slnt:-20;

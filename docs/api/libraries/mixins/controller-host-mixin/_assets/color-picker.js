@@ -23,7 +23,7 @@ class ColorPicker extends ControllerHostMixin(HTMLElement) {
   }
 
   update() {
-    const { x, y } = this.mouse.pos;
+    const [x, y] = this.mouse.pos;
     const { clientWidth, clientHeight } = document.documentElement;
     const hue = Math.floor((x / clientWidth) * 360);
     const saturation = 100 - Math.floor((y / clientHeight) * 100);

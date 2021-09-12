@@ -38,6 +38,8 @@ document.body.addEventListener('keydown', event => {
       return true;
     case 'p':
       deck.$.presenterToggle.click();
+      return true;
+    case 't':
       deck.$.timerToggle.click();
       return true;
     default:

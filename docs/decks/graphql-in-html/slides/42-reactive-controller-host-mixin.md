@@ -4,6 +4,36 @@ attrs: alt progressive
 ---
 
 ```js
+
+
+
+class MyElement extends LitElement {
+
+
+
+
+
+
+
+}
+```
+
+```js reveal
+import { MyController } from './my-controller.js';
+
+
+class MyElement extends LitElement {
+  myController = new MyController(this);
+
+
+
+
+
+
+}
+```
+
+```js reveal
 import { MyController } from './my-controller.js';
 
 

@@ -95,7 +95,7 @@ index a36279d..7a4af43 100644
    }
  
 diff --git a/node_modules/slidem/slidem-slide.js b/node_modules/slidem/slidem-slide.js
-index 4cdc5a1..903d622 100644
+index 4cdc5a1..f8a80ea 100644
 --- a/node_modules/slidem/slidem-slide.js
 +++ b/node_modules/slidem/slidem-slide.js
 @@ -28,13 +28,8 @@ export class SlidemSlide extends SlidemSlideBase {
@@ -123,3 +123,12 @@ index 4cdc5a1..903d622 100644
        }
      }
  
+@@ -103,6 +98,8 @@ export class SlidemSlide extends SlidemSlideBase {
+ 
+   attributeChangedCallback(attr, oldVal, newVal) {
+     super.attributeChangedCallback(attr, oldVal, newVal);
++    if (attr === 'active')
++      this.dispatchEvent(new Event('activated'));
+     if (attr === 'active' || attr === 'next') {
+       if (newVal !== null) {
+         this.__rescale();

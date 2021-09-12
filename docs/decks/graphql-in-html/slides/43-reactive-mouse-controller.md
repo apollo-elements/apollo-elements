@@ -1,5 +1,6 @@
 ---
 name: Example Reactive Controller
+attrs: alt
 templateEngineOverride: njk,md
 ---
 
