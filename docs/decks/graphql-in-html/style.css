@@ -61,7 +61,7 @@ docs-playground {
       'foot' 1fr;
   }
 
-  & #intro-header {
+  & header {
     margin-block-start: 4em;
   }
 
@@ -70,38 +70,55 @@ docs-playground {
     text-align: center;
   }
 
-  & #h1 {
-    font-size: 20vw;
+  & h1 {
+    font-size: 500%;
+    display: flex;
+    flex-flow: column;
   }
 
-  & #h1-graphql {
+  & em:first-of-type {
     --wght: 650;
+    --slnt: 0;
     color: var(--secondary);
     line-height: 0.6;
   }
 
-  & #h1-in-html {
+  & em:last-of-type {
     --wght: 100;
     --casl: 1;
+    --slnt: 0;
 
-    font-size: 18vw;
+    font-size: 80%;
     margin-inline-start: 0.3em;
   }
 
-  & #h1-html {
+  & code {
     --slnt: -16;
     --wght: 750;
     --casl: 0.5;
     --mono: 0.25;
 
     color: var(--primary);
-    font-size: 20vw;
+    font-size: 100%;
     font-family: inherit;
   }
 }
 
+[name="Contents"] {
+  font-size: 150%;
+  & ol {
+    columns: 2;
+  }
+}
+
 [name="graphql"] {
+  &::part(content) {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
   & header {
+    margin-block: 1em;
     gap: 0.3em;
     align-items: center;
     color: var(--rhodamine);
@@ -513,6 +530,36 @@ docs-playground {
   }
 }
 
+[name="Reactive Controllers Intro"] {
+  & h2 em {
+    &:first-of-type { color: var(--primary); }
+    &:last-of-type { color: var(--secondary); }
+  }
+  &::part(content) {
+    display: grid;
+  }
+  & dl {
+    display: grid;
+    grid-template: 1fr 1fr / max-content max-content;
+    & dd::before {
+      content: '⇒ ';
+    }
+  }
+}
+
+[name="Analogy to Biology"] {
+  background-repeat: no-repeat;
+  background-size: cover;
+  &[active] {
+    display: flex;
+  }
+  & p {
+    margin-top: auto;
+    background: rgb(0,0,0,0.5);
+    padding: 0.2em;
+  }
+}
+
 [name="ReactiveControllerHost"] {
   & svg {
     & path[marker-end="url(#Arrow1Mend)"] {
@@ -534,5 +581,26 @@ docs-playground {
   & [step]:not([step="1"]) > pre {
     position: relative;
     top: -8px;
+  }
+}
+
+[name="Thanks"] {
+  & ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    text-align: center;
+    align-items: self-end;
+    & a {
+      display: flex;
+      flex-flow: column;
+      & img {
+        max-width: 80%;
+        margin: 0 auto;
+        max-height: 200px;
+      }
+    }
   }
 }

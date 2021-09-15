@@ -4,15 +4,11 @@ attrs: slide-out center
 ---
 
 <header id="intro-header" flex center wrap>
+  <img src="/logo.svg" alt=""/>
+  
+  # _GraphQL_ _in `HTML`_
 
-  ![''](/logo.svg)
-
-  <h1 id="h1" flex column>
-    <span id="h1-graphql">GraphQL</span>
-    <span id="h1-in-html">in <code id="h1-html">HTML</code></span>
-  </h1>
-
-  ::p[Data-Driven Web Apps that Use the Platform]{center fullwidth}
+  <p center fullwidth>Data-Driven Web Apps that Use the Platform</p>
 </header>
 
 <small id="keys-legend" center>

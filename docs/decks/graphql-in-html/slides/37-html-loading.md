@@ -16,7 +16,9 @@ import '@apollo-elements/components';
 ### 🚛 Or load over CDN
 
 ```html
-<script src="https://unpkg.com/@apollo-elements/components?module"></script>
+<script type="module"
+        src="https://unpkg.com/@apollo-elements/components?module">
+</script>
 ```
 
 </section>

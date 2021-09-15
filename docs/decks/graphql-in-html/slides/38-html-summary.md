@@ -4,14 +4,10 @@ name: HTML Summary
 
 ## Apollo Elements <span>components</span> are...
 
-<ol>
+<ol reveal>
   <li>Declarative</li>
-  <li reveal>Dynamic</li>
-  <li reveal>HTML-First</li>
+  <li>Dynamic</li>
+  <li>HTML-First</li>
 </ol>
 
-<section reveal>
-
-...but there's _more_
-
-</section>
+<p reveal>...but there's <em>more</em></p>
