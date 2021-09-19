@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/polymer",
-  "version": "4.0.0",
+  "version": "4.0.1-next.0",
   "description": "👩‍🚀🌛 Polymer Elements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
@@ -58,8 +58,8 @@
   },
   "homepage": "https://apolloelements.dev/api/libraries/polymer/",
   "dependencies": {
-    "@apollo-elements/core": "^1.0.0",
-    "@apollo-elements/mixins": "^4.0.0",
+    "@apollo-elements/core": "^1.0.1-next.0",
+    "@apollo-elements/mixins": "^4.0.1-next.0",
     "tslib": "^2.3.0"
   },
   "customElements": "custom-elements.json"
