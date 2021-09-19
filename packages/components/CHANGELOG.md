@@ -1,5 +1,13 @@
 # @apollo-elements/components
 
+## 2.0.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [31b95bc]
+  - @apollo-elements/core@1.0.1-next.0
+  - @apollo-elements/mixins@4.0.1-next.0
+
 ## 2.0.0
 
 ### Major Changes
