@@ -1,8 +1,9 @@
-import type {
+import {
   ApolloClient,
   ApolloError,
   NetworkStatus,
   NormalizedCacheObject,
+  ObservableQuery,
   TypedDocumentNode,
 } from '@apollo/client/core';
 
@@ -17,7 +18,13 @@ import { component, useState } from 'haunted';
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 
-import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
+import {
+  assertType,
+  nextNAsync,
+  resetMessages,
+  setupClient,
+  teardownClient,
+} from '@apollo-elements/test';
 
 import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
@@ -31,17 +38,19 @@ describe('[haunted] useQuery', function() {
       describe('with HelloQuery and a jaunty little template', function() {
         let element: HTMLElement;
 
-        let refetchSpy: SinonSpy;
+        let pollSpy: SinonSpy;
+
+        beforeEach(function() {
+          pollSpy = spy(ObservableQuery.prototype, 'reobserve');
+        });
 
         afterEach(function() {
-          refetchSpy?.restore?.();
+          pollSpy?.restore?.();
         });
 
         beforeEach(async function define() {
           function Hello() {
             const c = useQuery(S.HelloQuery);
-
-            refetchSpy ??= spy(c, 'refetch');
 
             return html`
               <what-spin-such-loader ?active="${c.loading}"></what-spin-such-loader>
@@ -80,18 +89,18 @@ describe('[haunted] useQuery', function() {
 
           beforeEach(startPolling);
 
-          beforeEach(() => clock.tick(3500));
+          beforeEach(() => nextNAsync(clock, 2));
 
-          it('refetches', function() {
-            expect(refetchSpy).to.have.been.calledThrice;
+          it('polls', function() {
+            expect(pollSpy).to.have.been.calledThrice;
           });
 
           describe('then stopPolling', function() {
             beforeEach(stopPolling);
-            beforeEach(() => clock.tick(5000));
+            beforeEach(() => nextNAsync(clock, 5));
 
-            it('stops calling refetch', function() {
-              expect(refetchSpy).to.have.been.calledThrice;
+            it('stops polling', function() {
+              expect(pollSpy).to.have.been.calledThrice;
             });
           });
         });

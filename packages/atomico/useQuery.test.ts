@@ -1,9 +1,10 @@
 import type { ApolloQueryController } from '@apollo-elements/core';
-import type {
+import {
   ApolloClient,
   ApolloError,
   NetworkStatus,
   NormalizedCacheObject,
+  ObservableQuery,
   TypedDocumentNode,
 } from '@apollo/client/core';
 
@@ -18,7 +19,14 @@ import { useQuery } from './useQuery';
 import { aTimeout, defineCE, expect, nextFrame } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 
-import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
+import {
+  assertType,
+  makeClient,
+  nextNAsync,
+  resetMessages,
+  setupClient,
+  teardownClient,
+} from '@apollo-elements/test';
 
 import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
@@ -36,15 +44,7 @@ describe('[atomico] useQuery', function() {
       describe('with HelloQuery and a jaunty little template', function() {
         let element: HTMLElement & { updated: Promise<void>; };
 
-        let refetchSpy: SinonSpy;
-
-        let startPolling: ApolloQueryController<typeof S.HelloQuery>['startPolling'];
-        let stopPolling: ApolloQueryController<typeof S.HelloQuery>['stopPolling'];
         let executeQuery: ApolloQueryController<typeof S.HelloQuery>['executeQuery'];
-
-        afterEach(function() {
-          refetchSpy?.restore?.();
-        });
 
         beforeEach(async function define() {
           function Hello() {
@@ -53,8 +53,7 @@ describe('[atomico] useQuery', function() {
             const { data, error, loading } = con;
 
             useEffect(() => {
-              ({ executeQuery, stopPolling, startPolling } = con);
-              refetchSpy = spy(con, 'refetch');
+              ({ executeQuery } = con);
             }, [con]);
 
             return html`
@@ -75,30 +74,6 @@ describe('[atomico] useQuery', function() {
         });
 
         beforeEach(nextFrame);
-
-        describe('calling startPolling then stopPolling', function() {
-          let clock: SinonFakeTimers;
-
-          beforeEach(() => clock = useFakeTimers());
-          afterEach(() => clock.restore());
-
-          beforeEach(() => startPolling(1000));
-
-          beforeEach(() => clock.tick(3500));
-
-          it('refetches', function() {
-            expect(refetchSpy).to.have.been.calledThrice;
-          });
-
-          describe('then stopPolling', function() {
-            beforeEach(() => stopPolling());
-            beforeEach(() => clock.tick(5000));
-
-            it('stops calling refetch', function() {
-              expect(refetchSpy).to.have.been.calledThrice;
-            });
-          });
-        });
 
         describe('calling executeQuery', function() {
           beforeEach(async function() {
@@ -469,6 +444,51 @@ describe('[atomico] useQuery', function() {
       });
     });
   });
+
+  describe('polling', function() {
+    let clock: SinonFakeTimers;
+    let element: HTMLElement & { updated: Promise<void>; };
+    let pollSpy: SinonSpy;
+    let startPolling: ApolloQueryController<typeof S.HelloQuery>['startPolling'];
+    let stopPolling: ApolloQueryController<typeof S.HelloQuery>['stopPolling'];
+
+    beforeEach(teardownClient);
+    beforeEach(() => clock = useFakeTimers(new Date()));
+
+    beforeEach(async function define() {
+      const Component = defineCE(c(function Poller() {
+        const con = useQuery(S.HelloQuery, { client: makeClient(), noAutoSubscribe: true });
+        useEffect(() => {
+          ({ stopPolling, startPolling } = con);
+          pollSpy = spy(ObservableQuery.prototype, 'reobserve');
+        }, [con]);
+        return html`${JSON.stringify(con.data ?? null)}`;
+      }));
+      element = fixture(html`<${Component}></${Component}>`);
+      await element.updated;
+    });
+
+    afterEach(() => pollSpy?.restore?.());
+    afterEach(() => clock.restore());
+
+    describe('calling startPolling then stopPolling', function() {
+      beforeEach(() => startPolling(1000));
+      beforeEach(() => nextNAsync(clock, 2));
+
+      it('polls', function() {
+        expect(pollSpy).to.have.been.calledThrice;
+      });
+
+      describe('then stopPolling', function() {
+        beforeEach(() => stopPolling());
+        beforeEach(() => nextNAsync(clock, 5));
+
+        it('stops polling', function() {
+          expect(pollSpy).to.have.been.calledThrice;
+        });
+      });
+    });
+  });
 });
 
 type TypeCheckData = { a: 'a'; b: number };
@@ -477,7 +497,7 @@ type TypeCheckVars = { c: 'c'; d: number };
 const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
   gql`query TypedQuery($c: String, $d: Int) { a b }`;
 
-function TDNTypeCheck() {
+(function() {
   const {
     called,
     client,
@@ -527,4 +547,4 @@ function TDNTypeCheck() {
       },
     });
   });
-}
+});

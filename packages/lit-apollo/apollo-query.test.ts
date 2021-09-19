@@ -99,7 +99,10 @@ describe('[lit-apollo] ApolloQuery', function() {
     });
 
     it('polling', async function() {
-      class Test extends ApolloQuery { }
+      class Test extends ApolloQuery {
+        client = makeClient();
+        query = S.NullableParamQuery;
+      }
       const tagName = defineCE(Test);
       const tag = unsafeStatic(tagName);
       const element = await fixture<Test>(html`<${tag}></${tag}>`);

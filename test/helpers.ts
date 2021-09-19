@@ -1,4 +1,4 @@
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+import { spy, stub, SinonSpy, SinonStub, SinonFakeTimers } from 'sinon';
 
 import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
 
@@ -134,3 +134,8 @@ export const setupMutationClass = setupClass<TestableElement & Omit<ApolloMutati
       Test.prototype.onError = opts?.properties.onError;
   },
 });
+
+export async function nextNAsync(clock: SinonFakeTimers, length: number): Promise<void> {
+  for (const _ of Array.from({ length }))
+    await clock.nextAsync();
+}

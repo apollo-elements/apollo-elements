@@ -1,10 +1,10 @@
-import type * as C from '@apollo/client/core';
-
 import type * as I from '@apollo-elements/core/types';
 
 import type { ApolloQueryElement } from '@apollo-elements/core';
 
-import { makeClient, SetupOptions } from '@apollo-elements/test';
+import * as C from '@apollo/client/core';
+
+import { makeClient, nextNAsync, SetupOptions } from '@apollo-elements/test';
 
 import { fixture, expect } from '@open-wc/testing';
 
@@ -109,27 +109,25 @@ describe('[FAST] ApolloQuery', function() {
       element = await fixture<Test>(`<${name}></${name}>`);
       element.client = makeClient();
     });
-    beforeEach(() => spy(element.controller, 'refetch'));
+    beforeEach(() => spy(C.ObservableQuery.prototype, 'reobserve'));
     beforeEach(() => {
       clock = useFakeTimers();
     });
     afterEach(() => clock.restore());
     afterEach(() => {
-      (element.controller.refetch as SinonSpy).restore?.();
+      (C.ObservableQuery.prototype.reobserve as SinonSpy).restore?.();
     });
     describe('calling startPolling(1000)', function() {
       beforeEach(function startPolling() { element.startPolling(1000); });
-      beforeEach(() => {
-        clock.tick(3500);
-      });
+      beforeEach(() => nextNAsync(clock, 3));
       it('refetches', function() {
-        expect(element.controller.refetch).to.have.been.calledThrice;
+        expect(C.ObservableQuery.prototype.reobserve).to.have.been.calledThrice;
       });
       describe('then stopPolling', function() {
         beforeEach(function stopPolling() { element.stopPolling(); });
-        beforeEach(() => { clock.tick(3500); });
+        beforeEach(() => nextNAsync(clock, 5));
         it('stops calling refetch', function() {
-          expect(element.controller.refetch).to.have.been.calledThrice;
+          expect(C.ObservableQuery.prototype.reobserve).to.have.been.calledThrice;
         });
       });
     });
