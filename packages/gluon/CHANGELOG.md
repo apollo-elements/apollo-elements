@@ -1,5 +1,11 @@
 # @apollo-elements/gluon
 
+## 4.0.1
+
+### Patch Changes
+
+- @apollo-elements/mixins@4.0.1
+
 ## 4.0.1-next.0
 
 ### Patch Changes

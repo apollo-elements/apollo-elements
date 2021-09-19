@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/haunted",
-  "version": "2.0.1-next.0",
+  "version": "2.0.1",
   "description": "👩‍🚀 Haunted Hooks for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",
@@ -54,7 +54,7 @@
   "license": "ISC",
   "homepage": "https://apolloelements.dev/api/libraries/haunted/",
   "dependencies": {
-    "@apollo-elements/core": "^1.0.1-next.0",
+    "@apollo-elements/core": "^1.0.1",
     "haunted": "^4.8.1"
   },
   "customElements": "custom-elements.json"

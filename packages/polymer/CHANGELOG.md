@@ -1,5 +1,13 @@
 # @apollo-elements/polymer
 
+## 4.0.1
+
+### Patch Changes
+
+- Updated dependencies [31b95bc]
+  - @apollo-elements/core@1.0.1
+  - @apollo-elements/mixins@4.0.1
+
 ## 4.0.1-next.0
 
 ### Patch Changes
