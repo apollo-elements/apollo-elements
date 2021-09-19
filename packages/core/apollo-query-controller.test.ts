@@ -1,4 +1,5 @@
 import type { TypedDocumentNode, ResultOf } from '@graphql-typed-document-node/core';
+import type { SchemaLink } from '@apollo/client/link/schema';
 
 import * as S from '@apollo-elements/test/schema';
 
@@ -14,9 +15,9 @@ import { ApolloQueryController } from './apollo-query-controller';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
+import { nextNAsync, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { match, spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
+import { match, spy, useFakeTimers, SinonSpy, SinonFakeTimers } from 'sinon';
 
 describe('[core] ApolloQueryController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
@@ -681,16 +682,29 @@ describe('[core] ApolloQueryController', function() {
           });
         });
 
-        describe('calling startPolling', function() {
+        describe('calling startPolling', function(this: Mocha.Suite) {
+          beforeEach(() => {
+            spy((element.query.client!.link as SchemaLink), 'request');
+          });
+
+          afterEach(() => {
+            ((element.query.client!.link as SchemaLink).request as SinonSpy).restore();
+          });
+
           let clock: SinonFakeTimers;
           beforeEach(() => clock = useFakeTimers());
+          beforeEach(teardownClient);
+          beforeEach(setupClient);
           afterEach(() => clock.restore());
-          beforeEach(function startPolling() { element.query.startPolling(1000); });
 
-          beforeEach(() => clock.tick(3500));
+          beforeEach(function startPolling() {
+            element.query.startPolling(1000);
+          });
 
-          it('refetches', function() {
-            expect(element.query.refetch).to.have.been.calledThrice;
+          beforeEach(() => nextNAsync(clock, 3));
+
+          it('polls', function() {
+            expect((element.query.client!.link as SchemaLink).request).to.have.been.calledThrice;
           });
 
           describe('then stopPolling', function() {
@@ -698,10 +712,24 @@ describe('[core] ApolloQueryController', function() {
               element.query.stopPolling();
             });
 
-            beforeEach(() => clock.tick(3500));
+            beforeEach(() => nextNAsync(clock, 3));
 
-            it('stops calling refetch', function() {
-              expect(element.query.refetch).to.have.been.calledThrice;
+            it('stops polling', function() {
+              expect((element.query.client!.link as SchemaLink).request).to.have.been.calledThrice;
+            });
+          });
+
+          describe('then removing the element', function() {
+            let client: typeof element.query.client;
+            beforeEach(function stopPolling() {
+              ({ client } = element.query);
+              element.remove();
+            });
+
+            beforeEach(() => nextNAsync(clock, 3));
+
+            it('stops polling', function() {
+              expect((client!.link as SchemaLink).request).to.have.been.calledThrice;
             });
           });
         });

@@ -41,8 +41,6 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
   implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
-  private pollingInterval?: number;
-
   /** @summary Options to customize the query and to interface with the controller. */
   declare options: ApolloQueryControllerOptions<D, V>;
 
@@ -115,6 +113,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   override hostDisconnected(): void {
     this.#hasDisconnected = true;
+    this.stopPolling();
     super.hostDisconnected();
   }
 
@@ -357,15 +356,15 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    * @param ms milliseconds to wait between fetches
    */
   @bound public startPolling(ms: number): void {
-    this.pollingInterval = window.setInterval(() => {
-      this.refetch();
-    }, ms);
+    if (!this.observableQuery)
+      this.subscribe();
+    this.observableQuery?.startPolling?.(ms);
   }
 
   /**
    * @summary Stop polling this query
    */
   @bound public stopPolling(): void {
-    clearInterval(this.pollingInterval);
+    this.observableQuery?.stopPolling?.();
   }
 }

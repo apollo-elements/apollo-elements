@@ -8,7 +8,7 @@ import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
 import { html } from 'lit/static-html.js';
 
-import { setupClient, teardownClient } from '@apollo-elements/test';
+import { nextNAsync, setupClient, teardownClient } from '@apollo-elements/test';
 
 import './apollo-query';
 
@@ -330,19 +330,19 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
                 });
                 describe('then calling startPolling(1000)', function() {
                   beforeEach(() => { clock = useFakeTimers(); });
-                  beforeEach(() => spy(element.controller, 'refetch'));
-                  afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
+                  beforeEach(() => spy(C.ObservableQuery.prototype, 'reobserve'));
+                  afterEach(() => (C.ObservableQuery.prototype.reobserve as SinonSpy).restore?.());
                   afterEach(() => clock.restore());
                   beforeEach(function startPolling() { element.startPolling(1000); });
-                  beforeEach(() => { clock.tick(3500); });
-                  it('refetches', function() {
-                    expect(element.controller.refetch).to.have.been.calledThrice;
+                  beforeEach(() => nextNAsync(clock, 3));
+                  it('polls', function() {
+                    expect(C.ObservableQuery.prototype.reobserve).to.have.been.calledThrice;
                   });
                   describe('then stopPolling', function() {
                     beforeEach(function stopPolling() { element.stopPolling(); });
-                    beforeEach(() => { clock.tick(3500); });
-                    it('stops calling refetch', function() {
-                      expect(element.controller.refetch).to.have.been.calledThrice;
+                    beforeEach(() => nextNAsync(clock, 5));
+                    it('stops polling', function() {
+                      expect(C.ObservableQuery.prototype.reobserve).to.have.been.calledThrice;
                     });
                   });
                 });

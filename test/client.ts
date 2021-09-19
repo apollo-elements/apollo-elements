@@ -35,7 +35,7 @@ async function nullableParam(_: any, { nullable = 'Hello World', delay }: S.Null
     return { nullable };
 }
 
-const schema = makeExecutableSchema({
+const makeSchema = () => makeExecutableSchema({
   typeDefs: TestSchema.loc!.source.body,
   resolvers: {
     Message: {
@@ -147,7 +147,7 @@ export function makeClient({ connectToDevTools = false } = {}): ApolloClient<Nor
   // Create the Apollo Client
   return new ApolloClient({
     connectToDevTools,
-    link: new SchemaLink({ schema }),
+    link: new SchemaLink({ schema: makeSchema() }),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'network-only',
