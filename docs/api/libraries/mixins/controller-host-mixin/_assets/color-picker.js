@@ -10,7 +10,7 @@ class ColorPicker extends ControllerHostMixin(HTMLElement) {
   mouse = new MouseController(this);
 
   constructor() {
-    super()
+    super();
     this
       .attachShadow({ mode: 'open' })
       .append(template.content.cloneNode(true));

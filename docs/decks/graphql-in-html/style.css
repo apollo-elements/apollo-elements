@@ -550,13 +550,18 @@ docs-playground {
 [name="Analogy to Biology"] {
   background-repeat: no-repeat;
   background-size: cover;
-  &[active] {
-    display: flex;
-  }
+  &::part(content) { display: flex; }
   & p {
     margin-top: auto;
     background: rgb(0,0,0,0.5);
     padding: 0.2em;
+    & small {
+      display: block;
+      font-size: 60%;
+      & a {
+        text-decoration: underline;
+      }
+    }
   }
 }
 
@@ -581,6 +586,36 @@ docs-playground {
   & [step]:not([step="1"]) > pre {
     position: relative;
     top: -8px;
+  }
+}
+
+[name="MouseController Data Flow"] {
+  &::part(content) { display: flex; }
+  & svg {
+    margin: 0 auto;
+    height: 100%;
+    font-family: inherit;
+    font-size: 18px;
+    fill: #ccc;
+    & .messageText {
+      text-anchor: middle;
+      dominant-baseline: middle;
+      alignment-baseline: middle;
+    }
+    & .method-call {
+      stroke-dasharray: 4px 4px;
+    }
+    & .property-access {
+      stroke-dasharray: 2px 2px;
+    }
+    & .actor-line {
+     stroke-width: 0.5px;
+    }
+    & text.actor {
+      text-anchor: middle;
+      dominant-baseline: central;
+      alignment-baseline: central;
+    }
   }
 }
 
