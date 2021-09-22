@@ -14,7 +14,7 @@ import { fromRollup } from '@web/dev-server-rollup';
 
 import rollupCommonjs from '@rollup/plugin-commonjs';
 import rollupLitcss from 'rollup-plugin-lit-css';
-import rollupGraphql from '@apollo-elements/rollup-plugin-graphql';
+import rollupGraphQL from '@apollo-elements/rollup-plugin-graphql';
 
 const litcss = fromRollup(rollupLitcss);
 const graphql = fromRollup(rollupGraphQL);
