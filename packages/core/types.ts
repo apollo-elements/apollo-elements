@@ -102,8 +102,14 @@ export declare class CustomElement extends HTMLElement {
    * @param name name of the observed attribute
    * @param oldValue previous value of the attribute. null if it was nonexistent
    * @param newValue current value of the attribute. null if removed.
+   * @param namespace Attribute namespace.
    */
-  attributeChangedCallback?(name: string, oldValue: string, newValue: string): void;
+  attributeChangedCallback?(
+    name: string,
+    old: string|null,
+    value: string|null,
+    namespace: string|null
+  ): void;
 
   /**
    * Called when the element is adopted to a document.

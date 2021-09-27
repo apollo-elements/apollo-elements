@@ -190,3 +190,9 @@ describe('ControllerHostMixin', function() {
     });
   });
 });
+
+import { PolymerElement } from '@polymer/polymer';
+import { FASTElement } from '@microsoft/fast-element';
+
+class TypeCheckPolymerElement extends ControllerHostMixin(PolymerElement) {}
+class TypeCheckFASTElement extends ControllerHostMixin(FASTElement) {}
