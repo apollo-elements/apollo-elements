@@ -19,11 +19,11 @@ class MyElement extends LitElement {
 ```
 
 ```js reveal
-import { MyController } from './my-controller.js';
+import { ClockController } from './clock-controller.js';
 
 
 class MyElement extends LitElement {
-  myController = new MyController(this);
+  clock = new ClockController(this);
 
 
 
@@ -34,26 +34,26 @@ class MyElement extends LitElement {
 ```
 
 ```js reveal
-import { MyController } from './my-controller.js';
+import { ClockController } from './clock-controller.js';
 
 
 class MyElement extends LitElement {
-  myController = new MyController(this);
+  clock = new ClockController(this);
 
   render() {
     return html`
-      ${this.myController.someState}
+      <p>time: <time>${this.clock.value}</time></p>
     `;
   }
 }
 ```
 
 ```js reveal
-import { MyController } from './my-controller.js';
+import { ClockController } from './clock-controller.js';
 import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin.js';
 
 class MyElement extends ControllerHostMixin(HTMLElement) {
-  myController = new MyController(this);
+  clock = new ClockController(this);
 
 
 
@@ -64,16 +64,16 @@ class MyElement extends ControllerHostMixin(HTMLElement) {
 ```
 
 ```js reveal
-import { MyController } from './my-controller.js';
+import { ClockController } from './clock-controller.js';
 import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin.js';
 
 class MyElement extends ControllerHostMixin(HTMLElement) {
-  myController = new MyController(this);
+  clock = new ClockController(this);
 
   update(changed) {
     super.update(changed);
-    this.shadowRoot.textContent =
-      this.myController.someState;
+    this.shadowRoot.querySelector('time').textContent =
+      this.clock.value;
   }
 }
 ```

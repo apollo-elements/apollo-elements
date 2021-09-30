@@ -582,6 +582,13 @@ docs-playground {
   }
 }
 
+[name="ClockController"] {
+  & iframe {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 [name="ControllerHostMixin"] {
   & [step]:not([step="1"]) > pre {
     position: relative;
@@ -619,23 +626,31 @@ docs-playground {
   }
 }
 
+[name="ApolloQueryController flavours"] {
+  &>pre { width: 100%; }
+  & section[reveal] { background-color: black; }
+}
+
+[name="ApolloQueryController Lit"],
+[name="ApolloMutationController Lit"] {
+  & docs-playground::part(playground-ide) {
+    --playground-code-font-size: 50% !important;
+  }
+}
+
 [name="Thanks"] {
   & ul {
+    width: 50%;
     list-style-type: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    text-align: center;
-    align-items: self-end;
-    & a {
-      display: flex;
-      flex-flow: column;
-      & img {
-        max-width: 80%;
-        margin: 0 auto;
-        max-height: 200px;
-      }
-    }
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: repeat(auto-fill, 100px);
+    align-items: center;
+    justify-items: start;
+    gap: 4px 24px;
+    & li, & a { display: contents; }
+    & img { height: 100px; }
   }
 }
