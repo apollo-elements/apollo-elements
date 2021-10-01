@@ -28,6 +28,7 @@
     "docs:analyze": "npm run analyze",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
     "docs:failsafe": "cpx 'docs/_merged_assets/**/*' ./_site/_merged_assets",
+    "docs:failsafe:decks": "cpx 'docs/decks/**/*.{png,jpg,webp,svg}' _site/decks/",
     "lint": "run-s lint:*",
     "lint:clean": "rimraf packages/gluon/declaration.d.ts",
     "lint:eslint": "eslint .",
