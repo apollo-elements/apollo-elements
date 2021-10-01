@@ -24,7 +24,7 @@
     "release": "sh scripts/release.sh",
     "release:prerelease": "sh scripts/prerelease.sh",
     "postrelease": "npm run clean",
-    "docs": "run-s build:codegen docs:*",
+    "docs": "run-s build:codegen docs:**",
     "docs:analyze": "npm run analyze",
     "docs:rocket": "ELEVENTY_ENV=production rocket build",
     "docs:failsafe": "cpx 'docs/_merged_assets/**/*' ./_site/_merged_assets",
