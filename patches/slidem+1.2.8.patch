@@ -38,6 +38,505 @@ index 503d779..ec33af2 100644
          <slot name="backward"></slot>
        </div>
        <style>
+diff --git a/node_modules/slidem/slidem-deck.umd.js b/node_modules/slidem/slidem-deck.umd.js
+deleted file mode 100644
+index 3282899..0000000
+--- a/node_modules/slidem/slidem-deck.umd.js
++++ /dev/null
+@@ -1,255 +0,0 @@
+-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("../node_modules/@gluon/gluon/gluon.js")):"function"==typeof define&&define.amd?define(["exports","../node_modules/@gluon/gluon/gluon.js"],t):t((e=e||self).slidem={},e.GluonJS)}(this,(function(e,t){"use strict";let i=!1;const s=[],n=()=>{s.forEach(e=>e(o(),r(),a()))},o=()=>window.decodeURIComponent(window.location.pathname),r=()=>window.location.search.slice(1),a=()=>window.decodeURIComponent(window.location.hash.slice(1));!function(){function e(e,t){document.addEventListener?e.addEventListener("scroll",t,!1):e.attachEvent("scroll",t)}function t(e){this.a=document.createElement("div"),this.a.setAttribute("aria-hidden","true"),this.a.appendChild(document.createTextNode(e)),this.b=document.createElement("span"),this.c=document.createElement("span"),this.h=document.createElement("span"),this.f=document.createElement("span"),this.g=-1,this.b.style.cssText="max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;",this.c.style.cssText="max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;",this.f.style.cssText="max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;",this.h.style.cssText="display:inline-block;width:200%;height:200%;font-size:16px;max-width:none;",this.b.appendChild(this.h),this.c.appendChild(this.f),this.a.appendChild(this.b),this.a.appendChild(this.c)}function i(e,t){e.a.style.cssText="max-width:none;min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;white-space:nowrap;font-synthesis:none;font:"+t+";"}function s(e){var t=e.a.offsetWidth,i=t+100;return e.f.style.width=i+"px",e.c.scrollLeft=i,e.b.scrollLeft=e.b.scrollWidth+100,e.g!==t&&(e.g=t,!0)}function n(t,i){function n(){var e=o;s(e)&&e.a.parentNode&&i(e.g)}var o=t;e(t.b,n),e(t.c,n),s(t)}function o(e,t){var i=t||{};this.family=e,this.style=i.style||"normal",this.weight=i.weight||"normal",this.stretch=i.stretch||"normal"}var r=null,a=null,d=null,l=null;function c(){return null===l&&(l=!!document.fonts),l}function h(){if(null===d){var e=document.createElement("div");try{e.style.font="condensed 100px sans-serif"}catch(e){}d=""!==e.style.font}return d}function u(e,t){return[e.style,e.weight,h()?e.stretch:"","100px",t].join(" ")}o.prototype.load=function(e,s){var o=this,d=e||"BESbswy",l=0,h=s||3e3,m=(new Date).getTime();return new Promise((function(e,s){if(c()&&!function(){if(null===a)if(c()&&/Apple/.test(window.navigator.vendor)){var e=/AppleWebKit\/([0-9]+)(?:\.([0-9]+))(?:\.([0-9]+))/.exec(window.navigator.userAgent);a=!!e&&603>parseInt(e[1],10)}else a=!1;return a}()){var p=new Promise((function(e,t){!function i(){(new Date).getTime()-m>=h?t(Error(h+"ms timeout exceeded")):document.fonts.load(u(o,'"'+o.family+'"'),d).then((function(t){1<=t.length?e():setTimeout(i,25)}),t)}()})),f=new Promise((function(e,t){l=setTimeout((function(){t(Error(h+"ms timeout exceeded"))}),h)}));Promise.race([f,p]).then((function(){clearTimeout(l),e(o)}),s)}else!function(e){document.body?e():document.addEventListener?document.addEventListener("DOMContentLoaded",(function t(){document.removeEventListener("DOMContentLoaded",t),e()})):document.attachEvent("onreadystatechange",(function t(){"interactive"!=document.readyState&&"complete"!=document.readyState||(document.detachEvent("onreadystatechange",t),e())}))}((function(){function a(){var t;(t=-1!=v&&-1!=g||-1!=v&&-1!=w||-1!=g&&-1!=w)&&((t=v!=g&&v!=w&&g!=w)||(null===r&&(t=/AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent),r=!!t&&(536>parseInt(t[1],10)||536===parseInt(t[1],10)&&11>=parseInt(t[2],10))),t=r&&(v==y&&g==y&&w==y||v==b&&g==b&&w==b||v==k&&g==k&&w==k)),t=!t),t&&(x.parentNode&&x.parentNode.removeChild(x),clearTimeout(l),e(o))}var c=new t(d),p=new t(d),f=new t(d),v=-1,g=-1,w=-1,y=-1,b=-1,k=-1,x=document.createElement("div");x.dir="ltr",i(c,u(o,"sans-serif")),i(p,u(o,"serif")),i(f,u(o,"monospace")),x.appendChild(c.a),x.appendChild(p.a),x.appendChild(f.a),document.body.appendChild(x),y=c.a.offsetWidth,b=p.a.offsetWidth,k=f.a.offsetWidth,function e(){if((new Date).getTime()-m>=h)x.parentNode&&x.parentNode.removeChild(x),s(Error(h+"ms timeout exceeded"));else{var t=document.hidden;!0!==t&&void 0!==t||(v=c.a.offsetWidth,g=p.a.offsetWidth,w=f.a.offsetWidth,a()),l=setTimeout(e,50)}}(),n(c,(function(e){v=e,a()})),i(c,u(o,'"'+o.family+'",sans-serif')),n(p,(function(e){g=e,a()})),i(p,u(o,'"'+o.family+'",serif')),n(f,(function(e){w=e,a()})),i(f,u(o,'"'+o.family+'",monospace'))}))}))},"object"==typeof module?module.exports=o:(window.FontFaceObserver=o,window.FontFaceObserver.prototype.load=o.prototype.load)}();
+-/**
+-   * @license
+-   * MIT License
+-   *
+-   * Copyright (c) 2018 Goffert van Gool
+-   *
+-   * Permission is hereby granted, free of charge, to any person obtaining a copy
+-   * of this software and associated documentation files (the "Software"), to deal
+-   * in the Software without restriction, including without limitation the rights
+-   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-   * copies of the Software, and to permit persons to whom the Software is
+-   * furnished to do so, subject to the following conditions:
+-   *
+-   * The above copyright notice and this permission notice shall be included in all
+-   * copies or substantial portions of the Software.
+-   *
+-   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-   * SOFTWARE.
+-   */
+-const d={};window.addEventListener("keydown",e=>{e.defaultPrevented?console.warn("Keypress ignored!"):d[e.key]&&d[e.key].every(t=>{if(null!==t.offsetParent)return e.stopPropagation(),t.click(),!t.override})},!0);class l extends t.GluonElement{static get observedAttributes(){return["key","override"]}attributeChangedCallback(e,t,i){"key"===e?this.__register(i,t):"override"===e&&this.__override(this.key)}set key(e){e?this.setAttribute("key",e):this.removeAttribute("key")}get key(){return this.getAttribute("key")}set override(e){e?this.setAttribute("override",""):this.removeAttribute("override")}get override(){return""===this.getAttribute("override")}__register(e,t){if(t&&d[t]){const e=d[t].indexOf(this);-1!=e&&(d[t].splice(e,1),0===d[t].length&&delete d[t])}e&&(d[e]||(d[e]=[]),this.override?d[e].unshift(this):d[e].push(this))}__override(e){if(e&&d[e]){const t=d[e].indexOf(this);-1!=t&&(d[e].splice(t,1),d[e].unshift(this))}}}customElements.define(l.is,l);const c=document.createTextNode("\n  /* SLIDEM GLOBAL STYLES */\n  body {\n    margin: 0;\n  }\n\n  [reveal] {\n    opacity: 0;\n    transition: opacity 0.2s;\n  }\n\n  /* Keyframes are defined here to patch a scoping bug in Chrome */\n  @keyframes slidem-fade-in {\n    from {\n      opacity: 0;\n    }\n    to {\n      opacity: 1;\n    }\n  }\n\n  @keyframes slidem-fade-out {\n    from {\n      opacity: 1;\n    }\n    to {\n      opacity: 0;\n    }\n  }\n\n  @keyframes slidem-slide-in-forward {\n    from {\n      transform: translateX(100vw);\n    }\n    to {\n      transform: translateX(0);\n    }\n  }\n\n  @keyframes slidem-slide-in-backward {\n    from {\n      transform: translateX(0);\n    }\n    to {\n      transform: translateX(100vw);\n    }\n  }\n\n  @keyframes slidem-slide-out-forward {\n    from {\n      transform: translateX(0);\n    }\n    to {\n      transform: translateX(-100vw);\n    }\n  }\n\n  @keyframes slidem-slide-out-backward {\n    from {\n      transform: translateX(-100vw);\n    }\n    to {\n      transform: translateX(0);\n    }\n  }\n"),h=document.createElement("style");h.appendChild(c),document.head.appendChild(h);class u extends t.GluonElement{get template(){return t.html`
+-      <div class="slides">
+-        <slot id="slides"></slot>
+-      </div>
+-      <div id="progress"></div>
+-      <div id="timer"></div>
+-      <gluon-keybinding id="timerToggle" key="t"></gluon-keybinding>
+-      <gluon-keybinding id="presenterToggle" key="p"></gluon-keybinding>
+-      <div id="forward">
+-        <gluon-keybinding key="PageDown"></gluon-keybinding>
+-        <gluon-keybinding key="ArrowRight"></gluon-keybinding>
+-        <gluon-keybinding key="Right"></gluon-keybinding>
+-        <slot name="forward"></slot>
+-      </div>
+-      <div id="backward">
+-        <gluon-keybinding key="PageUp"></gluon-keybinding>
+-        <gluon-keybinding key="ArrowLeft"></gluon-keybinding>
+-        <gluon-keybinding key="Left"></gluon-keybinding>
+-        <slot name="backward"></slot>
+-      </div>
+-      <style>
+-        @keyframes slidem-fade-in {
+-          from {
+-            opacity: 0;
+-          }
+-          to {
+-            opacity: 1;
+-          }
+-        }
+-
+-        @keyframes slidem-fade-out {
+-          from {
+-            opacity: 1;
+-          }
+-          to {
+-            opacity: 0;
+-          }
+-        }
+-
+-        @keyframes slidem-slide-in-forward {
+-          from {
+-            transform: translateX(100vw);
+-          }
+-          to {
+-            transform: translateX(0);
+-          }
+-        }
+-
+-        @keyframes slidem-slide-in-backward {
+-          from {
+-            transform: translateX(0);
+-          }
+-          to {
+-            transform: translateX(100vw);
+-          }
+-        }
+-
+-        @keyframes slidem-slide-out-forward {
+-          from {
+-            transform: translateX(0);
+-          }
+-          to {
+-            transform: translateX(-100vw);
+-          }
+-        }
+-
+-        @keyframes slidem-slide-out-backward {
+-          from {
+-            transform: translateX(-100vw);
+-          }
+-          to {
+-            transform: translateX(0);
+-          }
+-        }
+-        :host {
+-          display: block;
+-          overflow: hidden;
+-          position: absolute;
+-          top: 0;
+-          left: 0;
+-          bottom: 0;
+-          right: 0;
+-          font-family: 'sans-serif';
+-          font-size: 56px;
+-          line-height: 1;
+-        }
+-
+-        .slides ::slotted(*) {
+-          position: absolute;
+-          top: 0;
+-          right: 0;
+-          bottom: 0;
+-          left: 0;
+-          animation-duration: 0.4s;
+-          animation-fill-mode: both;
+-          animation-timing-function: ease-in-out;
+-        }
+-
+-        .slides ::slotted(:not([active]):not([previous]):not([next])) {
+-          display: none;
+-        }
+-
+-        :host(:not([presenter])) .slides ::slotted([next]:not([previous])) {
+-          display: none;
+-        }
+-
+-        #progress {
+-          position: absolute;
+-          bottom: 0px;
+-          left: 0;
+-          right: 0;
+-          height: 50px;
+-          text-align: center;
+-          display: flex;
+-          flex-flow: row;
+-          justify-content: center;
+-          z-index: 10;
+-        }
+-        #progress div {
+-          height: 8px;
+-          width: 8px;
+-          border-radius: 50%;
+-          border: 2px solid white;
+-          margin-left: 6px;
+-          margin-right: 6px;
+-          background: transparent;
+-          transition: background 0.2s, transform 0.2s;
+-        }
+-        #progress div.active {
+-          background: white;
+-          transform: scale(1.3);
+-        }
+-        :host([progress="dark"]) #progress div {
+-          border: 2px solid black;
+-        }
+-        :host([progress="dark"]) #progress div.active {
+-          background: black;
+-        }
+-        :host([progress="none"]) #progress {
+-          display: none;
+-        }
+-
+-        #timer {
+-          display: none;
+-          position: absolute;
+-          top: 5%;
+-          right: 5%;
+-          color: white;
+-          font-size: 4vw;
+-          font-weight: bold;
+-          font-family: Helvetica, Arial, sans-serif;
+-        }
+-        :host([presenter]) #timer {
+-          display: inline;
+-        }
+-
+-        :host([presenter]) {
+-          background: black;
+-        }
+-        /* White box around active slide */
+-        :host([presenter])::before {
+-          display: block;
+-          position: absolute;
+-          content: '';
+-          top: calc(25% - 20px);
+-          right:  calc(45% - 20px);
+-          bottom:  calc(25% - 20px);
+-          left:  calc(5% - 20px);
+-          border: 2px solid white;
+-        }
+-        /* White box around next slide */
+-        :host([presenter])::after {
+-          display: block;
+-          position: absolute;
+-          content: '';
+-          top: calc(32.5% - 20px);
+-          right: calc(4.5% - 20px);
+-          bottom: calc(32.5% - 20px);
+-          left: calc(60.5% - 20px);
+-          border: 2px solid white;
+-        }
+-        :host([presenter]) .slides ::slotted(*) {
+-          animation: none !important; /* Block user-configured animations */
+-        }
+-        :host([presenter]) .slides ::slotted([previous]:not([next])) {
+-          display: none;
+-        }
+-        :host([presenter]) .slides ::slotted([active]) {
+-          transform: translate(-20%, 0) scale(0.5) !important; /* Force presenter layout */
+-        }
+-        :host([presenter]) .slides ::slotted([next]) {
+-          transform: translate(28%, 0) scale(0.35) !important; /* Force presenter layout */
+-        }
+-
+-        .slides ::slotted([active]) {
+-          z-index: 2;
+-        }
+-        .slides ::slotted([previous]) {
+-          z-index: 0;
+-        }
+-        .slides ::slotted([fade-in][active].animate-forward) {
+-          animation-name: slidem-fade-in;
+-        }
+-        .slides ::slotted([fade-in][previous].animate-backward) {
+-          animation-name: slidem-fade-out;
+-          z-index: 3;
+-        }
+-        .slides ::slotted([fade-out][active].animate-backward) {
+-          animation-name: slidem-fade-in;
+-        }
+-        .slides ::slotted([fade-out][previous].animate-forward) {
+-          animation-name: slidem-fade-out;
+-          z-index: 3;
+-        }
+-        .slides ::slotted([slide-in][active].animate-forward) {
+-          animation-name: slidem-slide-in-forward;
+-        }
+-        .slides ::slotted([slide-in][previous].animate-backward) {
+-          animation-name: slidem-slide-in-backward;
+-          z-index: 3;
+-        }
+-        .slides ::slotted([slide-out][active].animate-backward) {
+-          animation-name: slidem-slide-out-backward;
+-        }
+-        .slides ::slotted([slide-out][previous].animate-forward) {
+-          animation-name: slidem-slide-out-forward;
+-          z-index: 3;
+-        }
+-      </style>
+-    `}get presenter(){return null!==this.getAttribute("presenter")}set presenter(e){e?this.setAttribute("presenter",""):this.removeAttribute("presenter")}connectedCallback(){let e;var t;super.connectedCallback(),this.presenter="presenter"===r(),this.$.presenterToggle.addEventListener("click",()=>{this.presenter=!this.presenter,d({query:this.presenter?"presenter":"",hash:a()})}),this.$.timerToggle.addEventListener("click",()=>{if(e)clearInterval(e),e=void 0,this.$.timer.innerText="";else{this.$.timer.innerText="00:00";let t=new Date;e=setInterval(()=>this.$.timer.innerText=m(t),1e3)}}),this.slides=Array.from(this.children).filter(e=>!e.hasAttribute("slot")),this.slides.forEach(()=>{this.$.progress.appendChild(document.createElement("div"))}),t=()=>{this.slides[this.currentSlide].step=this.currentStep+1,this.slides[this.currentSlide].setAttribute("active",""),this.previousSlide!==this.currentSlide&&(void 0!==this.previousSlide&&(this.previousSlide<this.currentSlide?(this.slides[this.previousSlide].classList.add("animate-forward"),this.slides[this.currentSlide].classList.add("animate-forward"),this.slides[this.previousSlide].classList.remove("animate-backward"),this.slides[this.currentSlide].classList.remove("animate-backward")):(this.slides[this.previousSlide].classList.add("animate-backward"),this.slides[this.currentSlide].classList.add("animate-backward"),this.slides[this.previousSlide].classList.remove("animate-forward"),this.slides[this.currentSlide].classList.remove("animate-forward"))),void 0!==this.oldNextSlide&&this.slides[this.oldNextSlide].removeAttribute("next"),this.nextSlide=this.slides[this.currentSlide+1]&&this.currentSlide+1||void 0,void 0!==this.nextSlide&&(this.slides[this.nextSlide].setAttribute("next",""),this.oldNextSlide=this.nextSlide),void 0!==this.oldPreviousSlide&&this.slides[this.oldPreviousSlide].removeAttribute("previous"),void 0!==this.previousSlide&&(this.slides[this.previousSlide].removeAttribute("active"),this.slides[this.previousSlide].setAttribute("previous",""),this.$.progress.children[this.previousSlide].classList.remove("active"),this.oldPreviousSlide=this.previousSlide),this.$.progress.children[this.currentSlide].classList.add("active"),this.previousSlide=this.currentSlide)},i||(window.addEventListener("hashchange",n),window.addEventListener("location-changed",n),window.addEventListener("popstate",n),i=!0),s.push(t);const d=({path:e=o(),query:t=r(),hash:i=a()}={})=>{e=window.history.pushState({},"",`${e}${t&&"?"+t||""}${i&&"#"+i||""}`),window.dispatchEvent(new Event("location-changed")),localStorage.setItem("location",a())};let l,c;this.$.forward.onclick=()=>{this.slides[this.currentSlide].steps&&this.slides[this.currentSlide].step<=this.slides[this.currentSlide].steps?d({hash:`slide-${this.currentSlide+1}/step-${this.slides[this.currentSlide].step+1}`}):this.currentSlide<this.slides.length-1&&d({hash:`slide-${this.currentSlide+2}/step-1`})},this.$.backward.onclick=()=>{this.slides[this.currentSlide].steps&&this.slides[this.currentSlide].step>1?d({hash:`slide-${this.currentSlide+1}/step-${this.slides[this.currentSlide].step-1}`}):this.currentSlide>0&&d({hash:`slide-${this.currentSlide}/step-${(this.slides[this.currentSlide-1].steps||0)+1}`})},document.addEventListener("touchstart",e=>{l=e.touches[0].clientX,c=e.touches[0].clientY},!1),document.addEventListener("touchend",e=>{const t=e.changedTouches[0].clientX-l,i=e.changedTouches[0].clientY-c;Math.abs(t)>60&&Math.abs(t)>Math.abs(i)&&(t<0?this.$.forward.onclick():this.$.backward.onclick())},!1);const h=()=>{this.removeAttribute("loading"),window.dispatchEvent(new Event("location-changed"))},u=this.getAttribute("font");u&&(this.style.fontFamily=u);let p=new Promise((e,t)=>{let i=setTimeout(()=>{clearTimeout(i),t("Font loading timeout")},2e3)});Promise.race([Promise.all(this.slides.map(e=>e.tagName.includes("-")&&customElements.whenDefined(e.tagName.toLowerCase()))),p]).then(()=>Promise.race([Promise.all(this.slides.filter(e=>e.fonts).map(e=>e.fonts).reduce((e,t)=>e.concat(t),u&&[u]||[]).map(e=>new FontFaceObserver(e).load())),p])).then(h,()=>console.warn("Failed to initialize fonts")||h()),window.addEventListener("storage",e=>{"location"===e.key&&a()!==e.newValue&&d({hash:""+e.newValue})})}get currentSlide(){return(a().match(/(?:slide-(\d+))?(?:\/step-(\d+|Infinity))?/)[1]||1)-1}get currentStep(){return(a().match(/(?:slide-(\d+))?(?:\/step-(\d+|Infinity))?/)[2]||1)-1}}const m=e=>{const t=new Date(new Date-e),i=e=>e<10&&"0"+e||e,s=i(t.getUTCHours()),n=i(t.getUTCMinutes()),o=i(t.getUTCSeconds());return`${t.getUTCHours()&&s+":"||""}${n}:${o}`};customElements.define(u.is,u),e.SlidemDeck=u,Object.defineProperty(e,"__esModule",{value:!0})}));
+diff --git a/node_modules/slidem/slidem-polymersummit-slide.umd.js b/node_modules/slidem/slidem-polymersummit-slide.umd.js
+deleted file mode 100644
+index 515dc1b..0000000
+--- a/node_modules/slidem/slidem-polymersummit-slide.umd.js
++++ /dev/null
+@@ -1,232 +0,0 @@
+-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("../node_modules/@gluon/gluon/gluon.js")):"function"==typeof define&&define.amd?define(["exports","../node_modules/@gluon/gluon/gluon.js"],e):e((t=t||self).slidem={},t.GluonJS)}(this,(function(t,e){"use strict";const o=document.createTextNode("\n  /* SLIDEM SLIDE GLOBAL STYLES */\n\n  [reveal] {\n    opacity: 0;\n    transition: opacity 0.2s;\n  }\n"),i=document.createElement("style");i.appendChild(o),document.head.appendChild(i);const n=e.html`
+-  <style>
+-    :host {
+-      display: flex;
+-      flex-direction: row;
+-      overflow: hidden;
+-      align-items: center;
+-      background-size: cover;
+-      background-position: center;
+-    }
+-
+-    :host([zoom-in]) #content, :host([zoom-out]) #content {
+-      animation-duration: 0.4s;
+-      animation-fill-mode: both;
+-      animation-timing-function: ease-in-out;
+-    }
+-
+-    @keyframes zoom-in {
+-      from {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-      to {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-    }
+-
+-    @keyframes zoom-out {
+-      from {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-      to {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-    }
+-
+-    :host([zoom-in][active].animate-forward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    :host([zoom-in][previous].animate-backward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][previous].animate-forward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][active].animate-backward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    #iefix {
+-      width: 100%;
+-      display: flex;
+-      flex-direction: column;
+-      align-items: center;
+-    }
+-
+-    #content {
+-      width: var(--slidem-content-width, 1760px);
+-      max-height: var(--slidem-content-height, 990px);
+-      flex-shrink: 0;
+-    }
+-
+-    :host(:not([center])) #content {
+-      height: var(--slidem-content-height, 990px);
+-    }
+-  </style>
+-`;class s extends e.GluonElement{get template(){return null!==this.getAttribute("fullscreen")||this.constructor.fullscreen?e.html`
+-        ${n}
+-        ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-      `:e.html`
+-        ${n}
+-        <div id="iefix" part="container">
+-          <div id="content" part="content">
+-            ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-          </div>
+-        </div>
+-      `}connectedCallback(){let t;super.connectedCallback(),this._steps=Array.from(this.querySelectorAll("[reveal]")),this.steps=this._steps.length,this.__resizeContent(),window.addEventListener("resize",()=>{window.clearTimeout(t),t=window.setTimeout(()=>{this.__resizeContent()},200)})}static get observedAttributes(){return["step"]}attributeChangedCallback(t,e,o){if("step"===t){const t=Number(o);if(t>this.steps+1)return void this.setAttribute("step",this.steps+1);this.__setStep(t)}}set step(t){this.setAttribute("step",t)}get step(){return Number(this.getAttribute("step"))||1}__setStep(t){this._steps.forEach((e,o)=>{e.style.opacity=o<t-1?1:0})}__resizeContent(){const t=window.getComputedStyle(document.documentElement),e=Number((t.getPropertyValue("--slidem-content-width")||"1760px").slice(0,-2)),o=Number((t.getPropertyValue("--slidem-content-height")||"990px").slice(0,-2)),i=Math.min(window.innerHeight/1.09/o,window.innerWidth/1.09/e);i<1?(document.documentElement.style.setProperty("--slidem-content-scale",i),this.$.content&&(this.$.content.style.transform=`scale(${i})`)):(document.documentElement.style.setProperty("--slidem-content-scale",1),this.$.content&&(this.$.content.style.transform="scale(1)"))}}const l=document.createElement("link");l.href="https://fonts.googleapis.com/css?family=Roboto:400,500,700",l.rel="stylesheet",document.head.appendChild(l);class a extends s{get fonts(){return["Roboto"]}get template(){return this.content=e.html`
+-      <div class="introSlide">
+-        <div class="side">
+-          <div class="avatar"><slot name="avatar"></slot></div>
+-          <div class="speakerDetails">
+-            <slot name="speaker"></slot>
+-            <div>
+-              <slot name="email"></slot>
+-            </div>
+-            <div>
+-              <slot name="twitter"></slot>
+-            </div>
+-          </div>
+-          <div class="logo">
+-            <slot name="logo"></slot>
+-          </div>
+-        </div>
+-        <div class="event">
+-          <slot name="event"></slot>
+-        </div>
+-        <slot name="title"></slot>
+-        <slot name="subtitle"></slot>
+-      </div>
+-    `,e.html`
+-      <style>
+-        :host {
+-          background: #2e9be6;
+-          font-family: 'Roboto';
+-        }
+-        .introSlide {
+-          overflow: hidden;
+-          border-bottom: 3px solid white;
+-          color: white;
+-          position: relative;
+-          height: 100%;
+-        }
+-
+-        .topShade {
+-          position: absolute;
+-          top: 0;
+-          left: 0;
+-          right: 0;
+-          height: 34px;
+-          background: rgba(0, 0, 0, 0.2);
+-        }
+-
+-        .introSlide .event {
+-          position: absolute;
+-          bottom: 26px;
+-          left: 0;
+-        }
+-
+-        .introSlide .event ::slotted([slot="event"]) {
+-          margin: 0;
+-          font-size: 24px;
+-          letter-spacing: 1px;
+-          font-weight: 700;
+-        }
+-
+-        .introSlide .side {
+-          position: absolute;
+-          right: 0;
+-          width: 340px;
+-          height: 100%;
+-          display: flex;
+-          flex-flow: column;
+-          justify-content: flex-end;
+-        }
+-
+-        .introSlide .side * {
+-          flex-shrink: 0;
+-        }
+-
+-        .introSlide .avatar {
+-          height: 340px;
+-          width: 340px;
+-          border-radius: 50%;
+-          overflow: hidden;
+-          margin-bottom: 56px;
+-        }
+-
+-        .introSlide ::slotted([slot="avatar"]) {
+-          max-width: 340px;
+-        }
+-
+-        .introSlide .speakerDetails {
+-          border-top: 3px solid white;
+-          padding-top: 50px;
+-          padding-bottom: 30px;
+-        }
+-
+-
+-        .introSlide .speakerDetails ::slotted([slot="speaker"]) {
+-          font-weight: 400;
+-          margin-top: 0;
+-          margin-bottom: 20px;
+-          font-size: 32px;
+-          letter-spacing: 1px;
+-        }
+-
+-        .introSlide .speakerDetails div {
+-          margin-bottom: 20px;
+-        }
+-
+-        .introSlide .speakerDetails div ::slotted([slot="email"]),
+-        .introSlide .speakerDetails div ::slotted([slot="twitter"]) {
+-          color: white;
+-          font-weight: 500;
+-          font-size: 28px;
+-          letter-spacing: 1px;
+-        }
+-
+-        .introSlide .logo {
+-          display: flex;
+-          justify-content: center;
+-          align-items: center;
+-          height: 260px;
+-          background-color: white;
+-        }
+-
+-        .introSlide .logo ::slotted([slot="logo"]) {
+-          max-height: 200px;
+-          max-width: 300px;
+-          background-position: center;
+-          background-size: contain;
+-        }
+-
+-        .introSlide ::slotted([slot="title"]) {
+-          margin-top: 190px;
+-          margin-bottom: 0;
+-          font-weight: 500;
+-          font-size: 150px;
+-          color: white;
+-          letter-spacing: 2px;
+-        }
+-
+-        .introSlide ::slotted([slot="subtitle"]) {
+-          display: inline-block;
+-          margin-top: 40px;
+-          font-weight: 400;
+-          font-size: 100px;
+-          letter-spacing: 2px;
+-          color: white;
+-          padding-top: 40px;
+-          border-top: 3px solid white;
+-        }
+-      </style>
+-      <div class="topShade"></div>
+-      ${super.template}
+-    `}}customElements.define(a.is,a),t.SlidemPolymersummitSlide=a,Object.defineProperty(t,"__esModule",{value:!0})}));
 diff --git a/node_modules/slidem/slidem-slide-base.js b/node_modules/slidem/slidem-slide-base.js
 index a36279d..7a4af43 100644
 --- a/node_modules/slidem/slidem-slide-base.js
@@ -94,6 +593,95 @@ index a36279d..7a4af43 100644
      });
    }
  
+diff --git a/node_modules/slidem/slidem-slide-base.umd.js b/node_modules/slidem/slidem-slide-base.umd.js
+deleted file mode 100644
+index 288f1a3..0000000
+--- a/node_modules/slidem/slidem-slide-base.umd.js
++++ /dev/null
+@@ -1,83 +0,0 @@
+-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("../node_modules/@gluon/gluon/gluon.js")):"function"==typeof define&&define.amd?define(["exports","../node_modules/@gluon/gluon/gluon.js"],e):e((t=t||self).slidem={},t.GluonJS)}(this,(function(t,e){"use strict";const n=document.createTextNode("\n  /* SLIDEM SLIDE GLOBAL STYLES */\n\n  [reveal] {\n    opacity: 0;\n    transition: opacity 0.2s;\n  }\n"),o=document.createElement("style");o.appendChild(n),document.head.appendChild(o);const i=e.html`
+-  <style>
+-    :host {
+-      display: flex;
+-      flex-direction: row;
+-      overflow: hidden;
+-      align-items: center;
+-      background-size: cover;
+-      background-position: center;
+-    }
+-
+-    :host([zoom-in]) #content, :host([zoom-out]) #content {
+-      animation-duration: 0.4s;
+-      animation-fill-mode: both;
+-      animation-timing-function: ease-in-out;
+-    }
+-
+-    @keyframes zoom-in {
+-      from {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-      to {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-    }
+-
+-    @keyframes zoom-out {
+-      from {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-      to {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-    }
+-
+-    :host([zoom-in][active].animate-forward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    :host([zoom-in][previous].animate-backward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][previous].animate-forward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][active].animate-backward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    #iefix {
+-      width: 100%;
+-      display: flex;
+-      flex-direction: column;
+-      align-items: center;
+-    }
+-
+-    #content {
+-      width: var(--slidem-content-width, 1760px);
+-      max-height: var(--slidem-content-height, 990px);
+-      flex-shrink: 0;
+-    }
+-
+-    :host(:not([center])) #content {
+-      height: var(--slidem-content-height, 990px);
+-    }
+-  </style>
+-`;class s extends e.GluonElement{get template(){return null!==this.getAttribute("fullscreen")||this.constructor.fullscreen?e.html`
+-        ${i}
+-        ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-      `:e.html`
+-        ${i}
+-        <div id="iefix" part="container">
+-          <div id="content" part="content">
+-            ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-          </div>
+-        </div>
+-      `}connectedCallback(){let t;super.connectedCallback(),this._steps=Array.from(this.querySelectorAll("[reveal]")),this.steps=this._steps.length,this.__resizeContent(),window.addEventListener("resize",()=>{window.clearTimeout(t),t=window.setTimeout(()=>{this.__resizeContent()},200)})}static get observedAttributes(){return["step"]}attributeChangedCallback(t,e,n){if("step"===t){const t=Number(n);if(t>this.steps+1)return void this.setAttribute("step",this.steps+1);this.__setStep(t)}}set step(t){this.setAttribute("step",t)}get step(){return Number(this.getAttribute("step"))||1}__setStep(t){this._steps.forEach((e,n)=>{e.style.opacity=n<t-1?1:0})}__resizeContent(){const t=window.getComputedStyle(document.documentElement),e=Number((t.getPropertyValue("--slidem-content-width")||"1760px").slice(0,-2)),n=Number((t.getPropertyValue("--slidem-content-height")||"990px").slice(0,-2)),o=Math.min(window.innerHeight/1.09/n,window.innerWidth/1.09/e);o<1?(document.documentElement.style.setProperty("--slidem-content-scale",o),this.$.content&&(this.$.content.style.transform=`scale(${o})`)):(document.documentElement.style.setProperty("--slidem-content-scale",1),this.$.content&&(this.$.content.style.transform="scale(1)"))}}t.SlidemSlideBase=s,Object.defineProperty(t,"__esModule",{value:!0})}));
 diff --git a/node_modules/slidem/slidem-slide.js b/node_modules/slidem/slidem-slide.js
 index 4cdc5a1..f8a80ea 100644
 --- a/node_modules/slidem/slidem-slide.js
@@ -132,3 +720,197 @@ index 4cdc5a1..f8a80ea 100644
      if (attr === 'active' || attr === 'next') {
        if (newVal !== null) {
          this.__rescale();
+diff --git a/node_modules/slidem/slidem-slide.umd.js b/node_modules/slidem/slidem-slide.umd.js
+deleted file mode 100644
+index a3ce5c7..0000000
+--- a/node_modules/slidem/slidem-slide.umd.js
++++ /dev/null
+@@ -1,83 +0,0 @@
+-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("../node_modules/@gluon/gluon/gluon.js")):"function"==typeof define&&define.amd?define(["exports","../node_modules/@gluon/gluon/gluon.js"],e):e((t=t||self).slidem={},t.GluonJS)}(this,(function(t,e){"use strict";const n=document.createTextNode("\n  /* SLIDEM SLIDE GLOBAL STYLES */\n\n  [reveal] {\n    opacity: 0;\n    transition: opacity 0.2s;\n  }\n"),i=document.createElement("style");i.appendChild(n),document.head.appendChild(i);const o=e.html`
+-  <style>
+-    :host {
+-      display: flex;
+-      flex-direction: row;
+-      overflow: hidden;
+-      align-items: center;
+-      background-size: cover;
+-      background-position: center;
+-    }
+-
+-    :host([zoom-in]) #content, :host([zoom-out]) #content {
+-      animation-duration: 0.4s;
+-      animation-fill-mode: both;
+-      animation-timing-function: ease-in-out;
+-    }
+-
+-    @keyframes zoom-in {
+-      from {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-      to {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-    }
+-
+-    @keyframes zoom-out {
+-      from {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-      to {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-    }
+-
+-    :host([zoom-in][active].animate-forward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    :host([zoom-in][previous].animate-backward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][previous].animate-forward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][active].animate-backward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    #iefix {
+-      width: 100%;
+-      display: flex;
+-      flex-direction: column;
+-      align-items: center;
+-    }
+-
+-    #content {
+-      width: var(--slidem-content-width, 1760px);
+-      max-height: var(--slidem-content-height, 990px);
+-      flex-shrink: 0;
+-    }
+-
+-    :host(:not([center])) #content {
+-      height: var(--slidem-content-height, 990px);
+-    }
+-  </style>
+-`;class s extends e.GluonElement{get template(){return null!==this.getAttribute("fullscreen")||this.constructor.fullscreen?e.html`
+-        ${o}
+-        ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-      `:e.html`
+-        ${o}
+-        <div id="iefix" part="container">
+-          <div id="content" part="content">
+-            ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-          </div>
+-        </div>
+-      `}connectedCallback(){let t;super.connectedCallback(),this._steps=Array.from(this.querySelectorAll("[reveal]")),this.steps=this._steps.length,this.__resizeContent(),window.addEventListener("resize",()=>{window.clearTimeout(t),t=window.setTimeout(()=>{this.__resizeContent()},200)})}static get observedAttributes(){return["step"]}attributeChangedCallback(t,e,n){if("step"===t){const t=Number(n);if(t>this.steps+1)return void this.setAttribute("step",this.steps+1);this.__setStep(t)}}set step(t){this.setAttribute("step",t)}get step(){return Number(this.getAttribute("step"))||1}__setStep(t){this._steps.forEach((e,n)=>{e.style.opacity=n<t-1?1:0})}__resizeContent(){const t=window.getComputedStyle(document.documentElement),e=Number((t.getPropertyValue("--slidem-content-width")||"1760px").slice(0,-2)),n=Number((t.getPropertyValue("--slidem-content-height")||"990px").slice(0,-2)),i=Math.min(window.innerHeight/1.09/n,window.innerWidth/1.09/e);i<1?(document.documentElement.style.setProperty("--slidem-content-scale",i),this.$.content&&(this.$.content.style.transform=`scale(${i})`)):(document.documentElement.style.setProperty("--slidem-content-scale",1),this.$.content&&(this.$.content.style.transform="scale(1)"))}}const l=document.createTextNode("\n  /* SLIDEM BASIC SLIDE STYLE */\n  slidem-slide h1,\n  slidem-slide h2,\n  slidem-slide h3,\n  slidem-slide h4,\n  slidem-slide h5,\n  slidem-slide h6,\n  slidem-slide p {\n    margin-top: 0px;\n    margin-bottom: 0px;\n  }\n\n  slidem-slide a {\n    color: inherit;\n    text-decoration: none;\n  }\n"),r=document.createElement("style");r.appendChild(l),document.head.appendChild(r);class a extends s{connectedCallback(){super.connectedCallback();const t=this.getAttribute("background");if(t)if(t.match(/^--[a-zA-Z-]*$/))window.ShadyCSS&&window.ShadyCSS.variables?this.style.background=window.ShadyCSS.variables[t]:this.style.background=`var(${t})`;else if(t.match(/^(http|\/|\.)/)){let e=`url(${t})`;const n=this.getAttribute("darken-background");n&&(e=`linear-gradient(rgba(0,0,0,${n}), rgba(0,0,0,${n})), ${e}`),this.style.backgroundImage=e}else this.style.background=t;this.textNodes=Array.from(this.querySelectorAll("h1, h2, h3, h4, h5, h6, p, li, span")),this.textNodes.forEach(t=>{null!==t.getAttribute("font-size")&&(t.style.fontSize=t.getAttribute("font-size")),null!==t.getAttribute("bold")&&(t.style.fontWeight="bold"),null!==t.getAttribute("underline")&&(t.style.textDecoration="underline"),null!==t.getAttribute("italic")&&(t.style.fontStyle="italic"),null!==t.getAttribute("uppercase")&&(t.style.textTransform="uppercase"),null!==t.getAttribute("center")&&(t.style.textAlign="center"),null!==t.getAttribute("line-height")&&(t.style.lineHeight=t.getAttribute("line-height"));const e=t.getAttribute("color");null!==e&&(e.match(/^--[a-zA-Z-]*$/)?window.ShadyCSS&&window.ShadyCSS.variables?t.style.color=window.ShadyCSS.variables[e]:t.style.color=`var(${e})`:t.style.color=e)}),this.layoutNodes=Array.from(this.querySelectorAll("div")),this.layoutNodes.forEach(t=>{null!==t.getAttribute("center")&&(t.style.display="flex",t.style.justifyContent="center",t.style.alignItems="center")})}static get observedAttributes(){const t=super.observedAttributes||[];return Array.prototype.push.apply(t,["active","next"]),t}attributeChangedCallback(t,e,n){super.attributeChangedCallback(t,e,n),"active"!==t&&"next"!==t||null!==n&&this.__rescale()}__rescale(){requestAnimationFrame(()=>{this.textNodes.forEach(t=>{if(null!==t.getAttribute("fit")){t.style.display="table",t.style.whiteSpace="nowrap";const e=parseFloat(window.getComputedStyle(t,null).getPropertyValue("font-size")),n=this.$.content.clientWidth;t.style.fontSize=Math.floor(e*n/t.clientWidth)+"px"}})})}}customElements.define(a.is,a),t.SlidemSlide=a,Object.defineProperty(t,"__esModule",{value:!0})}));
+diff --git a/node_modules/slidem/slidem-video-slide.umd.js b/node_modules/slidem/slidem-video-slide.umd.js
+deleted file mode 100644
+index 3dc5392..0000000
+--- a/node_modules/slidem/slidem-video-slide.umd.js
++++ /dev/null
+@@ -1,99 +0,0 @@
+-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("../node_modules/@gluon/gluon/gluon.js")):"function"==typeof define&&define.amd?define(["exports","../node_modules/@gluon/gluon/gluon.js"],e):e((t=t||self).slidem={},t.GluonJS)}(this,(function(t,e){"use strict";const n=document.createTextNode("\n  /* SLIDEM SLIDE GLOBAL STYLES */\n\n  [reveal] {\n    opacity: 0;\n    transition: opacity 0.2s;\n  }\n"),o=document.createElement("style");o.appendChild(n),document.head.appendChild(o);const i=e.html`
+-  <style>
+-    :host {
+-      display: flex;
+-      flex-direction: row;
+-      overflow: hidden;
+-      align-items: center;
+-      background-size: cover;
+-      background-position: center;
+-    }
+-
+-    :host([zoom-in]) #content, :host([zoom-out]) #content {
+-      animation-duration: 0.4s;
+-      animation-fill-mode: both;
+-      animation-timing-function: ease-in-out;
+-    }
+-
+-    @keyframes zoom-in {
+-      from {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-      to {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-    }
+-
+-    @keyframes zoom-out {
+-      from {
+-        opacity: 1;
+-        transform: scale(var(--slidem-content-scale, 1));
+-      }
+-      to {
+-        opacity: 0;
+-        transform: scale(0);
+-      }
+-    }
+-
+-    :host([zoom-in][active].animate-forward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    :host([zoom-in][previous].animate-backward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][previous].animate-forward) #content {
+-      animation-name: zoom-out;
+-    }
+-
+-    :host([zoom-out][active].animate-backward) #content {
+-      animation-name: zoom-in;
+-    }
+-
+-    #iefix {
+-      width: 100%;
+-      display: flex;
+-      flex-direction: column;
+-      align-items: center;
+-    }
+-
+-    #content {
+-      width: var(--slidem-content-width, 1760px);
+-      max-height: var(--slidem-content-height, 990px);
+-      flex-shrink: 0;
+-    }
+-
+-    :host(:not([center])) #content {
+-      height: var(--slidem-content-height, 990px);
+-    }
+-  </style>
+-`;class s extends e.GluonElement{get template(){return null!==this.getAttribute("fullscreen")||this.constructor.fullscreen?e.html`
+-        ${i}
+-        ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-      `:e.html`
+-        ${i}
+-        <div id="iefix" part="container">
+-          <div id="content" part="content">
+-            ${"SlidemSlide"!==this.constructor.name&&this.content||e.html`<slot id="slot"></slot>`}
+-          </div>
+-        </div>
+-      `}connectedCallback(){let t;super.connectedCallback(),this._steps=Array.from(this.querySelectorAll("[reveal]")),this.steps=this._steps.length,this.__resizeContent(),window.addEventListener("resize",()=>{window.clearTimeout(t),t=window.setTimeout(()=>{this.__resizeContent()},200)})}static get observedAttributes(){return["step"]}attributeChangedCallback(t,e,n){if("step"===t){const t=Number(n);if(t>this.steps+1)return void this.setAttribute("step",this.steps+1);this.__setStep(t)}}set step(t){this.setAttribute("step",t)}get step(){return Number(this.getAttribute("step"))||1}__setStep(t){this._steps.forEach((e,n)=>{e.style.opacity=n<t-1?1:0})}__resizeContent(){const t=window.getComputedStyle(document.documentElement),e=Number((t.getPropertyValue("--slidem-content-width")||"1760px").slice(0,-2)),n=Number((t.getPropertyValue("--slidem-content-height")||"990px").slice(0,-2)),o=Math.min(window.innerHeight/1.09/n,window.innerWidth/1.09/e);o<1?(document.documentElement.style.setProperty("--slidem-content-scale",o),this.$.content&&(this.$.content.style.transform=`scale(${o})`)):(document.documentElement.style.setProperty("--slidem-content-scale",1),this.$.content&&(this.$.content.style.transform="scale(1)"))}}class r extends s{get template(){return this.content=e.html`
+-      <video controls id="video"></video>
+-    `,e.html`
+-      <style>
+-        :host {
+-          background: black;
+-          color: white;
+-        }
+-
+-        video {
+-          width: 100%;
+-          max-height: 100%;
+-          max-width: 100%;
+-        }
+-      </style>
+-      ${super.template}
+-    `}connectedCallback(){super.connectedCallback(),this.$.video.src=this.getAttribute("video"),this.$.video.muted=null!==this.getAttribute("muted")}static get observedAttributes(){const t=super.observedAttributes||[];return Array.prototype.push.apply(t,["active"]),t}attributeChangedCallback(t,e,n){super.attributeChangedCallback(t,e,n),"active"===t&&(null!==n?(this.$.video.currentTime=0,this.$.video.play()):this.$.video.pause())}}customElements.define(r.is,r),t.SlidemVideoSlide=r,Object.defineProperty(t,"__esModule",{value:!0})}));

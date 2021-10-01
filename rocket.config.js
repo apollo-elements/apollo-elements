@@ -214,6 +214,7 @@ export default ({
   ],
 
   eleventy(eleventyConfig) {
+    eleventyConfig.addPassThroughCopy('decks/graphql-in-html/*.{png,svg,jpg,webp}');
     eleventyConfig.addFilter('formatDate', date =>
       date instanceof Date ? date.toDateString() : date);
     eleventyConfig.addWatchTarget('_assets/**/*.css');

@@ -107,6 +107,8 @@ docs-playground {
 [name="Contents"] {
   font-size: 150%;
   & ol {
+    margin: initial;
+    padding: initial;
     columns: 2;
   }
 }
@@ -642,15 +644,13 @@ docs-playground {
   & ul {
     width: 50%;
     list-style-type: none;
-    margin: 0;
-    padding: 0;
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: min-content auto;
     grid-template-rows: repeat(auto-fill, 100px);
     align-items: center;
     justify-items: start;
-    gap: 4px 24px;
-    & li, & a { display: contents; }
+    gap: 14px 24px;
+    & :is(li, a) { display: contents; }
     & img { height: 100px; }
   }
 }

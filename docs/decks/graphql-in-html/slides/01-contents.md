@@ -1,5 +1,6 @@
 ---
 name: Contents
+attrs: alt
 ---
 
 ## What We'll Cover
