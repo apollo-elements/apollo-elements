@@ -9,7 +9,7 @@ Web browsers come with their own built-in component model, called **Web Componen
 
 <section reveal>
 
-These are _custom HTML elements_ which you the user define.
+These are _custom HTML elements_ which you, the user, define.
 
 Web components can have their own HTML templates, methods, events, and properties.
 
