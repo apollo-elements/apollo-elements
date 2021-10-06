@@ -22,3 +22,5 @@ import '@apollo-elements/components';
 ```
 
 </section>
+
+<aside slot="presenter">Emphasize "just HTML" and no need for build tools</aside>

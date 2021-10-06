@@ -1,8 +1,8 @@
 diff --git a/node_modules/slidem/slidem-deck.js b/node_modules/slidem/slidem-deck.js
-index 503d779..ec33af2 100644
+index 503d779..ee18b64 100644
 --- a/node_modules/slidem/slidem-deck.js
 +++ b/node_modules/slidem/slidem-deck.js
-@@ -78,23 +78,32 @@ document.head.appendChild(styleNode);
+@@ -78,23 +78,33 @@ document.head.appendChild(styleNode);
  export class SlidemDeck extends GluonElement {
    get template() {
      return html`
@@ -13,6 +13,7 @@ index 503d779..ec33af2 100644
 -      <div id="progress"></div>
 -      <div id="timer"></div>
 +      <div id="progress" part="progress"></div>
++      <div id="notes" part="notes"><slot name="presenter"></slot></div>
 +      <div id="timer" part="timer"></div>
 +      ${this.hasAttribute('unbind') ? html`
 +      <button hidden id="timerToggle"></button>
@@ -38,6 +39,59 @@ index 503d779..ec33af2 100644
          <slot name="backward"></slot>
        </div>
        <style>
+@@ -271,6 +281,22 @@ export class SlidemDeck extends GluonElement {
+           transform: translate(28%, 0) scale(0.35) !important; /* Force presenter layout */
+         }
+ 
++        #notes {
++          font-size: 18px;
++          position: absolute;
++          bottom: 10vh;
++          left: 4vw;
++        }
++
++        :host(:not([presenter])) #notes,
++        #notes ::slotted(*) {
++          display: none;
++        }
++
++        :host([presenter]) #notes ::slotted([active]) {
++          display: block;
++        }
++
+         .slides ::slotted([active]) {
+           z-index: 2;
+         }
+@@ -350,8 +376,13 @@ export class SlidemDeck extends GluonElement {
+     this.slides = Array.from(this.children).filter(item => !item.hasAttribute('slot'));
+ 
+     // Create dots for progress bar
+-    this.slides.forEach(() => {
++    this.slides.forEach((slide, i) => {
++      // NB:
+       this.$.progress.appendChild(document.createElement('div'));
++      slide.querySelectorAll('[slot="presenter"]').forEach(note => {
++        note.setAttribute('slide', i + 1);
++        this.appendChild(note);
++      });
+     });
+ 
+     /**
+@@ -362,6 +393,14 @@ export class SlidemDeck extends GluonElement {
+     onRouteChange(() => {
+       this.slides[this.currentSlide].step = this.currentStep + 1;
+       this.slides[this.currentSlide].setAttribute('active', '');
++      if (this.presenter) {
++        // set the `active` attr on any notes for this slide
++        this.$.notes
++          .querySelector('slot')
++          .assignedElements()
++          .forEach((note) =>
++            note.toggleAttribute('active', note.getAttribute('slide') == this.currentSlide + 1));
++      }
+ 
+       if (this.previousSlide === this.currentSlide) {
+         return;
 diff --git a/node_modules/slidem/slidem-deck.umd.js b/node_modules/slidem/slidem-deck.umd.js
 deleted file mode 100644
 index 3282899..0000000
