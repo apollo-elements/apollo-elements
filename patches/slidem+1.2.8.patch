@@ -592,7 +592,7 @@ index 515dc1b..0000000
 -      ${super.template}
 -    `}}customElements.define(a.is,a),t.SlidemPolymersummitSlide=a,Object.defineProperty(t,"__esModule",{value:!0})}));
 diff --git a/node_modules/slidem/slidem-slide-base.js b/node_modules/slidem/slidem-slide-base.js
-index a36279d..7a4af43 100644
+index a36279d..874c149 100644
 --- a/node_modules/slidem/slidem-slide-base.js
 +++ b/node_modules/slidem/slidem-slide-base.js
 @@ -7,6 +7,11 @@ const styleText = document.createTextNode(`
@@ -615,7 +615,34 @@ index a36279d..7a4af43 100644
        background-size: cover;
        background-position: center;
      }
-@@ -110,6 +116,9 @@ export class SlidemSlideBase extends GluonElement {
+@@ -73,8 +79,14 @@ const slidemStyle = html`
+       display: flex;
+       flex-direction: column;
+       align-items: center;
++      position: relative;
+     }
+ 
++    #start-start { place-self: start start }
++    #start-end { place-self: start end }
++    #end-start { place-self: end start }
++    #end-end { place-self: end end }
++
+     #content {
+       width: var(--slidem-content-width, 1760px);
+       max-height: var(--slidem-content-height, 990px);
+@@ -101,6 +113,11 @@ export class SlidemSlideBase extends GluonElement {
+           <div id="content" part="content">
+             ${(this.constructor.name !== 'SlidemSlide' && this.content) || html`<slot id="slot"></slot>`}
+           </div>
++
++          <div id="start-start" part="start-start"><slot name="start-start"></slot></div>
++          <div id="start-end" part="start-end"><slot name="start-end"></slot></div>
++          <div id="end-start" part="end-start"><slot name="end-start"></slot></div>
++          <div id="end-end" part="end-end"><slot name="end-end"></slot></div>
+         </div>
+       `;
+     }
+@@ -110,6 +127,9 @@ export class SlidemSlideBase extends GluonElement {
      super.connectedCallback();
      this._steps = Array.from(this.querySelectorAll('[reveal]'));
      this.steps = this._steps.length;
@@ -625,7 +652,7 @@ index a36279d..7a4af43 100644
      this.__resizeContent();
      let resizeTimeout;
      window.addEventListener('resize', () => {
-@@ -143,13 +152,14 @@ export class SlidemSlideBase extends GluonElement {
+@@ -143,13 +163,14 @@ export class SlidemSlideBase extends GluonElement {
      return Number(this.getAttribute('step')) || 1;
    }
  

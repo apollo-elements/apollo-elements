@@ -16,7 +16,7 @@ index 350b5cd..f8ed737 100644
 -  });
 -</script>
 diff --git a/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk b/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
-index 3a74498..0f26cc4 100644
+index 3a74498..ab1410b 100644
 --- a/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
 +++ b/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
 @@ -28,13 +28,16 @@
@@ -36,11 +36,20 @@ index 3a74498..0f26cc4 100644
  
        {% for slide in collections.slides %}
          {% set isPageSlide =
-@@ -58,3 +61,14 @@
+@@ -43,6 +46,7 @@
+         {% if isPageSlide %}
+           <slidem-slide name="{{ slide.data.name }}"
+                     {{ ('background='+slide.data.background) if slide.data.background }}
++                    {{ ('class='+slide.data.class) if slide.data.class }}
+                     {{ slide.data.attrs }}>
+             {{- slide.templateContent | safe -}}
+           </slidem-slide>
+@@ -58,3 +62,16 @@
    {% include 'partials/bottom.njk' %}
    </body>
  </html>
 +
++{% if not unbind %}
 +<script async defer>
 +  addEventListener('keyup', event => {
 +    if (event.defaultPrevented || event.key !== 'f')
@@ -51,6 +60,7 @@ index 3a74498..0f26cc4 100644
 +      document.body.requestFullscreen();
 +  });
 +</script>
++{% endif %}
 diff --git a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 index 70b81ff..6d3e680 100644
 --- a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js

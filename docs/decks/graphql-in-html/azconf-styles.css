@@ -1,0 +1,151 @@
+/**
+ * This file contains styles specific to the AzConf PPTX theme
+ * General Deck styles are in graphql-in-html.css
+ */
+
+@font-face {
+  font-family: 'Segoe UI Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Segoe UI Regular'), url('/decks/graphql-in-html/segoe/Segoe UI.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Segoe UI Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Segoe UI Italic'), url('/decks/graphql-in-html/segoe/Segoe UI Italic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Segoe UI Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Segoe UI Bold'), url('/decks/graphql-in-html/segoe/Segoe UI Bold.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Segoe UI Bold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Segoe UI Bold Italic'), url('/decks/graphql-in-html/segoe/Segoe UI Bold Italic.woff') format('woff');
+}
+
+:root {
+  --az-bg-blue: #08023f;
+  --az-blue: #0078d4;
+  --az-dark-blue: #243a5e;
+  --az-light-blue: #50e6ff;
+  --az-light-green: #9bf00b;
+  --az-sea-blue: #0c59a4;
+}
+
+slidem-deck {
+  font-family: 'Segoe UI Regular';
+  --background: var(--az-bg-blue);
+  --primary: var(--light-blue-400);
+  --secondary: var(--yellow-300);
+  &::part(progress) {
+    width: 50px;
+    flex-flow: column;
+    height: 100vh;
+    left: initial;
+    align-items: center;
+  }
+}
+
+
+slidem-slide {
+  &::part(container) {
+    height: 100%;
+    &::after {
+      content: '#AzConfDev';
+      font: lighter 24pt 'Segoe UI', 'Segoe UI Light';
+      position: absolute;
+      bottom: 1vh;
+      right: 1vw;
+      text-align: center;
+    }
+  }
+
+  &::part(start-start) {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &::part(start-end) {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  &::part(end-start) {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  &::part(end-end) {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+}
+
+
+#azconf-header {
+  display: grid;
+  text-align: center;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, max-content);
+  gap: 32px;
+  & img {
+    grid-column: 2/3;
+    width: 100%;
+  }
+  & h2, & p {
+    grid-column: span 3;
+  }
+}
+
+[name="Cover"] {
+  & .palaces { width: 30vw; }
+  &::part(content) {
+    display: grid;
+    height: 100%;
+  }
+}
+
+[name="Speaker"] {
+  &::part(container)::after {
+    left: 1vw;
+  }
+  & header {
+    display: grid;
+    grid-template-areas:
+      'p n',
+      'p j';
+    grid-template-columns: min-content auto;
+    grid-template-rows: max-content max-content;
+    & img {
+      border-radius: 100%;
+      overflow: hidden;
+      grid-area: p;
+    }
+    & h2 {
+      width: 100%;
+      font-size: 43pt;
+      color: var(--az-light-blue);
+      border-bottom: 4px solid var(--az-light-green);
+      grid-area: n;
+    }
+    & p {
+      grid-area: j;
+    }
+  }
+}
