@@ -71,6 +71,10 @@ slidem-slide {
     }
   }
 
+  &::part(content) {
+    height: 100%;
+  }
+
   &::part(start-start) {
     position: absolute;
     top: 0;
@@ -113,8 +117,10 @@ slidem-slide {
   }
 }
 
+.speaker-starburst,
+.palaces { width: 30vw; }
+
 [name="Cover"] {
-  & .palaces { width: 30vw; }
   &::part(content) {
     display: grid;
     height: 100%;
@@ -122,30 +128,39 @@ slidem-slide {
 }
 
 [name="Speaker"] {
+  & .speaker-starburst {
+    transform: translate(-40%, 40%) scale(1.68);
+    z-index: -1;
+    position: relative;
+  }
+  &::part(content) {
+    display: grid;
+  }
   &::part(container)::after {
     left: 1vw;
   }
   & header {
     display: grid;
-    grid-template-areas:
-      'p n',
-      'p j';
     grid-template-columns: min-content auto;
-    grid-template-rows: max-content max-content;
+    align-items: center;
+    width: 90vw;
+    justify-self: center;
+    gap: 24px;
     & img {
       border-radius: 100%;
       overflow: hidden;
-      grid-area: p;
     }
     & h2 {
       width: 100%;
       font-size: 43pt;
       color: var(--az-light-blue);
       border-bottom: 4px solid var(--az-light-green);
-      grid-area: n;
+      font-weight: lighter;
+      padding-block-end: 0.25em;
+      margin-block-end: 0.25em;
     }
     & p {
-      grid-area: j;
+      font-size: 24pt;
     }
   }
 }
