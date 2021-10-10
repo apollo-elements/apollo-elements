@@ -3,7 +3,7 @@ name: UI f query
 attrs: alt
 ---
 
-<figure class="sl-theme-dark">
+<figure class="sl-theme-light">
 <figcaption flex column center>
 
 ui = _f_(query)

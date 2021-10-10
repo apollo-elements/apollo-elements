@@ -2,6 +2,14 @@
   --rhodamine: #e10098;
 }
 
+slidem-deck {
+  &::part(progress) {
+    width: 100%;
+    height: 5px;
+    top: 0;
+  }
+}
+
 slidem-slide[float-header] {
   & h2:first-of-type {
     float: right;
@@ -9,6 +17,12 @@ slidem-slide[float-header] {
     position: relative;
     font-size: 0.8em;
   }
+}
+
+#slides-progress {
+  --indicator-color: var(--primary);
+  --height: 100%;
+  width: 100%;
 }
 
 [progressive] > :not([current]) {
@@ -74,42 +88,53 @@ docs-playground {
     font-size: 500%;
     display: flex;
     flex-flow: column;
+    & em:first-of-type {
+      --wght: 650;
+      --slnt: 0;
+      color: var(--secondary);
+      line-height: 0.6;
+    }
+
+    & em:nth-of-type(2) {
+      --wght: 100;
+      --casl: 1;
+      --slnt: 0;
+
+      font-size: 80%;
+      margin-inline-start: 0.3em;
+      & code {
+        --slnt: -16;
+        --wght: 750;
+        --casl: 0.5;
+        --mono: 0.25;
+
+        color: var(--primary);
+        font-size: 100%;
+        font-family: inherit;
+      }
+    }
+    & em:last-of-type {
+      display: none;
+    }
+
+    & + p {
+      text-align: center;
+      width: 100%;
+    }
   }
 
-  & em:first-of-type {
-    --wght: 650;
-    --slnt: 0;
-    color: var(--secondary);
-    line-height: 0.6;
-  }
-
-  & em:last-of-type {
-    --wght: 100;
-    --casl: 1;
-    --slnt: 0;
-
-    font-size: 80%;
-    margin-inline-start: 0.3em;
-  }
-
-  & code {
-    --slnt: -16;
-    --wght: 750;
-    --casl: 0.5;
-    --mono: 0.25;
-
-    color: var(--primary);
-    font-size: 100%;
-    font-family: inherit;
-  }
 }
 
 [name="Contents"] {
   font-size: 150%;
   & ol {
-    margin: initial;
-    padding: initial;
-    columns: 2;
+    margin: revert;
+    padding: revert;
+    padding-inline-start: 2em;
+    font-size: 64px;
+    height: 100%;
+    display: flex;
+    flex-flow: column wrap;
   }
 }
 
@@ -203,7 +228,8 @@ docs-playground {
 
 [name="UI f query"] {
   & figure {
-    margin: 0;
+    width: 75vw;
+    margin: 0 auto;
     --casl:1;
   }
 

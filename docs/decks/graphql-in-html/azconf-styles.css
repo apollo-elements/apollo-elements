@@ -3,67 +3,32 @@
  * General Deck styles are in graphql-in-html.css
  */
 
-@font-face {
-  font-family: 'Segoe UI Regular';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Segoe UI Regular'), url('/decks/graphql-in-html/segoe/Segoe UI.woff') format('woff');
-}
-
-
-@font-face {
-  font-family: 'Segoe UI Italic';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Segoe UI Italic'), url('/decks/graphql-in-html/segoe/Segoe UI Italic.woff') format('woff');
-}
-
-
-@font-face {
-  font-family: 'Segoe UI Bold';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Segoe UI Bold'), url('/decks/graphql-in-html/segoe/Segoe UI Bold.woff') format('woff');
-}
-
-
-@font-face {
-  font-family: 'Segoe UI Bold Italic';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Segoe UI Bold Italic'), url('/decks/graphql-in-html/segoe/Segoe UI Bold Italic.woff') format('woff');
-}
+@import "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.55/dist/themes/light.css";
 
 :root {
   --az-bg-blue: #08023f;
   --az-blue: #0078d4;
   --az-dark-blue: #243a5e;
+  --az-dark-green: #054b16;
   --az-light-blue: #50e6ff;
   --az-light-green: #9bf00b;
   --az-sea-blue: #0c59a4;
+  --text: white;
 }
 
 slidem-deck {
-  font-family: 'Segoe UI Regular';
+  font-family: 'Segoe UI';
   --background: var(--az-bg-blue);
-  --primary: var(--light-blue-400);
-  --secondary: var(--yellow-300);
-  &::part(progress) {
-    width: 50px;
-    flex-flow: column;
-    height: 100vh;
-    left: initial;
-    align-items: center;
-  }
+  --primary: var(--az-light-blue);
+  --secondary: var(--az-light-green);
 }
-
 
 slidem-slide {
   &::part(container) {
     height: 100%;
     &::after {
       content: '#AzConfDev';
-      font: lighter 24pt 'Segoe UI', 'Segoe UI Light';
+      font: lighter 24pt 'Segoe UI';
       position: absolute;
       bottom: 1vh;
       right: 1vw;
@@ -99,8 +64,71 @@ slidem-slide {
     right: 0;
   }
 
+  &:not([name="Cover"])::part(container)::before {
+    background-image: url('/decks/graphql-in-html/azconf-assets/conf-logo-watermark@2x.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: block;
+    height: 98pt;
+    position: absolute;
+    right: 16pt;
+    top: 16pt;
+    width: 152pt;
+    z-index: -1;
+  }
+
+  &[alt] {
+    --background: white;
+    --primary: var(--az-blue);
+    --secondary: var(--az-dark-green);
+    --text-color: currentColor;
+    --markdown-syntax-color: currentColor;
+    --markdown-blockquote-color: var(--light-blue-900);
+    --markdown-link-color: var(--pink-a700);
+    --markdown-link-decoration: var(--pink-200);
+    --markdown-syntax-attr-name-color: var(--blue-900);
+    --markdown-syntax-background-color: white;
+    --markdown-syntax-boolean-color: var(--light-blue-900);
+    --markdown-syntax-class-name-color: var(--deep-orange-a700);
+    --markdown-syntax-comment-color: var(--teal-700);
+    --markdown-syntax-function-color: var(--cyan-900);
+    --markdown-syntax-keyword-color: var(--deep-orange-a400);
+    --markdown-syntax-keyword-color: var(--light-blue-900);
+    --markdown-syntax-number-color: var(--light-blue-900);
+    --markdown-syntax-operator-color: var(--light-blue-900);
+    --markdown-syntax-punctuation-color: var(--teal-900);
+    --markdown-syntax-string-color: var(--deep-orange-a700);
+    --markdown-syntax-tag-color: var(--cyan-900);
+    --markdown-syntax-variable-color: var(--deep-orange-a700);
+    color: var(--az-bg-blue);
+
+    & docs-playground {
+      &::part(playground-ide) {
+        --playground-code-background: white;
+        --playground-tab-bar-background: white;
+      }
+    }
+
+    &:not([name="Cover"])::part(container)::before {
+      background-image: url('/decks/graphql-in-html/azconf-assets/conf-logo-watermark-alt@2x.png');
+    }
+  }
+  &[float-header] h2:first-of-type {
+    float: none;
+  }
 }
 
+h2 {
+  color: var(--text, currentColor);
+}
+
+docs-playground {
+  &::part(playground-ide) {
+    --playground-code-background: var(--az-bg-blue);
+    --playground-tab-bar-background: var(--az-bg-blue);
+  }
+}
 
 #azconf-header {
   display: grid;
@@ -119,6 +147,13 @@ slidem-slide {
 
 .speaker-starburst,
 .palaces { width: 30vw; }
+
+docs-playground {
+  transform: scale(1.09) translateY(var(--y-offset, 0)) !important;
+  &::part(playground-ide) {
+    --playground-code-font-size: 50%;
+  }
+}
 
 [name="Cover"] {
   &::part(content) {
@@ -149,6 +184,7 @@ slidem-slide {
     & img {
       border-radius: 100%;
       overflow: hidden;
+      box-shadow: 0 23pt 30pt black;
     }
     & h2 {
       width: 100%;
@@ -162,5 +198,134 @@ slidem-slide {
     & p {
       font-size: 24pt;
     }
+  }
+}
+
+[name="intro"] {
+  &::before {
+    background-image: url('/decks/graphql-in-html/azconf-assets/speaker-slide-sunburst@2x.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 30%;
+    left: -30%;
+    transform: scale(2) rotate(45deg) translateY(-1vh);
+    height: 50vh;
+    width: 50vh;
+  }
+
+  &::part(content) {
+    grid-template: 'main';
+    align-items: center;
+  }
+
+  & #intro-header {
+    margin: 0;
+    display: block;
+    transform: translate(20vw);
+    & img { display: none; }
+    & h1 {
+      /* conform to azconf slide css */
+      text-align: left;
+      display: block;
+      font-weight: lighter;
+      font-size: 43pt;
+      margin-bottom: 1em;
+      & em {
+        line-height: initial !imporant;
+        margin-left: 0;
+        font-size: inherit !important;
+        font-style: normal;
+        color: inherit !important;
+        &:last-of-type { display: inline; }
+        & code {
+          color: inherit;
+          font: inherit;
+        }
+      }
+    }
+    & p {
+      text-align: left;
+      font-weight: lighter;
+      font-size: 24pt;
+    }
+  }
+}
+
+[name="tradeoffs"] {
+  font-size: 0.8em;
+  & h2[right] {
+    float: initial;
+  }
+}
+
+[name="Example Query"],
+[name="Example Database"],
+[name="Schema Resolvers"],
+[name="HTML Queries"],
+[name="Update Functions"],
+[name="ControllerHostMixin"] {
+  &::part(container)::before {
+    z-index: 2 !important;
+  }
+}
+
+[name="Example Query"] {
+  & h2#queries { display: none; }
+  & [reveal]:last-of-type {
+    margin-block-start: 0;
+  }
+}
+
+[name^="HTML "],
+[name="ClockController"],
+[name="Example Reactive Controller"],
+[name="ApolloQueryController Lit"],
+[name="ApolloMutationController Lit"] {
+  & docs-playground {
+    --y-offset: -38px;
+    height: 110.3%;
+  }
+}
+
+[name="HTML Queries"],
+[name="HTML Mutations"],
+[name="ApolloQueryController Lit"],
+[name="ApolloMutationController Lit"] {
+  &::part(content) {
+    color: var(--az-bg-blue);
+  }
+}
+
+
+[name="HTML Queries"] {
+  /* &::part(content) { --slidem-content-scale: .92; } */
+  &[step=5]::part(container)::before {
+    display: none;
+  }
+}
+
+[name="Update Functions"] [progressive] {
+  & > [reveal]:nth-of-type(1) {
+    --markdown-syntax-background-color: transparent;
+  }
+  & [step="1"][past] {
+    opacity: 0.5;
+  }
+}
+
+[name="MouseController Data Flow"] {
+  & .messageText {
+    --text-color: currentColor;
+  }
+}
+
+[name="Wrap Up"] {
+  & ol {
+    display: flex;
+    flex-flow: column wrap;
+    margin-block: 0;
   }
 }

@@ -16,40 +16,97 @@ index 350b5cd..f8ed737 100644
 -  });
 -</script>
 diff --git a/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk b/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
-index 3a74498..ab1410b 100644
+index 3a74498..243776a 100644
 --- a/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
 +++ b/node_modules/rocket-preset-slide-decks/_includes/layout-deck.njk
-@@ -28,13 +28,16 @@
+@@ -1,20 +1,20 @@
+ <!doctype html>
+-{% block htmlTag %}
++{%- block htmlTag -%}
+ <html lang="{{ site.lang }}" dir="{{ site.dir }}">
+-{% endblock htmlTag %}
++{%- endblock htmlTag -%}
+ 
+-  {% block head %}
+-    {% include 'partials/head.njk' %}
++  {%- block head -%}
++    {%- include 'partials/head.njk' -%}
+ 
+-    {% for blockName, blockPath in _joiningBlocks._layoutDeck.head %}
+-      {% include blockPath %}
+-    {% endfor %}
++    {%- for blockName, blockPath in _joiningBlocks._layoutDeck.head -%}
++      {%- include blockPath -%}
++    {%- endfor -%}
+ 
+-  {% endblock head %}
++  {%- endblock head -%}
+ 
+-  {% block bodyTag %}
++  {%- block bodyTag -%}
+   <body layout="{{ layout }}">
+-  {% endblock bodyTag %}
++  {%- endblock bodyTag -%}
+ 
+     <noscript>
+       <h1>{{ title }}</h1>
+@@ -23,38 +23,55 @@
+       <p>This presentation relies on JavaScript. Please consider enabling JavaScript for this site.</p>
+     </noscript>
+ 
+-  {% block main %}
++  {%- block main -%}
+     <slidem-deck id="deck"
                   transition="{{ transition or 'slide-in slide-out' }}"
                   itemscope
                   itemtype="http://schema.org/PresentationDigitalDocument"
 +                 {{ 'unbind' if unbind }}
                   loading>
-+      {% if not unbind %}
++      {%- for blockName, blockPath in _joiningBlocks._layoutDeck.content -%}
++        {%- include blockPath -%}
++      {%- endfor -%}
++      {%- if not unbind -%}
        <gluon-keybinding key="Backspace" slot="backward"></gluon-keybinding>
        <gluon-keybinding key=" " slot="forward"></gluon-keybinding>
        <gluon-keybinding key="h" slot="backward"></gluon-keybinding>
        <gluon-keybinding key="j" slot="forward"></gluon-keybinding>
        <gluon-keybinding key="k" slot="backward"></gluon-keybinding>
        <gluon-keybinding key="l" slot="forward"></gluon-keybinding>
-+      {% endif %}
++      {%- endif -%}
  
-       {% for slide in collections.slides %}
-         {% set isPageSlide =
-@@ -43,6 +46,7 @@
-         {% if isPageSlide %}
+-      {% for slide in collections.slides %}
+-        {% set isPageSlide =
++      {%- for slide in collections.slides -%}
++        {%- set isPageSlide =
+                (slide.template.inputPath | dirname | joinPath('..'))
+-            == (page.inputPath | dirname | joinPath('.')) %}
+-        {% if isPageSlide %}
++            == (page.inputPath | dirname | joinPath('.')) -%}
++        {%- if isPageSlide -%}
            <slidem-slide name="{{ slide.data.name }}"
                      {{ ('background='+slide.data.background) if slide.data.background }}
 +                    {{ ('class='+slide.data.class) if slide.data.class }}
                      {{ slide.data.attrs }}>
              {{- slide.templateContent | safe -}}
            </slidem-slide>
-@@ -58,3 +62,16 @@
-   {% include 'partials/bottom.njk' %}
+-        {% endif %}
+-      {% endfor %}
++        {%- endif -%}
++      {%- endfor -%}
+ 
+     </slidem-deck>
+-    {% for blockName, blockPath in _joiningBlocks._layoutDeck.content %}
+-      {% include blockPath %}
+-    {% endfor %}
+-  {% endblock main %}
++  {%- endblock main -%}
+ 
+-  {% include 'partials/bottom.njk' %}
++  {%- include 'partials/bottom.njk' -%}
    </body>
  </html>
 +
-+{% if not unbind %}
++{%- if not unbind -%}
 +<script async defer>
 +  addEventListener('keyup', event => {
 +    if (event.defaultPrevented || event.key !== 'f')
@@ -60,7 +117,7 @@ index 3a74498..ab1410b 100644
 +      document.body.requestFullscreen();
 +  });
 +</script>
-+{% endif %}
++{%- endif -%}
 diff --git a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 index 70b81ff..6d3e680 100644
 --- a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js

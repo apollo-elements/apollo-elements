@@ -1,8 +1,6 @@
 const deck = document.querySelector('slidem-deck');
 const dp = document.getElementById('apollo-query-example');
-
-await customElements.whenDefined('docs-playground');
-await customElements.whenDefined('playground-ide');
+const progress = document.getElementById('slides-progress');
 
 /** @param {Event} event */
 function isInputEvent(event) {
@@ -46,6 +44,22 @@ document.body.addEventListener('keydown', event => {
       return true;
   }
 });
+
+window.addEventListener('location-changed', event => {
+  const curr = deck.currentSlide + 1;
+  const total = deck.slides.length;
+  const oneSlide = (1 / total) * 100;
+  const { steps, step } = deck.activeSlide;
+  // Add in a fraction of one slide's worth of progress, if there are slide steps
+  const stepProgress = steps <= 1 ? 0 : (((step / steps) * oneSlide) - oneSlide);
+  const percentage = ((curr / total) * 100);
+  progress.value = percentage + stepProgress;
+});
+
+await customElements.whenDefined('docs-playground');
+await customElements.whenDefined('playground-ide');
+await customElements.whenDefined('slidem-deck');
+progress.indeterminate = false;
 
 for (const dp of document.querySelectorAll('docs-playground')) {
   await dp.updateComplete;
