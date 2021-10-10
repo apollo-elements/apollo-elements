@@ -75,7 +75,7 @@ slidem-slide {
     right: 16pt;
     top: 16pt;
     width: 152pt;
-    z-index: -1;
+    z-index: 2;
   }
 
   &[alt] {
@@ -261,17 +261,6 @@ docs-playground {
   }
 }
 
-[name="Example Query"],
-[name="Example Database"],
-[name="Schema Resolvers"],
-[name="HTML Queries"],
-[name="Update Functions"],
-[name="ControllerHostMixin"] {
-  &::part(container)::before {
-    z-index: 2 !important;
-  }
-}
-
 [name="Example Query"] {
   & h2#queries { display: none; }
   & [reveal]:last-of-type {
@@ -320,6 +309,10 @@ docs-playground {
   & .messageText {
     --text-color: currentColor;
   }
+}
+
+[name="Lit.Fable"] {
+  font-size: 22px;
 }
 
 [name="Wrap Up"] {
