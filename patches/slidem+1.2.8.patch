@@ -1,5 +1,5 @@
 diff --git a/node_modules/slidem/slidem-deck.js b/node_modules/slidem/slidem-deck.js
-index 503d779..e127c76 100644
+index 503d779..464aa6e 100644
 --- a/node_modules/slidem/slidem-deck.js
 +++ b/node_modules/slidem/slidem-deck.js
 @@ -78,23 +78,33 @@ document.head.appendChild(styleNode);
@@ -39,10 +39,14 @@ index 503d779..e127c76 100644
          <slot name="backward"></slot>
        </div>
        <style>
-@@ -271,6 +281,22 @@ export class SlidemDeck extends GluonElement {
+@@ -270,6 +280,25 @@ export class SlidemDeck extends GluonElement {
+         :host([presenter]) .slides ::slotted([next]) {
            transform: translate(28%, 0) scale(0.35) !important; /* Force presenter layout */
          }
- 
++        :host([presenter]) #progress {
++          transform: translate(-20%, 25vh) scale(0.5);
++        }
++
 +        #notes {
 +          font-size: 18px;
 +          position: absolute;
@@ -58,11 +62,10 @@ index 503d779..e127c76 100644
 +        :host([presenter]) #notes ::slotted([active]) {
 +          display: block;
 +        }
-+
+ 
          .slides ::slotted([active]) {
            z-index: 2;
-         }
-@@ -321,6 +347,10 @@ export class SlidemDeck extends GluonElement {
+@@ -321,6 +350,10 @@ export class SlidemDeck extends GluonElement {
      }
    }
  
@@ -73,7 +76,7 @@ index 503d779..e127c76 100644
    connectedCallback() {
      super.connectedCallback();
  
-@@ -350,8 +380,12 @@ export class SlidemDeck extends GluonElement {
+@@ -350,8 +383,12 @@ export class SlidemDeck extends GluonElement {
      this.slides = Array.from(this.children).filter(item => !item.hasAttribute('slot'));
  
      // Create dots for progress bar
@@ -88,7 +91,7 @@ index 503d779..e127c76 100644
      });
  
      /**
-@@ -360,8 +394,16 @@ export class SlidemDeck extends GluonElement {
+@@ -360,8 +397,16 @@ export class SlidemDeck extends GluonElement {
       * Handles route changes and displays / animates the slides by changing classes and attributes
       */
      onRouteChange(() => {
@@ -107,7 +110,7 @@ index 503d779..e127c76 100644
  
        if (this.previousSlide === this.currentSlide) {
          return;
-@@ -370,14 +412,14 @@ export class SlidemDeck extends GluonElement {
+@@ -370,14 +415,14 @@ export class SlidemDeck extends GluonElement {
        if (this.previousSlide !== undefined) {
          if (this.previousSlide < this.currentSlide) {
            this.slides[this.previousSlide].classList.add('animate-forward');
@@ -126,7 +129,7 @@ index 503d779..e127c76 100644
          }
        }
  
-@@ -398,11 +440,11 @@ export class SlidemDeck extends GluonElement {
+@@ -398,11 +443,11 @@ export class SlidemDeck extends GluonElement {
        if (this.previousSlide !== undefined) {
          this.slides[this.previousSlide].removeAttribute('active');
          this.slides[this.previousSlide].setAttribute('previous', '');
@@ -140,7 +143,7 @@ index 503d779..e127c76 100644
  
        this.previousSlide = this.currentSlide;
      });
-@@ -419,16 +461,16 @@ export class SlidemDeck extends GluonElement {
+@@ -419,16 +464,16 @@ export class SlidemDeck extends GluonElement {
       * The 'forward' and 'backward' elements handle click events and navigate to the next/previous step/slide
       */
      this.$.forward.onclick = () => {

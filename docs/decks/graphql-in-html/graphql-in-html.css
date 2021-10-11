@@ -20,6 +20,7 @@ slidem-slide[float-header] {
 }
 
 #slides-progress {
+  --sl-border-radius-pill: 0;
   --indicator-color: var(--primary);
   --height: 100%;
   width: 100%;
@@ -306,16 +307,23 @@ docs-playground {
     height: 512px;
     width: auto;
   }
+  & #javascript-logo-svg {
+    transform: scale(80%);
+    transform-origin: bottom;
+  }
 }
 
 [name="Example Web Component"] {
   & [reveal]:nth-of-type(2) {
     & code.language-js > span.token:is(
-      /* until this */:nth-of-type(-n+13),
-      /* after this */:nth-of-type(n+23),
+      /* until this */:nth-of-type(-n+9),
+      /* after this */:nth-of-type(n+19),
     ) {
       opacity: 0.5;
     }
+  }
+  & [reveal][step="5"] > pre.language-js {
+    background: rgba(255,255,255, 0.5);
   }
 }
 
@@ -471,16 +479,16 @@ docs-playground {
     &::part(playground-ide) {
       --playground-code-font-size: 36px;
       /* --playground-code-font-size: 72% !important; */
-      flex-flow: row wrap;
+      /* flex-flow: row wrap; */
     }
-    &::part(lhs) {
+    /* &::part(lhs) {
       width: 100%;
       height: 75%;
     }
     &::part(rhs) {
       width: 100%;
       height: 25%;
-    }
+    } */
   }
 }
 
