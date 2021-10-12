@@ -357,10 +357,6 @@ docs-playground {
   & .actor { --text-color: white; }
 }
 
-[name="Lit.Fable"] {
-  font-size: 22px;
-}
-
 [name="Wrap Up"] {
   & ol {
     display: flex;

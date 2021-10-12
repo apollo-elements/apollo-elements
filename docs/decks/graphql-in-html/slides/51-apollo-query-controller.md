@@ -6,7 +6,7 @@ name: ApolloQueryController
 
 - Queries data from your GraphQL cache or server
 - Exposes the state of the query:
-    - `data`
+    - `data` - the result of the query
     - `loading`
     - `error`
 - Lots of options like

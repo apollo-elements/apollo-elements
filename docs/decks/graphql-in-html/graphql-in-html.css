@@ -664,13 +664,22 @@ docs-playground {
 
 [name="ApolloQueryController flavours"] {
   &>pre { width: 100%; }
-  & section[reveal] { background-color: black; }
+  & section[reveal] { background-color: var(--background); }
 }
 
 [name="ApolloQueryController Lit"],
 [name="ApolloMutationController Lit"] {
   & docs-playground::part(playground-ide) {
     --playground-code-font-size: 50% !important;
+  }
+}
+
+[name="Other Languages"] {
+  font-size: 22px;
+  &::part(content) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
   }
 }
 

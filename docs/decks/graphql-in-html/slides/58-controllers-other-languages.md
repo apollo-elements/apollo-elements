@@ -1,6 +1,8 @@
 ---
-name: Lit.Fable
+name: Other Languages
 ---
+<aside slot="presenter">Credit for F# to Angel Munoz</aside>
+<aside slot="presenter">Credit for Ruby to Jared White</aside>
 
 ```fsharp
 open Fable.Lit
@@ -37,4 +39,35 @@ let UserProfile () =
           Welcome, {data.profile.name}
         </h2>
         """
+```
+
+```ruby
+import [ class_map ], from: "lit/directives/class-map.js"
+import [ client ], from: "./client.js"
+import [ ApolloQueryController ], from: "@apollo-elements/core"
+import [ UserProfile ], from: "./UserProfile.query.graphql.js"
+
+class UserProfileElement < LitElement
+  attr_accessor :query
+
+  def self.styles
+    <<~CSS
+      .loading { opacity: 0 }
+    CSS
+  end
+
+  custom_element "user-profile"
+
+  def initialize
+    self.query = ApolloQueryController.new(self, UserProfile, client: client)
+  end
+
+  def render
+    <<~HTML
+      <h2 class=#{class_map(loading: query.loading)}>
+        Welcome, #{query.data&.profile&.name}!
+      </h2>
+    HTML
+  end
+end
 ```
