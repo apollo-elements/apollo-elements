@@ -5,7 +5,7 @@ attrs: fade-in
 
 ## `haunted`: Hooks for web components
 
-<div class="progressive">
+<div progressive>
 
 ```typescript
 import { useQuery, html, component } from '@apollo-elements/haunted';

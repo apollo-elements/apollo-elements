@@ -1,0 +1,7 @@
+<script type="module" src="color-picker.js"></script>
+<color-picker></color-picker>
+<output id="picked"></output>
+<script>
+  document.querySelector('color-picker')
+    .addEventListener('pick', ({ detail }) => picked.style.backgroundColor = detail);
+</script>

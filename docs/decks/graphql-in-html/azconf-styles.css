@@ -1,0 +1,366 @@
+/**
+ * This file contains styles specific to the AzConf PPTX theme
+ * General Deck styles are in graphql-in-html.css
+ */
+
+@import "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.55/dist/themes/light.css";
+
+:root {
+  --az-bg-blue: #08023f;
+  --az-blue: #0078d4;
+  --az-dark-blue: #243a5e;
+  --az-dark-green: #054b16;
+  --az-light-blue: #50e6ff;
+  --az-light-green: #9bf00b;
+  --az-sea-blue: #0c59a4;
+  --text: white;
+}
+
+slidem-deck {
+  font-family: 'Segoe UI';
+  --background: var(--az-bg-blue);
+  --primary: var(--az-light-blue);
+  --secondary: var(--az-light-green);
+}
+
+slidem-slide {
+  &::part(container) {
+    height: 100%;
+    &::after {
+      content: '#AzConfDev';
+      font: lighter 24pt 'Segoe UI';
+      position: absolute;
+      bottom: 1vh;
+      right: 1vw;
+      text-align: center;
+    }
+  }
+
+  &::part(content) {
+    height: 100%;
+  }
+
+  &::part(start-start) {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &::part(start-end) {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  &::part(end-start) {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  &::part(end-end) {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  &:not([name="Cover"])::part(container)::before {
+    background-image: url('/decks/graphql-in-html/azconf-assets/conf-logo-watermark@2x.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: block;
+    height: 98pt;
+    position: absolute;
+    right: 16pt;
+    top: 16pt;
+    width: 152pt;
+    z-index: 2;
+  }
+
+  &[alt] {
+    --background: white;
+    --primary: var(--az-blue);
+    --secondary: var(--az-dark-green);
+    --text-color: currentColor;
+    --markdown-syntax-color: currentColor;
+    --markdown-blockquote-color: var(--light-blue-900);
+    --markdown-link-color: var(--pink-a700);
+    --markdown-link-decoration: var(--pink-200);
+    --markdown-syntax-attr-name-color: var(--blue-900);
+    --markdown-syntax-background-color: white;
+    --markdown-syntax-boolean-color: var(--light-blue-900);
+    --markdown-syntax-class-name-color: var(--deep-orange-a700);
+    --markdown-syntax-comment-color: var(--teal-700);
+    --markdown-syntax-function-color: var(--cyan-900);
+    --markdown-syntax-keyword-color: var(--deep-orange-a400);
+    --markdown-syntax-keyword-color: var(--light-blue-900);
+    --markdown-syntax-number-color: var(--light-blue-900);
+    --markdown-syntax-operator-color: var(--light-blue-900);
+    --markdown-syntax-punctuation-color: var(--teal-900);
+    --markdown-syntax-string-color: var(--deep-orange-a700);
+    --markdown-syntax-tag-color: var(--cyan-900);
+    --markdown-syntax-variable-color: var(--deep-orange-a700);
+    --text: var(--az-bg-blue);
+    color: var(--text);
+
+    & docs-playground {
+      --playground-code-attribute-color: var(--markdown-syntax-attr-name-color);
+      --playground-code-atom-color: var(--markdown-syntax-keyword-color);
+      --playground-code-default-color: var(--markdown-syntax-color);
+      --playground-code-punctuation-color: var(--markdown-syntax-punctuation-color);
+      --playground-code-property-color: var(--markdown-syntax-class-name-color);
+      --playground-code-string-color: var(--markdown-syntax-string-color);
+      --playground-code-function-color: var(--markdown-syntax-function-color);
+      --playground-code-operator-color: var(--markdown-syntax-operator-color);
+      --playground-code-comment-color: var(--markdown-syntax-comment-color);
+      --playground-code-number-color: var(--markdown-syntax-number-color);
+      --playground-code-boolean-color: var(--markdown-syntax-boolean-color);
+      --playground-code-tag-color: var(--markdown-syntax-tag-color);
+      --playground-code-variable-color: var(--markdown-syntax-variable-color);
+      --playground-code-def-color: var(--markdown-syntax-variable-color);
+      --playground-code-background-color: var(--markdown-syntax-background-color);
+      --playground-code-callee-color: var(--markdown-syntax-function-color);
+      --playground-code-keyword-color: var(--markdown-syntax-keyword-color);
+      --playground-code-variable-2-color: var(--markdown-syntax-attr-name-color);
+      --playground-code-selection-background: var(--markdown-table-row-odd-background-color, #f6f8fa);
+      --playground-code-cursor-color: var(--markdown-syntax-color);
+      --playground-code-background: var(--markdown-syntax-background-color);
+      --playground-tab-bar-background: var(--page-background);
+      --playground-tab-bar-foreground-color: var(--primary-text-color);
+      --playground-preview-toolbar-background: var(--page-background);
+      --playground-preview-toolbar-foreground-color: var(--primary-text-color);
+      --playground-highlight-color: var(--primary-color);
+      --playground-code-builtin-color: var(--markdown-blockquote-color);
+      &::part(playground-ide) {
+        --playground-code-background: white;
+        --playground-tab-bar-background: white;
+      }
+    }
+
+    &:not([name="Cover"])::part(container)::before {
+      background-image: url('/decks/graphql-in-html/azconf-assets/conf-logo-watermark-alt@2x.png');
+    }
+  }
+
+  &[float-header] h2:first-of-type {
+    float: none;
+  }
+}
+
+h2 {
+  color: var(--text, currentColor);
+}
+
+docs-playground {
+  &::part(playground-ide) {
+    --playground-code-background: var(--az-bg-blue);
+    --playground-tab-bar-background: var(--az-bg-blue);
+  }
+}
+
+#azconf-header {
+  display: grid;
+  text-align: center;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, max-content);
+  gap: 32px;
+  & img {
+    grid-column: 2/3;
+    width: 100%;
+  }
+  & h2, & p {
+    grid-column: span 3;
+  }
+}
+
+.speaker-starburst,
+.palaces { width: 30vw; }
+
+docs-playground {
+  transform: scale(1.09) translateY(var(--y-offset, 0)) !important;
+  &::part(playground-ide) {
+    --playground-code-font-size: 50%;
+  }
+}
+
+[name="Cover"] {
+  &::part(content) {
+    display: grid;
+    height: 100%;
+  }
+}
+
+[name="Speaker"] {
+  & .speaker-starburst {
+    transform: translate(-40%, 40%) scale(1.68);
+    z-index: -1;
+    position: relative;
+  }
+  &::part(content) {
+    display: grid;
+  }
+  &::part(container)::after {
+    left: 1vw;
+  }
+  & header {
+    display: grid;
+    grid-template-columns: min-content auto;
+    align-items: center;
+    width: 90vw;
+    justify-self: center;
+    gap: 24px;
+    & img {
+      border-radius: 100%;
+      overflow: hidden;
+      /* box-shadow: 0 23pt 30pt black; */
+    }
+    & h2 {
+      width: 100%;
+      font-size: 43pt;
+      color: var(--az-light-blue);
+      border-bottom: 4px solid var(--az-light-green);
+      font-weight: lighter;
+      padding-block-end: 0.25em;
+      margin-block-end: 0.25em;
+    }
+    & p {
+      font-size: 24pt;
+    }
+  }
+}
+
+[name="intro"] {
+  &::before {
+    background-image: url('/decks/graphql-in-html/azconf-assets/speaker-slide-sunburst@2x.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 30%;
+    left: -30%;
+    transform: scale(2) rotate(45deg) translateY(-1vh);
+    height: 50vh;
+    width: 50vh;
+  }
+
+  &::part(content) {
+    grid-template: 'main';
+    align-items: center;
+  }
+
+  & #intro-header {
+    margin: 0;
+    display: block;
+    transform: translate(20vw);
+    & img { display: none; }
+    & h1 {
+      /* conform to azconf slide css */
+      text-align: left;
+      display: block;
+      font-weight: lighter;
+      font-size: 43pt;
+      margin-bottom: 1em;
+      & em {
+        line-height: initial !imporant;
+        margin-left: 0;
+        font-size: inherit !important;
+        font-style: normal;
+        color: inherit !important;
+        &:last-of-type { display: inline; }
+        & code {
+          color: inherit;
+          font: inherit;
+        }
+      }
+    }
+    & p {
+      text-align: left;
+      font-weight: lighter;
+      font-size: 24pt;
+    }
+  }
+}
+
+[name="tradeoffs"] {
+  font-size: 0.8em;
+  & h2[right] {
+    float: initial;
+  }
+}
+
+[name="Example Query"] {
+  & h2#queries { display: none; }
+  & [reveal]:last-of-type {
+    margin-block-start: 0;
+  }
+}
+
+[name="Web Components"] {
+  --w3-logo-text: white;
+}
+
+[name^="HTML "],
+[name="ApolloQueryController Lit"],
+[name="ApolloMutationController Lit"] {
+  & docs-playground {
+    --y-offset: -38px;
+    height: 110.3%;
+  }
+}
+
+[name="HTML Queries"],
+[name="HTML Mutations"],
+[name="ApolloQueryController Lit"],
+[name="ApolloMutationController Lit"] {
+  &::part(content) {
+    color: var(--az-bg-blue);
+  }
+}
+
+:is(
+  [name="HTML Queries"][step="5"],
+  [name="HTML Mutations"][step="6"],
+  [name="ClockController"],
+  [name="Example Reactive Controller"],
+  [name="ApolloQueryController Lit"],
+  [name="ApolloMutationController Lit"],
+) {
+  &::part(container)::before {
+    z-index: -1 !important;
+  }
+  &::part(container)::after {
+    color: var(--az-bg-blue);
+  }
+}
+
+
+[name="HTML Queries"] {
+  /* &::part(content) { --slidem-content-scale: .92; } */
+  &[step=5]::part(container)::before {
+    display: none;
+  }
+}
+
+[name="Update Functions"] [progressive] {
+  & > [reveal]:nth-of-type(1) {
+    --markdown-syntax-background-color: transparent;
+  }
+  & [step="1"][past] {
+    opacity: 0.5;
+  }
+}
+
+[name="MouseController Data Flow"] {
+  & .messageText { --text-color: var(--az-bg-blue); }
+  & .actor { --text-color: white; }
+}
+
+[name="Wrap Up"] {
+  & ol {
+    display: flex;
+    flex-flow: column wrap;
+    margin-block: 0;
+  }
+}

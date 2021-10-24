@@ -6,7 +6,7 @@ name: mutations-update
 ## Mutations - Updating the Cache
 
 
-<div class="progressive">
+<div progressive>
 
 ```js
 

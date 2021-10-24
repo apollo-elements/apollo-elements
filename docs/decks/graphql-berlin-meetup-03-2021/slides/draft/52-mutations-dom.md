@@ -5,7 +5,7 @@ name: mutations-dom
 
 ## Mutations - DOM
 
-<div class="progressive">
+<div progressive>
 
 ```js
 import { ApolloMutation                                } from '@apollo-elements/lit-apollo';
