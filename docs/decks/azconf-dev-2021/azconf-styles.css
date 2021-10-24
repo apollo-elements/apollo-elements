@@ -1,6 +1,6 @@
 /**
  * This file contains styles specific to the AzConf PPTX theme
- * General Deck styles are in graphql-in-html.css
+ * General Deck styles are in azconf-dev-2021.css
  */
 
 @import "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.55/dist/themes/light.css";
@@ -65,7 +65,7 @@ slidem-slide {
   }
 
   &:not([name="Cover"])::part(container)::before {
-    background-image: url('/decks/graphql-in-html/azconf-assets/conf-logo-watermark@2x.png');
+    background-image: url('/decks/azconf-dev-2021/azconf-assets/conf-logo-watermark@2x.png');
     background-repeat: no-repeat;
     background-size: contain;
     content: '';
@@ -139,7 +139,7 @@ slidem-slide {
     }
 
     &:not([name="Cover"])::part(container)::before {
-      background-image: url('/decks/graphql-in-html/azconf-assets/conf-logo-watermark-alt@2x.png');
+      background-image: url('/decks/azconf-dev-2021/azconf-assets/conf-logo-watermark-alt@2x.png');
     }
   }
 
@@ -232,7 +232,7 @@ docs-playground {
 
 [name="intro"] {
   &::before {
-    background-image: url('/decks/graphql-in-html/azconf-assets/speaker-slide-sunburst@2x.png');
+    background-image: url('/decks/azconf-dev-2021/azconf-assets/speaker-slide-sunburst@2x.png');
     background-repeat: no-repeat;
     background-size: contain;
     content: '';

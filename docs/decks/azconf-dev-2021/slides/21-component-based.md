@@ -15,9 +15,9 @@ On the **server**, GraphQL lends itself to *deeply nested*, *networked* data.
 
 Client-side, GraphQL frontends naturally revolve around **components**
 
-<img src="/decks/graphql-in-html/components-dir.png" alt="Components Directory"/>
+<img src="/decks/azconf-dev-2021/components-dir.png" alt="Components Directory"/>
 
 </section>
 
 <script data-helmet>window.FLARE_CHART_JSON = {{ FLARE_CHART_JSON | raw }};</script>
-<script type="module" data-helmet src="/decks/graphql-in-html/flare-chart.js"></script>
+<script type="module" data-helmet src="/decks/azconf-dev-2021/flare-chart.js"></script>

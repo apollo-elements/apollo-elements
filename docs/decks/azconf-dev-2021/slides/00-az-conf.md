@@ -5,7 +5,7 @@ class: hash-right
 ---
 
 <header id="azconf-header" flex center wrap>
-  <img src="/decks/graphql-in-html/azconf-assets/conf-logo-intro@2x.png" alt="Azure Community Conference Logo"/>
+  <img src="/decks/azconf-dev-2021/azconf-assets/conf-logo-intro@2x.png" alt="Azure Community Conference Logo"/>
 
   <h2>Azure Community Conference 2021</h2>
 
@@ -20,6 +20,6 @@ class: hash-right
 
 </small>
 <img class="palaces"
-  src="/decks/graphql-in-html/azconf-assets/palaces-graphic@2x.png"
+  src="/decks/azconf-dev-2021/azconf-assets/palaces-graphic@2x.png"
   slot="start-end"
   alt="Multicoloured Indian Palaces"/>
