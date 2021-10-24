@@ -15,7 +15,7 @@ unbind: true
       href="https://fonts.googleapis.com/css2?family=Rubik&display=swap">
 
 <link data-helmet rel="stylesheet"
-      href="{{ '/decks/azconf-dev-2021/azconf-dev-2021.css' | asset | url }}"/>
+      href="{{ '/decks/azconf-dev-2021/graphql-in-html.css' | asset | url }}"/>
 
 <link data-helmet rel="stylesheet"
       href="{{ '/decks/azconf-dev-2021/azconf-styles.css' | asset | url }}"/>
