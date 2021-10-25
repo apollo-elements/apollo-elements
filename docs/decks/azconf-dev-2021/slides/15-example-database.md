@@ -6,11 +6,11 @@ Even if the database schema doesn't match your query...
 
 ```json
 {
-  "id": "bojojo",
-  "first_name": "Boris",
-  "last_name": "Johnson",
-  "address": "10 Downing Street,London,UK",
-  "friend_ids": [ "raabster1974", "sajidlad", "pat-l" ]
+  "id": "spencer_harley",
+  "first_name": "Charlie",
+  "last_name": "Chaplin",
+  "address": "1085 Summit Dr., Beverly Hills, California",
+  "friend_ids": [ "keaton_it_real", "signal_hopper", "casa_veidt" ]
 }
 ```
 
