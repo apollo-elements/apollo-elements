@@ -7,7 +7,7 @@
   },
   "engines": {
     "node": "16.x",
-    "npm": "^7.19.x"
+    "npm": ">= 7"
   },
   "scripts": {
     "analyze": "npm run --workspaces --if-present analyze",
