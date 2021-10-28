@@ -5,16 +5,20 @@ attrs: alt
 
 ```js playground clock-controller clock-controller.js
 export class ClockController {
-  host;
-
   value = new Date();
-  timeout;
-  _timerID;
+
+  timeFormat = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });
 
   constructor(host, timeout = 1000) {
     (this.host = host).addController(this);
     this.timeout = timeout;
   }
+  /* playground-fold */
+
   hostConnected() {
     // Start a timer when the host is connected
     this._timerID = setInterval(() => {
@@ -23,10 +27,18 @@ export class ClockController {
       this.host.requestUpdate();
     }, this.timeout);
   }
+  /* playground-fold-end */
+  /* playground-fold */
+
   hostDisconnected() {
     // Clear the timer when the host is disconnected
     clearInterval(this._timerID);
     this._timerID = undefined;
+  }
+  /* playground-fold-end */
+
+  getFormatted() {
+    return this.timeFormat.format(this.value);
   }
 }
 ```
@@ -41,17 +53,17 @@ class MyElement extends LitElement {
 
   // Use the controller in render()
   render() {
-    const formattedTime = timeFormat.format(this.clock.value);
-    return html`Current time: ${formattedTime}`;
+    return html`
+      <p>The time is
+        <time datetime="${this.clock.value}">
+          ${this.clock.getFormatted()}
+        </time>
+      </p>
+    `;
   }
 }
-customElements.define('my-element', MyElement);
 
-const timeFormat = new Intl.DateTimeFormat('en-US', {
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-});
+customElements.define('my-element', MyElement);
 ```
 
 ```html playground-file clock-controller index.html

@@ -32,8 +32,8 @@ query PersonQuery($id: ID!) {
 ```
 
 ```graphql reveal
-query PersonQuery($id: ID!) { # query document
-  person(id: $id) {           # query resolver
+query PersonQuery($id: ID!) { # query operation
+  person(id: $id) {           # field on root query
 
 
 
@@ -44,9 +44,9 @@ query PersonQuery($id: ID!) { # query document
 ```
 
 ```graphql reveal
-query PersonQuery($id: ID!) {
-  person(id: $id) {
-    name
+query PersonQuery($id: ID!) { # query operation
+  person(id: $id) {           # field on root query
+    name                      # field on person type
     picture
 
 

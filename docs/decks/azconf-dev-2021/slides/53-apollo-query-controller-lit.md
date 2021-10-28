@@ -6,11 +6,24 @@ name: ApolloQueryController Lit
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js'
+import { ApolloQueryController } from '@apollo-elements/core';
+import { gql, TypedDocumentNode } from '@apollo/client/core';
+
 import { client } from './client.js';
 
-import { ApolloQueryController } from '@apollo-elements/core';
+interface ProfileQueryData {
+  profile: {
+    name: string;
+  }
+}
 
-import { UserProfile } from './UserProfile.query.graphql.js';
+const UserProfile: TypedDocumentNode<ProfileQueryData> = gql`
+  query UserProfile {
+    profile {
+      name
+    }
+  }
+`;
 
 @customElement('user-profile')
 class UserProfileElement extends LitElement {
@@ -32,22 +45,6 @@ class UserProfileElement extends LitElement {
 ```html playground-file lit-query-controller index.html
 <user-profile></user-profile>
 <script type="module" src="user-profile.js"></script>
-```
-
-```ts playground-file lit-query-controller UserProfile.query.graphql.ts
-import { gql, TypedDocumentNode } from '@apollo/client/core';
-
-interface Profile {
-  name: string;
-}
-
-export const UserProfile: TypedDocumentNode<{ profile: Profile }> = gql`
-query UserProfile {
-  profile {
-    name
-  }
-}
-`;
 ```
 
 ```ts playground-file lit-query-controller client.ts

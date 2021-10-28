@@ -102,6 +102,7 @@ slidem-slide {
     --markdown-syntax-tag-color: var(--cyan-900);
     --markdown-syntax-variable-color: var(--deep-orange-a700);
     --text: var(--az-bg-blue);
+    --primary-text-color: var(--text);
     color: var(--text);
 
     & docs-playground {
@@ -148,6 +149,10 @@ slidem-slide {
   }
 }
 
+.language-json {
+  --markdown-syntax-property-color: var(--az-light-blue);
+}
+
 h2 {
   color: var(--text, currentColor);
 }
@@ -188,6 +193,29 @@ docs-playground {
   &::part(content) {
     display: grid;
     height: 100%;
+  }
+}
+
+[name="Sponsors"] {
+  &::part(content) {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    justify-items: center;
+  }
+  & figure {
+    display: grid;
+    justify-items: center;
+    margin: 0;
+    padding: 0;
+    & figcaption {
+      font-weight: bolder;
+      font-size: 54pt;
+      margin: 0;
+      padding: 0;
+    }
+    &:last-of-type {
+      grid-column: span 2;
+    }
   }
 }
 
@@ -283,6 +311,10 @@ docs-playground {
   }
 }
 
+[name="Contents"] ol {
+  gap: 1em;
+}
+
 [name="tradeoffs"] {
   font-size: 0.8em;
   & h2[right] {
@@ -301,12 +333,25 @@ docs-playground {
   --w3-logo-text: white;
 }
 
+[name="Shadow DOM"] {
+  & output {
+    background: transparent;
+  }
+}
+
 [name^="HTML "],
 [name="ApolloQueryController Lit"],
 [name="ApolloMutationController Lit"] {
   & docs-playground {
     --y-offset: -38px;
     height: 110.3%;
+    &#apollo-query-example {
+      height: 135%;
+      --y-offset: -80px;
+    }
+    &#apollo-mutation-example {
+      --y-offset: -85px;
+    }
   }
 }
 
@@ -335,6 +380,22 @@ docs-playground {
   }
 }
 
+[name="HTML Mutations"][step="6"] {
+  &::part(container) {
+    &::after {
+      color: white !important;
+    }
+  }
+}
+
+#clock-controller {
+  --y-offset: -40px;
+}
+
+#mouse-controller {
+  --y-offset: -40px;
+  height: 135%;
+}
 
 [name="HTML Queries"] {
   /* &::part(content) { --slidem-content-scale: .92; } */
@@ -362,5 +423,77 @@ docs-playground {
     display: flex;
     flex-flow: column wrap;
     margin-block: 0;
+  }
+}
+
+[name="Try It"] {
+  & pre { font-size: 18pt; }
+  & li { font-size: 80%; }
+}
+
+[name="Communities"] {
+  &::part(content) {
+    display: grid;
+    grid-template: max-content auto / auto;
+  }
+  & h2 {
+    font-size: 54pt;
+    text-align: center;
+    margin: 0;
+  }
+  & img {
+    height: 100%;
+  }
+}
+
+[name="Partners"] {
+  &::part(content) {
+    display: grid;
+    grid-template: max-content auto / auto;
+  }
+  & h2 {
+    font-size: 54pt;
+    text-align: center;
+    margin: 0;
+  }
+  & section {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    & img {
+      height: 80pt;
+      &:nth-child(4) { height: 111pt; }
+      &:nth-child(5) { height: 237pt; }
+    }
+  }
+}
+
+[name="Q and A"],
+[name="Feedback"] {
+  & h2 { font-size: 88pt; }
+  &::before {
+    background-image: url('/decks/azconf-dev-2021/azconf-assets/qa-clipart@2x.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: block;
+    height: 40%;
+    position: absolute;
+    right: 1vw;
+    bottom: 0;
+    width: 20%;
+    z-index: 2;
+  }
+  &::part(content) {
+    display: grid;
+    place-content: center;
+  }
+  &::part(container) {
+    &::after {
+      right: initial;
+      left: 1vw;
+    }
   }
 }

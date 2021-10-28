@@ -19,7 +19,7 @@ attrs: slide-out center
 
 </header>
 
-Query Language for APIs
+**Query Language for APIs**
 
 Published by Facebook in 2015
 

@@ -214,7 +214,8 @@ export default ({
   ],
 
   eleventy(eleventyConfig) {
-    eleventyConfig.addPassthroughCopy('decks/azconf-dev-2021/*.{js,png,svg,jpg,webp,woff,woff2}');
+    eleventyConfig
+      .addPassthroughCopy('decks/azconf-dev-2021/**/*.{js,png,svg,jpg,webp,woff,woff2}');
     eleventyConfig.addFilter('formatDate', date =>
       date instanceof Date ? date.toDateString() : date);
     eleventyConfig.addWatchTarget('_assets/**/*.css');
