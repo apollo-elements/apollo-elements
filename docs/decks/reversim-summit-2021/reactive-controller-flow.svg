@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -10 682 411">
+  <defs>
+    <marker id="arrowhead" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z"></path>
+    </marker>
+  </defs>
+  <defs>
+    <marker id="crosshead" markerWidth="15" markerHeight="8" orient="auto" refX="16" refY="4">
+      <path fill="black" stroke="#000000" stroke-dasharray="0px 0px" stroke-width="1px" d="M 9,2 V 6 L16,4 Z"></path>
+      <path fill="none" stroke="#000000" stroke-dasharray="0px 0px" stroke-width="1px" d="M 0,1 L 6,7 M 6,1 L 0,7"></path>
+    </marker>
+  </defs>
+  <defs>
+    <marker id="filled-head" refX="18" refY="7" markerWidth="20" markerHeight="28" orient="auto">
+      <path d="M 18,7 L9,13 L14,7 L9,1 Z"></path>
+    </marker>
+  </defs>
+  <defs>
+    <marker id="sequencenumber" refX="15" refY="15" markerWidth="60" markerHeight="40" orient="auto">
+      <circle cx="15" cy="15" r="6"></circle>
+    </marker>
+  </defs>
+
+  <g class="actors">
+    <line id="actor0" x1="75" y1="5" x2="75" y2="400" class="actor-line"></line>
+    <rect x="0" y="0" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="75" y="32.5" class="actor">
+      <tspan x="75" dy="0">&lt;color-picker&gt;</tspan>
+    </text>
+    <line id="actor1" x1="300" y1="5" x2="300" y2="400" class="actor-line"></line>
+    <rect x="225" y="0" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="300" y="32.5" class="actor">
+      <tspan x="300" dy="0">MouseController</tspan>
+    </text>
+    <line id="actor2" x1="507" y1="5" x2="507" y2="400" class="actor-line"></line>
+    <rect x="432" y="0" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="507" y="32.5" class="actor">
+      <tspan x="507" dy="0">Window</tspan>
+    </text>
+  </g>
+
+  <g reveal>
+    <text x="188" y="80" class="messageText" dy="1em">hostConnected()</text>
+    <line class="messageLine0 method-call"
+      x1="75"
+      y1="115"
+      x2="300"
+      y2="115"
+      stroke-width="2"
+      marker-end="url(#arrowhead)"
+    ></line>
+  </g>
+
+  <g reveal>
+    <text x="406" y="130" class="messageText" dy="1em">addEventListener()</text>
+    <line class="messageLine0 method-call"
+      x1="305"
+      y1="165"
+      x2="507"
+      y2="165"
+      stroke-width="2"
+      marker-end="url(#arrowhead)"
+    ></line>
+  </g>
+
+  <g reveal>
+    <text x="404" y="180" class="messageText" dy="1em">MouseEvent</text>
+    <line class="messageLine0 event"
+      x1="502"
+      y1="215"
+      x2="305"
+      y2="215"
+      stroke-width="2"
+      marker-end="url(#arrowhead)"
+    ></line>
+  </g>
+
+  <g reveal>
+    <text x="185" y="230" class="messageText" dy="1em">host.requestUpdate()</text>
+    <line class="messageLine0 method-call"
+      x1="295"
+      y1="265"
+      x2="75"
+      y2="265"
+      stroke-width="2"
+      marker-end="url(#arrowhead)"
+    ></line>
+  </g>
+
+  <g reveal>
+    <text x="188" y="280" class="messageText" dy="1em">this.mouse.pos</text>
+    <line class="messageLine0 property-access"
+      x1="80"
+      y1="315"
+      x2="295"
+      y2="315"
+      stroke-width="2"
+      marker-end="url(#arrowhead)"
+    ></line>
+  </g>
+
+  <g class="actors">
+    <rect x="0" y="335" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="75" y="367.5" class="actor">
+      <tspan x="75" dy="0">&lt;color-picker&gt;</tspan>
+    </text>
+    <rect x="225" y="335" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="300" y="367.5" class="actor">
+      <tspan x="300" dy="0">MouseController</tspan>
+    </text>
+    <rect x="432" y="335" width="150" height="65" rx="3" ry="3" class="actor"></rect>
+    <text x="507" y="367.5" class="actor">
+      <tspan x="507" dy="0">Window</tspan>
+    </text>
+  </g>
+</svg>
