@@ -46,7 +46,7 @@ index 65b5d52..0705b4d 100644
      __before11tyFunctions: [],
  
 diff --git a/node_modules/@rocket/cli/src/shared/.eleventy.cjs b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
-index 4eaa98c..67c273a 100644
+index c215e6d..01fdeec 100644
 --- a/node_modules/@rocket/cli/src/shared/.eleventy.cjs
 +++ b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
 @@ -19,6 +19,10 @@ const defaultSetupUnifiedPlugins = [
