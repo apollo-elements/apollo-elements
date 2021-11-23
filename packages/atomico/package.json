@@ -55,8 +55,8 @@
   "homepage": "https://apolloelements.dev/api/libraries/atomico/",
   "dependencies": {
     "@apollo-elements/core": "^1.0.0",
-    "@atomico/hooks": "^3.10.5",
-    "atomico": "^1.26.1"
+    "@atomico/hooks": "^3.20.2",
+    "atomico": "^1.34.0"
   },
   "customElements": "custom-elements.json"
 }

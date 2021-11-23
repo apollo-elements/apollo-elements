@@ -24,12 +24,12 @@
     "pwa-helpers": "^0.9.1"
   },
   "devDependencies": {
-    "@apollo-elements/create": "^3.0.2",
-    "@graphql-codegen/cli": "^2.1.1",
-    "@graphql-codegen/typescript": "^2.1.2",
-    "@graphql-codegen/typescript-operations": "^2.1.2",
-    "@graphql-codegen/typed-document-node": "^2.1.2",
-    "@graphql-codegen/near-operation-file-preset": "^2.1.2",
+    "@apollo-elements/create": "^3.0.3",
+    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/typescript": "^2.4.1",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
+    "@graphql-codegen/typed-document-node": "^2.2.1",
+    "@graphql-codegen/near-operation-file-preset": "^2.2.2",
     "@open-wc/rollup-plugin-html": "^1.x",
     "@pwrs/eslint-config": "^0.x",
     "@rollup/plugin-commonjs": "^17.x",
