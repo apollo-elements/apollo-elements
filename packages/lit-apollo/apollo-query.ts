@@ -228,7 +228,7 @@ export class ApolloQuery<
    */
   public subscribe(
     params?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ZenObservable.Subscription {
+  ): C.ObservableSubscription {
     return this.controller.subscribe(params);
   }
 

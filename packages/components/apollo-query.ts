@@ -5,6 +5,7 @@ import type {
   SubscribeToMoreOptions,
   WatchQueryFetchPolicy,
   WatchQueryOptions,
+  ObservableSubscription,
 } from '@apollo/client/core';
 
 import type {
@@ -232,7 +233,7 @@ export class ApolloQueryElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariable
    */
   @bound public subscribe(
     params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ZenObservable.Subscription {
+  ): ObservableSubscription {
     return this.controller.subscribe(params);
   }
 

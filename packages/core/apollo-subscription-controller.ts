@@ -19,6 +19,7 @@ import type {
   Observable,
   SubscriptionOptions,
   WatchQueryOptions,
+  ObservableSubscription,
 } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
@@ -46,7 +47,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
   implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
 
-  private observableSubscription?: ZenObservable.Subscription;
+  private observableSubscription?: ObservableSubscription;
 
   /** @summary Options to customize the subscription and to interface with the controller. */
   declare options: ApolloSubscriptionControllerOptions<D, V>;

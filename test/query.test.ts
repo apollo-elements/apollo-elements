@@ -18,6 +18,7 @@ import {
 } from '@open-wc/testing';
 
 import { gql } from '@apollo/client/core';
+import type { ObservableSubscription } from '@apollo/client/core';
 
 import {
   ApolloClient,
@@ -1661,7 +1662,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('subscribe()', function() {
-          let subscription: ZenObservable.Subscription;
+          let subscription: ObservableSubscription;
 
           beforeEach(function() {
             subscription = element.subscribe();
@@ -1709,7 +1710,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('subscribe()', function() {
-          let subscription: ZenObservable.Subscription;
+          let subscription: ObservableSubscription;
 
           beforeEach(function() {
             subscription = element.subscribe();
