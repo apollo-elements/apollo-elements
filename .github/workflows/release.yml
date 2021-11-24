@@ -32,6 +32,7 @@ jobs:
           npm test --prefix packages/create
 
       - name: Publish Code Coverage
+        if: ${{ secrets.CC_TEST_REPORTER_ID }}
         uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
