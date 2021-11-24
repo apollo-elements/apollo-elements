@@ -55,9 +55,9 @@
   "homepage": "https://apolloelements.dev/api/libraries/hybrids",
   "dependencies": {
     "@apollo-elements/core": "^1.0.0",
-    "@lit/reactive-element": "^1.0.0-rc.2",
+    "@lit/reactive-element": "^1.0.2",
     "hybrids": "^5.4.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.1"
   },
   "customElements": "custom-elements.json"
 }
