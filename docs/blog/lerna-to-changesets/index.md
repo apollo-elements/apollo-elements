@@ -85,7 +85,7 @@ jobs:
         run: yarn test
 
       - name: Publish Code Coverage
-        uses: paambaati/codeclimate-action@v2.7.3
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
