@@ -19,6 +19,7 @@ import type {
   TypedDocumentNode,
   WatchQueryFetchPolicy,
   WatchQueryOptions,
+  ObservableSubscription,
 } from '@apollo/client/core';
 
 import type {
@@ -469,7 +470,7 @@ export declare class ApolloQueryElement<
    */
   public subscribe(
     params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
-  ): ZenObservable.Subscription
+  ): ObservableSubscription
 
   /**
    * Lets you pass a GraphQL subscription and updateQuery function

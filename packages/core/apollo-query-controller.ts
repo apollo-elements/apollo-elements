@@ -18,6 +18,7 @@ import type {
   SubscribeToMoreOptions,
   SubscriptionOptions,
   WatchQueryOptions,
+  ObservableSubscription,
 } from '@apollo/client/core';
 
 import { NetworkStatus } from '@apollo/client/core';
@@ -232,7 +233,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    */
   @bound public subscribe(
     params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ZenObservable.Subscription {
+  ): ObservableSubscription {
     if (this.observableQuery)
       this.observableQuery.stopPolling(); /* c8 ignore next */ // covered
 

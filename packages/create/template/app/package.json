@@ -20,7 +20,7 @@
   "dependencies": {
     "@apollo-elements/components": "^2.0.0",
     "@apollo-elements/core": "^1.0.0",
-    "@apollo/client": "^3.4.10",
+    "@apollo/client": "^3.5.4",
     "pwa-helpers": "^0.9.1"
   },
   "devDependencies": {

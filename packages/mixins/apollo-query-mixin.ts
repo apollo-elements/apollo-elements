@@ -249,7 +249,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      */
     subscribe(
       params?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
-    ): ZenObservable.Subscription {
+    ): C.ObservableSubscription {
       return this.controller.subscribe(params);
     }
 

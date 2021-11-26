@@ -2,6 +2,7 @@ import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
 import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
 
+import type { ObservableSubscription } from '@apollo/client/core';
 import type {
   ApolloElementElement,
   ApolloMutationElement,
@@ -15,7 +16,7 @@ import type { Entries } from '@apollo-elements/core/types';
 import { defineCE, fixture } from '@open-wc/testing';
 
 // 🐤 quack quack 🦆
-export function isSubscription(x: unknown): x is ZenObservable.Subscription {
+export function isSubscription(x: unknown): x is ObservableSubscription {
   return (
     !!x &&
     typeof x === 'object' &&

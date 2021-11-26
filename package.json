@@ -63,7 +63,7 @@
     "@11ty/eleventy-plugin-syntaxhighlight": "^3.1.3",
     "@airbnb/node-memwatch": "^2.0.0",
     "@apollo-elements/rollup-plugin-graphql": "^1.0.3",
-    "@apollo/client": "^3.4.8",
+    "@apollo/client": "^3.5.4",
     "@borgar/textbox": "^1.3.0",
     "@changesets/cli": "^2.18.0",
     "@commitlint/cli": "^13.2.1",
