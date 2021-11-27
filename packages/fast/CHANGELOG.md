@@ -1,5 +1,17 @@
 # @apollo-elements/fast
 
+## 2.1.0
+
+### Minor Changes
+
+- da301f4: Update `@apollo/client` to support `grahpql` v16
+
+### Patch Changes
+
+- Updated dependencies [da301f4]
+  - @apollo-elements/core@1.1.0
+  - @apollo-elements/mixins@4.1.0
+
 ## 2.0.0
 
 ### Major Changes

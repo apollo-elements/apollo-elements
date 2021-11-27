@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 3.1.0
+
+### Minor Changes
+
+- da301f4: Update `@apollo/client` to support `grahpql` v16
+
 ## 3.0.3
 
 ### Patch Changes
