@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/components",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "👩‍🚀🌛 Web component helpers for Apollo GraphQL 🚀👨‍🚀",
   "type": "module",
   "main": "index.js",

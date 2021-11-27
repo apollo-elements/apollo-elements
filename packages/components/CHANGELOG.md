@@ -1,5 +1,11 @@
 # @apollo-elements/components
 
+## 2.1.1
+
+### Patch Changes
+
+- Fixed custom-elements manifest
+
 ## 2.1.0
 
 ### Minor Changes
