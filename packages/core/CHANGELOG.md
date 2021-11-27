@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 1.1.0
+
+### Minor Changes
+
+- da301f4: Update `@apollo/client` to support `grahpql` v16
+
 ## 1.0.0
 
 ### Major Changes
