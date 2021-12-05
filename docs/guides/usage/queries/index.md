@@ -181,8 +181,6 @@ When the `ObservableQuery` subscription produces new data (e.g. on response from
     query = new ApolloQueryController(this, HelloQuery);
 
     render() {
-      const greeting = this.query.data?.greeting ?? 'Hello';
-      const name = this.query.data?.name ?? 'Friend';
       return html`
         <article class=${classMap({ skeleton: this.query.loading })}>
           <p id="error" ?hidden=${!this.query.error}>${this.query.error?.message}</p>
