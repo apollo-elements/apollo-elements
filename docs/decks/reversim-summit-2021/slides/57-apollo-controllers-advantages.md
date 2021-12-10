@@ -2,9 +2,11 @@
 name: Controller Advantages
 ---
 
-## Advantages to Controllers
+## Apollo Elements <span>controllers</span> are...
 
-- Composable / Stackable
-- Do not modify base class
-- DRY
-- Reusable
+<ol reveal>
+  <li>Composable</li>
+  <li>Stackable</li>
+  <li>Reusable</li>
+  <li>DRY</li>
+</ol>

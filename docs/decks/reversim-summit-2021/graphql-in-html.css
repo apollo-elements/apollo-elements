@@ -126,104 +126,50 @@ docs-playground {
 
 }
 
-[name="Contents"] {
-  font-size: 150%;
-  & ol {
-    margin: revert;
-    padding: revert;
-    padding-inline-start: 2em;
-    font-size: 64px;
+[name="whiskey"],
+[name="iso-containers"] {
+  background-position: center;
+  background-size: cover;
+}
+
+[name="standardization"] {
+  & ul {
+    display: grid;
+    font-size: 200%;
     height: 100%;
-    display: flex;
-    flex-flow: column wrap;
-  }
-}
-
-[name="graphql"] {
-  &::part(content) {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-  }
-  & header {
-    margin-block: 1em;
-    gap: 0.3em;
-    align-items: center;
-    color: var(--rhodamine);
-    font-family: Rubik;
-    font-size: 12vw;
-    & svg {
-      fill: currentColor;
-      max-height: 1em;
-    }
-  }
-}
-
-[name="Schema Resolvers"] {
-  &::part(content) {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 1em;
-  }
-
-  & #resolvers pre {
-    font-size: 60%;
-  }
-}
-
-[name="Queries and Mutations"] {
-  &::part(content) {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  & dl.analogy {
-    display: grid;
-    grid-template-columns: min-content auto;
-    gap: 1em;
-    align-items: end;
-
-    & :is(dt, dd) {
-      display: inline-block;
-    }
-
-    & dd::before {
-      content: '⇒';
-      margin-inline-end: 1em
-    }
-  }
-}
-
-[name="Example Query"] {
-  & [reveal]:last-of-type {
-    margin-block-start: -3em;
-  }
-}
-
-[name="GraphQL Frontends"] {
-  & h2 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    place-items: center;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
   }
 }
 
-[name="Component Based Frontends"] {
+[name="iso-containers"] {
+  & svg {
+    width: 20%;
+  }
+}
+
+[name="Web Components"] {
+  & img { width: 512px; }
   &::part(content) {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    place-content: center;
+    gap: 1em;
+    font-size: 200%;
+    place-items: center;
   }
-  & section[reveal] {
-    margin-block: 0;
-    &:nth-of-type(2) {
-      & img {
-        align-self: center;
-        transform: scale(0.9);
-        transform-origin: top center;
-      }
-    }
+}
+
+[name="Custom Elements"] {
+  & svg {
+    height: 512px;
+    width: auto;
+  }
+  #javascript-logo-svg {
+    transform: scale(80%);
+    transform-origin: bottom;
   }
 }
 
@@ -241,50 +187,47 @@ docs-playground {
   & dl {
     display: grid;
     grid-template-columns: 1fr 2fr;
-  }
+    & pre {
+      margin: 0;
+    }
 
-  & dl pre {
-    margin: 0;
-  }
+    & div {
+      grid-column: 2/3;
+    }
 
-  & dl div {
-    grid-column: 2/3;
-  }
-
-  & dd::before {
-    content: '⇒';
-    font-size: 4rem;
-    place-self: center;
-    grid-row: -1/1;
-    grid-column: 1/2;
-  }
-
-  & dl dd {
-    display: grid;
-    grid-template-columns:  1fr 1.5fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 2rem;
+    & dd {
+      display: grid;
+      grid-template-columns:  1fr 1.5fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 2rem;
+      &::before {
+        content: '⇒';
+        font-size: 4rem;
+        place-self: center;
+        grid-row: -1/1;
+        grid-column: 1/2;
+      }
+    }
   }
 
   & .fake-user {
+    --border-color: var(--rhodamine);
     width: 100%;
     grid-column: 2/3;
-  }
-
-  & .fake-user .name {
-    height: 2rem;
-    width: calc(90% * var(--b, 1));
-    align-self: center;
-  }
-
-  & .fake-user::part(body) {
-    display: grid;
-    gap: 1rem;
-    grid-template:
-      'a n' 3rem
-      'b b' auto
-      'b b' auto
-      'b b' auto / 3rem auto;
+    & .name {
+      height: 2rem;
+      width: calc(90% * var(--b, 1));
+      align-self: center;
+    }
+    &::part(body) {
+      display: grid;
+      gap: 1rem;
+      grid-template:
+        'a n' 3rem
+        'b b' auto
+        'b b' auto
+        'b b' auto / 3rem auto;
+    }
   }
 
   & sl-skeleton:nth-last-child(-n+3) {
@@ -298,67 +241,6 @@ docs-playground {
   & sl-skeleton.avatar {
     width: 3rem;
     height: 3rem;
-  }
-
-}
-
-[name="Web Components"] {
-  & svg {
-    height: 512px;
-    width: auto;
-  }
-  & #javascript-logo-svg {
-    transform: scale(80%);
-    transform-origin: bottom;
-  }
-}
-
-[name="Example Web Component"] {
-  & [reveal]:nth-of-type(2) {
-    & code.language-js > span.token:is(
-      /* until this */:nth-of-type(-n+9),
-      /* after this */:nth-of-type(n+19),
-    ) {
-      opacity: 0.5;
-    }
-  }
-  & [reveal][step="5"] > pre.language-js {
-    background: rgba(255,255,255, 0.5);
-  }
-}
-
-[name="Shadow DOM"] {
-  & [grid] {
-    grid-template: repeat(2, min-content) / 1fr 1fr;
-    gap: 0.5em;
-  }
-
-  & blockquote {
-    margin-block: 0.25em;
-  }
-
-  & pre {
-    margin: 0;
-    font-size: .7em;
-  }
-
-  & [past] {
-    opacity: 0.5;
-  }
-
-  & section[reveal]:not(:first-of-type) {
-    margin-block: 0;
-  }
-
-  & output {
-    background: #0007;
-    border-radius: .5em;
-    display: grid;
-    grid-column: span 2;
-    padding: 0.3em 0.1em;
-    place-items: center;
-    grid-template-columns: max-content max-content;
-    width: max-content;
   }
 }
 
@@ -383,8 +265,33 @@ docs-playground {
 }
 
 [name="Glue"] {
-  & ol li {
-    margin-block-end: 0.5em;
+  text-align: center;
+  &::part(content) {
+    display: grid;
+    align-items: center;
+    align-content: space-evenly;
+  }
+  & div:first-of-type {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: .5em;
+  }
+  & :is(svg, img) {
+    width: 100px;
+    height: auto;
+    display: inline-block;
+    &:nth-of-type(2) {
+      fill: var(--rhodamine);
+    }
+  }
+  & p {
+    font-size: 200%;
+    --wght: 600;
+    & em {
+      --wght: 300;
+    }
   }
 
   & ul {
@@ -417,6 +324,8 @@ docs-playground {
   }
 }
 
+[name="Web Components Advantages"],
+[name="Controller Advantages"],
 [name^="HTML "] {
   &:not([float-header]) {
     & h2 {
@@ -433,113 +342,13 @@ docs-playground {
   & pre {
     margin-block: 0;
   }
-
-  & docs-playground {
-    transform: translateY(-24px);
-    z-index: 3;
-    height: 100%;
-    &::part(playground-ide) {
-      height: 100%;
-    }
-  }
 }
 
-[name="HTML Queries"] {
-  & [progressive] {
-    & > [reveal] {
-      &:nth-of-type(1) {
-        & code.language-html > span.token:is(
-          /* client open  */:nth-child(-n+1),
-          /* client close */:nth-child(n+7)
-        ) {
-          opacity: 0.5;
-        }
-      }
-      &:nth-of-type(2) {
-        & code.language-html > span.token:is(
-          /* until script */:nth-child(-n+2),
-          /* after script */:nth-child(n+6)
-        ) {
-          opacity: 0.5;
-        }
-      }
-      &:nth-of-type(3) {
-        & code.language-html > span.token:is(
-          /* until template */:nth-child(-n+5),
-          /* after template */:nth-child(n+16)
-        ) {
-          opacity: 0.5;
-        }
-      }
-    }
-  }
-
-  & docs-playground {
-    /* --playground-preview-width: 100%; */
-    &::part(playground-ide) {
-      --playground-code-font-size: 36px;
-      /* --playground-code-font-size: 72% !important; */
-      /* flex-flow: row wrap; */
-    }
-    /* &::part(lhs) {
-      width: 100%;
-      height: 75%;
-    }
-    &::part(rhs) {
-      width: 100%;
-      height: 25%;
-    } */
-  }
-}
-
-[name="HTML Mutations"] {
-  & docs-playground::part(playground-ide) {
-    --playground-code-font-size: 59.5%;
-  }
-  & pre {
-    font-size: 70%;
-    background: transparent;
-  }
-  & [past] {
-    opacity: 0.5;
-  }
-  & [step="5"] {
-    & code.language-html > .token .token {
-      opacity: 0.5;
-      &.attr-name:nth-of-type(2),
-      &.attr-value:nth-of-type(3) {
-        opacity: 1;
-      }
-    }
-  }
-}
-
-[name="Update Functions"] {
-  & [progressive] {
-    & > [reveal] {
-      &:nth-of-type(1) {
-        --markdown-syntax-background-color: rgba(0,0,0,0.5);
-        & code.language-html > .token.tag > .token:is(
-          /* client open  */:nth-child(-n+1),
-          /* client close */:nth-child(n+5)
-        ) {
-          opacity: 0.5;
-        }
-      }
-    }
-  }
-  & pre {
-    font-size: 70%;
-    position: absolute;
-    margin-top: 1em !important;
-    top: 0;
-    right: 0;
-    left: 0;
-  }
-}
 
 [name="Web Components Advantages"],
+[name="Controller Advantages"],
 [name="HTML Summary"] {
+  font-size: 200%;
   & h3 span { color: var(--primary); }
   & p[reveal]:last-of-type { text-align: right; }
   & :is(ol, ul) {
@@ -555,138 +364,6 @@ docs-playground {
 
 [name="Web Components Advantages"] {
   font-size: 150%;
-}
-
-[name="HTML Summary"] {
-  font-size: 200%;
-}
-
-[name="HTML Mutations"] {
-  & [step="6"] pre {
-    background: black;
-  }
-}
-
-[name$=" Controllers"] {
-  & h2 span {
-    color: var(--secondary);
-    --slnt:-20;
-    &:first-of-type {
-      color: var(--primary);
-      --mono:1;
-      --casl:0;
-      --slnt:0;
-      --wght:900;
-    }
-  }
-}
-
-[name="Reactive Controllers Intro"] {
-  & h2 em {
-    &:first-of-type { color: var(--primary); }
-    &:last-of-type { color: var(--secondary); }
-  }
-  &::part(content) {
-    display: grid;
-  }
-  & dl {
-    display: grid;
-    grid-template: 1fr 1fr / max-content max-content;
-    & dd::before {
-      content: '⇒ ';
-    }
-  }
-}
-
-[name="Analogy to Biology"] {
-  background-repeat: no-repeat;
-  background-size: cover;
-  &::part(content) { display: flex; }
-  & p {
-    margin-top: auto;
-    background: rgb(0,0,0,0.5);
-    padding: 0.2em;
-    & small {
-      display: block;
-      font-size: 60%;
-      & a {
-        text-decoration: underline;
-      }
-    }
-  }
-}
-
-[name="ReactiveControllerHost"] {
-  & svg {
-    & path[marker-end="url(#Arrow1Mend)"] {
-      transform: translateX(-5px);
-    }
-    & text {
-      font-family: Recursive;
-      font-variant-caps:normal;
-      font-variant-east-asian:normal;
-      font-variant-ligatures:normal;
-      font-variant-numeric:normal;
-      font-variation-settings:'MONO' 1, 'wght' 400;
-      fill: currentColor;
-    }
-  }
-}
-
-[name="ClockController"] {
-  & iframe {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-[name="ControllerHostMixin"] {
-  & [step]:not([step="1"]) > pre {
-    position: relative;
-    top: -8px;
-  }
-}
-
-[name="MouseController Data Flow"] {
-  &::part(content) { display: flex; }
-  & svg {
-    margin: 0 auto;
-    height: 100%;
-    font-family: inherit;
-    font-size: 18px;
-    fill: #ccc;
-    & .messageText {
-      text-anchor: middle;
-      dominant-baseline: middle;
-      alignment-baseline: middle;
-    }
-    & .method-call {
-      stroke-dasharray: 4px 4px;
-    }
-    & .property-access {
-      stroke-dasharray: 2px 2px;
-    }
-    & .actor-line {
-     stroke-width: 0.5px;
-    }
-    & text.actor {
-      text-anchor: middle;
-      dominant-baseline: central;
-      alignment-baseline: central;
-    }
-  }
-}
-
-[name="ApolloQueryController flavours"] {
-  &>pre { width: 100%; }
-  & section[reveal] { background-color: var(--background); }
-}
-
-[name="ApolloQueryController Lit"],
-[name="ApolloMutationController Lit"] {
-  & docs-playground::part(playground-ide) {
-    --playground-code-font-size: 50% !important;
-  }
 }
 
 [name="Other Languages"] {

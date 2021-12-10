@@ -5,7 +5,7 @@ attrs: alt
 
 ## Web Components are...
 
-<ul reveal>
+<ul>
   <li>Reusable</li>
   <li>Encapsulated</li>
   <li>Interoperable</li>

@@ -9,5 +9,3 @@ name: HTML Summary
   <li>Dynamic</li>
   <li>HTML-First</li>
 </ol>
-
-<p reveal>...but there's <em>more</em></p>

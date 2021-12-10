@@ -18,10 +18,10 @@ unbind: true
       href="{{ '/decks/reversim-summit-2021/graphql-in-html.css' | asset | url }}"/>
 
 <link data-helmet rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.60/dist/themes/dark.css">
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.62/dist/themes/dark.css">
 
 <script data-helmet type="module"
-        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.60/dist/shoelace.js"></script>
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.62/dist/shoelace.js"></script>
 
 <script data-helmet type="module"
         src="{{ '/decks/reversim-summit-2021/slides-script.js' | asset | url }}"></script>

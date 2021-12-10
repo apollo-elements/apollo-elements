@@ -3,7 +3,7 @@ name: UI f query
 attrs: alt
 ---
 
-<figure class="sl-theme-light">
+<figure class="sl-theme-dark">
 <figcaption flex column center>
 
 ui = _f_(query)
@@ -14,7 +14,7 @@ ui = _f_(query)
   <dt>
 
   ```graphql
-  query Users {
+  query AllUsers {
     users {
       id
       name
