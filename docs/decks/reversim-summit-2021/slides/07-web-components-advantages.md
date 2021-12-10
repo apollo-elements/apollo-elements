@@ -1,6 +1,5 @@
 ---
 name: Web Components Advantages
-attrs: alt
 ---
 
 ## Web Components are...

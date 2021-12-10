@@ -7,10 +7,7 @@ name: Try It
 - Dashboard SPAs
     ```html
     <portal-home>
-      <apollo-query>
-        <script type="application/graphql" src="Uptime.query.graphql"></script>
-        <template><!-- ... --></template>
-      </apollo-query>
+      <apollo-query><!-- ... --></apollo-query>
     </portal-home>
     ```
 
@@ -21,11 +18,8 @@ name: Try It
 
 - Microfrontend Widgets
     ```ts
-    @customElement('users-online')
-    export class UsersOnline extends LitElement {
-      data = new ApolloQueryController(this, UsersOnlineQuery);
-      render() {
-        return html`<!-- ... -->`;
-      }
+    function UsersOnline() {
+      const { data } = useQuery(UsersOnlineQuery);
+      return html`<!-- ... -->`;
     }
     ```

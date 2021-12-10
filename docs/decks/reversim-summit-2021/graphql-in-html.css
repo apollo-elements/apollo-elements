@@ -175,13 +175,13 @@ docs-playground {
 
 [name="UI f query"] {
   & figure {
-    width: 75vw;
+    width: 75%;
     margin: 0 auto;
     --casl:1;
   }
 
   & figcaption {
-    font-size:20vh;
+    font-size: 300%;
   }
 
   & dl {
@@ -266,20 +266,24 @@ docs-playground {
 
 [name="Glue"] {
   text-align: center;
+  & > * {
+    width: max-content;
+  }
   &::part(content) {
     display: grid;
     align-items: center;
+    justify-items: center;
     align-content: space-evenly;
+    width: 100%;
   }
   & div:first-of-type {
     display: flex;
-    width: 100%;
     align-items: center;
     justify-content: center;
     gap: .5em;
   }
   & :is(svg, img) {
-    width: 100px;
+    width: 350px;
     height: auto;
     display: inline-block;
     &:nth-of-type(2) {
@@ -298,6 +302,11 @@ docs-playground {
     gap: 1em;
     list-style-type: none;
     justify-content: space-between;
+    display: flex;
+    width: 80%;
+    padding: 0;
+    margin: 0;
+    max-width: 70%;
     & li {
       display: contents;
       & a {
@@ -311,8 +320,8 @@ docs-playground {
         transition: background 0.2s ease-in-out;
         height: 100%;
         outline: none;
-        width: 12vw;
-        height: 12vw;
+        width: 10vw;
+        height: 10vw;
         & svg {
           font-size: initial;
           width: auto;

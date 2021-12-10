@@ -56,16 +56,5 @@ window.addEventListener('location-changed', event => {
   progress.value = percentage + stepProgress;
 });
 
-await customElements.whenDefined('docs-playground');
-await customElements.whenDefined('playground-ide');
 await customElements.whenDefined('slidem-deck');
 progress.indeterminate = false;
-
-for (const dp of document.querySelectorAll('docs-playground')) {
-  await dp.updateComplete;
-  const pi = dp.shadowRoot.querySelector('playground-ide');
-  pi.shadowRoot.getElementById('lhs').part = 'lhs';
-  pi.shadowRoot.getElementById('rhs').part = 'rhs';
-  dp.show();
-  pi.blur();
-}

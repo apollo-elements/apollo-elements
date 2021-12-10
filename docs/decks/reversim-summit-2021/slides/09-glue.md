@@ -1,6 +1,5 @@
 ---
 name: Glue
-attrs: spaced
 templateEngineOverride: njk,md
 libraries:
   - lib: mixins
@@ -43,7 +42,7 @@ libraries:
 
 Multiparadigm
 
-<ul fit flex center>
+<ul>
 {%- for library in libraries -%}
   {%- set path = ('../../../_assets/brand-logos/' + library.logo + '.svg') -%}
   <li aria-label="{{ library.name }}">
