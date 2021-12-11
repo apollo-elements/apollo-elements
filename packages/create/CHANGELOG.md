@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 3.1.1
+
+### Patch Changes
+
+- a9f697e: Fixes a bug which prevented the generator from progressing if certain options were not set
+
 ## 3.1.0
 
 ### Minor Changes
