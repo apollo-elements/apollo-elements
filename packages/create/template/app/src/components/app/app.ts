@@ -2,7 +2,7 @@ import { LitElement, html, TemplateResult } from 'lit';
 import { ApolloQueryController } from '@apollo-elements/core';
 import { customElement } from 'lit/decorators.js';
 
-import { AppQuery } from '../../schema';
+import { AppQuery } from './App.query.graphql';
 
 import style from './app.css';
 import shared from '../shared.css';
