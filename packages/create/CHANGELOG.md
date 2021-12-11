@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 3.1.2
+
+### Patch Changes
+
+- 1cefb64: Fixes the generated app so that it imports the app component's query from the correct file
+
 ## 3.1.1
 
 ### Patch Changes
