@@ -3,6 +3,7 @@ import type { BaseOptions, AppOptions, ComponentOptions } from './options';
 import { app } from './app.js';
 import { component } from './component.js';
 
+import Case from 'case';
 import inquirer from 'inquirer';
 
 import BANNER from './banner.js';
@@ -18,6 +19,13 @@ export type PromptOptions<T> =
 
 const ERR_BAD_CE_TAG_NAME =
   'Custom element tag names must contain a hyphen (-)';
+
+function normalizeOptions<T extends BaseOptions>(options: T): T {
+  return Object.fromEntries(Object.entries(options).flatMap(([key, value]) => [
+    [key, value],
+    [Case.camel(key), options[Case.camel(key) as keyof T] ?? value],
+  ])) as T;
+}
 
 export async function promptApp(options: PromptOptions<AppOptions>): Promise<AppOptions> {
   return {
@@ -208,9 +216,9 @@ export async function prompt(): Promise<void> {
 
   try {
     if (argv._.includes('app'))
-      return await promptApp(argv).then(app);
+      return await promptApp(argv).then(normalizeOptions).then(app);
     else if (argv._.includes('component'))
-      return await promptComponent(argv).then(component);
+      return await promptComponent(argv).then(normalizeOptions).then(component);
     else {
       console.log(BANNER);
 
@@ -237,9 +245,11 @@ export async function prompt(): Promise<void> {
       switch (generate) {
         case 'app':
           return await promptApp(commandAppendedArgv)
+            .then(normalizeOptions)
             .then(app);
         case 'component':
           return await promptComponent(commandAppendedArgv)
+            .then(normalizeOptions)
             .then(component);
       }
     }
