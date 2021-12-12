@@ -11,8 +11,10 @@ import BANNER from './banner.js';
 import m from 'module';
 
 const require = m.createRequire(import.meta.url);
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 const Yargs: typeof import('yargs') = require('yargs');
+const { version } = require('./package.json');
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 export type PromptOptions<T> =
   Partial<T> & BaseOptions;
@@ -103,7 +105,6 @@ export async function prompt(): Promise<void> {
 
   const { argv } = Yargs
     .scriptName(`${pkgManager ?? 'npm'} init @apollo-elements`)
-    .usage('$0 [<cmd>] [args]')
     .option('pkgManager', {
       type: 'string',
       default: pkgManager,
@@ -131,7 +132,9 @@ export async function prompt(): Promise<void> {
       demandOption: false,
       description: 'Output directory',
     })
+    .command('help', 'Display this help message', yargs => yargs.showHelp())
     .command<AppOptions>('app', 'Generate an Apollo Elements Skeleton App', yargs => void yargs
+      .command('help', 'Display this help message', yargs => yargs.showHelp())
       .option('uri', {
         alias: 'u',
         type: 'string',
@@ -157,6 +160,7 @@ export async function prompt(): Promise<void> {
       })
       .help())
     .command<ComponentOptions>('component', 'Generate an Apollo Element', yargs => void yargs
+      .command('help', 'Display this help message', yargs => yargs.showHelp())
       .option('name', {
         alias: 'n',
         type: 'string',
@@ -207,6 +211,8 @@ export async function prompt(): Promise<void> {
       })
       .help())
     .help()
+    .usage('npm init @apollo-elements [app|component] [help] -- [args]')
+    .version(version)
     .check(({ name }) => {
       if (typeof name === 'string' && !name.includes('-'))
         throw new Error(ERR_BAD_CE_TAG_NAME);
@@ -221,6 +227,7 @@ export async function prompt(): Promise<void> {
       return await promptComponent(argv).then(normalizeOptions).then(component);
     else {
       console.log(BANNER);
+      console.log(`Generator version ${version}`);
 
       const { generate } = await inquirer.prompt({
         name: 'generate',
