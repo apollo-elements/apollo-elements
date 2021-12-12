@@ -22,7 +22,7 @@
       }
       @media (prefers-color-scheme: dark) {
         #web-components-logo-left {
-          fill: white;
+          fill: #212121;
         }
       }
     </style>

@@ -2,7 +2,7 @@
 name: Web Components Advantages
 ---
 
-## Web Components are...
+## _Web Components_ are...
 
 <ul>
   <li>Reusable</li>

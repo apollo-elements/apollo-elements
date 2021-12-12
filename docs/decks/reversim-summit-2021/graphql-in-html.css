@@ -151,6 +151,21 @@ docs-playground {
   }
 }
 
+[name$=" Advantages"],
+[name^="HTML "] {
+  &:not([float-header]) {
+    & h2 {
+      --casl: 0;
+      --slnt: 0;
+      line-height: 0.9;
+      & em {
+        --slnt: -15;
+        color: var(--primary);
+      }
+    }
+  }
+}
+
 [name="Web Components"] {
   & img { width: 512px; }
   &::part(content) {
@@ -266,6 +281,7 @@ docs-playground {
 
 [name="Glue"] {
   text-align: center;
+  font-size: 200%;
   & > * {
     width: max-content;
   }
@@ -274,7 +290,6 @@ docs-playground {
     align-items: center;
     justify-items: center;
     align-content: space-evenly;
-    width: 100%;
   }
   & div:first-of-type {
     display: flex;
@@ -333,30 +348,7 @@ docs-playground {
   }
 }
 
-[name="Web Components Advantages"],
-[name="Controller Advantages"],
-[name^="HTML "] {
-  &:not([float-header]) {
-    & h2 {
-      --casl: 0;
-      --slnt: 0;
-      line-height: 0.9;
-      & span:first-of-type {
-        --slnt: -15;
-        color: var(--primary);
-      }
-    }
-  }
-
-  & pre {
-    margin-block: 0;
-  }
-}
-
-
-[name="Web Components Advantages"],
-[name="Controller Advantages"],
-[name="HTML Summary"] {
+[name$=" Advantages"] {
   font-size: 200%;
   & h3 span { color: var(--primary); }
   & p[reveal]:last-of-type { text-align: right; }
@@ -375,6 +367,15 @@ docs-playground {
   font-size: 150%;
 }
 
+[name="Try It"] {
+  & pre {
+    font-size: 75%;
+  }
+  & > [past] {
+    opacity: 0;
+  }
+}
+
 [name="Other Languages"] {
   font-size: 22px;
   &::part(content) {
@@ -385,16 +386,18 @@ docs-playground {
 }
 
 [name="Thanks"] {
-  & ul {
-    width: 50%;
-    list-style-type: none;
+  &::part(content) { display: grid; }
+  & ul { }
+  & p { font-size: 80%; }
+  & footer {
+    margin-left: auto;
+    margin-top: auto;
     display: grid;
-    grid-template-columns: min-content auto;
-    grid-template-rows: repeat(auto-fill, 100px);
-    align-items: center;
-    justify-items: start;
-    gap: 14px 24px;
-    & :is(li, a) { display: contents; }
-    & img { height: 100px; }
+    grid: 'logo name' 1fr 'logo title' 1fr / auto max-content;
+    width: max-content;
+    gap: 12px 36px;
+    & img {
+      grid-area: logo;
+    }
   }
 }

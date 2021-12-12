@@ -1,6 +1,6 @@
 ---
 name: HTML Mutations
-attrs: float-header
+attrs: float-header auto
 ---
 
 ## Mutations
@@ -65,13 +65,14 @@ customElements.define('add-user', component(AddUser));
 
 ```html reveal
 <apollo-mutation refetch-queries="LatestUsers" await-refetch-queries>
-  <script type="application/graphql" src="InsertUser.mutation.graphql"></script>
-  <sl-input data-variable="name" label="User name"></sl-input>
-  <sl-button trigger label="Add user"></sl-button>
+  <script type="application/graphql"
+          src="AddUser.mutation.graphql"></script>
+
+  <sl-input label="User name"
+            data-variable="name"></sl-input>
+  <sl-button label="Add user"
+             trigger></sl-button>
 </apollo-mutation>
-
-
-
 
 
 

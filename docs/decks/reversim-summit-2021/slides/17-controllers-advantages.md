@@ -2,7 +2,7 @@
 name: Controller Advantages
 ---
 
-## Apollo Elements <span>controllers</span> are...
+## Apollo Elements _controllers_ are...
 
 <ol reveal>
   <li>Composable</li>

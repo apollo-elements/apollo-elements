@@ -1,8 +1,8 @@
 ---
-name: HTML Summary
+name: Components Advantages
 ---
 
-## Apollo Elements <span>components</span> are...
+## Apollo Elements _components_ are...
 
 <ol reveal>
   <li>Declarative</li>

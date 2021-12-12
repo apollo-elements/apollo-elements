@@ -1,6 +1,6 @@
 ---
 name: HTML Queries
-attrs: float-header
+attrs: float-header auto
 ---
 
 ## Queries

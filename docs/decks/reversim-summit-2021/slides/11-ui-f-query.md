@@ -1,6 +1,5 @@
 ---
 name: UI f query
-attrs: alt
 ---
 
 <figure class="sl-theme-dark">
