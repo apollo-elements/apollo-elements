@@ -911,7 +911,7 @@ index 288f1a3..0000000
 -        </div>
 -      `}connectedCallback(){let t;super.connectedCallback(),this._steps=Array.from(this.querySelectorAll("[reveal]")),this.steps=this._steps.length,this.__resizeContent(),window.addEventListener("resize",()=>{window.clearTimeout(t),t=window.setTimeout(()=>{this.__resizeContent()},200)})}static get observedAttributes(){return["step"]}attributeChangedCallback(t,e,n){if("step"===t){const t=Number(n);if(t>this.steps+1)return void this.setAttribute("step",this.steps+1);this.__setStep(t)}}set step(t){this.setAttribute("step",t)}get step(){return Number(this.getAttribute("step"))||1}__setStep(t){this._steps.forEach((e,n)=>{e.style.opacity=n<t-1?1:0})}__resizeContent(){const t=window.getComputedStyle(document.documentElement),e=Number((t.getPropertyValue("--slidem-content-width")||"1760px").slice(0,-2)),n=Number((t.getPropertyValue("--slidem-content-height")||"990px").slice(0,-2)),o=Math.min(window.innerHeight/1.09/n,window.innerWidth/1.09/e);o<1?(document.documentElement.style.setProperty("--slidem-content-scale",o),this.$.content&&(this.$.content.style.transform=`scale(${o})`)):(document.documentElement.style.setProperty("--slidem-content-scale",1),this.$.content&&(this.$.content.style.transform="scale(1)"))}}t.SlidemSlideBase=s,Object.defineProperty(t,"__esModule",{value:!0})}));
 diff --git a/node_modules/slidem/slidem-slide.js b/node_modules/slidem/slidem-slide.js
-index 4cdc5a1..d2e96ea 100644
+index 4cdc5a1..c9f8edc 100644
 --- a/node_modules/slidem/slidem-slide.js
 +++ b/node_modules/slidem/slidem-slide.js
 @@ -28,13 +28,8 @@ export class SlidemSlide extends SlidemSlideBase {
@@ -930,7 +930,7 @@ index 4cdc5a1..d2e96ea 100644
        } else if (background.match(/^(http|\/|\.)/)) {
          let image = `url(${background})`;
          const darken = this.getAttribute('darken-background');
-@@ -43,11 +38,11 @@ export class SlidemSlide extends SlidemSlideBase {
+@@ -43,11 +38,12 @@ export class SlidemSlide extends SlidemSlideBase {
          }
          this.style.backgroundImage = image;
        } else {
@@ -941,10 +941,11 @@ index 4cdc5a1..d2e96ea 100644
  
 -    this.textNodes = Array.from(this.querySelectorAll('h1, h2, h3, h4, h5, h6, p, li, span'));
 +    this.textNodes = Array.from(this.querySelectorAll('h1, h2, h3, h4, h5, h6, p, li, span, em'));
++
      this.textNodes.forEach(textNode => {
        if (textNode.getAttribute('font-size') !== null) {
          textNode.style.fontSize = textNode.getAttribute('font-size');
-@@ -103,6 +98,8 @@ export class SlidemSlide extends SlidemSlideBase {
+@@ -103,6 +99,8 @@ export class SlidemSlide extends SlidemSlideBase {
  
    attributeChangedCallback(attr, oldVal, newVal) {
      super.attributeChangedCallback(attr, oldVal, newVal);
