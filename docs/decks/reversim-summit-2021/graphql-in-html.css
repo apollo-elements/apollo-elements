@@ -290,6 +290,7 @@ docs-playground {
     align-items: center;
     justify-items: center;
     align-content: space-evenly;
+    width: auto;
   }
   & div:first-of-type {
     display: flex;
@@ -306,7 +307,7 @@ docs-playground {
     }
   }
   & p {
-    font-size: 200%;
+    font-size: 150%;
     --wght: 600;
     & em {
       --wght: 300;
