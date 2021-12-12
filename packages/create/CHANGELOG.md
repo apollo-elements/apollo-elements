@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 3.1.3
+
+### Patch Changes
+
+- 2690f02: Improves help messaging
+
 ## 3.1.2
 
 ### Patch Changes
