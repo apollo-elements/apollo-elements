@@ -388,17 +388,21 @@ docs-playground {
 
 [name="Thanks"] {
   &::part(content) { display: grid; }
-  & ul { }
+  & ul {
+    list-style-type: none;
+  }
   & p { font-size: 80%; }
   & footer {
+    font-size: 70%;
     margin-left: auto;
     margin-top: auto;
     display: grid;
-    grid: 'logo name' 1fr 'logo title' 1fr / auto max-content;
+    grid: 'cc logo name' 1fr 'cc logo title' 1fr / auto auto max-content;
     width: max-content;
-    gap: 12px 36px;
-    & img {
-      grid-area: logo;
-    }
+    align-items: center;
+    gap: 8px 24px;
+    & img { width: 100px; }
+    & #cc-by-nc-sa { grid-area: cc; width: 200px; }
+    & #red-hat-logo { grid-area: logo; }
   }
 }
