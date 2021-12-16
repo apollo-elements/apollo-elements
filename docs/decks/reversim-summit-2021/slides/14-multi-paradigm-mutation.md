@@ -1,6 +1,6 @@
 ---
 name: HTML Mutations
-attrs: float-header auto
+attrs: float-header
 ---
 
 ## Mutations
