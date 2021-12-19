@@ -166,6 +166,11 @@ docs-playground {
   }
 }
 
+[name$=" Advantages"] {
+  & p {
+    font-size: 70%;
+  }
+}
 [name="Web Components"] {
   & img { width: 512px; }
   &::part(content) {
@@ -408,12 +413,26 @@ docs-playground {
     grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
+  & figure {
+    position: relative;
+    & figcaption {
+      position: absolute;
+      top: 40%;
+      left: 40%;
+      font-size: 92px;
+      z-index: 2;
+      --wght: 600;
+    }
+  }
 }
 
 [name="Thanks"] {
   &::part(content) { display: grid; }
   & ul {
     list-style-type: none;
+    & li:nth-child(n+3) {
+      font-size: 70%;
+    }
   }
   & p { font-size: 80%; }
   & footer {

@@ -9,3 +9,5 @@ name: Controller Advantages
   <li>Stackable</li>
   <li>DRY</li>
 </ol>
+
+For writing your own custom components in **TypeScript** or **JavaScript**
