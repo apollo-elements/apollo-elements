@@ -126,8 +126,8 @@ docs-playground {
 
 }
 
-[name="whiskey"],
-[name="iso-containers"] {
+
+.cover {
   background-position: center;
   background-size: cover;
 }
@@ -257,6 +257,30 @@ docs-playground {
     width: 3rem;
     height: 3rem;
   }
+}
+
+[name^="HTML Queries in"],
+[name^="HTML Mutations with"] {
+  font-size: 90%;
+  & pre {
+    width: 100%;
+    background: transparent
+  }
+  & img {
+    height: 150px;
+    width: auto;
+    position: relative;
+    top: 50px;
+    right: 50px;
+  }
+  &::part(end-start) {
+    position: absolute;
+    top: 100px;
+  }
+}
+
+[name^="HTML Queries in"] {
+  font-size: 60%;
 }
 
 [name="Apollo Elements"] {

@@ -4,6 +4,8 @@ name: Other Languages
 <aside slot="presenter">Credit for F# to Angel Munoz</aside>
 <aside slot="presenter">Credit for Ruby to Jared White</aside>
 
+<figure>
+
 ```fsharp
 open Fable.Lit
 open Fable.Core.JsInterop
@@ -41,6 +43,11 @@ let UserProfile () =
         """
 ```
 
+<figcaption>F#</figcaption>
+</figure>
+
+<figure>
+
 ```ruby
 import [ class_map ], from: "lit/directives/class-map.js"
 import [ client ], from: "./client.js"
@@ -71,3 +78,6 @@ class UserProfileElement < LitElement
   end
 end
 ```
+
+<figcaption>Ruby<figcaption>
+</figure>
