@@ -1,8 +1,39 @@
 diff --git a/node_modules/@rocket/cli/src/RocketCli.js b/node_modules/@rocket/cli/src/RocketCli.js
-index 19a0fa9..cb66442 100644
+index 19a0fa9..2dc55ca 100644
 --- a/node_modules/@rocket/cli/src/RocketCli.js
 +++ b/node_modules/@rocket/cli/src/RocketCli.js
-@@ -120,6 +120,7 @@ export class RocketCli {
+@@ -92,6 +92,10 @@ export class RocketCli {
+         type: String,
+         description: 'Location of Rocket configuration',
+       },
++      {
++        name: 'incremental',
++        type: Boolean,
++      }
+     ];
+     const options = commandLineArgs(mainDefinitions, {
+       stopAtFirstUnknown: true,
+@@ -100,8 +104,10 @@ export class RocketCli {
+     this.subArgv = options._unknown || [];
+     this.argvConfig = {
+       command: options.command,
++      incremental: options.incremental,
+       configFile: options['config-file'],
+     };
++
+     this.__isSetup = false;
+   }
+ 
+@@ -114,12 +120,16 @@ export class RocketCli {
+       await this.mergePresets();
+ 
+       const elev = new RocketEleventy(_inputDirCwdRelative, outputDevDir, this);
++
++      elev.setIncrementalBuild(this.argvConfig.incremental);
++
+       // 11ty always wants a relative path to cwd - why?
+       const rel = path.relative(process.cwd(), path.join(__dirname));
+       const relCwdPathToConfig = path.join(rel, 'shared', '.eleventy.cjs');
  
        const config = new TemplateConfig(null, relCwdPathToConfig);
        elev.config = config.getConfig();
@@ -25,7 +56,7 @@ index 0000000..d37b81e
 +  });
 +}
 diff --git a/node_modules/@rocket/cli/src/normalizeConfig.js b/node_modules/@rocket/cli/src/normalizeConfig.js
-index 65b5d52..0705b4d 100644
+index 65b5d52..5344921 100644
 --- a/node_modules/@rocket/cli/src/normalizeConfig.js
 +++ b/node_modules/@rocket/cli/src/normalizeConfig.js
 @@ -15,6 +15,7 @@ import { readConfig } from '@web/config-loader';
@@ -36,7 +67,15 @@ index 65b5d52..0705b4d 100644
  
  import { fileURLToPath } from 'url';
  
-@@ -63,6 +64,8 @@ export async function normalizeConfig(inConfig) {
+@@ -51,6 +52,7 @@ export async function normalizeConfig(inConfig) {
+     setupEleventyComputedConfig: [],
+     setupCliPlugins: [],
+     eleventy: () => {},
++    incremental: false,
+     command: 'help',
+     watch: true,
+     createSocialMediaImages: true,
+@@ -63,6 +65,8 @@ export async function normalizeConfig(inConfig) {
  
      ...inConfig,
  

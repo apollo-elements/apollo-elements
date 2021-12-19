@@ -718,7 +718,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "ZenObservable.Subscription"
+                  "text": "C.ObservableSubscription"
                 }
               },
               "parameters": [
