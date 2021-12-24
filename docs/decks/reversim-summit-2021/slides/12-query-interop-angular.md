@@ -8,11 +8,9 @@ attrs: fade-out
 ```html
 {%- raw -%}
 <spacex-launches
-  (change)="onChange($event)"
+  [limit]="limit"
   (select)="onSelect($event)"
 ></spacex-launches>
-
-<p>There are {{launches.length}} launches available.</p>
 
 <spacex-launch [launchId]="selectedLaunchId"></spacex-launch>
 {%- endraw -%}
@@ -26,10 +24,10 @@ import '@apollo-elements-demos/spacex-launches';
 
 @Component({ selector: 'app-root', templateUrl: 'App.component.html' })
 export class AppComponent {
+  limit = 3;
   selectedLaunchId = '';
-  launches = [];
 
-  onChange = event => this.launches = event.target.launches ?? [];
-  onSelect = event => this.selectedLaunchId = event.target.selected?.id ?? '';
+  onSelect = event =>
+    this.selectedLaunchId = event.target.selected?.id ?? '';
 }
 ```

@@ -8,11 +8,9 @@ attrs: fade-in fade-out
 ```html
 <template>{%raw%}
   <spacex-launches
-    @change="onChange"
+    :limit="{{ limit }}"
     @select="onSelect"
   ></spacex-launches>
-
-  <p>There are {{launches.length}} launches available.</p>
 
   <spacex-launch :launch-id="selectedLaunchId"></spacex-launch>
 </template>{%endraw%}
@@ -23,9 +21,11 @@ attrs: fade-in fade-out
 
   export default defineComponent({
     name: 'ApolloElementsDemo',
-    data: ()  => ({ selectedLaunchId: '', launches: [] }),
+    data: ()  => ({
+      limit: 3
+      selectedLaunchId: '',
+    }),
     methods: {
-      onChange: event => this.launches = event.target.launches ?? [],
       onSelect: event => this.selectedLaunchId = event.target.selected?.id ?? '',
     }
   });

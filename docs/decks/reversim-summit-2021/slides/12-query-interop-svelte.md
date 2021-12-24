@@ -10,18 +10,15 @@ attrs: fade-in fade-out
   import '@apollo-elements-demos/spacex-launches';
 
   let selectedLaunchId = '';
-  let launches = [];
+  const limit = 3;
 
-  const onChange = event => launches = event.target.launches ?? [];
   const onSelect = event => selectedLaunchId = event.target.selected?.id ?? '';
 </script>
 
 <spacex-launches
-  on:change={onChange}
+  limit={limit}
   on:select={onSelect}
 ></spacex-launches>
-
-<p>There are {launches.length} launches available.</p>
 
 <spacex-launch launch-id={selectedLaunchId}></spacex-launch>
 ```

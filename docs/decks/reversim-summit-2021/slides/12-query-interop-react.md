@@ -12,15 +12,13 @@ import '@apollo-elements-demos/spacex-launches';
 
 export const LaunchesDemo = () => {
   const [{ id: selectedLaunchId }, setSelected] = useState({});
-  const [launches, setLaunches] = useState([]);
+  const limit = 3;
 
   return (
     <spacex-launches
-      onchange={event => setLaunches(event.target.launches)}
+      limit={limit}
       onselect={event => setSelected(event.target.selected)}
     ></spacex-launches>
-
-    <p>There are {launches.length} launches available.</p>
 
     <spacex-launch launchId={selectedLaunchId ?? ''}></spacex-launch>
   );
