@@ -14,7 +14,7 @@
 
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
-```
+```bash
 npm init @apollo-elements
 ```
 
@@ -55,7 +55,7 @@ Reactive GraphQL controllers contain sharable, reusable, and stackable logic.
 
 <code-copy>
 
-```
+```bash
 npm i -S @apollo-elements/core@next
 ```
 
@@ -82,7 +82,7 @@ Write GraphQL apps in HTML.
 
 <code-copy>
 
-```
+```bash
 npm i -S @apollo-elements/components@next
 ```
 
@@ -90,11 +90,34 @@ npm i -S @apollo-elements/components@next
 
 <code-copy>
 
-```js
-import '@apollo-elements/components/apollo-client';
-import '@apollo-elements/components/apollo-query';
-import '@apollo-elements/components/apollo-mutation';
-import '@apollo-elements/components/apollo-subscription';
+```html
+<apollo-client src="/graphql">
+  <apollo-query>
+    <script type="application/graphql" src="AllUsers.query.graphql"></script>
+    <template>
+      <link rel="stylesheet" href="all-users.css">
+      <ul>
+        <template type="repeat" items="{{ data.users ?? [] }}">
+          <li data-user-id="{{ item.id }}">
+            <h2>{{ item.name }}</h2>
+            <img src="{{ item.avatar }}" alt=""/>
+          </li>
+        </template>
+      </ul>
+    </template>
+  </apollo-query>
+  <apollo-mutation refetch-queries="AllUsers">
+    <script type="application/graphql" src="AddUser.mutation.graphql"></script>
+    <template>
+      <link rel="stylesheet" href="add-user.css">
+      <label for="name">User Name</label>
+      <input id="name" ?disabled="{{ loading }}" data-variable="name"/>
+      <label for="avatar">Avatar Image</label>
+      <input id="avatar" type="file" ?disabled="{{ loading }}" data-variable="avatar"/>
+      <small ?hidden="{{ !data }}">{{ data.addUser.name }} added!</small>
+    </template>
+  </apollo-mutation>
+</apollo-client>
 ```
 
 </code-copy>
