@@ -27,11 +27,17 @@ document.body.addEventListener('keydown', event => {
     case 'j':
     case 'l':
     case 'RightArrow':
+    case 'DownArrow':
+    case ' ':
+    case 'Space':
       deck.$.forward.click();
       return true;
     case 'h':
     case 'k':
     case 'LeftArrow':
+    case 'Home':
+    case 'UpArrow':
+    case 'Backspace':
       deck.$.backward.click();
       return true;
     case 'p':
