@@ -1,12 +1,9 @@
-env:
-  TARGET: https://apolloelements.dev
-  RECURSIVE: true
-
 on:
   schedule:
     - cron: '0 0 * * 0'
   repository_dispatch: # run manually
-    types: [check-link]
+    types:
+      - check-link
 
 name: Broken Link Check
 jobs:
@@ -18,6 +15,5 @@ jobs:
         uses: technote-space/broken-link-checker-action@v2
         with:
           target: https://apolloelements.dev
-          excludedKeywords:
-            - camo.githubusercontent.com
-            - t.me
+          recursive: true
+          excludedKeywords: camo.githubusercontent.com, t.me
