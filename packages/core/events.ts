@@ -13,7 +13,7 @@ type ApolloElementEventType = `apollo-element-${'disconnected'|'connected'}`;
 type ApolloControllerEventType = `apollo-controller-${'disconnected'|'connected'}`;
 
 interface ApolloControllerHost extends HTMLElement {
-  controller: ApolloController;
+  controller: ApolloController<unknown, unknown>;
 }
 
 export type ApolloQueryResultEvent<TData = unknown> =
@@ -33,7 +33,7 @@ export type ApolloSubscriptionResultEvent<D = unknown> = CustomEvent<{
 
 export abstract class ApolloEvent<T = ApolloControllerHost> extends CustomEvent<T> {
   public abstract type: ApolloEventType
-  public declare controller?: ApolloController;
+  public declare controller?: ApolloController<unknown, unknown>;
   constructor(type: ApolloEventType, options?: CustomEventInit) {
     super(type, { ...options, bubbles: true, composed: true });
   }
@@ -50,8 +50,8 @@ export class ApolloElementEvent<T = ApolloControllerHost> extends ApolloEvent<T>
   }
 }
 
-export abstract class ApolloControllerEvent extends ApolloEvent {
-  public abstract controller: ApolloController;
+export abstract class ApolloControllerEvent<T extends ApolloController> extends ApolloEvent {
+  public abstract controller: T;
   public abstract type: ApolloControllerEventType
   constructor(type: ApolloControllerEventType) {
     super(type);
@@ -61,10 +61,11 @@ export abstract class ApolloControllerEvent extends ApolloEvent {
 /**
  * @summary Fired when a controlled element connects to the DOM
  */
-export class ApolloControllerConnectedEvent extends ApolloControllerEvent {
+export class ApolloControllerConnectedEvent<T extends ApolloController>
+  extends ApolloControllerEvent<T> {
   public static type = 'apollo-controller-connected' as const;
   public declare type: 'apollo-controller-connected';
-  constructor(public controller: ApolloController) {
+  constructor(public controller: T) {
     super(ApolloControllerConnectedEvent.type);
   }
 }
@@ -72,18 +73,19 @@ export class ApolloControllerConnectedEvent extends ApolloControllerEvent {
 /**
  * @summary Fired when a controlled element disconnects from the DOM
  */
-export class ApolloControllerDisconnectedEvent extends ApolloControllerEvent {
+export class ApolloControllerDisconnectedEvent<T extends ApolloController>
+  extends ApolloControllerEvent<T> {
   public static type = 'apollo-controller-disconnected' as const;
   public declare type: 'apollo-controller-disconnected';
-  constructor(public controller: ApolloController) {
+  constructor(public controller: T) {
     super(ApolloControllerDisconnectedEvent.type);
   }
 }
 
 declare global {
   interface HTMLElementEventMap {
-    'apollo-controller-connected': ApolloControllerConnectedEvent;
-    'apollo-controller-disconnected': ApolloControllerDisconnectedEvent;
+    'apollo-controller-connected': ApolloControllerConnectedEvent<ApolloController>;
+    'apollo-controller-disconnected': ApolloControllerDisconnectedEvent<ApolloController>;
     'apollo-element-connected': ApolloElementEvent;
     'apollo-element-disconnected': ApolloElementEvent;
     'apollo-error': CustomEvent<ApolloError>;
@@ -94,6 +96,6 @@ declare global {
 
   interface WindowEventMap {
     'apollo-element-disconnected': ApolloElementEvent;
-    'apollo-controller-disconnected': ApolloControllerDisconnectedEvent;
+    'apollo-controller-disconnected': ApolloControllerDisconnectedEvent<ApolloController>;
   }
 }

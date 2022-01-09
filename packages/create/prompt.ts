@@ -10,9 +10,10 @@ import BANNER from './banner.js';
 
 import m from 'module';
 
+import * as Yargs from 'yargs';
+
 const require = m.createRequire(import.meta.url);
 /* eslint-disable @typescript-eslint/no-var-requires */
-const Yargs: typeof import('yargs') = require('yargs');
 const { version } = require('./package.json');
 /* eslint-enable @typescript-eslint/no-var-requires */
 
@@ -103,7 +104,7 @@ export async function prompt(): Promise<void> {
     : process.argv0 === 'yarn' ? process.argv0
     : 'npm';
 
-  const { argv } = Yargs
+  const { argv: pargv } = Yargs
     .scriptName(`${pkgManager ?? 'npm'} init @apollo-elements`)
     .option('pkgManager', {
       type: 'string',
@@ -220,6 +221,8 @@ export async function prompt(): Promise<void> {
         return true;
     });
 
+  const argv = await pargv;
+
   try {
     if (argv._.includes('app'))
       return await promptApp(argv).then(normalizeOptions).then(app);
@@ -260,7 +263,7 @@ export async function prompt(): Promise<void> {
             .then(component);
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error?.command?.includes?.('build:codegen'))
       return;
     else

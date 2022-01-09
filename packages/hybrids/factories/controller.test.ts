@@ -1,7 +1,7 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
 
 import { nextFrame, expect, fixture } from '@open-wc/testing';
-import { define, html, Hybrids } from 'hybrids';
+import { define, html, Component } from 'hybrids';
 
 import { controller, HybridsControllerHost } from './controller';
 
@@ -64,14 +64,15 @@ describe('[hybrids] controller factory', function() {
     let element: HTMLElement & { clock: ClockController };
 
     beforeEach(async function() {
-      const name = getTagName();
+      const tag = getTagName();
 
-      define(name, {
+      define({
+        tag,
         clock: controller(ClockController, 100000000),
         render: host => html`<output>${host.clock.value.getSeconds()}</output>`,
-      } as Hybrids<typeof element>);
+      } as Component<typeof element>);
 
-      element = await fixture(`<${name}></${name}>`);
+      element = await fixture(`<${tag}></${tag}>`);
     });
 
     describe('initially', function() {

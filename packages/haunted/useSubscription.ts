@@ -1,4 +1,4 @@
-import type { ComponentDocument, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
+import type { ComponentDocument, VariablesOf } from '@apollo-elements/core/types';
 
 import { useController } from 'haunted/lib/use-controller';
 
@@ -7,8 +7,8 @@ import {
   ApolloSubscriptionControllerOptions,
 } from '@apollo-elements/core/apollo-subscription-controller';
 
-export function useSubscription<D extends MaybeTDN, V = MaybeVariables<D>>(
-  query: ComponentDocument<D>,
+export function useSubscription<D, V = VariablesOf<D>>(
+  query: ComponentDocument<D, V>,
   options?: ApolloSubscriptionControllerOptions<D, V>
 ): ApolloSubscriptionController<D, V> {
   return useController(host => new ApolloSubscriptionController<D, V>(host, query, options));

@@ -1,4 +1,4 @@
-import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
+import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin.js';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 
@@ -30,8 +30,10 @@ import { PolymerApolloElement } from './polymer-apollo-element.js';
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloSubscription<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloSubscriptionMixin(PolymerApolloElement as Constructor<PolymerApolloElement>)<D, V> {
+export class PolymerApolloSubscription<D = unknown, V = VariablesOf<D>>
+  extends ApolloSubscriptionMixin(
+    PolymerApolloElement as Constructor<PolymerApolloElement<unknown>>
+  )<D, V> {
   static readonly is = 'polymer-apollo-subscription';
 }
 
@@ -39,5 +41,5 @@ customElements.define(PolymerApolloSubscription.is, PolymerApolloSubscription);
 
 // eslint-disable-next-line max-len
 declare global { interface HTMLElementTagNameMap {
-  'polymer-apollo-subscription': PolymerApolloSubscription;
+  'polymer-apollo-subscription': PolymerApolloSubscription<unknown>;
 } }

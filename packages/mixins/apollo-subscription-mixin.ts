@@ -4,11 +4,10 @@ import type {
   ComponentDocument,
   Constructor,
   Data,
-  MaybeTDN,
-  MaybeVariables,
   OnSubscriptionDataParams,
   SubscriptionDataOptions,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
@@ -19,14 +18,12 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 type MixinInstance<B extends Constructor> = B & {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>(...a: any[]):
-    InstanceType<B> & ApolloSubscriptionElement<D, V>;
+  new <D, V = VariablesOf<D>>(...a: any[]): InstanceType<B> & ApolloSubscriptionElement<D, V>;
   documentType: 'subscription';
 }
 
 function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
-  class MixedApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  class MixedApolloSubscriptionElement<D, V = VariablesOf<D>>
     extends ApolloElementMixin(superclass)<D, V> {
     static override documentType = 'subscription' as const;
 
@@ -58,7 +55,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
       onError: error => this.onError?.(error),
     });
 
-    @controlled() subscription: ComponentDocument<D> | null = null;
+    @controlled() subscription: ComponentDocument<D, V> | null = null;
 
     @controlled({ readonly: true }) declare readonly canAutoSubscribe: boolean;
 

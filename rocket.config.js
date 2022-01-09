@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-import graphql from '@apollo-elements/rollup-plugin-graphql';
+import graphql from '@rollup/plugin-graphql';
 import litcss from 'rollup-plugin-lit-css';
 
 import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';

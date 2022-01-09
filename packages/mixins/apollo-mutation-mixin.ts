@@ -5,12 +5,11 @@ import type {
   Constructor,
   ControllerHost,
   Data,
-  MaybeTDN,
-  MaybeVariables,
   MutationUpdaterFn,
   OptimisticResponseType,
   RefetchQueriesType,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type { ApolloMutationElement } from '@apollo-elements/core/types';
@@ -23,14 +22,13 @@ import { controlled } from '@apollo-elements/core/decorators';
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>():
-    ControllerHost & InstanceType<B> & ApolloMutationElement<D, V>;
+  new <D, V = VariablesOf<D>>(): ControllerHost & InstanceType<B> & ApolloMutationElement<D, V>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
 
 function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInstance<B> {
-  class MixedApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  class MixedApolloMutationElement<D, V = VariablesOf<D>>
     extends ApolloElementMixin(base)<D, V> {
     static override documentType = 'mutation' as const;
 
@@ -50,7 +48,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     @controlled({ readonly: true }) readonly called = false;
 
-    @controlled() mutation: ComponentDocument<D> | null = null;
+    @controlled() mutation: ComponentDocument<D, V> | null = null;
 
     /**
      * An object that represents the result of this mutation that will be optimistically

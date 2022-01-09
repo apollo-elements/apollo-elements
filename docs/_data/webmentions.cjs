@@ -1,6 +1,4 @@
 const fs = require('fs');
-// @ts-expect-error: it's node
-const fetch = require('node-fetch');
 const unionBy = require('lodash/unionBy');
 const domain = 'daily-dev-tips.com';
 
@@ -27,6 +25,9 @@ async function fetchWebmentions(since, perPage = 10000) {
 
     let url = `${API}/mentions.jf2?domain=${domain}&token=${TOKEN}&per-page=${perPage}`;
     if (since) url += `&since=${since}`;
+
+
+    const fetch = await import('node-fetch');
 
     const response = await fetch(url);
     if (response.ok) {

@@ -1,10 +1,4 @@
-import type {
-  ComponentDocument,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
+import type { ComponentDocument, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
 import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
 
@@ -14,14 +8,14 @@ import {
 } from '@apollo-elements/core/apollo-query-controller';
 
 import { Observable, observable } from '@microsoft/fast-element';
-import { FASTControllerHost } from './fast-controller-host';
+import { FASTControllerHost } from './fast-controller-host.js';
 
 /**
  * `ApolloQueryBehavior`
  *
  * 🚀  FAST Behavior that connects to your Apollo cache.
  */
-export class ApolloQueryBehavior<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class ApolloQueryBehavior<D = unknown, V = VariablesOf<D>>
   extends ApolloQueryController<D, V> implements Behavior {
   /**
    * Latest query data.
@@ -46,7 +40,7 @@ export class ApolloQueryBehavior<D extends MaybeTDN = MaybeTDN, V = MaybeVariabl
 
   constructor(
     hostElement: FASTElement & HTMLElement,
-    query?: ComponentDocument<D> | null,
+    query?: ComponentDocument<D, V> | null,
     options?: ApolloQueryControllerOptions<D, V>,
   ) {
     super(new FASTControllerHost(hostElement), query, { ...options, hostElement });

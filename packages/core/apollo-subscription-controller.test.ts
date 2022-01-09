@@ -20,8 +20,11 @@ import { spy, SinonSpy } from 'sinon';
 
 describe('[core] ApolloSubscriptionController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
-    class MirroringHost<D extends TypedDocumentNode> extends ReactiveElement {
-      declare subscription: ApolloSubscriptionController<D>;
+    class MirroringHost<D extends TypedDocumentNode<any, any> = TypedDocumentNode<any, any>>
+      extends ReactiveElement {
+      declare subscription: D extends TypedDocumentNode<infer TD, infer TV>
+        ? ApolloSubscriptionController<TD, TV>
+        : ApolloSubscriptionController<any, any>;
 
       data?: this['subscription']['data'];
       error?: this['subscription']['error'];
@@ -37,7 +40,7 @@ describe('[core] ApolloSubscriptionController', function() {
     }
 
     describe('when simply instantiating', function() {
-      let element: MirroringHost<any>;
+      let element: MirroringHost;
 
       const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
 
@@ -131,7 +134,7 @@ describe('[core] ApolloSubscriptionController', function() {
               element.subscription.subscribe();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -144,7 +147,7 @@ describe('[core] ApolloSubscriptionController', function() {
               });
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -183,7 +186,7 @@ describe('[core] ApolloSubscriptionController', function() {
               element.subscription.subscribe();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -196,7 +199,7 @@ describe('[core] ApolloSubscriptionController', function() {
               });
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -746,16 +749,3 @@ describe('[core] ApolloSubscriptionController', function() {
     });
   });
 });
-
-class TypeCheck extends ReactiveElement {
-  c = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
-    shouldSubscribe({ variables } = {}) {
-      return variables?.nullable === 'nullable';
-    },
-  });
-
-  a() {
-    // @ts-expect-error: nullable should be string
-    this.c.variables = { nullable: 1 };
-  }
-}

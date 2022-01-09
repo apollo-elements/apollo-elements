@@ -58,10 +58,10 @@ import {
 } from '@apollo-elements/mixins';
 
 /* eslint-disable max-len */
-class ApolloElementElement<D extends C.TypedDocumentNode> extends ApolloElementMixin(HTMLElement)<D> {}
-class ApolloMutationElement<D extends C.TypedDocumentNode> extends ApolloMutationMixin(HTMLElement)<D> {}
-class ApolloQueryElement<D extends C.TypedDocumentNode> extends ApolloQueryMixin(HTMLElement)<D> {}
-class ApolloSubscriptionElement<D extends C.TypedDocumentNode> extends ApolloSubscriptionMixin(HTMLElement)<D> {}
+class ApolloElementElement<D> extends ApolloElementMixin(HTMLElement)<D> {}
+class ApolloMutationElement<D> extends ApolloMutationMixin(HTMLElement)<D> {}
+class ApolloQueryElement<D> extends ApolloQueryMixin(HTMLElement)<D> {}
+class ApolloSubscriptionElement<D> extends ApolloSubscriptionMixin(HTMLElement)<D> {}
 /* eslint-enable max-len */
 
 describe('GraphQLScriptChildMixin', function() {

@@ -195,7 +195,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
     describe('setting error', function() {
       it('as ApolloError', async function() {
         let error: C.ApolloError;
-        try { throw new C.ApolloError({}); } catch (e) { error = e; }
+        try { throw new C.ApolloError({}); } catch (e) { error = e as C.ApolloError; }
         element.error = error;
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
@@ -205,7 +205,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
         try {
           throw new Error();
         } catch (err) {
-          error = err;
+          error = err as C.ApolloError;
           element.error = error;
         }
         await element.updateComplete;

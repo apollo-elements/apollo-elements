@@ -1,10 +1,4 @@
-import type {
-  ComponentDocument,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
+import type { ComponentDocument, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
 import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
 
@@ -21,7 +15,7 @@ import { FASTControllerHost } from './fast-controller-host';
  *
  * 🚀  FAST Behavior that connects to your Apollo cache.
  */
-export class ApolloSubscriptionBehavior<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class ApolloSubscriptionBehavior<D, V = VariablesOf<D>>
   extends ApolloSubscriptionController<D, V> implements Behavior {
   /**
    * Latest query data.
@@ -46,7 +40,7 @@ export class ApolloSubscriptionBehavior<D extends MaybeTDN = MaybeTDN, V = Maybe
 
   constructor(
     hostElement: FASTElement & HTMLElement,
-    subscription?: ComponentDocument<D> | null,
+    subscription?: ComponentDocument<D, V> | null,
     options?: ApolloSubscriptionControllerOptions<D, V>,
   ) {
     super(new FASTControllerHost(hostElement), subscription, { ...options, hostElement });

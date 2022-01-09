@@ -15,7 +15,7 @@ import {
   setupSubscriptionClass,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloSubscription<D, V = I.VariablesOf<D>>
   extends ApolloSubscription<D, V> implements TestableElement {
   render(): TemplateResult {
     return html`
@@ -41,7 +41,7 @@ describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription(
 
   describe('subclassing', function() {
     it('is an instance of LitElement', async function() {
-      const tag = defineCE(class Sub extends TestableApolloSubscription {});
+      const tag = defineCE(class Sub extends TestableApolloSubscription<unknown> {});
       const el = await fixture(`<${tag}></${tag}>`);
       expect(el).to.be.an.instanceOf(LitElement);
     });
@@ -60,7 +60,7 @@ describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription(
     });
 
     describe('with a class that defines observedAttributes with decorator', function() {
-      class Test extends ApolloSubscription {
+      class Test extends ApolloSubscription<unknown> {
         @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
       }
 
@@ -86,24 +86,22 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
   typeCheck() {
+    this.offsetHeight; // HTMLElement
+    this.updateComplete; // LitElement
+    this.client?.getResolvers(); // ApolloClient
+    this.loading = true;
+    this.document?.definitions.map(x => x.kind); // DocumentNode
+    this.error?.stack;
+    this.errors.map(x => x.locations?.map(y => y.column)); // GraphQLError
+    this.data?.a === 'a';
+    // @ts-expect-error: b as number type
+    this.data?.b === 'b';
+
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
-    assertType<HTMLElement>                         (this);
-    assertType<LitElement>                          (this);
-
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client!);
     assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<C.DocumentNode>                        (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<readonly I.GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
+    if (isApolloError(this.error!))
       assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface

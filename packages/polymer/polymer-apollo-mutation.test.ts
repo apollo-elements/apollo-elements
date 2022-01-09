@@ -9,8 +9,6 @@ import { gql } from '@apollo/client/core';
 import { stub, spy } from 'sinon';
 
 import {
-  assertType,
-  isApolloError,
   NullableParamMutationData,
   NullableParamMutationVariables,
   setupClient,
@@ -32,7 +30,7 @@ import { flush } from '@polymer/polymer/lib/utils/flush';
 
 import * as S from '@apollo-elements/test/schema';
 
-class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloMutation<D, V = I.VariablesOf<D>>
   extends PolymerApolloMutation<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -157,7 +155,7 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
       let err: Error;
       try {
         throw new Error('error');
-      } catch (e) { err = e; }
+      } catch (e) { err = e as Error; }
       setTimeout(() => element.error = err);
       const { detail: { value: { message } } } = await oneEvent(element, 'error-changed');
       expect(message).to.equal('error');
@@ -215,59 +213,3 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
     });
   });
 });
-
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { d: 'd', e: number };
-class TypeCheck extends PolymerApolloMutation<TypeCheckData, TypeCheckVars> {
-  typeCheck() {
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
-
-    // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
-    assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<C.DocumentNode>                      (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
-
-    // ApolloMutationInterface
-    assertType<C.DocumentNode>                      (this.mutation!);
-    assertType<TypeCheckVars>                       (this.variables!);
-    assertType<boolean>                             (this.called);
-    assertType<boolean>                             (this.ignoreResults!);
-    assertType<boolean>                             (this.awaitRefetchQueries!);
-    assertType<C.ErrorPolicy>                       (this.errorPolicy!);
-    assertType<string>                              (this.errorPolicy);
-    // @ts-expect-error: ErrorPolicy is not a number
-    assertType<number>                              (this.errorPolicy);
-    assertType<string>                              (this.fetchPolicy!);
-    assertType<Extract<C.FetchPolicy, 'no-cache'>>  (this.fetchPolicy);
-
-    if (typeof this.refetchQueries === 'function')
-      assertType<(result: C.FetchResult<TypeCheckData>) => I.RefetchQueriesType>(this.refetchQueries);
-    else
-      assertType<I.RefetchQueriesType>(this.refetchQueries!);
-
-    if (typeof this.optimisticResponse !== 'function')
-      assertType<TypeCheckData>(this.optimisticResponse!);
-    else
-      assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
-
-    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
-  }
-}
-
-type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-class TDNTypeCheck extends PolymerApolloMutation<TDN> {
-  typeCheck() {
-    assertType<TypeCheckData>(this.data!);
-    assertType<TypeCheckVars>(this.variables!);
-  }
-}

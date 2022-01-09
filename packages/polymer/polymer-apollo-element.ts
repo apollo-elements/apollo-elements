@@ -1,12 +1,6 @@
 import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
-import type {
-  Data,
-  GraphQLError,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
-import type { ApolloController } from '@apollo-elements/core';
+import type { Data, GraphQLError, Variables } from '@apollo-elements/core/types';
+import type { ApolloController, VariablesOf } from '@apollo-elements/core';
 
 import { getInitialProps, getInitialProp } from '@apollo-elements/core/decorators';
 import { notify, PolymerChangeEvent } from './notify-decorator.js';
@@ -24,10 +18,8 @@ const last = Symbol('PolymerElement last known');
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloElement<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends GraphQLScriptChildMixin(ApolloElementMixin(HTMLElement))<D, V> {
+export class PolymerApolloElement<D = unknown, V = VariablesOf<D>>
+  extends GraphQLScriptChildMixin(ApolloElementMixin(HTMLElement))<D, V> {
   static readonly is: `polymer-apollo-${'mutation'|'query'|'subscription'}`;
 
   /** @ignore */

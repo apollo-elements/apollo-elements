@@ -1,5 +1,6 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -19,43 +20,37 @@ export interface AB {
 }
 
 export interface ABInput {
-  readonly a?: Maybe<Scalars['String']>;
-  readonly b?: Maybe<Scalars['String']>;
+  readonly a?: InputMaybe<Scalars['String']>;
+  readonly b?: InputMaybe<Scalars['String']>;
 }
 
 export interface HelloWorld {
   readonly __typename?: 'HelloWorld';
-  readonly name?: Maybe<Scalars['String']>;
   readonly greeting?: Maybe<Scalars['String']>;
+  readonly name?: Maybe<Scalars['String']>;
 }
 
 export interface Message {
   readonly __typename?: 'Message';
+  readonly date?: Maybe<Scalars['String']>;
   readonly message?: Maybe<Scalars['String']>;
   readonly user?: Maybe<Scalars['String']>;
-  readonly date?: Maybe<Scalars['String']>;
 }
 
 export interface Mutation {
   readonly __typename?: 'Mutation';
-  readonly sendMessage?: Maybe<Message>;
   readonly inputParam?: Maybe<AB>;
+  readonly noParam?: Maybe<NoParam>;
   readonly nonNullableParam?: Maybe<NonNull>;
   readonly nullableParam?: Maybe<Nullable>;
-  readonly noParam?: Maybe<NoParam>;
   readonly reset?: Maybe<ReadonlyArray<Maybe<Message>>>;
+  readonly sendMessage?: Maybe<Message>;
   readonly updateUser?: Maybe<User>;
 }
 
 
-export interface MutationsendMessageArgs {
-  user?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-}
-
-
 export interface MutationinputParamArgs {
-  input?: Maybe<ABInput>;
+  input?: InputMaybe<ABInput>;
 }
 
 
@@ -65,14 +60,20 @@ export interface MutationnonNullableParamArgs {
 
 
 export interface MutationnullableParamArgs {
-  nullable?: Maybe<Scalars['String']>;
-  delay?: Maybe<Scalars['Int']>;
+  delay?: InputMaybe<Scalars['Int']>;
+  nullable?: InputMaybe<Scalars['String']>;
+}
+
+
+export interface MutationsendMessageArgs {
+  message?: InputMaybe<Scalars['String']>;
+  user?: InputMaybe<Scalars['String']>;
 }
 
 
 export interface MutationupdateUserArgs {
-  username: Scalars['String'];
   haircolor: Scalars['String'];
+  username: Scalars['String'];
 }
 
 export interface NoParam {
@@ -97,12 +98,18 @@ export interface Paged {
 
 export interface Query {
   readonly __typename?: 'Query';
+  readonly helloWorld?: Maybe<HelloWorld>;
   readonly messages?: Maybe<ReadonlyArray<Maybe<Message>>>;
+  readonly noParam?: Maybe<NoParam>;
   readonly nonNullParam?: Maybe<NonNull>;
   readonly nullableParam?: Maybe<Nullable>;
-  readonly noParam?: Maybe<NoParam>;
-  readonly helloWorld?: Maybe<HelloWorld>;
   readonly pages?: Maybe<ReadonlyArray<Maybe<Scalars['Int']>>>;
+}
+
+
+export interface QueryhelloWorldArgs {
+  greeting?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 }
 
 
@@ -112,35 +119,23 @@ export interface QuerynonNullParamArgs {
 
 
 export interface QuerynullableParamArgs {
-  nullable?: Maybe<Scalars['String']>;
-  delay?: Maybe<Scalars['Int']>;
-}
-
-
-export interface QueryhelloWorldArgs {
-  name?: Maybe<Scalars['String']>;
-  greeting?: Maybe<Scalars['String']>;
+  delay?: InputMaybe<Scalars['Int']>;
+  nullable?: InputMaybe<Scalars['String']>;
 }
 
 
 export interface QuerypagesArgs {
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }
 
 export interface Subscription {
   readonly __typename?: 'Subscription';
   readonly messageSent?: Maybe<Message>;
-  readonly pageAdded?: Maybe<Scalars['Int']>;
-  readonly nullableParam?: Maybe<Nullable>;
-  readonly nonNullParam?: Maybe<NonNull>;
   readonly noParam?: Maybe<NoParam>;
-}
-
-
-export interface SubscriptionnullableParamArgs {
-  nullable?: Maybe<Scalars['String']>;
-  delay?: Maybe<Scalars['Int']>;
+  readonly nonNullParam?: Maybe<NonNull>;
+  readonly nullableParam?: Maybe<Nullable>;
+  readonly pageAdded?: Maybe<Scalars['Int']>;
 }
 
 
@@ -148,194 +143,116 @@ export interface SubscriptionnonNullParamArgs {
   nonNull: Scalars['String'];
 }
 
+
+export interface SubscriptionnullableParamArgs {
+  delay?: InputMaybe<Scalars['Int']>;
+  nullable?: InputMaybe<Scalars['String']>;
+}
+
 export interface User {
   readonly __typename?: 'User';
-  readonly username?: Maybe<Scalars['String']>;
   readonly haircolor?: Maybe<Scalars['String']>;
   readonly nickname?: Maybe<Scalars['String']>;
+  readonly username?: Maybe<Scalars['String']>;
 }
 
 export type HelloQueryVariables = Exact<{
-  name?: Maybe<Scalars['String']>;
-  greeting?: Maybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  greeting?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type HelloQueryData = (
-  { readonly __typename?: 'Query' }
-  & { readonly helloWorld?: Maybe<(
-    { readonly __typename?: 'HelloWorld' }
-    & Pick<HelloWorld, 'name' | 'greeting'>
-  )> }
-);
+export type HelloQueryData = { readonly __typename?: 'Query', readonly helloWorld?: { readonly __typename?: 'HelloWorld', readonly name?: string | null | undefined, readonly greeting?: string | null | undefined } | null | undefined };
 
 export type InputParamMutationVariables = Exact<{
   input: ABInput;
 }>;
 
 
-export type InputParamMutationData = (
-  { readonly __typename?: 'Mutation' }
-  & { readonly inputParam?: Maybe<(
-    { readonly __typename?: 'AB' }
-    & Pick<AB, 'a' | 'b'>
-  )> }
-);
+export type InputParamMutationData = { readonly __typename?: 'Mutation', readonly inputParam?: { readonly __typename?: 'AB', readonly a?: string | null | undefined, readonly b?: string | null | undefined } | null | undefined };
 
 export type MessageSentSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessageSentSubscriptionData = (
-  { readonly __typename?: 'Subscription' }
-  & { readonly messageSent?: Maybe<(
-    { readonly __typename?: 'Message' }
-    & Pick<Message, 'message'>
-  )> }
-);
+export type MessageSentSubscriptionData = { readonly __typename?: 'Subscription', readonly messageSent?: { readonly __typename?: 'Message', readonly message?: string | null | undefined } | null | undefined };
 
 export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessagesQueryData = (
-  { readonly __typename?: 'Query' }
-  & { readonly messages?: Maybe<ReadonlyArray<Maybe<(
-    { readonly __typename?: 'Message' }
-    & Pick<Message, 'message'>
-  )>>> }
-);
+export type MessagesQueryData = { readonly __typename?: 'Query', readonly messages?: ReadonlyArray<{ readonly __typename?: 'Message', readonly message?: string | null | undefined } | null | undefined> | null | undefined };
 
 export type NoParamMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NoParamMutationData = (
-  { readonly __typename?: 'Mutation' }
-  & { readonly noParam?: Maybe<(
-    { readonly __typename?: 'NoParam' }
-    & Pick<NoParam, 'noParam'>
-  )> }
-);
+export type NoParamMutationData = { readonly __typename?: 'Mutation', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
 
 export type NoParamQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NoParamQueryData = (
-  { readonly __typename?: 'Query' }
-  & { readonly noParam?: Maybe<(
-    { readonly __typename?: 'NoParam' }
-    & Pick<NoParam, 'noParam'>
-  )> }
-);
+export type NoParamQueryData = { readonly __typename?: 'Query', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
 
 export type NoParamSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NoParamSubscriptionData = (
-  { readonly __typename?: 'Subscription' }
-  & { readonly noParam?: Maybe<(
-    { readonly __typename?: 'NoParam' }
-    & Pick<NoParam, 'noParam'>
-  )> }
-);
+export type NoParamSubscriptionData = { readonly __typename?: 'Subscription', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
 
 export type NonNullableParamMutationVariables = Exact<{
   param: Scalars['String'];
 }>;
 
 
-export type NonNullableParamMutationData = (
-  { readonly __typename?: 'Mutation' }
-  & { readonly noParam?: Maybe<(
-    { readonly __typename?: 'NoParam' }
-    & Pick<NoParam, 'noParam'>
-  )> }
-);
+export type NonNullableParamMutationData = { readonly __typename?: 'Mutation', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
 
 export type NonNullableParamQueryVariables = Exact<{
   nonNull: Scalars['String'];
 }>;
 
 
-export type NonNullableParamQueryData = (
-  { readonly __typename?: 'Query' }
-  & { readonly nonNullParam?: Maybe<(
-    { readonly __typename?: 'NonNull' }
-    & Pick<NonNull, 'nonNull'>
-  )> }
-);
+export type NonNullableParamQueryData = { readonly __typename?: 'Query', readonly nonNullParam?: { readonly __typename?: 'NonNull', readonly nonNull: string } | null | undefined };
 
 export type NonNullableParamSubscriptionVariables = Exact<{
   nonNull: Scalars['String'];
 }>;
 
 
-export type NonNullableParamSubscriptionData = (
-  { readonly __typename?: 'Subscription' }
-  & { readonly nonNullParam?: Maybe<(
-    { readonly __typename?: 'NonNull' }
-    & Pick<NonNull, 'nonNull'>
-  )> }
-);
+export type NonNullableParamSubscriptionData = { readonly __typename?: 'Subscription', readonly nonNullParam?: { readonly __typename?: 'NonNull', readonly nonNull: string } | null | undefined };
 
 export type NullableParamMutationVariables = Exact<{
-  nullable?: Maybe<Scalars['String']>;
-  delay?: Maybe<Scalars['Int']>;
+  nullable?: InputMaybe<Scalars['String']>;
+  delay?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type NullableParamMutationData = (
-  { readonly __typename?: 'Mutation' }
-  & { readonly nullableParam?: Maybe<(
-    { readonly __typename?: 'Nullable' }
-    & Pick<Nullable, 'nullable'>
-  )> }
-);
+export type NullableParamMutationData = { readonly __typename?: 'Mutation', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null | undefined } | null | undefined };
 
 export type NullableParamQueryVariables = Exact<{
-  nullable?: Maybe<Scalars['String']>;
-  delay?: Maybe<Scalars['Int']>;
+  nullable?: InputMaybe<Scalars['String']>;
+  delay?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type NullableParamQueryData = (
-  { readonly __typename?: 'Query' }
-  & { readonly nullableParam?: Maybe<(
-    { readonly __typename?: 'Nullable' }
-    & Pick<Nullable, 'nullable'>
-  )> }
-);
+export type NullableParamQueryData = { readonly __typename?: 'Query', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null | undefined } | null | undefined };
 
 export type NullableParamSubscriptionVariables = Exact<{
-  nullable?: Maybe<Scalars['String']>;
-  delay?: Maybe<Scalars['Int']>;
+  nullable?: InputMaybe<Scalars['String']>;
+  delay?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type NullableParamSubscriptionData = (
-  { readonly __typename?: 'Subscription' }
-  & { readonly nullableParam?: Maybe<(
-    { readonly __typename?: 'Nullable' }
-    & Pick<Nullable, 'nullable'>
-  )> }
-);
+export type NullableParamSubscriptionData = { readonly __typename?: 'Subscription', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null | undefined } | null | undefined };
 
 export type PageAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PageAddedSubscriptionData = (
-  { readonly __typename?: 'Subscription' }
-  & Pick<Subscription, 'pageAdded'>
-);
+export type PageAddedSubscriptionData = { readonly __typename?: 'Subscription', readonly pageAdded?: number | null | undefined };
 
 export type PaginatedQueryVariables = Exact<{
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type PaginatedQueryData = (
-  { readonly __typename?: 'Query' }
-  & Pick<Query, 'pages'>
-);
+export type PaginatedQueryData = { readonly __typename?: 'Query', readonly pages?: ReadonlyArray<number | null | undefined> | null | undefined };
 
 export type UpdateUserMutationVariables = Exact<{
   username: Scalars['String'];
@@ -343,13 +260,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutationData = (
-  { readonly __typename?: 'Mutation' }
-  & { readonly updateUser?: Maybe<(
-    { readonly __typename?: 'User' }
-    & Pick<User, 'nickname'>
-  )> }
-);
+export type UpdateUserMutationData = { readonly __typename?: 'Mutation', readonly updateUser?: { readonly __typename?: 'User', readonly nickname?: string | null | undefined } | null | undefined };
 
 
 export const HelloQuery = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HelloQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"greeting"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"helloWorld"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"greeting"},"value":{"kind":"Variable","name":{"kind":"Name","value":"greeting"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}}]}}]}}]} as unknown as DocumentNode<HelloQueryData, HelloQueryVariables>;

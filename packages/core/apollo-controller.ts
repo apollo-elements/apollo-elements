@@ -12,9 +12,8 @@ import type {
   ComponentDocument,
   Data,
   GraphQLError,
-  MaybeTDN,
-  MaybeVariables,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import { isValidGql } from './lib/is-valid-gql.js';
@@ -57,10 +56,7 @@ function isReflectingHost(host: ReactiveControllerHost): host is ReflectingReact
  * @fires {ApolloControllerConnectedEvent} apollo-controller-connected - The controller's host connected to the DOM.
  * @fires {ApolloControllerDisconnectedEvent} apollo-controller-disconnected - The controller's host disconnected from the DOM.
  */
-export abstract class ApolloController<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
->
+export abstract class ApolloController<D = unknown, V = VariablesOf<D>>
 implements ReactiveController {
   /** @internal */
   static o(proto: ApolloController, _: string): void {
@@ -78,7 +74,7 @@ implements ReactiveController {
 
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
-  #document: ComponentDocument<D> | null = null;
+  #document: ComponentDocument<D, V> | null = null;
 
   /** @summary The event emitter to use when firing events, usually the host element. */
   protected emitter: EventTarget;
@@ -112,9 +108,9 @@ implements ReactiveController {
   }
 
   /** @summary The GraphQL document for the operation. */
-  get document(): ComponentDocument<D> | null { return this.#document; }
+  get document(): ComponentDocument<D, V> | null { return this.#document; }
 
-  set document(document: ComponentDocument<D> | null) {
+  set document(document: ComponentDocument<D, V> | null) {
     if (document === this.#document)
       return; /* c8 ignore next */ // covered
     else if (!document)
@@ -171,7 +167,7 @@ implements ReactiveController {
   }
 
   /** @summary callback for when the GraphQL document changes. */
-  protected documentChanged?(document?: ComponentDocument<D> | null): void;
+  protected documentChanged?(document?: ComponentDocument<D, V> | null): void;
 
   /** @summary callback for when the GraphQL variables change. */
   protected variablesChanged?(variables?: Variables<D, V> | null): void;
@@ -188,7 +184,7 @@ implements ReactiveController {
   }
 
   /** @summary Assigns the controller's variables and GraphQL document. */
-  protected init(document: ComponentDocument<D> | null): void {
+  protected init(document: ComponentDocument<D, V> | null): void {
     this.variables ??= this.options.variables ?? null;
     this.document = document;
   }

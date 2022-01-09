@@ -14,6 +14,45 @@
             {
               "kind": "field",
               "name": "client",
+              "description": "The client specified with `ApolloClientMixin`.",
+              "default": "client"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "client",
+              "description": "The specific `ApolloClient` instance."
+            },
+            {
+              "name": "superclass",
+              "description": "An element that implements the `ApolloElementInterface`."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloClientMixin",
+          "declaration": {
+            "name": "ApolloClientMixin",
+            "module": "apollo-client-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-client-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Mixin which applies a specific `ApolloClient` instance to the element.",
+          "name": "ApolloClientMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "client",
               "type": {
                 "text": "ApolloClient<NormalizedCacheObject>"
               },
@@ -55,9 +94,192 @@
       "path": "apollo-element-mixin.js",
       "declarations": [
         {
-          "kind": "variable",
+          "kind": "mixin",
+          "description": "",
           "name": "ApolloElementMixin",
-          "description": "`ApolloElementMixin`: class mixin for apollo custom elements."
+          "members": [
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance."
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest data",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation variables.\nAn object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "error-policy"
+            },
+            {
+              "name": "fetch-policy"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ControllerHostMixin",
+              "module": "/controller-host-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass"
+            }
+          ]
         }
       ],
       "exports": [
@@ -67,6 +289,610 @@
           "declaration": {
             "name": "ApolloElementMixin",
             "module": "apollo-element-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-element-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "ApolloElementMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "type": {
+                "text": "'document'|'query'|'mutation'|'subscription'"
+              },
+              "static": true,
+              "default": "'document'"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "ApolloClient<NormalizedCacheObject> | null"
+              },
+              "summary": "The Apollo Client instance."
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "type": {
+                "text": "ApolloController<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "ComponentDocument<D, V> | null"
+              },
+              "default": "null",
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM)."
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "default": "null",
+              "summary": "Latest data"
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "default": "null",
+              "summary": "Operation variables.\nAn object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value."
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "Error | ApolloError | null"
+              },
+              "default": "null",
+              "summary": "Latest error."
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "readonly GraphQLError[]"
+              },
+              "default": "[]",
+              "summary": "Latest errors."
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "summary": "Whether a request is in-flight."
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "string | undefined"
+              },
+              "summary": "Fetch Policy for the operation."
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown> | undefined"
+              },
+              "summary": "Context passed to the link execution chain."
+            },
+            {
+              "kind": "field",
+              "name": "errorPolicy",
+              "type": {
+                "text": "ErrorPolicy | undefined"
+              },
+              "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "attribute": "error-policy"
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "summary": "True when the element is connected and ready to receive its GraphQL document"
+            },
+            {
+              "kind": "method",
+              "name": "documentChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "document",
+                  "type": {
+                    "text": "this['document']"
+                  },
+                  "description": "The GraphQL document."
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the GraphQL document."
+            },
+            {
+              "kind": "method",
+              "name": "variablesChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "this['variables']"
+                  },
+                  "description": "The variables."
+                }
+              ],
+              "description": "Lifecycle callback that reacts to changes in the operation variables."
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "error-policy",
+              "type": {
+                "text": "ErrorPolicy | undefined"
+              },
+              "description": "errorPolicy determines the level of events for errors in the execution result. The options are:\n- `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)\n- `ignore`: errors from the request do not stop the observable, but also don't call `next`\n- `all`: errors are treated like data and will notify observables",
+              "summary": "[Error Policy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ErrorPolicy) for the operation.",
+              "fieldName": "errorPolicy"
+            },
+            {
+              "name": "fetch-policy"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ControllerHostMixin",
+              "module": "/controller-host-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "B"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElementMixin",
+          "declaration": {
+            "name": "ApolloElementMixin",
+            "module": "apollo-element-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-mutation-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "ApolloMutationMixin",
+          "members": [
+            {
+              "kind": "method",
+              "name": "mutate",
+              "parameters": [
+                {
+                  "name": "params"
+                }
+              ],
+              "description": "This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error."
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "default": "new ApolloMutationController(this, null, {\n                update: this.updater,\n                onCompleted: data => { var _a; return data && ((_a = this.onCompleted) === null || _a === void 0 ? void 0 : _a.call(this, data)); },\n                onError: error => { var _a; return (_a = this.onError) === null || _a === void 0 ? void 0 : _a.call(this, error); },\n            })"
+            },
+            {
+              "kind": "field",
+              "name": "called",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "mutation",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "refetchQueries",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "ignoreResults",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest data",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation variables.\nAn object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "await-refetch-queries"
+            },
+            {
+              "name": "refetch-queries"
+            },
+            {
+              "name": "error-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "module": "/apollo-element-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "base"
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloMutationMixin",
+          "declaration": {
+            "name": "ApolloMutationMixin",
+            "module": "apollo-mutation-mixin.js"
           }
         }
       ]
@@ -106,7 +932,7 @@
               "kind": "field",
               "name": "mutation",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "ComponentDocument<D, V> | null"
               },
               "default": "null"
             },
@@ -218,6 +1044,182 @@
                 }
               ],
               "description": "This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error."
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest data",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation variables.\nAn object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
             }
           ],
           "attributes": [
@@ -226,6 +1228,20 @@
             },
             {
               "name": "refetch-queries"
+            },
+            {
+              "name": "error-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -243,6 +1259,28 @@
               "name": "base",
               "type": {
                 "text": "B"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
               }
             }
           ]
@@ -264,8 +1302,899 @@
       "path": "apollo-query-mixin.js",
       "declarations": [
         {
-          "kind": "variable",
-          "name": "ApolloQueryMixin"
+          "kind": "mixin",
+          "description": "`ApolloQueryMixin`: class mixin for apollo-query elements.",
+          "name": "ApolloQueryMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "options"
+            },
+            {
+              "kind": "method",
+              "name": "refetch",
+              "parameters": [
+                {
+                  "name": "variables",
+                  "description": "The new set of variables. If there are missing variables, the previous values of those variables will be used.."
+                }
+              ],
+              "description": "Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method."
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "parameters": [
+                {
+                  "name": "options"
+                }
+              ],
+              "description": "Determines whether the element should attempt to automatically subscribe i.e. begin querying\n\nOverride to prevent subscribing unless your conditions are met."
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "parameters": [
+                {
+                  "name": "params",
+                  "description": "options for controlling how the subscription subscribes"
+                }
+              ],
+              "description": "Resets the observableQuery and subscribes."
+            },
+            {
+              "kind": "method",
+              "name": "subscribeToMore",
+              "parameters": [
+                {
+                  "name": "options"
+                }
+              ],
+              "description": "Lets you pass a GraphQL subscription and updateQuery function\nto subscribe to more updates for your query.\n\nThe `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results."
+            },
+            {
+              "kind": "method",
+              "name": "executeQuery",
+              "parameters": [
+                {
+                  "name": "params"
+                }
+              ],
+              "description": "Executes a Query once and updates the component with the result"
+            },
+            {
+              "kind": "method",
+              "name": "fetchMore",
+              "parameters": [
+                {
+                  "name": "params"
+                }
+              ],
+              "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object."
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "default": "new ApolloQueryController(this, null, {\n                shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),\n                onData: data => { var _a; return (_a = this.onData) === null || _a === void 0 ? void 0 : _a.call(this, data); },\n                onError: error => { var _a; return (_a = this.onError) === null || _a === void 0 ? void 0 : _a.call(this, error); }, /* c8 ignore next */ // covered\n            })"
+            },
+            {
+              "kind": "field",
+              "name": "partial",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
+              "summary": "True when the query returned partial data.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "networkStatus",
+              "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however."
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "null"
+              },
+              "summary": "A GraphQL document containing a single query.",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so."
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Flags an element that's ready and able to auto subscribe",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest data",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation variables.\nAn object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "next-fetch-policy"
+            },
+            {
+              "name": "no-auto-subscribe"
+            },
+            {
+              "name": "error-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "module": "/apollo-element-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass"
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloQueryMixin",
+          "declaration": {
+            "name": "ApolloQueryMixin",
+            "module": "apollo-query-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-query-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "`ApolloQueryMixin`: class mixin for apollo-query elements.",
+          "name": "ApolloQueryMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "type": {
+                "text": "'query'"
+              },
+              "static": true,
+              "default": "'query'"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "default": "new ApolloQueryController<D, V>(this, null, {\n      shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),\n      onData: data => this.onData?.(data), /* c8 ignore next */ // covered\n      onError: error => this.onError?.(error), /* c8 ignore next */ // covered\n    })"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "The latest query data.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Query variables.",
+              "default": "null",
+              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL query.\n\nSetting variables will initiate the query, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "ApolloQueryControllerOptions<D, V>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "partial",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "If data was read from the cache with missing fields,\npartial will be true. Otherwise, partial will be falsy.",
+              "summary": "True when the query returned partial data."
+            },
+            {
+              "kind": "field",
+              "name": "networkStatus",
+              "type": {
+                "text": "NetworkStatus"
+              },
+              "description": "`networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)\ndepending on your network status as it provides a more detailed view into the state of a network request\non your component than `loading` does. `networkStatus` is an enum with different number values between 1 and 8.\nThese number values each represent a different network state.\n\n1. `loading`: The query has never been run before and the request is now pending. A query will still have this network status even if a result was returned from the cache, but a query was dispatched anyway.\n2. `setVariables`: If a query’s variables change and a network request was fired then the network status will be setVariables until the result of that query comes back. React users will see this when options.variables changes on their queries.\n3. `fetchMore`: Indicates that fetchMore was called on this query and that the network request created is currently in flight.\n4. `refetch`: It means that refetch was called on a query and the refetch request is currently in flight.\n5. Unused.\n6. `poll`: Indicates that a polling query is currently in flight. So for example if you are polling a query every 10 seconds then the network status will switch to poll every 10 seconds whenever a poll request has been sent but not resolved.\n7. `ready`: No request is in flight for this query, and no errors happened. Everything is OK.\n8. `error`: No request is in flight for this query, but one or more errors were detected.\n\nIf the network status is less then 7 then it is equivalent to `loading` being true. In fact you could\nreplace all of your `loading` checks with `networkStatus < 7` and you would not see a difference.\nIt is recommended that you use `loading`, however."
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "ComponentDocument<D, V> | null"
+              },
+              "default": "null",
+              "summary": "A GraphQL document containing a single query."
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "C.WatchQueryFetchPolicy | undefined"
+              },
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
+              "attribute": "fetch-policy"
+            },
+            {
+              "kind": "field",
+              "name": "partialRefetch",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "If true, perform a query refetch if the query result is marked as being partial,\nand the returned data is reset to an empty Object by the Apollo Client QueryManager\n(due to a cache miss).\n\nThe default value is false for backwards-compatibility's sake,\nbut should be changed to true for most use-cases.",
+              "summary": "Set to retry any partial query results."
+            },
+            {
+              "kind": "field",
+              "name": "returnPartialData",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Opt into receiving partial results from the cache for queries\nthat are not fully satisfied by the cache."
+            },
+            {
+              "kind": "field",
+              "name": "nextFetchPolicy",
+              "type": {
+                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
+              },
+              "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
+              "attribute": "next-fetch-policy"
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe",
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "attribute": "no-auto-subscribe"
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "summary": "Whether or not updates to the network status should trigger next on the observer of this query."
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "type": {
+                "text": "number | undefined"
+              },
+              "summary": "The time interval (in milliseconds) on which this query should be refetched from the server."
+            },
+            {
+              "kind": "method",
+              "name": "onData",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "Data<D>"
+                  },
+                  "description": "the query data."
+                }
+              ],
+              "description": "Optional callback for when a query is completed."
+            },
+            {
+              "kind": "method",
+              "name": "onError",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "Error"
+                  },
+                  "description": "the error."
+                }
+              ],
+              "description": "Optional callback for when an error occurs."
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "summary": "Flags an element that's ready and able to auto subscribe"
+            },
+            {
+              "kind": "method",
+              "name": "refetch",
+              "return": {
+                "type": {
+                  "text": "Promise<C.ApolloQueryResult<Data<D>>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "Variables<D, V>"
+                  },
+                  "description": "The new set of variables. If there are missing variables, the previous values of those variables will be used.."
+                }
+              ],
+              "description": "Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method."
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  }
+                }
+              ],
+              "description": "Determines whether the element should attempt to automatically subscribe i.e. begin querying\n\nOverride to prevent subscribing unless your conditions are met."
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "return": {
+                "type": {
+                  "text": "C.ObservableSubscription"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  },
+                  "description": "options for controlling how the subscription subscribes"
+                }
+              ],
+              "description": "Resets the observableQuery and subscribes."
+            },
+            {
+              "kind": "method",
+              "name": "subscribeToMore",
+              "return": {
+                "type": {
+                  "text": "void | (() => void)"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>"
+                  }
+                }
+              ],
+              "description": "Lets you pass a GraphQL subscription and updateQuery function\nto subscribe to more updates for your query.\n\nThe `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results."
+            },
+            {
+              "kind": "method",
+              "name": "executeQuery",
+              "return": {
+                "type": {
+                  "text": "Promise<C.ApolloQueryResult<Data<D>>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<C.QueryOptions<Variables<D, V>, Data<D>>> | undefined"
+                  }
+                }
+              ],
+              "description": "Executes a Query once and updates the component with the result"
+            },
+            {
+              "kind": "method",
+              "name": "fetchMore",
+              "return": {
+                "type": {
+                  "text": "Promise<C.ApolloQueryResult<Data<D>>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<FetchMoreParams<D, V>> | undefined"
+                  }
+                }
+              ],
+              "description": "Exposes the `ObservableQuery#fetchMore` method.\nhttps://www.apollographql.com/docs/react/api/core/ObservableQuery/#ObservableQuery.fetchMore\n\nThe optional `updateQuery` parameter is a function that takes the previous query data,\nthen a `{ subscriptionData: TSubscriptionResult }` object,\nand returns an object with updated query data based on the new results.\n\nThe optional `variables` parameter is an optional new variables object."
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "next-fetch-policy",
+              "type": {
+                "text": "C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V> | undefined"
+              },
+              "description": "When someone chooses cache-and-network or network-only as their\ninitial FetchPolicy, they often do not want future cache updates to\ntrigger unconditional network requests, which is what repeatedly\napplying the cache-and-network or network-only policies would seem\nto imply. Instead, when the cache reports an update after the\ninitial network request, it may be desirable for subsequent network\nrequests to be triggered only if the cache result is incomplete.\nThe nextFetchPolicy option provides a way to update\noptions.fetchPolicy after the intial network request, without\nhaving to set options.",
+              "summary": "Set to prevent subsequent network requests when the fetch policy is `cache-and-network` or `network-only`.",
+              "fieldName": "nextFetchPolicy"
+            },
+            {
+              "name": "no-auto-subscribe",
+              "description": "When true, the component will not automatically subscribe to new data.\nCall the `subscribe()` method to do so.",
+              "fieldName": "noAutoSubscribe"
+            },
+            {
+              "name": "fetch-policy",
+              "type": {
+                "text": "C.WatchQueryFetchPolicy | undefined"
+              },
+              "description": "Determines where the client may return a result from. The options are:\n\n- `cache-first` (default): return result from cache, fetch from network if cached result is not available.\n- `cache-and-network`: return result from cache first (if it exists), then return network result once it's available.\n- `cache-only`: return result from cache if available, fail otherwise.\n- `no-cache`: return result from network, fail if network call doesn't succeed, don't save to cache\n- `network-only`: return result from network, fail if network call doesn't succeed, save to cache\n- `standby`: only for queries that aren't actively watched, but should be available for refetch and updateQueries.",
+              "summary": "The [fetchPolicy](https://www.apollographql.com/docs/react/api/core/ApolloClient/#FetchPolicy) for the query.",
+              "fieldName": "fetchPolicy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "error-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "module": "/apollo-element-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "B"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -284,9 +2213,727 @@
       "path": "apollo-subscription-mixin.js",
       "declarations": [
         {
-          "kind": "variable",
+          "kind": "mixin",
+          "description": "",
           "name": "ApolloSubscriptionMixin",
-          "description": "`ApolloSubscriptionMixin`: class mixin for apollo-subscription elements."
+          "members": [
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "parameters": [
+                {
+                  "name": "params"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "cancel"
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "parameters": [
+                {
+                  "name": "options"
+                }
+              ],
+              "description": "Determines whether the element should attempt to subscribe automatically\nOverride to prevent subscribing unless your conditions are met"
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "default": "new ApolloSubscriptionController(this, null, {\n                shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),\n                onData: data => { var _a; return (_a = this.onSubscriptionData) === null || _a === void 0 ? void 0 : _a.call(this, data); },\n                onComplete: () => { var _a; return (_a = this.onSubscriptionComplete) === null || _a === void 0 ? void 0 : _a.call(this); },\n                onError: error => { var _a; return (_a = this.onError) === null || _a === void 0 ? void 0 : _a.call(this, error); },\n            })"
+            },
+            {
+              "kind": "field",
+              "name": "subscription",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe"
+            },
+            {
+              "kind": "field",
+              "name": "shouldResubscribe",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "skip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest data",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation variables.\nAn object that maps from the name of a variable as used in the operation's GraphQL document to that variable's value.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "no-auto-subscribe"
+            },
+            {
+              "name": "error-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "module": "/apollo-element-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass"
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloSubscriptionMixin",
+          "declaration": {
+            "name": "ApolloSubscriptionMixin",
+            "module": "apollo-subscription-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-subscription-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "ApolloSubscriptionMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "documentType",
+              "static": true,
+              "default": "'subscription'",
+              "type": {
+                "text": "'subscription'"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest data",
+              "default": "null",
+              "description": "Latest subscription data.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Subscription variables.",
+              "default": "null",
+              "description": "An object map from variable name to variable value, where the variables are used within the GraphQL subscription.\n\nSetting variables will initiate the subscription, unless [`noAutoSubscribe`](#noautosubscribe) is also set.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "controller",
+              "default": "new ApolloSubscriptionController<D, V>(this, null, {\n      shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),\n      onData: data => this.onSubscriptionData?.(data), /* c8 ignore next */ // covered\n      onComplete: () => this.onSubscriptionComplete?.(), /* c8 ignore next */ // covered\n      onError: error => this.onError?.(error),\n    })"
+            },
+            {
+              "kind": "field",
+              "name": "subscription",
+              "type": {
+                "text": "ComponentDocument<D, V> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "canAutoSubscribe",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown> | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fetchPolicy",
+              "type": {
+                "text": "C.FetchPolicy | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pollInterval",
+              "type": {
+                "text": "number | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "noAutoSubscribe"
+            },
+            {
+              "kind": "field",
+              "name": "notifyOnNetworkStatusChange",
+              "type": {
+                "text": "boolean | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shouldResubscribe",
+              "type": {
+                "text": "SubscriptionDataOptions['shouldResubscribe']"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "skip",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "onSubscriptionData",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_result",
+                  "type": {
+                    "text": "OnSubscriptionDataParams<Data<D>>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "onSubscriptionComplete",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onError",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "C.ApolloError"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "params",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<SubscriptionDataOptions<D, V>>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "cancel",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>"
+                  }
+                }
+              ],
+              "description": "Determines whether the element should attempt to subscribe automatically\nOverride to prevent subscribing unless your conditions are met"
+            },
+            {
+              "kind": "field",
+              "name": "client",
+              "summary": "The Apollo Client instance.",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "document",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Operation document.\nA GraphQL document containing a single query, mutation, or subscription.\nYou can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "null"
+              },
+              "summary": "Latest error.",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errors",
+              "type": {
+                "text": "array"
+              },
+              "summary": "Latest errors.",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "Whether a request is in-flight.",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readyToReceiveDocument",
+              "type": {
+                "text": "boolean"
+              },
+              "summary": "True when the element is connected and ready to receive its GraphQL document",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ControllerHostMixin",
+                "module": "controller-host-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "no-auto-subscribe"
+            },
+            {
+              "name": "error-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "fetch-policy",
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "module": "/apollo-element-mixin.js"
+            },
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "B"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "apollo-element-connected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            },
+            {
+              "name": "apollo-element-disconnected",
+              "type": {
+                "text": "ApolloElementEvent"
+              },
+              "inheritedFrom": {
+                "name": "ApolloElementMixin",
+                "module": "apollo-element-mixin.ts"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -305,8 +2952,70 @@
       "path": "controller-host-mixin.js",
       "declarations": [
         {
-          "kind": "variable",
-          "name": "ControllerHostMixin"
+          "kind": "mixin",
+          "description": "",
+          "name": "ControllerHostMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "updateComplete"
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate"
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "parameters": [
+                {
+                  "name": "controller"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate"
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args"
+                }
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ]
         }
       ],
       "exports": [
@@ -316,6 +3025,242 @@
           "declaration": {
             "name": "ControllerHostMixin",
             "module": "controller-host-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "controller-host-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "ControllerHostMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#controllers",
+              "privacy": "private",
+              "default": "new Set<ReactiveController>()"
+            },
+            {
+              "kind": "field",
+              "name": "#updatePending",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#resolve",
+              "privacy": "private",
+              "type": {
+                "text": "(v: boolean) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updateComplete",
+              "privacy": "private",
+              "default": "new Promise(r => {\n      this.#resolve = r;\n    })"
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "doUpdate",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "addController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeController",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controller",
+                  "type": {
+                    "text": "ReactiveController"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updated",
+              "parameters": [
+                {
+                  "name": "args",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "type": {
+                "text": "T"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ControllerHostMixin",
+          "declaration": {
+            "name": "ControllerHostMixin",
+            "module": "controller-host-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "graphql-script-child-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "GraphQLScriptChildMixin",
+          "members": [
+            {
+              "kind": "method",
+              "name": "matchNode",
+              "parameters": [
+                {
+                  "name": "node"
+                }
+              ],
+              "description": "When encountering a DOM Mutation, update the element's state if relevant."
+            },
+            {
+              "kind": "method",
+              "name": "onDOMMutation",
+              "parameters": [
+                {
+                  "name": "records"
+                }
+              ],
+              "description": "Update the element state in reaction to DOM updates that change the\ndeclarative GraphQL document or JSON-variable scripts"
+            },
+            {
+              "kind": "method",
+              "name": "parseGQL",
+              "parameters": [
+                {
+                  "name": "text"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "parseVariables",
+              "parameters": [
+                {
+                  "name": "text"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "fetchDocument",
+              "parameters": [
+                {
+                  "name": "url"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDOMGraphQLDocument",
+              "summary": "Get a GraphQL DocumentNode from the element's GraphQL script child"
+            },
+            {
+              "kind": "method",
+              "name": "getDOMVariables",
+              "summary": "Gets operation variables from the element's JSON script child"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GraphQLScriptChildMixin",
+          "declaration": {
+            "name": "GraphQLScriptChildMixin",
+            "module": "graphql-script-child-mixin.js"
           }
         }
       ]
@@ -553,6 +3498,109 @@
     },
     {
       "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElementMixin",
+          "declaration": {
+            "name": "ApolloElementMixin",
+            "module": "./apollo-element-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQueryMixin",
+          "declaration": {
+            "name": "ApolloQueryMixin",
+            "module": "./apollo-query-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutationMixin",
+          "declaration": {
+            "name": "ApolloMutationMixin",
+            "module": "./apollo-mutation-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscriptionMixin",
+          "declaration": {
+            "name": "ApolloSubscriptionMixin",
+            "module": "./apollo-subscription-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloClientMixin",
+          "declaration": {
+            "name": "ApolloClientMixin",
+            "module": "./apollo-client-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GraphQLScriptChildMixin",
+          "declaration": {
+            "name": "GraphQLScriptChildMixin",
+            "module": "./graphql-script-child-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TypePoliciesMixin",
+          "declaration": {
+            "name": "TypePoliciesMixin",
+            "module": "./type-policies-mixin.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ValidateVariablesMixin",
+          "declaration": {
+            "name": "ValidateVariablesMixin",
+            "module": "./validate-variables-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "type-policies-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Lazily adds [`TypePolicies`](https://www.apollographql.com/docs/react/caching/cache-configuration/#typepolicy-fields)\nto the Apollo client when the element connects to the DOM,\nfrom the element's `typePolicies` instance property.",
+          "name": "TypePoliciesMixin",
+          "parameters": [
+            {
+              "name": "superclass"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TypePoliciesMixin",
+          "declaration": {
+            "name": "TypePoliciesMixin",
+            "module": "type-policies-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "type-policies-mixin.js",
       "declarations": [
         {
@@ -610,6 +3658,54 @@
               "name": "shouldSubscribe",
               "parameters": [
                 {
+                  "name": "options"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "shouldSubscribe"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superclass",
+              "description": "An element which implements either `ApolloQueryInterface` or `ApolloSubscriptionInterface`."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "dedupeMixin",
+              "package": "@open-wc/dedupe-mixin"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ValidateVariablesMixin",
+          "declaration": {
+            "name": "ValidateVariablesMixin",
+            "module": "validate-variables-mixin.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "validate-variables-mixin.js",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Mixin which prevents query or subscription operations from fetching until their required variables are set.",
+          "name": "ValidateVariablesMixin",
+          "members": [
+            {
+              "kind": "method",
+              "name": "shouldSubscribe",
+              "parameters": [
+                {
                   "name": "options",
                   "optional": true,
                   "type": {
@@ -620,8 +3716,7 @@
             },
             {
               "kind": "field",
-              "name": "shouldSubscribe",
-              "default": "(x?: Partial<SubscriptionOptions>) =>\n        (shouldSubscribe?.(x) ?? true) && this.shouldSubscribe(x)"
+              "name": "shouldSubscribe"
             }
           ],
           "parameters": [

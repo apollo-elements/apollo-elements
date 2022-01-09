@@ -1,0 +1,13 @@
+diff --git a/node_modules/@open-wc/testing-helpers/types/index.d.ts b/node_modules/@open-wc/testing-helpers/types/index.d.ts
+index 231d791..ca8525b 100644
+--- a/node_modules/@open-wc/testing-helpers/types/index.d.ts
++++ b/node_modules/@open-wc/testing-helpers/types/index.d.ts
+@@ -1,6 +1,6 @@
+ export { elementUpdated } from "./src/elementUpdated.js";
+-import { html } from "lit-html/static";
+-import { unsafeStatic } from "lit-html/static";
++import { html } from "lit/static-html.js";
++import { unsafeStatic } from "lit/static-html.js";
+ export { html, unsafeStatic };
+ export { fixture, fixtureSync } from "./src/fixture.js";
+ export { cachedWrappers, fixtureCleanup, fixtureWrapper } from "./src/fixtureWrapper.js";

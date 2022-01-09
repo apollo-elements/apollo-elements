@@ -35,7 +35,7 @@ import { client, makeClient, setupClient, teardownClient } from './client';
 import { isSubscription, restoreSpies, stringify, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql';
 
-export interface DescribeQueryComponentOptions<E extends ApolloQueryElement = ApolloQueryElement<any, any>> {
+export interface DescribeQueryComponentOptions<E extends ApolloQueryElement<any> = ApolloQueryElement<any>> {
   /**
    * Async function which returns an instance of the query element
    * The element must render a template which contains the following DOM structure
@@ -68,9 +68,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
   const Klass: typeof ApolloQueryElement = options.class as unknown as typeof ApolloQueryElement;
   describe(`ApolloQuery interface`, function() {
     describe('when simply instantiating', function() {
-      let element: TestableElement & ApolloQueryElement;
+      let element: TestableElement & ApolloQueryElement<unknown>;
 
-      let spies: Record<string|keyof ApolloQueryElement, SinonSpy> | undefined;
+      let spies: Record<string|keyof ApolloQueryElement<unknown>, SinonSpy> | undefined;
 
       let connectEvent: Event | undefined;
 
@@ -188,7 +188,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         let err: Error;
         try {
           throw new Error('error');
-        } catch (e) { err = e; }
+        } catch (e) { err = e as Error; }
         element.error = err;
         await element.controller.host.updateComplete;
         expect(element.error, 'error')
@@ -294,7 +294,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           let err: Error;
           try {
             throw new Error('error');
-          } catch (e) { err = e; }
+          } catch (e) { err = e as Error; }
           beforeEach(setProperties({ error: err }));
           beforeEach(waitForRender(() => element));
           it('renders', function() {
@@ -359,7 +359,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               await element.executeQuery();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -370,7 +370,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               await element.executeQuery({ query: S.NullableParamQuery });
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -405,7 +405,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               await element.executeQuery();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -416,7 +416,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               await element.executeQuery({ query: S.NonNullableParamQuery });
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -441,7 +441,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     if (!this.parent?.title.match(/^\[(haunted|hybrids)\]/)) {
       describe('with error-policy attribute set', function() {
-        let element: ApolloQueryElement;
+        let element: ApolloQueryElement<unknown>;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'error-policy="all"' }));
@@ -463,7 +463,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with fetch-policy attribute set', function() {
-        let element: ApolloQueryElement;
+        let element: ApolloQueryElement<unknown>;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'fetch-policy="no-cache"' }));
@@ -485,7 +485,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with next-fetch-policy attribute set', function() {
-        let element: ApolloQueryElement;
+        let element: ApolloQueryElement<unknown>;
 
         beforeEach(async function() {
           ({ element } = await setupFunction({ attributes: 'next-fetch-policy="no-cache"' }));
@@ -508,9 +508,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
     }
 
     describe('with global client available', function() {
-      let element: ApolloQueryElement;
+      let element: ApolloQueryElement<unknown>;
 
-      let spies: Record<string|keyof ApolloQueryElement, SinonSpy> | undefined;
+      let spies: Record<string|keyof ApolloQueryElement<unknown>, SinonSpy> | undefined;
 
       let cached: typeof window.__APOLLO_CLIENT__;
 
@@ -688,7 +688,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               await element.executeQuery();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/query/);
+              expect((error as Error).message).to.match(/query/);
             }
           });
         });
@@ -780,10 +780,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('executeQuery({ query })', function() {
-            let result: ApolloQueryResult<S.NoParamQueryData> | undefined;
+            let result: ApolloQueryResult<S.NoParamQueryData> | null;
 
             beforeEach(async function() {
-              result = (await element.executeQuery({ query: S.NoParamQuery }) || undefined);
+              result = await (element as ApolloQueryElement<typeof S.NoParamQuery>).executeQuery({ query: S.NoParamQuery });
             });
 
             it('calls client query', function() {
@@ -814,7 +814,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('fetchMore()', function() {
-          let result: ApolloQueryResult<ApolloQueryElement['data']> | undefined;
+          let result: ApolloQueryResult<ApolloQueryElement<unknown>['data']> | undefined;
           let error: Error | undefined;
 
           beforeEach(async function() {
@@ -822,7 +822,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               result = await element!.fetchMore();
               return result;
             } catch (e) {
-              error = e;
+              error = e as Error;
             }
           });
 
@@ -840,9 +840,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with no-auto-subscribe attribute set', function() {
-        let element: TestableElement & ApolloQueryElement;
+        let element: TestableElement & ApolloQueryElement<unknown>;
 
-        let spies: Record<string|keyof ApolloQueryElement, SinonSpy> | undefined;
+        let spies: Record<string|keyof ApolloQueryElement<unknown>, SinonSpy> | undefined;
 
         beforeEach(function(this: Mocha.Context) {
           if (this.SKIP_ATTRIBUTES) this.skip();
@@ -1062,7 +1062,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         }
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction({
+          ({ element } = await setupFunction<any>({
             properties: {
               query: S.NoParamQuery,
             },
@@ -1128,7 +1128,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('fetchMore({ updateQuery })', function() {
-          let result: ApolloQueryResult<ApolloQueryElement['data']>;
+          let result: ApolloQueryResult<S.NoParamQueryData | null>;
 
           beforeEach(async function callFetchMore() {
             result = await element!.fetchMore();
@@ -1136,7 +1136,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('updates data', function() {
-            expect(result.data?.noParam.noParam).to.equal('noParam');
+            expect(result?.data?.noParam?.noParam).to.equal('noParam');
             expect(element.data?.noParam?.noParam).to.equal('noParam');
           });
         });
@@ -1234,7 +1234,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         let element: TestableElement & ApolloQueryElement<typeof S.NullableParamQuery>;
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction({
+          ({ element } = await setupFunction<any>({
             properties: {
               query: S.NullableParamQuery,
             },
@@ -1363,7 +1363,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         let element: ApolloQueryElement<typeof S.NonNullableParamQuery>;
 
         beforeEach(async function setupElement() {
-          ({ element } = await setupFunction({
+          ({ element } = await setupFunction<any>({
             properties: {
               query: S.NonNullableParamQuery,
             },
@@ -1387,7 +1387,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               if (r)
                 expect.fail('did not reject query', r!.data!.nonNullParam!.nonNull);
             } catch (e) {
-              error = e;
+              error = e as Error;
             }
           });
 
@@ -1406,7 +1406,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       describe('with client set as class field', function() {
         let client: ApolloClient<any>;
 
-        let element: ApolloQueryElement;
+        let element: ApolloQueryElement<unknown>;
 
         beforeEach(() => {
           client = new ApolloClient({ cache: new InMemoryCache(), connectToDevTools: false });
@@ -1418,11 +1418,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         beforeEach(async function() {
-          const tag = defineCE(class Test extends Klass {
+          const tag = defineCE(class Test extends Klass<unknown> {
             client = client;
           });
 
-          element = await fixture<ApolloQueryElement>(`<${tag}></${tag}>`);
+          element = await fixture<ApolloQueryElement<unknown>>(`<${tag}></${tag}>`);
         });
 
         beforeEach(() => element.controller.host.updateComplete);
@@ -1444,7 +1444,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('with client set as class field', function() {
           let client: ApolloClient<any>;
 
-          let element: ApolloQueryElement;
+          let element: ApolloQueryElement<unknown>;
 
           beforeEach(teardownClient);
           afterEach(teardownClient);
@@ -1459,11 +1459,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           beforeEach(async function() {
-            const tag = defineCE(class Test extends Klass {
+            const tag = defineCE(class Test extends Klass<unknown> {
               client = client;
             });
 
-            element = await fixture<ApolloQueryElement>(`<${tag}></${tag}>`);
+            element = await fixture<ApolloQueryElement<unknown>>(`<${tag}></${tag}>`);
           });
 
           beforeEach(() => element.controller.host.updateComplete);
@@ -1481,7 +1481,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with noAutoSubscribe set as a class field', function() {
-        let element: ApolloQueryElement;
+        let element: ApolloQueryElement<unknown>;
 
         let spies: Record<string, SinonSpy>;
 
@@ -1493,13 +1493,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             subscribe: spy(Klass.prototype, 'subscribe'),
           };
 
-          class Test extends Klass {
+          class Test extends Klass<unknown> {
             noAutoSubscribe = true;
           }
 
           const tag = unsafeStatic(defineCE(Test));
 
-          element = await fixture<ApolloQueryElement>(html`<${tag}></${tag}>`);
+          element = await fixture<ApolloQueryElement<unknown>>(html`<${tag}></${tag}>`);
         });
 
         afterEach(restoreSpies(() => spies));
@@ -1540,7 +1540,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NoParams query set as a class field', function() {
-        class Test extends Klass {
+        class Test extends Klass<unknown> {
           query = S.NoParamQuery;
         }
 
@@ -1580,7 +1580,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with NullableParams query and variables set as class fields', function() {
-        class Test extends Klass {
+        class Test extends Klass<unknown> {
           query = S.NullableParamQuery;
 
           variables = { nullable: 'nullable' };
@@ -1734,20 +1734,20 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       });
 
       describe('with fetchPolicy set as a class field', function() {
-        let element: I.ApolloQueryElement;
+        let element: I.ApolloQueryElement<unknown>;
 
         const fetchPolicy = 'no-cache' as const;
 
         beforeEach(setupClient);
         afterEach(teardownClient);
         beforeEach(async function setupElement() {
-          const tag = defineCE(class Test extends Klass {
+          const tag = defineCE(class Test extends Klass<unknown> {
             query = S.NoParamQuery;
 
             fetchPolicy = fetchPolicy;
           });
 
-          element = await fixture<I.ApolloQueryElement>(`<${tag}></${tag}>`);
+          element = await fixture<I.ApolloQueryElement<unknown>>(`<${tag}></${tag}>`);
           await element.controller.host.updateComplete;
         });
 
@@ -1771,7 +1771,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       describe('with onData and onError methods defined in the class body', function() {
         describe(`with NonNullableParams query`, function() {
-          class Test extends Klass {
+          class Test extends Klass<unknown> {
             client = client;
 
             query = S.NonNullableParamQuery;

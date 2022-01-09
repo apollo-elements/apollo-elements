@@ -2,14 +2,12 @@ import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/c
 
 import type { PropertyDeclaration } from 'lit';
 
-import type { ApolloController } from '@apollo-elements/core';
+import type { ApolloController, VariablesOf } from '@apollo-elements/core';
 
 import type {
   ComponentDocument,
   Data,
   GraphQLError,
-  MaybeTDN,
-  MaybeVariables,
   Variables,
 } from '@apollo-elements/core/types';
 
@@ -32,10 +30,7 @@ export interface ControlledPropertyDeclaration extends PropertyDeclaration {
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  */
-export class ApolloElement<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends LitElement {
+export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
@@ -65,7 +60,7 @@ export class ApolloElement<
    */
   @controlled()
   @state()
-  document: ComponentDocument<D> | null = null;
+  document: ComponentDocument<D, V> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' })

@@ -1,9 +1,9 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
-import type { Descriptor, InvalidateOptions } from 'hybrids';
+import type { Descriptor } from 'hybrids';
 
 type Constructor<T> = { new (...a: any[]): T; }
 
-type Invalidate = (options?: InvalidateOptions) => void;
+type Invalidate = (options?: { force?: boolean }) => void;
 
 type ControllerRecord = {
   invalidate: Invalidate;

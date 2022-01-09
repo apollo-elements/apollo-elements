@@ -3,10 +3,11 @@ import type { ApolloQueryController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { expect, fixture, nextFrame } from '@open-wc/testing';
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
 import { query } from './query';
+import { gql } from '@apollo/client/core';
 
 let counter = 0;
 
@@ -31,9 +32,10 @@ describe('[hybrids] query factory', function() {
       beforeEach(async function() {
         const tag = getTagName();
 
-        define(tag, {
+        define<H>({
+          tag,
           query: query(S.NullableParamQuery, { noAutoSubscribe: true }),
-          render: (host: HTMLElement & H) => {
+          render: host => {
             return html`
               <output id="called">${stringify(host.query.called)}</output>
               <output id="data">${stringify(host.query.data)}</output>
@@ -42,7 +44,7 @@ describe('[hybrids] query factory', function() {
               <output id="loading">${stringify(host.query.loading)}</output>
             `;
           },
-        } as Hybrids<H>);
+        });
 
         element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
       });
@@ -97,3 +99,25 @@ describe('[hybrids] query factory', function() {
     });
   });
 });
+
+function TypeCheck() {
+  interface H extends HTMLElement {
+    query: ApolloQueryController<typeof S.NullableParamQuery>
+  }
+
+  const Klass = define.compile<H>({ tag: 'what-ever',
+    query: query(S.NullableParamQuery),
+  });
+
+  new Klass().query.data?.nullableParam?.nullable === 'hi';
+
+  interface I extends HTMLElement {
+    query: ApolloQueryController<S.NullableParamQueryData, S.NullableParamQueryVariables>
+  }
+
+  const ManuallyTyped = define.compile<I>({ tag: 'what-ever',
+    query: query(gql``),
+  });
+
+  new ManuallyTyped().query.data?.nullableParam?.nullable === 'hi';
+}

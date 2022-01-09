@@ -18,7 +18,7 @@ import {
 
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloSubscription<D, V = I.VariablesOf<D>>
   extends ApolloSubscription<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 

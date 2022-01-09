@@ -105,7 +105,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         let err: Error;
         try {
           throw new Error('error');
-        } catch (e) { err = e; }
+        } catch (e) { err = e as Error; }
         element.error = err;
         expect(element?.error, 'error').to.equal(err);
 
@@ -847,7 +847,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             element.subscription = `subscription { foo }`;
             expect.fail('should have thrown');
           } catch (e) {
-            result = e;
+            result = e as Error;
           }
         });
 

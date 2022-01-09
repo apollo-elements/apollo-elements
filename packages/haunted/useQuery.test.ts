@@ -38,7 +38,7 @@ describe('[haunted] useQuery', function() {
         });
 
         beforeEach(async function define() {
-          function Hello() {
+          function Hello(this: HTMLElement) {
             const c = useQuery(S.HelloQuery);
 
             refetchSpy ??= spy(c, 'refetch');
@@ -122,7 +122,7 @@ describe('[haunted] useQuery', function() {
       afterEach(() => onData.resetHistory());
 
       beforeEach(async function define() {
-        function Hello() {
+        function Hello(this: HTMLElement) {
           const { data, error, executeQuery } = useQuery(S.NullableParamQuery, {
             onData, onError,
           });
@@ -178,7 +178,7 @@ describe('[haunted] useQuery', function() {
       afterEach(() => onData.resetHistory());
 
       beforeEach(async function define() {
-        function Hello() {
+        function Hello(this: HTMLElement) {
           const [offset, setOffset] = useState(0);
 
           const { data, fetchMore } = useQuery(S.PaginatedQuery, {
@@ -448,10 +448,10 @@ describe('[haunted] useQuery', function() {
 type TypeCheckData = { a: 'a'; b: number };
 type TypeCheckVars = { c: 'c'; d: number };
 
-const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
-  gql`query TypedQuery($c: String, $d: Int) { a b }`;
-
 function TDNTypeCheck() {
+  const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
+    gql`query TypedQuery($c: String, $d: Int) { a b }`;
+
   const {
     called,
     client,
@@ -496,8 +496,60 @@ function TDNTypeCheck() {
     fetchMore({
       variables: { c: 'c', d: 12 },
       updateQuery(data) {
-        assertType<TypeCheckData>(data);
-        return { a: 'a', b: 3 };
+        assertType<TypeCheckData>(data!);
+        return { a: 'a' as const, b: 3 };
+      },
+    });
+  });
+}
+
+function ManuallyTypedTypeCheck() {
+  const {
+    called,
+    client,
+    data,
+    error,
+    fetchMore,
+    loading,
+    networkStatus,
+    variables,
+    refetch,
+    startPolling,
+    stopPolling,
+    subscribeToMore,
+  } = useQuery<TypeCheckData, TypeCheckVars>(gql``);
+
+  assertType<boolean>(called);
+  assertType<ApolloClient<NormalizedCacheObject>>(client!);
+  assertType<Error|ApolloError>(error!);
+  assertType<NetworkStatus>(networkStatus);
+  assertType<boolean>(loading);
+  assertType<TypeCheckData>(data!);
+  assertType<TypeCheckVars>(variables!);
+
+  assertType<void>(startPolling(12));
+
+  assertType<void>(stopPolling());
+
+  (async function typeCheckRefetch() {
+    const r = await refetch({ c: 'c', d: 2 });
+    assertType<'a'>(r.data.a);
+  });
+
+  (subscribeToMore({
+    document: gql`subscription { hi }`,
+    updateQuery(data) {
+      assertType<TypeCheckData>(data);
+      return { a: 'a', b: 3 };
+    },
+  }));
+
+  (async function typeCheckFetchMore() {
+    fetchMore({
+      variables: { c: 'c', d: 12 },
+      updateQuery(data) {
+        assertType<TypeCheckData>(data!);
+        return { a: 'a' as const, b: 3 };
       },
     });
   });

@@ -4,9 +4,8 @@ import type {
   ComponentDocument,
   Data,
   FetchMoreParams,
-  MaybeTDN,
-  MaybeVariables,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type {
@@ -19,6 +18,7 @@ import type {
   SubscriptionOptions,
   WatchQueryOptions,
   ObservableSubscription,
+  FetchMoreQueryOptions,
 } from '@apollo/client/core';
 
 import { NetworkStatus } from '@apollo/client/core';
@@ -27,7 +27,7 @@ import { ApolloController, ApolloControllerOptions } from './apollo-controller.j
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloQueryControllerOptions<D, V> extends
+export interface ApolloQueryControllerOptions<D, V = VariablesOf<D>> extends
     ApolloControllerOptions<D, V>,
     Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>;
@@ -37,9 +37,8 @@ export interface ApolloQueryControllerOptions<D, V> extends
   onError?: (error: Error) => void;
 }
 
-export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloController<D, V>
-  implements ReactiveController {
+export class ApolloQueryController<D, V = VariablesOf<D>>
+  extends ApolloController<D, V> implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
   private pollingInterval?: number;
@@ -81,9 +80,9 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
   #lastQueryDocument?: DocumentNode;
 
   /** @summary A GraphQL document containing a single query. */
-  get query(): ComponentDocument<D> | null { return this.document; }
+  get query(): ComponentDocument<D, V> | null { return this.document; }
 
-  set query(document: ComponentDocument<D> | null) { this.document = document; }
+  set query(document: ComponentDocument<D, V> | null) { this.document = document; }
 
   /** @summary Flags an element that's ready and able to auto-subscribe */
   public get canAutoSubscribe(): boolean {
@@ -97,7 +96,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 
   constructor(
     host: ReactiveControllerHost,
-    query?: ComponentDocument<D> | null,
+    query?: ComponentDocument<D, V> | null,
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
@@ -197,7 +196,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       this.subscribe();/* c8 ignore next */
   }
 
-  protected override documentChanged(doc?: ComponentDocument<D> | null): void {
+  protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
     const query = doc ?? undefined;/* c8 ignore next */
     if (doc === this.#lastQueryDocument)
       return;/* c8 ignore next */
@@ -309,7 +308,7 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
         this.nextData(result);
       return result;/* c8 ignore next */
     } catch (error) {
-      this.nextError(error);
+      this.nextError(error as ApolloError);
       throw error;
     }
   }
@@ -324,9 +323,9 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
    *
    * The optional `variables` parameter is an optional new variables object.
    */
-  @bound public async fetchMore(
-    params?: Partial<FetchMoreParams<D, V>>
-  ): Promise<ApolloQueryResult<Data<D>>> {
+  @bound public async fetchMore<TD = this['data'], TV = this['variables']>(
+    params?: Partial<FetchMoreParams<TD, TV>>
+  ): Promise<ApolloQueryResult<Data<TD>>> {
     this.loading = true;
     this.notify('loading');
 
@@ -335,22 +334,22 @@ export class ApolloQueryController<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       query: this.query!,
       context: this.options.context,
-      variables: this.variables,
+      variables: this.variables ?? undefined,
       ...params,
     };
 
-    return (
-      this.observableQuery ??= this.watchQuery(
-        options as WatchQueryOptions<Variables<D, V>, Data<D>>
-      )
-    ).fetchMore({
-      ...options,
-      variables: (options.variables as Variables<D, V>) ?? undefined, /* c8 ignore next */
-    }).then(x => {
-      this.loading = false;
-      this.notify('loading');
-      return x;
-    });
+    options.variables ??= undefined;
+
+    this.observableQuery ??=
+      this.watchQuery(options as WatchQueryOptions<Variables<D, V>, this['data']>);
+
+    return (this.observableQuery as unknown as ObservableQuery<Data<TD>, TV>)
+      .fetchMore(options as FetchMoreQueryOptions<TV, Data<TD>>)
+      .then(x => {
+        this.loading = false;
+        this.notify('loading');
+        return x;
+      });
   }
 
   /**

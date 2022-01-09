@@ -40,7 +40,7 @@ export interface DefineOptions {
 }
 
 function defineOnReactiveElement<T extends ReactiveElement & {
-  controller: ApolloController;
+  controller: ApolloController<unknown, unknown>;
 }>(
   proto: T,
   name: string & keyof T,
@@ -64,7 +64,7 @@ function defineOnReactiveElement<T extends ReactiveElement & {
 }
 
 function defineOnHTMLElement<T extends HTMLElement & {
-  controller: ApolloController;
+  controller: ApolloController<unknown, unknown>;
   requestUpdate?(name?: string, old?: unknown): void;
 }>(
   proto: T,
@@ -82,7 +82,7 @@ function defineOnHTMLElement<T extends HTMLElement & {
       } else {
         return (
             !this.controller ? getInitialProp(this, name)/* c8 ignore next */
-          : this.controller[name as keyof ApolloController]
+          : this.controller[name as keyof ApolloController<unknown, unknown>]
         );
       }
     },
@@ -96,7 +96,7 @@ function defineOnHTMLElement<T extends HTMLElement & {
         if (opts.path)
           this.controller[opts.path][name as keyof O] = value as O[keyof O];
         else
-          this.controller[name as keyof ApolloController] = value as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+          this.controller[name as keyof ApolloController<any, any>] = value as never;
         if (opts.onSet)
           opts.onSet.call(this, value);/* c8 ignore next */
       }
@@ -120,7 +120,7 @@ function isReactiveElement(
  */
 export function controlled(options: DefineOptions = {}) {
   return function<T extends HTMLElement & {
-  controller: ApolloController;
+  controller: ApolloController<any, any>;
 }>(
     proto: T,
     name: string & keyof T

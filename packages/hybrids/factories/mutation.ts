@@ -1,9 +1,4 @@
-import type {
-  Constructor,
-  ComponentDocument,
-  MaybeTDN,
-  MaybeVariables,
-} from '@apollo-elements/core/types';
+import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 
 import type { Descriptor } from 'hybrids';
 
@@ -21,17 +16,17 @@ import {
  * @param  options Options to control the mutation.
  * @return Hybrids descriptor for a [ApolloMutationController](/api/core/controllers/mutation/)
  */
-export function mutation<
-  E extends HTMLElement,
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
->(
-  mutationDocument?: ComponentDocument<D> | null,
+export function mutation<E extends HTMLElement, D, V>(
+  mutationDocument?: DocumentNode | null,
   options?: ApolloMutationControllerOptions<D, V>,
-): Descriptor<E, ApolloMutationController<D, V>> {
-  return controller(
-    ApolloMutationController as Constructor<ApolloMutationController<D, V>>,
+): Descriptor<E, ApolloMutationController<D, V>>
+export function mutation<E extends HTMLElement, D extends TypedDocumentNode>(
+  mutationDocument?: D | null,
+  options?: ApolloMutationControllerOptions<D>,
+): Descriptor<E, ApolloMutationController<D>> {
+  return controller<E, ApolloMutationController<D>>(
+    ApolloMutationController,
     mutationDocument,
-    options,
+    options
   );
 }

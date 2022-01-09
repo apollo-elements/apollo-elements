@@ -4,7 +4,7 @@ import { fromRollup } from '@web/dev-server-rollup';
 import { sendKeysPlugin } from '@web/test-runner-commands/plugins';
 
 import _commonjs from '@rollup/plugin-commonjs';
-import _graphql from '@apollo-elements/rollup-plugin-graphql';
+import _graphql from '@rollup/plugin-graphql';
 
 const graphql = fromRollup(_graphql);
 const commonjs = fromRollup(_commonjs);

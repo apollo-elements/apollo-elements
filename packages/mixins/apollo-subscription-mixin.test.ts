@@ -22,7 +22,7 @@ import {
   setupSubscriptionClass,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

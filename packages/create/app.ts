@@ -108,7 +108,7 @@ export async function app(options: AppOptions): Promise<void> {
     await codegen(options);
   try {
     await execStart(options);
-  } catch (e) {
+  } catch (e: any) {
     await writeFile(path.join(options.directory, 'start-error.log'), e.stderr, 'utf-8');
     if (!options.silent) {
       console.log(

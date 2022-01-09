@@ -9,9 +9,8 @@ import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { ApolloClientMixin } from './apollo-client-mixin';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
-import { assertType } from '@apollo-elements/test';
 
-class QE<D extends TypedDocumentNode> extends ApolloQueryMixin(HTMLElement)<D> {}
+class QE<D extends TypedDocumentNode<any, any>> extends ApolloQueryMixin(HTMLElement)<D> {}
 
 describe('ApolloClientMixin', function() {
   let element: ApolloElementElement;
@@ -37,35 +36,3 @@ describe('ApolloClientMixin', function() {
     });
   });
 });
-
-const client = window.__APOLLO_CLIENT__!;
-
-import * as FAST from '@apollo-elements/fast';
-import { FASTElement } from '@microsoft/fast-element';
-
-type D = TypedDocumentNode<{ a: 'a' }, { a: 'a' }>;
-class TypeCheckFAST extends ApolloClientMixin(
-  client,
-  FAST.ApolloQuery
-)<D> {
-  check() {
-    assertType<FASTElement>(this);
-    assertType<ApolloElementElement>(this);
-    assertType<QE<D>>(this);
-    assertType<{ a: 'a' }>(this.data!);
-    assertType<{ a: 'a' }>(this.variables!);
-  }
-}
-
-import * as Gluon from '@apollo-elements/gluon';
-import { GluonElement } from '@gluon/gluon';
-
-class TypeCheckGluon extends ApolloClientMixin(client, Gluon.ApolloQuery)<D> {
-  check() {
-    assertType<GluonElement>(this);
-    assertType<ApolloElementElement>(this);
-    assertType<QE<D>>(this);
-    assertType<{ a: 'a' }>(this.data!);
-    assertType<{ a: 'a' }>(this.variables!);
-  }
-}

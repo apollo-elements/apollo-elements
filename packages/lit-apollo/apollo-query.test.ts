@@ -23,7 +23,7 @@ import { NetworkStatus } from '@apollo/client/core';
 
 import { spy, SinonSpy } from 'sinon';
 
-class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloQuery<D, V = I.VariablesOf<D>>
   extends ApolloQuery<D, V> implements TestableElement {
   render() {
     return html`

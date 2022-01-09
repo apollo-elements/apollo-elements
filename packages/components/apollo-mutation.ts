@@ -1,12 +1,11 @@
 import type {
-  MaybeTDN,
-  MaybeVariables,
   Data,
   Variables,
   ComponentDocument,
   OptimisticResponseType,
   RefetchQueriesType,
   MutationUpdaterFn,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type { PropertyValues } from 'lit';
@@ -175,7 +174,7 @@ defaultTemplate.innerHTML = `<slot></slot>`;
  * ```
  */
 @customElement('apollo-mutation')
-export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is: 'apollo-mutation' = 'apollo-mutation';
 
@@ -305,7 +304,7 @@ export class ApolloMutationElement<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
   @controlled() @property({ type: Boolean, reflect: true }) called = false;
 
   /** @summary The mutation. */
-  @controlled() @state() mutation: null | ComponentDocument<D> = null;
+  @controlled() @state() mutation: null | ComponentDocument<D, V> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;

@@ -43,6 +43,73 @@
     },
     {
       "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./useQuery.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./useMutation.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./useSubscription.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "atomico"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "useMutation.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "useMutation",
+          "parameters": [
+            {
+              "name": "mutation"
+            },
+            {
+              "name": "options"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "useMutation",
+          "declaration": {
+            "name": "useMutation",
+            "module": "useMutation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "useMutation.js",
       "declarations": [
         {
@@ -57,7 +124,7 @@
             {
               "name": "mutation",
               "type": {
-                "text": "ComponentDocument<D>"
+                "text": "ComponentDocument<D, V>"
               }
             },
             {
@@ -89,6 +156,34 @@
         {
           "kind": "function",
           "name": "useQuery",
+          "parameters": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "options"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "useQuery",
+          "declaration": {
+            "name": "useQuery",
+            "module": "useQuery.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "useQuery.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "useQuery",
           "return": {
             "type": {
               "text": "ApolloQueryController<D, V>"
@@ -98,7 +193,7 @@
             {
               "name": "query",
               "type": {
-                "text": "ComponentDocument<D>"
+                "text": "ComponentDocument<D, V>"
               }
             },
             {
@@ -130,6 +225,34 @@
         {
           "kind": "function",
           "name": "useSubscription",
+          "parameters": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "options"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "useSubscription",
+          "declaration": {
+            "name": "useSubscription",
+            "module": "useSubscription.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "useSubscription.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "useSubscription",
           "return": {
             "type": {
               "text": "ApolloSubscriptionController<D, V>"
@@ -139,7 +262,7 @@
             {
               "name": "query",
               "type": {
-                "text": "ComponentDocument<D>"
+                "text": "ComponentDocument<D, V>"
               }
             },
             {

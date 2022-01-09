@@ -247,7 +247,7 @@ describe('[atomico] useQuery', function() {
     describe('subscribeToMore', function() {
       let element: HTMLElement & { updated: Promise<void>; };
 
-      let subscribeToMore: ApolloQueryController['subscribeToMore'];
+      let subscribeToMore: ApolloQueryController<typeof S.MessagesQuery>['subscribeToMore'];
 
       const onError = spy();
       const onData = spy();
@@ -522,8 +522,8 @@ function TDNTypeCheck() {
     fetchMore({
       variables: { c: 'c', d: 12 },
       updateQuery(data) {
-        assertType<TypeCheckData>(data);
-        return { a: 'a', b: 3 };
+        assertType<TypeCheckData>(data!);
+        return { a: 'a' as const, b: 3 };
       },
     });
   });

@@ -10,7 +10,7 @@ import type {
   NoParamQueryVariables,
 } from '@apollo-elements/test';
 
-import type { ApolloQueryController, ApolloQueryElement } from '@apollo-elements/core';
+import type { ApolloQueryController } from '@apollo-elements/core';
 
 import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
 
@@ -18,13 +18,15 @@ import { ApolloClient, TypedDocumentNode } from '@apollo/client/core';
 
 import { ApolloController } from '@apollo-elements/core';
 
-import * as S from '@apollo-elements/test/schema';
 import * as Core from '@apollo-elements/core';
+import * as S from '@apollo-elements/test/schema';
+
 import * as FAST from '@apollo-elements/fast';
 import * as Lit from '@apollo-elements/lit-apollo';
 import * as LitDeco from 'lit/decorators.js';
 import * as Haunted from '@apollo-elements/haunted';
 import * as Hybrids from '@apollo-elements/hybrids';
+
 import '@apollo-elements/polymer/polymer-apollo-query';
 
 import {
@@ -57,7 +59,7 @@ function restoreFetch() {
 
 describe('<apollo-client>', function() {
   describe('with basic elements', function() {
-    class ShallowElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloMutationMixin(HTMLElement)<D, V> {
+    class ShallowElement<D, V = I.VariablesOf<D>> extends ApolloMutationMixin(HTMLElement)<D, V> {
       declare shadowRoot: ShadowRoot;
 
       constructor() {
@@ -86,7 +88,7 @@ describe('<apollo-client>', function() {
       }
     }
 
-    class QueryElement<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>> extends ApolloQueryMixin(HTMLElement)<D, V> {
+    class QueryElement<D, V = I.VariablesOf<D>> extends ApolloQueryMixin(HTMLElement)<D, V> {
       query = S.NoParamQuery;
 
       constructor() {
@@ -106,7 +108,7 @@ describe('<apollo-client>', function() {
     let client: ApolloClient<NormalizedCacheObject> | undefined;
     let cached: ApolloClient<NormalizedCacheObject> | undefined;
     let element: ApolloClientElement | null;
-    let shallow: ShallowElement | null;
+    let shallow: ShallowElement<any> | null;
     let deep: DeepElement | null;
     let query: QueryElement<NoParamQueryData, NoParamQueryVariables> | null;
 
@@ -229,7 +231,7 @@ describe('<apollo-client>', function() {
       });
 
       describe('when a non-apollo-element fires event', function() {
-        let controllers: readonly ApolloController[];
+        let controllers: readonly ApolloController<any>[];
 
         beforeEach(function() {
           ({ controllers } = element!);
@@ -357,10 +359,10 @@ describe('<apollo-client>', function() {
 
       /* eslint-disable @typescript-eslint/no-unused-vars */
       @FAST.customElement({ name: TAG_NAMES.fast })
-      class FASTApolloQuery extends FAST.ApolloQuery { }
+      class FASTApolloQuery extends FAST.ApolloQuery<any> { }
 
       @LitDeco.customElement(TAG_NAMES.lit)
-      class LitApolloQuery extends Lit.ApolloQuery { }
+      class LitApolloQuery extends Lit.ApolloQuery<any> { }
       /* eslint-enable @typescript-eslint/no-unused-vars */
 
       Object.values(TAG_NAMES).forEach(tagName => {
@@ -414,10 +416,11 @@ describe('<apollo-client>', function() {
           tagName: 'hybrids-apollo-query-controller',
           register: () => {
             const { tagName } = FIXTURES.hybrids;
-            Hybrids.define(tagName, {
+            Hybrids.define({
+              tag: tagName,
               render: host => Hybrids.html`${JSON.stringify(host.query.data)}`,
               query: Hybrids.query(TagNameQuery, { variables: { tagName } }),
-            } as Hybrids.Hybrids<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
+            } as Hybrids.Component<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
           },
         },
 

@@ -201,12 +201,12 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
 
     describe('setting error', function() {
       it('as ApolloError', async function() {
-        try { throw new C.ApolloError({}); } catch (e) { element.error = e; }
+        try { throw new C.ApolloError({}); } catch (e) { element.error = e as Error; }
         await element.updateComplete;
         expect(element.controller.error).to.be.an.instanceof(C.ApolloError);
       });
       it('as Error', async function() {
-        try { throw new Error('hi'); } catch (err) { element.error = err; }
+        try { throw new Error('hi'); } catch (err) { element.error = err as Error; }
         await element.updateComplete;
         expect(element.controller.error?.message).to.equal('hi');
       });

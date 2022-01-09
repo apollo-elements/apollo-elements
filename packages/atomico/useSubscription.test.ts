@@ -37,7 +37,10 @@ describe('[atomico] useSubscription', function() {
   });
 
   describe('without options', function() {
-    let options: ApolloSubscriptionController<typeof S.NullableParamSubscription>['options'];
+    let options: ApolloSubscriptionController<
+      S.NullableParamSubscriptionData,
+      S.NullableParamSubscriptionVariables
+    >['options'];
 
     beforeEach(async function define() {
       function Renderer() {
@@ -63,7 +66,10 @@ describe('[atomico] useSubscription', function() {
   describe('with shouldSubscribe set to constant false', function() {
     let element: HTMLElement & { updated: Promise<void> };
 
-    let doSubscribe: ApolloSubscriptionController<typeof S.NullableParamSubscription>['subscribe'];
+    let doSubscribe: ApolloSubscriptionController<
+      S.NullableParamSubscriptionData,
+      S.NullableParamSubscriptionVariables
+    >['subscribe'];
 
     beforeEach(async function define() {
       function Renderer() {
@@ -107,7 +113,10 @@ describe('[atomico] useSubscription', function() {
       describe('without variables', function() {
         let element: HTMLElement & { updated: Promise<void> };
 
-        let sub: ApolloSubscriptionController<typeof S.NoParamSubscription>['subscribe'];
+        let sub: ApolloSubscriptionController<
+          S.NoParamSubscriptionData,
+          S.NoParamSubscriptionVariables
+        >['subscribe'];
 
         beforeEach(async function define() {
           function Renderer() {
@@ -245,9 +254,14 @@ describe('[atomico] useSubscription', function() {
     });
 
     describe('setting shouldSubscribe to constant false', function() {
-      let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
+      let element: HTMLElement & {
+        subscription: ApolloSubscriptionController<
+          S.NullableParamSubscriptionData,
+          S.NullableParamSubscriptionVariables
+        >
+      };
 
-      let subscription: ApolloSubscriptionController<typeof S.NullableParamSubscription>;
+      let subscription: typeof element['subscription'];
 
       beforeEach(async function define() {
         const Component = c(
@@ -321,7 +335,10 @@ describe('[atomico] useSubscription', function() {
     describe('with noAutoSubscribe option and NullableParamSubscription', function() {
       let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
 
-      let s: ApolloSubscriptionController<typeof S.NullableParamSubscription>;
+      let s: ApolloSubscriptionController<
+        S.NullableParamSubscriptionData,
+        S.NullableParamSubscriptionVariables
+      >;
 
       beforeEach(async function define() {
         function Renderer(this: typeof element) {
@@ -572,7 +589,10 @@ describe('[atomico] useSubscription', function() {
     describe('with NullableParamSubscription', function() {
       let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
 
-      let subscription: ApolloSubscriptionController<typeof S.NullableParamSubscription>;
+      let subscription: ApolloSubscriptionController<
+        S.NullableParamSubscriptionData,
+        S.NullableParamSubscriptionVariables
+      >;
 
       beforeEach(async function define() {
         function Renderer(this: typeof element) {

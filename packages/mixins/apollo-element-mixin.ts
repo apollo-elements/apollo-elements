@@ -10,9 +10,8 @@ import type {
   Constructor,
   Data,
   GraphQLError,
-  MaybeTDN,
-  MaybeVariables,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type { ApolloController, ApolloElementElement, ControllerHost } from '@apollo-elements/core';
@@ -25,8 +24,7 @@ import { ApolloElementEvent } from '@apollo-elements/core/events';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 type MixinInstance<B extends Constructor<HTMLElement>> = B & {
-  new <D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>():
-    ControllerHost & ApolloElementElement<D, V>;
+  new <D = unknown, V = VariablesOf<D>>(): ControllerHost & ApolloElementElement<D, V>;
   documentType: 'document'|'mutation'|'query'|'subscription';
   observedAttributes?: string[];
 }
@@ -36,7 +34,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 }>(
   superclass: B
 ): MixinInstance<B> {
-  class ApolloElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+  class ApolloElement<D = unknown, V = VariablesOf<D>>
     extends ControllerHostMixin(superclass) {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
@@ -59,7 +57,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
      * A GraphQL document containing a single query, mutation, or subscription.
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
-    @controlled() document: ComponentDocument<D> | null = null;
+    @controlled() document: ComponentDocument<D, V> | null = null;
 
     /** @summary Latest data */
     @controlled() data: Data<D> | null = null;

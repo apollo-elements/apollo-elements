@@ -29,7 +29,7 @@ describe('[haunted] useMutation', function() {
         let element: HTMLElement;
 
         beforeEach(async function define() {
-          function UpdateUser() {
+          function UpdateUser(this: HTMLElement) {
             let username: string;
 
             let haircolor: string;
@@ -110,10 +110,9 @@ describe('[haunted] useMutation', function() {
 type TypeCheckData = { a: 'a'; b: number };
 type TypeCheckVars = { c: 'c'; d: number };
 
-const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
-  gql`query TypedQuery($c: String, $d: Int) { a b }`;
-
 function TDNTypeCheck() {
+  const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> = gql``;
+
   const [mutate, { called, client, data, error, loading }] = useMutation(TDN);
   assertType<TypeCheckData>(data!);
   assertType<boolean>(called);
@@ -126,4 +125,18 @@ function TDNTypeCheck() {
     assertType<TypeCheckData>(r!.data!);
   });
 }
-TDNTypeCheck;
+
+function ManuallyTypedTypeCheck() {
+  const [mutate, { called, client, data, error, loading }] =
+    useMutation<TypeCheckData, TypeCheckVars>(gql``);
+  assertType<TypeCheckData>(data!);
+  assertType<boolean>(called);
+  assertType<boolean>(loading);
+  assertType<ApolloClient<NormalizedCacheObject>>(client!);
+  assertType<Error|ApolloError>(error!);
+
+  (async function() {
+    const r = await mutate({ variables: { c: 'c', d: 12 } });
+    assertType<TypeCheckData>(r!.data!);
+  });
+}

@@ -1,13 +1,7 @@
-import type {
-  Constructor,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
+import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
 import { GluonElement } from '@gluon/gluon';
-import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
+import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin.js';
 
 export { html } from '@gluon/gluon';
 
@@ -20,7 +14,7 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class ApolloElement<D = unknown, V = VariablesOf<D>>
   extends ApolloElementMixin(GluonElement as Constructor<GluonElement>)<D, V> {
   declare context?: Record<string, unknown>;
 
