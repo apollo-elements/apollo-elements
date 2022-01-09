@@ -1,4 +1,4 @@
-import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
+import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 import { notify } from './notify-decorator.js';
@@ -31,9 +31,9 @@ import { notify } from './notify-decorator.js';
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class PolymerApolloMutation<D = unknown, V = VariablesOf<D>>
   extends ApolloMutationMixin(
-    PolymerApolloElement as unknown as Constructor<PolymerApolloElement>
+    PolymerApolloElement as Constructor<PolymerApolloElement<unknown>>
   )<D, V> {
   static readonly is = 'polymer-apollo-mutation';
 
@@ -43,5 +43,5 @@ export class PolymerApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVaria
 customElements.define(PolymerApolloMutation.is, PolymerApolloMutation);
 
 declare global { interface HTMLElementTagNameMap {
-  'polymer-apollo-mutation': PolymerApolloMutation;
+  'polymer-apollo-mutation': PolymerApolloMutation<unknown>;
 } }

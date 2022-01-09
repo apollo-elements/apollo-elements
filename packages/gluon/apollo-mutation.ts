@@ -1,10 +1,4 @@
-import type {
-  Constructor,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
+import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
 import { ApolloElement } from './apollo-element.js';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
@@ -20,8 +14,8 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
+export class ApolloMutation<D = unknown, V = VariablesOf<D>>
+  extends ApolloMutationMixin(ApolloElement as Constructor<ApolloElement<unknown>>)<D, V> {
   /** @summary Latest mutation data. */
   declare data: Data<D> | null;
 

@@ -26,14 +26,14 @@ import { describeSubscription } from '@apollo-elements/test/subscription.test';
 
 import { ApolloSubscription } from './apollo-subscription';
 
-const template = html<TestableApolloSubscription>`
+const template = html<TestableApolloSubscription<any>>`
   <output id="data">${x => stringify(x.data)}</output>
   <output id="error">${x => stringify(x.error)}</output>
   <output id="loading">${x => stringify(x.loading)}</output>
 `;
 
 @customElement({ name: 'testable-apollo-subscription', template })
-class TestableApolloSubscription<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
   extends ApolloSubscription<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

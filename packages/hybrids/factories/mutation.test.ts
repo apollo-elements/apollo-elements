@@ -3,7 +3,7 @@ import type { ApolloMutationController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { expect, fixture, nextFrame } from '@open-wc/testing';
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 import {
   setupClient,
   stringify,
@@ -13,6 +13,7 @@ import {
 } from '@apollo-elements/test';
 
 import { mutation } from './mutation';
+import { gql } from '@apollo/client/core';
 
 let counter = 0;
 
@@ -37,7 +38,8 @@ describe('[hybrids] mutation factory', function() {
       beforeEach(async function() {
         const tag = getTagName();
 
-        define(tag, {
+        define<H>({
+          tag,
           mutation: mutation(S.NullableParamMutation),
           $: (host: H) => (id: string) => host.shadowRoot!.getElementById(id),
           hasRendered: host => async () => {
@@ -54,7 +56,7 @@ describe('[hybrids] mutation factory', function() {
               <output id="loading">${stringify(host.mutation.loading)}</output>
             `;
           },
-        } as Hybrids<H>);
+        });
 
         element = await fixture<H>(`<${tag}></${tag})`);
       });
@@ -111,3 +113,29 @@ describe('[hybrids] mutation factory', function() {
     });
   });
 });
+
+
+function TypeCheck() {
+  interface H extends HTMLElement {
+    mutation: ApolloMutationController<typeof S.NullableParamMutation>
+  }
+
+  const Klass = define.compile<H>({ tag: 'what-ever',
+    mutation: mutation(S.NullableParamMutation),
+  });
+
+  new Klass().mutation.data?.nullableParam?.nullable === 'hi';
+
+  interface I extends HTMLElement {
+    mutation: ApolloMutationController<
+      S.NullableParamMutationData,
+      S.NullableParamMutationVariables
+    >
+  }
+
+  const ManuallyTyped = define.compile<I>({ tag: 'what-ever',
+    mutation: mutation(gql``),
+  });
+
+  new ManuallyTyped().mutation.data?.nullableParam?.nullable === 'hi';
+}

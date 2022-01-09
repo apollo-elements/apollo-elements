@@ -12,10 +12,9 @@ import type {
   ComponentDocument,
   FetchMoreParams,
   Data,
-  MaybeTDN,
-  MaybeVariables,
   NextFetchPolicyFunction,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
@@ -75,11 +74,11 @@ declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryEl
  * ```
  */
 @customElement('apollo-query')
-export class ApolloQueryElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>> extends
-  GraphQLScriptChildMixin(ApolloElement)<D, V> {
+export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
+  extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-query';
 
-  controller: ApolloQueryController<D, V> = new ApolloQueryController<D, V>(this);
+  controller = new ApolloQueryController<D, V>(this);
 
   /** @summary Flags an element that's ready and able to auto subscribe */
   @controlled({ readonly: true }) @state() canAutoSubscribe = false;
@@ -110,7 +109,7 @@ export class ApolloQueryElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariable
   /**
    * @summary A GraphQL document containing a single query.
    */
-  @controlled() @state() query: null | ComponentDocument<D> = null;
+  @controlled() @state() query: null | ComponentDocument<D, V> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

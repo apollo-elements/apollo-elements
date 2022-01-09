@@ -1,4 +1,4 @@
-import type { Constructor, MaybeTDN, MaybeVariables } from '@apollo-elements/core/types';
+import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
 import { NetworkStatus } from '@apollo/client/core';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
@@ -33,9 +33,9 @@ import { notify } from './notify-decorator.js';
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class PolymerApolloQuery<D = unknown, V = VariablesOf<D>>
   extends ApolloQueryMixin(
-    PolymerApolloElement as unknown as Constructor<PolymerApolloElement>
+    PolymerApolloElement as Constructor<PolymerApolloElement<unknown>>
   )<D, V> {
   static readonly is = 'polymer-apollo-query';
 
@@ -45,5 +45,5 @@ export class PolymerApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariable
 customElements.define(PolymerApolloQuery.is, PolymerApolloQuery);
 
 declare global { interface HTMLElementTagNameMap {
-  'polymer-apollo-query': PolymerApolloQuery;
+  'polymer-apollo-query': PolymerApolloQuery<unknown>;
 } }

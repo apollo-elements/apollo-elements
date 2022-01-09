@@ -6,12 +6,10 @@ import { setupClient, teardownClient } from '@apollo-elements/test';
 import { gql } from '@apollo/client/core';
 
 describe('TypePoliciesMixin', function() {
-  class Base<
-    D extends I.MaybeTDN = I.MaybeTDN,
-    V = I.MaybeVariables<D>
-  > extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
+  class Base<D, V = I.VariablesOf<D>>
+    extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
 
-  let element: Base;
+  let element: Base<unknown>;
 
   const query = gql`{
     hello @client
@@ -22,7 +20,7 @@ describe('TypePoliciesMixin', function() {
 
   describe('with typePolicies set on the instance', function() {
     beforeEach(function() {
-      class Test extends Base {
+      class Test extends Base<unknown> {
         typePolicies = {
           Query: {
             fields: {

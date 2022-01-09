@@ -4,11 +4,10 @@ import type {
   Data,
   Variables,
   RefetchQueriesType,
-  MaybeTDN,
-  MaybeVariables,
   ComponentDocument,
   OptimisticResponseType,
   MutationUpdaterFn,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import { attr } from '@microsoft/fast-element';
@@ -30,10 +29,7 @@ import { controlled } from '@apollo-elements/core/decorators';
  *
  * @element
  */
-export class ApolloMutation<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends ApolloElement<D, V> {
+export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   /**
    * @summary Latest mutation data.
    */
@@ -63,7 +59,7 @@ export class ApolloMutation<
   /** @summary The mutation. */
   @hosted()
   @controlled()
-  mutation: ComponentDocument<D> | null = null;
+  mutation: ComponentDocument<D, V> | null = null;
 
   /**
    * An object that represents the result of this mutation that will be optimistically

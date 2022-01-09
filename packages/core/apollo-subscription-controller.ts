@@ -3,10 +3,9 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type {
   ComponentDocument,
   Data,
-  MaybeTDN,
-  MaybeVariables,
   SubscriptionDataOptions,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type {
@@ -26,7 +25,8 @@ import { ApolloController, ApolloControllerOptions } from './apollo-controller.j
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControllerOptions<D, V>,
+export interface ApolloSubscriptionControllerOptions<D, V = VariablesOf<D>>
+          extends ApolloControllerOptions<D, V>,
           Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>;
   fetchPolicy?: FetchPolicy;
@@ -42,9 +42,8 @@ export interface ApolloSubscriptionControllerOptions<D, V> extends ApolloControl
   onError?: (error: ApolloError) => void;
 }
 
-export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloController<D, V>
-  implements ReactiveController {
+export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
+  extends ApolloController<D, V> implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
 
   private observableSubscription?: ObservableSubscription;
@@ -56,9 +55,9 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
 
   #lastSubscriptionDocument?: DocumentNode;
 
-  get subscription(): ComponentDocument<D> | null { return this.document; }
+  get subscription(): ComponentDocument<D, V> | null { return this.document; }
 
-  set subscription(document: ComponentDocument<D> | null) { this.document = document; }
+  set subscription(document: ComponentDocument<D, V> | null) { this.document = document; }
 
   /** Flags an element that's ready and able to auto-subscribe */
   public get canAutoSubscribe(): boolean {
@@ -71,7 +70,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
 
   constructor(
     host: ReactiveControllerHost,
-    subscription?: ComponentDocument<D> | null,
+    subscription?: ComponentDocument<D, V> | null,
     options?: ApolloSubscriptionControllerOptions<D, V>
   ) {
     super(host, options);
@@ -191,7 +190,7 @@ export class ApolloSubscriptionController<D extends MaybeTDN = MaybeTDN, V = May
       this.subscribe();/* c8 ignore next */
   }
 
-  protected override documentChanged(doc?: ComponentDocument<D> | null): void {
+  protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
     const query = doc ?? undefined;/* c8 ignore next */
     if (doc === this.#lastSubscriptionDocument)
       return;/* c8 ignore next */

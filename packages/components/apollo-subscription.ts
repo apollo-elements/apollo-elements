@@ -1,8 +1,4 @@
-import type {
-  ComponentDocument,
-  MaybeTDN,
-  MaybeVariables,
-} from '@apollo-elements/core/types';
+import type { ComponentDocument, VariablesOf } from '@apollo-elements/core/types';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
@@ -15,7 +11,7 @@ import { controlled } from '@apollo-elements/core/decorators';
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
 declare global { interface HTMLElementTagNameMap {
-  'apollo-subscription': ApolloSubscriptionElement
+  'apollo-subscription': ApolloSubscriptionElement<any>
 } }
 
 /**
@@ -65,11 +61,11 @@ declare global { interface HTMLElementTagNameMap {
  * ```
  */
 @customElement('apollo-subscription')
-export class ApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-subscription';
 
-  controller: ApolloSubscriptionController<D, V> = new ApolloSubscriptionController<D, V>(this);
+  controller = new ApolloSubscriptionController<D, V>(this);
 
   /** @summary Flags an element that's ready and able to auto subscribe */
   get canAutoSubscribe(): boolean { return this.controller?.canAutoSubscribe ?? false; }
@@ -77,7 +73,7 @@ export class ApolloSubscriptionElement<D extends MaybeTDN = MaybeTDN, V = MaybeV
   /**
    * @summary A GraphQL document containing a single subscription.
    */
-  @controlled() @state() subscription: null | ComponentDocument<D> = null;
+  @controlled() @state() subscription: null | ComponentDocument<D, V> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

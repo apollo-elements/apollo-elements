@@ -1,5 +1,19 @@
 {
   "extends": "../tsconfig.settings.json",
   "include": ["."],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../packages/atomico" },
+    { "path": "../packages/core" },
+    { "path": "../packages/gluon" },
+    { "path": "../packages/fast" },
+    { "path": "../packages/haunted" },
+    { "path": "../packages/hybrids" },
+    { "path": "../packages/lit-apollo" },
+    { "path": "../packages/polymer" },
+  ],
 }

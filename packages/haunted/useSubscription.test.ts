@@ -1,7 +1,11 @@
 import * as S from '@apollo-elements/test/schema';
 
-import type { TemplateResult } from 'lit';
-import type { ApolloSubscriptionController } from '@apollo-elements/core';
+import type { ReactiveControllerHost } from 'lit';
+import type {
+  ApolloSubscriptionController,
+  ApolloSubscriptionControllerOptions,
+  GraphQLError,
+} from '@apollo-elements/core';
 
 import { html } from 'haunted';
 import { useSubscription } from './useSubscription';
@@ -9,9 +13,15 @@ import { component } from 'haunted';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { ApolloError } from '@apollo/client/core';
+import {
+  ApolloClient,
+  ApolloError,
+  gql,
+  NormalizedCacheObject,
+  TypedDocumentNode,
+} from '@apollo/client/core';
 
-import { setupClient, teardownClient, resetMessages } from '@apollo-elements/test';
+import { setupClient, teardownClient, resetMessages, assertType } from '@apollo-elements/test';
 
 import { spy, SinonSpy } from 'sinon';
 
@@ -23,7 +33,7 @@ describe('[haunted] useSubscription', function() {
         const { data } = useSubscription(S.NullableParamSubscription, { noAutoSubscribe: true });
         return data?.nullableParam?.nullable ?? 'nothing';
       }
-      const tag = defineCE(component(Component));
+      const tag = defineCE(component<HTMLElement>(Component));
       element = await fixture(`<${tag}></${tag}>`);
     });
 
@@ -35,7 +45,10 @@ describe('[haunted] useSubscription', function() {
   });
 
   describe('without options', function() {
-    let options: ApolloSubscriptionController<typeof S.NullableParamSubscription>['options'];
+    let options: ApolloSubscriptionController<
+      S.NullableParamSubscriptionData,
+      S.NullableParamSubscriptionVariables
+    >['options'];
 
     beforeEach(async function define() {
       function Component() {
@@ -43,7 +56,7 @@ describe('[haunted] useSubscription', function() {
         options = opts;
       }
 
-      const tag = defineCE(component(Component));
+      const tag = defineCE(component<HTMLElement>(Component));
 
       await fixture(`<${tag}></${tag}>`);
     });
@@ -59,7 +72,10 @@ describe('[haunted] useSubscription', function() {
   describe('with shouldSubscribe set to constant false', function() {
     let element: HTMLElement;
 
-    let doSubscribe: ApolloSubscriptionController<typeof S.NullableParamSubscription>['subscribe'];
+    let doSubscribe: ApolloSubscriptionController<
+      S.NullableParamSubscriptionData,
+      S.NullableParamSubscriptionVariables
+    >['subscribe'];
 
     beforeEach(async function define() {
       function Component() {
@@ -72,7 +88,7 @@ describe('[haunted] useSubscription', function() {
         return data?.nullableParam?.nullable ?? 'nothing';
       }
 
-      const tag = defineCE(component(Component));
+      const tag = defineCE(component<HTMLElement>(Component));
 
       element = await fixture(`<${tag}></${tag}>`);
     });
@@ -231,16 +247,14 @@ describe('[haunted] useSubscription', function() {
       let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
 
       beforeEach(async function define() {
-        function Component(this: typeof element) {
+        const tag = defineCE(component(function Component(this: typeof element) {
           this.subscription =
             useSubscription(S.NullableParamSubscription, {
               shouldSubscribe: () => false,
               onData: spy(),
               onError: spy(),
             });
-        }
-
-        const tag = defineCE(component(Component as () => TemplateResult));
+        }));
 
         element = await fixture(`<${tag}></${tag}>`);
       });
@@ -309,7 +323,7 @@ describe('[haunted] useSubscription', function() {
           });
         }
 
-        const tag = defineCE(component(Component as () => TemplateResult));
+        const tag = defineCE(component(Component));
 
         element = await fixture(`<${tag}></${tag}>`);
       });
@@ -552,7 +566,7 @@ describe('[haunted] useSubscription', function() {
           });
         }
 
-        const tag = defineCE(component(Component as () => TemplateResult));
+        const tag = defineCE(component(Component));
 
         element = await fixture(`<${tag}></${tag}>`);
       });
@@ -650,7 +664,7 @@ describe('[haunted] useSubscription', function() {
       beforeEach(async function define() {
         const messages = new Set();
 
-        function Component(this: typeof element) {
+        function Component() {
           const { data } = useSubscription(S.MessageSentSubscription, { onData });
 
           messages.add(data?.messageSent?.message);
@@ -660,7 +674,7 @@ describe('[haunted] useSubscription', function() {
           `;
         }
 
-        const tag = defineCE(component(Component as unknown as () => TemplateResult));
+        const tag = defineCE(component<HTMLElement>(Component));
 
         element = await fixture(`<${tag}></${tag}>`);
       });
@@ -678,3 +692,57 @@ describe('[haunted] useSubscription', function() {
     });
   });
 });
+
+type TypeCheckData = { a: 'a'; b: number };
+type TypeCheckVars = { c: 'c'; d: number };
+
+function TDNTypeCheck() {
+  const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
+    gql`query TypedQuery($c: String, $d: Int) { a b }`;
+
+  const {
+    called,
+    client,
+    data,
+    error,
+    errors,
+    host,
+    loading,
+    options,
+    variables,
+  } = useSubscription(TDN);
+
+  assertType<boolean>(called);
+  assertType<ApolloClient<NormalizedCacheObject>>(client!);
+  assertType<Error|ApolloError>(error!);
+  assertType<boolean>(loading);
+  assertType<TypeCheckData>(data!);
+  assertType<TypeCheckVars>(variables!);
+  assertType<ApolloSubscriptionControllerOptions<TypeCheckData, TypeCheckVars>>(options);
+  assertType<ReactiveControllerHost>(host);
+  assertType<readonly GraphQLError[]>(errors);
+}
+
+function ManuallyTypedTypeCheck() {
+  const {
+    called,
+    client,
+    data,
+    error,
+    errors,
+    host,
+    loading,
+    options,
+    variables,
+  } = useSubscription<TypeCheckData, TypeCheckVars>(gql``);
+
+  assertType<boolean>(called);
+  assertType<ApolloClient<NormalizedCacheObject>>(client!);
+  assertType<Error|ApolloError>(error!);
+  assertType<boolean>(loading);
+  assertType<TypeCheckData>(data!);
+  assertType<TypeCheckVars>(variables!);
+  assertType<ApolloSubscriptionControllerOptions<TypeCheckData, TypeCheckVars>>(options);
+  assertType<ReactiveControllerHost>(host);
+  assertType<readonly GraphQLError[]>(errors);
+}

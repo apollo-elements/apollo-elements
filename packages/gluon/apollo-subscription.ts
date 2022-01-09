@@ -1,13 +1,7 @@
-import type {
-  Constructor,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
+import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
 import { ApolloElement } from './apollo-element.js';
-import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
+import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin.js';
 
 export { html } from '@gluon/gluon';
 
@@ -21,8 +15,8 @@ export { html } from '@gluon/gluon';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
+export class ApolloSubscription<D = unknown, V = VariablesOf<D>>
+  extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement<unknown>>)<D, V> {
   /** @summary Latest subscription data. */
   declare data: Data<D> | null;
 

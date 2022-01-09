@@ -24,7 +24,7 @@ import { describeMutation, setupMutationClass } from '@apollo-elements/test/muta
 /**
  * Testable Mixed-in Apollo Mutation class
  */
-class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloMutation<D = unknown, V = I.VariablesOf<D>>
   extends ApolloMutationMixin(class XL extends HTMLElement { hi?: 'hi'; })<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

@@ -1,5 +1,10 @@
 {
   "extends": "../../tsconfig.settings.json",
   "include": ["."],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "allowJs": false,
+    "outDir": ".",
+    "rootDir": "."
+  }
 }

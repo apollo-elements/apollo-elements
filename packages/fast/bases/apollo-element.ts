@@ -3,9 +3,8 @@ import type {
   Data,
   Entries,
   GraphQLError,
-  MaybeTDN,
-  MaybeVariables,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type * as C from '@apollo/client/core';
@@ -25,10 +24,7 @@ import { hosted } from './decorators';
  *
  * @element
  */
-export class ApolloElement<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends FASTElement {
+export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
@@ -59,7 +55,7 @@ export class ApolloElement<
    */
   @hosted()
   @controlled()
-  document: ComponentDocument<D> | null = null;
+  document: ComponentDocument<D, V> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @hosted({ path: 'options' })

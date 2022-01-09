@@ -30,7 +30,7 @@ class XL extends HTMLElement {
   hi?: 'hi';
 }
 
-class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
   extends ApolloQueryMixin(XL)<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -252,7 +252,7 @@ function RuntimeMixin<Base extends Constructor>(superclass: Base) {
   };
 }
 
-class MixedClass<D extends I.MaybeTDN, V>
+class MixedClass<D, V = I.VariablesOf<D>>
   extends RuntimeMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
 
 function ChildMixin<Base extends Constructor>(superclass: Base) {
@@ -261,7 +261,7 @@ function ChildMixin<Base extends Constructor>(superclass: Base) {
   };
 }
 
-class Inheritor<D extends I.MaybeTDN, V> extends ChildMixin(MixedClass)<D, V> { }
+class Inheritor<D, V = I.VariablesOf<D>> extends ChildMixin(MixedClass)<D, V> { }
 
 const runChecks = false;
 if (runChecks) {

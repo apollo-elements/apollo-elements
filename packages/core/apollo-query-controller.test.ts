@@ -6,7 +6,7 @@ import * as E from './events';
 
 import { update } from './apollo-controller';
 
-import { ApolloError, NetworkStatus } from '@apollo/client/core';
+import { ApolloError, gql, NetworkStatus } from '@apollo/client/core';
 
 import { ReactiveElement } from 'lit';
 
@@ -20,8 +20,8 @@ import { match, spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 
 describe('[core] ApolloQueryController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
-    class MirroringHost<D extends TypedDocumentNode> extends ReactiveElement {
-        query!: ApolloQueryController<D>;
+    class MirroringHost extends ReactiveElement {
+        query!: ApolloQueryController<any>
 
         data?: unknown;
 
@@ -37,7 +37,7 @@ describe('[core] ApolloQueryController', function() {
     }
 
     describe('when simply instantiating', function() {
-      let element: MirroringHost<any>;
+      let element: MirroringHost;
 
       const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
 
@@ -59,7 +59,7 @@ describe('[core] ApolloQueryController', function() {
       });
 
       beforeEach(async function setupElement() {
-        const tag = defineCE(class extends MirroringHost<any> {
+        const tag = defineCE(class extends MirroringHost {
           query = new ApolloQueryController<TypedDocumentNode, unknown>(this);
         });
         element = await fixture(`<${tag}></${tag}>`);
@@ -133,7 +133,7 @@ describe('[core] ApolloQueryController', function() {
               await element.query.executeQuery();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -144,14 +144,14 @@ describe('[core] ApolloQueryController', function() {
               await element.query.executeQuery({ query: S.NullableParamQuery });
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
       });
 
       describe('setting NullableParam query', function() {
-        let subscribeSpy: SinonSpy;
+        let subscribeSpy: SinonSpy<Parameters<typeof element['query']['subscribe']>>;
         beforeEach(function() { subscribeSpy = spy(element.query, 'subscribe'); });
         afterEach(function() { subscribeSpy.restore(); });
 
@@ -167,7 +167,9 @@ describe('[core] ApolloQueryController', function() {
 
         describe('then setting variables', function() {
           beforeEach(function setVariables() {
-            element.query.variables = { nullable: '✈' };
+            (element as MirroringHost).query.variables = {
+              nullable: '✈',
+            };
           });
 
           beforeEach(nextFrame);
@@ -183,7 +185,7 @@ describe('[core] ApolloQueryController', function() {
               await element.query.executeQuery();
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -194,7 +196,7 @@ describe('[core] ApolloQueryController', function() {
               await element.query.executeQuery({ query: S.NonNullableParamQuery });
               expect.fail('did not throw');
             } catch (error) {
-              expect(error.message).to.match(/^No Apollo client/);
+              expect((error as Error).message).to.match(/^No Apollo client/);
             }
           });
         });
@@ -207,18 +209,18 @@ describe('[core] ApolloQueryController', function() {
       afterEach(teardownClient);
 
       describe('setting shouldSubscribe to constant false', function() {
-        let element: MirroringHost<typeof S.NullableParamQuery>;
+        let element: HelloQueryHost;
+
+        class HelloQueryHost extends MirroringHost {
+          query = new ApolloQueryController(this, S.NullableParamQuery, {
+            shouldSubscribe: () => false,
+            onData: spy(),
+            onError: spy(),
+          });
+        }
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof S.NullableParamQuery> {
-            query = new ApolloQueryController(this, S.NullableParamQuery, {
-              shouldSubscribe: () => false,
-              onData: spy(),
-              onError: spy(),
-            });
-          }
-
-          const tag = defineCE(HelloQueryHost);
+          const tag = defineCE(class extends HelloQueryHost {});
 
           element = await fixture(`<${tag}></${tag}>`);
         });
@@ -272,8 +274,20 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with noAutoSubscribe', function() {
-        let element: MirroringHost<typeof S.HelloQuery>;
+        let element: HelloQueryHost;
 
+        class HelloQueryHost extends MirroringHost {
+          query = new ApolloQueryController(this, S.HelloQuery, {
+            noAutoSubscribe: true,
+            onData: spy(),
+            onError: spy(),
+          });
+
+          constructor() {
+            super();
+            spy(this.query, 'refetch');
+          }
+        }
         afterEach(() => (element?.query?.refetch as SinonSpy)?.restore?.());
 
         afterEach(function() {
@@ -282,20 +296,7 @@ describe('[core] ApolloQueryController', function() {
         });
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof S.HelloQuery> {
-            query = new ApolloQueryController(this, S.HelloQuery, {
-              noAutoSubscribe: true,
-              onData: spy(),
-              onError: spy(),
-            });
-
-            constructor() {
-              super();
-              spy(this.query, 'refetch');
-            }
-          }
-
-          const tag = defineCE(HelloQueryHost);
+          const tag = defineCE(class extends HelloQueryHost {});
 
           element = await fixture(`<${tag}></${tag}>`);
         });
@@ -391,23 +392,23 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with HelloQuery', function() {
-        let element: MirroringHost<typeof S.HelloQuery>;
+        let element: HelloQueryHost;
+
+        class HelloQueryHost extends MirroringHost {
+          query = new ApolloQueryController(this, S.HelloQuery, {
+            onData: spy(),
+          });
+
+          constructor() {
+            super();
+            spy(this.query, 'refetch');
+          }
+        }
 
         afterEach(() => (element?.query?.refetch as SinonSpy)?.restore?.());
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof S.HelloQuery> {
-            query = new ApolloQueryController(this, S.HelloQuery, {
-              onData: spy(),
-            });
-
-            constructor() {
-              super();
-              spy(this.query, 'refetch');
-            }
-          }
-
-          const tag = defineCE(HelloQueryHost);
+          const tag = defineCE(class extends HelloQueryHost {});
 
           element = await fixture(`<${tag}></${tag}>`);
         });
@@ -708,7 +709,27 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with PaginatedQuery', function() {
-        let element: MirroringHost<typeof S.PaginatedQuery>;
+        let element: PaginatedQueryHost;
+
+        class PaginatedQueryHost extends MirroringHost {
+          declare shadowRoot: ShadowRoot;
+
+          $(id: string) { return this.shadowRoot.getElementById(id); }
+
+          query = new ApolloQueryController<typeof S.PaginatedQuery>(this, S.PaginatedQuery, {
+            onData: spy(data => { this.$('data')!.innerText = data.pages.join(','); }),
+            onError: spy(),
+            variables: { offset: 0 },
+          })
+
+          constructor() {
+            super();
+            this.attachShadow({ mode: 'open' }).innerHTML = `
+              <p id="data"></p>
+            `;
+          }
+        }
+
 
         const onError = spy();
         const onData = spy();
@@ -717,27 +738,7 @@ describe('[core] ApolloQueryController', function() {
         afterEach(() => onData.resetHistory());
 
         beforeEach(async function define() {
-          class PaginatedQueryHost extends MirroringHost<typeof S.PaginatedQuery> {
-            declare shadowRoot: ShadowRoot;
-
-            $(id: string) { return this.shadowRoot.getElementById(id); }
-
-            // @ts-expect-error: this should work ? try after updating deps
-            query = new ApolloQueryController(this, S.PaginatedQuery, {
-              onData: spy(data => { this.$('data')!.innerText = data.pages.join(','); }),
-              onError: spy(),
-              variables: { offset: 0 },
-            })
-
-            constructor() {
-              super();
-              this.attachShadow({ mode: 'open' }).innerHTML = `
-                <p id="data"></p>
-              `;
-            }
-          }
-
-          const tag = defineCE(PaginatedQueryHost);
+          const tag = defineCE(class extends PaginatedQueryHost {});
 
           element = await fixture(`<${tag}></${tag}>`);
         });
@@ -778,29 +779,29 @@ describe('[core] ApolloQueryController', function() {
       });
 
       describe('with MessagesQuery', function() {
-        let element: MirroringHost<typeof S.MessagesQuery>;
+        let element: HelloQueryHost;
+
+        class HelloQueryHost extends MirroringHost {
+          declare shadowRoot: ShadowRoot;
+
+          constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
+          }
+
+          query = new ApolloQueryController<typeof S.MessagesQuery>(this, S.MessagesQuery, {
+            onData: data => {
+              this.shadowRoot.innerHTML =
+                `<ol>${data.messages!.map(x => `<li>${x!.message}</li>`).join('')}</ol>`;
+            },
+          });
+
+          data?: ResultOf<typeof S.MessagesQuery>;
+        }
 
         afterEach(resetMessages);
 
         beforeEach(async function define() {
-          class HelloQueryHost extends MirroringHost<typeof S.MessagesQuery> {
-            declare shadowRoot: ShadowRoot;
-
-            constructor() {
-              super();
-              this.attachShadow({ mode: 'open' });
-            }
-
-            query = new ApolloQueryController(this, S.MessagesQuery, {
-              onData: data => {
-                this.shadowRoot.innerHTML =
-                  `<ol>${data.messages!.map(x => `<li>${x!.message}</li>`).join('')}</ol>`;
-              },
-            });
-
-            data?: ResultOf<typeof S.MessagesQuery>;
-          }
-
           const tag = defineCE(HelloQueryHost);
 
           element = await fixture(`<${tag}></${tag}>`);
@@ -847,14 +848,34 @@ describe('[core] ApolloQueryController', function() {
 });
 
 class TypeCheck extends ReactiveElement {
-  c = new ApolloQueryController(this, S.NullableParamQuery, {
+  static TDN: TypedDocumentNode<{
+    check: {
+      it: string
+    }
+  }, {
+    check: string
+  }> = gql`query CheckIt($check: String) {
+    check(check: $check) {
+      it
+    }
+  }`;
+
+  a = new ApolloQueryController(this, S.NullableParamQuery, {
+    variables: { nullable: 'nullable' },
     shouldSubscribe({ variables } = {}) {
       return variables?.nullable === 'nullable';
     },
   });
 
-  a() {
+  b = new ApolloQueryController(this, TypeCheck.TDN);
+
+  c = new ApolloQueryController<{ a: 'a' }, { b: 'b' }>(this, gql``);
+
+  check() {
     // @ts-expect-error: nullable should be string
-    this.c.variables = { nullable: 1 };
+    this.a.variables = { nullable: 1 };
+    this.a.variables = { nullable: 'nullable' };
+    this.b.variables = { check: 'check' };
+    this.c.variables = { b: 'b' };
   }
 }

@@ -103,7 +103,7 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
     await execa(options.pkgManager, getCLIArgs(options), { cwd, all: true });
     if (!options.silent)
       console.log(greenBright('Done!'));
-  } catch (error) {
+  } catch (error: any) {
     if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
       logNameError(options, error);
     else if (error?.name === 'ListrError')

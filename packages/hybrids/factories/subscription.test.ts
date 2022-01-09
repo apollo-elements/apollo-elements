@@ -3,10 +3,11 @@ import type { ApolloSubscriptionController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
-import { define, html, Hybrids } from 'hybrids';
+import { define, html } from 'hybrids';
 import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
 import { subscription } from './subscription';
+import gql from 'graphql-tag';
 
 let counter = 0;
 
@@ -26,23 +27,24 @@ describe('[hybrids] subscription factory', function() {
         subscription: ApolloSubscriptionController<typeof S.NullableParamSubscription>
       }
 
-      let element: HTMLElement & H;
+      let element: H;
 
       beforeEach(async function() {
         const tag = getTagName();
 
-        define(tag, {
+        define<H>({
+          tag,
           subscription: subscription(S.NullableParamSubscription, { noAutoSubscribe: true }),
-          render: (host: typeof element) => {
+          render: host => {
             return html`
               <output id="data">${stringify(host.subscription.data)}</output>
               <output id="error">${stringify(host.subscription.error)}</output>
               <output id="loading">${stringify(host.subscription.loading)}</output>
             `;
           },
-        } as Hybrids<H>);
+        });
 
-        element = await fixture<HTMLElement & H>(`<${tag}></${tag})`);
+        element = await fixture<H>(`<${tag}></${tag})`);
       });
 
       it('creates the controller', function() {
@@ -95,3 +97,28 @@ describe('[hybrids] subscription factory', function() {
     });
   });
 });
+
+function TypeCheck() {
+  interface H extends HTMLElement {
+    subscription: ApolloSubscriptionController<typeof S.MessageSentSubscription>
+  }
+
+  const Klass = define.compile<H>({ tag: 'what-ever',
+    subscription: subscription(S.MessageSentSubscription),
+  });
+
+  new Klass().subscription.data?.messageSent?.message === 'hi';
+
+  interface I extends HTMLElement {
+    subscription: ApolloSubscriptionController<
+      S.MessageSentSubscriptionData,
+      S.MessageSentSubscriptionVariables
+    >
+  }
+
+  const ManuallyTyped = define.compile<I>({ tag: 'what-ever',
+    subscription: subscription(gql``),
+  });
+
+  new ManuallyTyped().subscription.data?.messageSent?.message === 'hi';
+}

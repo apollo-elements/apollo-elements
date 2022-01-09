@@ -5,4 +5,4 @@ export { subscription } from './factories/subscription.js';
 
 export { define, html } from 'hybrids';
 
-export type { Hybrids } from 'hybrids';
+export type { Component } from 'hybrids';

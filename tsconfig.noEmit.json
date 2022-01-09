@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.settings.json",
+  "include": ["./packages/**/*.ts"],
+  "exclude": ["./packages/create/template"],
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": false,
+    "incremental": false
+  }
+}

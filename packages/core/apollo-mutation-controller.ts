@@ -3,26 +3,21 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type {
   ComponentDocument,
   Data,
-  MaybeTDN,
-  MaybeVariables,
   MutationUpdaterFn,
   OptimisticResponseType,
   RefetchQueriesType,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type {
-  ApolloError,
-  FetchPolicy,
-  FetchResult,
-  MutationOptions,
-} from '@apollo/client/core';
+import type { ApolloError, FetchPolicy, FetchResult, MutationOptions } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerOptions<D, V> {
+export interface ApolloMutationControllerOptions<D, V = VariablesOf<D>>
+extends ApolloControllerOptions<D, V> {
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
    *
@@ -40,7 +35,7 @@ export interface ApolloMutationControllerOptions<D, V> extends ApolloControllerO
   update?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 }
 
-export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
+export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
   extends ApolloController<D, V> implements ReactiveController {
   /**
    * The ID number of the most recent mutation since the element was instantiated.
@@ -53,13 +48,13 @@ export class ApolloMutationController<D extends MaybeTDN = MaybeTDN, V = MaybeVa
   called = false;
 
   /** @summary The GraphQL mutation document */
-  get mutation(): ComponentDocument<D> | null { return this.document; }
+  get mutation(): ComponentDocument<D, V> | null { return this.document; }
 
-  set mutation(document: ComponentDocument<D> | null) { this.document = document; }
+  set mutation(document: ComponentDocument<D, V> | null) { this.document = document; }
 
   constructor(
     host: ReactiveControllerHost,
-    mutation?: ComponentDocument<D> | null,
+    mutation?: ComponentDocument<D, V> | null,
     options?: ApolloMutationControllerOptions<D, V>
   ) {
     super(host, options);

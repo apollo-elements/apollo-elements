@@ -18,7 +18,7 @@ Decorators for Apollo Elements. Used internally to reflect properties from contr
 ```ts
 import { controlled } from '@apollo-elements/core/decorators';
 
-class ControlledData<D extends MaybeTDN, V = MaybeVariables<D>> extends LitElement {
+class ControlledData<D, V = VariablesOf<D>> extends LitElement {
   controller = new ApolloQueryController<D, V>(this);
 
   @controlled()

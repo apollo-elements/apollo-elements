@@ -38,17 +38,17 @@
     "directory": "packages/create"
   },
   "dependencies": {
-    "@graphql-codegen/cli": "^1.21.7",
-    "@graphql-codegen/typescript": "^1.23.0",
-    "@graphql-codegen/typescript-operations": "^1.18.4",
+    "@graphql-codegen/cli": "^2.3.1",
+    "@graphql-codegen/typescript": "^2.4.2",
+    "@graphql-codegen/typescript-operations": "^2.2.2",
     "case": "^1.6.3",
     "chalk": "^4.1.2",
-    "execa": "^5.1.1",
-    "inquirer": "^7.3.3",
+    "execa": "^6.0.0",
+    "inquirer": "^8.2.0",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
     "tslib": "^2.3.1",
-    "yargs": "^17.2.1"
+    "yargs": "^17.3.1"
   },
   "main": "index.js",
   "directories": {

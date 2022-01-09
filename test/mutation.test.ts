@@ -287,7 +287,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         let spies: Record<string|keyof ApolloMutationElement, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction({
+          ({ element, spies } = await setupFunction<any>({
             properties: {
               mutation: NoParamMutation,
               onCompleted: () => void null,
@@ -701,7 +701,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         let spies: Record<string | keyof typeof element, SinonSpy>;
 
         beforeEach(async function setupElement() {
-          ({ element, spies } = await setupFunction({
+          ({ element, spies } = await setupFunction<any>({
             properties: {
               mutation: NullableParamMutation,
               onCompleted: spy(),
@@ -789,7 +789,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               await element.mutate();
               expect.fail('no error');
             } catch (e) {
-              error = e;
+              error = e as ApolloError;
             }
           });
 
@@ -960,7 +960,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
                   await element.mutate();
                   expect.fail('no error');
                 } catch (e) {
-                  error = e;
+                  error = e as ApolloError;
                 }
               });
 

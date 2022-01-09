@@ -7,6 +7,7 @@ describe('[FAST] @hosted', function() {
       class A {
         @hosted() a = 'a';
       }
+      A;
     }).to.throw('a not described; call @controlled first');
   });
 });

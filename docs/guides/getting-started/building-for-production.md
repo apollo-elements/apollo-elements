@@ -33,11 +33,11 @@ export default {
 }
 ```
 
-You can use `rollup-plugin-lit-css` and `@apollo-elements/rollup-plugin-graphql` to enhance the <abbr title="developer experience">DX</abbr>:
+You can use `rollup-plugin-lit-css` and `@rollup/plugin-graphql` to enhance the <abbr title="developer experience">DX</abbr>:
 
 ```js copy
 import litcss from 'rollup-plugin-lit-css';
-import graphql from '@apollo-elements/rollup-plugin-graphql';
+import graphql from '@rollup/plugin-graphql';
 // ...
 
 export default {

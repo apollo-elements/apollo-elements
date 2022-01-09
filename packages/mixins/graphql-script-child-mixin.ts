@@ -56,7 +56,7 @@ function GraphQLScriptChildMixinImplementation<
       try {
         return gql(stripHTMLComments(text)); /* c8 ignore next */ // covered
       } catch (err) {
-        this.error = err;
+        this.error = err as Error;
         return null;
       }
     }

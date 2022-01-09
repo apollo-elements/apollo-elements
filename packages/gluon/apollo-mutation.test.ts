@@ -9,7 +9,7 @@ import { html } from 'lit-html';
 import { nextFrame } from '@open-wc/testing';
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloMutation<D, V = I.VariablesOf<D>>
   extends ApolloMutation<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

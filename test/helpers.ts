@@ -87,7 +87,7 @@ export function waitForRender<T extends HTMLElement & TestableElement>(getElemen
   };
 }
 
-function setupClass<T extends TestableElement & Omit<ApolloElementElement, 'variablesChanged'|'documentChanged'|'update'|'updated'>>(fopts?: {
+function setupClass<T extends TestableElement & Omit<ApolloElementElement<unknown>, 'variablesChanged'|'documentChanged'|'update'|'updated'>>(fopts?: {
   beforeDefine?: <U extends T>(k: Constructor<U>, opts: SetupOptions<U>) => void,
   omitKeys?: string[],
 }) {

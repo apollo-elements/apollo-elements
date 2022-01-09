@@ -1,5 +1,17 @@
 {
   "extends": "../../tsconfig.settings.json",
-  "include": [".", "../lib/create-apollo-client.ts"],
-  "exclude": ["node_modules"]
+  "include": ["."],
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../core" },
+    { "path": "../fast" },
+    { "path": "../gluon" },
+    { "path": "../haunted" },
+    { "path": "../hybrids" },
+    { "path": "../mixins" },
+    { "path": "../polymer" },
+  ],
 }

@@ -19,7 +19,7 @@ import { spy, SinonSpy } from 'sinon';
 
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloQuery<D, V = I.VariablesOf<D>>
   extends ApolloQuery<D, V>
   implements TestableElement {
   static get is() { return 'apollo-query'; }

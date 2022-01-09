@@ -351,7 +351,13 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   });
 
   describe('with refetch-queries attr', function() {
-    let element: ApolloMutationElement;
+    type D = { i: number }
+    type V = {
+      data: number,
+      context: Record<string, unknown>,
+      errors: string[]
+    }
+    let element: ApolloMutationElement<D, V>;
 
     beforeEach(async function() {
       element = await fixture(html`
@@ -367,11 +373,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         .and.to.deep.equal(element.controller.options.refetchQueries);
       element.refetchQueries = ['a', 'b'];
       element.refetchQueries = result => ['a', {
-        query: C.gql`{}` as C.TypedDocumentNode<{ i: number }, {
-          data: number,
-          context: Record<string, unknown>,
-          errors: string[]
-        }>,
+        query: C.gql`{}` as C.TypedDocumentNode<D, V>,
         variables: {
           data: result.data?.i,
           context: result.context,

@@ -26,7 +26,7 @@ import { property } from 'lit/decorators.js';
 import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 import { stringify } from '@apollo-elements/test';
 
-class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloMutation<D, V = I.VariablesOf<D>>
   extends ApolloMutation<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
@@ -97,7 +97,7 @@ describe('[lit-apollo] ApolloMutation', function() {
     describe('with update defined as a class method', function() {
       let element: Test;
 
-      class Test extends ApolloMutation<S.NoParamMutationData, unknown> {
+      class Test extends ApolloMutation<typeof S.NoParamMutation> {
         mutation = S.NoParamMutation;
 
         update(changed: Map<string|number|symbol, unknown>): void {

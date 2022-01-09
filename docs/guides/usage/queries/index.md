@@ -18,7 +18,7 @@ By default, query components *automatically* fetch their data over the network o
 
 > TL;DR: query components read data from the graph. By default, query elements automatically fetch data once you set their `query` and/or `variables` properties or class fields. Render your component's local DOM with the component's `data`, `loading`, and `error` properties.
 
-Query components read data from the GraphQL and expose them on the element's `data` property. Each query element has a `query` property which is a GraphQL `DocumentNode`. You can create that object using the `gql` template literal tag, or via `@apollo-elements/rollup-plugin-graphql`, etc. See the [buildless development](/guides/getting-started/buildless-development/) guide for more info.
+Query components read data from the GraphQL and expose them on the element's `data` property. Each query element has a `query` property which is a GraphQL `DocumentNode`. You can create that object using the `gql` template literal tag, or via `@rollup/plugin-graphql`, etc. See the [buildless development](/guides/getting-started/buildless-development/) guide for more info.
 
 ```graphql copy
 query HelloQuery {

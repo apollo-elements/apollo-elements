@@ -1,9 +1,4 @@
-import type {
-  Constructor,
-  MaybeTDN,
-  MaybeVariables,
-  ComponentDocument,
-} from '@apollo-elements/core/types';
+import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
 
 import type { Descriptor } from 'hybrids';
 
@@ -21,17 +16,18 @@ import {
  * @param  options Options to control the subscription.
  * @return Hybrids descriptor for a [ApolloMutationController](/api/core/controllers/subscription/)
  */
-export function subscription<
-  E extends HTMLElement,
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
->(
-  subscriptionDocument?: ComponentDocument<D> | null,
+
+export function subscription<E extends HTMLElement, D, V>(
+  subscriptionDocument?: DocumentNode | null,
   options?: ApolloSubscriptionControllerOptions<D, V>,
-): Descriptor<E, ApolloSubscriptionController<D, V>> {
-  return controller(
-    ApolloSubscriptionController as Constructor<ApolloSubscriptionController<D, V>>,
+): Descriptor<E, ApolloSubscriptionController<D, V>>
+export function subscription<E extends HTMLElement, D extends TypedDocumentNode>(
+  subscriptionDocument?: D | null,
+  options?: ApolloSubscriptionControllerOptions<D>,
+): Descriptor<E, ApolloSubscriptionController<D>> {
+  return controller<E, ApolloSubscriptionController<D>>(
+    ApolloSubscriptionController,
     subscriptionDocument,
-    options,
+    options
   );
 }

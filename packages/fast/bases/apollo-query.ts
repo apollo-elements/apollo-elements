@@ -2,10 +2,9 @@ import type {
   ComponentDocument,
   Data,
   FetchMoreParams,
-  MaybeTDN,
-  MaybeVariables,
   NextFetchPolicyFunction,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type * as C from '@apollo/client/core';
@@ -31,10 +30,7 @@ import { update } from '@apollo-elements/core/apollo-controller';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends ApolloElement<D, V> {
+export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
   /**
    * Latest query data.
    */
@@ -109,7 +105,7 @@ export class ApolloQuery<
    */
   @hosted()
   @controlled()
-  query: ComponentDocument<D> | null = null;
+  query: ComponentDocument<D, V> | null = null;
 
   /**
    * If data was read from the cache with missing fields,

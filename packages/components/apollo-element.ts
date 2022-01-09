@@ -1,13 +1,11 @@
 import type {
   Data,
-  MaybeTDN,
-  MaybeVariables,
   Variables,
   GraphQLError,
   ComponentDocument,
 } from '@apollo-elements/core/types';
 
-import type { ApolloController } from '@apollo-elements/core';
+import type { ApolloController, VariablesOf } from '@apollo-elements/core';
 import type { ReactiveElement } from 'lit';
 
 import type {
@@ -22,10 +20,7 @@ import { StampinoRender } from './stampino-render.js';
 
 import { property, state } from 'lit/decorators.js';
 
-export class ApolloElement<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends StampinoRender {
+export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
@@ -46,7 +41,7 @@ export class ApolloElement<
    * GraphQL operation document i.e. query, subscription, or mutation.
    * Must be a parsed GraphQL `DocumentNode`
    */
-  @controlled() @state() document: ComponentDocument<D> | null = null;
+  @controlled() @state() document: ComponentDocument<D, V> | null = null;
 
   /** @summary Latest error */
   @controlled() @state() error: Error | ApolloError | null = null;

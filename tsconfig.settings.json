@@ -1,19 +1,25 @@
 {
   "files": ["./declaration.d.ts"],
   "compilerOptions": {
-    "strict": true,
-    "target": "es2019",
-    "module": "es2020",
-    "declaration": true,
-    "useDefineForClassFields": false,
-    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "composite": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
+    "inlineSources": true,
+    "module": "es2020",
+    "moduleResolution": "Node",
     "noEmitOnError": false,
     "sourceMap": true,
-    "inlineSources": true,
-    "moduleResolution": "Node",
-    "downlevelIteration": true,
+    "strict": true,
+    "target": "es2019",
+    "useDefineForClassFields": false,
+    "paths": {
+      "@apollo-elements/*": ["packages/*"]
+    },
     "plugins": [
       { "name": "typescript-lit-html-plugin" },
       { "name": "ts-lit-plugin" }

@@ -1,12 +1,6 @@
-import type {
-  Constructor,
-  Data,
-  MaybeTDN,
-  MaybeVariables,
-  Variables,
-} from '@apollo-elements/core/types';
+import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
 import { ApolloElement } from './apollo-element.js';
 
 export { html } from '@gluon/gluon';
@@ -20,8 +14,8 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloQuery<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
+export class ApolloQuery<D = unknown, V = VariablesOf<D>>
+  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement<unknown>>)<D, V> {
   /** @summary Latest query data. */
   declare data: Data<D> | null;
 

@@ -1,13 +1,16 @@
 {
   "extends": "./tsconfig.settings.json",
-  "compilerOptions": {
-    "checkJs": true,
-    "allowJs": true,
-    "module": "es2020",
-    "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "@apollo-elements/*": ["packages/*"]
-    }
-  }
+  "references": [
+    { "path": "./packages/atomico" },
+    { "path": "./packages/components" },
+    { "path": "./packages/core" },
+    { "path": "./packages/create" },
+    { "path": "./packages/fast" },
+    { "path": "./packages/gluon" },
+    { "path": "./packages/haunted" },
+    { "path": "./packages/hybrids" },
+    { "path": "./packages/lit-apollo" },
+    { "path": "./packages/mixins" },
+    { "path": "./packages/polymer" },
+  ]
 }

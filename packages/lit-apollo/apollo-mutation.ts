@@ -3,12 +3,11 @@ import type * as C from '@apollo/client/core';
 import type {
   Data,
   Variables,
-  MaybeTDN,
-  MaybeVariables,
   ComponentDocument,
   OptimisticResponseType,
   RefetchQueriesType,
   MutationUpdaterFn,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import { controlled } from '@apollo-elements/core/decorators';
@@ -27,8 +26,7 @@ import { ApolloElement } from './apollo-element.js';
  * See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events
  *
  */
-export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>>
-  extends ApolloElement<D, V> {
+export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
   /**
    * Latest mutation data.
    */
@@ -56,7 +54,7 @@ export class ApolloMutation<D extends MaybeTDN = MaybeTDN, V = MaybeVariables<D>
   /** @summary The mutation. */
   @controlled()
   @state()
-  mutation: ComponentDocument<D> | null = null;
+  mutation: ComponentDocument<D, V> | null = null;
 
   /**
    * An object that represents the result of this mutation that will be optimistically

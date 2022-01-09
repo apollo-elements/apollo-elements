@@ -3,10 +3,9 @@ import type * as C from '@apollo/client/core';
 import type {
   ComponentDocument,
   Data,
-  MaybeTDN,
-  MaybeVariables,
   OnSubscriptionDataParams,
   Variables,
+  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import { ApolloElement } from './apollo-element.js';
@@ -27,10 +26,7 @@ import { controlled } from '@apollo-elements/core/decorators';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<
-  D extends MaybeTDN = MaybeTDN,
-  V = MaybeVariables<D>
-> extends ApolloElement<D, V> {
+export class ApolloSubscription<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   controller = new ApolloSubscriptionBehavior<D, V>(this, null, {
     shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
     onData: data => this.onSubscriptionData?.(data),
@@ -58,7 +54,7 @@ export class ApolloSubscription<
    */
   @hosted()
   @controlled()
-  subscription: ComponentDocument<D> | null = null;
+  subscription: ComponentDocument<D, V> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`

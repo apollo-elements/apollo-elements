@@ -36,7 +36,7 @@ const template = html<TestableApolloQuery>`
 `;
 
 @customElement({ name: 'fast-testable-apollo-query-class', template })
-class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
   extends ApolloQuery<D, V>
   implements TestableElement {
   async hasRendered() {

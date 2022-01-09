@@ -1,5 +1,11 @@
 {
   "extends": "../../tsconfig.settings.json",
   "include": ["."],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../core" },
+  ],
 }

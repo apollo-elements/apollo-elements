@@ -1,4 +1,3 @@
-import type * as C from '@apollo/client/core';
 import type * as I from '@apollo-elements/core/types';
 
 import { gql } from '@apollo/client/core';
@@ -8,14 +7,7 @@ import { GraphQLError } from 'graphql/error/GraphQLError';
 import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 import { stub } from 'sinon';
 
-import {
-  assertType,
-  isApolloError,
-  setupClient,
-  stringify,
-  teardownClient,
-  TestableElement,
-} from '@apollo-elements/test';
+import { setupClient, stringify, teardownClient, TestableElement } from '@apollo-elements/test';
 
 import './polymer-apollo-query';
 
@@ -27,7 +19,7 @@ import * as S from '@apollo-elements/test/schema';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-class TestableApolloQuery<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
+class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
   extends PolymerApolloQuery<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -108,7 +100,7 @@ describe('[polymer] <polymer-apollo-query>', function() {
       let err: Error;
       try {
         throw new Error('error');
-      } catch (e) { err = e; }
+      } catch (e) { err = e as Error; }
       setTimeout(() => element.error = err);
       const { detail: { value } } = await oneEvent(element, 'error-changed');
       expect(value).to.equal(err);
@@ -169,60 +161,3 @@ describe('[polymer] <polymer-apollo-query>', function() {
     });
   });
 });
-
-type TypeCheckData = { a: 'a', b: number };
-type TypeCheckVars = { d: 'd', e: number };
-
-class TypeCheck extends PolymerApolloQuery<TypeCheckData, TypeCheckVars> {
-  typeCheck() {
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
-
-    // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>> (this.client);
-    assertType<Record<string, unknown>>             (this.context!);
-    assertType<boolean>                             (this.loading);
-    assertType<C.DocumentNode>                      (this.document!);
-    assertType<Error>                               (this.error!);
-    assertType<readonly GraphQLError[]>             (this.errors!);
-    assertType<TypeCheckData>                       (this.data!);
-    assertType<string>                              (this.error.message);
-    assertType<'a'>                                 (this.data.a);
-    // @ts-expect-error: b as number type
-    assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
-
-    // ApolloQueryInterface
-    assertType<C.DocumentNode>                      (this.query!);
-    assertType<TypeCheckVars>                       (this.variables!);
-    assertType<C.ErrorPolicy>                       (this.errorPolicy!);
-    assertType<string>                              (this.errorPolicy!);
-    // @ts-expect-error: ErrorPolicy is not a number
-    assertType<number>                              (this.errorPolicy);
-    assertType<C.WatchQueryFetchPolicy>             (this.fetchPolicy!);
-    assertType<string>                              (this.fetchPolicy);
-    if (typeof this.nextFetchPolicy !== 'function')
-      assertType<C.WatchQueryFetchPolicy>           (this.nextFetchPolicy!);
-    assertType<C.NetworkStatus>                     (this.networkStatus);
-    assertType<number>                              (this.networkStatus);
-    // @ts-expect-error: NetworkStatus is not a string
-    assertType<string>                              (this.networkStatus);
-    assertType<boolean>                             (this.notifyOnNetworkStatusChange!);
-    assertType<number>                              (this.pollInterval!);
-    assertType<boolean>                             (this.partial!);
-    assertType<boolean>                             (this.partialRefetch!);
-    assertType<boolean>                             (this.returnPartialData!);
-    assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
-
-    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
-  }
-}
-
-type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
-class TDNTypeCheck extends PolymerApolloQuery<TDN> {
-  typeCheck() {
-    assertType<TypeCheckData>(this.data!);
-    assertType<TypeCheckVars>(this.variables!);
-  }
-}

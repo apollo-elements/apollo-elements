@@ -30,7 +30,7 @@ import { FASTElement, html, customElement, DOM } from '@microsoft/fast-element';
 
 import { describeMutation } from '@apollo-elements/test/mutation.test';
 
-const template = html<TestableApolloMutation>`
+const template = html<TestableApolloMutation<any>>`
   <output id="called">${x => stringify(x.called)}</output>
   <output id="data">${x => stringify(x.data)}</output>
   <output id="error">${x => stringify(x.error)}</output>
@@ -41,9 +41,8 @@ const template = html<TestableApolloMutation>`
 let counter = -1;
 
 @customElement({ name: 'fast-testable-apollo-mutation-class', template })
-class TestableApolloMutation<D extends I.MaybeTDN = I.MaybeTDN, V = I.MaybeVariables<D>>
-  extends ApolloMutation<D, V>
-  implements TestableElement {
+class TestableApolloMutation<D, V = I.VariablesOf<D>>
+  extends ApolloMutation<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
   async hasRendered(): Promise<this> {
@@ -64,7 +63,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       const { properties, attributes, innerHTML = '' } = options;
 
       @customElement({ name, template })
-      class Test extends TestableApolloMutation { }
+      class Test extends TestableApolloMutation<any> { }
 
       const attrs = attributes ? ` ${attributes}` : '';
 
@@ -99,7 +98,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
     it('is an instance of FASTElement', async function() {
       const name = 'is-an-instance-of-f-a-s-t-element';
       @customElement({ name })
-      class Test extends ApolloMutation { }
+      class Test extends ApolloMutation<any> { }
       const el = await fixture<Test>(`<${name}></${name}>`);
       expect(el).to.be.an.instanceOf(FASTElement);
     });
@@ -117,7 +116,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
     describe('refetchQueries', function() {
       let element: Test;
 
-      class Test extends ApolloMutation { }
+      class Test extends ApolloMutation<any> { }
 
       describe(`when refetch-queries attribute set with comma-separated, badly-formatted query names`, function() {
         beforeEach(async function() {
@@ -238,8 +237,10 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
 }
 
 type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
+
 class TDNTypeCheck extends ApolloMutation<TDN> {
   typeCheck() {
+    this.data;
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
     assertType<TDN>(this.mutation!);

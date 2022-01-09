@@ -6,5 +6,8 @@
     "module": "ES2020",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
-  }
+  },
+  "references": [
+    { "path": "../core" },
+  ],
 }

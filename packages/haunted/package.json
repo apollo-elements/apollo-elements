@@ -55,7 +55,7 @@
   "homepage": "https://apolloelements.dev/api/libraries/haunted/",
   "dependencies": {
     "@apollo-elements/core": "^1.0.0",
-    "haunted": "^4.8.2"
+    "haunted": "^4.8.3"
   },
   "customElements": "custom-elements.json"
 }

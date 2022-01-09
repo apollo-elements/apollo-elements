@@ -312,7 +312,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "ComponentDocument<D, V> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
@@ -691,8 +691,7 @@
             {
               "kind": "field",
               "name": "doMutate",
-              "privacy": "private",
-              "default": "(): void => void (this.mutate().catch(() => void 0))"
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -816,7 +815,7 @@
               "kind": "field",
               "name": "mutation",
               "type": {
-                "text": "null | ComponentDocument<D>"
+                "text": "null | ComponentDocument<D, V>"
               },
               "default": "null",
               "summary": "The mutation.",
@@ -1159,7 +1158,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "ComponentDocument<D, V> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
@@ -1582,7 +1581,7 @@
               "kind": "field",
               "name": "query",
               "type": {
-                "text": "null | ComponentDocument<D>"
+                "text": "null | ComponentDocument<D, V>"
               },
               "default": "null",
               "summary": "A GraphQL document containing a single query.",
@@ -1883,7 +1882,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "ComponentDocument<D, V> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
@@ -2269,7 +2268,7 @@
               "kind": "field",
               "name": "subscription",
               "type": {
-                "text": "null | ComponentDocument<D>"
+                "text": "null | ComponentDocument<D, V>"
               },
               "default": "null",
               "summary": "A GraphQL document containing a single subscription.",
@@ -2465,7 +2464,7 @@
               "kind": "field",
               "name": "document",
               "type": {
-                "text": "ComponentDocument<D> | null"
+                "text": "ComponentDocument<D, V> | null"
               },
               "default": "null",
               "summary": "Operation document.\nGraphQL operation document i.e. query, subscription, or mutation.\nMust be a parsed GraphQL `DocumentNode`",
