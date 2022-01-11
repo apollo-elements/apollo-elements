@@ -1,0 +1,62 @@
+diff --git a/node_modules/rocket-preset-webcomponents-dev/rocket-preset-webcomponents-dev.js b/node_modules/rocket-preset-webcomponents-dev/rocket-preset-webcomponents-dev.js
+index cdf437a..efdc896 100644
+--- a/node_modules/rocket-preset-webcomponents-dev/rocket-preset-webcomponents-dev.js
++++ b/node_modules/rocket-preset-webcomponents-dev/rocket-preset-webcomponents-dev.js
+@@ -19,38 +19,33 @@ export function webcomponentsDev() {
+ 
+     setupEleventyPlugins: [
+ 
+-      addPlugin({ name: 'markdown-shortcode', plugin: markdownShortcodePlugin }),
++      addPlugin(markdownShortcodePlugin),
+ 
+-      addPlugin({
+-        name: 'webcomponents-dev',
+-        plugin: wcdShortcodePlugin,
+-        location: 'markdown-shortcode',
++      addPlugin(wcdShortcodePlugin, undefined, {
++        location: markdownShortcodePlugin,
+         how: 'after',
+       }),
+ 
+-      addPlugin({
+-        name: 'auto-import-custom-elements',
+-        plugin: addWebComponentDefinitions,
+-        location: 'bottom',
+-        options: {
+-          quiet: true,
+-          singleScript: true,
+-        },
+-      }),
+-
+-      adjustPluginOptions('auto-import-custom-elements', options => ({
+-        ...options ?? {},
+-        specifiers: {
+-          ...options?.specifiers,
+-          'wcd-snippet': '/_merged_assets/_static/webcomponents-dev/wcd-snippet.js',
+-        },
+-      })),
++      // addPlugin(addWebComponentDefinitions, {
++      //   quiet: true,
++      //   singleScript: true,
++      // }, {
++      //   location: 'bottom',
++      // }),
++      //
++      // adjustPluginOptions(addWebComponentDefinitions, options => ({
++      //   ...options ?? {},
++      //   specifiers: {
++      //     ...options?.specifiers,
++      //     'wcd-snippet': '/_merged_assets/_static/webcomponents-dev/wcd-snippet.js',
++      //   },
++      // })),
+ 
+     ],
+ 
+     setupUnifiedPlugins: [
+-      addPlugin({ name: 'markdown-directives', plugin: markdownDirectives, location: 'top' }),
+-      adjustPluginOptions('markdown-directives', {
++      addPlugin(markdownDirectives, undefined, { location: 'top' }),
++      adjustPluginOptions(markdownDirectives, {
+         'wcd': ([id, file]) => ({ tagName: 'wcd-snippet', attributes: { 'data-id': id, file } }),
+       }),
+     ],

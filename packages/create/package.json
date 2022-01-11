@@ -20,13 +20,11 @@
   ],
   "scripts": {
     "preprepublishOnly": "node ./hack.js prepublish",
-    "prepublishOnly": "tsc -b .",
-    "build": "tsc",
-    "lint": "run-s lint:*",
-    "lint:types": "tsc --noEmit",
-    "start": "tsc -w",
-    "test": "run-s build test:unit",
-    "test:unit": "tape-es test/unit.test.js | tap-spec"
+    "prepublishOnly": "npm run build",
+    "build": "tsc -b .",
+    "rebuild": "rm -f tsconfig.tsbuildinfo && tsc -b .",
+    "test": "run-s rebuild test:unit",
+    "test:unit": "tape-es test/unit.test.js | tap-difflet"
   },
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
@@ -39,11 +37,12 @@
   },
   "dependencies": {
     "@graphql-codegen/cli": "^2.3.1",
-    "@graphql-codegen/typescript": "^2.4.2",
     "@graphql-codegen/typescript-operations": "^2.2.2",
+    "@graphql-codegen/typescript": "^2.4.2",
     "case": "^1.6.3",
     "chalk": "^4.1.2",
     "execa": "^6.0.0",
+    "globby": "^12.0.0",
     "inquirer": "^8.2.0",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
@@ -53,5 +52,6 @@
   "main": "index.js",
   "directories": {
     "test": "test"
-  }
+  },
+  "devDependencies": {}
 }

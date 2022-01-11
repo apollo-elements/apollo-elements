@@ -118,8 +118,61 @@ index 3a74498..243776a 100644
 +  });
 +</script>
 +{%- endif -%}
+diff --git a/node_modules/rocket-preset-slide-decks/lib/mdast-directive-to-hast.js b/node_modules/rocket-preset-slide-decks/lib/mdast-directive-to-hast.js
+new file mode 100644
+index 0000000..b43c104
+--- /dev/null
++++ b/node_modules/rocket-preset-slide-decks/lib/mdast-directive-to-hast.js
+@@ -0,0 +1,30 @@
++import visit from 'unist-util-visit';
++import { h } from 'hastscript';
++
++/**
++ * @param {import("./lib/types").Directive} node
++ */
++function visitor(node) {
++  switch (node.type) {
++    case 'textDirective':
++    case 'leafDirective':
++    case 'containerDirective': {
++      try {
++        const data = node.data || (node.data = {});
++        const hast = h(node.name, node.attributes)
++        data.hName = hast.tagName;
++        data.hProperties = hast.properties;
++      } catch(e) { console.error(e) }
++    }
++  }
++}
++
++/** @return {import('hast').Plugin} */
++export function mdastDirectiveToHast() {
++  return {
++    plugin() {
++      /** @param {import('mdast').Root} tree */
++      return tree => visit(tree, visitor);
++    },
++  }
++}
+diff --git a/node_modules/rocket-preset-slide-decks/lib/types.ts b/node_modules/rocket-preset-slide-decks/lib/types.ts
+new file mode 100644
+index 0000000..f407d74
+--- /dev/null
++++ b/node_modules/rocket-preset-slide-decks/lib/types.ts
+@@ -0,0 +1,11 @@
++import type {
++  ContainerDirective,
++  LeafDirective,
++  TextDirective,
++} from 'mdast-util-directive'
++
++export type Directive = (
++  | ContainerDirective
++  | LeafDirective
++  | TextDirective
++);
 diff --git a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
-index 70b81ff..6d3e680 100644
+index 70b81ff..01f640a 100644
 --- a/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 +++ b/node_modules/rocket-preset-slide-decks/rocket-preset-slide-decks.js
 @@ -6,6 +6,11 @@ import { dirname, join, resolve } from 'path';
@@ -128,56 +181,61 @@ index 70b81ff..6d3e680 100644
  import { slideDecksPlugin } from './eleventy/slide-decks.js';
 +import { markdownDirectives } from 'rocket-preset-markdown-directives';
 +import remarkDirective from 'remark-directive';
-+import visit from 'unist-util-visit';
-+// import { visit } from 'unist-util-visit';
-+import { h } from 'hastscript';
++import { rollupPluginHTML } from '@web/rollup-plugin-html';
++import { terser as rollupPluginTerser } from 'rollup-plugin-terser';
++import { mdastDirectiveToHast } from './lib/mdast-directive-to-hast.js';
  
  const path = resolve(dirname(fileURLToPath(import.meta.url)));
  
-@@ -54,5 +59,47 @@ export function slideDecks() {
+@@ -30,29 +35,46 @@ export function slideDecks() {
+         entryPoints: {
+           'slidem': join(path, 'entrypoints', 'slidem.js'),
+         },
++        plugins: [
++          {
++            name: 'fake it for gluon',
++            setup(build) {
++              build.onResolve({ filter: /lit-html\/lib\/shady-render.js$/ }, async ({ resolveDir }) => {
++                return { path: join(resolveDir, '../../lit-html/lit-html.js') };
++              });
++            },
++          },
++        ]
+       }).catch(() => process.exit(1));
+ 
+       console.log(chalk.yellow`[slide-decks] ${chalk.green`Done in ${time.seconds()}s`}`);
+     },
+ 
+     setupEleventyPlugins: [
+-      addPlugin({
+-        name: 'slide-decks',
+-        plugin: slideDecksPlugin,
+-      }),
++      addPlugin(slideDecksPlugin),
+     ],
+ 
+     setupBuildPlugins: [
+-      adjustPluginOptions('html', ({ exclude, ...options }) => ({ ...options, exclude: [
++      adjustPluginOptions(rollupPluginHTML, ({ exclude, ...options }) => ({ ...options, exclude: [
+         ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
+         '**/slide-decks/**/*',
+         '**/slide-decks/*',
+       ] })),
+ 
+-      adjustPluginOptions('terser', {
++      adjustPluginOptions(rollupPluginTerser, {
+         mangle: false,
        }),
      ],
  
 +    setupUnifiedPlugins: [
-+      addPlugin({
-+        name: 'markdown-directives',
-+        plugin: markdownDirectives,
-+        location: 'top',
-+      }),
-+      addPlugin({
-+        name: 'remark-directive',
-+        plugin: remarkDirective,
-+        location: 'top',
-+      }),
-+      addPlugin({
-+        name: 'slide-decks-remark-directives',
-+        plugin() {
-+          return tree => {
-+            visit(tree, node => {
-+              switch (node.type) {
-+                case 'textDirective':
-+                case 'leafDirective':
-+                case 'containerDirective': {
-+                  try {
-+                  const data = node.data || (node.data = {});
-+                  const hast = h(node.name, node.attributes)
-+                  data.hName = hast.tagName;
-+                  data.hProperties = hast.properties;
-+                }catch(e) {console.error(e)}
-+                }
-+              }
-+            })
-+          }
-+        },
-+        location: 'remark-directive',
-+        how: 'after',
-+      }),
-+      adjustPluginOptions(
-+        'markdown-directives',
-+        /** @type{import('rocket-preset-markdown-directives').Config} */
-+        ({
++      addPlugin(markdownDirectives, {}, { location: 'top', }),
++      addPlugin(remarkDirective, undefined, { location: 'top' }),
++      addPlugin(mdastDirectiveToHast, undefined, { location: remarkDirective, how: 'after' }),
++      adjustPluginOptions(markdownDirectives, options => ({
++          ...options,
 +          reveal: () => ({ tagName: 'section', attributes: { reveal: true } }),
-+        })
++        }),
 +      ),
 +    ],
    };

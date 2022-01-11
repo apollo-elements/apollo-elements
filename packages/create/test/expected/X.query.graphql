@@ -1,0 +1,3 @@
+query X($input: Input) {
+  y(input: $input) { z }
+}

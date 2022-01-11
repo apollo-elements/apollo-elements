@@ -1,5 +1,5 @@
 import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
-import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin.js';
+import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 
 /**

@@ -33,12 +33,9 @@
     "prepublishOnly": "run-s prepublishOnly:*",
     "prepublishOnly:analyze": "npm run analyze",
     "prepublishOnly:build": "tsc -b .",
-    "build": "tsc",
-    "lint": "run-s lint:*",
-    "lint:types": "tsc --noEmit",
-    "start": "tsc -w --noEmit",
+    "CAREFUL:bundle": "npx esbuild node_modules/stampino/src/stampino.ts --outfile=stampino.bundled.js --minify --external:lit-html --bundle --format=esm && cp node_modules/stampino/stampino.d.ts stampino.bundled.d.ts",
     "analyze": "custom-elements-manifest analyze --litelement",
-    "test": "wtr --coverage --root-dir ../.."
+    "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
   "repository": {
     "type": "git",

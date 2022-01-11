@@ -16,7 +16,7 @@ import type { ApolloMutationElement } from '@apollo-elements/core/types';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { ApolloElementMixin } from './apollo-element-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';

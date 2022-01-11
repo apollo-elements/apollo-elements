@@ -19,8 +19,8 @@ const cjsIncludes = [
 /** @type {Partial<import('@web/test-runner').TestRunnerConfig>} */
 export default ({
   nodeResolve: {
-    exportConditions: ['default', 'esbuild', 'import'],
-    extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
+    exportConditions: ['esbuild', 'import', 'default'],
+    extensions: ['.ts', '.mjs', '.js', '.css', '.graphql'],
   },
 
   rootDir: '../..',
@@ -72,5 +72,12 @@ export default ({
     commonjs({ include: cjsIncludes, ignoreDynamicRequires: false }),
     esbuildPlugin({ ts: true }),
     sendKeysPlugin(),
+    {
+      name: 'fake it for gluon',
+      resolveImport({ source }) {
+        if (source.endsWith('lit-html/lib/shady-render.js'))
+          return '../../lit-html/lit-html.js';
+      },
+    },
   ],
 });

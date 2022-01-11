@@ -17,6 +17,7 @@ packages/*/*.js
 packages/*/*.js.map
 packages/*/*.d.ts
 packages/*/*.d.ts.map
+packages/**/custom-elements.json
 
 packages/create/test/*.js
 packages/create/test/*.js.map

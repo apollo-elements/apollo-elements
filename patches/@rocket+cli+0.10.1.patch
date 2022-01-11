@@ -1,5 +1,19 @@
+diff --git a/node_modules/@rocket/cli/src/RocketBuild.js b/node_modules/@rocket/cli/src/RocketBuild.js
+index edc0bf7..76418bc 100755
+--- a/node_modules/@rocket/cli/src/RocketBuild.js
++++ b/node_modules/@rocket/cli/src/RocketBuild.js
+@@ -22,6 +22,9 @@ async function buildAndWrite(config) {
+   } else {
+     await bundle.write(config.output);
+   }
++  while(!bundle.closed)
++    await bundle.close();
++  return bundle;
+ }
+ 
+ async function productionBuild(config) {
 diff --git a/node_modules/@rocket/cli/src/RocketCli.js b/node_modules/@rocket/cli/src/RocketCli.js
-index 19a0fa9..2dc55ca 100644
+index a6153b6..91a20de 100644
 --- a/node_modules/@rocket/cli/src/RocketCli.js
 +++ b/node_modules/@rocket/cli/src/RocketCli.js
 @@ -92,6 +92,10 @@ export class RocketCli {
@@ -56,7 +70,7 @@ index 0000000..d37b81e
 +  });
 +}
 diff --git a/node_modules/@rocket/cli/src/normalizeConfig.js b/node_modules/@rocket/cli/src/normalizeConfig.js
-index 65b5d52..5344921 100644
+index 7d81de6..4fc25d4 100644
 --- a/node_modules/@rocket/cli/src/normalizeConfig.js
 +++ b/node_modules/@rocket/cli/src/normalizeConfig.js
 @@ -15,6 +15,7 @@ import { readConfig } from '@web/config-loader';
@@ -85,10 +99,10 @@ index 65b5d52..5344921 100644
      __before11tyFunctions: [],
  
 diff --git a/node_modules/@rocket/cli/src/shared/.eleventy.cjs b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
-index c215e6d..01fdeec 100644
+index 77484cd..e5f922e 100644
 --- a/node_modules/@rocket/cli/src/shared/.eleventy.cjs
 +++ b/node_modules/@rocket/cli/src/shared/.eleventy.cjs
-@@ -19,6 +19,10 @@ const defaultSetupUnifiedPlugins = [
+@@ -20,6 +20,10 @@ const defaultSetupUnifiedPlugins = [
  module.exports = function (eleventyConfig) {
    const config = getComputedConfig();
  

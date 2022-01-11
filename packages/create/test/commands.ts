@@ -1,4 +1,4 @@
-import execa from 'execa';
+import { execaCommand } from 'execa';
 import { normalize } from 'path';
 
 const filePath = new URL(normalize('../bin/main.js'), import.meta.url).pathname;
@@ -19,20 +19,20 @@ const componentFlags = [
   '--no-codegen',
   '--operation-name X',
   '--type query',
-  '--fields \'y(input:\\ $input)\\ {\\ z\\ }\'',
-  '--variables \'$input:\\ Input\'',
+  `--fields 'y(input: $input) { z }'`,
+  `--variables '$input: Input'`,
   '--silent',
 ];
 
 export async function scaffoldApp(cwd: string): Promise<void> {
-  const proc = execa.command(`node ${filePath} app --directory ${cwd} ${appFlags.join(' ')}`);
+  const proc = execaCommand(`node ${filePath} app --directory ${cwd} ${appFlags.join(' ')}`, { shell: 'sh' });
   proc.stdout?.pipe(process.stdout);
   proc.stderr?.pipe(process.stderr);
   await proc;
 }
 
 export async function scaffoldComponent(cwd: string): Promise<void> {
-  const proc = execa.command(`node ${filePath} component --directory ${cwd} ${componentFlags.join(' ')}`);
+  const proc = execaCommand(`node ${filePath} component --directory ${cwd} ${componentFlags.join(' ')}`, { shell: 'sh' });
   proc.stdout?.pipe(process.stdout);
   proc.stderr?.pipe(process.stderr);
   await proc;

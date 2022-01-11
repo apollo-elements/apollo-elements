@@ -10,12 +10,7 @@ import BANNER from './banner.js';
 
 import m from 'module';
 
-import * as Yargs from 'yargs';
-
-const require = m.createRequire(import.meta.url);
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { version } = require('./package.json');
-/* eslint-enable @typescript-eslint/no-var-requires */
+import Yargs from 'yargs';
 
 export type PromptOptions<T> =
   Partial<T> & BaseOptions;
@@ -99,12 +94,16 @@ export async function promptComponent(
 }
 
 export async function prompt(): Promise<void> {
+  const require = m.createRequire(import.meta.url);
+
+  const { version } = require('./package.json');
+
   const pkgManager: 'npm'|'yarn' =
       process.argv0 === 'npm' ? process.argv0
     : process.argv0 === 'yarn' ? process.argv0
     : 'npm';
 
-  const { argv: pargv } = Yargs
+  const { argv: pargv } = Yargs(process.argv)
     .scriptName(`${pkgManager ?? 'npm'} init @apollo-elements`)
     .option('pkgManager', {
       type: 'string',

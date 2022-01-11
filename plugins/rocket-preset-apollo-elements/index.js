@@ -1,9 +1,9 @@
-import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 import chalk from 'chalk';
 import helmet from 'eleventy-plugin-helmet';
 import hirestime from 'hirestime';
 import postcss from 'postcss';
 import postcssPresetEnv from 'postcss-preset-env';
+import { rollupPluginHTML } from '@web/rollup-plugin-html';
 
 import { addPlugin, adjustPluginOptions } from 'plugins-manager';
 import { dirname, join, resolve } from 'path';
@@ -32,8 +32,8 @@ export function apolloElements({ transformCSS = '' } = {}) {
     },
     setupEleventyPlugins: [
       addPlugin({
-        name: 'apollo-elements',
-        plugin(eleventyConfig) {
+        // @ts-expect-error: setupEleventyPlugins does not conform to the type for addPlugin
+        configFunction(eleventyConfig) {
           eleventyConfig.addWatchTarget('packages/components/*.ts');
           eleventyConfig.setTemplateFormats(['md', 'njk']);
 
@@ -51,6 +51,7 @@ export function apolloElements({ transformCSS = '' } = {}) {
             if (!transformCSS) return;
             const cwd = new URL('../../docs/', import.meta.url).pathname;
             const paths = await globby(transformCSS, { cwd });
+            // @ts-expect-error: https://github.com/seriousManual/hirestime/pull/39
             const end = hirestime.default();
             // eslint-disable-next-line easy-loops/easy-loops
             for (const path of paths) {
@@ -68,31 +69,14 @@ export function apolloElements({ transformCSS = '' } = {}) {
             console.log(chalk.yellow`[apollo-elements]`, 'PostCSS took', end.ms(), 'ms');
           });
         },
-      }),
-
-      addPlugin({
-        name: 'auto-import-custom-elements',
-        plugin: addWebComponentDefinitions,
+      }, {
         location: 'bottom',
-        options: {
-          quiet: true,
-          singleScript: true,
-        },
       }),
-
-      adjustPluginOptions('auto-import-custom-elements', options => ({
-        ...options ?? {},
-        specifiers: {
-          ...options?.specifiers,
-          'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
-          'codesandbox-button': '/_merged_assets/_static/apollo-elements/sandbox.js',
-        },
-      })),
 
     ],
 
     setupBuildPlugins: [
-      adjustPluginOptions('html', ({ exclude, ...options }) => ({ ...options, exclude: [
+      adjustPluginOptions(rollupPluginHTML, ({ exclude, ...options }) => ({ ...options, exclude: [
         ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
         '**/{_assets,_merged_assets}/**/*.{html,js}',
         '**/_static/apollo-elements/**/*',
@@ -101,11 +85,11 @@ export function apolloElements({ transformCSS = '' } = {}) {
     ],
 
     setupUnifiedPlugins: [
-      addPlugin({ name: 'markdown-directives', plugin: markdownDirectives, location: 'top' }),
-      adjustPluginOptions('markdown-directives', {
+      addPlugin(markdownDirectives, undefined, { location: 'top' }),
+      adjustPluginOptions(markdownDirectives, x => ({ ...x,
         'reveal': () => ({ tagName: 'div', attributes: { reveal: 'true' } }),
         'center': () => ({ tagName: 'div', attributes: { center: 'true' } }),
-      }),
+      })),
     ],
 
   };

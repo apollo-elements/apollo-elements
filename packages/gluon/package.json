@@ -32,12 +32,8 @@
   "scripts": {
     "preprepublishOnly": "rimraf declaration.d.ts",
     "prepublishOnly": "tsc -b .",
-    "build": "tsc",
-    "lint": "run-s lint:*",
-    "lint:types": "tsc --noEmit",
-    "start": "tsc -w --noEmit",
     "analyze": "custom-elements-manifest analyze",
-    "test": "echo \"Please run tests from the repository root\" && exit 1"
+    "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
   "repository": {
     "type": "git",
@@ -60,7 +56,7 @@
   "homepage": "https://apolloelements.dev/api/libraries/gluon/",
   "dependencies": {
     "@apollo-elements/mixins": "^4.0.0",
-    "@gluon/gluon": ">= 2",
+    "@gluon/gluon": "^2.5.3",
     "tslib": "^2.3.1"
   },
   "customElements": "custom-elements.json"

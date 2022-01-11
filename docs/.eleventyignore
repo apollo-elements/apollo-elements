@@ -3,3 +3,4 @@ _includes
 api/*/_assets/**/*
 blog/*/_assets/**/*
 type-tables
+_plugins

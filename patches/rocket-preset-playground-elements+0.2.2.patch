@@ -11,3 +11,69 @@ index f8418ab..8958b74 100644
  
  <button part="button">
    <span id="edit">▶️ Edit Live</span>
+diff --git a/node_modules/rocket-preset-playground-elements/rocket-preset-playground-elements.js b/node_modules/rocket-preset-playground-elements/rocket-preset-playground-elements.js
+index e3940d6..eca2f56 100644
+--- a/node_modules/rocket-preset-playground-elements/rocket-preset-playground-elements.js
++++ b/node_modules/rocket-preset-playground-elements/rocket-preset-playground-elements.js
+@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
+ import { addPlugin, adjustPluginOptions } from 'plugins-manager';
+ import { bundle } from './lib/bundle.js';
+ import { markdownDirectives } from 'rocket-preset-markdown-directives';
++import { rollupPluginHTML } from '@web/rollup-plugin-html';
+ 
+ const path = resolve(dirname(fileURLToPath(import.meta.url)));
+ 
+@@ -20,36 +21,33 @@ export function playgroundElements({ importMap = undefined, playgroundImport } =
+ 
+     setupEleventyPlugins: [
+ 
+-      addPlugin({
+-        name: 'auto-import-custom-elements',
+-        plugin: addWebComponentDefinitions,
+-        location: 'bottom',
+-        options: {
+-          quiet: true,
+-          singleScript: true,
+-        },
+-      }),
+-
+-      adjustPluginOptions('auto-import-custom-elements', options => ({
+-        ...options ?? {},
+-        specifiers: {
+-          ...options?.specifiers,
+-          'docs-playground': '/_merged_assets/_static/playground-elements/docs-playground.js',
+-        },
+-      })),
++      // addPlugin(addWebComponentDefinitions, {
++      //   quiet: true,
++      //   singleScript: true,
++      // }, {
++      //   location: 'bottom',
++      // }),
++      //
++      // adjustPluginOptions(addWebComponentDefinitions, options => ({
++      //   ...options ?? {},
++      //   specifiers: {
++      //     ...options?.specifiers,
++      //     'docs-playground': '/_merged_assets/_static/playground-elements/docs-playground.js',
++      //   },
++      // })),
+ 
+     ],
+ 
+     setupBuildPlugins: [
+-      adjustPluginOptions('html', ({ exclude, ...options }) => ({ ...options, exclude: [
++      adjustPluginOptions(rollupPluginHTML, ({ exclude, ...options }) => ({ ...options, exclude: [
+         ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
+         '**/playground-service-worker-proxy.html',
+       ] })),
+     ],
+ 
+     setupUnifiedPlugins: [
+-      addPlugin({ name: 'markdown-directives', plugin: markdownDirectives, location: 'top' }),
+-      adjustPluginOptions('markdown-directives', {
++      addPlugin(markdownDirectives, undefined, { location: 'top' }),
++      adjustPluginOptions(markdownDirectives, {
+         'playground': ([id, file]) => ({ tagName: 'docs-playground', attributes: { id, file } }),
+ 
+         'playground-file': ([id, name], { page }) => ({

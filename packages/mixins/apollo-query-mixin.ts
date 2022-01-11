@@ -14,7 +14,7 @@ import type { ApolloQueryElement } from '@apollo-elements/core/types';
 
 import { NetworkStatus } from '@apollo/client/core';
 
-import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 

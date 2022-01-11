@@ -1,7 +1,8 @@
 // @ts-check
-const { getComputedConfig, generateEleventyComputed } = require('@rocket/cli');
+const { generateEleventyComputed, getComputedConfig } = require('@rocket/cli');
 
 const fs = require('fs');
+const getPuppeteerBrowser = require('../_plugins/getPuppeteerBrowser.cjs');
 const nunjucks = require('nunjucks');
 const Textbox = require('@borgar/textbox');
 const { join } = require('path');
@@ -10,20 +11,20 @@ const { createHash } = require('crypto');
 const { blue, bold, green, yellow } = require('chalk');
 
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
-const and = (p, q) => x => p(x) && q(x);
-const or = (p, q) => x => p(x) || q(x);
-const not = p => x => !p(x);
+// const and = (p, q) => x => p(x) && q(x);
+// const or = (p, q) => x => p(x) || q(x);
+// const not = p => x => !p(x);
 const words = s => s.split(' ');
 const head = ([x]) => x;
-const getLength = x => x.length;
-const isLong = x => x >= 20;
-const isShort = x => x < 7;
+// const getLength = x => x.length;
+// const isLong = x => x >= 20;
+// const isShort = x => x < 7;
 const getFirstWord = compose(head, words);
-const getFirstWordLength = compose(getLength, getFirstWord);
-const isLongFirstWord = compose(x => x > 15, getFirstWordLength);
-const isShortFirstWord = compose(isShort, getFirstWordLength);
-const isLongTitle = isLong;
-const isShortTitle = and(isShort, not(isLongFirstWord));
+// const getFirstWordLength = compose(getLength, getFirstWord);
+// const isLongFirstWord = compose(x => x > 15, getFirstWordLength);
+// const isShortFirstWord = compose(isShort, getFirstWordLength);
+// const isLongTitle = isLong;
+// const isShortTitle = and(isShort, not(isLongFirstWord));
 const backToAngleBrackets = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
 const CACHE = new Map();
@@ -37,7 +38,7 @@ let page;
  * Hash a file
  * @param  {string} path
  * @param  {string} [hashName='md5']
- * @return {string}
+ * @return {Promise<string>}
  */
 function checksumFile(path, hashName = 'md5') {
   return new Promise((resolve, reject) => {
@@ -49,12 +50,19 @@ function checksumFile(path, hashName = 'md5') {
   });
 }
 
+/**
+ * @param {fs.PathLike | fs.promises.FileHandle} filePath
+ */
 async function readCached(filePath) {
   if (!BUFFERS.has(filePath))
     BUFFERS.set(filePath, await fs.promises.readFile(filePath));
   return BUFFERS.get(filePath);
 }
 
+/**
+ * @param {string} template
+ * @param {Record<`${'sub'|''}${'title'|'category'}`, string>} opts
+ */
 async function stamp(template, { title, subtitle, category, subcategory }) {
   const { s: createElement } = await import('hastscript');
   const { toHtml } = await import('hast-util-to-html');
@@ -95,14 +103,20 @@ async function stamp(template, { title, subtitle, category, subcategory }) {
   const titleSVG = toHtml(titleBox.linebreak(backToAngleBrackets(title)).render(), { space: 'svg' });
   const subtitleSVG = toHtml(subtitleBox.linebreak(backToAngleBrackets(subtitle)).render(), { space: 'svg' });
 
-  return nunjucks.renderString(template, { category, subcategory, subtitleSVG, titleSVG });
+  const FRONTMATTER_REGEXP = /^---\r?\n(.*)\r?\n---$/m;
+  return nunjucks.renderString(template.replace(FRONTMATTER_REGEXP, ''), { category, subcategory, subtitleSVG, titleSVG });
 }
 
-async function screenshot({ inPath, outPath }, browser) {
-  if (!page)
-    page = await browser.newPage();
+/**
+* @param {{ inPath: string; outPath: string }} opts
+ */
+async function screenshot({ inPath, outPath }) {
+  const browser = await getPuppeteerBrowser();
+  const page = await browser.newPage();
 
   await page.goto(`file://${inPath}`);
+
+  await page.waitForSelector('svg');
 
   const svgElement = await page.$('svg');
 
@@ -112,6 +126,10 @@ async function screenshot({ inPath, outPath }, browser) {
   });
 }
 
+/**
+ * @param {string} sourceUrl
+ * @param {string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView> | import("stream").Stream} svgString
+ */
 async function createPageSocialImage(sourceUrl, svgString, { rocketConfig }) {
   if (!CACHE.get(sourceUrl)) {
     const inputDir = join(__dirname, '..', '/_merged_assets/social/');
@@ -124,7 +142,7 @@ async function createPageSocialImage(sourceUrl, svgString, { rocketConfig }) {
 
     await fs.promises.writeFile(inPath, svgString, 'utf8');
 
-    await screenshot({ outPath, inPath }, rocketConfig.puppeteerBrowser);
+    await screenshot({ outPath, inPath });
 
     const hash = await checksumFile(outPath);
     const hashedPath = outPath.replace('.png', `-${hash}.png`).replace(/-+/g, '-');
@@ -140,10 +158,12 @@ async function createPageSocialImage(sourceUrl, svgString, { rocketConfig }) {
 
 async function socialMediaImage(data) {
   if (
+    process.env.SKIP_SOCIAL === 'true' ||
+    data.rocketConfig.createSocialMediaImages === false ||
     !data.title ||
     data.permalink === false ||
-    process.env.SKIP_SOCIAL === 'true' ||
-    data.rocketConfig.createSocialMediaImages === false
+    data.page.fileSlug === '404' ||
+    Object.keys(data).length === 0
   )
     return;
   else if (data.socialMediaImage)

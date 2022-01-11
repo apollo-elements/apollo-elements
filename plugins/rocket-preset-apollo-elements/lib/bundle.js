@@ -27,6 +27,14 @@ async function build(opts) {
       monorepoResolvePlugin({ scope: '@apollo-elements', external: opts.external }),
       litCssPlugin(),
       graphqlLoaderPlugin(),
+      {
+        name: 'fake it for gluon',
+        setup(build) {
+          build.onResolve({ filter: /lit-html\/lib\/shady-render.js$/ }, async ({ resolveDir }) => {
+            return { path: join(resolveDir, '../../lit-html/lit-html.js') };
+          });
+        },
+      },
     ],
   }).catch(e => {
     console.error(e);
