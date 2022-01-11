@@ -1,73 +1,49 @@
 import test from 'tape';
 import os from 'os';
-import { mkdtemp, readFile, rmdir } from 'fs/promises';
-import { globby } from 'globby';
+import { mkdtemp, readFile, rm } from 'fs/promises';
 import { join, normalize } from 'path';
 import { scaffoldApp, scaffoldComponent } from './commands.js';
+import { execaCommand } from 'execa';
+import { pathToFileURL } from 'url';
 
-const EXPECTED_APP_FILES = [
-  'index.html',
-  'package.json',
-  'rollup.config.js',
-  'style.css',
-  'tsconfig.json',
-  'web-dev-server.config.mjs',
-  'src/client.schema.graphql',
-  'src/client.ts',
-  'src/declaration.d.ts',
-  'src/main.ts',
-  'src/router.ts',
-  'src/components/shared.css',
-  'src/components/app/App.query.graphql',
-  'src/components/app/app.css',
-  'src/components/app/app.ts',
-  'src/components/app/index.ts',
-].map(x => normalize(x));
+async function getTempDir() {
+  return mkdtemp(normalize(`${os.tmpdir()}/`));
+}
 
-const EXPECTED_COMPONENT_FILES = [
-  'src/components/l/X.query.graphql',
-  'src/components/l/index.ts',
-  'src/components/l/l.css',
-  'src/components/l/l.ts',
-].map(x => normalize(x));
+async function getFixture(fileName: string): Promise<string> {
+  return readFile(new URL(`./expected/${fileName}`, import.meta.url), 'utf-8');
+}
 
-let cwd: string;
+async function getActual(path: string, { cwd }: { cwd: string}): Promise<string> {
+  const BASE = pathToFileURL(join(cwd, 'package.json'));
+  return readFile(new URL(path, BASE), 'utf-8');
+}
 
-test('setup', async function(t) {
-  cwd = await mkdtemp(normalize(`${os.tmpdir()}/`));
+test(`npm init @apollo-elements app`, async function(t) {
+  const cwd = await getTempDir();
+  await scaffoldApp(cwd);
+  const { stdout } = await execaCommand(`tree ${cwd}`, { shell: 'sh' });
+  const actual = stdout.replace(cwd, '/cwd/scaffolded-app/');
+  const expect = await getFixture('AFTER_APP.txt');
+  t.equal(actual, expect.trim(), 'scaffolds app files');
+  await rm(cwd, { recursive: true });
   t.end();
 });
 
-test(`npm init @apollo-elements app`, async function(t) {
-  t.plan(1);
-  await scaffoldApp(cwd);
-  const actual = await globby(join('**', '*'), { cwd });
-  t.deepEqual(actual, EXPECTED_APP_FILES, 'scaffolds app files');
-});
-
 test(`npm init @apollo-elements component`, async function(t) {
-  t.plan(2);
+  const cwd = await getTempDir();
 
+  await scaffoldApp(cwd);
   await scaffoldComponent(cwd);
 
-  const actual = await globby(join('**', '*'), { cwd });
+  const { stdout } = await execaCommand(`tree ${cwd}`, { shell: 'sh' });
+  const aTree = stdout.replace(cwd, '/cwd/scaffolded-app/');
+  const eTree = await getFixture('AFTER_COMPONENT.txt');
+  t.deepEqual(aTree, eTree.trim(), 'scaffolds component files');
 
-  t.deepEqual(
-    actual,
-    EXPECTED_APP_FILES.concat(EXPECTED_COMPONENT_FILES),
-    'scaffolds component files'
-  );
-
-  t.equal(
-    await readFile(join(cwd, 'src', 'components', 'l', 'X.query.graphql'), 'utf-8'),
-    `query X($input: Input) {
-  y(input: $input) { z }
-}
-`, 'writes query file'
-  );
-});
-
-test('teardown', async function(t) {
-  await rmdir(cwd, { recursive: true });
+  const actual = await getActual('./src/components/l/X.query.graphql', { cwd });
+  const expect = await getFixture('X.query.graphql');
+  t.equal(actual, expect, 'writes query file');
+  await rm(cwd, { recursive: true });
   t.end();
 });

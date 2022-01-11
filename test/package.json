@@ -9,13 +9,6 @@
     "url": "git+ssh://git@github.com/apollo-elements/apollo-elements.git",
     "directory": "packages/test"
   },
-  "scripts": {
-    "prepublishOnly": "tsc -b .",
-    "build": "tsc",
-    "lint": "run-s lint:*",
-    "lint:types": "tsc --noEmit",
-    "start": "tsc -w --noEmit"
-  },
   "keywords": [
     "Apollo",
     "GraphQL",
@@ -30,5 +23,8 @@
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
     "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@gluon/gluon": "^2.5.3"
   }
 }

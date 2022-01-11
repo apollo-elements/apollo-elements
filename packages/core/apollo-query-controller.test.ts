@@ -802,7 +802,7 @@ describe('[core] ApolloQueryController', function() {
         afterEach(resetMessages);
 
         beforeEach(async function define() {
-          const tag = defineCE(HelloQueryHost);
+          const tag = defineCE(class extends HelloQueryHost {});
 
           element = await fixture(`<${tag}></${tag}>`);
         });

@@ -13,7 +13,7 @@ import type {
 import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
 
 import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subscription-controller';
-import { ApolloElementMixin } from './apollo-element-mixin.js';
+import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 

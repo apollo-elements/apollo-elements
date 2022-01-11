@@ -2,9 +2,11 @@
 
 import graphql from '@rollup/plugin-graphql';
 import litcss from 'rollup-plugin-lit-css';
+import addWebComponentDefinitions from 'eleventy-plugin-add-web-component-definitions';
 
 import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 
+import getPuppeteerBrowser from './docs/_plugins/getPuppeteerBrowser.cjs';
 import { codeTabs } from 'rocket-preset-code-tabs';
 import { apolloElements } from 'rocket-preset-apollo-elements';
 import { customElementsManifest } from 'rocket-preset-custom-elements-manifest';
@@ -225,13 +227,37 @@ export default ({
         .replace(/&#x26;(link|style)/g, '<$1')
         .replace(/&#x3C;(link|style)/g, '<$1')
     );
+
+    // something's busted in plugin-manager?
+    // derived these by printing in the configFunction of add-web-components-defintions
+    // also had to patch out all the related calls
+    eleventyConfig.addPlugin(addWebComponentDefinitions, {
+      quiet: true,
+      singleScript: true,
+      specifiers: {
+        'code-copy': '/_merged_assets/_static/code-tabs/code-copy.js',
+        'code-tabs': '/_merged_assets/_static/code-tabs/code-tabs.js',
+        'codesandbox-button': '/_merged_assets/_static/apollo-elements/sandbox.js',
+        'css-value-doc': '/_merged_assets/_static/custom-elements-manifest/css-value-doc.js',
+        'docs-playground': '/_merged_assets/_static/playground-elements/docs-playground.js',
+        'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
+        'json-viewer': '/_merged_assets/_static/custom-elements-manifest/json-viewer.js',
+        'type-doc': '/_merged_assets/_static/custom-elements-manifest/type-doc.js',
+        'wcd-snippet': '/_merged_assets/_static/webcomponents-dev/wcd-snippet.js',
+      },
+    });
+
+    eleventyConfig.on('afterBuild', async () => {
+      const browser = await getPuppeteerBrowser();
+      await browser.close();
+    });
   },
 
   devServer: {
     port: 9048,
     nodeResolve: {
-      exportConditions: ['default', 'development', 'esbuild', 'import'],
-      extensions: ['.mjs', '.js', '.ts', '.css', '.graphql'],
+      exportConditions: ['development', 'esbuild', 'import', 'default'],
+      extensions: ['.ts', '.mjs', '.js', '.css', '.graphql'],
     },
     mimeTypes: {
       '**/*.ts': 'js',

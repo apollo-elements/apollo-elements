@@ -31,12 +31,8 @@
   ],
   "scripts": {
     "prepublishOnly": "tsc -b .",
-    "build": "tsc",
-    "lint": "run-s lint:*",
-    "lint:types": "tsc --noEmit",
-    "start": "tsc -w --noEmit",
     "analyze": "custom-elements-manifest analyze",
-    "test": "tsc --noEmit"
+    "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
   "repository": {
     "type": "git",

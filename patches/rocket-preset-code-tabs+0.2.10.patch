@@ -1,0 +1,60 @@
+diff --git a/node_modules/rocket-preset-code-tabs/rocket-preset-code-tabs.js b/node_modules/rocket-preset-code-tabs/rocket-preset-code-tabs.js
+index ca0aee2..9765a39 100644
+--- a/node_modules/rocket-preset-code-tabs/rocket-preset-code-tabs.js
++++ b/node_modules/rocket-preset-code-tabs/rocket-preset-code-tabs.js
+@@ -35,38 +35,28 @@ export function codeTabs(options) {
+     path,
+     async before11ty() { await bundle({ path }); },
+     setupEleventyPlugins: [
+-      addPlugin({
+-        name: 'auto-import-custom-elements',
+-        plugin: addWebComponentDefinitions,
+-        location: 'bottom',
+-        options: {
+-          quiet: true,
+-          singleScript: true,
+-        },
+-      }),
+-
+-      adjustPluginOptions('auto-import-custom-elements', options => ({
+-        ...options,
+-        specifiers: {
+-          ...options.specifiers,
+-          'code-copy': '/_merged_assets/_static/code-tabs/code-copy.js',
+-          'code-tabs': '/_merged_assets/_static/code-tabs/code-tabs.js',
+-        },
+-      })),
+-
++      // addPlugin(addWebComponentDefinitions, {
++      //   quiet: true,
++      //   singleScript: true,
++      // }, {
++      //   location: 'bottom',
++      // }),
++      //
++      // adjustPluginOptions(addWebComponentDefinitions, options => ({
++      //   ...options,
++      //   specifiers: {
++      //     ...options.specifiers,
++      //     'code-copy': '/_merged_assets/_static/code-tabs/code-copy.js',
++      //     'code-tabs': '/_merged_assets/_static/code-tabs/code-tabs.js',
++      //   },
++      // })),
+     ],
+ 
+     setupUnifiedPlugins: [
+-      addPlugin({
+-        name: 'markdown-directives',
+-        plugin: markdownDirectives,
++      addPlugin(markdownDirectives, undefined /* options */, {
+         location: 'top',
+-        options,
+       }),
+-      adjustPluginOptions(
+-        'markdown-directives',
+-        /** @type{import('rocket-preset-markdown-directives').Config} */
+-        ({
++      adjustPluginOptions(markdownDirectives, x => ({ ...x,
+           copy: () => ({ tagName: 'code-copy' }),
+           tab: ([tab], opts) => createTab(tab, collectionMap, opts),
+         })

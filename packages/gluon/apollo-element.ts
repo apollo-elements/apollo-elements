@@ -1,7 +1,7 @@
 import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
 import { GluonElement } from '@gluon/gluon';
-import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin.js';
+import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
 
 export { html } from '@gluon/gluon';
 

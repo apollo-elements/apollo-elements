@@ -1,9 +1,9 @@
-export { ApolloElementMixin } from './apollo-element-mixin.js';
-export { ApolloQueryMixin } from './apollo-query-mixin.js';
-export { ApolloMutationMixin } from './apollo-mutation-mixin.js';
-export { ApolloSubscriptionMixin } from './apollo-subscription-mixin.js';
+export { ApolloElementMixin } from './apollo-element-mixin';
+export { ApolloQueryMixin } from './apollo-query-mixin';
+export { ApolloMutationMixin } from './apollo-mutation-mixin';
+export { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
 
-export { ApolloClientMixin } from './apollo-client-mixin.js';
-export { GraphQLScriptChildMixin } from './graphql-script-child-mixin.js';
-export { TypePoliciesMixin } from './type-policies-mixin.js';
-export { ValidateVariablesMixin } from './validate-variables-mixin.js';
+export { ApolloClientMixin } from './apollo-client-mixin';
+export { GraphQLScriptChildMixin } from './graphql-script-child-mixin';
+export { TypePoliciesMixin } from './type-policies-mixin';
+export { ValidateVariablesMixin } from './validate-variables-mixin';

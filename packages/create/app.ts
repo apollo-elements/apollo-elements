@@ -5,7 +5,7 @@ import NCP from 'ncp';
 import { promisify } from 'util';
 
 import path from 'path';
-import execa from 'execa';
+import { execa } from 'execa';
 import { promises as fs } from 'fs';
 import { fileURLToPath } from 'url';
 
@@ -13,6 +13,7 @@ import { codegen } from './codegen.js';
 import { readFile, processTemplate, writeFile } from './files.js';
 
 import Chalk from 'chalk';
+
 const { cyan, greenBright } = Chalk;
 
 const ncp = promisify(NCP.ncp);

@@ -1,6 +1,6 @@
 import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
-import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin.js';
+import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element.js';
 
 export { html } from '@gluon/gluon';

@@ -1,5 +1,5 @@
 import path from 'path';
-import execa, { ExecaReturnValue } from 'execa';
+import { execa, ExecaReturnValue } from 'execa';
 import { AppOptions, BaseOptions, ComponentOptions } from './options.js';
 import { getOperationFileName, getUnprefixedTagName } from './component.js';
 import Chalk from 'chalk';

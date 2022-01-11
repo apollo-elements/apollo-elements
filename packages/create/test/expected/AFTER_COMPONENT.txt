@@ -1,0 +1,27 @@
+/cwd/scaffolded-app/
+├── index.html
+├── package.json
+├── rollup.config.js
+├── src
+│   ├── client.schema.graphql
+│   ├── client.ts
+│   ├── components
+│   │   ├── app
+│   │   │   ├── App.query.graphql
+│   │   │   ├── app.css
+│   │   │   ├── app.ts
+│   │   │   └── index.ts
+│   │   ├── l
+│   │   │   ├── X.query.graphql
+│   │   │   ├── index.ts
+│   │   │   ├── l.css
+│   │   │   └── l.ts
+│   │   └── shared.css
+│   ├── declaration.d.ts
+│   ├── main.ts
+│   └── router.ts
+├── style.css
+├── tsconfig.json
+└── web-dev-server.config.mjs
+
+4 directories, 20 files

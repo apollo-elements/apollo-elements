@@ -1,0 +1,43 @@
+diff --git a/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js b/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js
+index b23bbf6..5aa28f5 100644
+--- a/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js
++++ b/node_modules/eleventy-plugin-add-web-component-definitions/add-web-component-definitions.js
+@@ -15,7 +15,7 @@ const addChild = (body, child, position) => {
+   }
+ }
+ 
+-module.exports = function (options, content, outputPath) {
++module.exports = function (options, content, outputPath = this.outputPath) {
+   if (typeof outputPath !== 'string' || !outputPath) { return content }
+ 
+   if (!!options.path && !!options.specifiers) {
+@@ -61,7 +61,7 @@ module.exports = function (options, content, outputPath) {
+ 
+     const tags = new Set()
+     const tree = toHast(parse(content))
+-    let body, head
++    let body, head, script
+ 
+     visit(tree, 'element', (node) => {
+       if (!body && node.tagName === 'body') {
+@@ -90,6 +90,7 @@ module.exports = function (options, content, outputPath) {
+       if (options.singleScript) {
+         const value = arrayOfValues.map(value => `import "${value}";`).join('\n')
+         const child = h('script', { type: 'module' }, [{ type: 'text', value }])
++        script = child
+         addChild(body, child, options.position)
+       } else {
+         arrayOfValues.forEach(src => {
+diff --git a/node_modules/eleventy-plugin-add-web-component-definitions/index.js b/node_modules/eleventy-plugin-add-web-component-definitions/index.js
+index b43265c..0108a65 100644
+--- a/node_modules/eleventy-plugin-add-web-component-definitions/index.js
++++ b/node_modules/eleventy-plugin-add-web-component-definitions/index.js
+@@ -4,7 +4,7 @@ module.exports = {
+   configFunction: function (eleventyConfig, options = {}) {
+     eleventyConfig.addTransform(
+       'add-web-component-definitions',
+-      AddWebComponentDefinitions.bind(null, options)
++      AddWebComponentDefinitions.bind(this, options)
+     )
+   }
+ }

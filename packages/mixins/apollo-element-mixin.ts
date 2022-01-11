@@ -16,7 +16,7 @@ import type {
 
 import type { ApolloController, ApolloElementElement, ControllerHost } from '@apollo-elements/core';
 
-import { ControllerHostMixin } from './controller-host-mixin.js';
+import { ControllerHostMixin } from './controller-host-mixin';
 
 import { controlled } from '@apollo-elements/core/decorators';
 import { ApolloElementEvent } from '@apollo-elements/core/events';

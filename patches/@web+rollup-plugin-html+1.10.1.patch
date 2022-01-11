@@ -1,0 +1,84 @@
+diff --git a/node_modules/@web/rollup-plugin-html/dist/input/extract/extractAssets.js b/node_modules/@web/rollup-plugin-html/dist/input/extract/extractAssets.js
+index e7f7c74..31b59dd 100644
+--- a/node_modules/@web/rollup-plugin-html/dist/input/extract/extractAssets.js
++++ b/node_modules/@web/rollup-plugin-html/dist/input/extract/extractAssets.js
+@@ -11,25 +11,44 @@ const utils_1 = require("../../assets/utils");
+ function extractAssets(params) {
+     const assetNodes = utils_1.findAssets(params.document);
+     const allAssets = [];
++
++    function isMetaImage(node) {
++      return (
++        (node.tagName === 'meta' || node.nodeName === 'meta') &&
++        node.attrs.some(({ value }) => value === 'og:image') ||
++        !!node.attrs.find(({ value }) => value === 'og:image')
++      )
++    }
++
+     for (const node of assetNodes) {
+-        const sourcePaths = utils_1.getSourcePaths(node);
+-        for (const sourcePath of sourcePaths) {
+-            const filePath = utils_1.resolveAssetFilePath(sourcePath, params.htmlDir, params.rootDir, params.absolutePathPrefix);
+-            const hashed = utils_1.isHashedAsset(node);
+-            const alreadyHandled = allAssets.find(a => a.filePath === filePath && a.hashed === hashed);
+-            if (!alreadyHandled) {
+-                try {
+-                    fs_1.default.accessSync(filePath);
+-                }
+-                catch (error) {
++        if (!isMetaImage(node)) {
++          if (node.tagName === 'meta') console.log(node.attrs)
++          const sourcePaths = utils_1.getSourcePaths(node);
++          for (const sourcePath of sourcePaths) {
++              const filePath = utils_1.resolveAssetFilePath(sourcePath, params.htmlDir, params.rootDir, params.absolutePathPrefix);
++              const hashed = utils_1.isHashedAsset(node);
++              const alreadyHandled = allAssets.find(a => a.filePath === filePath && a.hashed === hashed);
++              if (!alreadyHandled) {
++                  try {
++                      fs_1.default.accessSync(filePath);
++                  }
++                  catch (error) {
++                      const elStr = parse5_1.serialize(node);
++                      const htmlPath = path_1.default.relative(process.cwd(), params.htmlFilePath);
++                      throw new Error(`Could not find ${filePath} referenced from HTML file ${htmlPath} from element ${elStr}.`);
++                  }
++                  try {
++                    const content = fs_1.default.readFileSync(filePath);
++                    allAssets.push({ filePath, hashed, content });
++                  } catch(e) {
+                     const elStr = parse5_1.serialize(node);
+                     const htmlPath = path_1.default.relative(process.cwd(), params.htmlFilePath);
+                     throw new Error(`Could not find ${filePath} referenced from HTML file ${htmlPath} from element ${elStr}.`);
+-                }
+-                const content = fs_1.default.readFileSync(filePath);
+-                allAssets.push({ filePath, hashed, content });
+-            }
++                  }
++              }
++          }
+         }
++
+     }
+     return allAssets;
+ }
+diff --git a/node_modules/@web/rollup-plugin-html/dist/output/injectedUpdatedAssetPaths.js b/node_modules/@web/rollup-plugin-html/dist/output/injectedUpdatedAssetPaths.js
+index f8a7fc5..b42f494 100644
+--- a/node_modules/@web/rollup-plugin-html/dist/output/injectedUpdatedAssetPaths.js
++++ b/node_modules/@web/rollup-plugin-html/dist/output/injectedUpdatedAssetPaths.js
+@@ -23,6 +23,16 @@ function injectedUpdatedAssetPaths(args) {
+     const { document, input, outputDir, rootDir, emittedAssets, publicPath = './', absolutePathPrefix, } = args;
+     const assetNodes = utils_1.findAssets(document);
+     for (const node of assetNodes) {
++        function isMetaImage(node) {
++          return (
++            (node.tagName === 'meta' || node.nodeName === 'meta') &&
++            node.attrs.some(({ value }) => value === 'og:image') ||
++            !!node.attrs.find(({ value }) => value === 'og:image')
++          )
++        }
++
++        if (isMetaImage(node)) continue;
++
+         const sourcePaths = utils_1.getSourcePaths(node);
+         for (const sourcePath of sourcePaths) {
+             const htmlFilePath = input.filePath ? input.filePath : path_1.default.join(rootDir, input.name);

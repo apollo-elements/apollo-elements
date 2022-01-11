@@ -1,0 +1,20 @@
+diff --git a/node_modules/rocket-preset-markdown-directives/rocket-preset-markdown-directives.js b/node_modules/rocket-preset-markdown-directives/rocket-preset-markdown-directives.js
+index c0ba772..97d59f1 100644
+--- a/node_modules/rocket-preset-markdown-directives/rocket-preset-markdown-directives.js
++++ b/node_modules/rocket-preset-markdown-directives/rocket-preset-markdown-directives.js
+@@ -9,12 +9,12 @@ export function mdDirectives({ directives }) {
+     path: resolve(dirname(fileURLToPath(import.meta.url))),
+ 
+     setupEleventyPlugins: [
+-      addPlugin({ name: 'markdown-shortcode', plugin: markdownShortcodePlugin }),
++      addPlugin(markdownShortcodePlugin),
+     ],
+ 
+     setupUnifiedPlugins: [
+-      addPlugin({ name: 'markdown-directives', plugin: markdownDirectives, location: 'top' }),
+-      adjustPluginOptions('markdown-directives', directives),
++      addPlugin(markdownDirectives, undefined, { location: 'top' }),
++      adjustPluginOptions(markdownDirectives, directives),
+     ],
+ 
+   };

@@ -5,7 +5,7 @@
     "allowJs": true,
     "noEmit": true,
     "target": "es2020",
-    "module": "es2020",
+    "module": "nodenext",
     "esModuleInterop": true,
     "useDefineForClassFields": false,
     "importHelpers": true,
