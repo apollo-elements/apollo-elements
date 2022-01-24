@@ -8,6 +8,8 @@ on:
 name: Broken Link Check
 jobs:
   check:
+    # Prevents action on forks
+    if: github.repository == 'apollo-elements/apollo-elements'
     name: Broken Link Check
     runs-on: ubuntu-latest
     steps:
