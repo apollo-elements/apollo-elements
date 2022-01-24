@@ -1,7 +1,59 @@
+diff --git a/node_modules/stampino/package.json b/node_modules/stampino/package.json
+index f4814aa..8a865ff 100644
+--- a/node_modules/stampino/package.json
++++ b/node_modules/stampino/package.json
+@@ -16,8 +16,8 @@
+     "demo": "wds --node-resolve"
+   },
+   "dependencies": {
+-    "jexpr": "^1.0.0-pre.2",
+-    "lit-html": "^2.0.0-rc.2",
++    "jexpr": "^1.0.0-pre.4",
++    "lit-html": "^2.1.1",
+     "trusted-types": "^2.0.0"
+   },
+   "devDependencies": {
+diff --git a/node_modules/stampino/stampino.d.ts b/node_modules/stampino/stampino.d.ts
+index f568dea..6bb303e 100644
+--- a/node_modules/stampino/stampino.d.ts
++++ b/node_modules/stampino/stampino.d.ts
+@@ -1,5 +1,3 @@
+-import { Template } from 'lit-html';
+-import { CompiledTemplate, CompiledTemplateResult } from 'lit-html';
+ export interface TemplateFunction {
+     (model: object): unknown;
+ }
+@@ -53,15 +51,5 @@ export declare const render: (template: HTMLTemplateElement, container: HTMLElem
+  * @param renderers
+  * @returns
+  */
+-export declare const evaluateTemplate: (template: HTMLTemplateElement, model: any, handlers?: TemplateHandlers, renderers?: Renderers) => CompiledTemplateResult;
+-declare type TemplatePart = Template['parts'][0];
+-declare type StampinoTemplatePart = TemplatePart & {
+-    update: PartUpdater;
+-};
+-declare type PartUpdater = (model: object, handlers: TemplateHandlers, blocks: Renderers) => unknown;
+-interface StampinoTemplate extends CompiledTemplate {
+-    parts: Array<StampinoTemplatePart>;
+-    renderers: Renderers;
+-}
+-export declare const getLitTemplate: (template: HTMLTemplateElement) => StampinoTemplate;
++export declare const evaluateTemplate: (template: HTMLTemplateElement, model: any, handlers?: TemplateHandlers, renderers?: Renderers) => TemplateHandler;
+ export {};
 diff --git a/node_modules/stampino/stampino.js b/node_modules/stampino/stampino.js
-index 3021718..2eab5e8 100644
+index 3021718..8a10fa5 100644
 --- a/node_modules/stampino/stampino.js
 +++ b/node_modules/stampino/stampino.js
+@@ -1,7 +1,7 @@
+ import { render as renderLit, nothing } from 'lit-html';
+ import { parse, Parser, EvalAstFactory } from 'jexpr';
+-import { _Σ } from 'lit-html/private-ssr-support.js';
+-const { AttributePart, PropertyPart, BooleanAttributePart, EventPart } = _Σ;
++import { _$LH } from 'lit-html/private-ssr-support.js';
++const { AttributePart, PropertyPart, BooleanAttributePart, EventPart } = _$LH;
+ const astFactory = new EvalAstFactory();
+ const expressionCache = new Map();
+ const toCamelCase = (s) => s.replace(/-(-|\w)/g, (_, p1) => p1.toUpperCase());
 @@ -245,9 +245,7 @@ const makeLitTemplate = (template) => {
                  const attributeNames = element.getAttributeNames();
                  for (const attributeName of attributeNames) {
