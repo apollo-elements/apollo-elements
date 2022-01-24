@@ -59,7 +59,6 @@ function defineOnReactiveElement<T extends ReactiveElement & {
   });
   // And also run ReactiveElement's property effects
   const Class = proto.constructor as typeof ReactiveElement;
-  // @ts-expect-error: i know it's protected
   Class.createProperty(name, Class.getPropertyOptions(name));
 }
 
