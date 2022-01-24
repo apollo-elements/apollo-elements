@@ -10,8 +10,6 @@
 "@apollo-elements/lit-apollo": patch
 "@apollo-elements/mixins": patch
 "@apollo-elements/polymer": patch
-"rocket-preset-apollo-elements": patch
-"@apollo-elements/test": patch
 ---
 
 Improvements to the internal type system makes working with query data easier
