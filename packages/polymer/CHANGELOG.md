@@ -1,5 +1,18 @@
 # @apollo-elements/polymer
 
+## 4.0.1-next.0
+
+### Patch Changes
+
+- 4345e6a: Improvements to the internal type system makes working with query data easier
+
+  This release makes some breaking changes to internal types. If for some reason you were importing
+  those types from core, your code may break. However, normal usage should not be affected.
+
+- Updated dependencies [4345e6a]
+  - @apollo-elements/core@1.1.1-next.0
+  - @apollo-elements/mixins@4.1.1-next.0
+
 ## 4.0.0
 
 ### Major Changes
