@@ -74,7 +74,7 @@ describe('[atomico] useMutation', function() {
             `;
           }
 
-          const Component = defineCE(c(Renderer));
+          const Component = defineCE(c(Renderer as any));
           element = fixture(html`<${Component}></${Component}>`);
         });
 

@@ -23,7 +23,7 @@ describe('[atomico] useSubscription', function() {
         const { data } = useSubscription(S.NullableParamSubscription, { noAutoSubscribe: true });
         return html`<host shadowDom>${data?.nullableParam?.nullable ?? 'nothing'}</host>`;
       }
-      const Component = c(Renderer);
+      const Component = c(Renderer) as any;
       defineCE(Component);
       element = fixture(html`<${Component}></${Component}>`);
       await element.updated;
@@ -48,7 +48,7 @@ describe('[atomico] useSubscription', function() {
         options = opts;
         return html`<host></host>`;
       }
-      const Component = c(Renderer);
+      const Component = c(Renderer) as any;
       defineCE(Component);
       const element = fixture(html`<${Component}></${Component}>`);
       // @ts-expect-error: upstream types
@@ -82,7 +82,7 @@ describe('[atomico] useSubscription', function() {
         return html`<host shadowDom>${data?.nullableParam?.nullable ?? 'nothing'}</host>`;
       }
 
-      const Component = c(Renderer);
+      const Component = c(Renderer) as any;
       defineCE(Component);
       element = fixture(html`<${Component}></${Component}>`);
       await element.updated;
@@ -143,7 +143,7 @@ describe('[atomico] useSubscription', function() {
             `;
           }
 
-          const Component = c(Renderer);
+          const Component = c(Renderer) as any;
           defineCE(Component);
           element = fixture(html`<${Component}></${Component}>`);
           await element.updated;
@@ -217,7 +217,7 @@ describe('[atomico] useSubscription', function() {
             `;
           }
 
-          const Component = c(Renderer);
+          const Component = c(Renderer) as any;
           defineCE(Component);
           element = fixture(html`<${Component}></${Component}>`);
           await element.updated;
@@ -275,7 +275,7 @@ describe('[atomico] useSubscription', function() {
             return html`<host></host>`;
           }
         );
-        defineCE(Component);
+        defineCE(Component as any);
         element = fixture(html`<${Component}></${Component}>`);
         // @ts-expect-error: upstream types
         await element.updated;
@@ -352,7 +352,7 @@ describe('[atomico] useSubscription', function() {
           return html`<host></host>`;
         }
 
-        const Component = c(Renderer);
+        const Component = c(Renderer) as any;
         defineCE(Component);
         element = fixture(html`<${Component}></${Component}>`);
         // @ts-expect-error: upstream types
@@ -604,7 +604,7 @@ describe('[atomico] useSubscription', function() {
           return html`<host></host>`;
         }
 
-        const Component = c(Renderer);
+        const Component = c(Renderer) as any;
         defineCE(Component);
         element = fixture(html`<${Component}></${Component}>`);
         // @ts-expect-error: upstream types
@@ -720,7 +720,7 @@ describe('[atomico] useSubscription', function() {
           `;
         }
 
-        const Component = c(Renderer);
+        const Component = c(Renderer) as any;
         defineCE(Component);
         element = fixture(html`<${Component}></${Component}>`);
         // @ts-expect-error: upstream types

@@ -69,7 +69,7 @@ describe('[atomico] useQuery', function() {
             `;
           }
 
-          const Component = defineCE(c(Hello));
+          const Component = defineCE(c(Hello as any));
           element = fixture(html`<${Component}></${Component}>`);
           await element.updated;
         });
@@ -149,7 +149,7 @@ describe('[atomico] useQuery', function() {
           `;
         }
 
-        const Component = defineCE(c(Hello));
+        const Component = defineCE(c(Hello as any));
         element = fixture(html`<${Component}></${Component}>`);
         await element.updated;
       });
@@ -213,7 +213,7 @@ describe('[atomico] useQuery', function() {
           `;
         }
 
-        const Component = defineCE(c(Hello));
+        const Component = defineCE(c(Hello as any));
         element = fixture(html`<${Component}></${Component}>`);
         await element.updated;
       });
@@ -271,7 +271,7 @@ describe('[atomico] useQuery', function() {
           `;
         }
 
-        const Component = defineCE(c(Hello));
+        const Component = defineCE(c(Hello as any));
         element = fixture(html`<${Component}></${Component}>`);
         await element.updated;
       });
@@ -351,7 +351,7 @@ describe('[atomico] useQuery', function() {
           `;
         }
 
-        const Component = defineCE(c(Hello));
+        const Component = defineCE(c(Hello as any));
         element = fixture(html`<${Component}></${Component}>`);
         await element.updated;
       });
@@ -416,7 +416,7 @@ describe('[atomico] useQuery', function() {
           `;
         }
 
-        const Component = defineCE(c(Hello));
+        const Component = defineCE(c(Hello as any));
         element = fixture(html`<${Component}></${Component}>`);
         await element.updated;
       });
@@ -445,7 +445,7 @@ describe('[atomico] useQuery', function() {
           `;
         }
 
-        const Component = defineCE(c(Hello));
+        const Component = defineCE(c(Hello as any));
         element = fixture(html`<${Component}></${Component}>`);
         await element.updated;
       });
