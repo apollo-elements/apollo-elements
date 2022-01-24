@@ -33,7 +33,6 @@
     "prepublishOnly": "run-s prepublishOnly:*",
     "prepublishOnly:analyze": "npm run analyze",
     "prepublishOnly:build": "tsc -b .",
-    "CAREFUL:bundle": "npx esbuild node_modules/stampino/src/stampino.ts --outfile=stampino.bundled.js --minify --external:lit-html --bundle --format=esm && cp node_modules/stampino/stampino.d.ts stampino.bundled.d.ts",
     "analyze": "custom-elements-manifest analyze --litelement",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },

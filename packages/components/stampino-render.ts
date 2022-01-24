@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types */
-import type { TemplateHandlers } from 'stampino';
+import type { TemplateHandlers } from './stampino.bundled.js';
 import { ReactiveElement, PropertyValues, ReactiveControllerHost } from '@lit/reactive-element';
-import { render } from 'stampino';
+import { render } from './stampino.bundled.js';
 import { bound } from '@apollo-elements/core/lib/bound';
 
 /**

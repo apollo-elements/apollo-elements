@@ -3,7 +3,7 @@ import { fixture, defineCE, expect, nextFrame } from '@open-wc/testing';
 import { property } from 'lit/decorators.js';
 
 import { StampinoRender } from './stampino-render';
-import { TemplateHandlers, evaluateTemplate } from 'stampino';
+import { TemplateHandlers, evaluateTemplate } from './stampino.bundled.js';
 
 describe('[components] StampinoRender', function() {
   describe('basic instance', function() {
