@@ -18,5 +18,8 @@
     "rocket-preset-apollo-elements": "0.0.0",
     "@apollo-elements/test": "1.3.0"
   },
-  "changesets": []
+  "changesets": [
+    "fast-keys-listen",
+    "lovely-flies-relate"
+  ]
 }
