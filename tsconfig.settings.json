@@ -15,7 +15,7 @@
     "noEmitOnError": false,
     "sourceMap": true,
     "strict": true,
-    "target": "es2019",
+    "target": "esnext",
     "useDefineForClassFields": false,
     "paths": {
       "@apollo-elements/*": ["packages/*"]

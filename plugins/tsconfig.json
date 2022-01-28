@@ -4,7 +4,7 @@
     "checkJs": true,
     "allowJs": true,
     "noEmit": true,
-    "target": "es2020",
+    "target": "esnext",
     "module": "nodenext",
     "esModuleInterop": true,
     "useDefineForClassFields": false,

@@ -10,7 +10,7 @@
     "module": "es2020",
     "moduleResolution": "Node",
     "sourceMap": true,
-    "target": "es2019",
+    "target": "esnext",
     "useDefineForClassFields": false,
     "lib": [
       "DOM.iterable",
