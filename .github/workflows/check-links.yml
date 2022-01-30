@@ -16,6 +16,8 @@ jobs:
       - name: Broken Link Check
         uses: technote-space/broken-link-checker-action@v2
         with:
-          target: https://apolloelements.dev
-          recursive: true
-          excludedKeywords: camo.githubusercontent.com, t.me
+          TARGET: https://apolloelements.dev
+          RECURSIVE: true
+          EXCLUDED_KEYWORDS: |
+            camo.githubusercontent.com
+            t.me
