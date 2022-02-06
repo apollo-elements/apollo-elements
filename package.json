@@ -36,6 +36,7 @@
     "lint:types": "tsc -p tsconfig.noEmit.json --tsBuildInfoFile null",
     "postinstall": "run-s postinstall:**",
     "postinstall:patch": "patch-package",
+    "postinstall:hack:killplayground": "rm -rf node_modules/rocket-preset-playground-elements/node_modules/playground-elements",
     "postinstall:stampino:bundle": "npx esbuild node_modules/stampino/stampino.js --outfile=packages/components/stampino.bundled.js --minify --external:lit-html --bundle --format=esm",
     "postinstall:stampino:copy": "cp node_modules/stampino/stampino.d.ts packages/components/stampino.bundled.d.ts",
     "start": "run-p start:*",
