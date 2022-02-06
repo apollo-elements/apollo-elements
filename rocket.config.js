@@ -44,6 +44,7 @@ export default ({
     slideDecks(),
 
     playgroundElements({
+      playgroundImport: 'https://unpkg.com/playground-elements@0.15.0-pre.1/playground-ide.js?module',
       importMap: {
         '@apollo/client/core': `${IMPORT_MAP_BASE}/apollo-client.js`,
         '@apollo/client/utilities': `${IMPORT_MAP_BASE}/apollo-client.js`,
