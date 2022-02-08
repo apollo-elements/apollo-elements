@@ -1,41 +1,46 @@
 ---
 name: ApolloMutationController flavours
-attrs: float-header
 ---
 
 ## `ApolloMutationController` flavours
 
-### Lit
+<dl class="flavours">
 
-```ts
-mutation = new ApolloMutationController(this, UpdateProfileMutation);
-```
+  <dt><img alt="Lit" src="/_merged_assets/brand-logos/lit.svg"></dt>
+  <dd>
+  
+  ```ts
+  mutation = new ApolloMutationController(this, UpdateProfileMutation);
+  ```
+  
+  </dd>
 
-<section reveal>
+  <dt><img alt="FAST" src="/_merged_assets/brand-logos/fast.svg"></dt>
+  <dd>
+  
+  ```ts
+  mutation = new ApolloMutationBehavior(this, UpdateProfileMutation);
+  ```
+  
+  </dd>
 
-### FAST
-```ts
-mutation = new ApolloMutationBehavior(this, UpdateProfileMutation);
-```
+  <dt><img alt="Haunted" src="/_merged_assets/brand-logos/haunted.svg"></dt>
+  <dd>
+  
+  ```ts
+  const [updateProfile, { data, loading }] = useMutation(UpdateProfileMutation);
+  ```
+  
+  </dd>
 
-</section>
+  <dt><img alt="Hybrids" src="/_merged_assets/brand-logos/hybrids.svg"></dt>
+  <dd>
+  
+  ```ts
+  mutation: mutation(UpdateProfileMutation),
+  ```
+  
+  </dd>
 
-<section reveal>
+</dl>
 
-### Hooks (Haunted, Atomico)
-
-```ts
-const [updateProfile, { data, loading }] = useMutation(UpdateProfileMutation);
-```
-
-</section>
-
-<section reveal>
-
-### Hybrids
-
-```ts
-mutation: mutation(UpdateProfileMutation),
-```
-
-</section>

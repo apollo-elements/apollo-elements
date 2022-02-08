@@ -662,6 +662,18 @@ docs-playground {
   }
 }
 
+dl.flavours {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  gap: 14px;
+  & dt {
+    place-self: center center;
+    & img {
+      height: 150px;
+    }
+  }
+}
+
 [name="ApolloQueryController flavours"] {
   &>pre { width: 100%; }
   & section[reveal] { background-color: var(--background); }
@@ -680,6 +692,13 @@ docs-playground {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
+  }
+}
+
+[name="Try It"] {
+  & [reveal] {
+    margin-top: 3em;
+    background: black;
   }
 }
 

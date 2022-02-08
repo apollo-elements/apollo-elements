@@ -11,8 +11,6 @@ npm i @apollo-elements/components
 import '@apollo-elements/components';
 ```
 
-<section reveal>
-
 ### 🚛 Or load over CDN
 
 ```html
@@ -20,7 +18,5 @@ import '@apollo-elements/components';
         src="https://unpkg.com/@apollo-elements/components?module">
 </script>
 ```
-
-</section>
 
 <aside slot="presenter">Emphasize "just HTML" and no need for build tools</aside>

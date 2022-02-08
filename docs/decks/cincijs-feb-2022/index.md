@@ -17,8 +17,11 @@ unbind: true
 <link data-helmet rel="stylesheet"
       href="{{ '/decks/cincijs-feb-2022/graphql-in-html.css' | asset | url }}"/>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.64/dist/themes/dark.css">
-<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.64/dist/shoelace.js"></script> 
+<link data-helmet rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.64/dist/themes/dark.css">
+
+<script data-helmet type="module"
+        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.64/dist/shoelace.js"></script> 
 
 <script data-helmet type="module"
         src="{{ '/decks/cincijs-feb-2022/slides-script.js' | asset | url }}"></script>

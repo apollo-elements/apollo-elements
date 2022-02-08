@@ -1,41 +1,44 @@
 ---
 name: ApolloQueryController flavours
-attrs: float-header
 ---
 
 ## `ApolloQueryController` flavours
 
-### Lit
+<dl class="flavours">
+  <dt><img alt="Lit" src="/_merged_assets/brand-logos/lit.svg"></dt>
+  <dd>
 
-```ts
-query = new ApolloQueryController(this, UserProfileQuery);
-```
+  ```ts
+  query = new ApolloQueryController(this, UserProfileQuery);
+  ```
 
-<section reveal>
+  </dd>
 
-### FAST
-```ts
-query = new ApolloQueryBehavior(this, UserProfileQuery);
-```
+  <dt><img alt="FAST" src="/_merged_assets/brand-logos/fast.svg"></dt>
+  <dd>
 
-</section>
+  ```ts
+  query = new ApolloQueryBehavior(this, UserProfileQuery);
+  ```
 
-<section reveal>
+  </dd>
 
-### Hooks (Haunted, Atomico)
+  <dt><img alt="Atomico" src="/_merged_assets/brand-logos/atomico.svg"></dt>
+  <dd>
 
-```ts
-const { data, loading } = useQuery(UserProfileQuery);
-```
+  ```ts
+  const { data, loading } = useQuery(UserProfileQuery);
+  ```
 
-</section>
+  </dd>
 
-<section reveal>
+  <dt><img alt="Hybrids" src="/_merged_assets/brand-logos/hybrids.svg"></dt>
+  <dd>
 
-### Hybrids
+  ```ts
+  query: query(UserProfileQuery),
+  ```
 
-```ts
-query: query(UserProfileQuery),
-```
+  </dd>
 
-</section>
+</dl>
