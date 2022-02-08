@@ -4,7 +4,7 @@ name: Thanks
 
 ## Thanks for Watching
 
-Made with 🥰 using...
+Made with  🌳🦒 using...
 
 - [![Apollo GraphQL](/decks/cincijs-feb-2022/apollo-graphql-logo.svg) Apollo GraphQL](https://apollographql.com/)
 - [![d3](/decks/cincijs-feb-2022/d3-logo.svg) D3](https://d3js.org)
