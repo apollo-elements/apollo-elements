@@ -1,0 +1,37 @@
+<svg version="1.1" viewBox="0 0 194.34 102.19" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <marker id="Arrow1Mend" overflow="visible" orient="auto">
+   <path transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill="#673ab7" fill-rule="evenodd" stroke="#673ab7" stroke-width="1pt"/>
+  </marker>
+  <linearGradient id="reactive-controller-channel-gradient">
+   <stop stop-color="#304ffe" offset="0"/>
+   <stop stop-color="#311b92" offset="1"/>
+  </linearGradient>
+  <linearGradient id="reactive-controller-channel-gradient-top" x1="116.63" x2="114.81" y1="54.134" y2="64.663" gradientUnits="userSpaceOnUse" xlink:href="#reactive-controller-channel-gradient"/>
+  <linearGradient id="reactive-controller-channel-gradient-sid" x1="116.63" x2="114.81" y1="54.134" y2="64.663" gradientTransform="rotate(90,115.07,75.08)" gradientUnits="userSpaceOnUse" xlink:href="#reactive-controller-channel-gradient"/>
+  <linearGradient id="reactive-controller-channel-gradient-bot" x1="116.63" x2="117.77" y1="54.134" y2="64.371" gradientTransform="rotate(180,116.35,74.918)" gradientUnits="userSpaceOnUse" xlink:href="#reactive-controller-channel-gradient"/>
+ </defs>
+ <g transform="translate(-8 -27.869)">
+  <text x="8.3360004" y="37.422253" font-size="8px"line-height:1.25" xml:space="preserve"><tspan x="8.3360004" y="37.422253" font-size="8px">LitElement</tspan></text>
+  <path id="reactive-controller-diagram-litelement" d="m141.35 63.996c-4.9338-5.0578-7.3413-27.662 5.1168-33.397 9.7507-2.3192 20.064-0.7436 29.968-0.1709 11.255 1.227 23.763 8.5738 24.035 21.12-1.1042 13.985 0.33265 27.77 0.34858 41.724 0.19748 13.445-0.78538 29.382-21.751 33.063-14.221 2.5468-22.985 4.5436-33.215-3.6636-9.9752-6.641-8.8244-24.877 4.5748-26.095 9.4947 0.7231 20.293-6.7773 17.358-17.311-2.7212-19.819-21.998-10.72-26.435-15.269z" fill="#03a9f4" stroke="#000" stroke-width="1px"/>
+ </g>
+ <g id="reactive-controller-diagram-reactivecontrollerhost" reveal transform="translate(-8 -27.869)" stroke="#000" stroke-width="1px" stroke-dasharray="1 1">
+  <path d="m137.52 54.233c-1.8974-11.104 10.706-13.195 20.308-11.415 12.983 3.4573 22.704 16.021 22.121 29.576-0.62885 13.266 1.3828 28.969-9.4638 38.898-7.3086 5.9972-21.478 9.3509-27.232 3.7554-7.0459-7.9921-1.7287-19.576 7.1701-18.471 15.129-1.7532 17.29-7.0363 16.909-17.041-2.0612-18.906-17.411-10.863-25.479-15.03-2.7822-2.1703-3.8357-7.3609-4.3331-10.271z" fill="#304ffe"/>
+  <text x="8.7600002" y="48.912315" font-size="18.667px" stroke="none" style="line-height:1.25" xml:space="preserve"><tspan x="8.7600002" y="48.912315" font-size="8px">ReactiveControllerHost</tspan></text>
+ </g>
+ <g transform="translate(-8 -27.869)" reveal>
+  <text x="8.7600002" y="125.14003" font-size="18.667px" style="line-height:1.25" xml:space="preserve"><tspan x="8.7600002" y="125.14003" font-size="8px">ReactiveController</tspan></text>
+  <path id="reactive-controller-diagram-controller" d="m104.04 78.732c-0.71937-8.1848 4.3802-16.225 11.755-19.628 4.2706-2.0616 9.6417-1.1004 14.25 0.05564 6.0088 3.2386 7.0777 7.369 7.0777 7.369 3.6306 3.4964 8.7767 1.4921 13.718 2.3834 2.2562 0.04611 5.8648 2.7514 7.481 4.3093 5.7099 5.0626 4.3146 15.935-2.8983 18.869-3.2582 1.368-6.8117 0.3382-9.8579-1.0513-5.3238-1.8757-10.873 0.3943-15.655 2.7545-4.9289 2.396-10.471 5.0922-16.046 3.3953-4.5781-1.3213-7.4575-5.7374-9.0196-9.9881-0.93034-2.6975-1.3886-5.6454-0.80435-8.4694z" fill="#311b92" stroke="#000"/>
+ </g>
+ <g transform="translate(28.674 -21.283)" reveal>
+  <text transform="scale(1.0078 .9923)" x="-8.3396015" y="62.991917" font-size="6.5691px" stroke-width=".82114" style="line-height:0.5" xml:space="preserve"><tspan x="-8.3396015" y="62.991917"><tspan font-size="6.5691px" stroke-width=".82114">  addController</tspan></tspan><tspan x="-8.3396015" y="70.724358"><tspan font-size="6.5691px" stroke-width=".82114">  requestUpdate</tspan></tspan><tspan x="-8.3396015" y="78.456802"><tspan font-size="6.5691px" stroke-width=".82114"/></tspan><tspan x="-8.3396015" y="86.189247"><tspan dx="0 0.12291598" font-size="6.5691px" stroke-width=".82114">hostConnected</tspan></tspan><tspan x="-8.3396015" y="93.921692" dx="0 0 0 -0.36874795 0 0 0 0 0 0 0 0 0.12291598">hostUpdated</tspan><tspan x="-8.3396015" y="101.65414" dx="0 0 0 0 0 -0.36874795 0 0 0 0 0 0 0 0 0.12291598"/><tspan x="-8.3396015" y="109.38658" dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.36874795 0 0 0 0 0 0 0 0 0.12291598"/></text>
+  <path transform="scale(.26458)" d="m322.01 193.93c-8.0641-0.0696-15.921 1.1536-22.982 4.5625-27.873 12.86-47.147 43.249-44.428 74.184-2.208 10.673-0.47719 21.815 3.0391 32.01 5.9039 16.066 16.787 32.756 34.09 37.75 21.072 6.4134 42.018-3.7761 60.646-12.832 18.074-8.9204 39.047-17.5 59.168-10.41 4.1594 1.8973 8.5711 3.6079 13.088 4.7871 4.3807 11.538 2.2687 21.614-3.3359 42.59 10.911-2.1573 27.711-9.3401 37.611-0.37696-15.557-24.276-14.609-23.336-17.693-40.943 2.5585-0.36787 5.0976-1.0376 7.5898-2.084 11.868-4.8286 19.565-15.343 22.697-27.256 16.95-3.0148 34.98 5.1522 41.615 7.75-4.7552-8.8385-1.8997-23.54 5.6797-33.982-10.08 8.2999-29.767 14.366-46.16 7.2031-1.3292-9.5186-5.5564-18.539-12.879-25.031-2.3746-2.2889-5.893-5.23-9.8008-7.9844-4.0271-17.454 2.2552-31.11 15.002-39.08-24.346 2.8983-33.803-3.4299-45.934-10.807 4.8696 7.6647 8.1558 26.724 5.666 35.533-0.53345 1.7725-1.162 3.4891-1.8711 5.1582-15.87-0.63421-31.576 3.0616-43.184-8.1172 0 0-4.6721-14.981-26.752-27.852-9.7965-2.4576-20.505-4.682-30.873-4.7715z" fill="#311b92" stroke="#000" stroke-width="3.78px"/>
+  <g id="reactive-controller-diagram-channels">
+   <path d="m123.73 99.052s-7.3631-6.5175-6.9748-13.197c2.2351-11.365-5.0024-3.7068-4.3601-0.56193-1.161-1.575 0.56732 0.02467 0.70159 3.8891 0.066 1.9009-0.88703 6.2794-2.0488 8.7818 6.791-1.1153 12.682 1.0878 12.682 1.0878z" fill="url(#reactive-controller-channel-gradient-bot)"/>
+   <path d="m137.58 71.318s-4.9495 4.8835-13.124 1.9792c-11.365-2.2351 5.774-0.79547-0.19728 4.3965-2.1584 1.5911 3.9854-1.7986 12.598 3.2434-1.1153-6.791 1.2526-9.8309 1.2526-9.8309z" fill="url(#reactive-controller-channel-gradient-sid)"/>
+   <path d="m111.05 51.075s2.8411 5.9704 1.0676 10.972c-1.8226 5.1404-3.1631 5.7912-3.1631 5.7912s8.8307-2.8934 10.914 0.27686c1.4728 2.2408-6.3652-9.4602 3.9448-14.623-6.791 1.1153-12.975-3.053-12.975-3.053z" fill="url(#reactive-controller-channel-gradient-top)"/>
+  </g>
+  <path d="m-10.51 87.023s-27.004-25.126 8.6709-22.32" fill="none" marker-end="url(#Arrow1Mend)" stroke="#673ab7" stroke-width=".82114px"/>
+  <path d="m52.381 66.024s27.004 25.126-8.6709 22.32" fill="none" marker-end="url(#Arrow1Mend)" stroke="#673ab7" stroke-width=".82114px"/>
+ </g>
+</svg>
