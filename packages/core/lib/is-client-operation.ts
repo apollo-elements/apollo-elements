@@ -30,7 +30,7 @@ const getDirectives =
     if (!hasSelections(x))
       return [...acc, ...directives];
     else
-      return [...acc, ...x.selectionSet?.selections.reduce(getDirectives, [])];
+      return [...acc, ...x.selectionSet?.selections.reduce(getDirectives, []) ?? []];
   };
 
 /**
