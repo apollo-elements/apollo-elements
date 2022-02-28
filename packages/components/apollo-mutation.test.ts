@@ -243,7 +243,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     describe('setting error', function() {
       it('as ApolloError', async function() {
-        let error;
+        let error: C.ApolloError | undefined = undefined;
         try {
           error = new C.ApolloError({ });
           element.error = error;
@@ -252,11 +252,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         expect(element.controller.error).to.equal(error);
       });
       it('as Error', async function() {
-        let error;
+        let error: Error;
         try {
           throw new Error();
         } catch (e) {
-          error = e;
+          error = e as Error;
           element.error = error as Error;
         }
         await element.updateComplete;
@@ -822,8 +822,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     afterEach(function() {
       replaceStateStub.restore();
       element.remove();
-      // @ts-expect-error: fixture
-      element = undefined;
+      // just clearing the text fixture
+      element = undefined as unknown as typeof element;
     });
 
     describe('clicking the link', function() {
@@ -1091,7 +1091,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           expect(input.disabled, 'input disabled').to.be.true;
         });
 
-        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
       });
 
@@ -1124,7 +1123,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           expect(input.disabled).to.be.true;
         });
 
-        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
       });
 
@@ -1187,7 +1185,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           button.click();
         });
 
-        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
       });
 
@@ -1231,7 +1228,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           disabledAfterTyping = input.disabled;
         });
 
-        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
       });
 
@@ -1263,7 +1259,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           disabledAfterTyping = input.disabled;
         });
 
-        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
       });
 
@@ -1293,7 +1288,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           expect(input.disabled).to.be.true;
         });
 
-        // @ts-expect-error: oneEvent doesn't type based on event
         event = await oneEvent(element, MutationCompletedEvent.type);
       });
 
