@@ -1,5 +1,24 @@
 # @apollo-elements/atomico
 
+## 2.0.0
+
+### Major Changes
+
+- 68670e5a: No longer transpiles class private fields
+
+### Patch Changes
+
+- 4345e6a2: Improvements to the internal type system makes working with query data easier
+
+  This release makes some breaking changes to internal types. If for some reason you were importing
+  those types from core, your code may break. However, normal usage should not be affected.
+
+- Updated dependencies [5b77eb2f]
+- Updated dependencies [4345e6a2]
+- Updated dependencies [5b77eb2f]
+- Updated dependencies [68670e5a]
+  - @apollo-elements/core@2.0.0
+
 ## 2.0.0-next.1
 
 ### Major Changes
