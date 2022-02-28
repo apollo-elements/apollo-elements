@@ -25,7 +25,7 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 
 ```ts playground query-controller profile-home.ts
 import '@apollo-elements/components/apollo-client';
-import { ApolloQueryController } from '@apollo-elements/core';
+// import { ApolloQueryController } from '@apollo-elements/core';
 import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
@@ -38,9 +38,12 @@ class ProfileHome extends LitElement {
 
   static styles = style;
 
+  profile = {}
+/*
   profile = new ApolloQueryController(this, ProfileQuery, {
     variables: { id: 1 }
   });
+*/
 
   radio(id) {
     const astronaut = this.profile.data?.profile;
@@ -53,7 +56,7 @@ class ProfileHome extends LitElement {
   onChange(event) { this.profile.variables = { id: event.target.value } }
 
   render() {
-    const { data, loading } = this.profile;
+    const { data, loading } = this.profile ?? {};
     const astronaut = data?.profile;
     return html`
       <form><legend>Crew ID</legend>${ProfileHome.ids.map(this.radio, this)}</form>
@@ -69,7 +72,7 @@ class ProfileHome extends LitElement {
 }
 ```
 
-```js playground-file query-controller profile-home.css.js
+```js playground-file query-controller profile-home.css.ts
 import { css } from 'lit';
 export default css`
   :host { display: block; }
@@ -86,8 +89,8 @@ export default css`
 ```
 
 ```html playground-file query-controller index.html
-<script type="module" src="profile-home.js"></script>
-<script type="module" src="client.js"></script>
+<script type="module" src="./profile-home.js"></script>
+<script type="module" src="./client.js"></script>
 
 <apollo-client>
   <profile-home></profile-home>
