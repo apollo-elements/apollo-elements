@@ -48,7 +48,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 
     /** @summary The Apollo Client instance. */
     @controlled()
-    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
+      client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
     declare controller: ApolloController<D, V>;
 

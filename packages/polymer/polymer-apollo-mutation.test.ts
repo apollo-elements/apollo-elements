@@ -55,7 +55,7 @@ class TestableApolloMutation<D, V = I.VariablesOf<D>>
     'error',
     'errors',
     'loading',
-  ]
+  ];
 
   constructor() {
     super();

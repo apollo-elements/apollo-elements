@@ -49,12 +49,12 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    */
   @controlled()
   @property({ type: Boolean, reflect: true })
-  called = false;
+    called = false;
 
   /** @summary The mutation. */
   @controlled()
   @state()
-  mutation: ComponentDocument<D, V> | null = null;
+    mutation: ComponentDocument<D, V> | null = null;
 
   /**
    * An object that represents the result of this mutation that will be optimistically
@@ -77,14 +77,14 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    */
   @controlled({ path: 'options' })
   @state()
-  optimisticResponse?: OptimisticResponseType<D, V>;
+    optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
    * @summary If true, the returned data property will not update with the mutation result.
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'ignore-results', type: Boolean })
-  ignoreResults = false;
+    ignoreResults = false;
 
   /**
    * Queries refetched as part of refetchQueries are handled asynchronously,
@@ -95,7 +95,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'await-refetch-queries', type: Boolean })
-  awaitRefetchQueries?: boolean;
+    awaitRefetchQueries?: boolean;
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.
@@ -103,7 +103,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: C.ErrorPolicy;
+    errorPolicy?: C.ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
@@ -111,7 +111,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: 'no-cache';
+    fetchPolicy?: 'no-cache';
 
   /**
    * A list of query names which will be refetched once this mutation has returned.

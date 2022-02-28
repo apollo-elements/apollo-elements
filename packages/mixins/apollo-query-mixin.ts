@@ -164,7 +164,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
           this.removeAttribute('next-fetch-policy');
       },
     })
-    nextFetchPolicy?: C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>;
+      nextFetchPolicy?: C.WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>;
 
     /**
      * When true, the component will not automatically subscribe to new data.
@@ -177,7 +177,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
         this.toggleAttribute('no-auto-subscribe', !!value);
       },
     })
-    noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
+      noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
 
     /**
      * @summary Whether or not updates to the network status should trigger next on the observer of this query.

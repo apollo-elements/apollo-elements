@@ -343,7 +343,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'ignore-results', type: Boolean })
-  ignoreResults = false;
+    ignoreResults = false;
 
   /**
    * Queries refetched as part of refetchQueries are handled asynchronously,
@@ -354,7 +354,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'await-refetch-queries', type: Boolean })
-  awaitRefetchQueries = false;
+    awaitRefetchQueries = false;
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.
@@ -362,7 +362,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: ErrorPolicy;
+    errorPolicy?: ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
@@ -370,7 +370,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: 'no-cache';
+    fetchPolicy?: 'no-cache';
 
   /**
    * A list of query names which will be refetched once this mutation has returned.

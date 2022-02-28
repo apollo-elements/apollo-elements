@@ -46,7 +46,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
   @observable
   @hosted()
   @controlled()
-  client: C.ApolloClient<C.NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
+    client: C.ApolloClient<C.NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
   /**
    * @summary Operation document.
@@ -55,38 +55,38 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
    */
   @hosted()
   @controlled()
-  document: ComponentDocument<D, V> | null = null;
+    document: ComponentDocument<D, V> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @hosted({ path: 'options' })
   @controlled({ path: 'options' })
-  context?: Record<string, unknown>;
+    context?: Record<string, unknown>;
 
   /** @summary Whether a request is in flight. */
   @attr({ mode: 'boolean' })
   @hosted()
   @controlled()
-  loading = false;
+    loading = false;
 
   /** @summary Latest Data. */
   @hosted()
   @controlled()
-  data: Data<D> | null = null;
+    data: Data<D> | null = null;
 
   /** @summary Operation variables. */
   @hosted()
   @controlled()
-  variables: Variables<D, V> | null = null;
+    variables: Variables<D, V> | null = null;
 
   /** @summary Latest error */
   @hosted()
   @controlled()
-  error: Error | C.ApolloError | null = null;
+    error: Error | C.ApolloError | null = null;
 
   /** @summary Latest errors */
   @hosted()
   @controlled()
-  errors: readonly GraphQLError[] = [];
+    errors: readonly GraphQLError[] = [];
 
   /** @internal */
   [update](properties: Partial<this>): void {
