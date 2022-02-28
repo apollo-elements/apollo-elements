@@ -1,7 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import html from '@open-wc/rollup-plugin-html';
-import graphql from '@rollup/plugin-graphql';
 import litcss from 'rollup-plugin-lit-css';
 import esbuild from 'rollup-plugin-esbuild';
 
@@ -19,7 +18,6 @@ export default {
     html(),
     resolve(),
     commonjs(),
-    graphql(),
     litcss(),
   ],
 };
