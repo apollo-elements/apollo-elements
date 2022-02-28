@@ -1,5 +1,19 @@
 # @apollo-elements/lit-apollo
 
+## 5.0.0-next.1
+
+### Major Changes
+
+- 68670e5: No longer transpiles class private fields
+
+### Patch Changes
+
+- 5b77eb2: Source linting
+- Updated dependencies [5b77eb2]
+- Updated dependencies [5b77eb2]
+- Updated dependencies [68670e5]
+  - @apollo-elements/core@2.0.0-next.1
+
 ## 4.1.1-next.0
 
 ### Patch Changes

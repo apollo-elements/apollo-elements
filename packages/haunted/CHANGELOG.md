@@ -1,5 +1,18 @@
 # @apollo-elements/haunted
 
+## 3.0.0-next.1
+
+### Major Changes
+
+- 68670e5: No longer transpiles class private fields
+
+### Patch Changes
+
+- Updated dependencies [5b77eb2]
+- Updated dependencies [5b77eb2]
+- Updated dependencies [68670e5]
+  - @apollo-elements/core@2.0.0-next.1
+
 ## 2.0.1-next.0
 
 ### Patch Changes

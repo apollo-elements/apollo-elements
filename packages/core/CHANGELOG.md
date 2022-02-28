@@ -1,5 +1,16 @@
 # @apollo-elements/core
 
+## 2.0.0-next.1
+
+### Major Changes
+
+- 68670e5: No longer transpiles class private fields
+
+### Patch Changes
+
+- 5b77eb2: Source linting
+- 5b77eb2: Fix a potentially unsafe optional chaining opearation
+
 ## 1.1.1-next.0
 
 ### Patch Changes

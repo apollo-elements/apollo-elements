@@ -1,5 +1,16 @@
 # @apollo-elements/create
 
+## 4.0.0-next.1
+
+### Major Changes
+
+- 68670e5: No longer transpiles class private fields
+
+### Patch Changes
+
+- 5b77eb2: Source linting
+- dbf304a: Remove `@rollup/plugin-graphql` dependency
+
 ## 3.1.4-next.0
 
 ### Patch Changes

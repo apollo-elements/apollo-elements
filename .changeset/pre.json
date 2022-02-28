@@ -19,7 +19,11 @@
     "@apollo-elements/test": "1.3.0"
   },
   "changesets": [
+    "eight-donuts-think",
     "fast-keys-listen",
-    "lovely-flies-relate"
+    "lovely-flies-relate",
+    "strange-bulldogs-melt",
+    "tender-spiders-draw",
+    "three-wasps-speak"
   ]
 }
