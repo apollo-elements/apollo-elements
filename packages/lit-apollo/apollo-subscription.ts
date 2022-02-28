@@ -42,7 +42,7 @@ export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloE
    */
   @controlled()
   @state()
-  subscription: ComponentDocument<D, V> | null = null;
+    subscription: ComponentDocument<D, V> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`
@@ -50,21 +50,21 @@ export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloE
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'no-auto-subscribe' })
-  noAutoSubscribe = false;
+    noAutoSubscribe = false;
 
   /**
    * @summary Whether or not updates to the network status should trigger next on the observer of this subscription.
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'notify-on-network-status-change' })
-  notifyOnNetworkStatusChange?: boolean;
+    notifyOnNetworkStatusChange?: boolean;
 
   /**
    * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'should-resubscribe' })
-  shouldResubscribe = false;
+    shouldResubscribe = false;
 
   /**
    * @summary If true, the query will be skipped entirely
@@ -77,7 +77,7 @@ export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloE
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: C.ErrorPolicy;
+    errorPolicy?: C.ErrorPolicy;
 
   /**
    * @summary Specifies the FetchPolicy to be used for this subscription.
@@ -85,14 +85,14 @@ export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloE
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: C.FetchPolicy;
+    fetchPolicy?: C.FetchPolicy;
 
   /**
    * @summary The time interval (in milliseconds) on which this subscription should be refetched from the server.
    */
   @controlled({ path: 'options' })
   @property({ type: Number, attribute: 'poll-interval' })
-  pollInterval?: number;
+    pollInterval?: number;
 
   /**
    * @summary Resets the observable and subscribes.

@@ -101,8 +101,8 @@ describe('[FAST] ApolloSubscription', function() {
       const template = html<Test>`${x => x.error?.message ?? 'FAIL'}`;
       @customElement({ name, template })
       class Test extends ApolloSubscription<typeof S.NullableParamSubscription> {
-        subscription = S.NullableParamSubscription
-        variables = { nullable: 'error' }
+        subscription = S.NullableParamSubscription;
+        variables = { nullable: 'error' };
       }
       const tag = unsafeStatic(name);
       const element = await fixture<Test>(h`<${tag}></${tag}>`);

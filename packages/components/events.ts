@@ -85,7 +85,7 @@ export class MutationCompletedEvent<D = unknown, V = VariablesOf<D>> extends Mut
  * @typeParam Variables Element's Variables type
  */
 export class WillNavigateEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
-  static type: 'will-navigate' = 'will-navigate'
+  static type: 'will-navigate' = 'will-navigate';
 
   constructor(element: ApolloMutationElement<D, V>) {
     const { data, mutation, variables } = element;

@@ -21,19 +21,19 @@ import { match, spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 describe('[core] ApolloQueryController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
     class MirroringHost extends ReactiveElement {
-        query!: ApolloQueryController<any>
+      query!: ApolloQueryController<any>;
 
-        data?: unknown;
+      data?: unknown;
 
-        error?: Error|ApolloError|null;
+      error?: Error|ApolloError|null;
 
-        loading?: boolean;
+      loading?: boolean;
 
-        updated() {
-          this.data = this.query?.data;
-          this.error = this.query?.error;
-          this.loading = this.query?.loading;
-        }
+      updated() {
+        this.data = this.query?.data;
+        this.error = this.query?.error;
+        this.loading = this.query?.loading;
+      }
     }
 
     describe('when simply instantiating', function() {
@@ -720,7 +720,7 @@ describe('[core] ApolloQueryController', function() {
             onData: spy(data => { this.$('data')!.innerText = data.pages.join(','); }),
             onError: spy(),
             variables: { offset: 0 },
-          })
+          });
 
           constructor() {
             super();

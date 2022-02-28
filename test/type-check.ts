@@ -49,7 +49,7 @@ export class X extends LitElement {
     shouldSubscribe(options) {
       return options?.variables?.name === 'hi';
     },
-  })
+  });
 
   userQCheck() {
     this.userQ.variables!.name = 'hello';

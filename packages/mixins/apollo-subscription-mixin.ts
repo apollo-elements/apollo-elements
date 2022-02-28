@@ -74,12 +74,12 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
         this.toggleAttribute('no-auto-subscribe', !!value);
       },
     })
-    noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
+      noAutoSubscribe = this.hasAttribute('no-auto-subscribe');
 
     @controlled({ path: 'options' }) notifyOnNetworkStatusChange?: boolean;
 
     @controlled({ path: 'options' })
-    shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'] = false;
+      shouldResubscribe: SubscriptionDataOptions['shouldResubscribe'] = false;
 
     @controlled({ path: 'options' }) skip = false;
 

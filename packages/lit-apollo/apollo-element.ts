@@ -51,7 +51,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
   /** @summary The Apollo Client instance. */
   @controlled()
   @state()
-  client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
+    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
 
   /**
    * @summary Operation document.
@@ -60,35 +60,35 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
    */
   @controlled()
   @state()
-  document: ComponentDocument<D, V> | null = null;
+    document: ComponentDocument<D, V> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' })
   @state()
-  context?: Record<string, unknown>;
+    context?: Record<string, unknown>;
 
   /** @summary Whether a request is in flight. */
   @controlled()
   @property({ reflect: true, type: Boolean })
-  loading = false;
+    loading = false;
 
   /** @summary Latest Data. */
   @controlled()
   @state()
-  data: Data<D> | null = null;
+    data: Data<D> | null = null;
 
   /** @summary Operation variables. */
   @controlled()
   @state()
-  variables: Variables<D, V> | null = null;
+    variables: Variables<D, V> | null = null;
 
   /** @summary Latest error */
   @controlled()
   @state()
-  error: Error | ApolloError | null = null;
+    error: Error | ApolloError | null = null;
 
   /** @summary Latest errors */
   @controlled()
   @state()
-  errors: readonly GraphQLError[] = [];
+    errors: readonly GraphQLError[] = [];
 }

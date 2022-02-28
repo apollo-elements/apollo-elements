@@ -84,21 +84,21 @@ export class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'no-auto-subscribe' })
-  noAutoSubscribe = false;
+    noAutoSubscribe = false;
 
   /**
    * @summary Whether or not updates to the network status should trigger next on the observer of this subscription.
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'notify-on-network-status-change' })
-  notifyOnNetworkStatusChange = false;
+    notifyOnNetworkStatusChange = false;
 
   /**
    * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'should-resubscribe' })
-  shouldResubscribe = false;
+    shouldResubscribe = false;
 
   /**
    * @summary If true, the query will be skipped entirely
@@ -111,7 +111,7 @@ export class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: this['controller']['options']['errorPolicy'];
+    errorPolicy?: this['controller']['options']['errorPolicy'];
 
   /**
    * @summary Specifies the FetchPolicy to be used for this subscription.
@@ -119,14 +119,14 @@ export class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: this['controller']['options']['fetchPolicy'];
+    fetchPolicy?: this['controller']['options']['fetchPolicy'];
 
   /**
    * @summary The time interval (in milliseconds) on which this subscription should be refetched from the server.
    */
   @controlled({ path: 'options' })
   @property({ type: Number, attribute: 'poll-interval' })
-  pollInterval?: number;
+    pollInterval?: number;
 
   /**
    * @summary Resets the observable and subscribes.

@@ -70,7 +70,7 @@ implements ReactiveController {
     });
   }
 
-  #options: ApolloControllerOptions<D, V> = {}
+  #options: ApolloControllerOptions<D, V> = {};
 
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 

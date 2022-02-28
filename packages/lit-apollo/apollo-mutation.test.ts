@@ -255,5 +255,5 @@ class TypeCheckProperty extends ApolloMutation<
   S.NonNullableParamMutationData,
   S.NonNullableParamMutationVariables
 > {
-  variables = { param: 'string' }
+  variables = { param: 'string' };
 }

@@ -29,7 +29,7 @@ describe('TypePoliciesMixin', function() {
               },
             },
           },
-        }
+        };
       }
       const tag = defineCE(Test);
       element = fixtureSync<Test>(`<${tag}></${tag}>`);

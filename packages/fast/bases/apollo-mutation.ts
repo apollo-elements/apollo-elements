@@ -54,12 +54,12 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   @hosted()
   @controlled()
   @attr({ mode: 'boolean' })
-  called = false;
+    called = false;
 
   /** @summary The mutation. */
   @hosted()
   @controlled()
-  mutation: ComponentDocument<D, V> | null = null;
+    mutation: ComponentDocument<D, V> | null = null;
 
   /**
    * An object that represents the result of this mutation that will be optimistically
@@ -82,7 +82,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
    */
   @hosted({ path: 'options' })
   @controlled({ path: 'options' })
-  optimisticResponse?: OptimisticResponseType<D, V>;
+    optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
    * @summary If true, the returned data property will not update with the mutation result.
@@ -90,7 +90,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   @hosted({ path: 'options' })
   @controlled({ path: 'options' })
   @attr({ mode: 'boolean', attribute: 'ignore-results' })
-  ignoreResults = false;
+    ignoreResults = false;
 
   /**
    * Queries refetched as part of refetchQueries are handled asynchronously,
@@ -102,7 +102,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   @hosted({ path: 'options' })
   @controlled({ path: 'options' })
   @attr({ mode: 'boolean', attribute: 'await-refetch-queries' })
-  awaitRefetchQueries?: boolean;
+    awaitRefetchQueries?: boolean;
 
   /**
    * Specifies the ErrorPolicy to be used for this mutation.
@@ -111,7 +111,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   @hosted({ path: 'options' })
   @controlled({ path: 'options' })
   @attr({ attribute: 'error-policy' })
-  errorPolicy?: C.ErrorPolicy;
+    errorPolicy?: C.ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
@@ -120,7 +120,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   @hosted({ path: 'options' })
   @controlled({ path: 'options' })
   @attr({ attribute: 'fetch-policy' })
-  fetchPolicy?: 'no-cache'
+    fetchPolicy?: 'no-cache';
 
   /**
    * As an attribute, can be a string of comma-separated query names
@@ -141,7 +141,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
       },
     },
   })
-  refetchQueries: RefetchQueriesType<D> | null = null;
+    refetchQueries: RefetchQueriesType<D> | null = null;
 
   /**
    * A function which updates the apollo cache when the query responds.

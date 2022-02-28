@@ -134,14 +134,14 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'partial-refetch' })
-  partialRefetch?: boolean;
+    partialRefetch?: boolean;
 
   /**
    * @summary The time interval (in milliseconds) on which this query should be refetched from the server.
    */
   @controlled({ path: 'options' })
   @property({ type: Number, attribute: 'poll-interval' })
-  pollInterval?: number;
+    pollInterval?: number;
 
   /**
    * Opt into receiving partial results from the cache for queries
@@ -149,7 +149,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'return-partial-data' })
-  returnPartialData?: boolean;
+    returnPartialData?: boolean;
 
   /**
    * When true, the component will not automatically subscribe to new data.
@@ -158,14 +158,14 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'no-auto-subscribe' })
-  noAutoSubscribe = false;
+    noAutoSubscribe = false;
 
   /**
    * @summary Whether or not updates to the network status should trigger next on the observer of this query.
    */
   @controlled({ path: 'options' })
   @property({ type: Boolean, attribute: 'notify-on-network-status-change' })
-  notifyOnNetworkStatusChange = false;
+    notifyOnNetworkStatusChange = false;
 
   /**
    * errorPolicy determines the level of events for errors in the execution result. The options are:
@@ -177,7 +177,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-  errorPolicy?: ErrorPolicy;
+    errorPolicy?: ErrorPolicy;
 
   /**
    * Determines where the client may return a result from. The options are:
@@ -194,7 +194,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'fetch-policy' })
-  fetchPolicy?: WatchQueryFetchPolicy;
+    fetchPolicy?: WatchQueryFetchPolicy;
 
   /**
    * When someone chooses cache-and-network or network-only as their
@@ -213,7 +213,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'next-fetch-policy' })
-  nextFetchPolicy?: WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>;
+    nextFetchPolicy?: WatchQueryFetchPolicy | NextFetchPolicyFunction<D, V>;
 
   /**
    * Exposes the [`ObservableQuery#refetch`](https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery.refetch) method.
