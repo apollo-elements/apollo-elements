@@ -6,7 +6,6 @@
 "@apollo-elements/lit-apollo": patch
 "@apollo-elements/mixins": patch
 "@apollo-elements/polymer": patch
-"@apollo-elements/test": patch
 ---
 
 Source linting
