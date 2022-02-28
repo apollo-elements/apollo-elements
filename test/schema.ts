@@ -162,60 +162,60 @@ export type HelloQueryVariables = Exact<{
 }>;
 
 
-export type HelloQueryData = { readonly __typename?: 'Query', readonly helloWorld?: { readonly __typename?: 'HelloWorld', readonly name?: string | null | undefined, readonly greeting?: string | null | undefined } | null | undefined };
+export type HelloQueryData = { readonly __typename?: 'Query', readonly helloWorld?: { readonly __typename?: 'HelloWorld', readonly name?: string | null, readonly greeting?: string | null } | null };
 
 export type InputParamMutationVariables = Exact<{
   input: ABInput;
 }>;
 
 
-export type InputParamMutationData = { readonly __typename?: 'Mutation', readonly inputParam?: { readonly __typename?: 'AB', readonly a?: string | null | undefined, readonly b?: string | null | undefined } | null | undefined };
+export type InputParamMutationData = { readonly __typename?: 'Mutation', readonly inputParam?: { readonly __typename?: 'AB', readonly a?: string | null, readonly b?: string | null } | null };
 
 export type MessageSentSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessageSentSubscriptionData = { readonly __typename?: 'Subscription', readonly messageSent?: { readonly __typename?: 'Message', readonly message?: string | null | undefined } | null | undefined };
+export type MessageSentSubscriptionData = { readonly __typename?: 'Subscription', readonly messageSent?: { readonly __typename?: 'Message', readonly message?: string | null } | null };
 
 export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessagesQueryData = { readonly __typename?: 'Query', readonly messages?: ReadonlyArray<{ readonly __typename?: 'Message', readonly message?: string | null | undefined } | null | undefined> | null | undefined };
+export type MessagesQueryData = { readonly __typename?: 'Query', readonly messages?: ReadonlyArray<{ readonly __typename?: 'Message', readonly message?: string | null } | null> | null };
 
 export type NoParamMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NoParamMutationData = { readonly __typename?: 'Mutation', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
+export type NoParamMutationData = { readonly __typename?: 'Mutation', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null } | null };
 
 export type NoParamQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NoParamQueryData = { readonly __typename?: 'Query', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
+export type NoParamQueryData = { readonly __typename?: 'Query', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null } | null };
 
 export type NoParamSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NoParamSubscriptionData = { readonly __typename?: 'Subscription', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
+export type NoParamSubscriptionData = { readonly __typename?: 'Subscription', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null } | null };
 
 export type NonNullableParamMutationVariables = Exact<{
   param: Scalars['String'];
 }>;
 
 
-export type NonNullableParamMutationData = { readonly __typename?: 'Mutation', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null | undefined } | null | undefined };
+export type NonNullableParamMutationData = { readonly __typename?: 'Mutation', readonly noParam?: { readonly __typename?: 'NoParam', readonly noParam?: string | null } | null };
 
 export type NonNullableParamQueryVariables = Exact<{
   nonNull: Scalars['String'];
 }>;
 
 
-export type NonNullableParamQueryData = { readonly __typename?: 'Query', readonly nonNullParam?: { readonly __typename?: 'NonNull', readonly nonNull: string } | null | undefined };
+export type NonNullableParamQueryData = { readonly __typename?: 'Query', readonly nonNullParam?: { readonly __typename?: 'NonNull', readonly nonNull: string } | null };
 
 export type NonNullableParamSubscriptionVariables = Exact<{
   nonNull: Scalars['String'];
 }>;
 
 
-export type NonNullableParamSubscriptionData = { readonly __typename?: 'Subscription', readonly nonNullParam?: { readonly __typename?: 'NonNull', readonly nonNull: string } | null | undefined };
+export type NonNullableParamSubscriptionData = { readonly __typename?: 'Subscription', readonly nonNullParam?: { readonly __typename?: 'NonNull', readonly nonNull: string } | null };
 
 export type NullableParamMutationVariables = Exact<{
   nullable?: InputMaybe<Scalars['String']>;
@@ -223,7 +223,7 @@ export type NullableParamMutationVariables = Exact<{
 }>;
 
 
-export type NullableParamMutationData = { readonly __typename?: 'Mutation', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null | undefined } | null | undefined };
+export type NullableParamMutationData = { readonly __typename?: 'Mutation', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null } | null };
 
 export type NullableParamQueryVariables = Exact<{
   nullable?: InputMaybe<Scalars['String']>;
@@ -231,7 +231,7 @@ export type NullableParamQueryVariables = Exact<{
 }>;
 
 
-export type NullableParamQueryData = { readonly __typename?: 'Query', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null | undefined } | null | undefined };
+export type NullableParamQueryData = { readonly __typename?: 'Query', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null } | null };
 
 export type NullableParamSubscriptionVariables = Exact<{
   nullable?: InputMaybe<Scalars['String']>;
@@ -239,12 +239,12 @@ export type NullableParamSubscriptionVariables = Exact<{
 }>;
 
 
-export type NullableParamSubscriptionData = { readonly __typename?: 'Subscription', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null | undefined } | null | undefined };
+export type NullableParamSubscriptionData = { readonly __typename?: 'Subscription', readonly nullableParam?: { readonly __typename?: 'Nullable', readonly nullable?: string | null } | null };
 
 export type PageAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PageAddedSubscriptionData = { readonly __typename?: 'Subscription', readonly pageAdded?: number | null | undefined };
+export type PageAddedSubscriptionData = { readonly __typename?: 'Subscription', readonly pageAdded?: number | null };
 
 export type PaginatedQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -252,7 +252,7 @@ export type PaginatedQueryVariables = Exact<{
 }>;
 
 
-export type PaginatedQueryData = { readonly __typename?: 'Query', readonly pages?: ReadonlyArray<number | null | undefined> | null | undefined };
+export type PaginatedQueryData = { readonly __typename?: 'Query', readonly pages?: ReadonlyArray<number | null> | null };
 
 export type UpdateUserMutationVariables = Exact<{
   username: Scalars['String'];
@@ -260,7 +260,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutationData = { readonly __typename?: 'Mutation', readonly updateUser?: { readonly __typename?: 'User', readonly nickname?: string | null | undefined } | null | undefined };
+export type UpdateUserMutationData = { readonly __typename?: 'Mutation', readonly updateUser?: { readonly __typename?: 'User', readonly nickname?: string | null } | null };
 
 
 export const HelloQuery = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HelloQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"greeting"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"helloWorld"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"greeting"},"value":{"kind":"Variable","name":{"kind":"Name","value":"greeting"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}}]}}]}}]} as unknown as DocumentNode<HelloQueryData, HelloQueryVariables>;

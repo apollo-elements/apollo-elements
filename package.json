@@ -167,7 +167,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "playground-elements": "^0.15.0-pre.1",
+    "playground-elements": "^0.15.0-pre.5",
     "tslib": "^2.3.1"
   }
 }
