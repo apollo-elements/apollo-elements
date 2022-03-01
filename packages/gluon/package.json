@@ -31,7 +31,8 @@
   ],
   "scripts": {
     "preprepublishOnly": "rimraf declaration.d.ts",
-    "prepublishOnly": "tsc -b .",
+    "prepublishOnly": "npm run build",
+    "build": "tsc -b .",
     "analyze": "custom-elements-manifest analyze",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },

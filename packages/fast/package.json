@@ -38,7 +38,8 @@
     "**/*.js.map"
   ],
   "scripts": {
-    "prepublishOnly": "tsc -b .",
+    "prepublishOnly": "npm run build",
+    "build": "tsc -b .",
     "analyze": "custom-elements-manifest analyze --fast",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },

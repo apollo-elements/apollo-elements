@@ -1,10 +1,6 @@
 {
   "extends": "../../tsconfig.settings.json",
   "include": ["."],
-  "compilerOptions": {
-    "outDir": ".",
-    "rootDir": "."
-  },
   "references": [
     { "path": "../core" },
     { "path": "../fast" },
