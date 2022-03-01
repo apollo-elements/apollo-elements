@@ -1,5 +1,17 @@
 # @apollo-elements/core
 
+## 2.0.1
+
+### Patch Changes
+
+- bc9ebd8: Fix build scripts
+- 987c2cd: Update TypeScript to 4.6
+
+  Note, previous major versions did not generate github releases
+  due to problems with changesets. Their breaking change was to no longer
+  transpile class private fields, so if you use webpack or other bundlers
+  which don't support private fields, you'll need to use babel.
+
 ## 2.0.0
 
 ### Major Changes
