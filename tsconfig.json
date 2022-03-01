@@ -11,6 +11,6 @@
     { "path": "./packages/hybrids" },
     { "path": "./packages/lit-apollo" },
     { "path": "./packages/mixins" },
-    { "path": "./packages/polymer" },
+    { "path": "./packages/polymer" }
   ]
 }

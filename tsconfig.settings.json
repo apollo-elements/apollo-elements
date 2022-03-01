@@ -10,12 +10,12 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "inlineSources": true,
-    "module": "es2020",
+    "module": "es2022",
     "moduleResolution": "Node",
     "noEmitOnError": false,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext",
+    "target": "es2022",
     "useDefineForClassFields": false,
     "paths": {
       "@apollo-elements/*": ["packages/*"]
