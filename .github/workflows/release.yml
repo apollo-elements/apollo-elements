@@ -18,7 +18,7 @@ jobs:
           cache: npm
 
       - name: Install packages
-        run: npm ci
+        run: npm i --prefer-offline
 
       - name: Codegen
         run: npm run build:codegen
