@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 4.0.2
+
+### Patch Changes
+
+- 6da2693: Update generated build script, dependencies
+
 ## 4.0.1
 
 ### Patch Changes
