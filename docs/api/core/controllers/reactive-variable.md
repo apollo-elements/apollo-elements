@@ -62,7 +62,7 @@ export default css`
 ```
 
 ```js playground-file reactive-variable-controller router.ts
-import 'urlpattern-polyfill'
+import 'urlpattern-polyfill';
 
 import { installRouter } from 'pwa-helpers/router';
 
@@ -70,9 +70,8 @@ import { makeVar } from '@apollo/client/core';
 
 const pattern = new URLPattern({ pathname: '/users/:username' });
 
-const getLocation = (loc = window.location) => ({
-  ...window.location,
-  groups: pattern.exec(location.pathname)?.pathname?.groups
+const getLocation = (loc = window.location) => ({ ...loc,
+  groups: pattern.exec(loc.pathname)?.pathname?.groups
 })
 
 export const locationVar = makeVar(getLocation());
