@@ -25,7 +25,7 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 
 ```ts playground query-controller profile-home.ts
 import '@apollo-elements/components/apollo-client';
-// import { ApolloQueryController } from '@apollo-elements/core';
+import { ApolloQueryController } from '@apollo-elements/core';
 import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
@@ -38,12 +38,9 @@ class ProfileHome extends LitElement {
 
   static styles = style;
 
-  profile = {}
-/*
   profile = new ApolloQueryController(this, ProfileQuery, {
     variables: { id: 1 }
   });
-*/
 
   radio(id) {
     const astronaut = this.profile.data?.profile;
