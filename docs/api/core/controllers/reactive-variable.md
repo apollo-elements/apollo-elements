@@ -29,7 +29,7 @@ import { ReactiveVariableController } from '@apollo-elements/core';
 
 import { locationVar } from './router.js';
 
-import style from './profile-home.css.js';
+import style from './profile-page.css.js';
 
 @customElement('profile-page')
 class ProfilePage extends LitElement {
@@ -61,7 +61,7 @@ export default css`
 <profile-home></profile-home>
 ```
 
-```js playground-file reactive-variable-controller router.js
+```js playground-file reactive-variable-controller router.ts
 import 'urlpattern-polyfill'
 
 import { installRouter } from 'pwa-helpers/router';
