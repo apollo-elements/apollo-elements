@@ -3,6 +3,8 @@ export * from './apollo-mutation-controller.js';
 export * from './apollo-query-controller.js';
 export * from './apollo-subscription-controller.js';
 
+export * from './reactive-variable-controller.js';
+
 export * from './decorators.js';
 export * from './events.js';
 
