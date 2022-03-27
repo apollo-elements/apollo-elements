@@ -5,13 +5,13 @@ import type { PropertyValues, TemplateResult } from 'lit';
 
 import * as S from '@apollo-elements/test/schema';
 
-import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
+import { assertType, isApolloError, stringify, TestableElement as TE } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
 import { makeClient } from '@apollo-elements/test';
 
-import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, nextFrame, oneEvent } from '@open-wc/testing';
 
 import { property } from 'lit/decorators.js';
 
@@ -23,8 +23,7 @@ import { NetworkStatus } from '@apollo/client/core';
 
 import { spy, SinonSpy } from 'sinon';
 
-class TestableApolloQuery<D, V = I.VariablesOf<D>>
-  extends ApolloQuery<D, V> implements TestableElement {
+class TestableApolloQuery<D, V = I.VariablesOf<D>> extends ApolloQuery<D, V> implements TE {
   render() {
     return html`
       <output id="data">${stringify(this.data)}</output>
@@ -54,6 +53,7 @@ describe('[lit-apollo] ApolloQuery', function() {
 
   describe('subclassing', function() {
     let el: ApolloQuery;
+
     beforeEach(async function subclass() {
       class Test extends ApolloQuery { }
       const tagName = defineCE(Test);
@@ -112,6 +112,7 @@ describe('[lit-apollo] ApolloQuery', function() {
       (element.controller.startPolling as SinonSpy).restore();
       (element.controller.stopPolling as SinonSpy).restore();
     });
+
     describe('with a class that defines observedAttributes with decorator', function() {
       class Test extends ApolloQuery {
         @property({ type: Number, attribute: 'x-a', reflect: true }) xA = 0;
@@ -133,10 +134,58 @@ describe('[lit-apollo] ApolloQuery', function() {
       });
     });
   });
+
+  describe.only('with a client and a query', function() {
+    class Test extends ApolloQuery {
+      noAutoSubscribe = true;
+      query = S.HelloQuery;
+      client = makeClient({ connectToDevTools: false });
+      updated(changed: PropertyValues<this>) {
+        super.updated?.(changed);
+      }
+    }
+
+    let el: Test;
+    let updatedSpy: SinonSpy;
+
+    before(function() {
+      updatedSpy = spy(Test.prototype, 'updated');
+    });
+
+    beforeEach(async function() {
+      const tagName = defineCE(class A extends Test {});
+      el = await fixture<Test>(`<${tagName}></${tagName}>`);
+      await el.updateComplete;
+    });
+
+    it('notifies that data changed once', function() {
+      expect(updatedSpy).to.have.been.calledOnce;
+    });
+
+    describe('when fetching', function() {
+      beforeEach(async function() {
+        updatedSpy.resetHistory();
+        await el.executeQuery();
+      });
+
+      it('notifies twice again', async function() {
+        expect(updatedSpy).to.have.been.calledTwice;
+        const [
+          { args: [firstChanged] },
+          { args: [secondChanged] },
+          ...rest
+        ] = updatedSpy.getCalls();
+        expect(rest.length).to.equal(0);
+        expect([...firstChanged.keys()]).to.deep.equal(['loading']);
+        expect([...secondChanged.keys()]).to.deep.equal(['data', 'errors', 'loading']);
+      });
+    });
+  });
 });
 
 type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
+type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   typeCheck() {
@@ -185,14 +234,12 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   }
 }
 
-type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 class TDNTypeCheck extends ApolloQuery<TDN> {
   typeCheck() {
     assertType<TypeCheckData>(this.data!);
     assertType<TypeCheckVars>(this.variables!);
   }
 }
-
 
 class TypeCheckLit extends ApolloQuery {
   update(changed: PropertyValues<TypeCheckLit>) {
