@@ -443,7 +443,7 @@ describe('[core] ApolloMutationController', function() {
           it('does not call onCompleted', function() {
             expect(element.mutation.options.onCompleted).to.not.have.been.called;
           });
-          it.only('calls onError', function() {
+          it('calls onError', function() {
             expect(element.mutation.options.onError).to.have.been.calledWith(err);
           });
           it('sets error', function() {
