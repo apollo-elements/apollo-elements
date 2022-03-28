@@ -142,8 +142,8 @@ implements ReactiveController {
     /* c8 ignore stop */
   }
 
-  /** @summary requests an update on the host. */
-  private notify(properties?: Record<string, unknown>): void {
+  /** @summary requests an update on the host with the provided properties. */
+  protected notify(properties?: Record<string, unknown>): void {
     if (properties && this.host.requestUpdate.length > 0) {
       for (const [key, value] of Object.entries(properties))
         (this.host as ReactiveElement).requestUpdate(key, value);

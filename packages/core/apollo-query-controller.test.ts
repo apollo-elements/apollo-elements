@@ -4,8 +4,6 @@ import * as S from '@apollo-elements/test/schema';
 
 import * as E from './events';
 
-import { update } from './apollo-controller';
-
 import { ApolloError, gql, NetworkStatus } from '@apollo/client/core';
 
 import { ReactiveElement } from 'lit';
