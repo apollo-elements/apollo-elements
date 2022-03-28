@@ -1,4 +1,4 @@
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from 'lit';
 
 import type {
   ApolloClient,
@@ -37,19 +37,6 @@ export interface ApolloControllerOptions<D, V> {
   errorPolicy?: ErrorPolicy;
   /** When provided, the controller will fall back to this element to fire events */
   hostElement?: HTMLElement;
-  /** Host update callback */
-  [update]?(properties?: Record<string, unknown>): void;
-}
-
-/** @internal */
-export const update = Symbol('update');
-
-interface ReflectingReactiveControllerHost extends ReactiveControllerHost {
-  [update](properties?: Record<string, unknown>): void;
-}
-
-function isReflectingHost(host: ReactiveControllerHost): host is ReflectingReactiveControllerHost {
-  return typeof (host as ReactiveControllerHost & { [update]: unknown })[update] === 'function';
 }
 
 /**
@@ -63,8 +50,7 @@ implements ReactiveController {
     Object.defineProperty(proto, 'options', {
       get() { return this.#options; },
       set(v) {
-        const u = this.#options[update];
-        this.#options = { [update]: u, ...v };
+        this.#options = v;
         this.optionsChanged?.(v);
       },
     });
@@ -102,9 +88,10 @@ implements ReactiveController {
   }
 
   set client(v: ApolloClient<NormalizedCacheObject> | null) {
+    const client = this.#client;
     this.#client = v;
     this.clientChanged?.(v); /* c8 ignore next */ // covered
-    this.notify('client');
+    this.notify({ client });
   }
 
   /** @summary The GraphQL document for the operation. */
@@ -120,7 +107,7 @@ implements ReactiveController {
       throw new TypeError(`${name} must be a parsed GraphQL document.`);
     } else {
       this.#document = document;
-      this[update]({ document });
+      this.notify({ document });
       this.documentChanged?.(document);/* c8 ignore next */
     }
   }
@@ -137,7 +124,7 @@ implements ReactiveController {
       return; /* c8 ignore next */ // covered
     else
       this.options.variables = variables;
-    this[update]({ variables });
+    this.notify({ variables });
     this.variablesChanged?.(variables);/* c8 ignore next */
   }
 
@@ -156,14 +143,12 @@ implements ReactiveController {
   }
 
   /** @summary requests an update on the host. */
-  private [update](properties?: Record<string, unknown>): void {
-    this.host.requestUpdate();
-    /* c8 ignore start */ // these are all covered
-    if (isReflectingHost(this.host))
-      this.host[update](properties);
-    else
-      this.options[update]?.(properties);
-    /* c8 ignore stop */
+  private notify(properties?: Record<string, unknown>): void {
+    if (properties && this.host.requestUpdate.length > 0) {
+      for (const [key, value] of Object.entries(properties))
+        (this.host as ReactiveElement).requestUpdate(key, value);
+    } else
+      this.host.requestUpdate();
   }
 
   /** @summary callback for when the GraphQL document changes. */
@@ -177,11 +162,6 @@ implements ReactiveController {
 
   /** @summary callback for when the options change. */
   protected optionsChanged?(options?: ApolloControllerOptions<D, V>): void;
-
-  /** @summary Notifies about updated properties. */
-  protected notify(...keys: (keyof this)[]): void {
-    this[update](Object.fromEntries(keys.map(x => [x, this[x]])));
-  }
 
   /** @summary Assigns the controller's variables and GraphQL document. */
   protected init(document: ComponentDocument<D, V> | null): void {

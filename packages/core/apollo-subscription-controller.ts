@@ -140,40 +140,41 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
    * Sets `data`, `loading`, and `error` on the instance when new subscription results arrive.
    */
   private nextData(result: FetchResult<Data<D>>) {
-    const { data = null, errors } = result;
+    const { data, error, errors, loading } = this;
     // If we got to this line without a client, it's because of user error
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const client = this.client!;
-    const loading = false;
-    const subscriptionData = { data, loading, error: null };
+    const subscriptionData = { data: result?.data ?? null, loading: false, error: null };
     const detail = { client, subscriptionData };
     this.emitter.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
-    this.data = data;
+    this.data = result?.data ?? null;
     this.error = null;
-    this.errors = errors ?? [];
-    this.loading = loading;
+    this.errors = result?.errors ?? [];
+    this.loading = false;
     this.options.onData?.(detail); /* c8 ignore next */ // covered
-    this.notify('data', 'error', 'errors', 'loading');
+    this.notify({ data, error, errors, loading });
   }
 
   /**
    * Sets `error` and `loading` on the instance when the subscription errors.
    */
-  private nextError(error: ApolloError) {
-    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
-    this.error = error;
+  private nextError(apolloError: ApolloError) {
+    const { error, loading } = this;
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
+    this.error = apolloError;
     this.loading = false;
-    this.options.onError?.(error); /* c8 ignore next */ // covered
-    this.notify('error', 'loading');
+    this.options.onError?.(apolloError); /* c8 ignore next */ // covered
+    this.notify({ error, loading });
   }
 
   /**
    * Shuts down the subscription
    */
   private onComplete(): void {
+    const { data, error, loading } = this;
     this.options.onComplete?.(); /* c8 ignore next */ // covered
     this.endSubscription();
-    this.notify();
+    this.notify({ data, error, loading });
   }
 
   private endSubscription() {
@@ -216,8 +217,9 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
     if (this.observableSubscription && !shouldResubscribe) return;
     /* c8 ignore stop */
 
+    const { loading } = this;
     this.loading = true;
-    this.notify('loading');
+    this.notify({ loading });
 
     this.observableSubscription =
       this.observable?.subscribe({

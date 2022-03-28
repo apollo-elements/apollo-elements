@@ -173,6 +173,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
   private nextData(result: ApolloQueryResult<Data<D>>): void {
     this.emitter.dispatchEvent(new CustomEvent('apollo-query-result', { detail: result }));
+    const { data, error, errors, loading, networkStatus, partial } = this;
     this.data = result.data;
     this.error = result.error ?? null;/* c8 ignore next */
     this.errors = result.errors ?? [];
@@ -180,15 +181,16 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     this.networkStatus = result.networkStatus;
     this.partial = result.partial ?? false;
     this.options.onData?.(result.data);/* c8 ignore next */
-    this.notify('data', 'error', 'errors', 'loading', 'networkStatus', 'partial');
+    this.notify({ data, error, errors, loading, networkStatus, partial });
   }
 
-  private nextError(error: ApolloError): void {
-    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
-    this.error = error;
+  private nextError(apolloError: ApolloError): void {
+    const { error, loading } = this;
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
+    this.error = apolloError;
     this.loading = false;
-    this.options.onError?.(error);/* c8 ignore next */
-    this.notify('error', 'loading');
+    this.options.onError?.(apolloError);/* c8 ignore next */
+    this.notify({ error, loading });
   }
 
   protected override clientChanged(): void {
@@ -254,8 +256,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     this.#lastQueryDocument = params?.query ?? this.query ?? undefined;/* c8 ignore next */
 
+    const { loading } = this;
     this.loading = true;
-    this.notify('loading');
+    this.notify({ loading });
 
     return this.observableQuery?.subscribe({
       next: this.nextData.bind(this),
@@ -287,8 +290,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       if (!this.client)
         throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
 
+      const { loading } = this;
       this.loading = true;
-      this.notify('loading');
+      this.notify({ loading });
 
       const result = await this.client.query<Data<D>, Variables<D, V>>({
         // It's better to let Apollo client throw this error, if needs be
@@ -326,8 +330,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   @bound public async fetchMore<TD = this['data'], TV = this['variables']>(
     params?: Partial<FetchMoreParams<TD, TV>>
   ): Promise<ApolloQueryResult<Data<TD>>> {
+    const { loading } = this;
     this.loading = true;
-    this.notify('loading');
+    this.notify({ loading });
 
     const options = {
       // It's better to let Apollo client throw this error
@@ -346,8 +351,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     return (this.observableQuery as unknown as ObservableQuery<Data<TD>, TV>)
       .fetchMore(options as FetchMoreQueryOptions<TV, Data<TD>>)
       .then(x => {
+        const { loading } = this;
         this.loading = false;
-        this.notify('loading');
+        this.notify({ loading });
         return x;
       });
   }

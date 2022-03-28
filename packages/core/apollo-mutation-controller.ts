@@ -72,12 +72,13 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
     const mutationId = this.generateMutationId();
 
+    const { called = false, data, error, errors, loading } = this;
     this.loading = true;
     this.called = true;
     this.error = null;
     this.errors = [];
     this.data = null;
-    this.notify('called', 'data', 'error', 'errors', 'loading');
+    this.notify({ called, data, error, errors, loading });
 
     return this.client.mutate<Data<D>, Variables<D, V>>({
       // It's better to let Apollo client throw this error
@@ -120,17 +121,17 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
     mutationId: number,
     response: FetchResult<Data<D>>
   ): FetchResult<Data<D>> {
-    const { data } = response;
+    const { data, error, errors, loading } = this;
     this.emitter.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
     if (this.isMostRecentMutation(mutationId)) {
       this.loading = false;
       if (!this.options.ignoreResults) {
         this.error = null;
-        this.data = data ?? null;/* c8 ignore next */
+        this.data = response.data ?? null;/* c8 ignore next */
         this.errors = response.errors ?? [];
         this.options.onCompleted?.(this.data); /* c8 ignore next */
       }
-      this.notify('data', 'error', 'errors', 'loading');
+      this.notify({ data, error, errors, loading });
     }
     return response;
   }
@@ -138,15 +139,16 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
   /**
    * Callback for when a mutation fails.
    */
-  private onMutationError(mutationId: number, error: ApolloError): never {
-    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
+  private onMutationError(mutationId: number, apolloError: ApolloError): never {
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
+    const { data, error, loading } = this;
     if (this.isMostRecentMutation(mutationId)) {
       this.loading = false;
       this.data = null;
-      this.error = error;
+      this.error = apolloError;
     }
-    this.options.onError?.(error);
-    this.notify('data', 'error', 'loading');
-    throw error;
+    this.options.onError?.(apolloError);
+    this.notify({ data, error, loading });
+    throw apolloError;
   }
 }

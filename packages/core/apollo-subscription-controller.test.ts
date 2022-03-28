@@ -4,8 +4,6 @@ import * as S from '@apollo-elements/test/schema';
 
 import * as E from './events';
 
-import { update } from './apollo-controller';
-
 import { ApolloError } from '@apollo/client/core';
 
 import { ReactiveElement } from 'lit';
@@ -99,16 +97,6 @@ describe('[core] ApolloSubscriptionController', function() {
           const [event] = handlers[type].lastCall.args;
           expect(event.controller, 'controller').to.equal(element.subscription);
           expect(event.type, 'type').to.equal(type);
-        });
-      });
-
-      describe('calling [update]()', function() {
-        let requestUpdateSpy: SinonSpy;
-        beforeEach(() => requestUpdateSpy = spy(element, 'requestUpdate'));
-        afterEach(() => requestUpdateSpy.restore());
-        beforeEach(() => element.subscription[update]());
-        it('updates the host', function() {
-          expect(requestUpdateSpy).to.have.been.calledOnce;
         });
       });
 
