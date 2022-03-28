@@ -11,7 +11,7 @@ import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test
 
 import { makeClient } from '@apollo-elements/test';
 
-import { aTimeout, defineCE, expect, fixture, nextFrame, oneEvent } from '@open-wc/testing';
+import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { property } from 'lit/decorators.js';
 
@@ -135,7 +135,7 @@ describe('[lit-apollo] ApolloQuery', function() {
     });
   });
 
-  describe.only('with a client and a query', function() {
+  describe('with a client and a query', function() {
     class Test extends ApolloQuery {
       noAutoSubscribe = true;
       query = S.HelloQuery;
