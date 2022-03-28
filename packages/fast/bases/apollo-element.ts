@@ -1,7 +1,6 @@
 import type {
   ComponentDocument,
   Data,
-  Entries,
   GraphQLError,
   Variables,
   VariablesOf,
@@ -9,8 +8,8 @@ import type {
 
 import type * as C from '@apollo/client/core';
 
-import { FASTElement, attr, observable } from '@microsoft/fast-element';
-import { ApolloController, update } from '@apollo-elements/core/apollo-controller';
+import { FASTElement, observable } from '@microsoft/fast-element';
+import { ApolloController } from '@apollo-elements/core/apollo-controller';
 import { ApolloElementEvent } from '@apollo-elements/core/events';
 import { controlled } from '@apollo-elements/core/decorators';
 import { hosted } from './decorators';
@@ -63,9 +62,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
     context?: Record<string, unknown>;
 
   /** @summary Whether a request is in flight. */
-  @attr({ mode: 'boolean' })
-  @hosted()
-  @controlled()
+  @controlled({ onSet(this: ApolloElement, v: boolean) { this.toggleAttribute('loading', v); } })
     loading = false;
 
   /** @summary Latest Data. */
@@ -87,10 +84,4 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
   @hosted()
   @controlled()
     errors: readonly GraphQLError[] = [];
-
-  /** @internal */
-  [update](properties: Partial<this>): void {
-    for (const [k, v] of Object.entries(properties) as Entries<this>)
-      (this[k] !== v) && (this[k] = v);
-  }
 }

@@ -18,7 +18,6 @@ import { ApolloQueryBehavior } from '../apollo-query-behavior.js';
 import { ApolloQueryControllerOptions } from '@apollo-elements/core/apollo-query-controller';
 
 import { controlled } from '@apollo-elements/core/decorators';
-import { update } from '@apollo-elements/core/apollo-controller';
 
 /**
  * `ApolloQuery`
@@ -47,7 +46,6 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
     shouldSubscribe: options => this.readyToReceiveDocument && this.shouldSubscribe(options),
     onData: data => this.onData?.(data),
     onError: error => this.onError?.(error), /* c8 ignore next */ // covered
-    [update]: (x: Partial<this>) => this[update](x),
   });
 
   /**

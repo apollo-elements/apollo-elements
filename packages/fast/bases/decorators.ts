@@ -13,7 +13,7 @@ export function hosted(opts?: { path?: string }) {
       },
       set(v) {
         set.call(this, v);
-        Observable.notify(this, v);
+        Observable.notify(this, key);
       },
     });
     Object.defineProperty(target, `${key}Changed`, {
