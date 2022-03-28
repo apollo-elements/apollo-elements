@@ -1,5 +1,11 @@
 # @apollo-elements/hybrids
 
+## 5.0.2
+
+### Patch Changes
+
+- 468912b: Update dependencies
+
 ## 5.0.1
 
 ### Patch Changes

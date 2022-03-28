@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/haunted",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "👩‍🚀 Haunted Hooks for Apollo GraphQL 🌛",
   "main": "index.js",
   "module": "index.js",

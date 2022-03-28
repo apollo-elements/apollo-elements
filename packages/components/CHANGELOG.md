@@ -1,5 +1,13 @@
 # @apollo-elements/components
 
+## 3.0.2
+
+### Patch Changes
+
+- 468912b: Update dependencies
+- Updated dependencies [468912b]
+  - @apollo-elements/mixins@5.0.2
+
 ## 3.0.1
 
 ### Patch Changes

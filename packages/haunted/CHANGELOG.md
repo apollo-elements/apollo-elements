@@ -1,5 +1,11 @@
 # @apollo-elements/haunted
 
+## 3.0.2
+
+### Patch Changes
+
+- 468912b: Update dependencies
+
 ## 3.0.1
 
 ### Patch Changes

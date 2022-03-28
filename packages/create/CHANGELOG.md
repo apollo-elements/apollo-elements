@@ -1,5 +1,11 @@
 # @apollo-elements/create
 
+## 4.0.3
+
+### Patch Changes
+
+- 468912b: Update dependencies
+
 ## 4.0.2
 
 ### Patch Changes
