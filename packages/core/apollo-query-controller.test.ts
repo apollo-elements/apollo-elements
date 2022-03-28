@@ -102,16 +102,6 @@ describe('[core] ApolloQueryController', function() {
         });
       });
 
-      describe('calling [update]()', function() {
-        let requestUpdateSpy: SinonSpy;
-        beforeEach(() => requestUpdateSpy = spy(element, 'requestUpdate'));
-        afterEach(() => requestUpdateSpy.restore());
-        beforeEach(() => element.query[update]());
-        it('updates the host', function() {
-          expect(requestUpdateSpy).to.have.been.calledOnce;
-        });
-      });
-
       describe('without setting query or variables', function() {
         describe('subscribe()', function() {
           it('throws', function() {

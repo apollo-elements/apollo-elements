@@ -36,12 +36,14 @@ export interface DefineOptions {
   /** When true, setting the property has no effect */
   readonly?: boolean,
   /** Called after setting with the new value */
-  onSet?(x: unknown): void,
+  onSet?(x: unknown, old: unknown): void,
 }
 
-function defineOnReactiveElement<T extends ReactiveElement & {
+interface ApolloReactiveElement extends ReactiveElement {
   controller: ApolloController<unknown, unknown>;
-}>(
+}
+
+function defineOnReactiveElement<T extends ApolloReactiveElement>(
   proto: T,
   name: string & keyof T,
   opts: DefineOptions
@@ -51,15 +53,14 @@ function defineOnReactiveElement<T extends ReactiveElement & {
     ...opts,
     // In addition to any user-defined side-effects,
     // also notify the ReactiveElement lifecycle
-    onSet(this: T, x: unknown) {
-      const old = this[name];
-      opts?.onSet?.call?.(this, x);/* c8 ignore next */
+    onSet(this: T, x: unknown, old: unknown) {
+      opts?.onSet?.call?.(this, x, old);/* c8 ignore next */
       this.requestUpdate(name, old);
     },
   });
   // And also run ReactiveElement's property effects
   const Class = proto.constructor as typeof ReactiveElement;
-  Class.createProperty(name, Class.getPropertyOptions(name));
+  Class.createProperty(name, { ...Class.getPropertyOptions(name), noAccessor: true });
 }
 
 function defineOnHTMLElement<T extends HTMLElement & {
@@ -97,7 +98,7 @@ function defineOnHTMLElement<T extends HTMLElement & {
         else
           this.controller[name as keyof ApolloController<any, any>] = value as never;
         if (opts.onSet)
-          opts.onSet.call(this, value);/* c8 ignore next */
+          opts.onSet.call(this, value, old);/* c8 ignore next */
       }
       this.requestUpdate?.(name, old);
     },
