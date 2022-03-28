@@ -55,7 +55,7 @@
   },
   "homepage": "https://apolloelements.dev/api/components/",
   "dependencies": {
-    "@apollo-elements/core": "^2.0.1",
+    "@apollo-elements/core": "^2.1.1",
     "@apollo-elements/mixins": "^5.0.1",
     "@apollo/client": "^3.5.4",
     "stampino": "^0.6.2",

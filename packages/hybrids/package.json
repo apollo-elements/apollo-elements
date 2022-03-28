@@ -51,7 +51,7 @@
   "license": "ISC",
   "homepage": "https://apolloelements.dev/api/libraries/hybrids",
   "dependencies": {
-    "@apollo-elements/core": "^2.0.1",
+    "@apollo-elements/core": "^2.1.1",
     "@lit/reactive-element": "^1.0.2",
     "hybrids": "^7",
     "tslib": "^2.3.1"

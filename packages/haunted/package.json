@@ -51,7 +51,7 @@
   "license": "ISC",
   "homepage": "https://apolloelements.dev/api/libraries/haunted/",
   "dependencies": {
-    "@apollo-elements/core": "^2.0.1",
+    "@apollo-elements/core": "^2.1.1",
     "haunted": "^4.8.3"
   },
   "customElements": "custom-elements.json"

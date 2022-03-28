@@ -18,8 +18,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@apollo-elements/components": "^2.0.0",
-    "@apollo-elements/core": "^1.0.0",
+    "@apollo-elements/components": "^3.0.1",
+    "@apollo-elements/core": "^2.1.1",
     "@apollo/client": "^3.5.4",
     "pwa-helpers": "^0.9.1"
   },

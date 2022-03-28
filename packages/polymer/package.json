@@ -53,7 +53,7 @@
   },
   "homepage": "https://apolloelements.dev/api/libraries/polymer/",
   "dependencies": {
-    "@apollo-elements/core": "^2.0.1",
+    "@apollo-elements/core": "^2.1.1",
     "@apollo-elements/mixins": "^5.0.1",
     "tslib": "^2.3.1"
   },
