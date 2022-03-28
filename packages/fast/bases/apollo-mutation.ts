@@ -17,7 +17,6 @@ import { ApolloElement } from './apollo-element.js';
 import { ApolloMutationBehavior } from '../apollo-mutation-behavior.js';
 
 import { hosted } from './decorators.js';
-import { update } from '@apollo-elements/core/apollo-controller';
 import { controlled } from '@apollo-elements/core/decorators';
 
 /**
@@ -45,15 +44,14 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   controller = new ApolloMutationBehavior<D, V>(this, null, {
     onCompleted: data => this.onCompleted?.(data),
     onError: error => this.onError?.(error), /* c8 ignore next */ // covered
-    [update]: (x: Partial<this>) => this[update](x),
   });
 
   /**
    * @summary Whether the mutation was called
    */
-  @hosted()
-  @controlled()
-  @attr({ mode: 'boolean' })
+  @controlled({ onSet(this: ApolloMutation<D, V>, v: boolean) {
+    this.toggleAttribute('called', v);
+  } })
     called = false;
 
   /** @summary The mutation. */
