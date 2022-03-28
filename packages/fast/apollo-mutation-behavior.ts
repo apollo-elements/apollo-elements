@@ -9,7 +9,6 @@ import {
 
 import { Observable, observable } from '@microsoft/fast-element';
 import { FASTControllerHost } from './fast-controller-host';
-import { update } from '@apollo-elements/core';
 
 /**
  * `ApolloMutationBehavior`
