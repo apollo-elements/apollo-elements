@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/fast",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "👩‍🚀🌛 FastElements for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
@@ -63,7 +63,7 @@
   },
   "homepage": "https://apolloelements.dev/api/libraries/fast/",
   "dependencies": {
-    "@apollo-elements/core": "^2.0.1",
+    "@apollo-elements/core": "^2.1.1",
     "@apollo-elements/mixins": "^5.0.1",
     "@microsoft/fast-element": "^1.6.2",
     "tslib": "^2.3.1"

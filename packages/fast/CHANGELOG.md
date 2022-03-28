@@ -1,5 +1,13 @@
 # @apollo-elements/fast
 
+## 3.0.2
+
+### Patch Changes
+
+- b2ad15e: fix boolean controller attrs
+- Updated dependencies [607f8e7]
+  - @apollo-elements/core@2.1.1
+
 ## 3.0.1
 
 ### Patch Changes
