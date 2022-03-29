@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { createRequire } from 'module';
 import { stat } from 'fs/promises';
@@ -9,12 +8,12 @@ const exists = x => stat(x).then(() => true, () => false);
  * @param {string} source
  * @param {import("Koa").Context} context
  */
-function tryToResolve(source, context) {
+function tryToResolve(source, context, rootDir) {
   let resolved = '';
 
   try {
-    const require = createRequire(import.meta.url);
-    resolved = require.resolve(source);
+    const require = createRequire(rootDir);
+    resolved = require.resolve(source, { paths: [rootDir] });
   } catch (error) {
     const { message } = error;
     // try not to look
@@ -31,7 +30,6 @@ function tryToResolve(source, context) {
   if (!resolved)
     resolved = join(dirname(context.path), source);
 
-
   return resolved;
 }
 
@@ -39,8 +37,7 @@ function tryToResolve(source, context) {
  * Resolves local monorepo package imports. Needed because we consume our own monorepo packages
  * @return {import('@web/dev-server-core').Plugin}
  */
-export function resolveLocalFilesFromTypeScriptSources() {
-  const rootDir = fileURLToPath(new URL('..', import.meta.url));
+export function resolveLocalFilesFromTypeScriptSources({ rootDir }) {
   return {
     name: 'resolve-local-monorepo-packages-from-ts-sources',
     async transformImport({ source, context }) {
@@ -52,7 +49,7 @@ export function resolveLocalFilesFromTypeScriptSources() {
         // don't try to resolve node_modules, they're already resolved
         return;
       } else {
-        const resolved = tryToResolve(source, context);
+        const resolved = tryToResolve(source, context, rootDir);
         const absToRoot = resolved.replace(rootDir, '/');
         const replaced = absToRoot.replace(/\.js$/, '.ts');
         const fileExists = await exists(join(rootDir, replaced));
