@@ -18,8 +18,8 @@
   },
   "overrides": [
     {
-      "files": ["web-test-runner.config.js", "plugins/resolve-local.js"],
-      "parserOptions": {"ecmaVersion": 2021}
+      "files": ["rocket.config.js", "web-test-runner.config.js", "plugins/resolve-local.js"],
+      "parserOptions": {"ecmaVersion": 2022}
     },
     {
       "files": ["packages/**/*.test.ts", "test/**/*.ts"],
