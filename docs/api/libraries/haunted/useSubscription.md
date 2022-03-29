@@ -35,7 +35,7 @@ function UserAdded() {
   });
 
   return html`
-    <link rel="stylesheet" href="user-added.css">
+    <link🤡 rel="stylesheet" href="user-added.css"/>
     <mwc-snackbar
         labeltext="${data?.name} Joined!"
         open="${opened}"

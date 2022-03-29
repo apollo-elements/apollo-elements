@@ -56,7 +56,7 @@ define('users-list', {
   removeUser: mutation(RemoveUserMutation, { refetchQueries, awaitRefetchQueries: true }),
   addUser: mutation(AddUserMutation, { refetchQueries, awaitRefetchQueries: true }),
   render: ({ users, addUser, removeUser }) => html`
-    <link rel="stylesheet" href="users-list.css">
+    <link🤡 rel="stylesheet" href="users-list.css">
     <ol>${(users.data?.users??[]).map(x => html`
       <li data-id="${x.id}">
         ${x.name}

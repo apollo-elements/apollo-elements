@@ -17,7 +17,7 @@ Apollo `useSubscription` hook for web components.
 Read the [subscription component guides](/guides/usage/subscriptions/) for examples and tips.
 
 ```ts playground subscription-factory user-added.ts
-import { useSubscription, useState, c, html } from '@apollo-elements/atomico';
+import { useSubscription, useState, c, html, css } from '@apollo-elements/atomico';
 
 import { client } from './client.js';
 
@@ -40,7 +40,6 @@ function UserAdded() {
 
   return html`
     <host shadowDom>
-      <link rel="stylesheet" href="user-added.css">
       <mwc-snackbar
           labeltext="${data?.name} Joined!"
           open=${opened}
@@ -49,13 +48,16 @@ function UserAdded() {
   `;
 };
 
+UserAdded.styles = css`
+  :host {
+    display: block;
+  }
+`;
+
 customElements.define('user-added', c(UserAdded));
 ```
 
 ```css playground-file subscription-factory user-added.css
-:host {
-  display: block;
-}
 ```
 
 ```ts playground-file subscription-factory UserAdded.subscription.graphql.ts
