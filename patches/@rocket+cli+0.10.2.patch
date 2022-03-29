@@ -55,6 +55,35 @@ index a6153b6..91a20de 100644
        /** @type {*} */
        (elev).resetConfig();
        elev.setConfigPathOverride(relCwdPathToConfig);
+diff --git a/node_modules/@rocket/cli/src/RocketLint.js b/node_modules/@rocket/cli/src/RocketLint.js
+index 60879ad..253d103 100755
+--- a/node_modules/@rocket/cli/src/RocketLint.js
++++ b/node_modules/@rocket/cli/src/RocketLint.js
+@@ -36,6 +36,7 @@ export class RocketLint {
+   async lintCommand() {
+     if (this.config.lintExecutesEleventyBefore) {
+       await this.eleventy.write();
++
+       // updated will trigger linting
+     } else {
+       await this.__lint();
+@@ -56,6 +57,16 @@ export class RocketLint {
+       continueOnError: true,
+     });
+ 
++  // START APOLLOELEMENTS HACK
++    const { cp } = await import('fs/promises');
++    await cp(
++      new URL('../../../../docs/_merged_assets/', import.meta.url),
++      new URL('../../../../_site/_merged_assets/', import.meta.url), {
++        recursive: true,
++      }
++    );
++  // END APOLLOELEMENTS HACK
++
+     const { errors, message } = await checkLinks.run();
+     if (errors.length > 0) {
+       if (this.config.command === 'start') {
 diff --git a/node_modules/@rocket/cli/src/getPuppeteerBrowser.js b/node_modules/@rocket/cli/src/getPuppeteerBrowser.js
 new file mode 100644
 index 0000000..d37b81e
