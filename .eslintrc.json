@@ -18,6 +18,10 @@
   },
   "overrides": [
     {
+      "files": ["web-test-runner.config.js", "plugins/resolve-local.js"],
+      "parserOptions": {"ecmaVersion": 2021}
+    },
+    {
       "files": ["packages/**/*.test.ts", "test/**/*.ts"],
       "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
