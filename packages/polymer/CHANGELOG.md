@@ -1,5 +1,14 @@
 # @apollo-elements/polymer
 
+## 5.0.3
+
+### Patch Changes
+
+- 1bb1428: Compiles away [class static blocks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks)
+- Updated dependencies [1bb1428]
+  - @apollo-elements/core@2.1.2
+  - @apollo-elements/mixins@5.0.3
+
 ## 5.0.2
 
 ### Patch Changes

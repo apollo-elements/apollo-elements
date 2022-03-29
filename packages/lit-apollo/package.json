@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/lit-apollo",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "👩‍🚀🌛 Lit meets Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
@@ -47,7 +47,7 @@
   },
   "homepage": "https://apolloelements.dev/api/libraries/lit-apollo/",
   "dependencies": {
-    "@apollo-elements/core": "^2.1.1",
+    "@apollo-elements/core": "^2.1.2",
     "lit": "^2.0.2",
     "tslib": "^2.3.1"
   },

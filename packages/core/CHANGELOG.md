@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 2.1.2
+
+### Patch Changes
+
+- 1bb1428: Compiles away [class static blocks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks)
+
 ## 2.1.1
 
 ### Patch Changes
