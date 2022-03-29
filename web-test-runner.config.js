@@ -7,6 +7,9 @@ import { resolveLocalFilesFromTypeScriptSources } from './plugins/resolve-local.
 import _commonjs from '@rollup/plugin-commonjs';
 import _graphql from '@rollup/plugin-graphql';
 
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
 const graphql = fromRollup(_graphql);
 const commonjs = fromRollup(_commonjs);
 
@@ -17,13 +20,15 @@ const cjsIncludes = [
   '**/incremental-dom/dist/*cjs.js',
 ];
 
+const rootDir = dirname(fileURLToPath(new URL(import.meta.url)));
+
 /** @type {Partial<import('@web/test-runner').TestRunnerConfig>} */
 export default ({
   nodeResolve: {
     extensions: ['.ts', '.mjs', '.js', '.css', '.graphql'],
   },
 
-  rootDir: '../..',
+  rootDir,
 
   files: [
     'packages/!(create)/**/*.test.ts',
@@ -66,9 +71,8 @@ export default ({
     </html>
   `,
 
-
   plugins: [
-    resolveLocalFilesFromTypeScriptSources(),
+    resolveLocalFilesFromTypeScriptSources({ rootDir }),
     graphql(),
     commonjs({ include: cjsIncludes, ignoreDynamicRequires: false }),
     esbuildPlugin({ ts: true }),
