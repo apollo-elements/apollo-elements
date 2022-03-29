@@ -227,6 +227,11 @@ export default ({
         .replace(/&#x26;(link|style)/g, '<$1')
         .replace(/&#x3C;(link|style)/g, '<$1')
     );
+    eleventyConfig.addTransform('fix-remark-link-in-lit-tpl', content =>
+      // for some reason i don't care to know, prism isn't tokenizing link elements within lit-html templates
+      // this affects mostly the haunted api demos, or other demos that use link elements to import styles into a shadow root
+      content.replace(/<link🤡/g, `%3Clink`)
+    );
 
     // something's busted in plugin-manager?
     // derived these by printing in the configFunction of add-web-components-defintions

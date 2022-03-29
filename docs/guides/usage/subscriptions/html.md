@@ -33,7 +33,7 @@ What that means is you can define the element's dynamic template using good-old 
       }
     </style>
 
-    <link rel="stylesheet" href="/components/notifications.css">
+    <link🤡 rel="stylesheet" href="/components/notifications.css">
 
     <ol class="notifications-list">
       <template type="repeat" repeat="{%raw%}{{ data.notifications }}{%endraw%}">

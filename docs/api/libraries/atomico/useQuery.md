@@ -23,7 +23,7 @@ Apollo `useQuery` hook for web components.
 </style>
 
 ```js playground use-query launches.js
-import { useQuery, c, html } from '@apollo-elements/atomico';
+import { useQuery, c, html, css } from '@apollo-elements/atomico';
 import { LaunchesQuery } from './Launches.query.graphql.js';
 import { client } from './client.js';
 
@@ -34,7 +34,6 @@ function Launches() {
 
   return html`
     <host shadowDom>
-      <link rel="stylesheet" href="launches.css"/>
       <ol>${launches.map(x => html`
         <li>
           <article>
@@ -47,15 +46,15 @@ function Launches() {
   `;
 }
 
+Launches.styles = css`
+{% include ../_assets/SpacexLaunches.css %}
+`;
+
 customElements.define('spacex-launches', c(Launches));
 ```
 
 ```html playground-file use-query index.html
 {% include ../_assets/index.spacex-launches.html %}
-```
-
-```css playground-file use-query launches.css
-{% include ../_assets/SpacexLaunches.css %}
 ```
 
 ```graphql playground-file use-query Launches.query.graphql.ts

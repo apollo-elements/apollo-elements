@@ -25,7 +25,7 @@ define('user-added', {
   userAdded: subscription(UserAddedSubscription),
   opened: false,
   render: host => html`
-    <link rel="stylesheet" href="user-added.css">
+    <link🤡 rel="stylesheet" href="user-added.css">
     <mwc-snackbar
         labeltext="${host.userAdded.data?.name} Joined!"
         open="${host.last !== host.userAdded.data?.name}"

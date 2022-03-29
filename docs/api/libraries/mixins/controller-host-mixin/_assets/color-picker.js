@@ -2,7 +2,7 @@ import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mix
 import { MouseController } from './mouse-controller.js';
 const template = document.createElement('template');
       template.innerHTML = `
-        <link rel="stylesheet" href="color-picker.css">
+        <link🤡 rel="stylesheet" href="color-picker.css">
         <div id="loupe"><div id="cursor">⊹</div></div>
       `;
 

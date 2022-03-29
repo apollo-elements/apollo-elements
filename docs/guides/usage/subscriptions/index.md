@@ -68,7 +68,7 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
     <apollo-query id="messages-query">
       <script type="application/graphql" src="Messages.query.graphql"></script>
       <template>
-        <link rel="stylesheet" href="messages.css"/>
+        <link🤡 rel="stylesheet" href="messages.css"/>
         <ol>
           <template type="repeat" repeat="{%raw%}{{ data.messages ?? [] }}{%endraw%}">
             <li>
@@ -118,7 +118,7 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
 
   const template = document.createElement('template');
         template.innerHTML = `
-        <link rel="stylesheet" href="messages.css"/>
+        <link🤡 rel="stylesheet" href="messages.css"/>
         <ol></ol>`;
 
   const msgTpl = document.createElement('template');
@@ -447,7 +447,7 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
     <apollo-query id="messages-query">
       <script type="application/graphql" src="Messages.query.graphql"></script>
       <template>
-        <link rel="stylesheet" href="messages.css"/>
+        <link🤡 rel="stylesheet" href="messages.css"/>
         <ol>
           <template type="repeat" repeat="{%raw%}{{ data.messages ?? [] }}{%endraw%}">
             <li>
@@ -508,7 +508,7 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
 
   const template = document.createElement('template');
         template.innerHTML = `
-        <link rel="stylesheet" href="messages.css"/>
+        <link🤡 rel="stylesheet" href="messages.css"/>
         <mwc-snackbar></mwc-snackbar>
         <ol></ol>`;
 
