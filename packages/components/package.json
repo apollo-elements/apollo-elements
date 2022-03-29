@@ -7,18 +7,9 @@
   "module": "index.js",
   "customElements": "custom-elements.json",
   "exports": {
-    ".": {
-      "esbuild": "./index.ts",
-      "default": "./index.js"
-    },
-    "./*": {
-      "esbuild": "./*.ts",
-      "default": "./*.js"
-    },
-    "./*.js": {
-      "esbuild": "./*.ts",
-      "default": "./*.js"
-    }
+    ".": "./index.js",
+    "./*": "./*.js",
+    "./*.js": "./*.js"
   },
   "files": [
     "custom-elements.json",
@@ -33,7 +24,9 @@
     "prepublishOnly": "npm run build",
     "build": "run-s build:*",
     "build:analyze": "npm run analyze",
-    "build:build": "tsc -b .",
+    "build:build": "run-s build:build:*",
+    "build:build:tsc": "tsc -b .",
+    "build:babel:babel": "babel --source-maps --ignore '*.config.js' --plugins @babel/plugin-proposal-class-static-block --out-dir . .",
     "analyze": "custom-elements-manifest analyze --litelement",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
