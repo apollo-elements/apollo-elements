@@ -357,5 +357,5 @@ element.addEventListener('will-navigate', event => {
 ```
 
 ## Next Steps
-- Read the [`<apollo-mutation>` API docs](/api/components/apollo-query/)
+- Read the [`<apollo-mutation>` API docs](/api/components/apollo-mutation/)
 - Learn how to write [subscription components](/guides/usage/subscriptions/)
