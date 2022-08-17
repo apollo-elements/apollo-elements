@@ -41,7 +41,8 @@ export class MutationEvent<D, V = VariablesOf<D>> extends CustomEvent<MutationEv
  * @typeParam Variables Element's Variables type
  */
 export class WillMutateEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
-  static type: 'will-mutate' = 'will-mutate';
+  static type = 'will-mutate' as const;
+  public declare type: 'will-mutate';
 
   constructor(element: ApolloMutationElement<D, V>) {
     const { mutation, variables } = element;
@@ -63,7 +64,8 @@ export class WillMutateEvent<D = unknown, V = VariablesOf<D>> extends MutationEv
  * @typeParam Variables Element's Variables type
  */
 export class MutationCompletedEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
-  static type: 'mutation-completed' = 'mutation-completed';
+  static type = 'mutation-completed' as const;
+  public declare type: 'mutation-completed';
 
   constructor(element: ApolloMutationElement<D, V>) {
     const { data, mutation, variables } = element;
@@ -85,7 +87,8 @@ export class MutationCompletedEvent<D = unknown, V = VariablesOf<D>> extends Mut
  * @typeParam Variables Element's Variables type
  */
 export class WillNavigateEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
-  static type: 'will-navigate' = 'will-navigate';
+  public static type = 'will-navigate' as const;
+  public declare type: 'will-navigate';
 
   constructor(element: ApolloMutationElement<D, V>) {
     const { data, mutation, variables } = element;
@@ -107,7 +110,8 @@ export class WillNavigateEvent<D = unknown, V = VariablesOf<D>> extends Mutation
  * @typeParam Variables Element's Variables type
  */
 export class MutationErrorEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
-  static type: 'mutation-error' = 'mutation-error';
+  public static type = 'mutation-error' as const;
+  public declare type: 'mutation-error';
 
   constructor(element: ApolloMutationElement<D, V>) {
     const { mutation, variables, error } = element;
