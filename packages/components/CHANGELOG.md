@@ -1,5 +1,11 @@
 # @apollo-elements/components
 
+## 3.0.4
+
+### Patch Changes
+
+- 187b8dc: Use `as const` for static types in `events.js`
+
 ## 3.0.3
 
 ### Patch Changes
