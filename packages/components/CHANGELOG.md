@@ -1,5 +1,11 @@
 # @apollo-elements/components
 
+## 3.0.5
+
+### Patch Changes
+
+- c95e8fb: Remove static blocks from build artifacts
+
 ## 3.0.4
 
 ### Patch Changes
