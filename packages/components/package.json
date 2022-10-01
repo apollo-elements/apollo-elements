@@ -22,11 +22,9 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "run-s build:*",
-    "build:analyze": "npm run analyze",
-    "build:build": "run-s build:build:*",
-    "build:build:tsc": "tsc -b .",
-    "build:babel:babel": "babel --source-maps --ignore '*.config.js' --plugins @babel/plugin-proposal-class-static-block --out-dir . .",
+    "build": "npm-run-all analyze build:*",
+    "build:tsc": "tsc -b .",
+    "build:babel": "babel --source-maps --ignore '*.config.js' --plugins @babel/plugin-proposal-class-static-block --out-dir . .",
     "analyze": "custom-elements-manifest analyze --litelement",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
