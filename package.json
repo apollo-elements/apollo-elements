@@ -80,7 +80,7 @@
     "@custom-elements-manifest/analyzer": "^0.5.7",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
     "@gluon/keybinding": "^1.1.0",
-    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/cli": "^2.16.3",
     "@graphql-codegen/typed-document-node": "^2.2.8",
     "@graphql-codegen/typescript": "^2.4.8",
     "@graphql-codegen/typescript-operations": "^2.3.5",
