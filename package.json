@@ -93,7 +93,7 @@
     "@power-elements/json-viewer": "^2.1.1",
     "@pwrs/eslint-config": "^0.0.25",
     "@rocket/blog": "^0.4.0",
-    "@rocket/cli": "^0.10.1",
+    "@rocket/cli": "^0.20.4",
     "@rocket/eleventy-rocket-nav": "^0.3.0",
     "@rocket/launch": "^0.6.0",
     "@rocket/navigation": "^0.2.1",
