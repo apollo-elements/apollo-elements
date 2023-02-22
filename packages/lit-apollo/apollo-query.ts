@@ -29,7 +29,10 @@ import { ApolloElement } from './apollo-element.js';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloQuery<
+  D = unknown,
+  V extends C.OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * Latest query data.
    */

@@ -1,4 +1,9 @@
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  ApolloError,
+  NormalizedCacheObject,
+  OperationVariables,
+} from '@apollo/client/core';
 
 import type { PropertyDeclaration } from 'lit';
 
@@ -30,7 +35,10 @@ export interface ControlledPropertyDeclaration extends PropertyDeclaration {
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  */
-export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
+export class ApolloElement<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends LitElement {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;

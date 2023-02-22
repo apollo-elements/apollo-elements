@@ -1,5 +1,7 @@
 import type { ComponentDocument, VariablesOf } from '@apollo-elements/core/types';
 
+import type { OperationVariables } from '@apollo/client/core';
+
 import { useController } from 'haunted/lib/use-controller';
 
 import {
@@ -7,7 +9,7 @@ import {
   ApolloSubscriptionControllerOptions,
 } from '@apollo-elements/core/apollo-subscription-controller';
 
-export function useSubscription<D, V = VariablesOf<D>>(
+export function useSubscription<D, V extends OperationVariables = VariablesOf<D>>(
   query: ComponentDocument<D>,
   options?: ApolloSubscriptionControllerOptions<D, V>
 ): ApolloSubscriptionController<D, V> {

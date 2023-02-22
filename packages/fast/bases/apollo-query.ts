@@ -10,7 +10,7 @@ import type {
 import type * as C from '@apollo/client/core';
 
 import { ApolloElement } from './apollo-element.js';
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus, type OperationVariables } from '@apollo/client/core';
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
 
 import { hosted } from './decorators.js';
@@ -29,7 +29,10 @@ import { controlled } from '@apollo-elements/core/decorators';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloQuery<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * Latest query data.
    */

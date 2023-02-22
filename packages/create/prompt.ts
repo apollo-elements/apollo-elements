@@ -224,9 +224,9 @@ export async function prompt(): Promise<void> {
 
   try {
     if (argv._.includes('app'))
-      return await promptApp(argv).then(normalizeOptions).then(app);
+      return await promptApp(argv as any).then(normalizeOptions).then(app);
     else if (argv._.includes('component'))
-      return await promptComponent(argv).then(normalizeOptions).then(component);
+      return await promptComponent(argv as any).then(normalizeOptions).then(component);
     else {
       console.log(BANNER);
       console.log(`Generator version ${version}`);
@@ -253,11 +253,11 @@ export async function prompt(): Promise<void> {
 
       switch (generate) {
         case 'app':
-          return await promptApp(commandAppendedArgv)
+          return await promptApp(commandAppendedArgv as any)
             .then(normalizeOptions)
             .then(app);
         case 'component':
-          return await promptComponent(commandAppendedArgv)
+          return await promptComponent(commandAppendedArgv as any)
             .then(normalizeOptions)
             .then(component);
       }

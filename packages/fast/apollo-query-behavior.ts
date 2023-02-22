@@ -2,6 +2,8 @@ import type { ComponentDocument, Data, Variables, VariablesOf } from '@apollo-el
 
 import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
 
+import type { OperationVariables } from '@apollo/client/core';
+
 import {
   ApolloQueryController,
   ApolloQueryControllerOptions,
@@ -15,7 +17,10 @@ import { FASTControllerHost } from './fast-controller-host.js';
  *
  * 🚀  FAST Behavior that connects to your Apollo cache.
  */
-export class ApolloQueryBehavior<D = unknown, V = VariablesOf<D>>
+export class ApolloQueryBehavior<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+>
   extends ApolloQueryController<D, V> implements Behavior {
   /**
    * Latest query data.

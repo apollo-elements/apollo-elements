@@ -6,6 +6,7 @@ import type {
   WatchQueryFetchPolicy,
   WatchQueryOptions,
   ObservableSubscription,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import type {
@@ -74,7 +75,7 @@ declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryEl
  * ```
  */
 @customElement('apollo-query')
-export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
+export class ApolloQueryElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-query';
 

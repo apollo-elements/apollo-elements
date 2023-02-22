@@ -12,6 +12,7 @@ import type {
   ApolloClient,
   ApolloError,
   NormalizedCacheObject,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import { controlled } from '@apollo-elements/core/decorators';
@@ -20,7 +21,10 @@ import { StampinoRender } from './stampino-render.js';
 
 import { property, state } from 'lit/decorators.js';
 
-export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
+export class ApolloElement<
+  D,
+  V extends OperationVariables = VariablesOf<D>,
+> extends StampinoRender {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;

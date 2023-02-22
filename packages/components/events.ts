@@ -1,5 +1,5 @@
 import type { Data, Variables, VariablesOf } from '@apollo-elements/core/types';
-import type { ApolloError, DocumentNode } from '@apollo/client/core';
+import type { ApolloError, DocumentNode, OperationVariables } from '@apollo/client/core';
 import type { ApolloMutationElement } from './apollo-mutation.js';
 
 export type MutationEventType = (
@@ -9,7 +9,7 @@ export type MutationEventType = (
   | 'will-navigate'
 );
 
-export interface MutationEventDetail<D, V = VariablesOf<D>> {
+export interface MutationEventDetail<D, V extends OperationVariables = VariablesOf<D>> {
   data?: Data<D> | null;
   error?: Error | ApolloError | null;
   variables?: Variables<D, V> | null;
@@ -17,7 +17,10 @@ export interface MutationEventDetail<D, V = VariablesOf<D>> {
   mutation: DocumentNode | null;
 }
 
-export class MutationEvent<D, V = VariablesOf<D>> extends CustomEvent<MutationEventDetail<D, V>> {
+export class MutationEvent<
+  D,
+  V extends OperationVariables = VariablesOf<D>,
+> extends CustomEvent<MutationEventDetail<D, V>> {
   declare type: MutationEventType;
 
   declare detail: MutationEventDetail<D, V>;
@@ -40,7 +43,10 @@ export class MutationEvent<D, V = VariablesOf<D>> extends CustomEvent<MutationEv
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillMutateEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
+export class WillMutateEvent<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends MutationEvent<D, V> {
   static type = 'will-mutate' as const;
   public declare type: 'will-mutate';
 
@@ -63,7 +69,10 @@ export class WillMutateEvent<D = unknown, V = VariablesOf<D>> extends MutationEv
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class MutationCompletedEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
+export class MutationCompletedEvent<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends MutationEvent<D, V> {
   static type = 'mutation-completed' as const;
   public declare type: 'mutation-completed';
 
@@ -86,7 +95,10 @@ export class MutationCompletedEvent<D = unknown, V = VariablesOf<D>> extends Mut
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class WillNavigateEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
+export class WillNavigateEvent<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends MutationEvent<D, V> {
   public static type = 'will-navigate' as const;
   public declare type: 'will-navigate';
 
@@ -109,7 +121,10 @@ export class WillNavigateEvent<D = unknown, V = VariablesOf<D>> extends Mutation
  * @typeParam Data Element's Data type
  * @typeParam Variables Element's Variables type
  */
-export class MutationErrorEvent<D = unknown, V = VariablesOf<D>> extends MutationEvent<D, V> {
+export class MutationErrorEvent<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends MutationEvent<D, V> {
   public static type = 'mutation-error' as const;
   public declare type: 'mutation-error';
 

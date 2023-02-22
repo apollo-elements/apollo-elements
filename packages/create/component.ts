@@ -2,7 +2,7 @@ import type { ComponentOptions, Operation } from './options';
 
 import Case from 'case';
 
-import { fileURLToPath } from 'nodej:url';
+import { fileURLToPath } from 'node:url';
 import { dirname, join, relative } from 'node:path';
 import { statSync } from 'node:fs';
 import { mkdir, stat } from 'node:fs/promises';

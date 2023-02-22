@@ -1,4 +1,9 @@
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type {
+  ApolloClient,
+  ApolloError,
+  NormalizedCacheObject,
+  OperationVariables,
+} from '@apollo/client/core';
 import type { Data, GraphQLError, Variables } from '@apollo-elements/core/types';
 import type { ApolloController, VariablesOf } from '@apollo-elements/core';
 
@@ -18,7 +23,7 @@ const last = Symbol('PolymerElement last known');
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloElement<D = unknown, V = VariablesOf<D>>
+export class PolymerApolloElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElementMixin(HTMLElement))<D, V> {
   static readonly is: `polymer-apollo-${'mutation'|'query'|'subscription'}`;
 

@@ -22,13 +22,16 @@ import { controlled } from '@apollo-elements/core/decorators';
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V = VariablesOf<D>>(): ControllerHost & InstanceType<B> & ApolloMutationElement<D, V>;
+  new <
+    D,
+    V extends C.OperationVariables = VariablesOf<D>,
+  >(): ControllerHost & InstanceType<B> & ApolloMutationElement<D, V>;
   documentType: 'mutation';
   observedAttributes?: string[];
 }
 
 function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInstance<B> {
-  class MixedApolloMutationElement<D, V = VariablesOf<D>>
+  class MixedApolloMutationElement<D, V extends C.OperationVariables = VariablesOf<D>>
     extends ApolloElementMixin(base)<D, V> {
     static override documentType = 'mutation' as const;
 

@@ -26,7 +26,10 @@ import { ApolloElement } from './apollo-element.js';
  * See [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events
  *
  */
-export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloMutation<
+  D = unknown,
+  V extends C.OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * Latest mutation data.
    */

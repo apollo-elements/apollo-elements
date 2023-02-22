@@ -1,4 +1,4 @@
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
+import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
 
 import type { Descriptor } from 'hybrids';
 
@@ -16,7 +16,7 @@ import {
  * @param  options Options to control the mutation.
  * @return Hybrids descriptor for a [ApolloMutationController](/api/core/controllers/mutation/)
  */
-export function mutation<E extends HTMLElement, D, V>(
+export function mutation<E extends HTMLElement, D, V extends OperationVariables>(
   mutationDocument?: DocumentNode | null,
   options?: ApolloMutationControllerOptions<D, V>,
 ): Descriptor<E, ApolloMutationController<D, V>>

@@ -1,5 +1,7 @@
 import type { ComponentDocument, VariablesOf } from '@apollo-elements/core';
 
+import type { OperationVariables } from '@apollo/client/core';
+
 import { useController } from 'haunted/lib/use-controller';
 
 import {
@@ -7,7 +9,7 @@ import {
   ApolloQueryControllerOptions,
 } from '@apollo-elements/core/apollo-query-controller';
 
-export function useQuery<D, V = VariablesOf<D>>(
+export function useQuery<D, V extends OperationVariables = VariablesOf<D>>(
   query: ComponentDocument<D>,
   options?: ApolloQueryControllerOptions<D, V>
 ): ApolloQueryController<D, V> {

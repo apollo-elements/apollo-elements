@@ -24,7 +24,10 @@ import {
 } from '@apollo-elements/core/apollo-query-controller';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V = VariablesOf<D>>(...a: any[]): InstanceType<B> & ApolloQueryElement<D, V>;
+  new <
+    D,
+    V extends C.OperationVariables = VariablesOf<D>,
+  >(...a: any[]): InstanceType<B> & ApolloQueryElement<D, V>;
   documentType: 'query',
 }
 
@@ -32,7 +35,7 @@ type MixinInstance<B extends Constructor> = B & {
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
  */
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
-  class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
+  class ApolloQueryElement<D = unknown, V extends C.OperationVariables = VariablesOf<D>>
     extends ApolloElementMixin(superclass)<D, V> {
     static override documentType = 'query' as const;
 
