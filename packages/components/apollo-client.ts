@@ -85,7 +85,7 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
  * ```
  */
 export class ApolloClientElement extends HTMLElement {
-  static readonly is: 'apollo-client' = 'apollo-client';
+  static readonly is = 'apollo-client' as const;
 
   static readonly observedAttributes = [
     'uri',

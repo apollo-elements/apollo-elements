@@ -10,7 +10,13 @@ import type {
   VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type { ApolloError, FetchPolicy, FetchResult, MutationOptions, OperationVariables } from '@apollo/client/core';
+import type {
+  ApolloError,
+  FetchPolicy,
+  FetchResult,
+  MutationOptions,
+  OperationVariables,
+} from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 

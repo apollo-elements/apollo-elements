@@ -177,7 +177,7 @@ defaultTemplate.innerHTML = `<slot></slot>`;
 @customElement('apollo-mutation')
 export class ApolloMutationElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
-  static readonly is: 'apollo-mutation' = 'apollo-mutation';
+  static readonly is = 'apollo-mutation' as const;
 
   /**
    * False when the element is a link.

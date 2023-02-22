@@ -26,9 +26,10 @@ import { ApolloController, ApolloControllerOptions } from './apollo-controller.j
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloSubscriptionControllerOptions<D, V extends OperationVariables = VariablesOf<D>>
-          extends ApolloControllerOptions<D, V>,
-          Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
+export interface ApolloSubscriptionControllerOptions<
+  D,
+  V extends OperationVariables = VariablesOf<D>,
+> extends ApolloControllerOptions<D, V>, Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>;
   fetchPolicy?: FetchPolicy;
   noAutoSubscribe?: boolean;

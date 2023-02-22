@@ -15,6 +15,7 @@ import { ApolloSubscriptionController } from '@apollo-elements/core/apollo-subsc
 import { controlled } from '@apollo-elements/core/decorators';
 
 import { state, property } from '@lit/reactive-element/decorators.js';
+import { OperationVariables } from '@apollo/client/core';
 
 /**
  * `ApolloSubscription`
@@ -24,7 +25,10 @@ import { state, property } from '@lit/reactive-element/decorators.js';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D = unknown, V extends OperationVariables = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloSubscription<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>
+> extends ApolloElement<D, V> {
   static readonly is = 'apollo-subscription';
 
   controller = new ApolloSubscriptionController<D, V>(this, null, {

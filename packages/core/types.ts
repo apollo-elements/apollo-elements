@@ -21,7 +21,6 @@ import type {
   WatchQueryFetchPolicy,
   WatchQueryOptions,
   ObservableSubscription,
-  Operation,
 } from '@apollo/client/core';
 
 import type {
@@ -52,7 +51,8 @@ export type Data<D> =
   : D;
 
 export type Variables<D, V> =
-    D extends TypedDocumentNode<infer _, infer TV> ? TV extends OperationVariables ? TV : OperationVariables
+    D extends TypedDocumentNode<infer _, infer TV> ?
+      TV extends OperationVariables ? TV : OperationVariables
   : V extends OperationVariables ? V extends OperationVariables ? V : OperationVariables
   : V extends any ? OperationVariables
   : OperationVariables;
@@ -132,7 +132,10 @@ export interface SubscriptionResult<TData> {
   error: ApolloError | null;
 }
 
-export interface SubscriptionDataOptions<D = unknown, V extends OperationVariables = OperationVariables> {
+export interface SubscriptionDataOptions<
+  D = unknown,
+  V extends OperationVariables = OperationVariables,
+> {
   context: SubscriptionOptions<V, D>['context'];
   subscription: DocumentNode | ComponentDocument<D>;
   variables?: Variables<D, V>;
@@ -167,7 +170,10 @@ export declare class ControllerHost extends HTMLElement implements ReactiveContr
  * @fires {ApolloElementEvent} apollo-element-connected - The element connected to the DOM
  * @fires {ApolloElementEvent} apollo-element-disconnected - The element disconnected from the DOM
  */
-export declare class ApolloElementElement<D = unknown, V extends OperationVariables = VariablesOf<D>> extends CustomElement {
+export declare class ApolloElementElement<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends CustomElement {
   static readonly documentType: 'document'|'query'|'mutation'|'subscription';
   static get observedAttributes(): string[]
   /** @summary The Apollo Client instance. */
@@ -228,7 +234,10 @@ export declare class ApolloElementElement<D = unknown, V extends OperationVariab
  * @fires {CustomEvent<FetchResult<Data<D>>>} apollo-mutation-result - The mutation resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The mutation rejected
  */
-export declare class ApolloMutationElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
+export declare class ApolloMutationElement<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'mutation';
   public controller: ApolloMutationController<D, V>;
@@ -507,7 +516,10 @@ export declare class ApolloQueryElement<D = unknown, V extends OperationVariable
  * @fires {ApolloSubscriptionResultEvent} apollo-subscription-result - The subscription updated
  * @fires {CustomEvent<ApolloError>} apollo-error - The subscription produced an error
  */
-export declare class ApolloSubscriptionElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
+export declare class ApolloSubscriptionElement<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'subscription';
   public controller: ApolloSubscriptionController<D, V>;

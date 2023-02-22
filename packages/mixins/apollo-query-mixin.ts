@@ -34,7 +34,7 @@ type MixinInstance<B extends Constructor> = B & {
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
   class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
     extends ApolloElementMixin(superclass)<D, V> {
-    static override documentType: 'query' = 'query';
+    static override documentType = 'query' as const;
 
     static override get observedAttributes(): string[] {
       return [

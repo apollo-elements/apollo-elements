@@ -28,9 +28,10 @@ import { ApolloController, ApolloControllerOptions } from './apollo-controller.j
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloQueryControllerOptions<D, V extends OperationVariables = VariablesOf<D>> extends
-    ApolloControllerOptions<D, V>,
-    Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
+export interface ApolloQueryControllerOptions<
+  D,
+  V extends OperationVariables = VariablesOf<D>,
+> extends ApolloControllerOptions<D, V>, Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>;
   noAutoSubscribe?: boolean;
   shouldSubscribe?: (options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>) => boolean;
@@ -275,7 +276,10 @@ export class ApolloQueryController<D = any, V extends OperationVariables = Varia
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  @bound public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
+  @bound public subscribeToMore<
+    TSubscriptionVariables extends OperationVariables,
+    TSubscriptionData,
+  >(
     options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
     return this.observableQuery?.subscribeToMore(options);
