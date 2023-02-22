@@ -109,7 +109,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
   /**
    * @summary A GraphQL document containing a single query.
    */
-  @controlled() @state() query: null | ComponentDocument<D, V> = null;
+  @controlled() @state() query: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

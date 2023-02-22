@@ -41,7 +41,7 @@ export class ApolloMutationBehavior<D, V = VariablesOf<D>> extends AMC<D, V> imp
 
   constructor(
     public hostElement: FASTElement & HTMLElement,
-    mutation?: ComponentDocument<D, V> | null,
+    mutation?: ComponentDocument<D> | null,
     options?: ApolloMutationControllerOptions<D, V>,
   ) {
     super(new FASTControllerHost(hostElement), mutation, { ...options, hostElement });

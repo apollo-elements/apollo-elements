@@ -10,7 +10,7 @@ import {
 } from '@apollo-elements/core/apollo-mutation-controller';
 
 export function useMutation<D, V>(
-  mutation: ComponentDocument<D, V>,
+  mutation: ComponentDocument<D>,
   options?: ApolloMutationControllerOptions<D, V>
 ): [
   (params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>) => Promise<FetchResult<Data<D>>>,

@@ -48,7 +48,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     @controlled({ readonly: true }) readonly called = false;
 
-    @controlled() mutation: ComponentDocument<D, V> | null = null;
+    @controlled() mutation: ComponentDocument<D> | null = null;
 
     /**
      * An object that represents the result of this mutation that will be optimistically

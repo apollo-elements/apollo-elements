@@ -8,7 +8,7 @@ import {
 } from '@apollo-elements/core/apollo-query-controller';
 
 export function useQuery<D, V = VariablesOf<D>>(
-  query: ComponentDocument<D, V>,
+  query: ComponentDocument<D>,
   options?: ApolloQueryControllerOptions<D, V>
 ): ApolloQueryController<D, V> {
   return useController(host => new ApolloQueryController<D, V>(host, query, options));

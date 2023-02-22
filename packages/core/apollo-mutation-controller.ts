@@ -10,13 +10,13 @@ import type {
   VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type { ApolloError, FetchPolicy, FetchResult, MutationOptions } from '@apollo/client/core';
+import type { ApolloError, FetchPolicy, FetchResult, MutationOptions, OperationVariables } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloMutationControllerOptions<D, V = VariablesOf<D>>
+export interface ApolloMutationControllerOptions<D, V extends OperationVariables = VariablesOf<D>>
 extends ApolloControllerOptions<D, V> {
   /**
    * An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.
@@ -35,7 +35,7 @@ extends ApolloControllerOptions<D, V> {
   update?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 }
 
-export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
+export class ApolloMutationController<D = any, V extends OperationVariables = VariablesOf<D>>
   extends ApolloController<D, V> implements ReactiveController {
   /**
    * The ID number of the most recent mutation since the element was instantiated.
@@ -48,13 +48,13 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
   called = false;
 
   /** @summary The GraphQL mutation document */
-  get mutation(): ComponentDocument<D, V> | null { return this.document; }
+  get mutation(): ComponentDocument<D> | null { return this.document; }
 
-  set mutation(document: ComponentDocument<D, V> | null) { this.document = document; }
+  set mutation(document: ComponentDocument<D> | null) { this.document = document; }
 
   constructor(
     host: ReactiveControllerHost,
-    mutation?: ComponentDocument<D, V> | null,
+    mutation?: ComponentDocument<D> | null,
     options?: ApolloMutationControllerOptions<D, V>
   ) {
     super(host, options);
@@ -80,7 +80,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
     this.data = null;
     this.notify({ called, data, error, errors, loading });
 
-    return this.client.mutate<Data<D>, Variables<D, V>>({
+    return this.client.mutate({
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       mutation: this.mutation!,
@@ -89,10 +89,10 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
-      optimisticResponse: this.options.optimisticResponse,
+      optimisticResponse: this.options.optimisticResponse as OptimisticResponseType<any, any>,
       refetchQueries: this.options.refetchQueries ?? undefined,
-      update: this.options.update,
-      variables: this.variables ?? undefined,
+      update: this.options.update as any,
+      variables: this.variables as any,
       ...params,
     })
       .then(this.onCompletedMutation.bind(this, mutationId))

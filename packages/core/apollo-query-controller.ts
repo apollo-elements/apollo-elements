@@ -19,6 +19,7 @@ import type {
   WatchQueryOptions,
   ObservableSubscription,
   FetchMoreQueryOptions,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import { NetworkStatus } from '@apollo/client/core';
@@ -27,7 +28,7 @@ import { ApolloController, ApolloControllerOptions } from './apollo-controller.j
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloQueryControllerOptions<D, V = VariablesOf<D>> extends
+export interface ApolloQueryControllerOptions<D, V extends OperationVariables = VariablesOf<D>> extends
     ApolloControllerOptions<D, V>,
     Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>;
@@ -37,7 +38,7 @@ export interface ApolloQueryControllerOptions<D, V = VariablesOf<D>> extends
   onError?: (error: Error) => void;
 }
 
-export class ApolloQueryController<D, V = VariablesOf<D>>
+export class ApolloQueryController<D = any, V extends OperationVariables = VariablesOf<D>>
   extends ApolloController<D, V> implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
@@ -80,9 +81,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   #lastQueryDocument?: DocumentNode;
 
   /** @summary A GraphQL document containing a single query. */
-  get query(): ComponentDocument<D, V> | null { return this.document; }
+  get query(): ComponentDocument<D> | null { return this.document; }
 
-  set query(document: ComponentDocument<D, V> | null) { this.document = document; }
+  set query(document: ComponentDocument<D> | null) { this.document = document; }
 
   /** @summary Flags an element that's ready and able to auto-subscribe */
   public get canAutoSubscribe(): boolean {
@@ -96,7 +97,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
   constructor(
     host: ReactiveControllerHost,
-    query?: ComponentDocument<D, V> | null,
+    query?: ComponentDocument<D> | null,
     options?: ApolloQueryControllerOptions<D, V>
   ) {
     super(host, options);
@@ -198,7 +199,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       this.subscribe();/* c8 ignore next */
   }
 
-  protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
+  protected override documentChanged(doc?: ComponentDocument<D> | null): void {
     const query = doc ?? undefined;/* c8 ignore next */
     if (doc === this.#lastQueryDocument)
       return;/* c8 ignore next */
@@ -274,7 +275,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+  @bound public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
     options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
     return this.observableQuery?.subscribeToMore(options);
@@ -343,12 +344,10 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       ...params,
     };
 
-    options.variables ??= undefined;
-
     this.observableQuery ??=
-      this.watchQuery(options as WatchQueryOptions<Variables<D, V>, this['data']>);
+      this.watchQuery(options as any);
 
-    return (this.observableQuery as unknown as ObservableQuery<Data<TD>, TV>)
+    return this.observableQuery
       .fetchMore(options as FetchMoreQueryOptions<TV, Data<TD>>)
       .then(x => {
         const { loading } = this;

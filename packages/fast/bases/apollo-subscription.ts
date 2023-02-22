@@ -54,7 +54,7 @@ export class ApolloSubscription<D, V = VariablesOf<D>> extends ApolloElement<D, 
    */
   @hosted()
   @controlled()
-    subscription: ComponentDocument<D, V> | null = null;
+    subscription: ComponentDocument<D> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`

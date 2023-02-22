@@ -21,6 +21,7 @@ import type {
   WatchQueryFetchPolicy,
   WatchQueryOptions,
   ObservableSubscription,
+  Operation,
 } from '@apollo/client/core';
 
 import type {
@@ -39,9 +40,11 @@ export type MutationUpdaterFn<D, V> = Required<MutationOptions<D, V>>['update'];
 
 export type GraphQLError = ApolloError['graphQLErrors'][number];
 
-export type ComponentDocument<D, V> =
-    D extends TypedDocumentNode<infer TD, infer TV> ? TypedDocumentNode<TD, TV>
-  : TypedDocumentNode<D, V>
+export type ComponentDocument<D> =
+  //   D extends unknown ? TypedDocumentNode<D, V>
+  // : D extends TypedDocumentNode ? D
+    D extends TypedDocumentNode ? D
+  : DocumentNode
 
 export type Data<D> =
     D extends TypedDocumentNode<infer TD, infer _> ? TD
@@ -49,20 +52,22 @@ export type Data<D> =
   : D;
 
 export type Variables<D, V> =
-    D extends TypedDocumentNode<infer _, infer TV> ? TV
-  : V extends OperationVariables ? V
-  : V extends any ? any
-  : unknown;
+    D extends TypedDocumentNode<infer _, infer TV> ? TV extends OperationVariables ? TV : OperationVariables
+  : V extends OperationVariables ? V extends OperationVariables ? V : OperationVariables
+  : V extends any ? OperationVariables
+  : OperationVariables;
+
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 
 export type VariablesOf<E> =
-    E extends TypedDocumentNode<infer _, infer V> ? V
-  : E extends ApolloElementElement<infer D, infer V> ? Variables<D, V>
-  : E extends any ? any
-  : unknown;
+  //   E extends TypedDocumentNode<infer _, infer V> ? V extends OperationVariables ? V : OperationVariables
+  // : E extends ApolloElementElement<infer D, infer V> ? Variables<D, V>
+    E extends ApolloElementElement<infer D, infer V> ? Variables<D, V>
+  : OperationVariables | Exact<{ [key: string]: never }>;
 
-export type NextFetchPolicyFunction<D, V> =
+export type NextFetchPolicyFunction<D, V extends OperationVariables> =
   (
-    this: WatchQueryOptions<Variables<D, V>, Data<V>>,
+    this: WatchQueryOptions<V, D>,
     lastFetchPolicy: WatchQueryFetchPolicy
   ) => WatchQueryFetchPolicy
 
@@ -127,9 +132,9 @@ export interface SubscriptionResult<TData> {
   error: ApolloError | null;
 }
 
-export interface SubscriptionDataOptions<D = unknown, V = OperationVariables> {
+export interface SubscriptionDataOptions<D = unknown, V extends OperationVariables = OperationVariables> {
   context: SubscriptionOptions<V, D>['context'];
-  subscription: DocumentNode | ComponentDocument<D, V>;
+  subscription: DocumentNode | ComponentDocument<D>;
   variables?: Variables<D, V>;
   errorPolicy?: ErrorPolicy;
   fetchPolicy?: FetchPolicy;
@@ -162,7 +167,7 @@ export declare class ControllerHost extends HTMLElement implements ReactiveContr
  * @fires {ApolloElementEvent} apollo-element-connected - The element connected to the DOM
  * @fires {ApolloElementEvent} apollo-element-disconnected - The element disconnected from the DOM
  */
-export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> extends CustomElement {
+export declare class ApolloElementElement<D = unknown, V extends OperationVariables = VariablesOf<D>> extends CustomElement {
   static readonly documentType: 'document'|'query'|'mutation'|'subscription';
   static get observedAttributes(): string[]
   /** @summary The Apollo Client instance. */
@@ -174,7 +179,7 @@ export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> exten
    *
    * @summary Operation document.
    */
-  public document: ComponentDocument<D, V> | null;
+  public document: ComponentDocument<D> | null;
   /** @summary Latest Data. */
   public data: Data<D> | null;
   /** @summary Operation variables. */
@@ -210,7 +215,7 @@ export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> exten
   public readyToReceiveDocument: boolean;
   public attributeChangedCallback(name: string, oldVal: string, newVal: string): void;
   /** Lifecycle callback that reacts to changes in the GraphQL document */
-  protected documentChanged?(document: ComponentDocument<D, V> | null): void
+  protected documentChanged?(document: ComponentDocument<D> | null): void
   /** Lifecycle callback that reacts to changes in the operation variables */
   protected variablesChanged?(variables: Variables<D, V> | null): void
 }
@@ -223,7 +228,7 @@ export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> exten
  * @fires {CustomEvent<FetchResult<Data<D>>>} apollo-mutation-result - The mutation resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The mutation rejected
  */
-export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
+export declare class ApolloMutationElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'mutation';
   public controller: ApolloMutationController<D, V>;
@@ -255,8 +260,7 @@ export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    */
   public ignoreResults: boolean;
   /** @summary The mutation. */
-  public mutation: ComponentDocument<D, V> | null;
-  /**
+  public mutation: ComponentDocument<D> | null; /**
    * An object that represents the result of this mutation that
    * will be optimistically stored before the server has actually returned a
    * result.
@@ -328,7 +332,7 @@ export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
  * @fires {CustomEvent<ApolloQueryResult<Data<D>>>} apollo-query-result - The query resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The query rejected
  */
-export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
+export declare class ApolloQueryElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'mutation';
   public controller: ApolloQueryController<D, V>;
@@ -425,7 +429,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
   /** @summary The time interval (in milliseconds) on which this query should be refetched from the server. */
   public pollInterval?: number;
   /** @summary A GraphQL document containing a single query. */
-  public query: DocumentNode | ComponentDocument<D, V> | null;
+  public query: DocumentNode | ComponentDocument<D> | null;
   /**
    * Opt into receiving partial results from the cache for queries
    * that are not fully satisfied by the cache.
@@ -503,7 +507,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
  * @fires {ApolloSubscriptionResultEvent} apollo-subscription-result - The subscription updated
  * @fires {CustomEvent<ApolloError>} apollo-error - The subscription produced an error
  */
-export declare class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
+export declare class ApolloSubscriptionElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'subscription';
   public controller: ApolloSubscriptionController<D, V>;
@@ -523,7 +527,8 @@ export declare class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
   /**
    * @summary A GraphQL document containing a single subscription.
    */
-  public subscription: ComponentDocument<D, V> | null;
+  public subscription: ComponentDocument<D> | null;
+
   /** @summary Flags an element that's ready and able to auto subscribe */
   public get canAutoSubscribe(): boolean;
   /**

@@ -14,6 +14,7 @@ import type {
   FetchResult,
   MutationOptions,
   ErrorPolicy,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
@@ -174,7 +175,7 @@ defaultTemplate.innerHTML = `<slot></slot>`;
  * ```
  */
 @customElement('apollo-mutation')
-export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
+export class ApolloMutationElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is: 'apollo-mutation' = 'apollo-mutation';
 
@@ -304,7 +305,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   @controlled() @property({ type: Boolean, reflect: true }) called = false;
 
   /** @summary The mutation. */
-  @controlled() @state() mutation: null | ComponentDocument<D, V> = null;
+  @controlled() @state() mutation: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, unknown>;

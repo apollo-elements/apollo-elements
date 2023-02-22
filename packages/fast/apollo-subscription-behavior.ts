@@ -40,7 +40,7 @@ export class ApolloSubscriptionBehavior<D, V = VariablesOf<D>>
 
   constructor(
     hostElement: FASTElement & HTMLElement,
-    subscription?: ComponentDocument<D, V> | null,
+    subscription?: ComponentDocument<D> | null,
     options?: ApolloSubscriptionControllerOptions<D, V>,
   ) {
     super(new FASTControllerHost(hostElement), subscription, { ...options, hostElement });

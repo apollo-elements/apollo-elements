@@ -105,7 +105,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
     @controlled() networkStatus: NetworkStatus = NetworkStatus.ready;
 
     /** @summary A GraphQL document containing a single query. */
-    @controlled() query: ComponentDocument<D, V> | null = null;
+    @controlled() query: ComponentDocument<D> | null = null;
 
     /**
      * Determines where the client may return a result from. The options are:

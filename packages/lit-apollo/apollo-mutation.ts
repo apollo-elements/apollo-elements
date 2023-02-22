@@ -54,7 +54,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
   /** @summary The mutation. */
   @controlled()
   @state()
-    mutation: ComponentDocument<D, V> | null = null;
+    mutation: ComponentDocument<D> | null = null;
 
   /**
    * An object that represents the result of this mutation that will be optimistically

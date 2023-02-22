@@ -41,7 +41,7 @@ export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
    * GraphQL operation document i.e. query, subscription, or mutation.
    * Must be a parsed GraphQL `DocumentNode`
    */
-  @controlled() @state() document: ComponentDocument<D, V> | null = null;
+  @controlled() @state() document: ComponentDocument<D> | null = null;
 
   /** @summary Latest error */
   @controlled() @state() error: Error | ApolloError | null = null;

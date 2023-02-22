@@ -19,13 +19,14 @@ import type {
   SubscriptionOptions,
   WatchQueryOptions,
   ObservableSubscription,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
 import { bound } from './lib/bound.js';
 
-export interface ApolloSubscriptionControllerOptions<D, V = VariablesOf<D>>
+export interface ApolloSubscriptionControllerOptions<D, V extends OperationVariables = VariablesOf<D>>
           extends ApolloControllerOptions<D, V>,
           Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
   variables?: Variables<D, V>;
@@ -42,7 +43,7 @@ export interface ApolloSubscriptionControllerOptions<D, V = VariablesOf<D>>
   onError?: (error: ApolloError) => void;
 }
 
-export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
+export class ApolloSubscriptionController<D = any, V extends OperationVariables = VariablesOf<D>>
   extends ApolloController<D, V> implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
 
@@ -55,9 +56,9 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
 
   #lastSubscriptionDocument?: DocumentNode;
 
-  get subscription(): ComponentDocument<D, V> | null { return this.document; }
+  get subscription(): ComponentDocument<D> | null { return this.document; }
 
-  set subscription(document: ComponentDocument<D, V> | null) { this.document = document; }
+  set subscription(document: ComponentDocument<D> | null) { this.document = document; }
 
   /** Flags an element that's ready and able to auto-subscribe */
   public get canAutoSubscribe(): boolean {
@@ -70,7 +71,7 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
 
   constructor(
     host: ReactiveControllerHost,
-    subscription?: ComponentDocument<D, V> | null,
+    subscription?: ComponentDocument<D> | null,
     options?: ApolloSubscriptionControllerOptions<D, V>
   ) {
     super(host, options);
@@ -127,7 +128,7 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      variables: this.variables,
+      variables: this.variables!,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
@@ -191,7 +192,7 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
       this.subscribe();/* c8 ignore next */
   }
 
-  protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
+  protected override documentChanged(doc?: ComponentDocument<D> | null): void {
     const query = doc ?? undefined;/* c8 ignore next */
     if (doc === this.#lastSubscriptionDocument)
       return;/* c8 ignore next */

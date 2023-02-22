@@ -60,7 +60,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
    */
   @controlled()
   @state()
-    document: ComponentDocument<D, V> | null = null;
+    document: ComponentDocument<D> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' })

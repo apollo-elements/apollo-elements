@@ -13,7 +13,7 @@ type ApolloElementEventType = `apollo-element-${'disconnected'|'connected'}`;
 type ApolloControllerEventType = `apollo-controller-${'disconnected'|'connected'}`;
 
 interface ApolloControllerHost extends HTMLElement {
-  controller: ApolloController<unknown, unknown>;
+  controller: ApolloController;
 }
 
 export type ApolloQueryResultEvent<TData = unknown> =
@@ -33,7 +33,7 @@ export type ApolloSubscriptionResultEvent<D = unknown> = CustomEvent<{
 
 export abstract class ApolloEvent<T = ApolloControllerHost> extends CustomEvent<T> {
   public abstract type: ApolloEventType
-  public declare controller?: ApolloController<unknown, unknown>;
+  public declare controller?: ApolloController;
   constructor(type: ApolloEventType, options?: CustomEventInit) {
     super(type, { ...options, bubbles: true, composed: true });
   }

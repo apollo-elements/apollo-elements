@@ -102,7 +102,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    */
   @controlled()
   @state()
-    query: null | ComponentDocument<D, V> = null;
+    query: null | ComponentDocument<D> = null;
 
   /**
    * If data was read from the cache with missing fields,

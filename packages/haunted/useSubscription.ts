@@ -8,7 +8,7 @@ import {
 } from '@apollo-elements/core/apollo-subscription-controller';
 
 export function useSubscription<D, V = VariablesOf<D>>(
-  query: ComponentDocument<D, V>,
+  query: ComponentDocument<D>,
   options?: ApolloSubscriptionControllerOptions<D, V>
 ): ApolloSubscriptionController<D, V> {
   return useController(host => new ApolloSubscriptionController<D, V>(host, query, options));

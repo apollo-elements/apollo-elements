@@ -57,7 +57,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
      * A GraphQL document containing a single query, mutation, or subscription.
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
-    @controlled() document: ComponentDocument<D, V> | null = null;
+    @controlled() document: ComponentDocument<D> | null = null;
 
     /** @summary Latest data */
     @controlled() data: Data<D> | null = null;

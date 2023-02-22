@@ -40,7 +40,7 @@ export class ApolloQueryBehavior<D = unknown, V = VariablesOf<D>>
 
   constructor(
     hostElement: FASTElement & HTMLElement,
-    query?: ComponentDocument<D, V> | null,
+    query?: ComponentDocument<D> | null,
     options?: ApolloQueryControllerOptions<D, V>,
   ) {
     super(new FASTControllerHost(hostElement), query, { ...options, hostElement });

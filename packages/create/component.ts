@@ -2,11 +2,10 @@ import type { ComponentOptions, Operation } from './options';
 
 import Case from 'case';
 
-import { promisify } from 'util';
-import { fileURLToPath } from 'url';
-import { dirname, join, relative } from 'path';
-import fs from 'fs';
-import mkdirp from 'mkdirp';
+import { fileURLToPath } from 'nodej:url';
+import { dirname, join, relative } from 'node:path';
+import { statSync } from 'node:fs';
+import { mkdir, stat } from 'node:fs/promises';
 
 import { codegen } from './codegen.js';
 import { processTemplate, readFile, writeFile } from './files.js';
@@ -43,9 +42,6 @@ enum FileKey {
   operation = 'operation',
   index = 'index'
 }
-
-const stat =
-  promisify(fs.stat);
 
 async function exists(path: string): Promise<boolean> {
   try {
@@ -298,7 +294,7 @@ async function writeComponent(options: ComponentOptions) {
   if (!options.silent)
     console.log(`\nCreating ${green(options.name)} in ${getComponentPathFromDirectoryOption(options)}\n`);
 
-  await mkdirp(getComponentAbsPath(options));
+  await mkdir(getComponentAbsPath(options), { recursive: true });
 
   for (const key of Object.keys(FileKey) as FileKey[])
     await writeComponentFile(key, options);
@@ -314,7 +310,7 @@ export async function component(options: ComponentOptions): Promise<void> {
   if (!options) return; // ctrl-c
 
   try {
-    fs.statSync(join(options.directory, 'package.json'));
+    statSync(join(options.directory, 'package.json'));
   } catch (error) {
     return console.log('‼️ No package.json found.', '👉 Scaffold an app first');
   }

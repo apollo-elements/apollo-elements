@@ -41,7 +41,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   afterEach(teardownClient);
 
   describe('simply instantiating', function() {
-    let element: ApolloMutationElement;
+    let element: ApolloMutationElement<any, any>;
     beforeEach(async function() {
       element = await fixture(html`<apollo-mutation></apollo-mutation>`);
     });

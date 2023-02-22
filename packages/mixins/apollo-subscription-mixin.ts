@@ -55,7 +55,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
       onError: error => this.onError?.(error),
     });
 
-    @controlled() subscription: ComponentDocument<D, V> | null = null;
+    @controlled() subscription: ComponentDocument<D> | null = null;
 
     @controlled({ readonly: true }) declare readonly canAutoSubscribe: boolean;
 

@@ -24,7 +24,7 @@ import { state, property } from '@lit/reactive-element/decorators.js';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloSubscription<D = unknown, V extends OperationVariables = VariablesOf<D>> extends ApolloElement<D, V> {
   static readonly is = 'apollo-subscription';
 
   controller = new ApolloSubscriptionController<D, V>(this, null, {
@@ -42,7 +42,7 @@ export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloE
    */
   @controlled()
   @state()
-    subscription: ComponentDocument<D, V> | null = null;
+    subscription: ComponentDocument<D> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`

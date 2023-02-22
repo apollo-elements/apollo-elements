@@ -13,7 +13,7 @@ export type MutationHookTuple<D, V = VariablesOf<D>> = [
 ]
 
 export function useMutation<D, V = VariablesOf<D>>(
-  mutation: ComponentDocument<D, V>,
+  mutation: ComponentDocument<D>,
   options?: ApolloMutationControllerOptions<D, V>
 ): MutationHookTuple<D, V> {
   const controller = useController(host =>

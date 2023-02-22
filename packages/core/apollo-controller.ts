@@ -3,8 +3,10 @@ import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from
 import type {
   ApolloClient,
   ApolloError,
+  DefaultContext,
   ErrorPolicy,
   NormalizedCacheObject,
+  OperationVariables,
 } from '@apollo/client/core';
 
 
@@ -20,13 +22,13 @@ import { isValidGql } from './lib/is-valid-gql.js';
 
 import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } from './events.js';
 
-export interface ApolloControllerOptions<D, V> {
+export interface ApolloControllerOptions<D, V extends OperationVariables> {
   /** The `ApolloClient` instance for the controller. */
   client?: ApolloClient<NormalizedCacheObject>;
   /** Variables for the operation. */
   variables?: Variables<D, V>;
   /** Context passed to the link execution chain. */
-  context?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  context?: DefaultContext;
   /**
    * errorPolicy determines the level of events for errors in the execution result. The options are:
    * - `none` (default): any errors from the request are treated like runtime errors and the observable is stopped (XXX this is default to lower breaking changes going from AC 1.0 => 2.0)
@@ -43,10 +45,10 @@ export interface ApolloControllerOptions<D, V> {
  * @fires {ApolloControllerConnectedEvent} apollo-controller-connected - The controller's host connected to the DOM.
  * @fires {ApolloControllerDisconnectedEvent} apollo-controller-disconnected - The controller's host disconnected from the DOM.
  */
-export abstract class ApolloController<D = unknown, V = VariablesOf<D>>
+export abstract class ApolloController<D = unknown, V extends OperationVariables = VariablesOf<D>>
 implements ReactiveController {
   /** @internal */
-  static o(proto: ApolloController, _: string): void {
+  static o(proto: ApolloController<any, any>, _: string): void {
     Object.defineProperty(proto, 'options', {
       get() { return this.#options; },
       set(v) {
@@ -60,7 +62,7 @@ implements ReactiveController {
 
   #client: ApolloClient<NormalizedCacheObject> | null = null;
 
-  #document: ComponentDocument<D, V> | null = null;
+  #document: ComponentDocument<D> | null = null;
 
   /** @summary The event emitter to use when firing events, usually the host element. */
   protected emitter: EventTarget;
@@ -95,9 +97,9 @@ implements ReactiveController {
   }
 
   /** @summary The GraphQL document for the operation. */
-  get document(): ComponentDocument<D, V> | null { return this.#document; }
+  get document(): ComponentDocument<D> | null { return this.#document; }
 
-  set document(document: ComponentDocument<D, V> | null) {
+  set document(document: ComponentDocument<D> | null) {
     if (document === this.#document)
       return; /* c8 ignore next */ // covered
     else if (!document)
@@ -152,7 +154,7 @@ implements ReactiveController {
   }
 
   /** @summary callback for when the GraphQL document changes. */
-  protected documentChanged?(document?: ComponentDocument<D, V> | null): void;
+  protected documentChanged?(document?: ComponentDocument<D> | null): void;
 
   /** @summary callback for when the GraphQL variables change. */
   protected variablesChanged?(variables?: Variables<D, V> | null): void;
@@ -164,17 +166,17 @@ implements ReactiveController {
   protected optionsChanged?(options?: ApolloControllerOptions<D, V>): void;
 
   /** @summary Assigns the controller's variables and GraphQL document. */
-  protected init(document: ComponentDocument<D, V> | null): void {
+  protected init(document: ComponentDocument<D> | null): void {
     this.variables ??= this.options.variables ?? null;
     this.document = document;
   }
 
   hostConnected(): void {
-    this.emitter.dispatchEvent(new ApolloControllerConnectedEvent(this));
+    this.emitter.dispatchEvent(new ApolloControllerConnectedEvent(this as any));
   }
 
   hostDisconnected(): void {
-    this.emitter.dispatchEvent(new ApolloControllerDisconnectedEvent(this));
-    window.dispatchEvent(new ApolloControllerDisconnectedEvent(this));
+    this.emitter.dispatchEvent(new ApolloControllerDisconnectedEvent(this as any));
+    window.dispatchEvent(new ApolloControllerDisconnectedEvent(this as any));
   }
 }

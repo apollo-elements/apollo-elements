@@ -1,4 +1,4 @@
-import type { TypedDocumentNode, ResultOf } from '@graphql-typed-document-node/core';
+import type { ResultOf } from '@graphql-typed-document-node/core';
 
 import * as S from '@apollo-elements/test/schema';
 
@@ -18,11 +18,8 @@ import { spy, SinonSpy } from 'sinon';
 
 describe('[core] ApolloSubscriptionController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
-    class MirroringHost<D extends TypedDocumentNode<any, any> = TypedDocumentNode<any, any>>
-      extends ReactiveElement {
-      declare subscription: D extends TypedDocumentNode<infer TD, infer TV>
-        ? ApolloSubscriptionController<TD, TV>
-        : ApolloSubscriptionController<any, any>;
+    class MirroringHost extends ReactiveElement {
+      declare subscription: ApolloSubscriptionController;
 
       data?: this['subscription']['data'];
       error?: this['subscription']['error'];
@@ -60,8 +57,8 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       beforeEach(async function setupElement() {
-        const tag = defineCE(class extends MirroringHost<any> {
-          subscription = new ApolloSubscriptionController<any>(this);
+        const tag = defineCE(class extends MirroringHost {
+          subscription = new ApolloSubscriptionController(this);
         });
         element = await fixture(`<${tag}></${tag}>`);
       });
@@ -200,10 +197,10 @@ describe('[core] ApolloSubscriptionController', function() {
       afterEach(teardownClient);
 
       describe('setting shouldSubscribe to constant false', function() {
-        let element: MirroringHost<typeof S.NullableParamSubscription>;
+        let element: MirroringHost;
 
         beforeEach(async function define() {
-          class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
+          class HelloSubscriptionHost extends MirroringHost {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               shouldSubscribe: () => false,
               onData: spy(),
@@ -283,10 +280,10 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       describe('with noAutoSubscribe option and NullableParamSubscription', function() {
-        let element: MirroringHost<typeof S.NullableParamSubscription>;
+        let element: MirroringHost;
 
         beforeEach(async function define() {
-          class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
+          class HelloSubscriptionHost extends MirroringHost {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               noAutoSubscribe: true,
               onData: spy(),
@@ -372,13 +369,13 @@ describe('[core] ApolloSubscriptionController', function() {
 
         describe('with context option', function() {
           beforeEach(function() {
-            element.subscription.options.context = 'none';
+            element.subscription.options.context = { none: 'none' };
           });
           describe('subscribe()', function() {
             beforeEach(() => element.subscription.subscribe());
             it('uses context option', function() {
               expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
-                context: 'none',
+                context: { none: 'none' },
               });
             });
           });
@@ -571,10 +568,10 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       describe('with NullableParamSubscription', function() {
-        let element: MirroringHost<typeof S.NullableParamSubscription>;
+        let element: MirroringHost;
 
         beforeEach(async function define() {
-          class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
+          class HelloSubscriptionHost extends MirroringHost {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               onData: spy(),
               onComplete: spy(),
@@ -693,13 +690,13 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       describe('with MessageSentSubscription', function() {
-        let element: MirroringHost<typeof S.MessageSentSubscription>;
+        let element: MirroringHost;
 
         beforeEach(resetMessages);
         afterEach(resetMessages);
 
         beforeEach(async function define() {
-          class HelloSubscriptionHost extends MirroringHost<typeof S.MessageSentSubscription> {
+          class HelloSubscriptionHost extends MirroringHost {
             declare shadowRoot: ShadowRoot;
 
             constructor() {
