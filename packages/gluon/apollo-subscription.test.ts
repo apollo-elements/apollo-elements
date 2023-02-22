@@ -18,7 +18,7 @@ import {
 
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloSubscription<D, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloSubscription<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 

@@ -57,13 +57,13 @@ export type Variables<D, V> =
   : V extends any ? OperationVariables
   : OperationVariables;
 
-type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+
+export type NullVars = Exact<{ [key: string]: never }>;
 
 export type VariablesOf<E> =
-  //   E extends TypedDocumentNode<infer _, infer V> ? V extends OperationVariables ? V : OperationVariables
-  // : E extends ApolloElementElement<infer D, infer V> ? Variables<D, V>
     E extends ApolloElementElement<infer D, infer V> ? Variables<D, V>
-  : OperationVariables | Exact<{ [key: string]: never }>;
+  : OperationVariables | NullVars;
 
 export type NextFetchPolicyFunction<D, V extends OperationVariables> =
   (

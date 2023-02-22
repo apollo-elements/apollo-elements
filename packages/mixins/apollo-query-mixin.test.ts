@@ -8,6 +8,7 @@ import type {
   WatchQueryFetchPolicy,
   NormalizedCacheObject,
   TypedDocumentNode,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import * as S from '@apollo-elements/test/schema';
@@ -30,7 +31,7 @@ class XL extends HTMLElement {
   hi?: 'hi';
 }
 
-class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloQuery<D = unknown, V extends OperationVariables = I.VariablesOf<D>>
   extends ApolloQueryMixin(XL)<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -252,7 +253,7 @@ function RuntimeMixin<Base extends Constructor>(superclass: Base) {
   };
 }
 
-class MixedClass<D, V = I.VariablesOf<D>>
+class MixedClass<D, V extends OperationVariables = I.VariablesOf<D>>
   extends RuntimeMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
 
 function ChildMixin<Base extends Constructor>(superclass: Base) {
@@ -261,12 +262,15 @@ function ChildMixin<Base extends Constructor>(superclass: Base) {
   };
 }
 
-class Inheritor<D, V = I.VariablesOf<D>> extends ChildMixin(MixedClass)<D, V> { }
+class Inheritor<
+  D,
+  V extends OperationVariables = I.VariablesOf<D>,
+> extends ChildMixin(MixedClass)<D, V> { }
 
 const runChecks = false;
 if (runChecks) {
-  const instance = new MixedClass<{ foo: number }, unknown>();
-  const inheritor = new Inheritor<{ foo: string }, unknown>();
+  const instance = new MixedClass<{ foo: number }>();
+  const inheritor = new Inheritor<{ foo: string }>();
   assertType<number>(instance.data!.foo);
   assertType<boolean>(instance.mixinProp);
   assertType<string>(inheritor.data!.foo);

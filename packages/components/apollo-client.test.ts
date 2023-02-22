@@ -12,7 +12,12 @@ import type {
 
 import type { ApolloQueryController } from '@apollo-elements/core';
 
-import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
+import {
+  gql,
+  NormalizedCacheObject,
+  type OperationVariables,
+  TypePolicies,
+} from '@apollo/client/core';
 
 import { ApolloClient, TypedDocumentNode } from '@apollo/client/core';
 
@@ -59,7 +64,10 @@ function restoreFetch() {
 
 describe('<apollo-client>', function() {
   describe('with basic elements', function() {
-    class ShallowElement<D, V = I.VariablesOf<D>> extends ApolloMutationMixin(HTMLElement)<D, V> {
+    class ShallowElement<
+      D,
+      V extends OperationVariables = I.VariablesOf<D>,
+    > extends ApolloMutationMixin(HTMLElement)<D, V> {
       declare shadowRoot: ShadowRoot;
 
       constructor() {
@@ -88,7 +96,10 @@ describe('<apollo-client>', function() {
       }
     }
 
-    class QueryElement<D, V = I.VariablesOf<D>> extends ApolloQueryMixin(HTMLElement)<D, V> {
+    class QueryElement<
+      D,
+      V extends OperationVariables = I.VariablesOf<D>,
+    > extends ApolloQueryMixin(HTMLElement)<D, V> {
       query = S.NoParamQuery;
 
       constructor() {
@@ -418,9 +429,9 @@ describe('<apollo-client>', function() {
             const { tagName } = FIXTURES.hybrids;
             Hybrids.define({
               tag: tagName,
-              render: host => Hybrids.html`${JSON.stringify(host.query.data)}`,
+              render: (host: any) => Hybrids.html`${JSON.stringify(host.query.data)}`,
               query: Hybrids.query(TagNameQuery, { variables: { tagName } }),
-            } as Hybrids.Component<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
+            } as unknown as Hybrids.Component<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
           },
         },
 

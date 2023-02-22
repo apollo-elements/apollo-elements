@@ -246,7 +246,11 @@ export class ApolloQueryElement<D = unknown, V extends OperationVariables = Vari
    * and returns an object with updated query data based on the new results.
    */
   @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: SubscribeToMoreOptions<
+      Data<D>,
+      Variables<D, TSubscriptionVariables>,
+      TSubscriptionData
+    >
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }

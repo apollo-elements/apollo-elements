@@ -41,7 +41,7 @@ const template = html<TestableApolloMutation<any>>`
 let counter = -1;
 
 @customElement({ name: 'fast-testable-apollo-mutation-class', template })
-class TestableApolloMutation<D, V = I.VariablesOf<D>>
+class TestableApolloMutation<D, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloMutation<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
@@ -107,7 +107,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       const name = 'renders-when-data-is-set';
       const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
       @customElement({ name, template })
-      class Test extends ApolloMutation<{ foo: 'bar' }, null> { }
+      class Test extends ApolloMutation<{ foo: 'bar' }> { }
       const tag = unsafeStatic(name);
       const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');

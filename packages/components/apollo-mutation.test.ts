@@ -41,7 +41,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   afterEach(teardownClient);
 
   describe('simply instantiating', function() {
-    let element: ApolloMutationElement<any, any>;
+    let element: ApolloMutationElement;
     beforeEach(async function() {
       element = await fixture(html`<apollo-mutation></apollo-mutation>`);
     });
@@ -376,7 +376,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         query: C.gql`{}` as C.TypedDocumentNode<D, V>,
         variables: {
           data: result.data?.i,
-          context: result.context,
           errors: result.errors!.map(x => x.message),
         },
       }];

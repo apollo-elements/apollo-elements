@@ -15,7 +15,7 @@ import {
   setupSubscriptionClass,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloSubscription<D, V> implements TestableElement {
   render(): TemplateResult {
     return html`
@@ -35,8 +35,8 @@ class TestableApolloSubscription<D, V = I.VariablesOf<D>>
 
 describe('[lit-apollo] ApolloSubscription', function describeApolloSubscription() {
   describeSubscription({
-    class: TestableApolloSubscription,
-    setupFunction: setupSubscriptionClass(TestableApolloSubscription),
+    class: TestableApolloSubscription as any,
+    setupFunction: setupSubscriptionClass(TestableApolloSubscription as any),
   });
 
   describe('subclassing', function() {

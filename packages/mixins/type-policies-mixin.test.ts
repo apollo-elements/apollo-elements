@@ -3,10 +3,10 @@ import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { TypePoliciesMixin } from './type-policies-mixin';
 import { ApolloQueryMixin } from './apollo-query-mixin';
 import { setupClient, teardownClient } from '@apollo-elements/test';
-import { gql } from '@apollo/client/core';
+import { gql, type OperationVariables } from '@apollo/client/core';
 
 describe('TypePoliciesMixin', function() {
-  class Base<D, V = I.VariablesOf<D>>
+  class Base<D, V extends OperationVariables = I.VariablesOf<D>>
     extends TypePoliciesMixin(ApolloQueryMixin(HTMLElement))<D, V> { }
 
   let element: Base<unknown>;

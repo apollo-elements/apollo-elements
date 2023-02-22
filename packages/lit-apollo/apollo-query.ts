@@ -240,7 +240,11 @@ export class ApolloQuery<
    * and returns an object with updated query data based on the new results.
    */
   public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: C.SubscribeToMoreOptions<
+      Data<D>,
+      Variables<D, TSubscriptionVariables>,
+      TSubscriptionData
+    >
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }

@@ -28,7 +28,10 @@ import { controlled } from '@apollo-elements/core/decorators';
  *
  * @element
  */
-export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloMutation<
+  D,
+  V extends C.OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * @summary Latest mutation data.
    */

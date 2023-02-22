@@ -1,4 +1,5 @@
 import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
+import type { OperationVariables } from '@apollo/client/core';
 
 import { GluonElement } from '@gluon/gluon';
 import { ApolloElementMixin } from '@apollo-elements/mixins/apollo-element-mixin';
@@ -14,7 +15,7 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloElement<D = unknown, V = VariablesOf<D>>
+export class ApolloElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloElementMixin(GluonElement as Constructor<GluonElement>)<D, V> {
   declare context?: Record<string, unknown>;
 

@@ -36,7 +36,7 @@ const template = html<TestableApolloQuery>`
 `;
 
 @customElement({ name: 'fast-testable-apollo-query-class', template })
-class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloQuery<D = unknown, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloQuery<D, V>
   implements TestableElement {
   async hasRendered() {
@@ -91,7 +91,7 @@ describe('[FAST] ApolloQuery', function() {
   it('renders when data is set', async function rendersOnData() {
     const name = 'renders-when-data-is-set';
     const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
-    @customElement({ name, template }) class Test extends ApolloQuery<{ foo: 'bar' }, null> { }
+    @customElement({ name, template }) class Test extends ApolloQuery<{ foo: 'bar' }> { }
     const tag = unsafeStatic(name);
     const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
     expect(element).shadowDom.to.equal('bar');

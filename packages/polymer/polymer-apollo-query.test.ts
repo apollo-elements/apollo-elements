@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/core/types';
 
-import { gql } from '@apollo/client/core';
+import { gql, type OperationVariables } from '@apollo/client/core';
 
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
@@ -19,7 +19,7 @@ import * as S from '@apollo-elements/test/schema';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 
-class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloQuery<D = unknown, V extends OperationVariables = I.VariablesOf<D>>
   extends PolymerApolloQuery<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

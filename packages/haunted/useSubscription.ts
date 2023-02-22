@@ -1,4 +1,4 @@
-import type { ComponentDocument, VariablesOf } from '@apollo-elements/core/types';
+import type { ComponentDocument, NullVars, VariablesOf } from '@apollo-elements/core/types';
 
 import type { OperationVariables } from '@apollo/client/core';
 
@@ -9,7 +9,7 @@ import {
   ApolloSubscriptionControllerOptions,
 } from '@apollo-elements/core/apollo-subscription-controller';
 
-export function useSubscription<D, V extends OperationVariables = VariablesOf<D>>(
+export function useSubscription<D, V extends OperationVariables|NullVars = VariablesOf<D>>(
   query: ComponentDocument<D>,
   options?: ApolloSubscriptionControllerOptions<D, V>
 ): ApolloSubscriptionController<D, V> {

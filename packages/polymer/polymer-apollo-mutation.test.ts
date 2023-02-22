@@ -4,7 +4,7 @@ import type * as C from '@apollo/client/core';
 
 import { aTimeout, fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 
-import { gql } from '@apollo/client/core';
+import { gql, type OperationVariables } from '@apollo/client/core';
 
 import { stub, spy } from 'sinon';
 
@@ -30,7 +30,7 @@ import { flush } from '@polymer/polymer/lib/utils/flush';
 
 import * as S from '@apollo-elements/test/schema';
 
-class TestableApolloMutation<D, V = I.VariablesOf<D>>
+class TestableApolloMutation<D, V extends OperationVariables = I.VariablesOf<D>>
   extends PolymerApolloMutation<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
