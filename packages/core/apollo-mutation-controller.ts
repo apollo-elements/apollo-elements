@@ -98,7 +98,7 @@ export class ApolloMutationController<D = any, V extends OperationVariables = Va
       optimisticResponse: this.options.optimisticResponse as OptimisticResponseType<any, any>,
       refetchQueries: this.options.refetchQueries ?? undefined,
       update: this.options.update as any,
-      variables: this.variables as any,
+      variables: this.variables ?? undefined,
       ...params,
     })
       .then(this.onCompletedMutation.bind(this, mutationId))
