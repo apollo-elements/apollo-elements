@@ -28,7 +28,10 @@ import { controlled } from '@apollo-elements/core/decorators';
  *
  * @element
  */
-export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloMutation<
+  D,
+  V extends C.OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * @summary Latest mutation data.
    */
@@ -57,7 +60,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   /** @summary The mutation. */
   @hosted()
   @controlled()
-    mutation: ComponentDocument<D, V> | null = null;
+    mutation: ComponentDocument<D> | null = null;
 
   /**
    * An object that represents the result of this mutation that will be optimistically

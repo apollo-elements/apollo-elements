@@ -455,7 +455,7 @@ describe('GraphQLScriptChildMixin', function() {
 
     describe('with no script child', function() {
       beforeEach(async function setupElement() {
-        ({ element } = await setupFunction());
+        ({ element } = await setupFunction() as any);
       });
 
       describe('appending a script child with wrong type', function() {
@@ -492,7 +492,7 @@ describe('GraphQLScriptChildMixin', function() {
         ({ element } =
           await setupFunction({
             innerHTML: `<script type="application/graphql">${NoParamQuery.loc!.source.body}</script>`,
-          }));
+          }) as any);
       });
 
       beforeEach(waitForRender(() => element));
@@ -566,7 +566,7 @@ describe('GraphQLScriptChildMixin', function() {
       async hasRendered() { return this; }
     }
 
-    const setupFunction = setupMutationClass(Test);
+    const setupFunction = setupMutationClass(Test as any);
 
     let element: Test;
 
@@ -580,7 +580,7 @@ describe('GraphQLScriptChildMixin', function() {
       beforeEach(async function setupElement() {
         ({ element } = await setupFunction({
           innerHTML: `<script type="application/graphql">${NoParamMutation.loc!.source.body}</script>`,
-        }));
+        }) as any);
       });
 
       it('does not remove the script', function() {
@@ -633,7 +633,7 @@ describe('GraphQLScriptChildMixin', function() {
           innerHTML: `
             <script type="application/graphql">${NoParamSubscription?.loc?.source.body}</script>
           `,
-        }));
+        }) as any);
       });
 
       beforeEach(waitForRender(() => element));

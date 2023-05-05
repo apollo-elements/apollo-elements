@@ -26,7 +26,10 @@ import { controlled } from '@apollo-elements/core/decorators';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloSubscription<
+  D,
+  V extends C.OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   controller = new ApolloSubscriptionBehavior<D, V>(this, null, {
     shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
     onData: data => this.onSubscriptionData?.(data),
@@ -54,7 +57,7 @@ export class ApolloSubscription<D, V = VariablesOf<D>> extends ApolloElement<D, 
    */
   @hosted()
   @controlled()
-    subscription: ComponentDocument<D, V> | null = null;
+    subscription: ComponentDocument<D> | null = null;
 
   /**
    * @summary If true, the element will not begin querying data until you manually call `subscribe`

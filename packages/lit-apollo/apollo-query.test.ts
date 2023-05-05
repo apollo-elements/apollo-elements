@@ -23,7 +23,10 @@ import { NetworkStatus } from '@apollo/client/core';
 
 import { spy, SinonSpy } from 'sinon';
 
-class TestableApolloQuery<D, V = I.VariablesOf<D>> extends ApolloQuery<D, V> implements TE {
+class TestableApolloQuery<
+  D,
+  V extends C.OperationVariables = I.VariablesOf<D>,
+> extends ApolloQuery<D, V> implements TE {
   render() {
     return html`
       <output id="data">${stringify(this.data)}</output>
@@ -47,8 +50,8 @@ class TestableApolloQuery<D, V = I.VariablesOf<D>> extends ApolloQuery<D, V> imp
 
 describe('[lit-apollo] ApolloQuery', function() {
   describeQuery({
-    setupFunction: setupQueryClass(TestableApolloQuery),
-    class: TestableApolloQuery,
+    setupFunction: setupQueryClass(TestableApolloQuery as any),
+    class: TestableApolloQuery as any,
   });
 
   describe('subclassing', function() {

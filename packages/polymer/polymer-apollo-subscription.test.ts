@@ -1,4 +1,5 @@
 import type * as I from '@apollo-elements/core/types';
+import type { OperationVariables } from '@apollo/client/core';
 
 import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
@@ -18,7 +19,7 @@ import * as S from '@apollo-elements/test/schema';
 
 import './polymer-apollo-subscription';
 
-class TestableApolloSubscription<D, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D, V extends OperationVariables = I.VariablesOf<D>>
   extends PolymerApolloSubscription<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

@@ -45,10 +45,7 @@ describe('[haunted] useSubscription', function() {
   });
 
   describe('without options', function() {
-    let options: ApolloSubscriptionController<
-      S.NullableParamSubscriptionData,
-      S.NullableParamSubscriptionVariables
-    >['options'];
+    let options: ApolloSubscriptionController<typeof S.NullableParamSubscription>['options'];
 
     beforeEach(async function define() {
       function Component() {
@@ -72,10 +69,7 @@ describe('[haunted] useSubscription', function() {
   describe('with shouldSubscribe set to constant false', function() {
     let element: HTMLElement;
 
-    let doSubscribe: ApolloSubscriptionController<
-      S.NullableParamSubscriptionData,
-      S.NullableParamSubscriptionVariables
-    >['subscribe'];
+    let doSubscribe: ApolloSubscriptionController<typeof S.NullableParamSubscription>['subscribe'];
 
     beforeEach(async function define() {
       function Component() {
@@ -396,13 +390,13 @@ describe('[haunted] useSubscription', function() {
 
       describe('with context option', function() {
         beforeEach(function() {
-          element.subscription.options.context = 'none';
+          element.subscription.options.context = { none: 'none' };
         });
         describe('subscribe()', function() {
           beforeEach(() => element.subscription.subscribe());
           it('uses context option', function() {
             expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
-              context: 'none',
+              context: { none: 'none' },
             });
           });
         });
@@ -718,7 +712,7 @@ function TDNTypeCheck() {
   assertType<boolean>(loading);
   assertType<TypeCheckData>(data!);
   assertType<TypeCheckVars>(variables!);
-  assertType<ApolloSubscriptionControllerOptions<TypeCheckData, TypeCheckVars>>(options);
+  assertType<ApolloSubscriptionControllerOptions<typeof TDN>>(options);
   assertType<ReactiveControllerHost>(host);
   assertType<readonly GraphQLError[]>(errors);
 }

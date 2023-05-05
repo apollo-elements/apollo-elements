@@ -1,5 +1,5 @@
 import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus, type OperationVariables } from '@apollo/client/core';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 import { notify } from './notify-decorator.js';
@@ -33,7 +33,7 @@ import { notify } from './notify-decorator.js';
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloQuery<D = unknown, V = VariablesOf<D>>
+export class PolymerApolloQuery<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloQueryMixin(
     PolymerApolloElement as Constructor<PolymerApolloElement<unknown>>
   )<D, V> {

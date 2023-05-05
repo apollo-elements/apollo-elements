@@ -24,7 +24,10 @@ import {
 } from '@apollo-elements/core/apollo-query-controller';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V = VariablesOf<D>>(...a: any[]): InstanceType<B> & ApolloQueryElement<D, V>;
+  new <
+    D,
+    V extends C.OperationVariables = VariablesOf<D>,
+  >(...a: any[]): InstanceType<B> & ApolloQueryElement<D, V>;
   documentType: 'query',
 }
 
@@ -32,9 +35,9 @@ type MixinInstance<B extends Constructor> = B & {
  * `ApolloQueryMixin`: class mixin for apollo-query elements.
  */
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
-  class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
+  class ApolloQueryElement<D = unknown, V extends C.OperationVariables = VariablesOf<D>>
     extends ApolloElementMixin(superclass)<D, V> {
-    static override documentType: 'query' = 'query';
+    static override documentType = 'query' as const;
 
     static override get observedAttributes(): string[] {
       return [
@@ -105,7 +108,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
     @controlled() networkStatus: NetworkStatus = NetworkStatus.ready;
 
     /** @summary A GraphQL document containing a single query. */
-    @controlled() query: ComponentDocument<D, V> | null = null;
+    @controlled() query: ComponentDocument<D> | null = null;
 
     /**
      * Determines where the client may return a result from. The options are:
@@ -259,7 +262,11 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * and returns an object with updated query data based on the new results.
      */
     subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-      options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+      options: C.SubscribeToMoreOptions<
+        Data<D>,
+        Variables<D, TSubscriptionVariables>,
+        TSubscriptionData
+      >
     ): void | (() => void) {
       return this.controller.subscribeToMore(options);
     }

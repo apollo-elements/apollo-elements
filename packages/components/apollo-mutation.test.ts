@@ -376,7 +376,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         query: C.gql`{}` as C.TypedDocumentNode<D, V>,
         variables: {
           data: result.data?.i,
-          context: result.context,
           errors: result.errors!.map(x => x.message),
         },
       }];

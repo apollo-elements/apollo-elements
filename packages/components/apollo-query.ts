@@ -6,6 +6,7 @@ import type {
   WatchQueryFetchPolicy,
   WatchQueryOptions,
   ObservableSubscription,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import type {
@@ -74,7 +75,7 @@ declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryEl
  * ```
  */
 @customElement('apollo-query')
-export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
+export class ApolloQueryElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-query';
 
@@ -109,7 +110,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
   /**
    * @summary A GraphQL document containing a single query.
    */
-  @controlled() @state() query: null | ComponentDocument<D, V> = null;
+  @controlled() @state() query: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -245,7 +246,11 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * and returns an object with updated query data based on the new results.
    */
   @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: SubscribeToMoreOptions<
+      Data<D>,
+      Variables<D, TSubscriptionVariables>,
+      TSubscriptionData
+    >
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }

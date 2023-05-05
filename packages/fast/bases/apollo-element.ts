@@ -1,3 +1,5 @@
+import type { OperationVariables } from '@apollo/client/core';
+
 import type {
   ComponentDocument,
   Data,
@@ -23,7 +25,10 @@ import { hosted } from './decorators';
  *
  * @element
  */
-export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement {
+export class ApolloElement<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends FASTElement {
   declare controller: ApolloController<D, V>;
 
   readyToReceiveDocument = false;
@@ -54,7 +59,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
    */
   @hosted()
   @controlled()
-    document: ComponentDocument<D, V> | null = null;
+    document: ComponentDocument<D> | null = null;
 
   /** @summary Context passed to the link execution chain. */
   @hosted({ path: 'options' })

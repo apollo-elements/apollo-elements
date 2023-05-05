@@ -2,6 +2,8 @@ import type { ComponentDocument, Data, Variables, VariablesOf } from '@apollo-el
 
 import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
 
+import type { OperationVariables } from '@apollo/client/core';
+
 import {
   ApolloMutationController as AMC,
   ApolloMutationControllerOptions,
@@ -15,7 +17,10 @@ import { FASTControllerHost } from './fast-controller-host';
  *
  * 🚀  FAST Behavior that connects to your Apollo cache.
  */
-export class ApolloMutationBehavior<D, V = VariablesOf<D>> extends AMC<D, V> implements Behavior {
+export class ApolloMutationBehavior<
+  D,
+  V extends OperationVariables = VariablesOf<D>,
+> extends AMC<D, V> implements Behavior {
   /**
    * Latest query data.
    */
@@ -41,7 +46,7 @@ export class ApolloMutationBehavior<D, V = VariablesOf<D>> extends AMC<D, V> imp
 
   constructor(
     public hostElement: FASTElement & HTMLElement,
-    mutation?: ComponentDocument<D, V> | null,
+    mutation?: ComponentDocument<D> | null,
     options?: ApolloMutationControllerOptions<D, V>,
   ) {
     super(new FASTControllerHost(hostElement), mutation, { ...options, hostElement });

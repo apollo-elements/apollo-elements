@@ -1,4 +1,5 @@
 import type { ComponentDocument, VariablesOf } from '@apollo-elements/core/types';
+import type { OperationVariables } from '@apollo/client/core';
 
 import { GraphQLScriptChildMixin } from '@apollo-elements/mixins/graphql-script-child-mixin';
 
@@ -61,7 +62,7 @@ declare global { interface HTMLElementTagNameMap {
  * ```
  */
 @customElement('apollo-subscription')
-export class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
+export class ApolloSubscriptionElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
   static readonly is = 'apollo-subscription';
 
@@ -73,7 +74,7 @@ export class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
   /**
    * @summary A GraphQL document containing a single subscription.
    */
-  @controlled() @state() subscription: null | ComponentDocument<D, V> = null;
+  @controlled() @state() subscription: null | ComponentDocument<D> = null;
 
   /** @summary Context passed to the link execution chain. */
   @controlled({ path: 'options' }) @state() context?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

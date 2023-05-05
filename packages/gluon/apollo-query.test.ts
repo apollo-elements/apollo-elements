@@ -19,7 +19,7 @@ import { spy, SinonSpy } from 'sinon';
 
 import { GluonElement } from '@gluon/gluon';
 
-class TestableApolloQuery<D, V = I.VariablesOf<D>>
+class TestableApolloQuery<D, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloQuery<D, V>
   implements TestableElement {
   static get is() { return 'apollo-query'; }

@@ -5,6 +5,7 @@ import type {
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
+  OperationVariables,
   TypedDocumentNode,
 } from '@apollo/client/core';
 
@@ -24,7 +25,7 @@ import { describeMutation, setupMutationClass } from '@apollo-elements/test/muta
 /**
  * Testable Mixed-in Apollo Mutation class
  */
-class TestableApolloMutation<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloMutation<D = unknown, V extends OperationVariables = I.VariablesOf<D>>
   extends ApolloMutationMixin(class XL extends HTMLElement { hi?: 'hi'; })<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;

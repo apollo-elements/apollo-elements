@@ -10,7 +10,7 @@ import type {
 import type * as C from '@apollo/client/core';
 
 import { ApolloElement } from './apollo-element.js';
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus, type OperationVariables } from '@apollo/client/core';
 import { attr, nullableNumberConverter } from '@microsoft/fast-element';
 
 import { hosted } from './decorators.js';
@@ -29,7 +29,10 @@ import { controlled } from '@apollo-elements/core/decorators';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloQuery<
+  D = unknown,
+  V extends OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * Latest query data.
    */
@@ -103,7 +106,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    */
   @hosted()
   @controlled()
-    query: ComponentDocument<D, V> | null = null;
+    query: ComponentDocument<D> | null = null;
 
   /**
    * If data was read from the cache with missing fields,
@@ -243,7 +246,11 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * and returns an object with updated query data based on the new results.
    */
   public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: C.SubscribeToMoreOptions<
+      Data<D>,
+      Variables<D, TSubscriptionVariables>,
+      TSubscriptionData
+    >
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }

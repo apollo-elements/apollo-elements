@@ -2,6 +2,7 @@ import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements
 
 import { ApolloElement } from './apollo-element.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
+import { OperationVariables } from '@apollo/client/core';
 
 export { html } from '@gluon/gluon';
 
@@ -15,7 +16,7 @@ export { html } from '@gluon/gluon';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D = unknown, V = VariablesOf<D>>
+export class ApolloSubscription<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement<unknown>>)<D, V> {
   /** @summary Latest subscription data. */
   declare data: Data<D> | null;

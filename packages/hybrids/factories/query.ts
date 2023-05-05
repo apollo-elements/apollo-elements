@@ -1,4 +1,4 @@
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
+import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client/core';
 
 import type { Descriptor } from 'hybrids';
 
@@ -16,7 +16,7 @@ import {
  * @param  options Options to control the query.
  * @return Hybrids descriptor for a [`ApolloQueryController`](/api/core/controllers/query/)
  */
-export function query<E extends HTMLElement, D, V>(
+export function query<E extends HTMLElement, D, V extends OperationVariables>(
  queryDocument?: DocumentNode | null,
  options?: ApolloQueryControllerOptions<D, V>,
 ): Descriptor<E, ApolloQueryController<D, V>>

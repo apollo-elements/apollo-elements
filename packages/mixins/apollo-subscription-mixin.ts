@@ -18,12 +18,15 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V = VariablesOf<D>>(...a: any[]): InstanceType<B> & ApolloSubscriptionElement<D, V>;
+  new <
+    D,
+    V extends C.OperationVariables = VariablesOf<D>,
+  >(...a: any[]): InstanceType<B> & ApolloSubscriptionElement<D, V>;
   documentType: 'subscription';
 }
 
 function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
-  class MixedApolloSubscriptionElement<D, V = VariablesOf<D>>
+  class MixedApolloSubscriptionElement<D, V extends C.OperationVariables = VariablesOf<D>>
     extends ApolloElementMixin(superclass)<D, V> {
     static override documentType = 'subscription' as const;
 
@@ -55,7 +58,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
       onError: error => this.onError?.(error),
     });
 
-    @controlled() subscription: ComponentDocument<D, V> | null = null;
+    @controlled() subscription: ComponentDocument<D> | null = null;
 
     @controlled({ readonly: true }) declare readonly canAutoSubscribe: boolean;
 

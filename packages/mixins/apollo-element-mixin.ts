@@ -3,6 +3,7 @@ import type {
   ApolloError,
   ErrorPolicy,
   NormalizedCacheObject,
+  OperationVariables,
 } from '@apollo/client/core';
 
 import type {
@@ -24,7 +25,10 @@ import { ApolloElementEvent } from '@apollo-elements/core/events';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 type MixinInstance<B extends Constructor<HTMLElement>> = B & {
-  new <D = unknown, V = VariablesOf<D>>(): ControllerHost & ApolloElementElement<D, V>;
+  new <
+    D = unknown,
+    V extends OperationVariables = VariablesOf<D>,
+  >(): ControllerHost & ApolloElementElement<D, V>;
   documentType: 'document'|'mutation'|'query'|'subscription';
   observedAttributes?: string[];
 }
@@ -34,7 +38,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 }>(
   superclass: B
 ): MixinInstance<B> {
-  class ApolloElement<D = unknown, V = VariablesOf<D>>
+  class ApolloElement<D = unknown, V extends OperationVariables = VariablesOf<D>>
     extends ControllerHostMixin(superclass) {
     static documentType: 'document'|'query'|'mutation'|'subscription' = 'document';
 
@@ -57,7 +61,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
      * A GraphQL document containing a single query, mutation, or subscription.
      * You can set it as a JavaScript property or by appending a GraphQL script to the element (light DOM).
      */
-    @controlled() document: ComponentDocument<D, V> | null = null;
+    @controlled() document: ComponentDocument<D> | null = null;
 
     /** @summary Latest data */
     @controlled() data: Data<D> | null = null;

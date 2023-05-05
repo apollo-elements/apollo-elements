@@ -2,6 +2,7 @@ import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
 import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 import { notify } from './notify-decorator.js';
+import { OperationVariables } from '@apollo/client/core';
 
 /**
  * @element polymer-apollo-mutation
@@ -31,7 +32,7 @@ import { notify } from './notify-decorator.js';
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloMutation<D = unknown, V = VariablesOf<D>>
+export class PolymerApolloMutation<D = unknown, V extends OperationVariables = VariablesOf<D>>
   extends ApolloMutationMixin(
     PolymerApolloElement as Constructor<PolymerApolloElement<unknown>>
   )<D, V> {

@@ -19,7 +19,7 @@ import { match, spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
 describe('[core] ApolloQueryController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
     class MirroringHost extends ReactiveElement {
-      query!: ApolloQueryController<any>;
+      query!: ApolloQueryController;
 
       data?: unknown;
 
@@ -58,7 +58,7 @@ describe('[core] ApolloQueryController', function() {
 
       beforeEach(async function setupElement() {
         const tag = defineCE(class extends MirroringHost {
-          query = new ApolloQueryController<TypedDocumentNode, unknown>(this);
+          query = new ApolloQueryController(this);
         });
         element = await fixture(`<${tag}></${tag}>`);
       });
@@ -494,23 +494,23 @@ describe('[core] ApolloQueryController', function() {
 
         describe('with context option', function() {
           beforeEach(function() {
-            element.query.options!.context = 'none';
+            element.query.options!.context = { none: 'none' };
           });
 
           describe('executeQuery()', function() {
             beforeEach(() => element.query.executeQuery());
             it('uses context option', function() {
               expect(element.query.client!.query).to.have.been.calledWithMatch({
-                context: 'none',
+                context: { none: 'none' },
               });
             });
           });
 
           describe('executeQuery({ context })', function() {
-            beforeEach(() => element.query.executeQuery({ context: 'all' }));
+            beforeEach(() => element.query.executeQuery({ context: { all: 'all' } }));
             it('uses provided context', function() {
               expect(element.query.client!.query).to.have.been.calledWithMatch({
-                context: 'all',
+                context: { all: 'all' },
               });
             });
           });
@@ -777,7 +777,7 @@ describe('[core] ApolloQueryController', function() {
             this.attachShadow({ mode: 'open' });
           }
 
-          query = new ApolloQueryController<typeof S.MessagesQuery>(this, S.MessagesQuery, {
+          query = new ApolloQueryController(this, S.MessagesQuery, {
             onData: data => {
               this.shadowRoot.innerHTML =
                 `<ol>${data.messages!.map(x => `<li>${x!.message}</li>`).join('')}</ol>`;

@@ -33,7 +33,7 @@ const template = html<TestableApolloSubscription<any>>`
 `;
 
 @customElement({ name: 'testable-apollo-subscription', template })
-class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D = unknown, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloSubscription<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -89,7 +89,7 @@ describe('[FAST] ApolloSubscription', function() {
       const name = 'renders-when-data-is-set';
       const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
       @customElement({ name, template })
-      class Test extends ApolloSubscription<{ foo: 'bar' }, null> { }
+      class Test extends ApolloSubscription<{ foo: 'bar' }> { }
       const tag = unsafeStatic(name);
       const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');

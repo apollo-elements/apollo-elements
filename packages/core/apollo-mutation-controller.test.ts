@@ -91,7 +91,7 @@ describe('[core] ApolloMutationController', function() {
 
     describe('on a ReactiveElement that mirrors props', function() {
       class MirroringHost extends ReactiveElement {
-        declare mutation: ApolloMutationController<any, any>;
+        declare mutation: ApolloMutationController;
 
         called = false;
 

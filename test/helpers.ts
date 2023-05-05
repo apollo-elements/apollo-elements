@@ -120,7 +120,7 @@ function setupClass<T extends TestableElement & Omit<ApolloElementElement<unknow
 }
 
 export const setupApolloElementClass = setupClass();
-export const setupQueryClass = setupClass<TestableElement & Omit<ApolloQueryElement<any, any>, 'update'|'updated'>>();
+export const setupQueryClass = setupClass<TestableElement & Omit<ApolloQueryElement<any, any>, 'updated'>>();
 export const setupSubscriptionClass = setupClass<TestableElement & Omit<ApolloSubscriptionElement<any, any>, 'update'|'updated'>>();
 export const setupMutationClass = setupClass<TestableElement & Omit<ApolloMutationElement<any, any>, 'update'|'updated'>>({
   omitKeys: ['onCompleted', 'onError'],

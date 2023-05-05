@@ -1,4 +1,5 @@
 import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
+import type { OperationVariables } from '@apollo/client/core';
 
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { ApolloElement } from './apollo-element.js';
@@ -14,8 +15,8 @@ export { html } from '@gluon/gluon';
  *
  * @element
  */
-export class ApolloQuery<D = unknown, V = VariablesOf<D>>
-  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement<unknown>>)<D, V> {
+export class ApolloQuery<D = unknown, V extends OperationVariables = VariablesOf<D>>
+  extends ApolloQueryMixin(ApolloElement as Constructor<ApolloElement>)<D, V> {
   /** @summary Latest query data. */
   declare data: Data<D> | null;
 

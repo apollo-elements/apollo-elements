@@ -26,7 +26,7 @@ import { property } from 'lit/decorators.js';
 import { describeMutation, setupMutationClass } from '@apollo-elements/test/mutation.test';
 import { stringify } from '@apollo-elements/test';
 
-class TestableApolloMutation<D, V = I.VariablesOf<D>>
+class TestableApolloMutation<D, V extends C.OperationVariables = I.VariablesOf<D>>
   extends ApolloMutation<D, V> implements TestableElement {
   declare shadowRoot: ShadowRoot;
 
@@ -53,8 +53,8 @@ class TestableApolloMutation<D, V = I.VariablesOf<D>>
 
 describe('[lit-apollo] ApolloMutation', function() {
   describeMutation({
-    class: TestableApolloMutation,
-    setupFunction: setupMutationClass(TestableApolloMutation),
+    class: TestableApolloMutation as any,
+    setupFunction: setupMutationClass(TestableApolloMutation as any),
   });
 
   describe('subclassing', function() {

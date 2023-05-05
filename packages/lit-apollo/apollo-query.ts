@@ -29,7 +29,10 @@ import { ApolloElement } from './apollo-element.js';
  * See [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events
  *
  */
-export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloQuery<
+  D = unknown,
+  V extends C.OperationVariables = VariablesOf<D>,
+> extends ApolloElement<D, V> {
   /**
    * Latest query data.
    */
@@ -102,7 +105,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    */
   @controlled()
   @state()
-    query: null | ComponentDocument<D, V> = null;
+    query: null | ComponentDocument<D> = null;
 
   /**
    * If data was read from the cache with missing fields,
@@ -237,7 +240,11 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * and returns an object with updated query data based on the new results.
    */
   public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
-    options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: C.SubscribeToMoreOptions<
+      Data<D>,
+      Variables<D, TSubscriptionVariables>,
+      TSubscriptionData
+    >
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }

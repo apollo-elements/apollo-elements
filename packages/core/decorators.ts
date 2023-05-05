@@ -40,7 +40,7 @@ export interface DefineOptions {
 }
 
 interface ApolloReactiveElement extends ReactiveElement {
-  controller: ApolloController<unknown, unknown>;
+  controller: ApolloController;
 }
 
 function defineOnReactiveElement<T extends ApolloReactiveElement>(
@@ -64,7 +64,7 @@ function defineOnReactiveElement<T extends ApolloReactiveElement>(
 }
 
 function defineOnHTMLElement<T extends HTMLElement & {
-  controller: ApolloController<unknown, unknown>;
+  controller: ApolloController;
   requestUpdate?(name?: string, old?: unknown): void;
 }>(
   proto: T,
@@ -82,7 +82,7 @@ function defineOnHTMLElement<T extends HTMLElement & {
       } else {
         return (
             !this.controller ? getInitialProp(this, name)/* c8 ignore next */
-          : this.controller[name as keyof ApolloController<unknown, unknown>]
+          : this.controller[name as keyof ApolloController]
         );
       }
     },
