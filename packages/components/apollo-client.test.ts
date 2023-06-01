@@ -376,7 +376,7 @@ describe('<apollo-client>', function() {
             `);
           });
 
-          beforeEach(() => aTimeout(50));
+          beforeEach(() => aTimeout(100));
 
           it('fetches the query', async function() {
             expect(window.fetch).to.have.been.calledOnce;
