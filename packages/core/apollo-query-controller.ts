@@ -194,6 +194,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       ...(this.options.context && { context: this.options.context }),
       ...(this.options.errorPolicy && { errorPolicy: this.options.errorPolicy }),
       ...(this.options.fetchPolicy && { fetchPolicy: this.options.fetchPolicy }),
+      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
       ...(this.options.pollInterval !== undefined && { pollInterval: this.options.pollInterval }),
       ...(this.options.nextFetchPolicy && { nextFetchPolicy: this.options.nextFetchPolicy }),
       ...params,
@@ -294,6 +295,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       ...(this.options.context && { context: this.options.context }),
       ...(this.options.errorPolicy && { errorPolicy: this.options.errorPolicy }),
       ...(this.options.fetchPolicy && { fetchPolicy: this.options.fetchPolicy }),
+      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
       ...(this.options.pollInterval !== undefined && { pollInterval: this.options.pollInterval }),
       ...(this.options.refetchWritePolicy && { refetchWritePolicy: this.options.refetchWritePolicy }),
       ...params,
@@ -388,6 +390,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
         ...(this.options.context && { context: this.options.context }),
         ...(this.options.errorPolicy && { errorPolicy: this.options.errorPolicy }),
         ...(fetchPolicy && { fetchPolicy }),
+        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
         ...params,
       });
       if (result) // NB: not sure why, but sometimes this returns undefined
