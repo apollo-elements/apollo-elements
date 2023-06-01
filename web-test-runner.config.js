@@ -3,6 +3,8 @@ import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
 import { sendKeysPlugin } from '@web/test-runner-commands/plugins';
 import { resolveLocalFilesFromTypeScriptSources } from './plugins/resolve-local.js';
+import { playwrightLauncher } from '@web/test-runner-playwright';
+
 
 import _commonjs from '@rollup/plugin-commonjs';
 import _graphql from '@rollup/plugin-graphql';
@@ -27,6 +29,8 @@ export default ({
   nodeResolve: {
     extensions: ['.ts', '.mjs', '.js', '.css', '.graphql'],
   },
+
+  browsers: [playwrightLauncher()],
 
   rootDir,
 
