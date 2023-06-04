@@ -65,8 +65,10 @@
     "./docs"
   ],
   "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
     "@11ty/eleventy-plugin-inclusive-language": "^1.0.3",
     "@11ty/eleventy-plugin-syntaxhighlight": "^4.0.0",
+    "@11ty/eleventy-plugin-webc": "^0.11.1",
     "@airbnb/node-memwatch": "^2.0.0",
     "@apollo/client": "^3.5.9",
     "@babel/cli": "^7.17.6",
@@ -129,6 +131,7 @@
     "eleventy-plugin-add-web-component-definitions": "^2.1.1",
     "eleventy-plugin-footnotes": "^0.10.0",
     "eleventy-plugin-helmet": "^0.2.2",
+    "eleventy-plugin-slide-decks": "^0.3.0",
     "esbuild": "^0.14.28",
     "esbuild-plugin-lit-css": "^1.2.4",
     "eslint": "^8.12.0",

@@ -5,7 +5,7 @@ attrs: slide-out center
 
 <header fit uppercase flex color="--primary">
 
-{% include ../../../graphql.svg % }
+{% include '../../../graphql.svg' %}
 
 ## GraphQL
 

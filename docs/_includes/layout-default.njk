@@ -1,0 +1,34 @@
+<!doctype html>
+{% block htmlTag %}
+<html lang="{{ site.lang }}" dir="{{ site.dir }}">
+{% endblock htmlTag %}
+
+  {% block head %}
+    {% include 'partials/head.njk' %}
+  {% endblock head %}
+
+  {% block bodyTag %}
+  <body layout="{{ layout }}">
+  {% endblock bodyTag %}
+
+    {% block header %}
+      {% include 'partials/header.njk' %}
+    {% endblock header%}
+
+    {% block main %}
+      <div id="content-wrapper">
+        <div class="content-area">
+          {% block content %}
+            {% include 'partials/content.njk' %}
+          {% endblock content %}
+        </div>
+      </div>
+    {% endblock main %}
+
+    {% block footer %}
+      {% include 'partials/footer.njk' %}
+    {% endblock footer %}
+
+    {% include 'partials/bottom.njk' %}
+  </body>
+</html>

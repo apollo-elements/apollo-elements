@@ -30,7 +30,7 @@ We'll develop an Apollo element which queries the entire list of sites and displ
 The mutation will take a list of string site IDs as its input. In order to get that list of selected sites, we'll define a `selected` client-side state property on the `Site` object. Whenever the user selects a site in the list, we'll update the local state using `writeFragment`, then when the user clicks the *Create Network* button, we'll filter the list of all sites, taking only the ids of those sites which are selected.
 
 <figure aria-label="Sequence Diagram for one-way data flow">
-  {%- include ./mermaid-local-state.svg -%}
+  {%- include './mermaid-local-state.svg' -%}
 
   <figcaption class="visually-hidden">
 
@@ -150,31 +150,31 @@ Then, when the user is ready to create the Network, she clicks the `Create` butt
 <code-tabs collection="libraries" default-tab="lit">
 
 ```html tab html
-{% include ./_assets/final.html.html %}
+{% include './_assets/final.html.html' %}
 ```
 
 ```ts tab mixins
-{% include ./_assets/final.mixins.ts %}
+{% include './_assets/final.mixins.ts' %}
 ```
 
 ```ts tab lit
-{% include ./_assets/final.lit.ts %}
+{% include './_assets/final.lit.ts' %}
 ```
 
 ```ts tab fast
-{% include ./_assets/final.fast.ts %}
+{% include './_assets/final.fast.ts' %}
 ```
 
 ```ts tab haunted
-{% include ./_assets/final.haunted.ts %}
+{% include './_assets/final.haunted.ts' %}
 ```
 
 ```tsx tab atomico
-{% include ./_assets/final.atomico.tsx %}
+{% include './_assets/final.atomico.tsx' %}
 ```
 
 ```ts tab hybrids
-{% include ./_assets/final.hybrids.ts %}
+{% include './_assets/final.hybrids.ts' %}
 ```
 
 </code-tabs>

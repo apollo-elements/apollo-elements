@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  color: var(--code-button-color, inherit);
+  position: relative;
+  padding: 9px 16px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  font-size: 16px;
+  background: var(--code-button-background, var(--markdown-table-row-odd-background-color));
+  outline: none;
+  transition: color, background 0.1s ease;
+}
+
+button:focus,
+button:hover {
+  color: var(--code-button-focus-color, inherit);
+  background: var(--code-button-focus-background, var(--primary-lines-color));
+}
+
+button[selected] {
+  text-decoration: none;
+}
+
+button:active {
+  color: var(--code-button-active-color);
+}

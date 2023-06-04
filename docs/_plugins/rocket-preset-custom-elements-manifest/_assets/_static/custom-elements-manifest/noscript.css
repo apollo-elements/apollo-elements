@@ -1,0 +1,116 @@
+css-value-doc:not(:defined) {
+  opacity: 1 !important;
+}
+
+type-doc {
+  background: var(--type-doc-background, var(--markdown-syntax-background-color));
+  position: relative;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  display: grid;
+  grid-template: 'name type' 'inheritance inheritance' 'content content' auto / max-content 1fr;
+  overflow: hidden;
+}
+
+type-doc[kind="slot"] {
+  grid-template: 'name name' 'inheritance inheritance' 'content content' auto / 100% 1fr;
+}
+
+type-doc[kind="slot"] [slot="name"] {
+  width: 100%;
+}
+
+type-doc[kind="method"],
+type-doc[kind="property"] {
+  position: relative;
+}
+
+type-doc[kind="method"]::before,
+type-doc[kind="property"]::before {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 0;
+  background: var(--type-doc-header-background, var(--markdown-table-row-odd-background-color, #f6f8fa));
+  right: 0;
+  left: 0;
+  height: 37px;
+}
+
+type-doc > :not([slot="name"], [slot="type"], [slot="attribute"], [slot="inheritance"]) {
+  padding-left: 12px;
+}
+
+type-doc :is([slot="name"], [slot="type"], [slot="attribute"], [slot="inheritance"]) {
+  display: inline-flex !important;
+  padding: 6px 12px;
+}
+
+type-doc > :not([slot="name"], [slot="type"], [slot="attribute"], [slot="inheritance"]):first-child,
+type-doc > :not([slot="name"], [slot="type"], [slot="attribute"], [slot="inheritance"]):last-child {
+  padding-top: 6px;
+}
+
+type-doc[data-empty-body] {
+  padding-bottom: 0;
+}
+
+type-doc[data-empty-body][kind="method"]::before,
+type-doc[data-empty-body][kind="property"]::before {
+  height: 100%;
+}
+
+type-doc[data-empty-body] header {
+  border-radius: 6px;
+}
+
+type-doc type-doc {
+  margin-bottom: 0;
+  background: transparent;
+  padding: 0.3rem 0.8rem;
+}
+
+type-doc:not(:defined) {
+  opacity: 1 !important;
+}
+
+type-doc > [slot="name"],
+type-doc > [slot="type"],
+type-doc > [slot="inheritance"] {
+  background: var(--type-doc-header-background, var(--markdown-table-row-odd-background-color, #f6f8fa));
+  position: relative;
+
+  /* padding: 0 12px 6px 0; */
+  z-index: 1;
+}
+
+type-doc > [slot="inheritance"] {
+  grid-area: inheritance;
+  width: calc(100% + 24px);
+  left: -12px;
+  padding: 6px 12px;
+}
+
+type-doc > [slot="name"] {
+  border-start-start-radius: 6px;
+  width: max-content;
+}
+
+type-doc > [slot="type"] {
+  border-start-end-radius: 6px;
+  grid-area: type;
+  align-items: center;
+}
+
+type-doc[kind="parameter"] > :is([slot="name"], [slot="type"]) {
+  background: none;
+}
+
+type-doc[kind="return"] :is([slot="type"], [slot="name"]) {
+  background: none;
+}
+
+type-doc [slot="type"]::before {
+  content: 'type:';
+}

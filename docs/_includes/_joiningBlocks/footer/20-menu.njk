@@ -1,0 +1,16 @@
+<div id="footer-menu">
+  <div class="content-area">
+    {% for category in footer %}
+      <nav>
+        <h3>{{category.name}}</h3>
+        <ul>
+          {% for entry in category.children %}
+            <li>
+              <a href="{{entry.href | url}}">{{entry.text}}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endfor %}
+  </div>
+</div>

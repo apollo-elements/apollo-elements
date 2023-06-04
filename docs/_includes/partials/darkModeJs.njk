@@ -1,0 +1,69 @@
+<script type="module">
+  import {installDarkModeHandler} from 'pwa-helper-components';
+  import {GenericSwitch} from '@thepassle/generic-components/generic-switch/GenericSwitch.js';
+
+  const htmlClassList = document
+    .getElementsByTagName('html')[0]
+    .classList;
+
+  class LaunchDarkSwitch extends GenericSwitch {
+    connectedCallback() {
+      super.connectedCallback();
+      this.setupDarkModeHandler();
+      this.addEventListener('checked-changed', this.checkedChangedHandler);
+    }
+
+    setupDarkModeHandler() {
+      installDarkModeHandler((darkmode) => {
+        if (darkmode) {
+          this.setAttribute('checked', '');
+          htmlClassList.add('dark');
+        } else {
+          this.removeAttribute('checked');
+          htmlClassList.remove('dark');
+        }
+      });
+    }
+
+    checkedChangedHandler() {
+      if (htmlClassList.contains('dark')) {
+        htmlClassList.remove('dark');
+        localStorage.setItem('darkmode', 'false');
+      } else {
+        htmlClassList.add('dark');
+        localStorage.setItem('darkmode', 'true');
+      }
+    }
+  }
+
+  customElements.define('launch-dark-switch', LaunchDarkSwitch);
+</script>
+
+<noscript>
+  <style type="text/css">
+    @media (prefers-color-scheme: dark) {
+      html {
+        --primary-color: #e63946;
+        --primary-color-lighter: #e25761;
+        --primary-color-darker: #a22831;
+        --primary-color-accent: #cee5f6;
+        --primary-text-color: #eee;
+
+        /* Contrast colors */
+        --contrast-color-light: #fff;
+        --contrast-color-dark: #1d3557;
+
+        /* background-colors */
+        --page-background: #333;
+        --footer-background: #4f4f4f;
+
+        --text-color: white;
+
+        --markdown-octicon-link: white;
+        --markdown-syntax-background-color: #a0a0a0;
+        --markdown-link-color: #fb7881;
+        --markdown-blockquote-color: #c9e3ff;
+      }
+    }
+  </style>
+</noscript>

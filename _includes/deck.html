@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="{{ lang or 'en' }}" dir="{{ dir or 'ltr' }}">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="{{ title }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="{{ title }}">
+    {% if author %}<meta name="author" content="{{ author }}">{% endif %}
+    {% if date %}<meta name="date.created" content="{{ date }}">{% endif %}
+    <meta name="HandheldFriendly" content="true">
+    {% if description %}
+    <meta name="description" content="{{ description | trim }}">
+    <meta property="og:description" content="{{ description | trim }}">
+    {% endif %}
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:site_name" content="{{ title }}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="{{ locale or 'en-US' }}">
+    <meta property="og:url" content="{{ origin }}{{ page.url or '/'}}">
+    {% if coverImage %}
+    <meta property="og:image" content="{{ coverImage }}">
+    <meta property="og:image:type" content="{{ coverImage | mime }}">
+    <!-- TODO: calculate cover image dimensions -->
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="1024">
+    {% endif %}
+
+    {% for link in preconnect %}
+    <link rel="preconnect" href="{{ link }}">{% endfor %}
+
+    {% for icon in icons %}
+    <link rel="{{ icon.rel }}"{% if icon.sizes %} sizes="{{ icon.sizes }}"{% endif %} href="{{ icon.href | url }}">{% endfor %}
+    <link rel="manifest" href="{{ manifest or '/manifest.webmanifest' | url }}">
+
+    <noscript><style>:not(:defined) { display: initial; }</style></noscript>
+
+    {% for sheet in stylesheets %}
+    <link rel="stylesheet"{% if sheet.media %}
+          media="{{ sheet.media }}"{% endif %}{% if sheet.async %}
+          async{% endif %}
+          href="{{ sheet.href | url }}">
+    {% endfor %}
+
+    {% if importMap %}
+    <script type="importmap">{{ importMap | dump | safe }}</script>{% endif %}
+    {% if polyfills.esmoduleShims -%}
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.7.2/dist/es-module-shims.js"></script>{% endif %}
+
+    {% for script in scripts %}
+    <script {% if script.type -%}
+            type="{{ script.type }}"{%- endif -%}
+            src="{{ script.src | url }}"></script>
+    {% endfor %}
+
+    {% if polyfills.constructibleStyleSheets -%}
+    <script type="module" src="https://unpkg.com/construct-style-sheets-polyfill"></script>{% endif %}
+    {% if polyfills.webcomponents -%}
+    <script type="module" src="https://unpkg.com/@webcomponents/webcomponentsjs@%5E2/"></script>{% endif %}
+
+    <script type="module" src="{{ '/assets/decks.min.js' | url }}"></script>
+
+    <style>
+      body {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        max-width: 100vw;
+        padding: 0;
+      }
+
+      main { position: relative; }
+
+      main,
+      slidem-deck { height: 100%; }
+
+      #footer {
+        position: fixed;
+        font-size: 80%;
+        inset-block-end: 1em;
+        inset-inline-end: 1em;
+        z-index: 2;
+      }
+
+      #slides-progress {
+        --sl-border-radius-pill: 0;
+        --indicator-color: var(--deck-primary-color);
+        --height: 100%;
+        width: 100%;
+      }
+
+      slidem-deck::part(progress) {
+        width: 100%;
+        height: 5px;
+        top: 0;
+      }
+    </style>
+  </head>
+  <body class="deck">
+    <main>
+      <slidem-deck id="deck">
+        <sl-progress-bar slot="progress" id="slides-progress" indeterminate></sl-progress-bar>
+        {% for slide in collections.slides %}
+        {% if slide.deck == deck %}
+        <{{ slide.data.is or 'slidem-slide' }}
+            {%- if slide.data.name %} name="{{ slide.data.name }}"{% endif %}
+            {%- if slide.data.class %} class="{{ slide.data.class }}"{% endif %}
+            {%- if slide.data.style %} style="{{ slide.data.style | stringifyCSSStyle }}"{% endif %}>
+          {{ slide.templateContent | reveal(slide.data.reveal) | safe }}
+        </{{ slide.data.is or 'slidem-slide' }}>
+        {% endif %}
+        {% endfor %}
+      </slidem-deck>
+      {{ content | safe }}
+    </main>
+    <footer id="footer" class="screen-only">
+      <small id="legal">{{ copyright }}</small>
+    </footer>
+  </body>
+</html>
+

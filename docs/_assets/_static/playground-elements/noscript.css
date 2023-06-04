@@ -1,0 +1,7 @@
+docs-playground:not(:defined) {
+  opacity: 1 !important;
+}
+
+docs-playground > pre {
+  margin-bottom: 0;
+}

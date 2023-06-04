@@ -1,0 +1,15 @@
+:host {
+  display: inline-flex;
+  gap: 4px;
+  flex-flow: row;
+  align-items: center;
+}
+
+#color {
+  border: 1px solid var(--primary-lines-color);
+  display: block;
+  content: '';
+  width: 1em;
+  height: 1em;
+  border-radius: 100%;
+}

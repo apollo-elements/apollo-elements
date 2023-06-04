@@ -22,7 +22,10 @@ Looking for reactive Apollo query controllers? See [`@apollo-elements/core/apoll
 
 ## Demo
 
-```ts playground lit-apollo-query launches.ts
+<launches-playground>
+
+    <playground-file name="launches.ts" language="typescript">
+```ts
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
 import { customElement } from 'lit/decorators.js';
 import { LaunchesQuery } from './Launches.query.graphql.js';
@@ -52,19 +55,9 @@ class SpacexLaunches extends ApolloQuery<typeof LaunchesQuery> {
   }
 }
 ```
+    </playground-file>
 
-```graphql playground-file lit-apollo-query Launches.query.graphql.ts
-{% include ../_assets/Launches.query.graphql.ts %}
-```
 
-```js playground-file lit-apollo-query SpacexLaunches.css.js
-import { css } from 'lit';
-export const style = css`
-{% include ../_assets/SpacexLaunches.css %}`;
-```
-
-```html playground-file lit-apollo-query index.html
-{% include ../_assets/index.spacex-launches.html %}
-```
+</launches-playground>
 
 Read the [query component guides](../../../../guides/usage/queries/) for more examples and tips.

@@ -1,0 +1,62 @@
+<slot></slot>
+
+<playground-file name="index.html">
+
+```html
+<script webc:keep type="module" src="launches.js"></script>
+<apollo-client uri="https://api.spacex.land/graphql">
+  <spacex-launches></spacex-launches>
+</apollo-client>
+```
+
+</playground-file>
+
+<playground-file name="Launches.query.graphql.ts">
+```ts
+import { gql, TypedDocumentNode } from '@apollo/client/core';
+
+interface Launch {
+  mission_name: string;
+  links: {
+    mission_patch_small: string;
+  };
+}
+
+interface Data {
+  launchesPast: Launch[];
+}
+
+interface Variables {
+  limit: number;
+}
+
+export const LaunchesQuery: TypedDocumentNode<Data, Variables> = gql`
+query LaunchesQuery($limit: Int) {
+  launchesPast(limit: $limit) {
+    id
+    mission_name
+    links { mission_patch_small }
+  }
+}
+`
+```
+</playground-file>
+
+<playground-file name="launches.css">
+```css
+:host {
+  --image-size: 40px;
+}
+
+li img {
+  height: var(--image-size);
+  width: auto;
+}
+
+li article {
+  height: var(--image-size);
+  display: flex;
+  justify-content: space-between;
+}
+```
+</playground-file>

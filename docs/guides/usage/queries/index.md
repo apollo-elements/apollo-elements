@@ -29,7 +29,7 @@ query HelloQuery {
 Apollo Elements give you three ways to define query components:
 1. Using the `<apollo-query>` HTML element
 2. With [`ApolloQueryController`](/api/core/controllers/query/) reactive controller; `useQuery` hook for [haunted](/api/libraries/haunted/useQuery/) or [atomico](/api/libraries/atomico/useQuery/); or `query` [hybrids factory](/api/libraries/hybrids/query/)
-3. By defining a custom element that extends from {%footnoteref "querymixin" 'or applies <a href="/api/libraries/mixins/apollo-query-mixin/"><code>ApolloQueryMixin</code></a>'%}{%endfootnoteref%}
+3. By defining a custom element that extends from {%footnoteref "querymixin", 'or applies <a href="/api/libraries/mixins/apollo-query-mixin/"><code>ApolloQueryMixin</code></a>'%}{%endfootnoteref%}
 
 ## HTML Queries
 
@@ -81,7 +81,7 @@ In any case, setting your element's query property or class field (or using `use
 document.querySelector('hello-query').query = HelloQuery;
 ```
 
-Apollo client ensures that the component always has the latest data by {% footnoteref "observablequery" "This is different from <a href='/guides/usage/subscriptions/'>GraphQL subscriptions</a>, which are realtime persistent streams, typically over websockets. Rather, <code>ObservableQueries</code> update the client-side state whenever the query's data changes, either because the user executed the query operation, a mutation updated the query's fields, or the Apollo cache's local state changed." %}_subscribing_{% endfootnoteref %} to the query using an [`ObservableQuery`](https://www.apollographql.com/docs/react/api/core/ObservableQuery/) object. As long as an element has access to an `ApolloClient` instance, whenever its `query` or `variables` property changes, it will automatically subscribe to (or update) its `ObservableQuery`.
+Apollo client ensures that the component always has the latest data by {% footnoteref "observablequery", "This is different from <a href='/guides/usage/subscriptions/'>GraphQL subscriptions</a>, which are realtime persistent streams, typically over websockets. Rather, <code>ObservableQueries</code> update the client-side state whenever the query's data changes, either because the user executed the query operation, a mutation updated the query's fields, or the Apollo cache's local state changed." %}_subscribing_{% endfootnoteref %} to the query using an [`ObservableQuery`](https://www.apollographql.com/docs/react/api/core/ObservableQuery/) object. As long as an element has access to an `ApolloClient` instance, whenever its `query` or `variables` property changes, it will automatically subscribe to (or update) its `ObservableQuery`.
 
 When the `ObservableQuery` subscription produces new data (e.g. on response from the GraphQL server, or if local state changes), it sets the element's `data`, `loading` and `error` properties (as well as `errors` if `returnPartialData` property is true). The following example shows how a simple query element written with different component libraries (or none) renders it's state.
 
@@ -411,7 +411,12 @@ There are three main ways to control how and when your query component fetches i
 2. By overriding the `shouldSubscribe` method
 3. By setting a custom `FetchPolicy`
 
-You can call your component's [`executeQuery()`](/api/core/interfaces/query/#executequery) method at any time to {%footnoteref 'executeQuery' "if you've previously set a 'cache-only' fetch policy and you want to imperatively issue query over the network, call <code>executeQuery({ fetchPolicy: 'network-only' })</code>"%}immediately{%endfootnoteref%} fetch the query.
+You can call your component's 
+[`executeQuery()`](/api/core/interfaces/query/#executequery) method at any time 
+to {%footnoteref 'executeQuery', "if you've previously set a 'cache-only' fetch 
+policy and you want to imperatively issue query over the network, call 
+<code>executeQuery({ fetchPolicy: 'network-only' 
+    })</code>"%}immediately{%endfootnoteref%} fetch the query.
 
 ### No Auto Subscribe
 

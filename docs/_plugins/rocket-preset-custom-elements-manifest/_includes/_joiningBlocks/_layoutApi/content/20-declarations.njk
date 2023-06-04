@@ -1,0 +1,26 @@
+{% set declarations = [moduleData | getDeclaration(className)] if className else moduleData.declarations %}
+
+{% for declaration in declarations %}
+
+  {% if declaration.kind == 'class' %}
+    {%- block class -%}
+      {% include "partials/custom-elements-manifest/class.njk" %}
+    {%- endblock -%}
+
+  {% elif declaration.kind == 'mixin' %}
+    {%- block mixin -%}
+      {% include "partials/custom-elements-manifest/mixin.njk" %}
+    {%- endblock -%}
+
+  {% elif declaration.kind == 'function' %}
+    {%- block function -%}
+      {% include "partials/custom-elements-manifest/function.njk" %}
+    {%- endblock -%}
+
+  {% elif declaration.kind == 'variable' %}
+    {%- block variable -%}
+      {% include "partials/custom-elements-manifest/variable.njk" %}
+    {%- endblock -%}
+
+  {% endif %}
+{% endfor %}

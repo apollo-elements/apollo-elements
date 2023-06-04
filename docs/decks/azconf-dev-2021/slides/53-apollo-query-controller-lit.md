@@ -48,5 +48,5 @@ class UserProfileElement extends LitElement {
 ```
 
 ```ts playground-file lit-query-controller client.ts
-{% include ../controller-client.ts %}
+{% include '../controller-client.ts' %}
 ```

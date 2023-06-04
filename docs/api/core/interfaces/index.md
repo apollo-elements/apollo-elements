@@ -8,7 +8,7 @@ That is to say, whether you create a query element with `lit-apollo`, `haunted`,
 
 <figure aria-label="Inheritance diagram">
 
-  {% include ./mermaid-inheritance.svg | safe %}
+  {% include './mermaid-inheritance.svg' %}
 
   <figcaption class="visually-hidden">
 

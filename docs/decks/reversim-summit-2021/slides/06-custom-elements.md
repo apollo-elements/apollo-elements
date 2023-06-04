@@ -2,9 +2,9 @@
 name: Custom Elements
 ---
 <div flex center style="gap: 1em">
-  {%- include ../html5.svg -%}
-  {%- include ../css3.svg -%}
-  {%- include ../js.svg -%}
+  {%- include '../../../html5.svg' -%}
+  {%- include '../../../css3.svg' -%}
+  {%- include '../../../js.svg' -%}
 </div>
 
 <section reveal>

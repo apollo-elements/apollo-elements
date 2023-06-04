@@ -16,7 +16,9 @@ Apollo `useQuery` hook for web components.
 
 ## Demo
 
-```js playground use-query launches.js
+<launches-playground id="use-query">
+
+```js
 import { useQuery, component, html } from '@apollo-elements/haunted';
 import { LaunchesQuery } from './Launches.query.graphql.js';
 import '@apollo-elements/components/apollo-client';
@@ -45,16 +47,7 @@ function Launches(hostElement) {
 customElements.define('spacex-launches', component(Launches));
 ```
 
-```html playground-file use-query index.html
-{% include ../_assets/index.spacex-launches.html %}
-```
+</launches-playground>
 
-```graphql playground-file use-query Launches.query.graphql.ts
-{% include ../_assets/Launches.query.graphql.ts %}
-```
-
-```css playground-file use-query launches.css
-{% include ../_assets/SpacexLaunches.css %}
-```
 
 Read the [query component guides](/guides/usage/queries/) for examples and tips.

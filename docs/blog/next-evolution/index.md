@@ -168,13 +168,13 @@ The `<apollo-mutation>` component lets you declare GraphQL mutations in HTML. No
 ```js playground-file shoelace imports.js
 import '@apollo-elements/components';
 
-{% include ./_assets/html-components/client.js | safe %}
+{% include './_assets/html-components/client.js' %}
 
 document.getElementById('add-user-mutation').client = client;
 ```
 
 ```graphql playground-file shoelace AddUser.mutation.graphql
-{% include ./_assets/html-components/AddUser.mutation.graphql | safe %}
+{% include './_assets/html-components/AddUser.mutation.graphql' %}
 ```
 
 <figcaption>
@@ -189,7 +189,7 @@ Demonstrating how to use `<apollo-mutation>` with [Shoelace](https://shoelace.st
 On the heels of the controllers release, we're happy to add a new package to the roster. Apollo Elements now has first-class support for [Atomico](https://atomico.gitbook.io), a new hooks-based web components library with JSX or template-string templating.
 
 ```jsx
-{% include ./atomico.jsx %}
+{% include './atomico.jsx' %}
 ```
 
 ## FAST Behaviors
@@ -246,13 +246,13 @@ The last release included support for the web components hooks library [haunted]
 With controllers at the core, and the [`useController`](https://github.com/matthewp/haunted#usecontroller) hook, you can use as many Apollo hooks as you want in your elements without clobbering each other or polluting the element interface.
 
 ```js playground haunted-multiple-hooks healthy-snack.js
-{% include ./haunted-healthy-snack.js %}
+{% include './haunted-healthy-snack.js' %}
 ```
 
 The same is true of the [hybrids](https://hybrids.js.org) support, it now uses the controllers underneath the hood, letting you mix multiple operations in a single hybrid.
 
 ```js playground hybrids-multiple-factories healthy-snack.js
-{% include ./hybrids-healthy-snack.js %}
+{% include './hybrids-healthy-snack.js' %}
 ```
 
 ## Try it Out
@@ -270,7 +270,7 @@ Apollo Elements next is available in prerelease on [npm](https://npm.im/@apollo-
 
 ```js playground-file multiple-controllers Users.css.js
 import { css } from 'lit';
-export const style = css`{% include ./_assets/multiple-controllers/Users.css | safe %}`;
+export const style = css`{% include './_assets/multiple-controllers/Users.css' %}`;
 ```
 
 ```html playground-file multiple-controllers index.html
@@ -285,67 +285,67 @@ html, body {
 ```
 
 ```ts playground-file multiple-controllers graphql.documents.ts
-{% include ./_assets/multiple-controllers/graphql.documents.ts | safe %}
+{% include './_assets/multiple-controllers/graphql.documents.ts' %}
 ```
 
 ```graphql playground-file html-components Users.query.graphql
-{% include ./_assets/html-components/Users.query.graphql | safe %}
+{% include './_assets/html-components/Users.query.graphql' %}
 ```
 
 ```graphql playground-file html-components AddUser.mutation.graphql
-{% include ./_assets/html-components/AddUser.mutation.graphql | safe %}
+{% include './_assets/html-components/AddUser.mutation.graphql' %}
 ```
 
 ```js playground-file html-components components.js
-{% include ./_assets/html-components/components.js | safe %}
+{% include './_assets/html-components/components.js' %}
 
-{% include ./_assets/html-components/client.js | safe %}
+{% include './_assets/html-components/client.js' %}
 
 document.querySelector('apollo-client').client = client;
 ```
 
 ```html playground-file haunted-multiple-hooks index.html
-{% include ./_assets/healthy-snack/index.html | safe %}
+{% include './_assets/healthy-snack/index.html' %}
 ```
 
 ```html playground-file hybrids-multiple-factories index.html
-{% include ./_assets/healthy-snack/index.html | safe %}
+{% include './_assets/healthy-snack/index.html' %}
 ```
 
 ```css playground-file haunted-multiple-hooks healthy-snack.css
-{% include ./_assets/healthy-snack/healthy-snack.css | safe %}
+{% include './_assets/healthy-snack/healthy-snack.css' %}
 ```
 
 ```css playground-file hybrids-multiple-factories healthy-snack.css
-{% include ./_assets/healthy-snack/healthy-snack.css | safe %}
+{% include './_assets/healthy-snack/healthy-snack.css' %}
 ```
 
 ```js playground-file haunted-multiple-hooks Fruits.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const FruitsQuery = gql`{% include ./_assets/healthy-snack/Fruits.query.graphql | safe %}`;
+export const FruitsQuery = gql`{% include './_assets/healthy-snack/Fruits.query.graphql' %}`;
 ```
 
 ```js playground-file haunted-multiple-hooks Veggies.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const VeggiesQuery = gql`{% include ./_assets/healthy-snack/Veggies.query.graphql %}`;
+export const VeggiesQuery = gql`{% include './_assets/healthy-snack/Veggies.query.graphql' %}`;
 ```
 
 ```js playground-file hybrids-multiple-factories Fruits.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const FruitsQuery = gql`{% include ./_assets/healthy-snack/Fruits.query.graphql | safe %}`;
+export const FruitsQuery = gql`{% include './_assets/healthy-snack/Fruits.query.graphql' %}`;
 ```
 
 ```js playground-file hybrids-multiple-factories Veggies.query.graphql.js
 import { gql } from '@apollo/client/core';
-export const VeggiesQuery = gql`{% include ./_assets/healthy-snack/Veggies.query.graphql %}`;
+export const VeggiesQuery = gql`{% include './_assets/healthy-snack/Veggies.query.graphql' %}`;
 ```
 
 ```js playground-file haunted-multiple-hooks client.js
-{% include ./_assets/healthy-snack/client.js | safe %}
+{% include './_assets/healthy-snack/client.js' %}
 ```
 
 ```js playground-file hybrids-multiple-factories client.js
-{% include ./_assets/healthy-snack/client.js | safe %}
+{% include './_assets/healthy-snack/client.js' %}
 ```
 
 <style data-helmet>

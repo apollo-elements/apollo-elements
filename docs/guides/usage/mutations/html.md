@@ -97,7 +97,7 @@ Templates use [stampino](https://npm.im/stampino) and [jexpr](https://npm.im/jex
 ```
 
 ```css playground-file add-user add-user.css
-{% include ./_assets/add-user.css %}
+{% include './_assets/add-user.css' %}
 ```
 
 ```graphql playground-file add-user AddUser.mutation.graphql
@@ -107,7 +107,7 @@ mutation AddUser($name: String!) {
 ```
 
 ```js playground-file add-user client.js
-{% include ./_assets/client.js %}
+{% include './_assets/client.js' %}
 ```
 
 <inline-notification type="tip">

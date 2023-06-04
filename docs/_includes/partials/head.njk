@@ -1,0 +1,97 @@
+<head>
+  {% set _pageTitle = title %}
+  {% if title != site.name %}
+    {% set _pageTitle = title + ': ' + site.name %}
+  {% endif %}
+  {% if pageTitle %}
+    {% set _pageTitle = pageTitle %}
+  {% endif %}
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ _pageTitle }}</title>
+  <meta property="og:title" content="{{ _pageTitle }}"/>
+
+  <meta name="generator" content="rocket 0.1">
+  <link rel="canonical" href="{{ page.url }}"/>
+
+  {% set _description = site.description %}
+  {% if description %}
+    {% set _description = description %}
+  {% endif %}
+  <meta name="description" content="{{ _description }}"/>
+  <meta property="og:description" content="{{ _description }}"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/_assets/_static/icons/apple-touch-icon.png' | asset | url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/_assets/_static/icons/favicon-32x32.png' | asset | url }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/_assets/_static/icons/favicon-16x16.png' | asset | url }}">
+  <link rel="manifest" href="{{ '/_assets/webmanifest.json' | asset | url }}">
+  <link rel="mask-icon" href="{{ '/_assets/_static/icons/safari-pinned-tab.svg' | asset | url }}" color="{{ site.iconColorMaskIcon }}">
+  <meta name="msapplication-TileColor" content="{{ site.iconColorMsapplicationTileColor }}">
+  <meta name="theme-color" content="{{ site.iconColorThemeColor }}">
+  <meta property="og:site_name" content="{{ site.name }}"/>
+  <meta property="og:type" content="website"/>
+
+  <meta property="og:image" content="{{ socialMediaImage | url }}"/>
+  <meta property="og:url" content="{{ page.url | url }}"/>
+
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta property="og:site_name" content="{{ site.name }}"/>
+  <meta property="og:type" content="website"/>
+
+  <meta property="og:image" content="{{ socialMediaImage  | url }}"/>
+  <meta property="og:url" content="{{ page.url | url }}"/>
+
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <noscript data-preset="playground-elements"><link rel="stylesheet" href="{{ '/_assets/_static/playground-elements/noscript.css' | asset | url }}"></noscript>
+  <script type="module" data-preset="playground-elements">
+  (async function loadPolyfills() {
+    if (!('fromEntries' in Object))
+      await import('{{ "/_assets/_static/playground-elements/object-fromentries-polyfill.js" | asset | url }}')
+    if (!('requestIdleCallback' in window))
+      await import('{{ "/_assets/_static/playground-elements/requestidlecallback-polyfill.js" | asset | url }}')
+  })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional">
+  <link rel="stylesheet" href="{{ '/_assets/variables.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/layout.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/markdown.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/style.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/theme.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/mermaid.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/components.css' | asset | url }}">
+
+  <link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&display=swap" rel="stylesheet">
+
+  {%- if layout == 'layout-home' -%}
+    <link rel="stylesheet" href="{{ '/_assets/home.css' | asset | url }}">
+  {%- endif -%}
+
+  {%- if layout == 'layout-deck' -%}
+    <link rel="stylesheet" href="{{ '/_assets/decks-custom.css' | asset | url }}">
+  {%- endif -%}
+  <noscript><link rel="stylesheet" href="{{ '/_assets/_static/noscript.css' | asset | url }}"/></noscript>
+  <link data-preset="custom-elements-manifest" rel="stylesheet" href="{{ '/_assets/_static/custom-elements-manifest/type-doc.css' | asset | url }}">
+  <noscript data-preset="custom-elements-manifest"><link rel="stylesheet" href="{{ '/_assets/_static/custom-elements-manifest/noscript.css' | asset | url }}"></noscript>
+  <link rel="stylesheet" href="{{ '/_assets/rocket-blog.css' | asset | url }}">
+  <link rel="stylesheet" href="{{ '/_assets/rocket-blog.css' | asset | url }}">
+  {%- if layout == 'layout-blog-overview' -%}
+    <style>
+      .articles article .thumbnail {
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
+  {%- endif -%}
+  {%- if layout == 'layout-blog-overview' -%}
+    <style>
+      .articles article .thumbnail {
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
+  {%- endif -%}
+</head>

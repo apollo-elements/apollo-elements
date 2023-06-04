@@ -1,0 +1,50 @@
+{% extends 'layout-sidebar.njk' %}
+
+{% from "partials/custom-elements-manifest/macros.njk" import linkHeading %}
+
+{% macro renderModule(moduleData, blocks, setExportsHeading=false) %}
+  {% set additionalHeadings = moduleData | getHeadings %}
+
+  {% if setExportsHeading %}
+    {% set exportsHeading = 3 %}
+  {% endif %}
+
+  {% for blockName, blockPath in blocks %}
+    {% include blockPath %}
+  {% endfor %}
+{% endmacro %}
+
+{% set blocks = _joiningBlocks._layoutApiIndex.content if layout === 'layout-api-index' else _joiningBlocks._layoutApi.content %}
+
+{% block content %}
+  <main class="markdown-body">
+    {%- if cem.modules.length -%}
+      {% for blockName, blockPath in blocks %}
+        {% if blockName === '10-content.njk' %}
+          {% include blockPath %}
+        {% endif %}
+      {% endfor %}
+      {%- for m in cem.modules -%}
+        {{- linkHeading(m.path, level=2) -}}
+        {{- renderModule(m, blocks | nonContent, setExportsHeading=true) -}}
+      {%- endfor -%}
+    {%- elif cem.module -%}
+      {{- renderModule(cem.module, blocks=blocks) -}}
+    {%- else -%}
+      {{- renderModule(cem.index, blocks=blocks) -}}
+    {%- endif -%}
+  </main>
+{% endblock content %}
+
+{% block bottom %}
+  <script type="module" async>
+    if (location.hash) {
+      const anchor = document.querySelector(location.hash)
+      const doc = anchor && anchor.closest('type-doc');
+      if (doc) {
+        doc.expanded = true;
+        doc.scrollIntoView();
+      }
+    }
+  </script>
+{% endblock bottom %}

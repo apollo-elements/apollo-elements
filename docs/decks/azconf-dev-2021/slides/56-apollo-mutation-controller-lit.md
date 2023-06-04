@@ -99,5 +99,5 @@ mutation UpdateProfile($user: UserInput) {
 ```
 
 ```ts playground-file lit-mutation-controller client.ts
-{% include ../controller-client.ts %}
+{% include '../controller-client.ts' %}
 ```

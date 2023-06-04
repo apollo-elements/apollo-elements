@@ -566,6 +566,7 @@ And for the UI, let's import `@apollo-elements/components/apollo-mutation` for a
 The `trigger` attribute on the slotted button tells `<apollo-mutation>` to execute when the user clicks, the element will also manage the `disabled` state of the button for you. Check out the [`<apollo-mutation>` docs](https://apolloelements.dev/api/components/apollo-mutation/) for more info.
 
 ```html copy
+{%raw%}
 <li>
   <apollo-mutation data-todo-id="${id}"
                   .mutation="${ToggleTodo}"
@@ -574,6 +575,7 @@ The `trigger` attribute on the slotted button tells `<apollo-mutation>` to execu
   </apollo-mutation>
   <a href="/todos/${id}">${name}</a>
 </li>
+{%endraw%}
 ```
 
 ## Editing Todos

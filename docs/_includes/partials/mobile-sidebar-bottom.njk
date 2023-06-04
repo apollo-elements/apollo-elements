@@ -1,0 +1,6 @@
+<div class="sidebar-bottom">
+  <hr/> {% include 'partials/_shared/darkSwitch.njk' %}
+  {% if site.helpUrl %}
+    <a href="{{ site.helpUrl | url }}">Help and Feedback</a>
+  {% endif %}
+</div>

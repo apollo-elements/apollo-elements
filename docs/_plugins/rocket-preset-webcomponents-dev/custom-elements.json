@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "rocket-preset-webcomponents-dev.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "webcomponentsDev"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "webcomponentsDev",
+          "declaration": {
+            "name": "webcomponentsDev",
+            "module": "rocket-preset-webcomponents-dev.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "eleventy/wcdShortcode.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "wcdShortcodePlugin",
+          "parameters": [
+            {
+              "name": "eleventyConfig"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "wcdShortcodePlugin",
+          "declaration": {
+            "name": "wcdShortcodePlugin",
+            "module": "eleventy/wcdShortcode.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/wcd-snippet/wcd-snippet.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "WcdSnippet",
+          "members": [
+            {
+              "kind": "field",
+              "name": "iframe",
+              "type": {
+                "text": "HTMLIFrameElement"
+              },
+              "default": "this.shadowRoot.querySelector('iframe')"
+            },
+            {
+              "kind": "field",
+              "name": "button",
+              "type": {
+                "text": "HTMLButtonElement"
+              },
+              "default": "this.shadowRoot.querySelector('button')"
+            },
+            {
+              "kind": "field",
+              "name": "url",
+              "type": {
+                "text": "URL"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "load",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "show"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "live"
+            },
+            {
+              "name": "data-id"
+            },
+            {
+              "name": "file"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "wcd-snippet",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "WcdSnippet",
+          "declaration": {
+            "name": "WcdSnippet",
+            "module": "components/wcd-snippet/wcd-snippet.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "wcd-snippet",
+          "declaration": {
+            "name": "WcdSnippet",
+            "module": "components/wcd-snippet/wcd-snippet.ts"
+          }
+        }
+      ]
+    }
+  ]
+}

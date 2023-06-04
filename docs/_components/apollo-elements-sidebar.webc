@@ -1,0 +1,26 @@
+<rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    <a class="logo-link" href="/">
+      <img src="4db73eb3.svg" alt="Apollo Elements">
+      <span>Apollo Elements</span>
+    </a>
+    <rocket-navigation>
+      <ul>
+          <li>
+            <a href="/guides/" class="">Guides</a>
+          </li>
+          <li>
+            <a href="/api/" class="">API</a>
+          </li>
+          <li>
+            <a href="/blog/" class="">Blog</a>
+          </li>
+      </ul>
+      <div class="sidebar-bottom">
+        <hr>
+        <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+        <a href="https://github.com/apollo-elements/apollo-elements/issues">Help and Feedback</a>
+      </div>
+  </rocket-navigation>
+</nav>
+</rocket-drawer>

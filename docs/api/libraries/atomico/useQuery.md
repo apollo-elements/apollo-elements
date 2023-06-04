@@ -1,6 +1,7 @@
 ---
 layout: layout-api
 package: '@apollo-elements/atomico'
+templateEngineOverride: webc,md
 module: useQuery.js
 ---
 <!-- ----------------------------------------------------------------------------------------
@@ -22,7 +23,10 @@ Apollo `useQuery` hook for web components.
 }
 </style>
 
-```js playground use-query launches.js
+<playground id="use-query">
+    <playground-file id="use-query" name="launches.js" language="js">
+
+```js
 import { useQuery, c, html, css } from '@apollo-elements/atomico';
 import { LaunchesQuery } from './Launches.query.graphql.js';
 import { client } from './client.js';
@@ -47,22 +51,26 @@ function Launches() {
 }
 
 Launches.styles = css`
-{% include ../_assets/SpacexLaunches.css %}
+{% include '../_assets/SpacexLaunches.css' %}
 `;
 
 customElements.define('spacex-launches', c(Launches));
 ```
+    </playground-file>
 
-```html playground-file use-query index.html
-{% include ../_assets/index.spacex-launches.html %}
-```
+    <playground-file id="use-query" name="index.html" language="html">
+    {% include '../_assets/index.spacex-launches.html' %}
+    </playground-file>
 
-```graphql playground-file use-query Launches.query.graphql.ts
-{% include ../_assets/Launches.query.graphql.ts %};
-```
+    <playground-file id="use-query" name="Launches.query.graphql.ts" language="ts">
+    {% include '../_assets/Launches.query.graphql.ts' %}
+    </playground-file>
 
-```js playground-file use-query client.js
-{% include ../_assets/client.spacex.export.js %}
-```
+    <playground-file id="use-query" name="client.js" language="javascript">
+    {% include '../_assets/client.spacex.export.js' %}
+    </playground-file>
+
+</playground>
+
 
 Read the [query component guides](/guides/usage/queries/) for more examples and tips.

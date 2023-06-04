@@ -16,7 +16,11 @@ module: apollo-query-behavior.js
 
 ## Demo
 
-```ts playground fast-query launches.ts
+<launches-playground id="fast-query">
+
+<playground-file id="fast-query" name="launches.ts" language="typescript">
+
+```ts
 import type { Binding, ViewTemplate } from '@microsoft/fast-element';
 import { FASTElement, customElement, html, repeat } from '@microsoft/fast-element';
 import { ApolloQueryBehavior } from '@apollo-elements/fast';
@@ -24,6 +28,8 @@ import { styles } from './launches.css.js';
 import { LaunchesQuery, Launch } from './Launches.query.graphql.js';
 
 import '@apollo-elements/components/apollo-client';
+
+import '@microsoft/fast-components';
 
 const name = 'spacex-launches';
 
@@ -33,6 +39,7 @@ const getPatch:       Binding<Launches> = x => x.links?.mission_patch_small;
 const onLimitChange:  Binding<Launches> = (x, { event }) => x.onLimitChange(event);
 
 const template: ViewTemplate<Launches> = html`
+<fast-design-system-provider use-defaults>
   <fast-card>
     <h2>Launches</h2>
     <fast-number-field min=1 max=50 value=3 @change=${onLimitChange}}>
@@ -48,6 +55,7 @@ const template: ViewTemplate<Launches> = html`
       </li>` as ViewTemplate<Launch>)}
     </ol>
   </fast-card>
+</fast-design-system-provider>
 `;
 
 @customElement({ name, styles, template })
@@ -64,34 +72,14 @@ class Launches extends FASTElement {
 }
 ```
 
+</playground-file>
 
-```html playground-file fast-query index.html
-<script type="module" src="https://unpkg.com/@microsoft/fast-components"></script>
-<fast-design-system-provider use-defaults>
-{% include ../_assets/index.spacex-launches.html %}
-</fast-design-system-provider>
-```
+<playground-file language="js" id="fast-query" name="launches.css.js">
 
-```css playground-file fast-query style.css
-body {
-  display: grid;
-  background-color: #111;
-  color: white;
-  font-family: "Open Sans", Arial, Helvetica, sans-serif;
-  place-items: center center;
-  height: 100vh;
-}
-
-apollo-client,
-fast-design-system-provider {
-  height: 100%;
-}
-```
-
-```js playground-file fast-query launches.css.js
+```js
 import { css } from '@microsoft/fast-element';
 export const styles = css`
-{% include ../_assets/SpacexLaunches.css %}
+{% include '../_assets/SpacexLaunches.css' %}
 
 fast-card {
   display: grid;
@@ -106,8 +94,8 @@ h2 {
 `;
 ```
 
-```graphql playground-file fast-query Launches.query.graphql.ts
-{% include ../_assets/Launches.query.graphql.ts %};
-```
+</playground-file>
+
+</launches-playground>
 
 Read the [query component guides](/guides/usage/queries/) for more examples and tips.

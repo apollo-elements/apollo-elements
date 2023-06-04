@@ -1,0 +1,18 @@
+{% from "./macros.njk" import codeBlock, linkHeading %}
+
+<type-doc kind="variable" data-variable="{{ declaration.name }}">
+  <span slot="name">
+    {{ linkHeading(declaration.name) }}
+  </span>
+
+  <span slot="type">{{ codeBlock(declaration.return.type | getTypeString) | linkToTypes | safe }}</span>
+
+  {% if declaration.summary %}
+    {% renderTemplate 'njk,md' %}{{ declaration.summary | safe }}{% endrenderTemplate %}
+  {% endif %}
+
+  {% if declaration.description %}
+    {% renderTemplate 'njk,md' %}{{ declaration.description | safe }}{% endrenderTemplate %}
+  {% endif %}
+
+</type-doc>

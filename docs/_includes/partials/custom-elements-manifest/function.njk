@@ -1,0 +1,36 @@
+{% from "./macros.njk" import codeBlock, linkHeading %}
+
+<type-doc kind="function" data-function="{{ declaration.name }}">
+  <span slot="name">
+    {% if declaration.async %}<em>async</em>{% endif %}
+    {{ linkHeading(declaration.name) }}
+  </span>
+
+  {% if declaration.summary %}
+    {% renderTemplate 'njk,md' %}{{ declaration.summary | safe }}{% endrenderTemplate %}
+  {% endif %}
+
+  {% if declaration.description %}
+    {% renderTemplate 'njk,md' %}{{ declaration.description | safe }}{% endrenderTemplate %}
+  {% endif %}
+
+  {% if declaration.parameters %}
+    {{ linkHeading('Parameters', prefix=declaration.name, class=parameter) }}
+    {% for param in declaration.parameters %}
+      {% include "./parameter.njk" %}
+    {% endfor %} {# param #}
+  {% endif %} {# parameters #}
+
+  {% if declaration.return %}
+    <type-doc kind="return">
+      {{ linkHeading('Returns', prefix=declaration.name, slot='name', class=return) }}
+      <span slot="type">{{ codeBlock(declaration.return.type | getTypeString) | linkToTypes | safe }}</span>
+      {% if declaration.return.summary %}
+        {% renderTemplate 'njk,md' %}{{ declaration.return.summary | safe }}{% endrenderTemplate %}
+      {% endif %}
+      {% if declaration.return.description %}
+        {% renderTemplate 'njk,md' %}{{ declaration.return.description | safe }}{% endrenderTemplate %}
+      {% endif %}
+    </type-doc>
+  {% endif %} {# return #}
+</type-doc>

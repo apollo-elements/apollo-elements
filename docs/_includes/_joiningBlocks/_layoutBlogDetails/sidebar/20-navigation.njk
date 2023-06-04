@@ -1,0 +1,25 @@
+<rocket-navigation>
+  <ul>
+    <li class="current">
+      <h3>Headings</h3>
+      {{ collections[section] | rocketPageAnchors({ title: title }) | rocketNavToHtml({
+      listItemClass: "menu-item",
+      activeListItemClass: "current",
+      activeKey: eleventyNavigation.key
+  }) | safe }}
+    </li>
+  </ul>
+  <div class="sidebar-tags">
+    <h3>Date</h3>
+    <div>{{ page.date.toDateString() }}</div>
+  </div>
+  <div class="sidebar-tags">
+    <h3>Tags</h3>
+    <div class="tags">
+      {% for tag in tags %}
+        <span class="tag">{{tag}}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% include 'partials/mobile-sidebar-bottom.njk' %}
+</rocket-navigation>

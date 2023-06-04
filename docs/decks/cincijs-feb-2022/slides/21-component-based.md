@@ -19,5 +19,5 @@ Client-side, GraphQL frontends naturally revolve around **components**
 
 </section>
 
-<script data-helmet>window.FLARE_CHART_JSON = {{ FLARE_CHART_JSON | raw }};</script>
+<script data-helmet>window.FLARE_CHART_JSON = {{ FLARE_CHART_JSON | dump }};</script>
 <script type="module" data-helmet src="/decks/cincijs-feb-2022/flare-chart.js"></script>

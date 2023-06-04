@@ -15,15 +15,18 @@ socialMediaImage: https://thepracticaldev.s3.amazonaws.com/i/rk6u6o9jibsv4vo3cpg
 
 <sup dir="rtl"><abbr title="בסייעתא דשמייא">בס״ד</abbr></sup>
 
-Today I published version 0.0.1 of `apollo-elements`, a collection of packages that help you create web components connected to {% footnoteref "apollo" "Apollo Elements is a community project maintained by myself, it's not affiliated with Meteor." %}Apollo GraphQL{% endfootnoteref %}.
+Today I published version 0.0.1 of `apollo-elements`, a collection of packages 
+that help you create web components connected to {% footnoteref "apollo", 
+"Apollo Elements is a community project maintained by myself, it's not 
+affiliated with Meteor." %}Apollo GraphQL{% endfootnoteref %}.
 
-{% github apollo-elements/apollo-elements %}
+{% github 'apollo-elements/apollo-elements' %}
 
 Apollo Elements handles the plumbing between web components libraries like `lit-element` or `hybrids` and Apollo Client, so you can concentrate on building your app.
 
 If you're new to web components, take a <abbr title="peek">👀</abbr> at my "Let's Build Web Components" series to get up to speed:
 
-{% dev https://dev.to/bennypowers/lets-build-web-components-part-1-the-standards-3e85 %}
+{% dev 'https://dev.to/bennypowers/lets-build-web-components-part-1-the-standards-3e85' %}
 
 ## Connected Components
 
@@ -51,7 +54,10 @@ query UserProfilePage($userId: ID) {
 ```
 
 ## Show Me The Code
-Now, with Apollo Elements, you can get up and running building connected components. You provide a GraphQL document and a custom element {% footnoteref "hybrids-class" "Or in the case of hybrids, all you need is a render function." %}class{% endfootnoteref %} that handles templating, and you're good to go.
+Now, with Apollo Elements, you can get up and running building connected 
+components. You provide a GraphQL document and a custom element {% footnoteref 
+"hybrids-class", "Or in the case of hybrids, all you need is a render function." 
+%}class{% endfootnoteref %} that handles templating, and you're good to go.
 
 ```js
 import { ApolloQuery, html } from '@apollo-elements/lit-apollo';

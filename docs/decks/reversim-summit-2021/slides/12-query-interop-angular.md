@@ -6,14 +6,12 @@ attrs: fade-out
 <img slot="end-start" alt="Angular" src="/_merged_assets/brand-logos/angular.svg"/>
 
 ```html
-{%- raw -%}
 <spacex-launches
   [limit]="limit"
   (select)="onSelect($event)"
 ></spacex-launches>
 
 <spacex-launch [launchId]="selectedLaunchId"></spacex-launch>
-{%- endraw -%}
 ```
 
 -----

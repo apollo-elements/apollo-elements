@@ -1,0 +1,18 @@
+<template webc:keep
+          webc:root="override"
+          :data-playground-id="id"
+          :data-filename="name"
+          :data-lang="language ?? $data.page.lang">
+  <slot></slot>
+</template>
+
+<!---
+  //       'playground-file': ([id, name], { page }) => ({
+  //         tagName: 'template',
+  //         attributes: {
+  //           'data-playground-id': id,
+  //           'data-filename': name,
+  //           'data-lang': page.lang,
+  //         },
+  //       }),
+-->

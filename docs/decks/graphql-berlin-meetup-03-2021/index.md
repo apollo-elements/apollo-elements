@@ -1,5 +1,5 @@
 ---
-layout: layout-deck
+layout: deck.html
 title: What is Apollo Elements?
 description: Declarative Data that Uses the Platform
 socialMediaImage: https://apolloelements.dev/graphql-berlin-slides/images/poster.png

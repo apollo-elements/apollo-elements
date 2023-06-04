@@ -1,5 +1,5 @@
 ---
-layout: layout-deck
+layout: deck.html
 title: GraphQL in HTML with Apollo Elements
 description: Declarative Data that Uses the Platform
 socialMediaImage: https://apolloelements.dev/cincijs-feb-2022/images/poster.png

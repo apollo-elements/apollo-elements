@@ -32,7 +32,7 @@ Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each c
 
 <figure>
 
-{% include ./cycle.svg | safe %}
+{% include './cycle.svg' %}
 
 <figcaption>
 

@@ -1,0 +1,30 @@
+:host {
+  --code-button-active-color: #00c853; /* MaterialGreen A100 */
+
+  margin-block-end: var(--markdown-syntax-margin-block-end, 16px);
+  outline: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --code-button-active-color: #00c853; /* MaterialGreen A700 */
+  }
+}
+
+#copy-button {
+  position: absolute;
+  inset: auto 0 0 auto;
+  height: 40px;
+  width: 40px;
+  padding: 10px;
+  transition: color 1s cubic-bezier(0, 1.15, 0, 1);
+  border-start-start-radius: var(--code-border-radius);
+}
+
+::slotted(pre) {
+  margin-block-end: 0 !important;
+}
+
+[aria-hidden="true"] {
+  display: none !important;
+}

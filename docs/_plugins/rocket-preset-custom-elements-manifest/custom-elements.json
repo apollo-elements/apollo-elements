@@ -1,0 +1,708 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "custom-elements-manifest.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "customElementsManifest",
+          "parameters": [
+            {
+              "name": "options",
+              "type": {
+                "text": "Options & CEMOptions"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "text": "Partial<RocketPreset>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "customElementsManifest",
+          "declaration": {
+            "name": "customElementsManifest",
+            "module": "custom-elements-manifest.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "eleventy/custom-elements-manifest.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "customElementsManifestPlugin",
+          "parameters": [
+            {
+              "name": "eleventyConfig",
+              "type": {
+                "text": "*"
+              }
+            },
+            {
+              "name": "options",
+              "type": {
+                "text": "CEMOptions"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "customElementsManifestPlugin",
+          "declaration": {
+            "name": "customElementsManifestPlugin",
+            "module": "eleventy/custom-elements-manifest.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "eleventy/filters.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isPrivate",
+          "parameters": [
+            {
+              "name": "x"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "split",
+          "parameters": [
+            {
+              "name": "x"
+            },
+            {
+              "name": "d"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "filterMembersBy",
+          "parameters": [
+            {
+              "name": "p"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getDeclaration",
+          "parameters": [
+            {
+              "name": "moduleData"
+            },
+            {
+              "name": "declaration"
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "getAllFields"
+        },
+        {
+          "kind": "variable",
+          "name": "getAllMethods"
+        },
+        {
+          "kind": "variable",
+          "name": "getFields"
+        },
+        {
+          "kind": "variable",
+          "name": "getMethods"
+        },
+        {
+          "kind": "variable",
+          "name": "getPrivateFields"
+        },
+        {
+          "kind": "variable",
+          "name": "getPrivateMethods"
+        },
+        {
+          "kind": "function",
+          "name": "getExports",
+          "parameters": [
+            {
+              "name": "m"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getAttributes",
+          "parameters": [
+            {
+              "name": "declaration"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getCssProperties",
+          "parameters": [
+            {
+              "name": "declaration"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getCssParts",
+          "parameters": [
+            {
+              "name": "declaration"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getSlots",
+          "parameters": [
+            {
+              "name": "declaration"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getEvents",
+          "parameters": [
+            {
+              "name": "declaration"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getGitHubURL",
+          "parameters": [
+            {
+              "name": "{ repository: { url = '', directory = '' } = {} }",
+              "default": "{}"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getHeadings",
+          "parameters": [
+            {
+              "name": "module"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "sortByProp",
+          "parameters": [
+            {
+              "name": "list",
+              "default": "[]"
+            },
+            {
+              "name": "prop",
+              "default": "''"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "sortClassMembers",
+          "parameters": [
+            {
+              "name": "list",
+              "default": "[]",
+              "optional": true,
+              "type": {
+                "text": "ClassMember[]"
+              }
+            }
+          ],
+          "description": "Sort a list of custom-element.json `ClassMember`s",
+          "return": {
+            "type": {
+              "text": "ClassMember[]"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "nonContent",
+          "parameters": [
+            {
+              "name": "blocks",
+              "description": "Object with keys blockname (file name) and values block include path",
+              "type": {
+                "text": "Record<string, string>"
+              }
+            }
+          ],
+          "description": "Get the non-content blocks from a _joiningBlocks directory",
+          "return": {
+            "type": {
+              "text": "Record<string, string>"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "manifestModuleImports",
+          "parameters": [
+            {
+              "name": "eleventyConfig"
+            },
+            {
+              "name": "configOptions"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getTypeString",
+          "parameters": [
+            {
+              "name": "input",
+              "type": {
+                "text": "string|Type"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isPrivate",
+          "declaration": {
+            "name": "isPrivate",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "split",
+          "declaration": {
+            "name": "split",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "filterMembersBy",
+          "declaration": {
+            "name": "filterMembersBy",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getDeclaration",
+          "declaration": {
+            "name": "getDeclaration",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getAllFields",
+          "declaration": {
+            "name": "getAllFields",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getAllMethods",
+          "declaration": {
+            "name": "getAllMethods",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getFields",
+          "declaration": {
+            "name": "getFields",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getMethods",
+          "declaration": {
+            "name": "getMethods",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getPrivateFields",
+          "declaration": {
+            "name": "getPrivateFields",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getPrivateMethods",
+          "declaration": {
+            "name": "getPrivateMethods",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getExports",
+          "declaration": {
+            "name": "getExports",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getAttributes",
+          "declaration": {
+            "name": "getAttributes",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getCssProperties",
+          "declaration": {
+            "name": "getCssProperties",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getCssParts",
+          "declaration": {
+            "name": "getCssParts",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getSlots",
+          "declaration": {
+            "name": "getSlots",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getEvents",
+          "declaration": {
+            "name": "getEvents",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getGitHubURL",
+          "declaration": {
+            "name": "getGitHubURL",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getHeadings",
+          "declaration": {
+            "name": "getHeadings",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sortByProp",
+          "declaration": {
+            "name": "sortByProp",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sortClassMembers",
+          "declaration": {
+            "name": "sortClassMembers",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "nonContent",
+          "declaration": {
+            "name": "nonContent",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "manifestModuleImports",
+          "declaration": {
+            "name": "manifestModuleImports",
+            "module": "eleventy/filters.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getTypeString",
+          "declaration": {
+            "name": "getTypeString",
+            "module": "eleventy/filters.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "eleventy/linkToTypes.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "linkToTypes",
+          "parameters": [
+            {
+              "name": "options"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "linkToTypes",
+          "declaration": {
+            "name": "linkToTypes",
+            "module": "eleventy/linkToTypes.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "eleventy/prettyJson.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "prettyJson",
+          "parameters": [
+            {
+              "name": "content"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "prettyJson",
+          "declaration": {
+            "name": "prettyJson",
+            "module": "eleventy/prettyJson.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/css-value-doc/css-value-doc.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CssValueDoc",
+          "members": [
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "array"
+              },
+              "static": true,
+              "default": "[style]"
+            },
+            {
+              "kind": "field",
+              "name": "emptyBody",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mo",
+              "default": "new MutationObserver(() => this.onMutation())"
+            },
+            {
+              "kind": "method",
+              "name": "onMutation",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CssValueDoc",
+          "declaration": {
+            "name": "CssValueDoc",
+            "module": "components/css-value-doc/css-value-doc.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/type-doc/type-doc.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TypeDoc",
+          "cssProperties": [
+            {
+              "description": "background colour for type doc headers",
+              "name": "--type-doc-header-background",
+              "default": "var(--markdown-table-row-odd-background-color, #f6f8fa)"
+            },
+            {
+              "description": "type doc body background",
+              "name": "--type-doc-background",
+              "default": "var(--markdown-syntax-background-color)"
+            },
+            {
+              "description": "font family for headers",
+              "name": "--type-doc-header-font-family"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "array"
+              },
+              "static": true,
+              "default": "[style]"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "emptyBody",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "cloneHeading",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "toggleInherited",
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TypeDoc",
+          "declaration": {
+            "name": "TypeDoc",
+            "module": "components/type-doc/type-doc.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
