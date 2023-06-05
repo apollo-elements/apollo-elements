@@ -1,0 +1,27 @@
+<noscript>
+  <link rel="stylesheet" href="/_assets/_static/code-tabs/noscript.css">
+</noscript>
+
+<style>
+
+code-tabs:hover,
+code-tabs:focus,
+code-tabs:focus-within {
+  --code-tabs-selected-highlight-color: var(--primary-color) !important;
+}
+
+:root {
+  --code-tabs-tabs-background: transparent;
+  --code-tabs-selected-highlight-color: var(--markdown-link-decoration);
+  --code-tabs-border-color: var(--page-background);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --code-tabs-tabs-background: transparent;
+  }
+}
+
+</style>
+
+<slot></slot>

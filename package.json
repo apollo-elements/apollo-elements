@@ -66,8 +66,9 @@
   ],
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
+    "@11ty/eleventy-fetch": "^4.0.0",
     "@11ty/eleventy-plugin-inclusive-language": "^1.0.3",
-    "@11ty/eleventy-plugin-syntaxhighlight": "^4.0.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^4.2.0",
     "@11ty/eleventy-plugin-webc": "^0.11.1",
     "@airbnb/node-memwatch": "^2.0.0",
     "@apollo/client": "^3.5.9",
@@ -87,6 +88,7 @@
     "@graphql-codegen/typescript": "^2.4.8",
     "@graphql-codegen/typescript-operations": "^2.3.5",
     "@graphql-tools/mock": "^8.6.3",
+    "@jspm/generator": "^1.1.9",
     "@luckycatfactory/esbuild-graphql-loader": "^3.7.0",
     "@microsoft/fast-components": "^2.25.3",
     "@open-wc/testing": "^3.1.2",

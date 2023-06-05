@@ -1,6 +1,6 @@
 <slot></slot>
 
-<script type="module" webc:keep>
+<script type="module" webc:bucket="modules">
   import { LitElement, html, css } from 'lit';
 
   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);

@@ -1,0 +1,5 @@
+<style>
+:root {
+  --type-doc-header-font-family: 'Recursive';
+}
+</style>

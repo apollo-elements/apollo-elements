@@ -1,8 +1,8 @@
+// @ts-check
 const path = require('node:path');
 
 const eleventyRocketNav = require('@rocket/eleventy-rocket-nav');
 const rocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
-const playgroundElements = require('./docs/_plugins/playgrounds/build-playgrounds.cjs');
 const addWebComponentDefinitions = require('eleventy-plugin-add-web-component-definitions');
 const apolloElements = require('./docs/_plugins/rocket-preset-apollo-elements/index.cjs');
 const CodeTabs = require('./docs/_plugins/rocket-preset-code-tabs/rocket-preset-code-tabs.cjs');
@@ -11,20 +11,44 @@ const CustomElementsManifest = require('./docs/_plugins/rocket-preset-custom-ele
 const Footnotes = require('eleventy-plugin-footnotes');
 const WebC = require('@11ty/eleventy-plugin-webc');
 const { EleventyRenderPlugin } = require('@11ty/eleventy');
+const EleventyPluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
+const ImportMaps = require('./docs/_plugins/importMaps.cjs');
+const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
+const Icons = require('./docs/_plugins/icons.cjs');
 
+const yaml = require('yaml');
+/** @type{import('@11ty/eleventy/src/UserConfig')} */
 module.exports = function(eleventyConfig) {
   // rocketSearch()...
 
+  eleventyConfig.setQuietMode(true);
+  eleventyConfig.addDataExtension('yaml,yml', content => yaml.parse(content));
   eleventyConfig.addPassthroughCopy(`docs/!(*.md|*.html)*`);
   eleventyConfig.addPassthroughCopy(`docs/_assets/_static/**/*`);
   eleventyConfig.addPassthroughCopy('decks/azconf-dev-2021/**/*.{js,png,svg,jpg,webp,woff,woff2}');
   eleventyConfig.addWatchTarget('_assets/**/*.css');
+  eleventyConfig.addWatchTarget('_includes/**/*.css');
 
   eleventyConfig.addFilter('formatDate', date =>
     date instanceof Date ? date.toDateString() : date);
 
+  eleventyConfig.addPlugin(Icons);
+  eleventyConfig.addPlugin(Playgrounds);
+  eleventyConfig.addPlugin(ImportMaps, {
+    cacheFor: '1d',
+    specs: [
+      'lit',
+      'playground-elements',
+    ],
+  });
+
+  eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
   eleventyConfig.addPlugin(WebC, {
-    components: 'docs/_components/**/*.webc',
+    components: [
+      'docs/_components/**/*.webc',
+      'docs/_plugins/playgrounds/components/**/*.webc',
+      'npm:@11ty/eleventy-plugin-syntaxhighlight/*.webc',
+    ],
   });
 
   // eleventyConfig.addPlugin(SlideDecks);
@@ -148,7 +172,7 @@ module.exports = function(eleventyConfig) {
   // eleventyConfig.setTemplateFormats(['webc']);
 
   return {
-    templateFormats: ['webc'],
+    templateFormats: ['playground.html', 'playground.css', 'playground.graphql', 'webc', 'svg'],
     dir: {
       input: 'docs',
       output: '_site',

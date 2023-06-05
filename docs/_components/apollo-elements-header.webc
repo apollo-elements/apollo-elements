@@ -1,44 +1,136 @@
-<header id="main-header">
-  <div class="content-area">
-    <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
-      <span class="sr-only">Show Menu</span>
-      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
-        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
-      </svg>
-    </button>
-    <a class="logo-link" href="/">
-      <img src="4db73eb3.svg" alt="Apollo Elements">
-      <span>Apollo Elements</span>
-    </a>
-    <rocket-search class="search" json-url="/_merged_assets/_static/rocket-search-index.json">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" style="width: 25px;">
-        <path d="M51.6 96.7c11 0 21-3.9 28.8-10.5l35 35c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2c1.6-1.6 1.6-4.2 0-5.8l-35-35c6.5-7.8 10.5-17.9 10.5-28.8 0-24.9-20.2-45.1-45.1-45.1-24.8 0-45.1 20.3-45.1 45.1 0 24.9 20.3 45.1 45.1 45.1zm0-82c20.4 0 36.9 16.6 36.9 36.9C88.5 72 72 88.5 51.6 88.5S14.7 71.9 14.7 51.6c0-20.3 16.6-36.9 36.9-36.9z"></path>
-      </svg>
-    </rocket-search>
+<style>
+#main-header {
+  padding-block: 20px;
+  padding-inline: calc((100vw - 1200px) / 2 + 20px);
+  top: 0;
+  position: sticky;
+  z-index: 100;
+  background-color: var(--page-background);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 30px;
+  gap: 50px;
+}
+
+#main-header a {
+  text-decoration: none;
+  color: var(--primary-text-color);
+  transition: color 0.3s ease-in-out;
+  font-weight: bold;
+  order: 2;
+}
+
+#main-header a, #main-header .social-link, #main-header rocket-search {
+  order: initial !important;
+}
+
+#main-header .logo-link {
+  color: var(--primary-color);
+  font-size: 19px;
+  font-weight: bold;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  vertical-align: middle;
+}
+
+#mobile-menu-trigger {
+	color: inherit;
+	border: none;
+	width: 20px;
+	height: 20px;
+	box-sizing: content-box;
+	background: none;
+	padding: 0;
+}
+
+#social-links {
+  display: none;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#main-header svg {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+}
+
+@media (min-width: 1024px) {
+  #social-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  .social-link {
+    display: block;
+  }
+  #main-header {
+    gap: 25px;
+  }
+  #mobile-menu-trigger {
+    display: none;
+  }
+}
+
+</style>
+<header id="main-header" webc:root="override">
+  <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+      <title>Show Menu</title>
+      <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+    </svg>
+  </button>
+  <a class="logo-link" href="/">
+    <sprite-icon name="apollo-elements"></sprite-icon>
+    <span>Apollo Elements</span>
+  </a>
+
+  <rocket-search style="display:block;height:38.3333px" class="search" json-url="/assets/static/rocket-search-index.json">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" style="width: 25px;">
+      <path d="M51.6 96.7c11 0 21-3.9 28.8-10.5l35 35c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2c1.6-1.6 1.6-4.2 0-5.8l-35-35c6.5-7.8 10.5-17.9 10.5-28.8 0-24.9-20.2-45.1-45.1-45.1-24.8 0-45.1 20.3-45.1 45.1 0 24.9 20.3 45.1 45.1 45.1zm0-82c20.4 0 36.9 16.6 36.9 36.9C88.5 72 72 88.5 51.6 88.5S14.7 71.9 14.7 51.6c0-20.3 16.6-36.9 36.9-36.9z"></path>
+    </svg>
+  </rocket-search>
+
+  <nav>
     <a href="/guides/" class="">Guides</a>
     <a href="/api/" class="">API</a>
     <a href="/blog/" class="">Blog</a>
-    <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+  </nav>
+
+  <ul id="social-links">
+    <li>
       <a class="social-link" href="https://github.com/apollo-elements/apollo-elements" aria-label="Apollo Elements on GitHub" rel="me" target="_blank">
-        <span class="sr-only">GitHub</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
           <title>GitHub</title>
           <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
         </svg>
       </a>
+    </li>
+
+    <li>
       <a class="social-link" href="https://twitter.com/ApolloElements" aria-label="Apollo Elements on Twitter" rel="me" target="_blank">
-        <span class="sr-only">Twitter</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 274 223"><title>Twitter</title><path d="M85.98 223c-31.675 0-61.158-9.285-85.98-25.199 4.388.518 8.853.783 13.38.783 26.278 0 50.463-8.967 69.659-24.01-24.544-.453-45.258-16.669-52.395-38.953a56.014 56.014 0 0 0 10.552 1.006c5.116 0 10.071-.685 14.778-1.967-25.66-5.152-44.993-27.822-44.993-54.998 0-.236 0-.471.004-.705a55.865 55.865 0 0 0 25.406 7.015c-15.05-10.058-24.953-27.226-24.953-46.685 0-10.279 2.766-19.914 7.594-28.198 27.664 33.934 68.993 56.264 115.609 58.603a56.31 56.31 0 0 1-1.453-12.782c0-30.975 25.114-56.088 56.091-56.088 16.132 0 30.709 6.812 40.941 17.713a112.328 112.328 0 0 0 35.617-13.611c-4.188 13.097-13.081 24.089-24.662 31.031a112.148 112.148 0 0 0 32.215-8.832 114 114 0 0 1-27.988 29.035c.108 2.405.162 4.824.162 7.256C245.564 137.533 189.148 223 85.98 223" fill="currentColor"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 274 223">
+          <title>Twitter</title>
+          <path d="M85.98 223c-31.675 0-61.158-9.285-85.98-25.199 4.388.518 8.853.783 13.38.783 26.278 0 50.463-8.967 69.659-24.01-24.544-.453-45.258-16.669-52.395-38.953a56.014 56.014 0 0 0 10.552 1.006c5.116 0 10.071-.685 14.778-1.967-25.66-5.152-44.993-27.822-44.993-54.998 0-.236 0-.471.004-.705a55.865 55.865 0 0 0 25.406 7.015c-15.05-10.058-24.953-27.226-24.953-46.685 0-10.279 2.766-19.914 7.594-28.198 27.664 33.934 68.993 56.264 115.609 58.603a56.31 56.31 0 0 1-1.453-12.782c0-30.975 25.114-56.088 56.091-56.088 16.132 0 30.709 6.812 40.941 17.713a112.328 112.328 0 0 0 35.617-13.611c-4.188 13.097-13.081 24.089-24.662 31.031a112.148 112.148 0 0 0 32.215-8.832 114 114 0 0 1-27.988 29.035c.108 2.405.162 4.824.162 7.256C245.564 137.533 189.148 223 85.98 223" fill="currentColor"></path>
+        </svg>
       </a>
+    </li>
+
+    <li>
       <a class="social-link" href="https://join.slack.com/share/zt-rze808zo-YmRT8zyJI6sDTQjC_49ytA" aria-label="Apollo Elements on Slack" rel="noopener noreferrer" target="_blank">
-        <span class="sr-only">Slack</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 123 123" fill="currentColor">
           <title>Slack</title>
           <path stroke="none" stroke-width="1" stroke-dasharray="none" stroke-linecap="butt" stroke-dashoffset="0" stroke-linejoin="miter" stroke-miterlimit="4" fill-rule="nonzero" d="M26.4 78.2c0 7.1-5.8 12.9-12.9 12.9S.6 85.3.6 78.2c0-7.1 5.8-12.9 12.9-12.9h12.9v12.9zm6.5 0c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9v32.3c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V78.2zm12.9-51.8c-7.1 0-12.9-5.8-12.9-12.9S38.7.6 45.8.6s12.9 5.8 12.9 12.9v12.9H45.8zm0 6.5c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H13.5C6.4 58.7.6 52.9.6 45.8s5.8-12.9 12.9-12.9h32.3zM97.6 45.8c0-7.1 5.8-12.9 12.9-12.9 7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H97.6V45.8zm-6.5 0c0 7.1-5.8 12.9-12.9 12.9-7.1 0-12.9-5.8-12.9-12.9V13.5C65.3 6.4 71.1.6 78.2.6c7.1 0 12.9 5.8 12.9 12.9v32.3zM78.2 97.6c7.1 0 12.9 5.8 12.9 12.9 0 7.1-5.8 12.9-12.9 12.9-7.1 0-12.9-5.8-12.9-12.9V97.6h12.9zm0-6.5c-7.1 0-12.9-5.8-12.9-12.9 0-7.1 5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9 0 7.1-5.8 12.9-12.9 12.9H78.2z"></path>
         </svg>
       </a>
+    </li>
+
+    <li>
       <a class="social-link" href="https://discord.gg/2FgMbKf" aria-label="Apollo Elements on Discord" rel="noopener noreferrer" target="_blank">
-        <span class="sr-only">Discord</span>
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
           <title>Discord</title>
           <path d="m3.58 21.196h14.259l-.681-2.205 1.629 1.398 1.493 1.338 2.72 2.273v-21.525c-.068-1.338-1.22-2.475-2.648-2.475l-16.767.003c-1.427 0-2.585 1.139-2.585 2.477v16.24c0 1.411 1.156 2.476 2.58 2.476zm10.548-15.513-.033.012.012-.012zm-7.631 1.269c1.833-1.334 3.532-1.27 3.532-1.27l.137.135c-2.243.535-3.26 1.537-3.26 1.537s.272-.133.747-.336c3.021-1.188 6.32-1.102 9.374.402 0 0-1.019-.937-3.124-1.537l.186-.183c.291.001 1.831.055 3.479 1.26 0 0 1.844 3.15 1.844 7.02-.061-.074-1.144 1.666-3.931 1.726 0 0-.472-.534-.808-1 1.63-.468 2.24-1.404 2.24-1.404-.535.337-1.023.537-1.419.737-.609.268-1.219.4-1.828.535-2.884.468-4.503-.315-6.033-.936l-.523-.266s.609.936 2.174 1.404c-.411.469-.818 1.002-.818 1.002-2.786-.066-3.802-1.806-3.802-1.806 0-3.876 1.833-7.02 1.833-7.02z"></path>
@@ -46,13 +138,17 @@
           <path d="m9.69 12.771c.711 0 1.29-.6 1.29-1.34 0-.735-.575-1.335-1.286-1.335l-.004.003c-.711 0-1.29.598-1.29 1.338 0 .734.579 1.334 1.29 1.334z"></path>
         </svg>
       </a>
+    </li>
+
+    <li>
       <a class="social-link" href="https://t.me/apolloelements" aria-label="Apollo Elements on Telegram" rel="noopener noreferrer" target="_blank">
-        <span class="sr-only">Telegram</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54" fill="currentColor">
           <title>Telegram</title>
           <path d="M-.2.1h53.8v53.4H-.2z" fill="none"></path>
           <path d="M49.7 16.5c1.3 3.1 2 6.3 2 9.7s-.7 6.6-2 9.7c-1.3 3.1-3.1 5.7-5.3 8-2.2 2.2-4.9 4-8 5.3-3.1 1.3-6.3 2-9.7 2-3.4 0-6.6-.7-9.7-2s-5.7-3.1-8-5.3c-2.2-2.2-4-4.9-5.3-8-1.3-3.1-2-6.3-2-9.7s.7-6.6 2-9.7c1.3-3.1 3.1-5.7 5.3-8 2.2-2.2 4.9-4 8-5.3s6.3-2 9.7-2c3.4 0 6.6.7 9.7 2 3.1 1.3 5.7 3.1 8 5.3 2.2 2.3 3.9 5 5.3 8zM34.8 37.7l4.1-19.3c.2-.8.1-1.4-.3-1.8-.4-.4-.8-.4-1.4-.2l-24.1 9.3c-.5.2-.9.4-1.1.7-.2.3-.2.5-.1.7.1.2.4.4.9.5l6.2 1.9 14.3-9c.4-.3.7-.3.9-.2.1.1.1.2-.1.4L22.5 31.3l-.5 6.4c.4 0 .8-.2 1.3-.6l3-2.9 6.2 4.6c1.3.7 2 .3 2.3-1.1z"></path>
         </svg>
       </a>
-    </div>
-  </header>
+    </li>
+  </ul>
+
+</header>

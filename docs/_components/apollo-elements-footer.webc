@@ -1,4 +1,63 @@
-<footer id="main-footer">
+<style>
+:root {
+  --footer-background: rgba(0, 0, 0, 0.1);
+}
+
+#main-footer {
+  margin-top: 50px;
+  border-top: 1px solid #eaeaea;
+  background-color: var(--footer-background, rgba(0, 0, 0, 0.1));
+  color: var(--text-color);
+  padding: 40px 0;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+
+#footer-menu .content-area {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+@media screen and (min-width: 1024px) {
+  #footer-menu .content-area {
+    flex-direction: row;
+    text-align: left;
+  }
+}
+
+
+#footer-menu {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+#footer-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#footer-menu a {
+  text-decoration: none;
+  color: var(--primary-text-color);
+  padding: 5px 0;
+  display: block;
+}
+
+.content-area {
+  padding: 0 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --footer-background: #151515;
+  }
+}
+</style>
+<footer id="main-footer" webc:root="override">
   <div id="footer-menu">
     <div class="content-area">
       <nav>
@@ -66,3 +125,7 @@
     </div>
   </div>
 </footer>
+
+<svg id="icon-sprite-sheet" aria-hidden="true">
+  <defs @raw="getBundle('html', 'svg')"></defs>
+</svg>

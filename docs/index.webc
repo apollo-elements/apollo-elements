@@ -1,212 +1,340 @@
----yaml
-title: Apollo Elements
-slogan: Build high-performance web apps with GraphQL and web components.
+<style>
+main {
+  padding-block-start: 50px;
+}
+.page-logo {
+  display: block;
+  margin: 0 auto;
+  margin-top: 0px;
+  width: 35vw;
+  max-width: 250px;
+  color: var(--primary-color);
+}
+.page-title {
+  font-size: 50px;
+}
+.page-title, .reason-header, .page-slogan {
+  text-align: center;
+  border-bottom: none;
+  color: var(--text-color);
+}
 
-callToActionItems:
-  - text: Guides
-    href: /guides/
-  - text: API Docs
-    href: /api/
+.page-slogan {
+	font-size: 18px;
+}
 
-frameworkDemos:
-  - framework: angular
-    frameworkAlt: Angular
-    sandboxId: apollo-elements-in-angular-9smgl
-    module: /src/app/app.component.html
-    color: '#dd0031'
+#call-to-action,
+#call-to-action li {
+  display: contents;
+}
 
-  - framework: preact
-    frameworkAlt: Preact
-    sandboxId: apollo-elements-in-preact-yowom
-    module: /src/components/LaunchesDemo.js
-    color: '#673ab8'
+#call-to-action ul {
+  list-style-type: none;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+	padding: 25px 0;
+  font-variation-settings: "CASL" 0, "MONO" 0, "slnt" -5, "CRSV" 1;
+  width: max-content;
+}
 
-  - framework: react
-    frameworkAlt: React
-    sandboxId: apollo-elements-in-react-00ev3
-    module: /src/LaunchesDemo.js
-    color: '#61dafb'
+#call-to-action li a {
+  display: inline-block;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: var(--secondary-font-family);
+  font-size: 16px;
+  font-weight: bold;
+  vertical-align: middle;
+  padding: 8px 24px;
+  border: 1px solid var(--primary-color);
+  border-radius: 24px;
+  background: linear-gradient(to right, var(--primary-color-lighter), var(--primary-color));
+  text-shadow: var(--primary-color-darker) 1px 1px 1px;
+  color: var(--contrast-color-light, #fff);
+  text-decoration: none;
+}
 
-  - framework: svelte
-    frameworkAlt: Svelte
-    sandboxId: apollo-elements-in-svelte-u6js9
-    module: /LaunchesDemo.svelte
-    color: '#ff3e00'
+#call-to-action a:hover,
+#call-to-action a:focus {
+  background: linear-gradient(to right, var(--primary-color), var(--primary-color-darker));
+  text-decoration: none;
+}
 
-  - framework: vue
-    frameworkAlt: Vue
-    sandboxId: apollo-elements-in-vue-cq769
-    module: /src/components/ApolloElementsDemo.vue
-    color: '#41b883'
+#call-to-action a:active {
+  background: var(--primary-color-darker);
+}
 
-libraries:
-  - lib: mixins
-    name: Vanilla
-    logo: html5
+#call-to-action li:nth-of-type(2) {
+	--primary-color: #222;
+	--primary-color-lighter: #333;
+	--primary-color-darker: #000;
+}
 
-  - lib: lit-apollo
-    name: Lit
-    logo: lit
+#reasons {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	column-gap: 100px;
+	row-gap: 40px;
+	color: var(--text-color);
+  margin-block-end: 36px;
+}
 
-  - lib: fast
-    name: FAST
-    logo: fast
+h2 {
+  text-align: center;
+}
 
-  - lib: haunted
-    name: Haunted
-    logo: haunted
+h2:not(:first-of-type) {
+  margin-block-start: 7rem;
+}
 
-  - lib: atomico
-    name: Atomico
-    logo: atomico
+@media screen and (min-width: 1024px) {
+  .page-background {
+    top: -210px;
+    right: -463px;
+    transform: rotate(45deg);
+  }
+}
 
-  - lib: hybrids
-    name: Hybrids
-    logo: hybrids
+code-tab::part(content) {
+  width: 100%;
+}
 
-  - lib: polymer
-    name: Polymer
-    logo: polymer
+#libraries {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 140px);
+  grid-template-rows: repeat(auto-fit, 140px);
+  gap: 20px;
+  list-style-type: none;
+  place-content: center;
+}
 
----
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apollo Elements</title>
-    <meta property="og:title" content="Apollo Elements">
-    <meta name="generator" content="rocket 0.1">
-    <meta name="msapplication-TileColor" content="black">
-    <meta name="theme-color" content="black">
-    <meta property="og:site_name" content="Apollo Elements">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://apolloelements.dev/_assets/social/apollo-elements-95de180c1aa9816ae1a19a4fd8995539.png">
-    <meta property="og:url" content="https://apolloelements.dev/">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="description" content="Build high-performance GraphQL web apps with Apollo Elements">
-    <meta property="og:description" content="Build high-performance GraphQL web apps with Apollo Elements">
-    <link rel="canonical" href="https://apolloelements.dev/">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-    <link rel="manifest" href="assets/webmanifest.json">
-    <link rel="mask-icon" href="assets/safari-pinned-tab.svg" color="white">
-    <link rel="webmention" href="https://webmention.io/apolloelements.dev/webmention">
-    <link rel="pingback" href="https://webmention.io/apolloelements.dev/xmlrpc">
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
-    <link rel="stylesheet" webc:keep href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional">
-    <link rel="stylesheet" webc:keep href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional">
-    <link rel="stylesheet" webc:keep href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&amp;display=swap">
-  </head>
-  <body layout="layout-home">
-    <apollo-elements-header></apollo-elements-header>
-    <apollo-elements-sidebar></apollo-elements-sidebar>
-    <main>
-      <img class="page-logo" src="_assets/logo.svg" alt="Stylized Letter A surrounded by Angle Brackets" width="250px" height="250px">
+.library svg {
+  filter: brightness(1);
+}
 
-      <h1 class="page-title">Apollo Elements</h1>
+.library.atomico svg path {
+  fill: currentColor !important;
+}
 
-      <p class="page-slogan">Build high-performance web apps with GraphQL and web components.</p>
+:is(.library:hover, .library:focus) svg {
+  filter: brightness(1.5);
+  transition: transform 0.2s ease-in, filter 0.2s ease-in;
+  transform: scale(1.0618);
+  transform-origin: center;
+}
 
-      <nav class="call-to-action-list">
-        <ul>
-          <li><a class="call-to-action" href="/guides/">Guides</a></li>
-          <li><a class="call-to-action" href="/api/">API Docs</a></li>
-        </ul>
-      </nav>
+#libraries li,
+#libraries {
+  margin: 0;
+  padding: 0;
+}
 
-      <docs-playground id="query-spacex" playground-name="mainpage"></docs-playground>
+#libraries li {
+  display: contents;
+}
 
-      <h2 class="reason-header" id="why-apollo-elements">Why Apollo Elements?</h2>
-      <section class="reasons">
-        <article>
-          <h3>High-Performance</h3>
-          Leverage the modern web platform to deliver less JavaScript, without sacrificing <abbr title="developer experience">DX</abbr>.
-        </article>
-        <article>
-          <h3>GraphQL</h3>
-          Write declarative, expressive frontends and manage client-side state using GraphQL.
-        </article>
-        <article>
-          <h3>Interoperable</h3>
-          Use your GraphQL components in any other frontend framework, or none!
-        </article>
-      </section>
+#libraries a {
+  color: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.9;
+  padding: 20px;
+  display: flex;
+  text-decoration: none;
+  border-radius: 100%;
+  transition: background 0.2s ease-in-out;
+  height: 100%;
+  outline: none;
+}
 
-      <p>
-        Write GraphQL web applications with <strong>declarative HTML</strong> templates.
-        Define <strong>custom</strong> query, mutation, or subscription components in JavaScript or TypeScript using your favourite web component library.
-        <strong>Mix and match</strong> programming styles and libraries in a single app, or publish GraphQL-connected components for use in any front-end framework.
-      </p>
+#libraries figure {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 100px min-content;
+}
 
-      <h2 id="use-your-favourite-web-components-library">Use your Favourite Web Components Library</h2>
-      <p>Apollo Elements comes with support for popular web components libraries.
-         Components built using different libraries can coexist seamlessly in the same app.</p>
+#libraries figcaption {
+  text-align: center;
+}
 
-      <ul id="libraries">
-        <li webc:for="library of libraries">
-          <a :href=`./api/libraries/${library.lib}/` class=`library ${library.lib}`>
-            <figure>
-              <file-include :href=`./_assets/brand-logos/${library.logo}.svg`></file-include>
-              <figcaption @text=library.name></figcaption>
-            </figure>
-          </a>
-        </li>
-      </ul>
+#libraries svg {
+  width: 100px;
+  height: 100px;
+}
 
-      <h2 id="interoperable-1">Interoperable</h2>
-      <p><strong>Write GraphQL components once</strong> and <strong>use them everywhere</strong> with ease.
-        Elements created with Apollo Elements work in any framework or none,
-        even in Angular, Preact, React, Svelte, or Vue apps.</p>
-      <p>These demos all import the same Apollo Element component from NPM.</p>
+#libraries a:hover figcaption,
+#libraries a:focus figcaption {
+  color: var(--primary-color-lighter);
+  text-shadow: 2px 2px 2px var(--footer-background);
+}
 
-      <wibbler-wobbler>
-        <code-tabs id="demos" collection="frameworks">
-          <article id="default-tab" slot="default">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39.794 39.794">
-              <path d="M32.901 39.794a3.32 3.32 0 01-1.933-.604L10.182 24.344l-6.001 6a.998.998 0 01-1.703-.622L.004 1.086A1 1 0 011.086.004l28.638 2.475a1 1 0 01.622 1.703l-6 6 14.847 20.786c.926 1.297.769 3.197-.359 4.325l-3.539 3.539c-.637.635-1.516.962-2.394.962zM10.075 22.038c.202 0 .406.061.581.186l21.475 15.339c.499.357 1.315.288 1.748-.146l3.539-3.539c.433-.434.501-1.25.146-1.749l-15.34-21.474a1 1 0 01.107-1.288l5.081-5.081L2.098 2.098l2.188 25.314 5.081-5.081a.999.999 0 01.708-.293z"/>
-            </svg>
-            <p>Click a tab to view the demo</p>
-          </article>
+@media (prefers-color-scheme: dark) {
+  #libraries a:hover figcaption,
+  #libraries a:focus figcaption {
+    text-shadow: 2px 2px 2px var(--primary-color-darker);
+  }
+}
 
-<code-tab webc:for="demo of frameworkDemos"
-          no-copy
-          @id="`${demo.framework}`"
-          @synonyms="`${demo.frameworkAlt}`"
-          @label="`${demo.frameworkAlt}`"
-          @color="`${demo.color}`"
-          @icon-href="`/_assets/brand-logos/${demo.framework}.svg`">
-  <codesandbox-button sandbox-id="`${demo.sandboxId}`" module="`${demo.module}`">
-    <span slot="button" hidden></span>
-  </codesandbox-button>
-</code-tab>
+#demos {
+  --code-tabs-min-height: 505px;
+}
 
-        </code-tabs>
-      </wibbler-wobbler>
+#demos #default-tab {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  justify-content: center;
+  height: var(--code-tabs-min-height);
+  gap: 20px;
+  align-items: center;
+}
 
-    </main>
-  <apollo-elements-footer></apollo-elements-footer>
+#demos #default-tab svg {
+  --ds: 1px;
 
-  <noscript>
-    <link rel="stylesheet" href="/_assets/_static/search/noscript.css">
-    <link rel="stylesheet" href="/_assets/_static/noscript.css">
-    <link rel="stylesheet" href="/_assets/_static/playground-elements/noscript.css">
-    <link rel="stylesheet" href="/_assets/_static/code-tabs/noscript.css">
-  </noscript>
+  width: 100px;
+  transform: rotate(var(--deg, 30deg));
+  fill: currentColor;
+  filter:
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent))
+    drop-shadow(0 0 var(--ds) var(--fw-color, transparent));
+  transition: fill 0.2s ease;
+  will-change: transform, fill;
+}
 
-  <script type="module" webc:keep>
-    import './wibbler.js';
-    const demos = document.getElementById('demos');
-    demos.addEventListener('select', loadDemo);
-    function loadDemo() {
-      const sandbox = document.querySelector('#demos [selected] > *');
-      sandbox.theme =
-        document.body.getAttribute('theme') ||
-        window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      sandbox.showDemo = true;
-    }
-  </script>
-</body>
+#demos #default-tab p {
+  font-size: 48px;
+}
 
-</html>
+#demos code-tab[selected] {
+  height: var(--code-tabs-min-height, 505px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+codesandbox-button[show-demo] {
+  flex: 1;
+}
+
+#reasons {
+  margin-bottom: 36px;
+}
+
+#query-spacex {
+  --playground-ide-height: 25em;
+}
+
+@media (min-width: 380px) {
+  .page-slogan {
+    font-size: 25px;
+  }
+}
+</style>
+
+<sprite-icon name="apollo-elements"
+             class="page-logo"
+             width="250px"
+             height="250px"></sprite-icon>
+
+<h1 class="page-title">Apollo Elements</h1>
+
+<p class="page-slogan">Build high-performance web apps with GraphQL and web components.</p>
+
+<nav id="call-to-action">
+  <ul>
+    <li><a href="/guides/">Guides</a></li>
+    <li><a href="/api/">API Reference</a></li>
+  </ul>
+</nav>
+
+<docs-playground id="query-spacex" playground-name="mainpage"></docs-playground>
+
+<h2 class="reason-header" id="why-apollo-elements">Why Apollo Elements?</h2>
+<section id="reasons">
+  <article>
+    <h3>High-Performance</h3>
+    Leverage the modern web platform to deliver less JavaScript, without sacrificing <abbr title="developer experience">DX</abbr>.
+  </article>
+  <article>
+    <h3>GraphQL</h3>
+    Write declarative, expressive frontends and manage client-side state using GraphQL.
+  </article>
+  <article>
+    <h3>Interoperable</h3>
+    Use your GraphQL components in any other frontend framework, or none!
+  </article>
+</section>
+
+<p>
+  Write GraphQL web applications with <strong>declarative HTML</strong> templates.
+  Define <strong>custom</strong> query, mutation, or subscription components in JavaScript or TypeScript using your favourite web component library.
+  <strong>Mix and match</strong> programming styles and libraries in a single app, or publish GraphQL-connected components for use in any front-end framework.
+</p>
+
+<h2 id="use-your-favourite-web-components-library">Use your Favourite Web Components Library</h2>
+<p>Apollo Elements comes with support for popular web components libraries.
+   Components built using different libraries can coexist seamlessly in the same app.</p>
+
+<ul id="libraries">
+  <li webc:for="library of libraries">
+    <a :href=`./api/libraries/${library.lib}/` :class="`library ${library.lib}`">
+      <figure>
+        <sprite-icon :name="library.logo"></sprite-icon>
+        <figcaption @text=library.name></figcaption>
+      </figure>
+    </a>
+  </li>
+</ul>
+
+<h2 id="interoperable-1">Interoperable</h2>
+<p>
+  <strong>Write GraphQL components once</strong> and <strong>use them everywhere</strong> with ease.
+  Elements created with Apollo Elements work in any framework or none, even in Angular, Preact,
+  React, Svelte, or Vue apps.
+</p>
+<p>These demos all import the same Apollo Element component from NPM.</p>
+
+<wibbler-wobbler>
+  <code-tabs id="demos" collection="frameworks">
+    <article id="default-tab" slot="default">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39.794 39.794">
+        <path d="M32.901 39.794a3.32 3.32 0 01-1.933-.604L10.182 24.344l-6.001 6a.998.998 0 01-1.703-.622L.004 1.086A1 1 0 011.086.004l28.638 2.475a1 1 0 01.622 1.703l-6 6 14.847 20.786c.926 1.297.769 3.197-.359 4.325l-3.539 3.539c-.637.635-1.516.962-2.394.962zM10.075 22.038c.202 0 .406.061.581.186l21.475 15.339c.499.357 1.315.288 1.748-.146l3.539-3.539c.433-.434.501-1.25.146-1.749l-15.34-21.474a1 1 0 01.107-1.288l5.081-5.081L2.098 2.098l2.188 25.314 5.081-5.081a.999.999 0 01.708-.293z"/>
+      </svg>
+      <p>Click a tab to view the demo</p>
+    </article>
+
+    <code-tab webc:for="demo of frameworkDemos"
+        no-copy
+        @id="`${demo.framework}`"
+        @synonyms="`${demo.frameworkAlt}`"
+        @label="`${demo.frameworkAlt}`"
+        @color="`${demo.color}`"
+        @icon-href="`/_assets/brand-logos/${demo.framework}.svg`">
+      <codesandbox-button sandbox-id="`${demo.sandboxId}`" module="`${demo.module}`">
+        <span slot="button" hidden></span>
+      </codesandbox-button>
+    </code-tab>
+  </code-tabs>
+</wibbler-wobbler>
+
+<noscript>
+  <link rel="stylesheet" href="/_assets/_static/search/noscript.css">
+  <link rel="stylesheet" href="/_assets/_static/noscript.css">
+</noscript>
+
+<script type="module" webc:bundle="modules">
+  import { LitElement } from 'lit';
+  const demos = document.getElementById('demos');
+  demos.addEventListener('select', loadDemo);
+  function loadDemo() {
+    const sandbox = document.querySelector('#demos [selected] > *');
+    sandbox.theme =
+      document.body.getAttribute('theme') ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    sandbox.showDemo = true;
+  }
+</script>

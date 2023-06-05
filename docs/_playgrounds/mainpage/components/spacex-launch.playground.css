@@ -1,0 +1,24 @@
+article {
+  display: grid;
+  grid-template-areas: 'h i' 'p p';
+  grid-template-columns: auto min-content;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+:host([loading]) article { display: none; }
+article { opacity: 0; }
+h2 { grid-area: h; }
+p { grid-area: p; }
+img, p { display: block; }
+
+.resolved {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+img {
+  max-width: 50px;
+  grid-area: i;
+  place-self: center;
+}

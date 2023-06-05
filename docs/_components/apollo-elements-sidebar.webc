@@ -1,3 +1,8 @@
+<style>
+apollo-elements-sidebar {
+  display: none;
+}
+</style>
 <rocket-drawer id="sidebar">
   <nav slot="content" id="sidebar-nav">
     <a class="logo-link" href="/">
