@@ -6,8 +6,7 @@ apollo-elements-sidebar {
 <rocket-drawer id="sidebar">
   <nav slot="content" id="sidebar-nav">
     <a class="logo-link" href="/">
-      <img src="4db73eb3.svg" alt="Apollo Elements">
-      <span>Apollo Elements</span>
+      <sprite-icon name="apollo-elements"></sprite-icon>
     </a>
     <rocket-navigation>
       <ul>

@@ -1,5 +1,13 @@
 <noscript>
-  <link rel="stylesheet" href="/_assets/_static/playground-elements/noscript.css">
+  <style>
+  docs-playground:not(:defined) {
+    opacity: 1 !important;
+  }
+
+  docs-playground > pre {
+    margin-bottom: 0;
+  }
+  </style>
 </noscript>
 
 <style>

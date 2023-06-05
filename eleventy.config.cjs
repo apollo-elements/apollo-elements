@@ -23,11 +23,10 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.setQuietMode(true);
   eleventyConfig.addDataExtension('yaml,yml', content => yaml.parse(content));
-  eleventyConfig.addPassthroughCopy(`docs/!(*.md|*.html)*`);
-  eleventyConfig.addPassthroughCopy(`docs/_assets/_static/**/*`);
+  eleventyConfig.addPassthroughCopy('docs/!(*.md|*.html)*');
+  eleventyConfig.addPassthroughCopy('docs/assets');
+  eleventyConfig.addPassthroughCopy('favicon.ico');
   eleventyConfig.addPassthroughCopy('decks/azconf-dev-2021/**/*.{js,png,svg,jpg,webp,woff,woff2}');
-  eleventyConfig.addWatchTarget('_assets/**/*.css');
-  eleventyConfig.addWatchTarget('_includes/**/*.css');
 
   eleventyConfig.addFilter('formatDate', date =>
     date instanceof Date ? date.toDateString() : date);
