@@ -33,6 +33,7 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
+  eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
   eleventyConfig.addPlugin(ImportMaps, {
     cacheFor: '1d',
     specs: [
@@ -41,7 +42,6 @@ module.exports = function(eleventyConfig) {
     ],
   });
 
-  eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
   eleventyConfig.addPlugin(WebC, {
     components: [
       'docs/_components/**/*.webc',

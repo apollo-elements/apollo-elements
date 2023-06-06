@@ -1,0 +1,219 @@
+<noscript>
+  <style>
+    :is(code-copy, code-tab, code-tabs):not(:defined) {
+      opacity: 1 !important;
+    }
+
+    code-tab pre {
+      border-radius: 0 0 var(--code-border-radius) var(--code-border-radius) !important;
+    }
+
+    code-tab::before {
+      content: attr(data-label);
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 5px;
+      background: var(--markdown-table-row-odd-background-color);
+      border-start-start-radius: var(--code-border-radius);
+      border-start-end-radius: var(--code-border-radius);
+      font-size: 13px;
+      width: calc(100% - 10px);
+    }
+
+    code-copy > pre {
+      margin-bottom: 0;
+    }
+  </style>
+</noscript>
+
+<style>
+  :root {
+    --code-border-radius: 6px;
+  }
+
+  code-tab > pre {
+    border-radius: 0 !important;
+    margin-bottom: 0;
+  }
+
+  code-tabs:hover,
+  code-tabs:focus,
+  code-tabs:focus-within {
+    --code-tabs-selected-highlight-color: var(--primary-color) !important;
+  }
+
+  :root {
+    --code-tabs-tabs-background: transparent;
+    --code-tabs-selected-highlight-color: var(--markdown-link-decoration);
+    --code-tabs-border-color: var(--page-background);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --code-tabs-tabs-background: transparent;
+    }
+  }
+
+</style>
+
+<slot></slot>
+
+<template webc:keep shadowroot="open" shadowrootmode="open">
+  <style>
+    :host {
+      display: block;
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+      color: var(--code-button-color, inherit);
+      position: relative;
+      padding: 9px 16px;
+      border: none;
+      cursor: pointer;
+      display: block;
+      font-size: 16px;
+      background: var(--code-button-background, var(--markdown-table-row-odd-background-color));
+      outline: none;
+      transition: color, background 0.1s ease;
+    }
+
+    button:focus,
+    button:hover {
+      color: var(--code-button-focus-color, inherit);
+      background: var(--code-button-focus-background, var(--primary-lines-color));
+    }
+
+    button[selected] {
+      text-decoration: none;
+    }
+
+    button:active {
+      color: var(--code-button-active-color);
+    }
+
+    :host {
+      margin-block-end: var(--markdown-syntax-margin-block-end, 16px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    img {
+      height: var(--code-tabs-icon-height, 24px);
+      width: auto;
+    }
+
+    #tabs,
+    #tabpanels {
+      --code-tabs-border: 1px solid var(--code-tabs-border-color, transparent);
+    }
+
+    :host(:is(:focus-within, :hover)) :is(#tabs, #tabpanels) {
+      --code-tabs-border: 1px solid var(--code-tabs-border-focus-color, var(--primary-color));
+    }
+
+    :host(:is(:focus-within, :hover)) #tabs button {
+      border-block-end-color: var(--code-tabs-border-focus-color, var(--primary-color));
+    }
+
+    #tabs {
+      display: flex;
+      background: var(--code-tabs-tabs-background);
+      overflow-x: auto;
+      z-index: 2;
+      position: relative;
+      inset-block-end: -1px;
+    }
+
+    #tabs button {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border-start-start-radius: var(--code-border-radius);
+      border-start-end-radius: var(--code-border-radius);
+      border-block-end: var(--code-tabs-border);
+      border-block-end-color: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+    }
+
+    #tabs button[selected] {
+      background: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+      border: var(--code-tabs-border);
+      border-block-start: 2px solid var(--code-tabs-selected-highlight-color, var(--markdown-link-color));
+      border-block-end-color: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+      border-block-end-width: 0;
+      padding: 9px 15px 11px 15px;
+    }
+
+    #tabs button[selected]:focus,
+    #tabs button[selected]:hover {
+      color: inherit;
+    }
+
+    #tabs button[selected]::before {
+      content: '';
+      z-index: -1;
+      position: absolute;
+      inset-inline-start: -100%;
+      border-end-end-radius: 3px;
+      background-color: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+    }
+
+    #tabs button img:not([src]) {
+      display: none;
+    }
+
+    #tabpanels {
+      background: var(--code-tabs-tabpanel-background, var(--markdown-syntax-background-color, #f6f8fa));
+      border-radius: var(--code-border-radius);
+      overflow: hidden;
+      min-height: var(--code-tabs-min-height, 1px);
+      z-index: 1;
+      position: relative;
+      border: var(--code-tabs-border);
+    }
+
+    :host([selected-index="0"]) #tabpanels {
+      border-start-start-radius: 0;
+    }
+
+    :host([align="start"]) #tabs {
+      justify-content: var(--code-tabs-justify-tabs, start);
+    }
+
+    :host([align="end"]) #tabs {
+      justify-content: var(--code-tabs-justify-tabs, end);
+    }
+
+    :host([align="start"]) #tabpanels {
+      border-start-start-radius: 0;
+      border-start-end-radius: var(--code-border-radius);
+    }
+
+    :host([align="end"]) #tabpanels {
+      border-start-start-radius: var(--code-border-radius);
+      border-start-end-radius: 0;
+    }
+
+    /* visually hidden */
+    #sr-clone {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+  </style>
+</template>
+
+<script type="module" webc:keep>
+</script>
