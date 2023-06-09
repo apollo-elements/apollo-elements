@@ -67,6 +67,7 @@
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
     "@11ty/eleventy-fetch": "^4.0.0",
+    "@11ty/eleventy-navigation": "^0.3.5",
     "@11ty/eleventy-plugin-inclusive-language": "^1.0.3",
     "@11ty/eleventy-plugin-syntaxhighlight": "^4.2.0",
     "@11ty/eleventy-plugin-webc": "^0.11.1",

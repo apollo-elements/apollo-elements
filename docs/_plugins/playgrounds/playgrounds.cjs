@@ -29,9 +29,10 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addTransform('playground-html', function(content) {
     if (this.page.inputPath.endsWith?.('webc') && this.page.outputPath && this.page.outputPath.endsWith('html')) {
       const $ = require('cheerio').load(content)
-      $('script[type=sample/html]').each(function() {
+      $('script[type=sample/html], code-tab').each(function() {
         const s = $(this);
         const text = s.text();
+        console.log({text})
         s.text(text
           .replaceAll('&amp;lt;', '<')
           .replaceAll('&lt;', '<')

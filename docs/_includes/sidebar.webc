@@ -9,8 +9,8 @@ layout: root.webc
         <span @text="$data.site.name"></span>
       </a>
       <rocket-navigation no-redirects>
-        <template webc:type="11ty" 11ty:type="njk" :@collections="$data.collections" :@page="page">
-          {{ log(collections[page.section] | rocketNav) | rocketNavToHtml({
+        <template webc:type="11ty" 11ty:type="njk" :@nav="eleventyNavigation($data.collections[$data.section])">
+          {{ log(nav) | eleventyNavigationToHtml({
             listItemClass: "menu-item",
             activeListItemClass: "current",
             activeKey: eleventyNavigation.key

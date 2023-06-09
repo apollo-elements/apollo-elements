@@ -16,10 +16,11 @@ const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
 const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
 const LitPlugin = require('@lit-labs/eleventy-plugin-lit');
+const EleventyNavigationPlugin = require('@11ty/eleventy-navigation');
 
 // Rocket
-const Nav = require('./docs/_plugins/nav/nav.cjs');
-const RocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
+// const Nav = require('./docs/_plugins/nav/nav.cjs');
+// const RocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
 
 const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
@@ -37,11 +38,12 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter('formatDate', date =>
     date instanceof Date ? date.toDateString() : date);
 
-  eleventyConfig.addPlugin(RocketCollections);
-  eleventyConfig.addPlugin(Nav);
+  // eleventyConfig.addPlugin(RocketCollections);
+  // eleventyConfig.addPlugin(Nav);
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
   eleventyConfig.addPlugin(CodeTabs);
+  eleventyConfig.addPlugin(EleventyNavigationPlugin);
   eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
   eleventyConfig.addPlugin(ImportMaps, {
     cacheFor: '1d',

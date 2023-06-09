@@ -1,90 +1,99 @@
 ---
 layout: sidebar.webc
+section: guides
 permalink: /guides/usage/index.html
+eleventyNavigation:
+  order: 25
 templateEngineOverride: webc,md
 description: Learn the ins-and-outs of the Apollo client to help you write expressive web apps with Apollo Elements
 ---
 
-# Usage || 25
+# Usage
 
-Once you've [gotten set up](/guides/getting-started/), it's time to start building your app's components. What does building an app with GraphQL look like? What kinds of components does it have? This introductory guide will help you understand what it's like to build with Apollo Elements.
+Once you've [gotten set up](/guides/getting-started/), it's time to start 
+building your app's components. What does building an app with GraphQL look 
+like? What kinds of components does it have? This introductory guide will help 
+you understand what it's like to build with Apollo Elements.
 
 ## The Concept
 
-In a GraphQL app, you'll use [queries and mutations](https://graphql.org/learn/queries/) to interact with your application's [data graph](https://graphql.org/learn/thinking-in-graphs/). GraphQL helps you model your frontend's data in terms of queries.
+In a GraphQL app, you'll use [queries and 
+mutations](https://graphql.org/learn/queries/) to interact with your 
+application's [data graph](https://graphql.org/learn/thinking-in-graphs/). 
+GraphQL helps you model your frontend's data in terms of queries.
 
 <figure>
-<figcaption>GraphQL: Query to Data</figcaption>
-<dl class="to" id="query-to-data">
-  <dt>
-
-  ```graphql
-  query Users {
-    users {
-      id
-      name
-      picture
-    }
+  <figcaption>GraphQL: Query to Data</figcaption>
+  <dl class="to" id="query-to-data">
+    <dt>
+      <syntax-highlight language="graphql">
+query Users {
+  users {
+    id
+    name
+    picture
   }
-  ```
-
-  </dt>
-
-  <dd>
-
-  ```json
-  {
-    "data": {
-      "users": [
-        { "id": 1, "name": "Neil", "picture": "/avatars/neil.png" },
-        { "id": 2, "name": "Buzz", "picture": "/avatars/buzz.png" }
-      ]
-    }
-  }
-  ```
-
-  </dd>
-</dl>
+}
+      </syntax-highlight>
+    </dt>
+    <dd>
+      <syntax-highlight language="json">
+      {
+        "data": {
+          "users": [
+            { "id": 1, "name": "Neil", "picture": "/avatars/neil.png" },
+            { "id": 2, "name": "Buzz", "picture": "/avatars/buzz.png" }
+          ]
+        }
+      }
+      </syntax-highlight>
+    </dd>
+  </dl>
 </figure>
 
-{{ 'space-capsule' | icon }}
+<sprite-icon name=space-capsule></sprite-icon>
 
-A query is a self-contained slice of the _state of your app's data graph_, and a mutation is a self-contained _action to affect a slice of your graph_. They fit naturally into the data-driven web components development model, since a web component is a self-contained unit of HTML UI with programmer-defined behaviours.
+A query is a self-contained slice of the _state of your app's data graph_, and a 
+mutation is a self-contained _action to affect a slice of your graph_. They fit 
+naturally into the data-driven web components development model, since a web 
+component is a self-contained unit of HTML UI with programmer-defined 
+behaviours.
 
-Using Apollo Elements, you'll build [query components](./queries/) to fetch and display data from the graph and [mutation components](./mutations/) to make changes to the graph. You can also publish self-contained GraphQL components for others to use in their apps, for example if multiple teams work on the same large dashboard app.
+Using Apollo Elements, you'll build [query components](./queries/) to fetch and 
+display data from the graph and [mutation components](./mutations/) to make 
+changes to the graph. You can also publish self-contained GraphQL components for 
+others to use in their apps, for example if multiple teams work on the same 
+large dashboard app.
 
 <figure>
-<figcaption>Apollo Elements: Query to UI</figcaption>
-<dl class="to" id="query-to-ui">
-  <dt>
-
-  ```graphql
-  query Users {
-    users {
-      id
-      name
-      picture
-    }
+  <figcaption>Apollo Elements: Query to UI</figcaption>
+  <dl class="to" id="query-to-ui">
+    <dt>
+      <syntax-highlight language="graphql">
+query Users {
+  users {
+    id
+    name
+    picture
   }
-  ```
+}
+      </syntax-highlight>
+    </dt>
+    <dd>
 
-  </dt>
+```html
+  <astro-naut id="1" name="Neil">
+    <img src="/avatars/neil.png"
+         alt="Portrait of Neil"/>
+  </astro-naut>
+  <astro-naut id="2" name="Buzz">
+    <img src="/avatars/buzz.png"
+         alt="Portrait of Buzz"/>
+  </astro-naut>
+```
 
-  <dd>
-
-  ```html
-    <astro-naut id="1" name="Neil">
-      <img src="/avatars/neil.png"
-           alt="Portrait of Neil"/>
-    </astro-naut>
-    <astro-naut id="2" name="Buzz">
-      <img src="/avatars/buzz.png"
-           alt="Portrait of Buzz"/>
-    </astro-naut>
-  ```
-
-  </dd>
-</dl>
+    </dd>
+  </dl>
 </figure>
 
 ## Many Paths to Success
@@ -95,32 +104,39 @@ The tabs below demonstrate multiple ways to write the same query component:
 
 <code-tabs collection="libraries" default-tab="html">
 
-  ```html tab html
+<code-tab data-id="html" data-label="HTML" data-icon-href="/assets/icons/html5.svg">
+
+  ```html
   <apollo-query>
     <!-- Use a script child like so,
-         or set the `query` DOM property on the element -->
+or set the `query` DOM property on the element -->
     <script type="application/json">
-      query Users {
-        users {
-          id
-          name
-          picture
-        }
+    query Users {
+      users {
+        id
+        name
+        picture
       }
+    }
     </script>
     <template>
       <h2>Astronauts</h2>
       <template type="repeat" repeat="{%raw%}{{ data.users }}{%endraw%}">
-        <astro-naut id="{%raw%}{{ item.id }}{%endraw%}" name="{%raw%}{{ item.name }}{%endraw%}">
+        <astro-naut id="{%raw%}{{ item.id }}{%endraw%}" name="{%raw%}{{ 
+          item.name }}{%endraw%}">
           <img src="{%raw%}{{ item.picture }}{%endraw%}"
-               alt="Portrait of {%raw%}{{ item.name }}{%endraw%}"/>
+            alt="Portrait of {%raw%}{{ item.name }}{%endraw%}"/>
         </astro-naut>
       </template>
     </template>
   </apollo-query>
   ```
 
-  ```js tab mixins
+</code-tab>
+
+<code-tab data-id="js" data-label="JavaScript" data-icon-href="/assets/icons/js.svg">
+
+  ```js
   import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin';
   import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
@@ -177,7 +193,11 @@ The tabs below demonstrate multiple ways to write the same query component:
   }
   ```
 
-  ```js tab lit
+</code-tab>
+
+<code-tab data-id="lit" data-label="Lit" data-icon-href="/assets/icons/lit.svg">
+
+  ```js
   import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
 
   class Astronauts extends ApolloQuery {
@@ -205,17 +225,17 @@ The tabs below demonstrate multiple ways to write the same query component:
   }
   ```
 
-  ```ts tab fast
+</code-tab>
+
+<code-tab data-id="fast" data-label="FAST" data-icon-href="/assets/icons/fast.svg">
+
+  ```ts
   import type { TypedDocumentNode } from '@apollo/client/core';
   import type { Binding, ViewTemplate } from '@microsoft/fast-element';
 
   import { FASTElement, customElement, html } from '@microsoft/fast-element';
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
-  const getId: Binding<Astronaut> = x => x.id;
-  const getName: Binding<Astronaut> = x => x.name;
-  const getPicture: Binding<Astronaut> = x => x.picture;
-  const getAstronauts: Binding<Astronaut> = x => x.query.data?.users ?? [];
   const astronautTemplate: ViewTemplate<Astronaut> = html`
     <astro-naut id="${getId}" name="${getName}">
       <img src="${getPicture}"
@@ -244,7 +264,11 @@ The tabs below demonstrate multiple ways to write the same query component:
   }
   ```
 
-  ```js tab haunted
+</code-tab>
+
+<code-tab data-id="haunted" data-label="Haunted" data-icon-href="/assets/icons/haunted.svg">
+
+  ```js
   function Astronauts() {
     const { data } = useQuery(gql`
       query Users {
@@ -268,7 +292,11 @@ The tabs below demonstrate multiple ways to write the same query component:
   }
   ```
 
-  ```jsx tab atomico
+</code-tab>
+
+<code-tab data-id="atomico" data-label="Atomico" data-icon-href="/assets/icons/atomico.svg">
+
+  ```jsx
   function Astronauts() {
     const { data } = useQuery(gql`
       query Users {
@@ -294,7 +322,11 @@ The tabs below demonstrate multiple ways to write the same query component:
   }
   ```
 
-  ```js tab hybrids
+</code-tab>
+
+<code-tab data-id="hybrids" data-label="Hybrids" data-icon-href="/assets/icons/hybrids.svg">
+
+  ```js
   import { query } from '@apollo-elements/hybrids/factories/query';
 
   define('astro-nauts', {
@@ -318,6 +350,8 @@ The tabs below demonstrate multiple ways to write the same query component:
     `,
   });
   ```
+
+</code-tab>
 
 </code-tabs>
 

@@ -2,9 +2,9 @@
 layout: sidebar.webc
 permalink: /guides/index.html
 templateEngineOverride: webc,md
+section: guides
 eleventyNavigation:
   order: 10
-  key: guides
 installationSnippets:
   - pm: npm
     label: NPM
