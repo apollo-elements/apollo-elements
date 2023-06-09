@@ -63,6 +63,9 @@ docs/_merged_includes/
 _site-dev
 _site
 
+docs/_plugins/code-tabs/components/*.js
+docs/_plugins/code-tabs/components/*.js.map
+
 ## Apollo Elements docs ignores
 docs/_data/customElementsManifests
 *.draft.md

@@ -1,6 +1,5 @@
 import type { PropertyValues, LitElement } from 'lit';
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { property } from 'lit/decorators.js';
+import { property } from 'lit/decorators/property.js';
 
 type SlotchangeEvent = Event & { target: HTMLSlotElement };
 
@@ -285,7 +284,7 @@ const SelectedIndexConverter = {
  * ```
  *
  */
-function SelectMixinImpl<TBase extends Constructor<LitElement>>(
+export function SelectMixin<TBase extends Constructor<LitElement>>(
   superclass: TBase
 ) {
   class MixedSelectMixinElement extends superclass {
@@ -389,7 +388,7 @@ function SelectMixinImpl<TBase extends Constructor<LitElement>>(
       const { multi, attributeForSelected, items } = this;
       return (
           multi ? items.filter(hasAttribute(attributeForSelected))
-        : this.querySelector(`[${attributeForSelected}]`) as Item
+        : this.querySelector?.(`[${attributeForSelected}]`) as Item
       );
     }
 
@@ -816,5 +815,3 @@ class SelectEvent extends Event {
     this.detail = selectedItem;
   }
 }
-
-export const SelectMixin = dedupeMixin(SelectMixinImpl);

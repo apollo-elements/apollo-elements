@@ -24,6 +24,10 @@ img {
   border-block-end-color: var(--code-tabs-border-focus-color, var(--primary-color));
 }
 
+[hide-default] ::slotted([data-default]) {
+  display: none !important;
+}
+
 #tabs {
   display: flex;
   background: var(--code-tabs-tabs-background);

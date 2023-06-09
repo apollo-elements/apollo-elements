@@ -1,10 +1,10 @@
 import { html, LitElement, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators/custom-element.js';
+import { property } from 'lit/decorators/property.js';
+import { state } from 'lit/decorators/state.js';
 
 import ButtonHostStyles from './button-host.css';
 import CopyStyles from './code-copy.css';
-
-const supportsClipboard = 'clipboard' in navigator;
 
 /**
  * @csspart copy-button - copy button
@@ -53,7 +53,7 @@ export class CodeCopy extends LitElement {
 
       <button id="copy-button" part="copy-button"
           @click="${this.onCopy}"
-          ?hidden="${!supportsClipboard}">
+          ?hidden="${!('clipboard' in globalThis.navigator)}">
         <div part="copy-icon" aria-hidden="${this.success === 'copied'}">
           <slot name="copy-icon">
             <i aria-label="copy" role="img">${CodeCopy.copyIcon}</i>

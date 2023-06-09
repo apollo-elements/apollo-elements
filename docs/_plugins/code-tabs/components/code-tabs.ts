@@ -1,19 +1,13 @@
-import { SelectMixin } from '@pwrs/mixins/select/select-mixin';
-import { html, LitElement, PropertyValues, TemplateResult } from 'lit';
-import { customElement, property, queryAll, state } from 'lit/decorators.js';
+import { SelectMixin } from './select-mixin.js';
+import { html, isServer, LitElement, type PropertyValues, type TemplateResult } from 'lit';
+import { customElement } from 'lit/decorators/custom-element.js';
+import { property } from 'lit/decorators/property.js';
+import { state } from 'lit/decorators/state.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-
-import './code-copy.js';
 
 import ButtonHostStyles from './button-host.css';
 import TabsStyles from './code-tabs.css';
 import TabStyles from './code-tab.css';
-
-declare module '@pwrs/mixins/select/select-mixin' {
-  export interface Item {
-    dataset: DOMStringMap & Tab;
-  }
-}
 
 export interface Tab {
   id: string;
@@ -59,7 +53,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
   @state() private labels = new Map<string, Tab>();
 
   /** The tab buttons. */
-  @queryAll('[role="tab"]') tabs: NodeListOf<HTMLButtonElement>;
+  tabs: NodeListOf<HTMLButtonElement>;
 
   /** Which tab name to treat as default, in case the use has not yet made a selection. */
   @property({ attribute: 'default-tab' }) defaultTab: string;
@@ -73,16 +67,15 @@ export class CodeTabs extends SelectMixin(LitElement) {
    */
   @property() collection: string;
 
-  constructor() {
-    super();
-    this.onClickTab = this.onClickTab.bind(this);
-  }
-
   protected initialSelectedIndex = 0;
+
+  /**** ssr workaround */
+  #kids: CodeTab[] = [];
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.initialSelectedIndex = parseInt(this.getAttribute('selected-index'));
+    import('./code-copy.js');
+    this.initialSelectedIndex = parseInt(this.getAttribute('selected-index') ?? '-1');
     if (this.collection)
       this.initCollection();
   }
@@ -92,11 +85,18 @@ export class CodeTabs extends SelectMixin(LitElement) {
     INSTANCES.delete(this);
   }
 
+  update(changed: PropertyValues<this>) {
+    super.update(changed);
+    this.tabs = this.shadowRoot!.querySelectorAll('[role="tab"]');
+  }
+
   async firstUpdated(changed: PropertyValues<this>): Promise<void> {
     this.initLabels();
     super.firstUpdated(changed);
     this.selectIndex(await this.getInitialSelectedIndex());
     this.onSelect();
+    this.#kids = [...this.children ?? []].filter(x => x.localName === 'code-tab') as CodeTab[]
+    this.requestUpdate();
   }
 
   updated(changed: PropertyValues<this>): void {
@@ -113,7 +113,12 @@ export class CodeTabs extends SelectMixin(LitElement) {
         stored ? this.items.findIndex(x => x.dataset.id === stored)
       : this.defaultTab ? this.items.findIndex(x => x.dataset.id === this.defaultTab)
       : this.initialSelectedIndex;
-    return index < 0 ? this.initialSelectedIndex : index;
+    if (index < 0) {
+      return this.initialSelectedIndex;
+    } else {
+      this.dispatchEvent(new CustomEvent('tab-selected', { bubbles: true, detail: this.shadowRoot!.querySelectorAll('button')[index] }));
+      return index;
+    }
   }
 
   private initCollection() {
@@ -127,7 +132,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
     const items = this.items ?? [];
     return html`
       <div id="tabs" role="tablist" part="tablist">
-        ${items.map(({ dataset: { id, iconHref, label } }, i) => html`
+        ${isServer ? html`` : items.map(({ dataset: { id, iconHref, label } }, i) => html`
         <button role="tab"
                 part="tab"
                 data-id="${id}"
@@ -136,7 +141,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
                 aria-controls="${id}"
                 tabindex="${this.selectedIndex === i || (this.selectedIndex < 0 && i === 0)? 0 : -1}"
                 ?selected="${this.selectedIndex === i}"
-                @click="${this.onClickTab}">
+                @click="${this.#onClickTab}">
           <img src="${ifDefined(iconHref)}" role="presentation"/>
           ${label}
         </button>
@@ -145,19 +150,15 @@ export class CodeTabs extends SelectMixin(LitElement) {
 
       <!-- We'd prefer to us AOM to assign aria properties across roots,  -->
       <!-- but that's not ready across UAs yet, so we copy content instead. -->
-      <div id="sr-clone">${Array.from(this.children as HTMLCollectionOf<CodeTab>, (node, i) => html`
+      <div id="sr-clone">${this.#kids.map((node, i) => html`
         <div id="${node.dataset.id}"
              role="tabpanel"
              aria-labelledby="button-${node.dataset.id}"
-             ?hidden="${this.selectedIndex !== i}">
-          ${Array.from(node.children, x => {
-            const clone = x.cloneNode(true) as HTMLElement;
-            clone.setAttribute('aria-hidden', 'false');
-            return clone;
-          })}
+             ?hidden="${this.selectedIndex !== i}">${node.textContent}</div>
         </div>`)}
       </div>
-      <div id="tabpanels" part="tabpanels">
+
+      <div id="tabpanels" part="tabpanels" ?hide-default="${this.selectedIndex >= 0}">
         <slot @slotchange="${this.onSlotchange}"></slot>
         <div id="default" ?hidden="${this.selectedItem}" part="default-container">
           <slot name="default"></slot>
@@ -175,7 +176,7 @@ export class CodeTabs extends SelectMixin(LitElement) {
 
   private onSlotchange() {
     for (const child of this.children)
-      child.firstElementChild.setAttribute('aria-hidden', 'true');
+      child.firstElementChild?.setAttribute('aria-hidden', 'true');
     this.requestUpdate();
   }
 
@@ -187,11 +188,11 @@ export class CodeTabs extends SelectMixin(LitElement) {
     if (!tab) return;
     tab.setAttribute('selected', '');
     const { left } = tab.getBoundingClientRect();
-    this.shadowRoot.getElementById('tabs')
-      .scrollTo({ behavior: 'smooth', left });
+    this.shadowRoot?.getElementById('tabs')
+      ?.scrollTo({ behavior: 'smooth', left });
   }
 
-  private onClickTab(event: Event & { target: HTMLButtonElement }) {
+  #onClickTab(event: Event & { target: HTMLButtonElement }) {
     const tabs = [...this.tabs];
     let tab = event.target;
     while (!tabs.includes(tab))
@@ -203,16 +204,14 @@ export class CodeTabs extends SelectMixin(LitElement) {
       localStorage.setItem(`code-tabs-selected-${this.collection}`, id);
       INSTANCES.forEach(x => x.selectId(id));
     }
-    this.fire('tab-selected', event.target);
+    this.dispatchEvent(new CustomEvent('tab-selected', { bubbles: true, detail: event.target }));
   }
 
   protected initLabels(event?: Event): void {
     if (event) this.labels.clear();
     this.items
-      .forEach(({ dataset: { id, label, iconHref, ...dataset } }: HTMLElement) => {
-        const pkg: Tab = { id, label, iconHref };
-
-        this.labels.set(pkg.id, pkg);
+      .forEach(({ dataset: { id, label, iconHref } }: HTMLElement) => {
+        this.labels.set(id as string, { id, label, iconHref } as Tab);
       });
   }
 }
@@ -236,9 +235,8 @@ export class CodeTab extends LitElement {
   @property({ type: Boolean, attribute: 'no-copy' }) noCopy = false;
 
   render(): TemplateResult {
-    if (this.noCopy)
-      return html`<div part="content"><slot></slot></div>`;
-    else
-      return html`<code-copy part="content" .host=${this}><slot></slot></code-copy>`;
+    return this.noCopy
+      ? html`<slot id="content" part="content"></slot>`
+      : html`<code-copy part="content" .host=${this}><slot></slot></code-copy>`;
   }
 }

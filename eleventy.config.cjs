@@ -26,6 +26,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addDataExtension('yaml,yml', content => yaml.parse(content));
   eleventyConfig.addPassthroughCopy('docs/!(*.md|*.html)*');
   eleventyConfig.addPassthroughCopy('docs/assets');
+  eleventyConfig.addPassthroughCopy({ 'docs/icons/*.svg': 'assets/icons' });
   eleventyConfig.addPassthroughCopy('favicon.ico');
   eleventyConfig.addPassthroughCopy('decks/azconf-dev-2021/**/*.{js,png,svg,jpg,webp,woff,woff2}');
 
@@ -39,7 +40,15 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPlugin(ImportMaps, {
     cacheFor: '1d',
     specs: [
+      '@lit-labs/ssr-client',
+      '@lit-labs/ssr-client/lit-element-hydrate-support.js',
+      '@power-elements/codesandbox-button',
       'lit',
+      'lit/decorators/custom-element.js',
+      'lit/decorators/property.js',
+      'lit/decorators/state.js',
+      'lit/directives/if-defined.js',
+      'lit/directives/repeat.js',
       'playground-elements',
     ],
   });
@@ -55,6 +64,7 @@ module.exports = function(eleventyConfig) {
     components: [
       'docs/_components/**/*.webc',
       'docs/_plugins/playgrounds/components/**/*.webc',
+      'docs/_plugins/code-tabs/components/**/*.webc',
       'npm:@11ty/eleventy-plugin-syntaxhighlight/*.webc',
     ],
   });

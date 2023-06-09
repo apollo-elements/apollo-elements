@@ -1,5 +1,8 @@
 {
-  "files": ["./declaration.d.ts"],
+  "files": [
+    "./declaration.d.ts",
+    "docs/_plugins/*/components/*.ts"
+  ],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
@@ -18,11 +21,17 @@
     "target": "es2022",
     "useDefineForClassFields": false,
     "paths": {
-      "@apollo-elements/*": ["packages/*"]
+      "@apollo-elements/*": [
+        "packages/*"
+      ]
     },
     "plugins": [
-      { "name": "typescript-lit-html-plugin" },
-      { "name": "ts-lit-plugin" }
+      {
+        "name": "typescript-lit-html-plugin"
+      },
+      {
+        "name": "ts-lit-plugin"
+      }
     ],
     "lib": [
       "DOM.iterable",
