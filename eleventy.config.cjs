@@ -1,20 +1,21 @@
 // @ts-check
 const path = require('node:path');
 
-const eleventyRocketNav = require('@rocket/eleventy-rocket-nav');
-const rocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
-const addWebComponentDefinitions = require('eleventy-plugin-add-web-component-definitions');
-const apolloElements = require('./docs/_plugins/rocket-preset-apollo-elements/index.cjs');
-const CodeTabs = require('./docs/_plugins/rocket-preset-code-tabs/rocket-preset-code-tabs.cjs');
-const SlideDecks = require('eleventy-plugin-slide-decks');
-const CustomElementsManifest = require('./docs/_plugins/rocket-preset-custom-elements-manifest/eleventy/custom-elements-manifest.cjs');
-const Footnotes = require('eleventy-plugin-footnotes');
-const WebC = require('@11ty/eleventy-plugin-webc');
+// const eleventyRocketNav = require('@rocket/eleventy-rocket-nav');
+// const rocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
+// const apolloElements = require('./docs/_plugins/rocket-preset-apollo-elements/index.cjs');
+// const SlideDecks = require('eleventy-plugin-slide-decks');
+// const CustomElementsManifest = require('./docs/_plugins/rocket-preset-custom-elements-manifest/eleventy/custom-elements-manifest.cjs');
+// const Footnotes = require('eleventy-plugin-footnotes');
+
 const { EleventyRenderPlugin } = require('@11ty/eleventy');
+const WebC = require('@11ty/eleventy-plugin-webc');
 const EleventyPluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
 const ImportMaps = require('./docs/_plugins/importMaps.cjs');
 const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
+const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
+const LitPlugin = require('@lit-labs/eleventy-plugin-lit');
 
 const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
@@ -33,12 +34,20 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
+  eleventyConfig.addPlugin(CodeTabs);
   eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
   eleventyConfig.addPlugin(ImportMaps, {
     cacheFor: '1d',
     specs: [
       'lit',
       'playground-elements',
+    ],
+  });
+  eleventyConfig.addPlugin(LitPlugin, {
+    mode: 'worker',
+    componentModules: [
+      'docs/_plugins/code-tabs/components/code-tabs.js',
+      'docs/_plugins/code-tabs/components/code-copy.js',
     ],
   });
 
