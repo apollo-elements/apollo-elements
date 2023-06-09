@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult } from 'lit';
+import { html, isServer, LitElement, TemplateResult } from 'lit';
 import { customElement } from 'lit/decorators/custom-element.js';
 import { property } from 'lit/decorators/property.js';
 import { state } from 'lit/decorators/state.js';
@@ -53,7 +53,7 @@ export class CodeCopy extends LitElement {
 
       <button id="copy-button" part="copy-button"
           @click="${this.onCopy}"
-          ?hidden="${!('clipboard' in globalThis.navigator)}">
+          ?hidden="${isServer || 'clipboard' in globalThis.navigator}">
         <div part="copy-icon" aria-hidden="${this.success === 'copied'}">
           <slot name="copy-icon">
             <i aria-label="copy" role="img">${CodeCopy.copyIcon}</i>

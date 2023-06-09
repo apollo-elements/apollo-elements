@@ -54,12 +54,12 @@
   const enc = s => s?.replace(/[\u00A0-\u9999<>\&]/g, i => `&#${i.charCodeAt(0)}`);
   const isIndex = x => x.fileSlug === 'index' || x.fileSlug === 'index.playground';
   const getFiles = ($data, playgroundName) =>
-    $data.collections.playground.filter(x => x.data.playgroundName === playgroundName);
+    $data.collections.playground?.filter(x => x.data.playgroundName === playgroundName) ?? [];
   const getContent = file => file?.content;
   const getSnippetFile = files =>
     files.find(isIndex);
   const getLang = file => {
-    const ext = file.template.parsed.ext.replace('.', '')
+    const ext = file?.template?.parsed.ext.replace('.', '')
     return ext === 'html' ? 'markup' : ext;
   };
   const htmlencode = str => str.replace('</'+'script>', '&lt;/script>');
@@ -83,7 +83,7 @@ ${file.content}
           .replace(playgroundsDir, '')
           .replace(`${x.data.playgroundName}/`, '')
           .replace('.playground', ''),
-        mimetype: `sample/${x.template.parsed.ext.replace('.', '')}`,
+        mimetype: `sample/${x?.template?.parsed.ext.replace('.', '')}`,
         selected: x === getSnippetFile(getFiles($data, playgroundName)),
         content: htmlencode(hidestuff(x)),
       }))

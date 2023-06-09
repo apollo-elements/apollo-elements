@@ -80,8 +80,9 @@ main {
   margin-block-end: 36px;
 }
 
-h2 {
+main h2 {
   text-align: center;
+  border-bottom-width: 0px;
 }
 
 h2:not(:first-of-type) {

@@ -1,5 +1,5 @@
 <script webc:setup>
-const getIconTemplate = name => $data.collections.icon.find(x => x.fileSlug === name);
+const getIconTemplate = name => $data.collections.icon?.find(x => x.fileSlug === name);
 </script>
 <template webc:type="11ty"
           11ty:type="njk"

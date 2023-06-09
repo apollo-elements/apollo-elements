@@ -3,6 +3,11 @@ title: Apollo Elements
 slogan: Build high-performance web apps with GraphQL and web components.
 description: Build high-performance GraphQL web apps with Apollo Elements
 
+eleventyImport:
+  collections:
+    - icon
+    - playground
+
 callToActionItems:
   - text: Guides
     href: /guides/

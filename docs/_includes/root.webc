@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title @text="title"></title>
+    <meta property="og:title" :content="title">
+    <meta name="generator" content="eleventy 2.0.1">
+    <meta name="msapplication-TileColor" content="black">
+    <meta name="theme-color" content="black">
+    <meta property="og:site_name" content="Apollo Elements">
+    <meta property="og:type" content="website">
+    <!--- TODO: social images
+    <meta property="og:image" content="https://apolloelements.dev/_assets/social/apollo-elements-95de180c1aa9816ae1a19a4fd8995539.png">
+    <meta name="twitter:card" content="summary_large_image">
+    --->
+    <meta property="og:url" content="https://apolloelements.dev/">
+    <meta name="description" :content="description">
+    <meta property="og:description" :content="description">
+    <link rel="canonical" :href="canonicalUrl ?? page.url">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/manifest/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/manifest/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/manifest/favicon-16x16.png">
+    <link rel="manifest" href="assets/manifest/webmanifest.json">
+    <link rel="mask-icon" href="assets/manifest/safari-pinned-tab.svg" color="white">
+    <link rel="webmention" href="https://webmention.io/apolloelements.dev/webmention">
+    <link rel="pingback" href="https://webmention.io/apolloelements.dev/xmlrpc">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+    <link rel="stylesheet" href="main.css">
+
+    <link rel="stylesheet" webc:keep href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional">
+    <link rel="stylesheet" webc:keep href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional">
+    <link rel="stylesheet" webc:keep href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&amp;display=swap">
+    <style @raw="getBundle('css')" webc:keep></style>
+    <script type="importmap"
+       webc:keep
+       webc:if="importMap" @raw="JSON.stringify(importMap, null, watch ? 2 : 0)"></script>
+    <script webc:if="importMap" async src="https://ga.jspm.io/npm:es-module-shims@1.7.3/dist/es-module-shims.js" crossorigin="anonymous" webc:keep></script>
+    <script :type="'module'" :src="getBundleFileUrl('js', 'modules')" webc:keep></script>
+    <!--- <script @raw="getBundle('js')" webc:keep></script> --->
+  </head>
+  <body>
+    <apollo-elements-header></apollo-elements-header>
+    <apollo-elements-sidebar></apollo-elements-sidebar>
+    <main @html="content"></main>
+    <apollo-elements-footer></apollo-elements-footer>
+    <noscript>
+      <link rel="stylesheet" href="/assets/static/search/noscript.css">
+      <link rel="stylesheet" href="/assets/static/noscript.css">
+      <style @raw="getBundle('css', 'noscript)" webc:keep></style>
+    </noscript>
+  </body>
+</html>

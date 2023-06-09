@@ -17,6 +17,10 @@ const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
 const LitPlugin = require('@lit-labs/eleventy-plugin-lit');
 
+// Rocket
+const Nav = require('./docs/_plugins/nav/nav.cjs');
+const RocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
+
 const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
 module.exports = function(eleventyConfig) {
@@ -33,6 +37,8 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter('formatDate', date =>
     date instanceof Date ? date.toDateString() : date);
 
+  eleventyConfig.addPlugin(RocketCollections);
+  eleventyConfig.addPlugin(Nav);
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
   eleventyConfig.addPlugin(CodeTabs);
@@ -190,7 +196,14 @@ module.exports = function(eleventyConfig) {
   // eleventyConfig.setTemplateFormats(['webc']);
 
   return {
-    templateFormats: ['playground.html', 'playground.css', 'playground.graphql', 'webc', 'svg'],
+    templateFormats: [
+      'playground.html',
+      'playground.css',
+      'playground.graphql',
+      'webc',
+      'webc.md',
+      'svg',
+    ],
     dir: {
       input: 'docs',
       output: '_site',

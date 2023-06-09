@@ -6,7 +6,8 @@ module.exports = function(eleventyConfig) {
     compile: x => () => x,
     compileOptions: {
       permalink(contents, path) {
-        return () => path.includes('/icons/') ? false : undefined;
+        return () => false;
+        // return () => path.includes('/icons/') ? false : undefined;
       }
     },
     async getData(inputPath) {

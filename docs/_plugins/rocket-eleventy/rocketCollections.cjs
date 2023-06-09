@@ -9,43 +9,33 @@ function getDirectories(source) {
     .map(dirent => dirent.name);
 }
 
+const inputdir = path.join(process.cwd(), 'docs');
+
 const rocketCollections = {
-  configFunction: (eleventyConfig, { _inputDirCwdRelative }) => {
-    const sectionNames = getDirectories(_inputDirCwdRelative);
+  configFunction: (eleventyConfig) => {
+    const sectionNames = getDirectories(inputdir);
     const headerCollectionPaths = [];
     for (const section of sectionNames) {
-      const fullPath = path.join(_inputDirCwdRelative, section);
-      const indexSection = path.join(fullPath, 'index.md');
+      const fullPath = path.join(inputdir, section);
+      const indexSection = path.join(fullPath, 'index.webc.md');
       if (fs.existsSync(indexSection)) {
         // add to header
         headerCollectionPaths.push(indexSection);
         // add to specific collection
-        eleventyConfig.addCollection(section, collection => {
-          let docs = [
-            ...collection.getFilteredByGlob(`${_inputDirCwdRelative}/${section}/**/*.md`),
-          ];
-          docs = docs.filter(page => page.inputPath !== `./${slash(indexSection)}`);
-
-          return docs;
+        eleventyConfig.addCollection(section, api => {
+          const c = api.getFilteredByGlob(`docs/${section}/**/*.webc.md`)
+            .filter(page => page.inputPath !== `./${slash(indexSection)}`)
+            .map(x => (x.page.section = section, x));
+          return c;
         });
       }
     }
 
     if (headerCollectionPaths.length > 0) {
-      eleventyConfig.addCollection('header', collection => {
-        let headers = [];
-        for (const headerCollectionPath of headerCollectionPaths) {
-          headers = [...headers, ...collection.getFilteredByGlob(headerCollectionPath)];
-        }
-        headers = headers.sort((a, b) => {
-          const aOrder =
-            (a.data && a.data.eleventyNavigation && a.data.eleventyNavigation.order) || 0;
-          const bOrder =
-            (b.data && b.data.eleventyNavigation && b.data.eleventyNavigation.order) || 0;
-          return aOrder - bOrder;
-        });
-
-        return headers;
+      eleventyConfig.addCollection('header', api => {
+        return headerCollectionPaths.flatMap(x => api.getFilteredByGlob(x)).sort((a, b) =>
+          a?.data?.eleventyNavigation?.order ?? 0 -
+          b?.data?.eleventyNavigation?.order ?? 0);
       });
     }
   },
