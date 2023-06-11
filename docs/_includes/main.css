@@ -162,8 +162,7 @@ body {
   -webkit-font-smoothing: antialiased;
   background-color: var(--page-background);
   color: var(--primary-text-color);
-  display: flex;
-  flex-flow: column;
+  display: grid;
   font-family: 'Open Sans', sans-serif;
   font-family: var(--primary-font-family);
   font-size: 16px;
@@ -173,9 +172,18 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   word-wrap: break-word;
+  grid-template-areas:
+    'h h'
+    's b'
+    'f f';
 }
 
+#main-header { grid-area: h; }
+#main-sidebar { grid-area: s; }
+#main-footer { grid-area: f; }
+
 main {
+  grid-area: b;
   width: 100%;
   max-width: 1200px;
   position: relative;

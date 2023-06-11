@@ -1,0 +1,137 @@
+<style>
+  #sidebar-nav {
+    overflow: auto;
+    display: block;
+    margin-top: 40px;
+    padding: 0 20px;
+  }
+
+  #sidebar-nav a {
+    text-decoration: none;
+    color: var(--primary-text-color);
+  }
+
+  #sidebar-nav a:hover {
+    color: var(--primary-color);
+  }
+
+  #sidebar-nav > ul > li > a {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+  }
+
+  /* line on the left to indicate current page */
+  #sidebar-nav > ul > li > ul li.current ul li.anchor.current::before {
+    content: '';
+    height: 1.6em;
+    width: 3px;
+    background: var(--primary-color);
+    position: absolute;
+    left: 0;
+    margin-top: -2px;
+  }
+
+  #sidebar-nav li {
+    padding: 7px 0;
+  }
+
+  #sidebar-nav > ul > li > ul li.current a:not(.anchor) {
+    font-weight: bold;
+  }
+
+  #sidebar-nav > ul > li > ul > li.current > ul > li > a {
+    font-weight: normal;
+  }
+
+  #sidebar-nav hr {
+    margin: 30px -10px 10px -10px;
+  }
+
+  /* Hide below 3rd level by default */
+  #sidebar-nav > ul > li > ul > li ul {
+    display: none;
+  }
+
+  #sidebar-nav {
+    background: var(--page-background, #fff);
+    width: 80%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-height: 100vh;
+    overflow: auto;
+  }
+
+  #sidebar-nav .logo-link {
+    display: block;
+    font-size: 18px;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+    padding-left: 10px;
+    text-decoration: none;
+
+    /* same as header */
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    color: var(--primary-text-color);
+    font-weight: bold;
+  }
+
+  #sidebar-nav .logo-link span {
+    padding-left: 10px;
+  }
+
+  #sidebar-nav li.anchor {
+    padding: 4px 0;
+  }
+
+  #sidebar-nav li.anchor a {
+    position: relative;
+  }
+
+  #sidebar-nav li.anchor:last-child {
+    padding: 4px 0 0 0;
+  }
+
+  #sidebar-nav {
+    width: 100%;
+    position: static;
+    max-height: calc(100vh - 70px);
+  }
+
+  @media (min-width: 1024px) {
+    #sidebar-nav {
+      padding: 0 25px 0 0;
+    }
+  }
+</style>
+
+<nav id="sidebar-nav" webc:root="override">
+  <a class="logo-link" :href="url('/')">
+    <sprite-icon name="apollo-elements"></sprite-icon>
+    <span>Apollo Elements</span>
+  </a>
+  <ul webc:if="collections[section]">
+    <li webc:for="entry of forSection(collections, section)"
+        @html="renderNavListItem(entry, page)"></li>
+  </ul>
+  <slot></slot>
+</nav>
+
+<script webc:setup>
+function forSection(collections, section) {
+  const collection = collections[section]
+  const nav = eleventyNavigation(collection) ?? [];
+  return nav.find(entry => entry.key === section).children;
+}
+function renderNavListItem(entry, page) {
+  return /* html */`
+  <li class="${entry.url === page.url ? 'active' : ''}">
+    <a href="${entry.url}">${entry.title}</a>${!entry.children?.length ? '' : `
+    <ul>${entry.children.map(child => renderNavListItem(child, page)).join('\n')}</ul>`}
+  </li>`;
+}
+</script>
+

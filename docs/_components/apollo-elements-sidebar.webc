@@ -1,30 +1,54 @@
 <style>
-apollo-elements-sidebar {
-  display: none;
-}
+  #main-sidebar {
+    display: block;
+  }
+
+  #main-sidebar > ul {
+    padding: 0;
+    position: relative;
+  }
+
+  #main-sidebar ul {
+    padding: 7px 0 10px 15px;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  @media screen and (min-width: 1024px) {
+    #main-sidebar {
+      position: sticky;
+      height: 100%;
+      left: 0;
+      top: 70px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      min-width: 270px;
+      z-index: 10;
+      margin-right: 50px;
+    }
+
+    #main-sidebar .sidebar-bottom {
+      display: none;
+    }
+
+    #main-sidebar hr {
+      margin: 30px 0 10px 0;
+      background: linear-gradient(90deg, rgba(204, 204, 204, 1) 0%, rgba(255, 255, 255, 0) 80%);
+    }
+
+    #main-sidebar .logo-link {
+      display: none;
+    }
+  }
 </style>
-<rocket-drawer id="sidebar">
-  <nav slot="content" id="sidebar-nav">
-    <a class="logo-link" href="/">
-      <sprite-icon name="apollo-elements"></sprite-icon>
-    </a>
-    <rocket-navigation>
-      <ul>
-          <li>
-            <a href="/guides/" class="">Guides</a>
-          </li>
-          <li>
-            <a href="/api/" class="">API</a>
-          </li>
-          <li>
-            <a href="/blog/" class="">Blog</a>
-          </li>
-      </ul>
+
+<aside id="main-sidebar" webc:root="override">
+  <rocket-drawer id="sidebar">
+    <side-navigation :@collections="$data.collections" :@section="$data.section">
       <div class="sidebar-bottom">
-        <hr>
-        <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
-        <a href="https://github.com/apollo-elements/apollo-elements/issues">Help and Feedback</a>
+        <hr/>
+        <a webc:if="$data.site.helpUrl" :href="url($data.site.helpUrl)">Help and Feedback</a>
       </div>
-  </rocket-navigation>
-</nav>
-</rocket-drawer>
+    </side-navigation>
+  </rocket-drawer>
+</aside>

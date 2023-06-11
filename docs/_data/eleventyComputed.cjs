@@ -5,13 +5,15 @@
 
 module.exports = {
   eleventyNavigation(data) {
-    if (data?.page?.url?.split) {
-      const urlParts = data.page.url.split("/");
+    const url = data?.page?.url
+    if (typeof url === 'string') {
+      const urlParts = url.split("/");
       const pathDirs = urlParts?.slice(1, urlParts.length - 1);
       const key = data.key ?? pathDirs?.join("/");
       const parentDirs = urlParts?.slice(1, urlParts.length - 2);
       const parent = data.parent ?? parentDirs?.join("/");
-      const { title, order } = data;
+      const { title } = data;
+      const { order } = data.eleventyNavigation ?? {}
       return { key, title, parent, order };
     } else {
       return data.eleventyNavigation;

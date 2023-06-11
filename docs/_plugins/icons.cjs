@@ -3,17 +3,18 @@ const fs = require('node:fs/promises');
 /** @param{import('@11ty/eleventy/src/UserConfig.js')} eleventyConfig */
 module.exports = function(eleventyConfig) {
   eleventyConfig.addExtension('svg', {
+    outputFileExtension: 'svg',
     compile: x => () => x,
     compileOptions: {
       permalink(contents, path) {
-        return () => false;
-        // return () => path.includes('/icons/') ? false : undefined;
+        // return () => false;
+        return () => path.includes('/icons/') ? false : undefined;
       }
     },
     async getData(inputPath) {
       const content = await fs.readFile(inputPath, 'utf-8');
       const [,title] = content.match(/<title>(.*)<\/title>/m) ?? [];
-      return { title };
+      return { title, eleventyExcludeFromCollections: true };
     }
   });
   eleventyConfig.addShortcode('icon', function icon(name, kwargs) {

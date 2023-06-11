@@ -1,12 +1,17 @@
 ---
 description: How to use Apollo Elements with @web/dev-server to develop your GraphQL-based app without a build step.
+title: Buildless Development
+eleventyNavigation:
+  order: 20
 ---
 
-# Getting Started >> Buildless Development || 20
+# Buildless Development
 
-You can run your apollo-elements app without using a build step with the [web dev server](https://modern-web.dev/docs/dev-server/overview/).
+You can run your apollo-elements app without using a build step with the [web 
+dev server](https://modern-web.dev/docs/dev-server/overview/).
 
-This sample config lets you also import css and graphql into your lit-apollo components written in TypeScript:
+This sample config lets you also import css and graphql into your lit-apollo 
+components written in TypeScript:
 
 ```js copy
 import { esbuildPlugin } from '@web/dev-server-esbuild';
@@ -53,7 +58,9 @@ export default {
 };
 ```
 
-If you're using TypeScript and importing CSS and GraphQL files with the rollup plugins, make sure to add this declaration somewhere in a `.d.ts` file in your project:
+If you're using TypeScript and importing CSS and GraphQL files with the rollup 
+plugins, make sure to add this declaration somewhere in a `.d.ts` file in your 
+project:
 
 ```ts copy
 declare module '*.graphql' {

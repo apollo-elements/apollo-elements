@@ -32,7 +32,6 @@ module.exports = function(eleventyConfig) {
       $('script[type=sample/html], code-tab').each(function() {
         const s = $(this);
         const text = s.text();
-        console.log({text})
         s.text(text
           .replaceAll('&amp;lt;', '<')
           .replaceAll('&lt;', '<')

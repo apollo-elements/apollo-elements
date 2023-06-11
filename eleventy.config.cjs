@@ -6,7 +6,7 @@ const path = require('node:path');
 // const apolloElements = require('./docs/_plugins/rocket-preset-apollo-elements/index.cjs');
 // const SlideDecks = require('eleventy-plugin-slide-decks');
 // const CustomElementsManifest = require('./docs/_plugins/rocket-preset-custom-elements-manifest/eleventy/custom-elements-manifest.cjs');
-// const Footnotes = require('eleventy-plugin-footnotes');
+const Footnotes = require('eleventy-plugin-footnotes');
 
 const { EleventyRenderPlugin } = require('@11ty/eleventy');
 const WebC = require('@11ty/eleventy-plugin-webc');
@@ -40,6 +40,7 @@ module.exports = function(eleventyConfig) {
 
   // eleventyConfig.addPlugin(RocketCollections);
   // eleventyConfig.addPlugin(Nav);
+  eleventyConfig.addPlugin(Footnotes);
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
   eleventyConfig.addPlugin(CodeTabs);
@@ -79,7 +80,6 @@ module.exports = function(eleventyConfig) {
 
   // eleventyConfig.addPlugin(SlideDecks);
   // eleventyConfig.addPlugin(eleventyRocketNav);
-  // eleventyConfig.addPlugin(Footnotes);
   // eleventyConfig.addPlugin(EleventyRenderPlugin);
 
   // const IMPORT_MAP_BASE = `{{ORIGIN}}/_merged_assets/_static/apollo-elements`;

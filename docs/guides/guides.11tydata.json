@@ -1,5 +1,6 @@
 {
   "section": "guides",
+  "layout": "sidebar.webc",
   "tags": [
     "guides"
   ]

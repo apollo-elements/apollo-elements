@@ -1,34 +1,9 @@
 ---
-layout: root.webc
+layout: html.webc
 ---
-<aside>
-  <rocket-drawer id="sidebar">
-    <nav slot="content" id="sidebar-nav">
-      <a class="logo-link" :href="url('/')">
-        <sprite-icon name="apollo-elements"></sprite-icon>
-        <span @text="$data.site.name"></span>
-      </a>
-      <rocket-navigation no-redirects>
-        <template webc:type="11ty" 11ty:type="njk" :@nav="eleventyNavigation($data.collections[$data.section])">
-          {{ log(nav) | eleventyNavigationToHtml({
-            listItemClass: "menu-item",
-            activeListItemClass: "current",
-            activeKey: eleventyNavigation.key
-          }) | safe }}
-        </template>
-      <div class="sidebar-bottom">
-        <hr/>
-        <a webc:if="$data.site.helpUrl" :href="url($data.site.helpUrl)">Help and Feedback</a>
-      </div>
-      </rocket-navigation>
-    </nav>
-  </rocket-drawer>
-</aside>
-
 <apollo-elements-header></apollo-elements-header>
 <apollo-elements-sidebar></apollo-elements-sidebar>
 <main>
-  <main>
   <template webc:nokeep @html="content"></template>
   <footer class="content-footer">
     <p>
@@ -36,8 +11,7 @@ layout: root.webc
       <a :href="`${$data.site.gitSiteUrl}/edit/main/${page.inputPath}`">Edit this page on GitHub!</a>
     </p>
   </footer>
-  {% footnotes %}
-  </main>
+  <template webc:type="11ty" 11ty:type="njk">{% footnotes %}</template>
 </main>
 <apollo-elements-footer></apollo-elements-footer>
 <noscript>

@@ -1,6 +1,7 @@
 ---
 layout: sidebar.webc
 permalink: /guides/index.html
+title: Guides
 templateEngineOverride: webc,md
 section: guides
 eleventyNavigation:
@@ -18,7 +19,7 @@ installationSnippets:
 ---
 
 <style>
-  .icon.moon-landing {
+  svg[name="moon-landing"] {
     display: block;
     opacity: 0.75;
     width: 60%;

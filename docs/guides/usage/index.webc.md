@@ -1,6 +1,7 @@
 ---
 layout: sidebar.webc
 section: guides
+title: Usage
 permalink: /guides/usage/index.html
 eleventyNavigation:
   order: 25
