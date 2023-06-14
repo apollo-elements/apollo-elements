@@ -1,34 +1,63 @@
-# Getting Started >> Migrating >> From Apollo Client 2.0 || 20
+---
+title: From Apollo Client 2.0
+eleventyNavigation:
+  order: 20
+permalink: /guides/getting-started/migrating/apollo-client-2/index.html
+---
+# From Apollo Client 2.0
 
-Apollo Client 3 and Apollo Elements 3 both bring with them significant breaking changes. When upgrading your app to `@apollo-elements` 3, follow these steps to ease the transition:
+Apollo Client 3 and Apollo Elements 3 both bring with them significant breaking 
+changes. When upgrading your app to `@apollo-elements` 3, follow these steps to 
+ease the transition:
 
 ### Replace imports with `@apollo/client/core`
-`apollo-client`, `apollo-cache-inmemory`, `apollo-link-*` and others are now supplied by `@apollo/client/core`, so replace your import statements to match.
-*NB:* you should always import from `@apollo/client/core`, not from `@apollo/client`, as the latter includes dependencies on `react` which you probably don't need or want. A single import statement from `@apollo/client` in your app can cause the TypeScript compiler to fail if `react` is not installed as a dependency. To avoid this, always import from `@apollo/client/core`.
+`apollo-client`, `apollo-cache-inmemory`, `apollo-link-*` and others are now 
+supplied by `@apollo/client/core`, so replace your import statements to match.
+*NB:* you should always import from `@apollo/client/core`, not from 
+`@apollo/client`, as the latter includes dependencies on `react` which you 
+probably don't need or want. A single import statement from `@apollo/client` in 
+your app can cause the TypeScript compiler to fail if `react` is not installed 
+as a dependency. To avoid this, always import from `@apollo/client/core`.
 
 ### Remove calls to `writeData`
-If your app used `client.writeData` (e.g. to set default values when loading the cache), you must replace it with calls to either `writeQuery`, `writeFragment` or `cache.modify`. You can also set default values in [field policies](#replace-resolvers-with-type-policies)
+If your app used `client.writeData` (e.g. to set default values when loading the 
+cache), you must replace it with calls to either `writeQuery`, `writeFragment` 
+or `cache.modify`. You can also set default values in [field 
+policies](#replace-resolvers-with-type-policies)
 
 ### Check Non-Nullable Variables
-Query and Subscription elements in `@apollo-elements` 2 tried to prevent operations with non-nullable variables from fetching if their required arguments were null or undefined. Version 3 removes that check by default, so as long as there's a client and a query, they subscribe immediately. To avoid errors, always make sure to set your variables before you query.
+Query and Subscription elements in `@apollo-elements` 2 tried to prevent 
+operations with non-nullable variables from fetching if their required arguments 
+were null or undefined. Version 3 removes that check by default, so as long as 
+there's a client and a query, they subscribe immediately. To avoid errors, 
+always make sure to set your variables before you query.
 
-To keep components from fetching until they have their required variables, see [Validating Variables](/guides/cool-tricks/validating-variables/).
+To keep components from fetching until they have their required variables, see 
+[Validating Variables](/guides/cool-tricks/validating-variables/).
 
 ### Replace Resolvers with Type Policies
-Apollo client 3 deprecates local resolvers in favour of type policies. Your resolvers will still work for now, but it's recommended to migrate them.
+Apollo client 3 deprecates local resolvers in favour of type policies. Your 
+resolvers will still work for now, but it's recommended to migrate them.
 
-Say you had this query, and you wanted to define the client-side type policies for it.
+Say you had this query, and you wanted to define the client-side type policies 
+for it.
 
-```graphql copy
+<code-copy>
+
+```graphql
 query DetailsOpenQuery {
   eenieOpen @client
   meenieOpen @client
 }
 ```
 
+</code-copy>
+
 In which case you might define the type policies like this:
 
-```ts copy
+<code-copy>
+
+```ts
 export const DetailsTypePolicies: TypePolicies = {
   Query: {
     fields: {
@@ -45,11 +74,15 @@ export const DetailsTypePolicies: TypePolicies = {
 }
 ```
 
-Use `TypePoliciesMixin` to declare a component's type policies by setting the `typePolicies` property on the component.
+</code-copy>
+
+Use `TypePoliciesMixin` to declare a component's type policies by setting the 
+`typePolicies` property on the component.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
   <apollo-client>...</apollo-client>
   <script>
@@ -63,9 +96,11 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
       });
   </script>
   ```
-  ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ApolloQueryMixin, TypePoliciesMixins } from '@apollo-elements/mixins';
 
   import { DetailsTypePolicies } from './typePolicies';
@@ -128,7 +163,10 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
   customElements.define('toggle-views', ToggleViews);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQuery, customElement, html } from '@apollo-elements/lit-apollo';
 
   import { TypePoliciesMixins } from '@apollo-elements/mixins/type-policies-mixin';
@@ -171,7 +209,10 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { ApolloQuery, customElement, html } from '@apollo-elements/fast';
 
   import { TypePoliciesMixins } from '@apollo-elements/mixins/type-policies-mixin';
@@ -212,7 +253,10 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
 
   import { DetailsTypePolicies } from './typePolicies';
@@ -258,7 +302,10 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
   customElements.define('toggle-views', component(ToggleViews));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { query, define, property, html } from '@apollo-elements/hybrids';
 
   import { DetailsTypePolicies } from './typePolicies';
@@ -304,4 +351,5 @@ Use `TypePoliciesMixin` to declare a component's type policies by setting the `t
   });
   ```
 
+  </code-tab>
 </code-tabs>

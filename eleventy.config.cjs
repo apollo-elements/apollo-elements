@@ -55,30 +55,24 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
 
   eleventyConfig.addPlugin(CodeTabs, {
-    collections: {
-      frameworks: {
-        angular: { label: 'Angular', iconHref: '/assets/icons/angular.svg' },
-        preact: { label: 'Preact', iconHref: '/assets/icons/preact.svg' },
-        react: { label: 'React', iconHref: '/assets/icons/react.svg' },
-        svelte: { label: 'Svelte', iconHref: '/assets/icons/svelte.svg' },
-        vue: { label: 'Vue', iconHref: '/assets/icons/vue.svg' },
-      },
-      packageManagers: {
-        npm: { label: 'NPM', iconHref: '/assets/icons/npm.svg' },
-        yarn: { label: 'Yarn', iconHref: '/assets/icons/yarn.svg' },
-        pnpm: { label: 'PNPM', iconHref: '/assets/icons/pnpm.svg' },
-      },
-      libraries: {
-        html: { label: 'HTML', iconHref: '/assets/icons/html5.svg' },
-        lit: { label: 'Lit', iconHref: '/assets/icons/lit.svg' },
-        fast: { label: 'FAST', iconHref: '/assets/icons/fast.svg' },
-        gluon: { label: 'Gluon', iconHref: '/assets/icons/js.svg' },
-        haunted: { label: 'Haunted', iconHref: '/assets/icons/haunted.svg' },
-        atomico: { label: 'Atomico', iconHref: '/assets/icons/atomico.svg' },
-        hybrids: { label: 'Hybrids', iconHref: '/assets/icons/hybrids.svg' },
-        mixins: { label: 'Vanilla', iconHref: '/assets/icons/js.svg' },
-        polymer: { label: 'Polymer', iconHref: '/assets/icons/polymer.svg' },
-      },
+    tabs: {
+      angular: { label: 'Angular', iconHref: '/assets/icons/angular.svg' },
+      preact: { label: 'Preact', iconHref: '/assets/icons/preact.svg' },
+      react: { label: 'React', iconHref: '/assets/icons/react.svg' },
+      svelte: { label: 'Svelte', iconHref: '/assets/icons/svelte.svg' },
+      vue: { label: 'Vue', iconHref: '/assets/icons/vue.svg' },
+      npm: { label: 'NPM', iconHref: '/assets/icons/npm.svg' },
+      yarn: { label: 'Yarn', iconHref: '/assets/icons/yarn.svg' },
+      pnpm: { label: 'PNPM', iconHref: '/assets/icons/pnpm.svg' },
+      html: { label: 'HTML', iconHref: '/assets/icons/html5.svg' },
+      lit: { label: 'Lit', iconHref: '/assets/icons/lit.svg' },
+      fast: { label: 'FAST', iconHref: '/assets/icons/fast.svg' },
+      gluon: { label: 'Gluon', iconHref: '/assets/icons/js.svg' },
+      haunted: { label: 'Haunted', iconHref: '/assets/icons/haunted.svg' },
+      atomico: { label: 'Atomico', iconHref: '/assets/icons/atomico.svg' },
+      hybrids: { label: 'Hybrids', iconHref: '/assets/icons/hybrids.svg' },
+      mixins: { label: 'Vanilla', iconHref: '/assets/icons/js.svg' },
+      polymer: { label: 'Polymer', iconHref: '/assets/icons/polymer.svg' },
     },
   });
 

@@ -72,9 +72,7 @@ connected to the DOM, passing in an `updateQuery` function to define the merge
 for new data:
 
 <code-tabs collection="libraries" default-tab="lit">
-
-  <code-tab @collection="libraries" @item="html">
-  <template webc:raw>
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <apollo-client id="messages-client">
@@ -123,11 +121,8 @@ for new data:
   </script>
   ```
 
-  </template>
   </code-tab>
-
-  <code-tab @collection="libraries" @item="mixins">
-  <template webc:raw>
+  <code-tab @tab="$data.codeTabs.mixins">
 
   ```js
   import { ApolloQueryMixin } from '@apollo-elements/mixins'
@@ -210,7 +205,8 @@ for new data:
   </template>
   </code-tab>
 
-  <code-tab @collection="libraries" @item="lit">
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
@@ -479,12 +475,13 @@ for new data:
 
 ## ApolloSubscriptionController
 
-The first approach of calling `subscribeToMore` suits our requirement of updating the list of messages, but we still have to notify our users. Let's use a subscription controller and run our notification side effect using its lifecycle events.
+The first approach of calling `subscribeToMore` suits our requirement of 
+updating the list of messages, but we still have to notify our users. Let's use 
+a subscription controller and run our notification side effect using its 
+lifecycle events.
 
 <code-tabs collection="libraries" default-tab="lit">
-
-  <code-tab @collection="libraries" @item="html">
-  <template webc:raw>
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <apollo-client id="messages-client">
@@ -541,10 +538,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   </script>
   ```
 
-  </template>
   </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
 
-  ```js tab mixins
+  ```js
   import { ApolloQueryMixin } from '@apollo-elements/mixins';
   import { ApolloSubscriptionController } from '@apollo-elements/core';
   import { client } from './client';
@@ -604,7 +601,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   customElements.define('messages-query', MessagesQuery);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQueryController, ApolloSubscriptionController } from '@apollo-elements/core';
   import { LitElement, html } from 'lit';
   import { customElement } from 'lit/decorators.js';
@@ -648,7 +648,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { FASTElement, customElement, html, ref, ViewTemplate } from 'lit';
   import { ApolloQueryBehavior, ApolloSubscriptionBehavior } from '@apollo-elements/fast';
 
@@ -687,7 +690,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   }
   ```
 
-  ```js tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```js
   import { useQuery, useSubscription, useEffect, component, html } from '@apollo-elements/haunted';
   import { client } from './client';
   import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
@@ -739,7 +745,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   customElements.define('messages-query', component(Messages));
   ```
 
-  ```jsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```jsx
   import { useQuery, useSubscription, useEffect, useHost, c } from '@apollo-elements/atomico';
   import { client } from './client';
   import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
@@ -794,7 +803,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   customElements.define('messages-query', c(Messages));
   ```
 
-  ```js tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```js
   import { define, query, html } from '@apollo-elements/hybrids';
 
   import { client } from './client';
@@ -843,14 +855,20 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## Subscription Component
-We could create on a separate `<chat-subscription>` component to handle fetching the subscription side. See the HTML example in the previous section for an example of listening for the subscription's lifecycle events to update the query
+We could create on a separate `<chat-subscription>` component to handle fetching 
+the subscription side. See the HTML example in the previous section for an 
+example of listening for the subscription's lifecycle events to update the query
 
 ## Next Steps
 
-See this simple chat-app demo which demonstrates building custom elements which subscribe to a GraphQL server over websockets: [`#leeway`](https://leeway.apolloelements.dev)
+See this simple chat-app demo which demonstrates building custom elements which 
+subscribe to a GraphQL server over websockets: 
+[`#leeway`](https://leeway.apolloelements.dev)
 
-Dive into the [`ApolloSubscription` API](/api/core/interfaces/subscription/) and [component lifecycle](/api/core/interfaces/subscription/lifecycle/)
+Dive into the [`ApolloSubscription` API](/api/core/interfaces/subscription/) and 
+[component lifecycle](/api/core/interfaces/subscription/lifecycle/)
 or continue on to the [managing local state guide](/guides/usage/local-state/).

@@ -66,7 +66,7 @@ on the root query:
 Let's define a custom element that displays a button to toggle the theme.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @collection="libraries" @tab="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <apollo-query>
@@ -89,7 +89,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="mixins">
+  <code-tab @tab="$data.codeTabs.mixins">
 
   ```ts
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
@@ -140,7 +140,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="lit">
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
@@ -173,7 +173,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="fast">
+  <code-tab @tab="$data.codeTabs.fast">
 
   ```ts
   import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
@@ -203,7 +203,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="haunted">
+  <code-tab @tab="$data.codeTabs.haunted">
 
   ```ts
   import { useQuery, component, html } from '@apollo-elements/haunted';
@@ -231,7 +231,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="atomico">
+  <code-tab @tab="$data.codeTabs.atomico">
 
   ```tsx
   import { useQuery, c } from '@apollo-elements/atomico';
@@ -261,7 +261,7 @@ Let's define a custom element that displays a button to toggle the theme.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="hybrids">
+  <code-tab @tab="$data.codeTabs.hybrids">
 
   ```ts
   import { query, define, html } from '@apollo-elements/hybrids';
@@ -337,7 +337,7 @@ or we can use
 lazy-load the type policies when the component connects:
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @collection="libraries" @tab="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <apollo-client>
@@ -359,7 +359,7 @@ lazy-load the type policies when the component connects:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="mixins">
+  <code-tab @tab="$data.codeTabs.mixins">
 
   ```ts
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
@@ -375,7 +375,7 @@ lazy-load the type policies when the component connects:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="lit">
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```ts
   import { typePolicies } from './typePolicies';
@@ -392,7 +392,7 @@ lazy-load the type policies when the component connects:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="fast">
+  <code-tab @tab="$data.codeTabs.fast">
 
   ```ts
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
@@ -410,7 +410,7 @@ lazy-load the type policies when the component connects:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="haunted">
+  <code-tab @tab="$data.codeTabs.haunted">
 
   ```ts
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
@@ -442,7 +442,7 @@ lazy-load the type policies when the component connects:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="atomico">
+  <code-tab @tab="$data.codeTabs.atomico">
 
   ```tsx
   import { useQuery, useEffect, c } from '@apollo-elements/atomico';
@@ -476,7 +476,7 @@ lazy-load the type policies when the component connects:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="hybrids">
+  <code-tab @tab="$data.codeTabs.hybrids">
 
   ```ts
   import { typePolicies } from './typePolicies';
@@ -501,7 +501,7 @@ lazy-load the type policies when the component connects:
 All that's left is to define the `toggleTheme` function to actually update the cache:
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @collection="libraries" @tab="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <apollo-client>
@@ -529,7 +529,7 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="mixins">
+  <code-tab @tab="$data.codeTabs.mixins">
 
   ```ts
   toggleTheme() {
@@ -542,7 +542,7 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="lit">
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```ts
   toggleTheme() {
@@ -555,7 +555,7 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="fast">
+  <code-tab @tab="$data.codeTabs.fast">
 
   ```ts
   toggleTheme() {
@@ -568,7 +568,7 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="haunted">
+  <code-tab @tab="$data.codeTabs.haunted">
 
   ```ts
   function toggleTheme() {
@@ -581,7 +581,7 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="atomico">
+  <code-tab @tab="$data.codeTabs.atomico">
 
   ```tsx
   function toggleTheme() {
@@ -594,7 +594,7 @@ All that's left is to define the `toggleTheme` function to actually update the c
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="hybrids">
+  <code-tab @tab="$data.codeTabs.hybrids">
 
   ```ts
   function toggleTheme(host) {
@@ -651,7 +651,7 @@ ensure that all queries that depend on `theme` will get the new value every time
 we call.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @collection="libraries" @tab="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```js
   toggleTheme() {
@@ -660,7 +660,7 @@ we call.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="mixins">
+  <code-tab @tab="$data.codeTabs.mixins">
 
   ```ts
   toggleTheme() {
@@ -669,7 +669,7 @@ we call.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="lit">
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```ts
   toggleTheme() {
@@ -678,7 +678,7 @@ we call.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="fast">
+  <code-tab @tab="$data.codeTabs.fast">
 
   ```ts
   toggleTheme() {
@@ -687,7 +687,7 @@ we call.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="haunted">
+  <code-tab @tab="$data.codeTabs.haunted">
 
   ```ts
   function toggleTheme() {
@@ -696,7 +696,7 @@ we call.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="atomico">
+  <code-tab @tab="$data.codeTabs.atomico">
 
   ```tsx
   function toggleTheme() {
@@ -705,7 +705,7 @@ we call.
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="hybrids">
+  <code-tab @tab="$data.codeTabs.hybrids">
 
   ```ts
   function toggleTheme(host) {
@@ -743,7 +743,7 @@ Now in order to update the theme, we need to perform two steps:
 2. Invalidate the Apollo cache's value for theme on the root query using the `evict` method on `InMemoryCache`.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @collection="libraries" @tab="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```js
   toggleTheme() {
@@ -753,7 +753,7 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="mixins">
+  <code-tab @tab="$data.codeTabs.mixins">
 
   ```ts
   toggleTheme() {
@@ -763,7 +763,7 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="lit">
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```ts
   toggleTheme() {
@@ -773,7 +773,7 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="fast">
+  <code-tab @tab="$data.codeTabs.fast">
 
   ```ts
   toggleTheme() {
@@ -783,7 +783,7 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="haunted">
+  <code-tab @tab="$data.codeTabs.haunted">
 
   ```ts
   function toggleTheme() {
@@ -793,7 +793,7 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="atomico">
+  <code-tab @tab="$data.codeTabs.atomico">
 
   ```ts
   function toggleTheme() {
@@ -803,7 +803,7 @@ Now in order to update the theme, we need to perform two steps:
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="hybrids">
+  <code-tab @tab="$data.codeTabs.hybrids">
 
   ```ts
   function toggleTheme(host) {
@@ -815,7 +815,11 @@ Now in order to update the theme, we need to perform two steps:
   </code-tab>
 </code-tabs>
 
-Note that type policy read functions *must be synchronous*. If you need to perform async work to read a value, you'll need some helper that uses reactive variables underneath. See the [issue on apollo-client](https://github.com/apollographql/apollo-client/issues/6852) which discusses the reason why and provides a workaround.
+Note that type policy read functions *must be synchronous*. If you need to 
+perform async work to read a value, you'll need some helper that uses reactive 
+variables underneath. See the [issue on 
+apollo-client](https://github.com/apollographql/apollo-client/issues/6852) which 
+discusses the reason why and provides a workaround.
 
 Next Steps:
  - [Advanced Local State](./advanced-local-state.md)

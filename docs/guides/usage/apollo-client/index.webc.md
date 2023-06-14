@@ -70,7 +70,7 @@ If you'd prefer to avoid assigning to the `window`, you have more options...
 Pass the `client` param to controllers to specify the client instance
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @collection="libraries" @tab="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <blink>
@@ -78,7 +78,10 @@ Pass the `client` param to controllers to specify the client instance
   </blink>
   ```
 
-  ```ts tab mixins
+  </code-tabs>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
   import { ControllerHostMixin } from '@apollo-elements/mixins';
   import { MyQuery } from './My.query.graphql';
@@ -91,7 +94,10 @@ Pass the `client` param to controllers to specify the client instance
   customElements.define('connected-query', ConnectedQuery);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
   import { LitElement } from 'lit';
   import { customElement } from 'lit/decorators.js';
@@ -104,7 +110,10 @@ Pass the `client` param to controllers to specify the client instance
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
   import { FASTElement, customElement } from '@microsoft/fast-element';
   import { MyQuery } from './My.query.graphql';
@@ -116,7 +125,10 @@ Pass the `client` param to controllers to specify the client instance
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useQuery } from '@apollo-elements/haunted';
   import { client } from './specific-apollo-client';
 
@@ -125,7 +137,10 @@ Pass the `client` param to controllers to specify the client instance
   }
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import { useQuery } from '@apollo-elements/atomico';
   import { client } from './specific-apollo-client';
 
@@ -135,7 +150,10 @@ Pass the `client` param to controllers to specify the client instance
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { query, define, html } from '@apollo-elements/hybrids';
   import { client as apolloClient } from './specific-apollo-client';
 
@@ -144,6 +162,7 @@ Pass the `client` param to controllers to specify the client instance
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## Elements' `ApolloClientMixin`

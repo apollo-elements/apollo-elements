@@ -1,34 +1,50 @@
 ---
+title: Codegen
+eleventyNavigation:
+  order: 40
+permalink: /guides/getting-started/codegen/index.html
 description: How to use Apollo Elements and GraphQL Code Generator to improve the experience of developing with GraphQL and web components.
 ---
 
-# Getting Started >> Codegen || 40
+# Codegen
 
-Using the `@graphql-codegen/cli` package and its plugins, you can automatically generate TypeScript typings from your schema and query documents.
+Using the `@graphql-codegen/cli` package and its plugins, you can automatically 
+generate TypeScript typings from your schema and query documents.
 
 ## Install Dependencies
 
-```bash copy
+<code-copy>
+
+```bash
 npm i -D \
   @graphql-codegen/cli \
   @graphql-codegen/typescript \
   @graphql-codegen/typescript-operations
 ```
 
+</code-copy>
+
 Or if you use `yarn`:
 
-```bash copy
+<code-copy>
+
+```bash
 yarn add -D \
   @graphql-codegen/cli \
   @graphql-codegen/typescript \
   @graphql-codegen/typescript-operations
 ```
 
+</code-copy>
+
 ## Configure GraphQL Code Generator
 
-Create a file called `.graphqlrc.yml` in your project root and paste in these contents:
+Create a file called `.graphqlrc.yml` in your project root and paste in these 
+contents:
 
-```yml copy
+<code-copy>
+
+```yml
 schema: 'https://api.app.dev/graphql' # replace with url to your graphql server
 
 extensions:
@@ -67,12 +83,19 @@ extensions:
           - src/**/*.subscription.graphql
 ```
 
+</code-copy>
+
 Now, to automatically generate typings, run
 
-```bash copy
+<code-copy>
+
+```bash
 npx graphql-codegen --watch
 ```
 
+</code-copy>
+
 This has the added benefit of linting your graphql files for errors.
 
-[Read more about `graphql-codegen` on their webpage](https://graphql-code-generator.com/)
+[Read more about `graphql-codegen` on their 
+webpage](https://graphql-code-generator.com/)

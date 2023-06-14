@@ -1,5 +1,6 @@
 ---
 description: How to use Apollo Elements with @web/dev-server to develop your GraphQL-based app without a build step.
+permalink: /guides/getting-started/buildless-development/index.html
 title: Buildless Development
 eleventyNavigation:
   order: 20
@@ -13,7 +14,9 @@ dev server](https://modern-web.dev/docs/dev-server/overview/).
 This sample config lets you also import css and graphql into your lit-apollo 
 components written in TypeScript:
 
-```js copy
+<code-copy>
+
+```js
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fromRollup } from '@web/dev-server-rollup';
 
@@ -58,11 +61,15 @@ export default {
 };
 ```
 
+</code-copy>
+
 If you're using TypeScript and importing CSS and GraphQL files with the rollup 
 plugins, make sure to add this declaration somewhere in a `.d.ts` file in your 
 project:
 
-```ts copy
+<code-copy>
+
+```ts
 declare module '*.graphql' {
   import { DocumentNode } from '@apollo/client/core';
   const defaultDocument: DocumentNode;
@@ -75,6 +82,8 @@ declare module '*.css' {
   export default css;
 }
 ```
+
+</code-copy>
 
 ## Recommended Optimizations
 Apply these plugins to further reduce your bundle sizes.

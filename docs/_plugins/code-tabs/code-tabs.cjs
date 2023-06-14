@@ -5,7 +5,11 @@ const { cp } = require('node:fs/promises');
 /** @param {import('@11ty/eleventy/src/UserConfig')} */
 module.exports = function(eleventyConfig, options) {
   eleventyConfig.addWatchTarget('docs/_plugins/code-tabs/components/');
-  eleventyConfig.addGlobalData('codeTabsCollections', options?.collections ?? {});
+  eleventyConfig.addGlobalData('codeTabs',
+    Object.fromEntries(
+      Object.entries(options?.tabs ?? {})
+        .map(([id, tab]) => [id, ({ id, ...tab })]),
+    ));
   eleventyConfig.on('eleventy.before', async function() {
     const esbuild = await import('esbuild');
     const { default: chalk } = await import('chalk');

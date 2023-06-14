@@ -104,7 +104,7 @@ With Apollo Elements, you can write declarative templates and styles for your co
 The tabs below demonstrate multiple ways to write the same query component:
 
 <code-tabs collection="libraries" default-tab="html">
-  <code-tab @collection="libraries" @item="html">
+  <code-tab @tab="$data.codeTabs.html">
 
   ```html
   <apollo-query>
@@ -133,7 +133,7 @@ or set the `query` DOM property on the element -->
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="js">
+  <code-tab @tab="$data.codeTabs.js">
 
   ```js
   import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin';
@@ -193,7 +193,7 @@ or set the `query` DOM property on the element -->
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="lit">
+  <code-tab @tab="$data.codeTabs.lit">
 
   ```js
   import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
@@ -224,7 +224,7 @@ or set the `query` DOM property on the element -->
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="fast">
+  <code-tab @tab="$data.codeTabs.fast">
 
   ```ts
   import type { TypedDocumentNode } from '@apollo/client/core';
@@ -262,7 +262,7 @@ or set the `query` DOM property on the element -->
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="haunted">
+  <code-tab @tab="$data.codeTabs.haunted">
 
   ```js
   function Astronauts() {
@@ -289,7 +289,7 @@ or set the `query` DOM property on the element -->
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="atomico">
+  <code-tab @tab="$data.codeTabs.atomico">
 
   ```jsx
   function Astronauts() {
@@ -318,7 +318,7 @@ or set the `query` DOM property on the element -->
   ```
 
   </code-tab>
-  <code-tab @collection="libraries" @tab="hybrids">
+  <code-tab @tab="$data.codeTabs.hybrids">
 
   ```js
   import { query } from '@apollo-elements/hybrids/factories/query';

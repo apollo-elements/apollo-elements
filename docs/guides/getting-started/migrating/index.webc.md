@@ -1,22 +1,37 @@
 ---
+title: Migrating
+eleventyNavigation:
+  order: 50
+permalink: /guides/getting-started/migrating/index.html
 description: How to update your Apollo Elements 2 app to Apollo Elements 3
 ---
 
-# Getting Started >> Migrating || 50
+# Migrating
 
-> Migrating from Apollo Client 2? See the [previous migration guide](./apollo-client-2/)
+> Migrating from Apollo Client 2? See the [previous migration 
+> guide](./apollo-client-2/)
 
 ## From `@apollo-elements/components` 1.x
 
-Version 2 Removes `variables` and `trigger` named slots from `<apollo-mutation>`, replacing them with a single anonymous slot. This gives users more control over their mutation components.
+Version 2 Removes `variables` and `trigger` named slots from 
+`<apollo-mutation>`, replacing them with a single anonymous slot. This gives 
+users more control over their mutation components.
 
-The previous named-slot-based API assumed that the user wanted the trigger to appear in the DOM after the variable-inputs, but this isn't always what the user wants. Users also had to make their inputs and triggers direct children of the mutation element - it would not work if they nested them in `<label>` or `<header>` elements, for example.
+The previous named-slot-based API assumed that the user wanted the trigger to 
+appear in the DOM after the variable-inputs, but this isn't always what the user 
+wants. Users also had to make their inputs and triggers direct children of the 
+mutation element - it would not work if they nested them in `<label>` or 
+`<header>` elements, for example.
 
-Instead of using `slot="variable"` add a `data-variable` attribute to any input-like element that represents a variable, e.g. `<input data-variable="varName"\>` would represent the value of the `varName` variable.
+Instead of using `slot="variable"` add a `data-variable` attribute to any 
+input-like element that represents a variable, e.g. `<input 
+data-variable="varName"\>` would represent the value of the `varName` variable.
 
-Similarly, to assign a button-like element as the trigger, add a `trigger` attribute to it.
+Similarly, to assign a button-like element as the trigger, add a `trigger` 
+attribute to it.
 
-Version 2 also removes the protected `trigger` and `button` accessors, and replaces them with `triggers` and `buttons`, which return `NodeList`s.
+Version 2 also removes the protected `trigger` and `button` accessors, and 
+replaces them with `triggers` and `buttons`, which return `NodeList`s.
 
 <article class="before-after">
 
@@ -33,7 +48,10 @@ Version 2 also removes the protected `trigger` and `button` accessors, and repla
 </apollo-mutation>
 ```
 
-```html copy
+
+<code-copy>
+
+```html
 <apollo-mutation input-key="input">
   <button trigger>Mutate!</button>
 
@@ -44,11 +62,14 @@ Version 2 also removes the protected `trigger` and `button` accessors, and repla
 </apollo-mutation>
 ```
 
+</code-copy>
+
 </article>
 
 ## From `@apollo-elements/fast` 1.x
 
-If you used inline GraphQL script children or JSON script variables, import and apply `GraphQLScriptChildMixin`
+If you used inline GraphQL script children or JSON script variables, import and 
+apply `GraphQLScriptChildMixin`
 
 <article class="before-after">
 
@@ -67,7 +88,9 @@ export class QueryElement extends GraphQLScriptChildMixin(ApolloQuery) {/*...*/}
 
 ## From `@apollo-elements/haunted` 1.x
 
-Previous versions mixed the ApolloElement interface into the host element. This was a bad hack, if you relied on it (e.g. by referencing `this.data`, etc.), change your references to the hook controller instead.
+Previous versions mixed the ApolloElement interface into the host element. This 
+was a bad hack, if you relied on it (e.g. by referencing `this.data`, etc.), 
+change your references to the hook controller instead.
 
 <article class="before-after">
 
@@ -110,9 +133,12 @@ document.querySelector('uses-query-component')
 
 ## From `@apollo-elements/hybrids` 3.x
 
-Previous versions required the use of the `client` factory to mix the ApolloElement interface into the host element. Render functions and other references to the host would access the query data on `host.data`, etc.
+Previous versions required the use of the `client` factory to mix the 
+ApolloElement interface into the host element. Render functions and other 
+references to the host would access the query data on `host.data`, etc.
 
-Version 4 removes the `client` factory and keeps the GraphQL data within the factory's controller.
+Version 4 removes the `client` factory and keeps the GraphQL data within the 
+factory's controller.
 Change your references from the host to the factory's property:
 
 <article class="before-after">
@@ -138,7 +164,8 @@ define('has-a-query-component', {
 
 </article>
 
-Version 4 also removes the pre-made hybrids spread objects altogether. Use the factories instead.
+Version 4 also removes the pre-made hybrids spread objects altogether. Use the 
+factories instead.
 
 <article class="before-after">
 
@@ -168,7 +195,8 @@ document.querySelector('query-component').query.query = SomeQuery;
 
 ## From `@apollo-elements/lit-apollo` 3.x
 
-If you used inline GraphQL script children or JSON script variables, import and apply `GraphQLScriptChildMixin`
+If you used inline GraphQL script children or JSON script variables, import and 
+apply `GraphQLScriptChildMixin`
 
 <article class="before-after">
 
@@ -185,7 +213,8 @@ export class QueryElement extends GraphQLScriptChildMixin(ApolloQuery) {/*...*/}
 
 </article>
 
-More broadly, Lit users should now prefer to use controllers from `core` over the `lit-apollo` package.
+More broadly, Lit users should now prefer to use controllers from `core` over 
+the `lit-apollo` package.
 
 <article class="before-after">
 
@@ -216,7 +245,8 @@ export class QueryElement extends LitElement {
 
 ## From `@apollo-elements/mixins` 3.x
 
-If you used inline GraphQL script children or JSON script variables, import and apply `GraphQLScriptChildMixin`
+If you used inline GraphQL script children or JSON script variables, import and 
+apply `GraphQLScriptChildMixin`
 
 <article class="before-after">
 
@@ -232,7 +262,8 @@ export class QueryElement extends GraphQLScriptChildMixin(ApolloQueryMixin(HTMLE
 
 </article>
 
-More broadly, mixins users can use controller-based workflows by applying the `ControllerHostMixin`:
+More broadly, mixins users can use controller-based workflows by applying the 
+`ControllerHostMixin`:
 
 <article class="before-after">
 
