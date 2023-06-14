@@ -1,27 +1,45 @@
-# Usage >> Local State || 50
-
-<meta name="description" data-helmett
-      content="Introductory recipes for managing local state with Apollo Elements" />
+---
+title: Local State
+permalink: /guides/usage/local-state/index.html
+eleventyNavigation:
+  order: 50
+templateEngineOverride: webc,md
+description: Introductory recipes for managing local state with Apollo Elements
+---
+# Local State
 
 Apollo Client 3 provides a number of ways to manage local state in your app.
 
 ## Reading Local State
 
-Like in Apollo Client 2.x, you can get your stored local state in the apollo cache by using the `@client` directive in queries:
+Like in Apollo Client 2.x, you can get your stored local state in the apollo 
+cache by using the `@client` directive in queries:
 
-```graphql copy
-query AppQuery {
-  theme @client
-  user @client { name picture }
-}
-```
+<code-copy>
+
+  ```graphql
+  query AppQuery {
+    theme @client
+    user @client { name picture }
+  }
+  ```
+
+</code-copy>
 
 ## Writing Local State
-Apollo Client 3 removes the `writeData` method from `ApolloClient`, as well it deprecates the concept of "local resolvers". Rather than defining resolver functions for your local state, you should now instead define type policies for local fields. Type Policies are not limited to local state. For example, if the server returns ISO 8601 Date Format string, you can define a type policy which converts it to a Date object, or formats the string according to the user's locale. We'll focus from now on on managing local state with apollo-elements.
+Apollo Client 3 removes the `writeData` method from `ApolloClient`, as well it 
+deprecates the concept of "local resolvers". Rather than defining resolver 
+functions for your local state, you should now instead define type policies for 
+local fields. Type Policies are not limited to local state. For example, if the 
+server returns ISO 8601 Date Format string, you can define a type policy which 
+converts it to a Date object, or formats the string according to the user's 
+locale. We'll focus from now on on managing local state with apollo-elements.
 
-How you update a piece of your local state depends on how you define that field's type policy. Generally speaking, you have three options:
+How you update a piece of your local state depends on how you define that 
+field's type policy. Generally speaking, you have three options:
 
-1. Store the state in the apollo cache. This is most similar to the pattern from Apollo Client 2.x
+1. Store the state in the apollo cache. This is most similar to the pattern from 
+   Apollo Client 2.x
 2. Store the state in new Apollo Client 3 "Reactive Variables"
 3. Bring your own storage (i.e. LocalStorage or IndexedDB)
 
@@ -31,19 +49,26 @@ Each approach has pros and cons, and we'll try to address them all here
 
 To update your state in the apollo cache, use `writeFragment` or `writeQuery`.
 
-Say we wanted to toggle the page's colour scheme by changing the `theme` field on the root query:
+Say we wanted to toggle the page's colour scheme by changing the `theme` field 
+on the root query:
 
-```graphql copy
-query ThemeToggle {
-  theme @client
-}
-```
+<code-copy>
+
+  ```graphql
+  query ThemeToggle {
+    theme @client
+  }
+  ```
+
+</code-copy>
+
 
 Let's define a custom element that displays a button to toggle the theme.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @collection="libraries" @tab="html">
 
-  ```html tab html
+  ```html
   <apollo-query>
     <template>
       <button @click="{%raw%}{{ toggleTheme }}{%endraw%}">
@@ -63,7 +88,10 @@ Let's define a custom element that displays a button to toggle the theme.
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @collection="libraries" @tab="mixins">
+
+  ```ts
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
   type Theme = 'dark'|'light';
@@ -111,7 +139,10 @@ Let's define a custom element that displays a button to toggle the theme.
   customElements.define('theme-toggle', ThemeToggle);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @collection="libraries" @tab="lit">
+
+  ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
   import { LittElement, html } from 'lit';
   import { customElement } from 'lit/decorators.js';
@@ -141,7 +172,10 @@ Let's define a custom element that displays a button to toggle the theme.
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @collection="libraries" @tab="fast">
+
+  ```ts
   import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
@@ -168,7 +202,10 @@ Let's define a custom element that displays a button to toggle the theme.
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @collection="libraries" @tab="haunted">
+
+  ```ts
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
   type Theme = 'dark'|'light';
@@ -193,7 +230,10 @@ Let's define a custom element that displays a button to toggle the theme.
   customElements.define('theme-toggle', component(ThemeToggle));
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @collection="libraries" @tab="atomico">
+
+  ```tsx
   import { useQuery, c } from '@apollo-elements/atomico';
 
   type Theme = 'dark'|'light';
@@ -220,7 +260,10 @@ Let's define a custom element that displays a button to toggle the theme.
   customElements.define('theme-toggle', c(ThemeToggle));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @collection="libraries" @tab="hybrids">
+
+  ```ts
   import { query, define, html } from '@apollo-elements/hybrids';
 
   type Theme = 'dark'|'light';
@@ -245,44 +288,58 @@ Let's define a custom element that displays a button to toggle the theme.
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-In order for our query to load the user's theme preference from their browser or OS settings, we'll define a type policy for the `theme` field.
+In order for our query to load the user's theme preference from their browser or 
+OS settings, we'll define a type policy for the `theme` field.
 
-```ts copy
-import type { TypePolicy } from '@apollo/client/core';
+<code-copy>
 
-/** Get the user's Browser-or-OS preferred theme */
-function getUAPreferredTheme(): Theme {
-  const { matches } = window.matchMedia('prefers-color-scheme: dark');
-  return matches ? 'dark' : 'light';
-}
+  ```ts
+  import type { TypePolicy } from '@apollo/client/core';
 
-export const typePolicies: TypePolicy = {
-  Query: {
-    fields: {
-      theme(existing: Theme): Theme {
-        return existing ?? getUAPreferredTheme();
+  /** Get the user's Browser-or-OS preferred theme */
+  function getUAPreferredTheme(): Theme {
+    const { matches } = window.matchMedia('prefers-color-scheme: dark');
+    return matches ? 'dark' : 'light';
+  }
+
+  export const typePolicies: TypePolicy = {
+    Query: {
+      fields: {
+        theme(existing: Theme): Theme {
+          return existing ?? getUAPreferredTheme();
+        }
       }
     }
   }
-}
-```
+  ```
 
-We can register that type policy eagerly when we create our `ApolloClient` instance:
+</code-copy>
 
-```ts copy
-const client = new ApolloClient({
-  link: new HttpLink({ uri: '/graphql' }),
-  cache: new InMemoryCache({ typePolicies }),
-})
-```
+We can register that type policy eagerly when we create our `ApolloClient` 
+instance:
 
-or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoliciesmixin) to lazy-load the type policies when the component connects:
+<code-copy>
+
+  ```ts
+  const client = new ApolloClient({
+    link: new HttpLink({ uri: '/graphql' }),
+    cache: new InMemoryCache({ typePolicies }),
+  })
+  ```
+
+</code-copy>
+
+or we can use 
+[`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoliciesmixin) to 
+lazy-load the type policies when the component connects:
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @collection="libraries" @tab="html">
 
-  ```html tab html
+  ```html
   <apollo-client>
     <apollo-query>
       <!-- ... -->
@@ -301,7 +358,10 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @collection="libraries" @tab="mixins">
+
+  ```ts
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { typePolicies } from './typePolicies';
 
@@ -314,7 +374,10 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   }
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @collection="libraries" @tab="lit">
+
+  ```ts
   import { typePolicies } from './typePolicies';
 
   @customElement('theme-toggle')
@@ -328,7 +391,10 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @collection="libraries" @tab="fast">
+
+  ```ts
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { typePolicies } from './typePolicies';
 
@@ -343,7 +409,10 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @collection="libraries" @tab="haunted">
+
+  ```ts
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
   import { typePolicies } from './typePolicies';
 
@@ -372,7 +441,10 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   }
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @collection="libraries" @tab="atomico">
+
+  ```tsx
   import { useQuery, useEffect, c } from '@apollo-elements/atomico';
   import { typePolicies } from './typePolicies';
 
@@ -403,7 +475,10 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @collection="libraries" @tab="hybrids">
+
+  ```ts
   import { typePolicies } from './typePolicies';
 
   /**
@@ -420,13 +495,15 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
 All that's left is to define the `toggleTheme` function to actually update the cache:
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @collection="libraries" @tab="html">
 
-  ```html tab html
+  ```html
   <apollo-client>
     <apollo-query>
       <!-- ... -->
@@ -451,7 +528,10 @@ All that's left is to define the `toggleTheme` function to actually update the c
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @collection="libraries" @tab="mixins">
+
+  ```ts
   toggleTheme() {
     const theme = this.nextTheme;
     this.client.writeQuery({
@@ -461,7 +541,10 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @collection="libraries" @tab="lit">
+
+  ```ts
   toggleTheme() {
     const theme = this.nextTheme;
     this.query.client.writeQuery({
@@ -471,7 +554,10 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @collection="libraries" @tab="fast">
+
+  ```ts
   toggleTheme() {
     const theme = this.nextTheme;
     this.query.client.writeQuery({
@@ -481,7 +567,10 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @collection="libraries" @tab="haunted">
+
+  ```ts
   function toggleTheme() {
     const theme = nextTheme;
     client.writeQuery({
@@ -491,7 +580,10 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @collection="libraries" @tab="atomico">
+
+  ```tsx
   function toggleTheme() {
     const theme = nextTheme;
     client.writeQuery({
@@ -501,7 +593,10 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @collection="libraries" @tab="hybrids">
+
+  ```ts
   function toggleTheme(host) {
     const theme = host.nextTheme;
     host.query.client.writeQuery({
@@ -511,153 +606,213 @@ All that's left is to define the `toggleTheme` function to actually update the c
   }
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## Storing State in Reactive Variables
 
-We can acheive the same effect using the new `makeVar` function from Apollo Client. First we'll define our theme variable, initializing it with the user preference:
+We can acheive the same effect using the new `makeVar` function from Apollo 
+Client. First we'll define our theme variable, initializing it with the user 
+preference:
 
-```ts copy
-import { makeVar } from '@apollo/client/core';
+<code-copy>
 
-export const themeVar = makeVar<Theme>(getUAPreferredTheme());
-```
+  ```ts
+  import { makeVar } from '@apollo/client/core';
+
+  export const themeVar = makeVar<Theme>(getUAPreferredTheme());
+  ```
+
+</code-copy>
 
 Then we'll modify our type policy to read the value from that variable:
 
-```ts copy
-import { themeVar } from './variables';
+<code-copy>
 
-export const typePolicies: TypePolicy = {
-  Query: {
-    fields: {
-      theme(): Theme {
-        return themeVar();
+  ```ts
+  import { themeVar } from './variables';
+
+  export const typePolicies: TypePolicy = {
+    Query: {
+      fields: {
+        theme(): Theme {
+          return themeVar();
+        }
       }
     }
   }
-}
-```
+  ```
 
-Last, we'll refactor the `toggleTheme` method to directly update the value of `themeVar`. We do that by calling `themeVar` with a value. Apollo Client will ensure that all queries that depend on `theme` will get the new value every time we call.
+</code-copy>
+
+Last, we'll refactor the `toggleTheme` method to directly update the value of 
+`themeVar`. We do that by calling `themeVar` with a value. Apollo Client will 
+ensure that all queries that depend on `theme` will get the new value every time 
+we call.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @collection="libraries" @tab="html">
 
-  ```js tab html
+  ```js
   toggleTheme() {
     themeVar(queryEl.data.theme === 'light' ? 'dark' : 'light');
   }
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @collection="libraries" @tab="mixins">
+
+  ```ts
   toggleTheme() {
     themeVar(this.nextTheme);
   }
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @collection="libraries" @tab="lit">
+
+  ```ts
   toggleTheme() {
     themeVar(this.nextTheme);
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @collection="libraries" @tab="fast">
+
+  ```ts
   toggleTheme() {
     themeVar(this.nextTheme);
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @collection="libraries" @tab="haunted">
+
+  ```ts
   function toggleTheme() {
     themeVar(nextTheme);
   }
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @collection="libraries" @tab="atomico">
+
+  ```tsx
   function toggleTheme() {
     themeVar(nextTheme);
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @collection="libraries" @tab="hybrids">
+
+  ```ts
   function toggleTheme(host) {
     themeVar(host.nextTheme);
   }
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## Bringing our own Storage
 
-If for whatever reason we prefer to store a piece of state ourselves, we can redefine the type policy to read from that storage. Here's an example using localStorage:
+If for whatever reason we prefer to store a piece of state ourselves, we can 
+redefine the type policy to read from that storage. Here's an example using 
+localStorage:
 
-```ts copy
-export const typePolicies: TypePolicy = {
-  Query: {
-    fields: {
-      theme(): Theme {
-        return localStorage.getItem('theme') ?? getUAPreferredTheme();
+<code-copy>
+
+  ```ts
+  export const typePolicies: TypePolicy = {
+    Query: {
+      fields: {
+        theme(): Theme {
+          return localStorage.getItem('theme') ?? getUAPreferredTheme();
+        }
       }
     }
   }
-}
-```
+  ```
+
+</code-copy>
 
 Now in order to update the theme, we need to perform two steps:
 1. Change the stored value
 2. Invalidate the Apollo cache's value for theme on the root query using the `evict` method on `InMemoryCache`.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @collection="libraries" @tab="html">
 
-  ```js tab html
+  ```js
   toggleTheme() {
     localStorage.setItem('theme', queryEl.data.theme === 'light' ? 'dark' : 'light');
     queryEl.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @collection="libraries" @tab="mixins">
+
+  ```ts
   toggleTheme() {
     localStorage.setItem('theme', this.nextTheme);
     this.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @collection="libraries" @tab="lit">
+
+  ```ts
   toggleTheme() {
     localStorage.setItem('theme', this.nextTheme);
     this.query.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @collection="libraries" @tab="fast">
+
+  ```ts
   toggleTheme() {
     localStorage.setItem('theme', this.nextTheme);
     this.query.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @collection="libraries" @tab="haunted">
+
+  ```ts
   function toggleTheme() {
     localStorage.setItem('theme', nextTheme);
     client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
-  ```ts tab atomico
+  </code-tab>
+  <code-tab @collection="libraries" @tab="atomico">
+
+  ```ts
   function toggleTheme() {
     localStorage.setItem('theme', nextTheme);
     client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @collection="libraries" @tab="hybrids">
+
+  ```ts
   function toggleTheme(host) {
     localStorage.setItem('theme', host.nextTheme);
     host.query.client.cache.evict({ fieldName: 'theme' });
   }
   ```
 
+  </code-tab>
 </code-tabs>
 
 Note that type policy read functions *must be synchronous*. If you need to perform async work to read a value, you'll need some helper that uses reactive variables underneath. See the [issue on apollo-client](https://github.com/apollographql/apollo-client/issues/6852) which discusses the reason why and provides a workaround.

@@ -50,7 +50,7 @@
   }
 
   /* Hide below 3rd level by default */
-  #sidebar-nav > ul > li > ul > li ul {
+  #sidebar-nav > ul > li > ul > li:not(.current) ul {
     display: none;
   }
 
@@ -115,7 +115,7 @@
   </a>
   <ul webc:if="collections[section]">
     <li webc:for="entry of forSection(collections, section)"
-        @html="renderNavListItem(entry, page)"></li>
+        @html="renderNavListItem(entry, $data.page)"></li>
   </ul>
   <slot></slot>
 </nav>
@@ -127,9 +127,11 @@ function forSection(collections, section) {
   return nav.find(entry => entry.key === section).children;
 }
 function renderNavListItem(entry, page) {
+  const current = entry.url === page.url;
   return /* html */`
-  <li class="${entry.url === page.url ? 'active' : ''}">
-    <a href="${entry.url}">${entry.title}</a>${!entry.children?.length ? '' : `
+  <li class="${current ? 'current' : ''}">
+    <a href="${entry.url}">${entry.title}</a>${!current ? '' : `
+    <template webc:nokeep @html="toc(content)"></template>`}${!entry.children?.length ? '' : `
     <ul>${entry.children.map(child => renderNavListItem(child, page)).join('\n')}</ul>`}
   </li>`;
 }

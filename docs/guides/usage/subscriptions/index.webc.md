@@ -1,18 +1,26 @@
 ---
+title: Subscriptions
+permalink: /guides/usage/subscriptions/index.html
+eleventyNavigation:
+  order: 40
+templateEngineOverride: webc,md
 description: Use Apollo Elements to write high-performance realtime GraphQL subscription components
 ---
 
-# Usage >> Subscriptions || 40
+# Subscriptions
 
-Subscription components fetch data in real time via GraphQL subscriptions, which usually use websockets under the hood.
+Subscription components fetch data in real time via GraphQL subscriptions, which 
+usually use websockets under the hood.
 
 ## Example: Chat App
 
-A chat app queries for a list of messages, then initiates a subscription for all incoming messages. When a new message comes in, we want to notify the users, as well as add the message to the bottom of the existing on-screen list.
+A chat app queries for a list of messages, then initiates a subscription for all 
+incoming messages. When a new message comes in, we want to notify the users, as 
+well as add the message to the bottom of the existing on-screen list.
 
 Consider this query and subscription:
 
-<style data-helmet>
+<style>
 #gql-documents {
   display: grid;
   gap: 12px 6px;
@@ -59,24 +67,29 @@ Let's define a component which performs the following tasks:
 2. subscribes to any new messages
 3. when new messages arrive, integrate them with the cached messages from the query.
 
-We'll accomplish this by calling `subscribeToMore` on our element once it's connected to the DOM, passing in an `updateQuery` function to define the merge for new data:
+We'll accomplish this by calling `subscribeToMore` on our element once it's 
+connected to the DOM, passing in an `updateQuery` function to define the merge 
+for new data:
 
 <code-tabs collection="libraries" default-tab="lit">
 
-  ```html tab html
+  <code-tab @collection="libraries" @item="html">
+  <template webc:raw>
+
+  ```html
   <apollo-client id="messages-client">
     <apollo-query id="messages-query">
       <script type="application/graphql" src="Messages.query.graphql"></script>
       <template>
         <link🤡 rel="stylesheet" href="messages.css"/>
         <ol>
-          <template type="repeat" repeat="{%raw%}{{ data.messages ?? [] }}{%endraw%}">
+          <template type="repeat" repeat="{{ data.messages ?? [] }}">
             <li>
               <h4>
-                <time datetime="{%raw%}{{ date }}{%endraw%}">{%raw%}{{ formatDate(item.date) }}{%endraw%}</time>
-                <span class="user">{%raw%}{{ item.user }}{%endraw%} said:</span>
+                <time datetime="{{ date }}">{{ formatDate(item.date) }}</time>
+                <span class="user">{{ item.user }} said:</span>
               </h4>
-              <p>{%raw%}{{ item.message }}{%endraw%}</p>
+              <p>{{ item.message }}</p>
             </li>
           </template>
         </ol>
@@ -110,7 +123,13 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   </script>
   ```
 
-  ```js tab mixins
+  </template>
+  </code-tab>
+
+  <code-tab @collection="libraries" @item="mixins">
+  <template webc:raw>
+
+  ```js
   import { ApolloQueryMixin } from '@apollo-elements/mixins'
   import { client } from './client';
   import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
@@ -125,10 +144,10 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
         msgTpl.innerHTML = `
         <li>
           <h4>
-            <time>{%raw%}{{ formatDate(item.date) }}{%endraw%}</time>
-            <span class="user">{%raw%}{{ item.user }}{%endraw%} said:</span>
+            <time>{{ formatDate(item.date) }}</time>
+            <span class="user">{{ item.user }} said:</span>
           </h4>
-          <p>{%raw%}{{ item.message }}{%endraw%}</p>
+          <p>{{ item.message }}</p>
         </li>`;
 
   class Messages extends ApolloQueryMixin(HTMLElement) {
@@ -188,7 +207,12 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   customElements.define('messages-query', MessagesQuery);
   ```
 
-  ```ts tab lit
+  </template>
+  </code-tab>
+
+  <code-tab @collection="libraries" @item="lit">
+
+  ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
   import { LitElement, html } from 'lit';
   import { customElement } from 'lit/decorators.js';
@@ -241,7 +265,11 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+
+  <code-tab @collection="libraries" @item="fast">
+
+  ```ts
   import { FASTElement, customElement, html, repeat } from '@microsoft/fast-element';
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
@@ -288,7 +316,11 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   }
   ```
 
-  ```js tab haunted
+  </code-tab>
+
+  <code-tab @collection="libraries" @item="haunted">
+
+  ```js
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
   import { client } from './client';
@@ -336,7 +368,11 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   customElements.define('messages-query', component(Messages));
   ```
 
-  ```jsx tab atomico
+  </code-tab>
+
+  <code-tab @collection="libraries" @item="atomico">
+
+  ```jsx
   import { useQuery, c } from '@apollo-elements/atomico';
 
   import { client } from './client';
@@ -386,7 +422,11 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   customElements.define('messages-query', c(Messages));
   ```
 
-  ```js tab hybrids
+  </code-tab>
+
+  <code-tab @collection="libraries" @item="hybrids">
+
+  ```js
   import { define, query, html } from '@apollo-elements/hybrids';
 
   import { client } from './client';
@@ -434,6 +474,7 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## ApolloSubscriptionController
@@ -442,20 +483,23 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
 
 <code-tabs collection="libraries" default-tab="lit">
 
-  ```html tab html
+  <code-tab @collection="libraries" @item="html">
+  <template webc:raw>
+
+  ```html
   <apollo-client id="messages-client">
     <apollo-query id="messages-query">
       <script type="application/graphql" src="Messages.query.graphql"></script>
       <template>
         <link🤡 rel="stylesheet" href="messages.css"/>
         <ol>
-          <template type="repeat" repeat="{%raw%}{{ data.messages ?? [] }}{%endraw%}">
+          <template type="repeat" repeat="{{ data.messages ?? [] }}">
             <li>
               <h4>
-                <time datetime="{%raw%}{{ date }}{%endraw%}">{%raw%}{{ formatDate(item.date) }}{%endraw%}</time>
-                <span class="user">{%raw%}{{ item.user }}{%endraw%} said:</span>
+                <time datetime="{{ date }}">{{ formatDate(item.date) }}</time>
+                <span class="user">{{ item.user }} said:</span>
               </h4>
-              <p>{%raw%}{{ item.message }}{%endraw%}</p>
+              <p>{{ item.message }}</p>
             </li>
           </template>
         </ol>
@@ -465,7 +509,7 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
     <apollo-subscription id="messages-subscription">
       <script type="application/graphql" src="MessageSent.subscription.graphql"></script>
       <template>
-        <mwc-snackbar labeltext="{%raw%}{{ data.messagesSent.user }}{%endraw%} sent a message!"></mwc-snackbar>
+        <mwc-snackbar labeltext="{{ data.messagesSent.user }} sent a message!"></mwc-snackbar>
       </template>
     </apollo-subcription>
 
@@ -497,6 +541,9 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
   </script>
   ```
 
+  </template>
+  </code-tab>
+
   ```js tab mixins
   import { ApolloQueryMixin } from '@apollo-elements/mixins';
   import { ApolloSubscriptionController } from '@apollo-elements/core';
@@ -516,10 +563,10 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
         msgTpl.innerHTML = `
         <li>
           <h4>
-            <time>{%raw%}{{ formatDate(item.date) }}{%endraw%}</time>
-            <span class="user">{%raw%}{{ item.user }}{%endraw%} said:</span>
+            <time>{{ formatDate(item.date) }}</time>
+            <span class="user">{{ item.user }} said:</span>
           </h4>
-          <p>{%raw%}{{ item.message }}{%endraw%}</p>
+          <p>{{ item.message }}</p>
         </li>`;
 
   class Messages extends ApolloQueryMixin(HTMLElement) {

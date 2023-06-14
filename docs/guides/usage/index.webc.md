@@ -104,8 +104,7 @@ With Apollo Elements, you can write declarative templates and styles for your co
 The tabs below demonstrate multiple ways to write the same query component:
 
 <code-tabs collection="libraries" default-tab="html">
-
-<code-tab data-id="html" data-label="HTML" data-icon-href="/assets/icons/html5.svg">
+  <code-tab @collection="libraries" @item="html">
 
   ```html
   <apollo-query>
@@ -133,9 +132,8 @@ or set the `query` DOM property on the element -->
   </apollo-query>
   ```
 
-</code-tab>
-
-<code-tab data-id="js" data-label="JavaScript" data-icon-href="/assets/icons/js.svg">
+  </code-tab>
+  <code-tab @collection="libraries" @tab="js">
 
   ```js
   import { ControllerHostMixin } from '@apollo-elements/mixins/controller-host-mixin';
@@ -194,9 +192,8 @@ or set the `query` DOM property on the element -->
   }
   ```
 
-</code-tab>
-
-<code-tab data-id="lit" data-label="Lit" data-icon-href="/assets/icons/lit.svg">
+  </code-tab>
+  <code-tab @collection="libraries" @tab="lit">
 
   ```js
   import { ApolloQueryController } from '@apollo-elements/core/apollo-query-controller';
@@ -226,9 +223,8 @@ or set the `query` DOM property on the element -->
   }
   ```
 
-</code-tab>
-
-<code-tab data-id="fast" data-label="FAST" data-icon-href="/assets/icons/fast.svg">
+  </code-tab>
+  <code-tab @collection="libraries" @tab="fast">
 
   ```ts
   import type { TypedDocumentNode } from '@apollo/client/core';
@@ -265,9 +261,8 @@ or set the `query` DOM property on the element -->
   }
   ```
 
-</code-tab>
-
-<code-tab data-id="haunted" data-label="Haunted" data-icon-href="/assets/icons/haunted.svg">
+  </code-tab>
+  <code-tab @collection="libraries" @tab="haunted">
 
   ```js
   function Astronauts() {
@@ -293,9 +288,8 @@ or set the `query` DOM property on the element -->
   }
   ```
 
-</code-tab>
-
-<code-tab data-id="atomico" data-label="Atomico" data-icon-href="/assets/icons/atomico.svg">
+  </code-tab>
+  <code-tab @collection="libraries" @tab="atomico">
 
   ```jsx
   function Astronauts() {
@@ -323,9 +317,8 @@ or set the `query` DOM property on the element -->
   }
   ```
 
-</code-tab>
-
-<code-tab data-id="hybrids" data-label="Hybrids" data-icon-href="/assets/icons/hybrids.svg">
+  </code-tab>
+  <code-tab @collection="libraries" @tab="hybrids">
 
   ```js
   import { query } from '@apollo-elements/hybrids/factories/query';
@@ -352,8 +345,7 @@ or set the `query` DOM property on the element -->
   });
   ```
 
-</code-tab>
-
+  </code-tab>
 </code-tabs>
 
 Apollo Elements doesn't lock you in to one way of working. You can build an app's components piecemeal from several different libraries using multiple different paradigms, and they can all consume each other, communicate with each other, and coexist with one another, and couldn't we use some more of that?

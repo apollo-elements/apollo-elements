@@ -1,22 +1,26 @@
 // @ts-check
 const path = require('node:path');
 
+const anchor = require('markdown-it-anchor');
+
 // const eleventyRocketNav = require('@rocket/eleventy-rocket-nav');
 // const rocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
 // const apolloElements = require('./docs/_plugins/rocket-preset-apollo-elements/index.cjs');
 // const SlideDecks = require('eleventy-plugin-slide-decks');
 // const CustomElementsManifest = require('./docs/_plugins/rocket-preset-custom-elements-manifest/eleventy/custom-elements-manifest.cjs');
-const Footnotes = require('eleventy-plugin-footnotes');
-
 const { EleventyRenderPlugin } = require('@11ty/eleventy');
+
 const WebC = require('@11ty/eleventy-plugin-webc');
 const EleventyPluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
+const LitPlugin = require('@lit-labs/eleventy-plugin-lit');
+const EleventyNavigationPlugin = require('@11ty/eleventy-navigation');
+const Footnotes = require('eleventy-plugin-footnotes');
+const TocPlugin = require('eleventy-plugin-nesting-toc');
+
 const ImportMaps = require('./docs/_plugins/importMaps.cjs');
 const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
 const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
-const LitPlugin = require('@lit-labs/eleventy-plugin-lit');
-const EleventyNavigationPlugin = require('@11ty/eleventy-navigation');
 
 // Rocket
 // const Nav = require('./docs/_plugins/nav/nav.cjs');
@@ -26,6 +30,9 @@ const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
 module.exports = function(eleventyConfig) {
   // rocketSearch()...
+
+  eleventyConfig.amendLibrary('md', /** @param{import('markdown-it')}md*/md =>
+    md.use(anchor, { permalink: anchor.permalink.headerLink() }));
 
   eleventyConfig.setQuietMode(true);
   eleventyConfig.addDataExtension('yaml,yml', content => yaml.parse(content));
@@ -40,12 +47,41 @@ module.exports = function(eleventyConfig) {
 
   // eleventyConfig.addPlugin(RocketCollections);
   // eleventyConfig.addPlugin(Nav);
+  eleventyConfig.addPlugin(TocPlugin);
   eleventyConfig.addPlugin(Footnotes);
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
-  eleventyConfig.addPlugin(CodeTabs);
   eleventyConfig.addPlugin(EleventyNavigationPlugin);
   eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
+
+  eleventyConfig.addPlugin(CodeTabs, {
+    collections: {
+      frameworks: {
+        angular: { label: 'Angular', iconHref: '/assets/icons/angular.svg' },
+        preact: { label: 'Preact', iconHref: '/assets/icons/preact.svg' },
+        react: { label: 'React', iconHref: '/assets/icons/react.svg' },
+        svelte: { label: 'Svelte', iconHref: '/assets/icons/svelte.svg' },
+        vue: { label: 'Vue', iconHref: '/assets/icons/vue.svg' },
+      },
+      packageManagers: {
+        npm: { label: 'NPM', iconHref: '/assets/icons/npm.svg' },
+        yarn: { label: 'Yarn', iconHref: '/assets/icons/yarn.svg' },
+        pnpm: { label: 'PNPM', iconHref: '/assets/icons/pnpm.svg' },
+      },
+      libraries: {
+        html: { label: 'HTML', iconHref: '/assets/icons/html5.svg' },
+        lit: { label: 'Lit', iconHref: '/assets/icons/lit.svg' },
+        fast: { label: 'FAST', iconHref: '/assets/icons/fast.svg' },
+        gluon: { label: 'Gluon', iconHref: '/assets/icons/js.svg' },
+        haunted: { label: 'Haunted', iconHref: '/assets/icons/haunted.svg' },
+        atomico: { label: 'Atomico', iconHref: '/assets/icons/atomico.svg' },
+        hybrids: { label: 'Hybrids', iconHref: '/assets/icons/hybrids.svg' },
+        mixins: { label: 'Vanilla', iconHref: '/assets/icons/js.svg' },
+        polymer: { label: 'Polymer', iconHref: '/assets/icons/polymer.svg' },
+      },
+    },
+  });
+
   eleventyConfig.addPlugin(ImportMaps, {
     cacheFor: '1d',
     specs: [
@@ -123,34 +159,6 @@ module.exports = function(eleventyConfig) {
   // eleventyConfig.addPlugin(apolloElements, { transformCSS: 'decks/**/*.css' });
 
   // eleventyConfig.addPlugin(webcomponentsDev);
-
-  // eleventyConfig.addPlugin(CodeTabs, {
-  //   collections: {
-  //     frameworks: {
-  //       angular: { label: 'Angular', iconHref: '/_merged_assets/brand-logos/angular.svg' },
-  //       preact: { label: 'Preact', iconHref: '/_merged_assets/brand-logos/preact.svg' },
-  //       react: { label: 'React', iconHref: '/_merged_assets/brand-logos/react.svg' },
-  //       svelte: { label: 'Svelte', iconHref: '/_merged_assets/brand-logos/svelte.svg' },
-  //       vue: { label: 'Vue', iconHref: '/_merged_assets/brand-logos/vue.svg' },
-  //     },
-  //     packageManagers: {
-  //       npm: { label: 'NPM', iconHref: '/_merged_assets/brand-logos/npm.svg' },
-  //       yarn: { label: 'Yarn', iconHref: '/_merged_assets/brand-logos/yarn.svg' },
-  //       pnpm: { label: 'PNPM', iconHref: '/_merged_assets/brand-logos/pnpm.svg' },
-  //     },
-  //     libraries: {
-  //       html: { label: 'HTML', iconHref: '/_merged_assets/brand-logos/html5.svg' },
-  //       lit: { label: 'Lit', iconHref: '/_merged_assets/brand-logos/lit.svg' },
-  //       fast: { label: 'FAST', iconHref: '/_merged_assets/brand-logos/fast.svg' },
-  //       gluon: { label: 'Gluon', iconHref: '/_merged_assets/brand-logos/js.svg' },
-  //       haunted: { label: 'Haunted', iconHref: '/_merged_assets/brand-logos/haunted.svg' },
-  //       atomico: { label: 'Atomico', iconHref: '/_merged_assets/brand-logos/atomico.svg' },
-  //       hybrids: { label: 'Hybrids', iconHref: '/_merged_assets/brand-logos/hybrids.svg' },
-  //       mixins: { label: 'Vanilla', iconHref: '/_merged_assets/brand-logos/js.svg' },
-  //       polymer: { label: 'Polymer', iconHref: '/_merged_assets/brand-logos/polymer.svg' },
-  //     },
-  //   },
-  // });
 
   // eleventyConfig.addPlugin(CustomElementsManifest, {
   //   typeLinksNewTab: true,

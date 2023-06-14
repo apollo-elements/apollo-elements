@@ -2,7 +2,7 @@
 layout: html.webc
 ---
 <apollo-elements-header></apollo-elements-header>
-<apollo-elements-sidebar></apollo-elements-sidebar>
+<apollo-elements-sidebar :@content="content"></apollo-elements-sidebar>
 <main>
   <template webc:nokeep @html="content"></template>
   <footer class="content-footer">

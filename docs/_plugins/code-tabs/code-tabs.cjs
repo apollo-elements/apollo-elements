@@ -3,8 +3,9 @@ const { join } = require('node:path');
 const { cp } = require('node:fs/promises');
 
 /** @param {import('@11ty/eleventy/src/UserConfig')} */
-module.exports = function(eleventyConfig) {
+module.exports = function(eleventyConfig, options) {
   eleventyConfig.addWatchTarget('docs/_plugins/code-tabs/components/');
+  eleventyConfig.addGlobalData('codeTabsCollections', options?.collections ?? {});
   eleventyConfig.on('eleventy.before', async function() {
     const esbuild = await import('esbuild');
     const { default: chalk } = await import('chalk');

@@ -13,7 +13,7 @@ Before your components can interact with your graph, they need to connect to an
 `ApolloClient` instance. The easiest and simplest way to do that is with 
 `<apollo-client>`.
 
-## &lt;apollo-client&gt;
+## `<apollo-client>`
 
 Import `@apollo-elements/components/apollo-client` and set it up on your page. 
 If you set the `uri` attribute, `<apollo-client>` will create its own client 
@@ -22,11 +22,13 @@ boolean attribute to prevent the client from fetching any operation (e.g. query)
 that does not have all its non-nullable variables set.
 
 <code-copy>
+
 ```html
 <apollo-client uri="/graphql" validate-variables>
   <app-root></app-root>
 </apollo-client>
 ```
+
 </code-copy>
 
 Nested instances of `<apollo-client>` will control their own decendents
@@ -68,8 +70,9 @@ If you'd prefer to avoid assigning to the `window`, you have more options...
 Pass the `client` param to controllers to specify the client instance
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @collection="libraries" @tab="html">
 
-  ```html tab html
+  ```html
   <blink>
   The HTML Apollo Elements use the ApolloElement interface. See the previous segments.
   </blink>

@@ -44,7 +44,9 @@
 
 <aside id="main-sidebar" webc:root="override">
   <rocket-drawer id="sidebar">
-    <side-navigation :@collections="$data.collections" :@section="$data.section">
+    <side-navigation :@collections="$data.collections"
+                     :@section="$data.section"
+                     :@content="content">
       <div class="sidebar-bottom">
         <hr/>
         <a webc:if="$data.site.helpUrl" :href="url($data.site.helpUrl)">Help and Feedback</a>

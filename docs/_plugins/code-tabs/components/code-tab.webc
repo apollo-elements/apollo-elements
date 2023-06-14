@@ -1,0 +1,15 @@
+<script webc:setup>
+const getTab = (collection, tab) => this.codeTabsCollections?.[collection]?.[tab]
+const getLabel = (collection, tab) => getTab(collection, tab)?.label ?? false;
+const getIconHref = (collection, tab) => getTab(collection, tab)?.iconHref ?? false;
+</script>
+
+<code-tab :data-id="tab"
+          :data-collection="collection"
+          :data-label="getLabel(collection, tab)"
+          :data-icon-href="getIconHref(collection, tab)">
+  <syntax-highlight :language="log(language)" webc:if="language">
+    <slot></slot>
+  </syntax-highlight>
+  <slot webc:if="!language"></slot>
+</code-tab>
