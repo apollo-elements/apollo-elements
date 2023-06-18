@@ -1,0 +1,13 @@
+<apollo-mutation>
+  <script type="application/graphql" src="AddUser.mutation.graphql"></script>
+  <label>Name <input data-variable="name"/></label>
+  <button trigger>Add</button>
+  <template>
+    <link rel="stylesheet" href="add-user.css">
+    <slot></slot>
+    <output class="{%raw%}{{ data ? 'resolved' : 'transparent' }}{%endraw%}">
+      <p>You have added {%raw%}{{ data.addUser.name }}{%endraw%}.</p>
+    </output>
+  </template>
+</apollo-mutation>
+<script type="module" src="client.js"></script>

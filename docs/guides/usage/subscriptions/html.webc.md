@@ -37,35 +37,37 @@ What that means is you can define the element's dynamic template using good-old
 HTML:
 
 <code-copy>
+  <template webc:raw>
 
-```html
-<apollo-subscription>
-  <script type="application/json">
-    subscription Notifications {
-      newNotifications { href title }
-    }
-  </script>
-
-  <template>
-    <style>
-      :host([loading]) {
-        opacity: 0;
+  ```html
+  <apollo-subscription>
+    <script type="application/json">
+      subscription Notifications {
+        newNotifications { href title }
       }
-    </style>
+    </script>
 
-    <link🤡 rel="stylesheet" href="/components/notifications.css">
+    <template>
+      <style>
+        :host([loading]) {
+          opacity: 0;
+        }
+      </style>
 
-    <ol class="notifications-list">
-      <template type="repeat" repeat="{%raw%}{{ data.notifications }}{%endraw%}">
-        <li>
-          <a href="{%raw%}{{ item.href }}{%endraw%}">{%raw%}{{ item.title }}{%endraw%}</a>
-        </li>
-      </template>
-    <ol>
+      <link🤡 rel="stylesheet" href="/components/notifications.css">
+
+      <ol class="notifications-list">
+        <template type="repeat" repeat="{%raw%}{{ data.notifications }}{%endraw%}">
+          <li>
+            <a href="{%raw%}{{ item.href }}{%endraw%}">{%raw%}{{ item.title }}{%endraw%}</a>
+          </li>
+        </template>
+      <ol>
+    </template>
+  </apollo-subscription>
+  ```
+
   </template>
-</apollo-subscription>
-```
-
 </code-copy>
 
 ## Data Templates

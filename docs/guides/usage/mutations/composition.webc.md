@@ -1,10 +1,25 @@
-# Usage >> Mutations >> Composing Mutations and Queries || 30
+---
+title: Composing Mutations and Queries
+permalink: /guides/usage/mutations/composition/index.html
+eleventyNavigation:
+  order: 30
+templateEngineOverride: webc,md
+subtitle: "Using <apollo-mutation> element"
+---
 
-Consider an "edit my profile" page in a typical web app. As the developer, you'll want to first fetch the user's profile (the query), display it in some pleasant page layout (the template), and offer controls to update profile fields like nickname or avatar (the mutation).
+# Composing Mutations and Queries
 
-Combining queries with mutations in the same component like this is a common pattern. Apollo Elements provides some different ways to accomplish that goal. Let's take these GraphQL documents as an example and see how we can combine them on one page.
+Consider an "edit my profile" page in a typical web app. As the developer, 
+you'll want to first fetch the user's profile (the query), display it in some 
+pleasant page layout (the template), and offer controls to update profile fields 
+like nickname or avatar (the mutation).
 
-<style data-helmet>
+Combining queries with mutations in the same component like this is a common 
+pattern. Apollo Elements provides some different ways to accomplish that goal. 
+Let's take these GraphQL documents as an example and see how we can combine them 
+on one page.
+
+<style>
 #gql-documents {
   display: grid;
   gap: 12px 6px;
@@ -21,45 +36,54 @@ Combining queries with mutations in the same component like this is a common pat
   }
 }
 </style>
+
 <div id="gql-documents">
+  <code-copy>
 
-```graphql copy
-query ProfileQuery(
-  $userId: ID!
-) {
-  profile(userId: $userId) {
-    id
-    name
-    picture
-    birthday
+  ```graphql
+  query ProfileQuery(
+    $userId: ID!
+  ) {
+    profile(userId: $userId) {
+      id
+      name
+      picture
+      birthday
+    }
   }
-}
-```
+  ```
 
-```graphql copy
-mutation UpdateProfileMutation(
-  $input: UpdateProfileInput
-) {
-  updateProfile(input: $input) {
-    id
-    name
-    picture
-    birthday
+  </code-copy>
+  <code-copy>
+
+  ```graphql
+  mutation UpdateProfileMutation(
+    $input: UpdateProfileInput
+  ) {
+    updateProfile(input: $input) {
+      id
+      name
+      picture
+      birthday
+    }
   }
-}
-```
+  ```
 
+  </code-copy>
 </div>
 
 ## Using `<apollo-mutation>`
 
 <a hidden id="#example-edit-user-profile"></a>
 
-Import the `<apollo-mutation>` element from `@apollo-elements/components` to write declarative mutations right in your template. In this way, we combine our query and mutation into a single component:
+Import the `<apollo-mutation>` element from `@apollo-elements/components` to 
+write declarative mutations right in your template. In this way, we combine our 
+query and mutation into a single component:
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <apollo-query>
     <script type="application/graphql">
       query User($userId: ID!) {
@@ -113,7 +137,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   </apollo-query>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
 
   import '@apollo-elements/components/apollo-mutation';
   import { ControllerHostMixin } from '@apollo-elements/mixins';
@@ -175,7 +202,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   customElements.define('profile-page', ProfilePage);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
 
   import '@apollo-elements/components/apollo-mutation';
   import { ApolloQueryController } from '@apollo-elements/core';
@@ -220,7 +250,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import '@apollo-elements/components/apollo-mutation';
   import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
@@ -259,7 +292,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import '@apollo-elements/components/apollo-mutation';
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
@@ -299,7 +335,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   customElements.define('profile-page', component(ProfilePage));
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import '@apollo-elements/components/apollo-mutation';
   import { useQuery, c } from '@apollo-elements/atomico';
 
@@ -337,7 +376,10 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   customElements.define('profile-page', c(ProfilePage));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import '@apollo-elements/components/apollo-mutation';
   import { query, define, html } from '@apollo-elements/hybrids';
 
@@ -373,20 +415,26 @@ Import the `<apollo-mutation>` element from `@apollo-elements/components` to wri
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutation/).
+Read more about the [`<apollo-mutation>` 
+component](/api/components/apollo-mutation/).
 
 ## Using `ApolloMutationController`
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <blink>The Apollo HTML elements use the controllers under the hood</blink>
   <marquee>Just follow the previous example.</marquee>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ControllerHostMixin } from '@apollo-elements/mixins';
   import { ApolloQueryController, ApolloMutationController } from '@apollo-elements/core';
 
@@ -451,7 +499,10 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   customElements.define('profile-page', ProfilePage);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQueryController, ApolloMutationController } from '@apollo-elements/core';
   import { LitElement, html } from 'lit';
   import { customElement, queryAll } from 'lit/decorators.js';
@@ -504,7 +555,10 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
@@ -551,7 +605,10 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import '@apollo-elements/components/apollo-mutation';
   import { useQuery, useMutation, useState, component, html } from '@apollo-elements/haunted';
 
@@ -593,7 +650,10 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   customElements.define('profile-page', component(ProfilePage));
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import '@apollo-elements/components/apollo-mutation';
   import { useQuery, useMutation, useState, c } from '@apollo-elements/atomico';
 
@@ -633,7 +693,10 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   customElements.define('profile-page', c(ProfilePage));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import '@apollo-elements/components/apollo-mutation';
   import { query, mutation, define, html } from '@apollo-elements/hybrids';
 
@@ -677,7 +740,8 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-
-Read more about [`ApolloMutationController`](/api/core/controllers/mutation/) in the API docs.
+Read more about [`ApolloMutationController`](/api/core/controllers/mutation/) in 
+the API docs.

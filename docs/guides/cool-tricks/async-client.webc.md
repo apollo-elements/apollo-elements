@@ -1,55 +1,74 @@
 ---
+title: Asynchronous Client
+permalink: /guides/cool-tricks/asyncronous-client/index.html
+eleventyNavigation:
+  order: 10
+templateEngineOverride: webc,md
 description: Use Apollo Elements to asynchronously create your apollo client before loading your views, e.g. to fetch an auth token
 ---
 
-# Cool Tricks >> Asynchronous Client || 10
+# Asynchronous Client
 
-In some cases, you may want to wait for your Apollo client to do some initial asynchronous setup (for example reloading a persistent cache or getting a user token) before you can make your client available to your app.
+In some cases, you may want to wait for your Apollo client to do some initial 
+asynchronous setup (for example reloading a persistent cache or getting a user 
+token) before you can make your client available to your app.
 
-```js copy
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
+<code-copy>
 
-const cache = new InMemoryCache();
+  ```js copy
+  import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
-const link = new HttpLink({
-  uri: 'https://api.spacex.land/graphql',
-})
+  const cache = new InMemoryCache();
 
-let client;
+  const link = new HttpLink({
+    uri: 'https://api.spacex.land/graphql',
+  })
 
-export async function getClient() {
-  if (client)
+  let client;
+
+  export async function getClient() {
+    if (client)
+      return client;
+
+    // Wait for the cache to be restored
+    await persistCache({ cache, storage: localStorage });
+
+    // Create the Apollo Client
+    client =
+      new ApolloClient({ cache, link });
+
     return client;
+  };
+  ```
 
-  // Wait for the cache to be restored
-  await persistCache({ cache, storage: localStorage });
+</code-copy>
 
-  // Create the Apollo Client
-  client =
-    new ApolloClient({ cache, link });
+The most straightforward way to do this is first instantiate your client, and 
+only afterwards load your components using dynamic `import()`:
 
-  return client;
-};
-```
+<code-copy>
 
-The most straightforward way to do this is first instantiate your client, and only afterwards load your components using dynamic `import()`:
+  ```ts copy
+  import { getClient } from './client';
+  (async function init() {
+    window.__APOLLO_CLIENT__ = await getClient();
+    await Promise.all([
+      import('./components/connected-element.js'),
+      import('./components/connected-input.js'),
+    ]);
+  })();
+  ```
 
-```ts copy
-import { getClient } from './client';
-(async function init() {
-  window.__APOLLO_CLIENT__ = await getClient();
-  await Promise.all([
-    import('./components/connected-element.js'),
-    import('./components/connected-input.js'),
-  ]);
-})();
-```
+</code-copy>
 
-If for whatever reason you'd like to load your component files eagerly, set the `noAutoSubscribe` property on your components, then you can import a promise of a client and wait for it in `connectedCallback`, calling `subscribe` when ready.
+If for whatever reason you'd like to load your component files eagerly, set the 
+`noAutoSubscribe` property on your components, then you can import a promise of 
+a client and wait for it in `connectedCallback`, calling `subscribe` when ready.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <apollo-client>
     <apollo-query no-auto-subscribe>
       <template>
@@ -98,7 +117,10 @@ If for whatever reason you'd like to load your component files eagerly, set the 
 
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 
   import UserSessionQuery from './UserSession.query.graphql';
@@ -169,7 +191,10 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   customElements.define('async-element', AsyncElement);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
   import { LitElement, html } from 'lit';
   import { customElement } from 'lit/decorators.js';
@@ -206,7 +231,10 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   };
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { FASTElement, customElement, html, ViewTemplate } from '@microsoft/fast-element';
   import { ApolloQueryBehavior } from '@apollo-elements/fast';
 
@@ -246,7 +274,10 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   };
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useQuery, component, html } from '@apollo-elements/haunted';
 
   import { UserSessionQuery } from './UserSession.query.graphql';
@@ -283,7 +314,10 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   customElements.define('async-element', component(AsyncElement));
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import { useQuery, c } from '@apollo-elements/atomico';
 
   import { UserSessionQuery } from './UserSession.query.graphql';
@@ -322,7 +356,10 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   customElements.define('async-element', c(AsyncElement));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { query, define, property, html } from '@apollo-elements/hybrids';
 
   import { getClient } from './client';
@@ -358,4 +395,5 @@ If for whatever reason you'd like to load your component files eagerly, set the 
   })
   ```
 
+  </code-tab>
 </code-tabs>

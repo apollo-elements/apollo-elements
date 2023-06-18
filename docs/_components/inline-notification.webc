@@ -1,0 +1,22 @@
+<template shadowrootmode="open" shadowroot="open">
+  <style>
+    :host {
+      padding: 0.1rem 1.5rem;
+      border-left-width: 0.5rem;
+      border-left-style: solid;
+      margin: 1rem 0px;
+      display: block;
+    }
+    :host([type=tip]) {
+      background-color: var(--inline-notification-tip-background-color, rgba(221, 221, 221, 0.3));
+      border-color: var(--inline-notification-tip-border-color, #42b983);
+    }
+    [part=title] {
+      font-weight: 600;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+  </style>
+  <h2 part="title" :text="type"></h2>
+  <slot></slot>
+</template>

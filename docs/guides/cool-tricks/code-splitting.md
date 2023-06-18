@@ -1,66 +1,91 @@
 ---
+title: Code Splitting
+permalink: /guides/cool-tricks/asyncronous-client/index.html
+eleventyNavigation:
+  order: 20
+templateEngineOverride: webc,md
 description: Optimize your GraphQL web app with code splitting and lazy loading
 ---
 
-# Cool Tricks >> Code Splitting || 20
+# Code Splitting
 
-Code splitting or lazy-loading is the process of writing an app such that the user only loads the code they need when they need it, instead of loading the entire app in one huge bundle up front.
+Code splitting or lazy-loading is the process of writing an app such that the 
+user only loads the code they need when they need it, instead of loading the 
+entire app in one huge bundle up front.
 
-Imagine your single-page app has two kinds of users: regular users and admins. The admins have access to different pages than the regular users, and those pages have whole complicated state trees which are irrelevant to regular users.
+Imagine your single-page app has two kinds of users: regular users and admins. 
+The admins have access to different pages than the regular users, and those 
+pages have whole complicated state trees which are irrelevant to regular users.
 
-It doesn't make sense to force regular users to download, parse, and compile the code for those pages which they'll never see and can't use. Instead, we can lazily load those components using dynamic `import()`, and register their state trees after-the-fact.
+It doesn't make sense to force regular users to download, parse, and compile the 
+code for those pages which they'll never see and can't use. Instead, we can 
+lazily load those components using dynamic `import()`, and register their state 
+trees after-the-fact.
 
 ## TypePoliciesMixin
 
-To facilitate this, import the `TypePoliciesMixin` so you can lazy-load portions of your client-side state store along with their UI components.
+To facilitate this, import the `TypePoliciesMixin` so you can lazy-load portions 
+of your client-side state store along with their UI components.
 
-Let's say your client side router loads a different component depending on the user role:
+Let's say your client side router loads a different component depending on the 
+user role:
 
-```ts copy
-// router.ts
-export const router = new Router({
-  routes: [{
-    path: '/profile',
-    async onEnter(context) {
-      if (context.user.roles.includes('admin'))
-        await import('../components/admin-profile');
-      else
-        await import('../components/profile');
-    },
-  }]
-})
-```
+<code-copy>
+
+  ```ts copy
+  // router.ts
+  export const router = new Router({
+    routes: [{
+      path: '/profile',
+      async onEnter(context) {
+        if (context.user.roles.includes('admin'))
+          await import('../components/admin-profile');
+        else
+          await import('../components/profile');
+      },
+    }]
+  })
+  ```
+
+</code-copy>
 
 And let's say you want to apply different type policies depending on the type of user:
 
-```ts copy
-// src/components/user/typePolicies.ts
-export const UserTypePolicies = {
-  User: {
-    fields: {
-      fullName(_, { readField }) {
-        return `${readField('firstName')} ${readField('lastName')}`;
+<code-copy>
+
+  ```ts
+  // src/components/user/typePolicies.ts
+  export const UserTypePolicies = {
+    User: {
+      fields: {
+        fullName(_, { readField }) {
+          return `${readField('firstName')} ${readField('lastName')}`;
+        }
       }
     }
-  }
-};
+  };
 
-export const AdminTypePolicies = {
-  User: {
-    fields: {
-      role() {
-        return 'admin';
+  export const AdminTypePolicies = {
+    User: {
+      fields: {
+        role() {
+          return 'admin';
+        }
       }
     }
-  }
-};
-```
+  };
+  ```
 
-import `TypePoliciesMixin` from the mixins package to easily register type policies on a component. For example, in `src/components/profile/profile.ts` you can use `UserTypePolicies`
+</code-copy>
+
+import `TypePoliciesMixin` from the mixins package to easily register type 
+policies on a component. For example, in `src/components/profile/profile.ts` you 
+can use `UserTypePolicies`
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
   <apollo-client>...</apollo-client>
   <script>
@@ -75,7 +100,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { UserTypePolicies } from './typePolicies';
 
@@ -90,7 +118,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   customElements.define('profile-page', ProfilePage);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
@@ -105,7 +136,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
   import { customElement } from '@microsoft/fast-element';
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
@@ -121,7 +155,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
   import { UserTypePolicies } from './typePolicies';
 
@@ -144,7 +181,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   customElements.define('profile-page', component(ProfilePage));
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import { useQuery, useEffect, c } from '@apollo-elements/atomico';
   import { UserTypePolicies } from './typePolicies';
 
@@ -167,7 +207,10 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   customElements.define('profile-page', c(ProfilePage));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { query, define } from '@apollo-elements/hybrids';
   import { UserTypePolicies } from './typePolicies';
   import { UserQuery } from './User.query.graphql';
@@ -186,13 +229,16 @@ import `TypePoliciesMixin` from the mixins package to easily register type polic
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-And you can lazy-load that same code for use in `src/components/admin-profile/admin-profile.ts`.
+And you can lazy-load that same code for use in 
+`src/components/admin-profile/admin-profile.ts`.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
   <apollo-client>...</apollo-client>
   <script>
@@ -207,7 +253,10 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ApolloQueryMixin, TypePoliciesMixin } from '@apollo-elements/mixins';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
@@ -223,7 +272,10 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   customElements.define('admin-profile-page', AdminProfilePage);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
   import { UserTypePolicies } from './typePolicies';
@@ -238,7 +290,10 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { customElement } from '@microsoft/fast-element';
   import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
   import { TypePoliciesMixin } from '@apollo-elements/mixins/type-policies-mixin';
@@ -254,7 +309,10 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useQuery, useEffect, component, html } from '@apollo-elements/haunted';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
@@ -278,7 +336,16 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   customElements.define('admin-profile-page', component(AdminProfilePage));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```ts
+
+  ```
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { query, define } from '@apollo-elements/hybrids';
   import { UserTypePolicies, AdminTypePolicies } from './typePolicies';
 
@@ -299,6 +366,9 @@ And you can lazy-load that same code for use in `src/components/admin-profile/ad
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-When using `Apollo*Controllers`, take inspiration from the `haunted` and `hybrids` examples and call `addTypePolicies` on the controller's cache when the host connects.
+When using `Apollo*Controllers`, take inspiration from the `haunted` and 
+`hybrids` examples and call `addTypePolicies` on the controller's cache when the 
+host connects.

@@ -1,29 +1,41 @@
 ---
+title: Cache Management
+permalink: /guides/usage/mutations/cache-management/index.html
+eleventyNavigation:
+  order: 20
+templateEngineOverride: webc,md
 description: Use Apollo Elements to manage the Apollo client cache after GraphQL mutations
 ---
 
-# Usage >> Mutations >> Cache Management || 20
+# Cache Management
 
-When defining components that issue graphql mutations, you may want to take control over how and when Apollo updates it's local cache. You can do this with the `updater` property on elements that extend from `ApolloMutation`
+When defining components that issue graphql mutations, you may want to take 
+control over how and when Apollo updates it's local cache. You can do this with 
+the `updater` property on elements that extend from `ApolloMutation`
 
 Say we had this mutation in `components/blog-post/BlogPost.mutation.graphql`:
 
-```graphql copy
-mutation BlogPostMutation($content: String) {
-  postBlogPost(content: $content) {
-    content
-    datePosted
-    summary
-    url
+<code-copy>
+
+  ```graphql
+  mutation BlogPostMutation($content: String) {
+    postBlogPost(content: $content) {
+      content
+      datePosted
+      summary
+      url
+    }
   }
-}
-```
+  ```
+
+</code-copy>
 
 And this component definition:
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <apollo-mutation>
     <template>
       <loading-overlay ?active="{%raw%}{{ loading }}{%endraw%}"></loading-overlay>
@@ -40,7 +52,10 @@ And this component definition:
   </apollo-mutation>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import type {
     BlogPostMutationData as Data,
     BlogPostMutationVariables as Variables
@@ -102,7 +117,10 @@ And this component definition:
   customElements.define('blog-post', BlogPost);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloMutationController } from '@apollo-elements/core';
   import { LitElement, html } from 'lit';
 
@@ -142,7 +160,10 @@ And this component definition:
   }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { FASTElement, html, ref, ViewTemplate } from '@microsoft/fast-element';
   import { ApolloMutationBehavior } from '@apollo-elements/fast';
 
@@ -185,7 +206,10 @@ And this component definition:
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useMutation, useState, component, html } from '@apollo-elements/haunted';
 
   import { BlogPostMutation } from './BlogPost.mutation.graphql';
@@ -222,7 +246,10 @@ And this component definition:
   customElements.define('blog-post', component(BlogPost));
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import { useMutation, useState, c } from '@apollo-elements/atomico';
 
   import { BlogPostMutation } from './BlogPost.mutation.graphql';
@@ -258,7 +285,10 @@ And this component definition:
   customElements.define('blog-post', c(BlogPost));
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { mutation, define, html } from '@apollo-elements/fast';
 
   import { BlogPostMutation } from './BlogPost.mutation.graphql';
@@ -300,36 +330,49 @@ And this component definition:
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-This will set `data` on `blog-post` just fine, but let's say that you had a `<blog-snippets>` element which shows the latest posts with this query:
+This will set `data` on `blog-post` just fine, but let's say that you had a 
+`<blog-snippets>` element which shows the latest posts with this query:
 
-```graphql copy
-query LatestPostsQuery {
-  posts(limit: 10) {
-    content
-    datePosted
-    summary
-    url
+<code-copy>
+
+  ```graphql
+  query LatestPostsQuery {
+    posts(limit: 10) {
+      content
+      datePosted
+      summary
+      url
+    }
   }
-}
-```
+  ```
+
+</code-copy>
 
 ## Refetch Queries After Mutating
-In that case, you could set the `refetchQueries` property on `<blog-post>` (either via the DOM, or using the `refetch-queries` attribute):
+In that case, you could set the `refetchQueries` property on `<blog-post>` 
+(either via the DOM, or using the `refetch-queries` attribute):
 
-```html copy
-<blog-post refetch-queries="LatestPosts"></blog-post>
-```
+<code-copy>
+
+  ```html
+  <blog-post refetch-queries="LatestPosts"></blog-post>
+  ```
+
+</code-copy>
 
 But that would mean an extra network round-trip that you might not need.
 
 ## Update the Cache Synchronously
-Instead, you can define an `updater` method on `BlogPost` which instructs the apollo cache how to handle the results of the `BlogPostMutation`.
+Instead, you can define an `updater` method on `BlogPost` which instructs the 
+apollo cache how to handle the results of the `BlogPostMutation`.
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <script>
     document.currentScript.getRootNode()
       .querySelector('apollo-mutation')
@@ -348,7 +391,10 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   /**
    * update function which reads a cached query result, merges
    * it with the mutation result, and then writes it back to the cache.
@@ -370,7 +416,10 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   }
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   mutation = new ApolloMutationController(this, BlogPostMutation, {
     /**
      * update function which reads a cached query result, merges
@@ -394,7 +443,10 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   })
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   mutation = new ApolloMutationBehavior(this, BlogPostMutation, {
     /**
      * update function which reads a cached query result, merges
@@ -418,7 +470,10 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   });
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import type { ResultOf } from '@graphql-typed-document-node/core';
   /**
    * update function which reads a cached query result, merges
@@ -453,7 +508,10 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   }
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import type { ResultOf } from '@graphql-typed-document-node/core';
   /**
    * update function which reads a cached query result, merges
@@ -488,7 +546,10 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   define('blog-post', {
     mutation: mutation(BlogPostMutation, {
       /**
@@ -514,15 +575,21 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
   })
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## Optimistic UI
 
-The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in this example are calculated by the server. If we know what they will be (or can offer a pretty good guess) at the moment we send the mutation, we can "optimistically" update the UI by setting the `optimisticResponse` property on our element:
+The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in 
+this example are calculated by the server. If we know what they will be (or can 
+offer a pretty good guess) at the moment we send the mutation, we can 
+"optimistically" update the UI by setting the `optimisticResponse` property on 
+our element:
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <script>
     document.currentScript.getRootNode()
       .querySelector('apollo-mutation')
@@ -539,7 +606,10 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   </script>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   optimisticResponse = variables => ({
     postBlogPost: {
       __typename: 'BlogPost',
@@ -552,7 +622,10 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   });
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   mutation = new ApolloMutationController(this, BlogPostMutation, {
     optimisticResponse: variables => ({
       postBlogPost: {
@@ -567,7 +640,10 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   });
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   mutation = new ApolloMutationBehavior(this, BlogPostMutation, {
     optimisticResponse: variables => ({
       postBlogPost: {
@@ -582,7 +658,10 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   });
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   function BlogPost() {
     const [datePosted, setDatePosted] = useState(new Date().toISOString());
     const [content, setContent] = useState('');
@@ -626,7 +705,10 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```ts
   function BlogPost() {
     const [datePosted, setDatePosted] = useState(new Date().toISOString());
     const [content, setContent] = useState('');
@@ -670,7 +752,10 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   define(name, {
     mutation: mutation(BlogPostMutation, {
       optimisticResponse: variables => ({
@@ -685,6 +770,11 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
-But what if the mutation fails? Apollo client's cache can roll back optimistic updates if the mutation fails. That way, as soon as the mutation is in flight, the cache will update once with the optimisticResponse, then if the mutation resolves, it will update again with the real data, and if the mutation rejects, it will roll the optimistic update back.
+But what if the mutation fails? Apollo client's cache can roll back optimistic 
+updates if the mutation fails. That way, as soon as the mutation is in flight, 
+the cache will update once with the optimisticResponse, then if the mutation 
+resolves, it will update again with the real data, and if the mutation rejects, 
+it will roll the optimistic update back.

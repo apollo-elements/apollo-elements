@@ -73,6 +73,7 @@ for new data:
 
 <code-tabs collection="libraries" default-tab="lit">
   <code-tab @tab="$data.codeTabs.html">
+  <template webc:raw>
 
   ```html
   <apollo-client id="messages-client">
@@ -121,8 +122,10 @@ for new data:
   </script>
   ```
 
+  </template>
   </code-tab>
   <code-tab @tab="$data.codeTabs.mixins">
+  <template webc:raw>
 
   ```js
   import { ApolloQueryMixin } from '@apollo-elements/mixins'
@@ -204,9 +207,8 @@ for new data:
 
   </template>
   </code-tab>
-
-  </code-tab>
   <code-tab @tab="$data.codeTabs.lit">
+  <template webc:raw>
 
   ```ts
   import { ApolloQueryController } from '@apollo-elements/core';
@@ -261,9 +263,10 @@ for new data:
   }
   ```
 
+  </template>
   </code-tab>
-
-  <code-tab @collection="libraries" @item="fast">
+  <code-tab @tab="$data.codeTabs.fast">
+  <template webc:raw>
 
   ```ts
   import { FASTElement, customElement, html, repeat } from '@microsoft/fast-element';
@@ -312,9 +315,10 @@ for new data:
   }
   ```
 
+  </template>
   </code-tab>
-
-  <code-tab @collection="libraries" @item="haunted">
+  <code-tab @tab=$data.codeTabs.haunted">
+  <template webc:raw>
 
   ```js
   import { useQuery, component, html } from '@apollo-elements/haunted';
@@ -364,9 +368,10 @@ for new data:
   customElements.define('messages-query', component(Messages));
   ```
 
+  </template>
   </code-tab>
-
-  <code-tab @collection="libraries" @item="atomico">
+  <code-tab @tab=$data.codeTabs.atomico">
+  <template webc:raw>
 
   ```jsx
   import { useQuery, c } from '@apollo-elements/atomico';
@@ -418,9 +423,10 @@ for new data:
   customElements.define('messages-query', c(Messages));
   ```
 
+  </template>
   </code-tab>
-
-  <code-tab @collection="libraries" @item="hybrids">
+  <code-tab @tab=$data.codeTabs.hybrids">
+  <template webc:raw>
 
   ```js
   import { define, query, html } from '@apollo-elements/hybrids';
@@ -470,6 +476,7 @@ for new data:
   });
   ```
 
+  </template>
   </code-tab>
 </code-tabs>
 
@@ -482,6 +489,7 @@ lifecycle events.
 
 <code-tabs collection="libraries" default-tab="lit">
   <code-tab @tab="$data.codeTabs.html">
+  <template webc:raw>
 
   ```html
   <apollo-client id="messages-client">
@@ -538,6 +546,7 @@ lifecycle events.
   </script>
   ```
 
+  </template>
   </code-tab>
   <code-tab @tab="$data.codeTabs.mixins">
 
