@@ -125,6 +125,7 @@ As such, you can only expect your component's `data` property to be truthy once 
 
 <code-tabs collection="libraries" default-tab="lit">
   <code-tab @tab="$data.codeTabs.html">
+    <template webc:raw>
 
   ```html
   <apollo-mutation>
@@ -159,6 +160,7 @@ As such, you can only expect your component's `data` property to be truthy once 
   </script>
   ```
 
+    </template>
   </code-tab>
   <code-tab @tab="$data.codeTabs.mixins">
 

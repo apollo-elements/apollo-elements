@@ -4,6 +4,7 @@ layout: html.webc
 <apollo-elements-header></apollo-elements-header>
 <apollo-elements-sidebar :@content="content"></apollo-elements-sidebar>
 <main>
+  <h1 :id="slugify(title)" @html="title"></h1>
   <template webc:nokeep @html="content"></template>
   <footer class="content-footer">
     <p>
@@ -14,8 +15,8 @@ layout: html.webc
   <template webc:type="11ty" 11ty:type="njk">{% footnotes %}</template>
 </main>
 <apollo-elements-footer></apollo-elements-footer>
-<noscript>
-  <link rel="stylesheet" href="/assets/static/search/noscript.css">
-  <link rel="stylesheet" href="/assets/static/noscript.css">
-  <style @raw="getBundle('css', 'noscript)" webc:keep></style>
-</noscript>
+
+<script type="module" webc:bucket="modules">
+  import '/assets/dsd.js';
+  import '/assets/components/code-copy.js';
+</script>

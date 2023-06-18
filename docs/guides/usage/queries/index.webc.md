@@ -7,35 +7,24 @@ templateEngineOverride: webc,md
 description: Use Apollo Elements to write high-performance GraphQL query components
 ---
 
-# Queries
-
 Query components combine a <abbr title="graph query language">GraphQL</abbr> 
-query with a [custom 
-element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements), 
-which you would usually define with a <abbr title="document object 
-  model">DOM</abbr> template and optionally some custom JavaScript behaviours. 
-In other words, each query component 
-[encapsulates](https://www.wikiwand.com/en/Encapsulation_(computer_programming)) 
-GraphQL *data* (the query) and <abbr title="hypertext markup 
-  language">HTML</abbr>/<abbr title="cascading style sheets">CSS</abbr>/<abbr 
-  title="javascript">JS</abbr> <abbr title="user interface">UI</abbr> (the 
-custom element).
+query with a [custom element][mdn-ce], which you would usually define with a 
+<abbr title="document object model">DOM</abbr> template and optionally some 
+custom JavaScript behaviours. In other words, each query component 
+[encapsulates][encap] GraphQL *data* (the query) and <abbr title="hypertext 
+  markup language">HTML</abbr>/<abbr title="cascading style 
+  sheets">CSS</abbr>/<abbr title="javascript">JS</abbr> <abbr title="user 
+  interface">UI</abbr> (the custom element).
 
-<inline-notification type="tip">
-
-This page is a HOW-TO guide. For detailed docs on the `ApolloQuery` interface 
-see the [API docs](/api/core/interfaces/query/)
-
-</inline-notification>
+<inline-notification type="tip">This page is a HOW-TO guide. For detailed docs 
+  on the `ApolloQuery` interface see the [API docs][api]</inline-notification>
 
 Queries are how your application reads data from the graph. You can think of 
 them as roughly analogous to <abbr title="hypertext transfer 
-  protocol">HTTP</abbr> [`GET` 
-requests](https://www.wikiwand.com/en/Hypertext_Transfer_Protocol#/Request_methods) 
-or <abbr title="structured query 
-  language">[SQL](https://www.wikiwand.com/en/SQL)</abbr> `READ` statements. A 
-query can have variables, e.g. "user, by user ID" or "posts, sorted by last 
-modified"; or it might not, e.g. "all users".
+  protocol">HTTP</abbr> [`GET` requests][getreq] or <abbr title="structured 
+  query language">[SQL][sql]</abbr> `READ` statements. A query can have 
+variables, e.g. "user, by user ID" or "posts, sorted by last modified"; or it 
+might not, e.g. "all users".
 
 By default, query components *automatically* fetch their data over the network 
 once they are added to the page, although you can [configure the fetching 
@@ -88,6 +77,7 @@ query's variables are static, adding a <abbr title="JavaScript Object
 start the query.
 
 <code-copy>
+  <template webc:raw>
 
   ```html
   <apollo-query>
@@ -118,6 +108,7 @@ start the query.
   </apollo-query>
   ```
 
+</template>
 </code-copy>
 
 Read more about `<apollo-query>` in the [`<apollo-query>` HTML element 
@@ -642,7 +633,7 @@ of the default behaviour by setting the `noAutoSubscribe` DOM property.
 
 
 Once you do, the element won't fetch any data unless you call its 
-[`subscribe()`](/api/core/interfaces/query/#subscribe) or 
+[`subscribe()`][subscribe] or 
 [`executeQuery()`](/api/core/interfaces/query/#executequery) methods.
 
 <code-copy>
@@ -671,16 +662,13 @@ presence indicates truthiness, and its absence indicates falsiness.
 
 </code-copy>
 
-<inline-notification type="warning">
-
-NOTE, the `no-auto-subscribe` attribute comes built-in for query class elements 
-e.g. `@apollo-elements/mixins/apollo-query-mixin.js` for 
-[controllers](/api/core/), [hybrids](/api/libraries/hybrids/) components or 
-[haunted](/api/libraries/haunted/) `useQuery` hooks, you can pass the 
-`noAutoSubscribe` option to the controller, but you'll be in charge of reading 
-the attribute yourself.
-
-</inline-notification>
+<inline-notification type="warning"> NOTE, the `no-auto-subscribe` attribute 
+  comes built-in for query class elements e.g. 
+  `@apollo-elements/mixins/apollo-query-mixin.js` for [controllers](/api/core/), 
+  [hybrids](/api/libraries/hybrids/) components or 
+  [haunted](/api/libraries/haunted/) `useQuery` hooks, you can pass the 
+  `noAutoSubscribe` option to the controller, but you'll be in charge of reading 
+  the attribute yourself.</inline-notification>
 
 ### Overriding `shouldSubscribe`
 
@@ -694,6 +682,7 @@ of a query param in the page URL:
 
 <code-tabs collection="libraries" default-tab="lit">
   <code-tab @tab="$data.codeTabs.html">
+    <template webc:raw>
 
    ```html
   <no-auto-fetch-query>...</no-auto-fetch-query>
@@ -714,6 +703,7 @@ of a query param in the page URL:
   </script>
   ```
 
+    </template>
   </code-tab>
   <code-tab @tab="$data.codeTabs.mixins">
 
@@ -832,18 +822,17 @@ of a query param in the page URL:
 
 ### Setting a `FetchPolicy`
 
-[Fetch 
-Policies](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy) 
-are how Apollo client internally manages query behaviour. The default fetch 
-policy for queries is `cache-first` meaning that Apollo client will first check 
-to see if a given operation (i.e. query-variables pair) already has complete 
-data in the cache. If so, it will *not* fetch over the network. Set the 
-`fetchPolicy` property on your component to configure.
+[Fetch Policies][fetchpolicies] are how Apollo client internally manages query 
+behaviour. The default fetch policy for queries is `cache-first` meaning that 
+Apollo client will first check to see if a given operation (i.e. query-variables 
+pair) already has complete data in the cache. If so, it will *not* fetch over 
+the network. Set the `fetchPolicy` property on your component to configure.
 
 <code-tabs collection="libraries" default-tab="lit">
   <code-tab @tab="$data.codeTabs.html">
+    <template webc:raw>
 
-  ```html tab html
+  ```html
   <apollo-query fetch-policy="cache-only">
     <script type="application/graphql">...</script>
 
@@ -851,10 +840,11 @@ data in the cache. If so, it will *not* fetch over the network. Set the
   </apollo-query>
   ```
 
+    </template>
   </code-tab>
   <code-tab @tab="$data.codeTabs.mixins">
 
-  ```ts tab mixins
+  ```ts
   import type { FetchPolicy } from '@apollo/client/core';
 
   class CacheOnlyQueryElement extends ApolloQueryMixin(HTMLElement)<typeof HeavySlowQuery> {
@@ -867,7 +857,7 @@ data in the cache. If so, it will *not* fetch over the network. Set the
   </code-tab>
   <code-tab @tab="$data.codeTabs.lit">
 
-  ```ts tab lit
+  ```ts
   export class HeavySlowQueryElement extends LitElement {
     query = new ApolloQueryController(this, HeavySlowQuery, {
       fetchPolicy: 'cache-only',
@@ -878,7 +868,7 @@ data in the cache. If so, it will *not* fetch over the network. Set the
   </code-tab>
   <code-tab @tab="$data.codeTabs.fast">
 
-  ```ts tab fast
+  ```ts
   class HeavySlowQueryElement extends FASTElement {
     query = new ApolloQueryBehavior(this, HeavySlowQuery, {
       fetchPolicy: 'cache-only',
@@ -923,13 +913,12 @@ data in the cache. If so, it will *not* fetch over the network. Set the
   </code-tab>
 </code-tabs>
 
-<code-tabs collection="libraries" default-tab="lit">
-
-</code-tabs>
-
-You can also use the `fetch-policy` attribute on individual elements (if they implement the ApolloElement interface, e.g. `<apollo-query>` or elements with `ApolloQueryMixin`):
+You can also use the `fetch-policy` attribute on individual elements (if they 
+implement the ApolloElement interface, e.g. `<apollo-query>` or elements with 
+`ApolloQueryMixin`):
 
 <code-copy>
+  <template webc:raw>
 
   ```html
 <apollo-query fetch-policy="network-only">
@@ -949,30 +938,50 @@ You can also use the `fetch-policy` attribute on individual elements (if they im
 </apollo-query>
   ```
 
+  </template>
 </code-copy>
 
 If you want your query to fire once over the network, but subsequently to only 
-use the client-side cache, use the 
-[`nextFetchPolicy`](/api/core/interfaces/query/#nextfetchpolicy) property.
+use the client-side cache, use the [`nextFetchPolicy`][nextfetchpolicy] 
+property.
 
 If you want your component to automatically subscribe, but only if its required 
-variables are present, see [Validating 
-Variables](/guides/cool-tricks/validating-variables/).
+variables are present, see [Validating Variables][validate-vars].
 
 ## Reacting to Updates
-As we've seen query elements set their `data` property whenever the query resolves. For vanilla components, you should define a data setter that renders your DOM, and for each library (`lit`, `FAST`, `hybrids`, etc.), their differing reactivity systems ensure that your element renders when the data changes.
+As we've seen query elements set their `data` property whenever the query 
+resolves. For vanilla components, you should define a data setter that renders 
+your DOM, and for each library (`lit`, `FAST`, `hybrids`, etc.), their differing 
+reactivity systems ensure that your element renders when the data changes.
 
 If you want to run other side effects, here are some options:
 
 - use your library's reactivity system, e.g. `updated` for Lit
-- define [`onData`](/api/core/interfaces/query/lifecycle/#ondata) callback
-- listen for the `apollo-query-result` and `apollo-error` [events](/api/core/interfaces/query/lifecycle/#events)
-- call the [`executeQuery`](/api/core/interfaces/query/#executequery) method and `await` it's result.
+- define [`onData`][ondata] callback
+- listen for the `apollo-query-result` and `apollo-error` [events][query-events]
+- call the [`executeQuery`][execute-query] method and `await` it's result.
 
-For more information, see [query element lifecycle](/api/core/interfaces/query/lifecycle/)
+For more information, see [query element lifecycle][query-lifecycle]
 
 ## Next Steps
 
-Read about the [`<apollo-query>` HTML element](/guides/usage/queries/html/),
-dive into the [`ApolloQuery` API](/api/core/interfaces/query/) and [component lifecycle](/api/core/interfaces/query/lifecycle/)
-or continue on to the [mutations guide](/guides/usage/mutations/).
+Read about the [`<apollo-query>` HTML element][query-el],
+dive into the [`ApolloQuery` API][api] and [component 
+lifecycle][query-lifecycle]
+or continue on to the [mutations guide][mutations].
+
+[api]: /api/core/interfaces/query/
+[query-el]: /guides/usage/queries/html/
+[query-lifecycle]: /api/core/interfaces/query/lifecycle/
+[query-events]: /api/core/interfaces/query/lifecycle/#events
+[mutations]: /guides/usage/mutations/
+[ondata]: /api/core/interfaces/query/lifecycle/#ondata
+[execute-query]: /api/core/interfaces/query/#executequery
+[validate-vars]: /guides/cool-tricks/validating-variables/
+[nextfetchpolicy]: /api/core/interfaces/query/#nextfetchpolicy
+[fetchpolicies]: https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy
+[subscribe]: /api/core/interfaces/query/#subscribe
+[mdn-ce]: https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
+[encap]: https://www.wikiwand.com/en/Encapsulation_(computer_programming)
+[getreq]: https://www.wikiwand.com/en/Hypertext_Transfer_Protocol#/Request_methods
+[sql]: https://www.wikiwand.com/en/SQL

@@ -38,6 +38,11 @@
     <script webc:if="importMap" async src="https://ga.jspm.io/npm:es-module-shims@1.7.3/dist/es-module-shims.js" crossorigin="anonymous" webc:keep></script>
     <script :type="'module'" :src="getBundleFileUrl('js', 'modules')" webc:keep></script>
     <!--- <script @raw="getBundle('js')" webc:keep></script> --->
+    <noscript>
+      <link rel="stylesheet" href="/assets/static/search/noscript.css">
+      <link rel="stylesheet" href="/assets/static/noscript.css">
+      <style @raw="getBundle('css', 'noscript')" webc:keep></style>
+    </noscript>
   </head>
   <body @html="content"></body>
 </html>

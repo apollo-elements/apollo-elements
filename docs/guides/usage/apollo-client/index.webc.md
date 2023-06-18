@@ -7,8 +7,6 @@ templateEngineOverride: webc,md
 description: How to set up Apollo Client for use with Apollo Elements
 ---
 
-# Apollo Client
-
 Before your components can interact with your graph, they need to connect to an 
 `ApolloClient` instance. The easiest and simplest way to do that is with 
 `<apollo-client>`.
@@ -34,6 +32,7 @@ that does not have all its non-nullable variables set.
 Nested instances of `<apollo-client>` will control their own decendents
 
 <code-copy>
+
 ```html
 <apollo-client uri="/server-a">
   <query-element>
@@ -48,6 +47,7 @@ Nested instances of `<apollo-client>` will control their own decendents
 
 </apollo-client>
 ```
+
 </code-copy>
 
 See [`<apollo-client>` guide](./html/) for more info and examples.
@@ -57,10 +57,12 @@ See [`<apollo-client>` guide](./html/) for more info and examples.
 If you assign your client to the global variable `window.__APOLLO_CLIENT__`, all the apollo elements in your app will connect to it. This is also the variable that Apollo Client Developer Tools use to connect to the client.
 
 <code-copy>
+
 ```ts
 import { client } from './global-apollo-client';
 window.__APOLLO_CLIENT__ = client;
 ```
+
 </code-copy>
 
 If you'd prefer to avoid assigning to the `window`, you have more options...
@@ -171,15 +173,19 @@ Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your
 components' classes to connect them to a specific client:
 
 <code-tabs collection="libraries" default-tab="lit">
+  <code-tab @tab="$data.codeTabs.html">
 
-  ```html tab html
+  ```html
   <blink>
   There is no equivalent of <code>ApolloClientMixin</code> for HTML,
   so just use the <code>&lt;apollo-client&gt;</code> element.
   </blink>
   ```
 
-  ```ts tab mixins
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.mixins">
+
+  ```ts
   import { ApolloClientMixin, ApolloQueryMixin } from '@apollo-elements/mixins';
 
   import { client } from './specific-apollo-client';
@@ -195,7 +201,10 @@ components' classes to connect them to a specific client:
   customElements.define('connected-query', ConnectedQuery);
   ```
 
-  ```ts tab lit
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.lit">
+
+  ```ts
   import { ApolloClientMixin } from '@apollo-elements/mixins/apollo-client-mixin';
   import { ApolloQuery, customElement } from '@apollo-elements/lit-apollo';
   import { client } from './specific-apollo-client';
@@ -210,7 +219,10 @@ components' classes to connect them to a specific client:
   export class ConnectedQuery extends Base<Data, Variables> { /* ... */ }
   ```
 
-  ```ts tab fast
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.fast">
+
+  ```ts
   import { ApolloClientMixin } from '@apollo-elements/mixins/apollo-client-mixin';
   import { ApolloQuery } from '@apollo-elements/fast/bases/apollo-query';
   import { customElement, ViewTemplate } from '@apollo-elements/fast';
@@ -226,7 +238,10 @@ components' classes to connect them to a specific client:
   export class ConnectedQuery extends Base<any> { /* ... */ }
   ```
 
-  ```ts tab haunted
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.haunted">
+
+  ```ts
   import { useQuery } from '@apollo-elements/haunted';
   import { client } from './specific-apollo-client';
 
@@ -238,7 +253,10 @@ components' classes to connect them to a specific client:
   }
   ```
 
-  ```tsx tab atomico
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.atomico">
+
+  ```tsx
   import { useQuery } from '@apollo-elements/atomico';
   import { client } from './specific-apollo-client';
 
@@ -251,7 +269,10 @@ components' classes to connect them to a specific client:
   }
   ```
 
-  ```ts tab hybrids
+  </code-tab>
+  <code-tab @tab="$data.codeTabs.hybrids">
+
+  ```ts
   import { query, define, html } from '@apollo-elements/hybrids';
   import { client as apolloClient } from './specific-apollo-client';
 
@@ -263,6 +284,7 @@ components' classes to connect them to a specific client:
   });
   ```
 
+  </code-tab>
 </code-tabs>
 
 ## Next Steps

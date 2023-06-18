@@ -27,7 +27,8 @@ GraphQL helps you model your frontend's data in terms of queries.
   <figcaption>GraphQL: Query to Data</figcaption>
   <dl class="to" id="query-to-data">
     <dt>
-      <syntax-highlight language="graphql">
+
+```graphql
 query Users {
   users {
     id
@@ -35,19 +36,22 @@ query Users {
     picture
   }
 }
-      </syntax-highlight>
+```
+
     </dt>
     <dd>
-      <syntax-highlight language="json">
-      {
-        "data": {
-          "users": [
-            { "id": 1, "name": "Neil", "picture": "/avatars/neil.png" },
-            { "id": 2, "name": "Buzz", "picture": "/avatars/buzz.png" }
-          ]
-        }
-      }
-      </syntax-highlight>
+
+```json
+{
+  "data": {
+    "users": [
+      { "id": 1, "name": "Neil", "picture": "/avatars/neil.png" },
+      { "id": 2, "name": "Buzz", "picture": "/avatars/buzz.png" }
+    ]
+  }
+}
+```
+
     </dd>
   </dl>
 </figure>
@@ -70,7 +74,8 @@ large dashboard app.
   <figcaption>Apollo Elements: Query to UI</figcaption>
   <dl class="to" id="query-to-ui">
     <dt>
-      <syntax-highlight language="graphql">
+
+```graphql
 query Users {
   users {
     id
@@ -78,7 +83,8 @@ query Users {
     picture
   }
 }
-      </syntax-highlight>
+```
+
     </dt>
     <dd>
 
@@ -99,7 +105,12 @@ query Users {
 
 ## Many Paths to Success
 
-With Apollo Elements, you can write declarative templates and styles for your component in HTML, or you can leverage your favourite web-components library to write your own custom query, mutation, or subscription component. Apollo Elements coordinates between your UI library of choice (or your declarative HTML template) and the Apollo client. Add your query, template, styles, and custom behaviours to Apollo Elements' components, base classes, or helpers functions.
+With Apollo Elements, you can write declarative templates and styles for your 
+component in HTML, or you can leverage your favourite web-components library to 
+write your own custom query, mutation, or subscription component. Apollo 
+Elements coordinates between your UI library of choice (or your declarative HTML 
+template) and the Apollo client. Add your query, template, styles, and custom 
+behaviours to Apollo Elements' components, base classes, or helpers functions.
 
 The tabs below demonstrate multiple ways to write the same query component:
 
@@ -121,11 +132,11 @@ or set the `query` DOM property on the element -->
     </script>
     <template>
       <h2>Astronauts</h2>
-      <template type="repeat" repeat="{%raw%}{{ data.users }}{%endraw%}">
-        <astro-naut id="{%raw%}{{ item.id }}{%endraw%}" name="{%raw%}{{ 
-          item.name }}{%endraw%}">
-          <img src="{%raw%}{{ item.picture }}{%endraw%}"
-            alt="Portrait of {%raw%}{{ item.name }}{%endraw%}"/>
+      <template type="repeat" repeat="{{ data.users }}">
+        <astro-naut id="{{ item.id }}" name="{{ 
+          item.name }}">
+          <img src="{{ item.picture }}"
+            alt="Portrait of {{ item.name }}"/>
         </astro-naut>
       </template>
     </template>
@@ -348,14 +359,17 @@ or set the `query` DOM property on the element -->
   </code-tab>
 </code-tabs>
 
-Apollo Elements doesn't lock you in to one way of working. You can build an app's components piecemeal from several different libraries using multiple different paradigms, and they can all consume each other, communicate with each other, and coexist with one another, and couldn't we use some more of that?
+Apollo Elements doesn't lock you in to one way of working. You can build an 
+app's components piecemeal from several different libraries using multiple 
+different paradigms, and they can all consume each other, communicate with each 
+other, and coexist with one another, and couldn't we use some more of that?
 
 ## Next Steps
 - Learn how to use [GraphQL query components](./queries/) to fetch and display your app's data
 - Learn how to use [GraphQL mutation components](./mutations/) to make changes to your data graph
 - Learn how to use [GraphQL subscription components](./subscriptions/) to add real-time updates to your app
 
-<style data-helmet>
+<style>
   .icon.space-capsule {
     float: right;
     opacity: 0.75;

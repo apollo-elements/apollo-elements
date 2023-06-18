@@ -26,21 +26,21 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addExtension('playground.html', { compile, compileOptions, getData });
   eleventyConfig.addExtension('playground.css', { compile, compileOptions, getData });
   eleventyConfig.addExtension('playground.graphql', { compile, compileOptions, getData });
-  eleventyConfig.addTransform('playground-html', function(content) {
-    if (this.page.inputPath.endsWith?.('webc') && this.page.outputPath && this.page.outputPath.endsWith('html')) {
-      const $ = require('cheerio').load(content)
-      $('script[type=sample/html], code-tab').each(function() {
-        const s = $(this);
-        const text = s.text();
-        s.text(text
-          .replaceAll('&amp;lt;', '<')
-          .replaceAll('&lt;', '<')
-          .replaceAll('&gt;', '>')
-          .replaceAll('</script>', '&lt;/script>')
-        );
-      })
-      return $.html();
-    }
-    return content
-  });
+  // eleventyConfig.addTransform('playground-html', function(content) {
+  //   if (this.page.inputPath.endsWith?.('webc') && this.page.outputPath && this.page.outputPath.endsWith('html')) {
+  //     const $ = require('cheerio').load(content)
+  //     $('script[type=sample/html], code-tab').each(function() {
+  //       const s = $(this);
+  //       const text = s.text();
+  //       s.text(text
+  //         .replaceAll('&amp;lt;', '<')
+  //         .replaceAll('&lt;', '<')
+  //         .replaceAll('&gt;', '>')
+  //         .replaceAll('</script>', '&lt;/script>')
+  //       );
+  //     })
+  //     return $.html();
+  //   }
+  //   return content
+  // });
 }

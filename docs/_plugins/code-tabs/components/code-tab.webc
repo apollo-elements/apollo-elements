@@ -8,8 +8,8 @@
 
 </code-tab>
 
-<script type="module" webc:bundle="modules">
-import '/assets/components/code-tab.js';
+<script>
+import('/assets/components/code-tab.js');
 </script>
 
 

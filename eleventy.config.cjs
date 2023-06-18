@@ -22,10 +22,6 @@ const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
 const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
 
-// Rocket
-// const Nav = require('./docs/_plugins/nav/nav.cjs');
-// const RocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
-
 const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
 module.exports = function(eleventyConfig) {
@@ -45,14 +41,21 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter('formatDate', date =>
     date instanceof Date ? date.toDateString() : date);
 
-  // eleventyConfig.addPlugin(RocketCollections);
-  // eleventyConfig.addPlugin(Nav);
   eleventyConfig.addPlugin(TocPlugin);
   eleventyConfig.addPlugin(Footnotes);
   eleventyConfig.addPlugin(Icons);
   eleventyConfig.addPlugin(Playgrounds);
   eleventyConfig.addPlugin(EleventyNavigationPlugin);
-  eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight);
+  eleventyConfig.addPlugin(EleventyPluginSyntaxHighlight, {
+    init() {
+      require('prismjs/components/index')(['html']);
+      require('prismjs/components/index')(['regex']);
+      require('prismjs/components/index')(['js-templates']);
+      require('prismjs/components/index')(['javascript']);
+      require('prismjs/components/index')(['graphql']);
+    },
+  });
+
 
   eleventyConfig.addPlugin(CodeTabs, {
     tabs: {
@@ -91,6 +94,7 @@ module.exports = function(eleventyConfig) {
       'playground-elements',
     ],
   });
+
   eleventyConfig.addPlugin(LitPlugin, {
     mode: 'worker',
     componentModules: [
