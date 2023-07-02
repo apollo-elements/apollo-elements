@@ -7,8 +7,6 @@ templateEngineOverride: webc,md
 description: Use Apollo Elements to manage the Apollo client cache after GraphQL mutations
 ---
 
-# Cache Management
-
 When defining components that issue graphql mutations, you may want to take 
 control over how and when Apollo updates it's local cache. You can do this with 
 the `updater` property on elements that extend from `ApolloMutation`
