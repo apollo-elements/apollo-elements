@@ -1,11 +1,10 @@
 ---
-title: apollo-query-element
+title: "<apollo-query> element"
 permalink: /guides/usage/queries/html/index.html
 eleventyNavigation:
   order: 20
 templateEngineOverride: webc,md
 ---
-# apollo-query Element
 
 Use the `<apollo-query>` element from `@apollo-elements/components` to write 
 declarative query elements in HTML. You can mix-and-match these elements in your 
@@ -28,40 +27,38 @@ What that means is you can define the element's dynamic template using good-old
 HTML:
 
 <code-copy>
-  <template webc:raw>
 
-  ```html
-  <apollo-query>
-    <script type="application/json">
-      query Notifications {
-      me { id name }
-      notifications { href title }
+```html
+<apollo-query webc:raw>
+  <script type="application/graphql">
+  query Notifications {
+    me { id name }
+    notifications { href title }
+  }
+  </script>
+
+  <template>
+    <style>
+    :host([loading]) {
+      opacity: 0;
     }
-    </script>
+    </style>
 
-    <template>
-      <style>
-        :host([loading]) {
-          opacity: 0;
-        }
-      </style>
+    <link rel="stylesheet" href="/components/notifications.css">
 
-      <link rel="stylesheet" href="/components/notifications.css">
-
-      <h2>Welcome, {{ data.me.name }}!</h2>
-      <p>You have {{ data.notifications.length }} notifications.</p>
-      <ol class="notifications-list">
-        <template type="repeat" repeat="{{ data.notifications }}">
-          <li>
-            <a href="{{ item.href }}">{{ item.title }}</a>
-          </li>
-        </template>
-        <ol>
-    </template>
-  </apollo-query>
-  ```
-
+    <h2>Welcome, {{ data.me.name }}!</h2>
+    <p>You have {{ data.notifications.length }} notifications.</p>
+    <ol class="notifications-list">
+      <template type="repeat" repeat="{{ data.notifications }}">
+        <li>
+          <a href="{{ item.href }}">{{ item.title }}</a>
+        </li>
+      </template>
+      <ol>
   </template>
+</apollo-query>
+```
+
 </code-copy>
 
 ## Template Expressions
@@ -90,6 +87,7 @@ Bind to element content by adding an expression as a child of the element.
 ```
 
 ### Attribute Binding
+
 You can bind to attributes by adding an expression in an attribute position. For 
 boolean attributes (where their presence indicates `true` and their absence 
 `false`), prefix a `?` to the attribute name.
@@ -108,6 +106,7 @@ boolean attributes (where their presence indicates `true` and their absence
 
 ### Property Binding
 Bind to DOM properties by prefixing `.` to the property name.
+
 ```html
 <apollo-query>
   <template>
@@ -148,8 +147,8 @@ You can set the `templateHanders` property on an `<apollo-query>` element to
 customize rendering behaviour by adding your own custom template types.
 
 <inline-notification type="warning">
-  <p>The Stampino API is still undergoing revision. For advanced usages, we 
-    recommend writing a custom element class for now.</p>
+  The Stampino API is still undergoing revision. For advanced usages, we 
+  recommend writing a custom element class for now.
 </inline-notification>
 
 ```html

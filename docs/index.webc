@@ -1,3 +1,9 @@
+---
+layout: root.webc
+eleventyImport:
+  collections:
+    - icon
+---
 <style>
 main {
   padding-block-start: 50px;

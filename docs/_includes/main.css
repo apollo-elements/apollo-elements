@@ -43,6 +43,9 @@
   --teal-900: #004d40;
   --yellow-300: #FFF176;
 
+  /* root layout */
+  --main-padding-inline: calc((100vw - 1200px) / 2 + 20px);
+
   /* theme */
   --primary-color-accent: var(--blue-grey-100);
   --primary-color-darker: var(--purple-700);
@@ -188,7 +191,6 @@ main {
   max-width: 1200px;
   position: relative;
   min-width: 0;
-  margin-block-start: 40px;
   margin-inline: auto;
   padding-inline: 20px;
 }

@@ -1,9 +1,13 @@
 ---
 layout: html.webc
+eleventyImport:
+  collections:
+  - icon
 ---
 <apollo-elements-header></apollo-elements-header>
 <main @html="content"></main>
 <apollo-elements-footer></apollo-elements-footer>
+
 <noscript>
   <link rel="stylesheet" href="/assets/static/search/noscript.css">
   <link rel="stylesheet" href="/assets/static/noscript.css">

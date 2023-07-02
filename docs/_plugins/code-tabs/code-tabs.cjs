@@ -1,21 +1,31 @@
 const { default: hirestime } = require('hirestime');
-const { join } = require('node:path');
+const { join, dirname } = require('node:path');
 const { cp } = require('node:fs/promises');
+const fs = require('node:fs');
 
 /** @param {import('@11ty/eleventy/src/UserConfig')} */
 module.exports = function(eleventyConfig, options) {
-  eleventyConfig.addWatchTarget('docs/_plugins/code-tabs/components/');
+  eleventyConfig.addWatchTarget(join(__dirname, 'components/*.webc'));
   eleventyConfig.addGlobalData('codeTabs',
     Object.fromEntries(
       Object.entries(options?.tabs ?? {})
         .map(([id, tab]) => [id, ({ id, ...tab })]),
     ));
+  eleventyConfig.addJavaScriptFunction('readFileSync', function(src) {
+    return fs.readFileSync(src, 'utf8');
+  });
+  eleventyConfig.addJavaScriptFunction('resolveRelativeToInput', function(src, page) {
+    return join(dirname(page.inputPath), src);
+  });
   eleventyConfig.on('eleventy.before', async function() {
     const esbuild = await import('esbuild');
     const { default: chalk } = await import('chalk');
+    const { yellow, blue, bold } = chalk;
     const { litCssPlugin } = await import('esbuild-plugin-lit-css');
 
-    console.log(chalk.yellow`[code-tabs] ${chalk.blue`Building ${chalk.bold`<code-tabs>`}...`}`);
+    console.log(
+      yellow`[code-tabs] ${blue`Building ${bold`<code-tabs>`}...`}`,
+    );
 
     const time = hirestime();
 

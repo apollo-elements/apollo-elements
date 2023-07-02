@@ -44,5 +44,15 @@
       <style @raw="getBundle('css', 'noscript')" webc:keep></style>
     </noscript>
   </head>
-  <body @html="content"></body>
+  <body>
+    <template webc:nokeep @html="content"></template>
+    <svg id="icon-sprite-sheet" aria-hidden="true">
+      <defs>
+        <g webc:for="entry of Array.from(getIcons($data.page).entries())"
+            :id="`${entry[0]}-icon`"
+            @html="entry[1]"
+        ></g>
+      </defs>
+    </svg>
+  </body>
 </html>

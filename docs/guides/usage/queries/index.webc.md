@@ -2,29 +2,38 @@
 title: Queries
 permalink: /guides/usage/queries/index.html
 eleventyNavigation:
-  order: 20
+  order: 10
 templateEngineOverride: webc,md
 description: Use Apollo Elements to write high-performance GraphQL query components
 ---
 
 Query components combine a <abbr title="graph query language">GraphQL</abbr> 
-query with a [custom element][mdn-ce], which you would usually define with a 
-<abbr title="document object model">DOM</abbr> template and optionally some 
-custom JavaScript behaviours. In other words, each query component 
-[encapsulates][encap] GraphQL *data* (the query) and <abbr title="hypertext 
-  markup language">HTML</abbr>/<abbr title="cascading style 
-  sheets">CSS</abbr>/<abbr title="javascript">JS</abbr> <abbr title="user 
-  interface">UI</abbr> (the custom element).
+query with a [custom 
+element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements), 
+which you would usually define with a <abbr title="document object 
+  model">DOM</abbr> template and optionally some custom JavaScript behaviours. 
+In other words, each query component 
+[encapsulates](https://www.wikiwand.com/en/Encapsulation_(computer_programming)) 
+GraphQL *data* (the query) and <abbr title="hypertext markup 
+  language">HTML</abbr>/<abbr title="cascading style sheets">CSS</abbr>/<abbr 
+  title="javascript">JS</abbr> <abbr title="user interface">UI</abbr> (the 
+custom element).
 
-<inline-notification type="tip">This page is a HOW-TO guide. For detailed docs 
-  on the `ApolloQuery` interface see the [API docs][api]</inline-notification>
+<inline-notification>
+
+This page is a HOW-TO guide. For detailed docs on the `ApolloQuery` interface 
+see the [API docs](/api/core/interfaces/query/)
+
+</inline-notification>
 
 Queries are how your application reads data from the graph. You can think of 
 them as roughly analogous to <abbr title="hypertext transfer 
-  protocol">HTTP</abbr> [`GET` requests][getreq] or <abbr title="structured 
-  query language">[SQL][sql]</abbr> `READ` statements. A query can have 
-variables, e.g. "user, by user ID" or "posts, sorted by last modified"; or it 
-might not, e.g. "all users".
+  protocol">HTTP</abbr> [`GET` 
+requests](https://www.wikiwand.com/en/Hypertext_Transfer_Protocol#/Request_methods) 
+or <abbr title="structured query 
+  language">[SQL](https://www.wikiwand.com/en/SQL)</abbr> `READ` statements. A 
+query can have variables, e.g. "user, by user ID" or "posts, sorted by last 
+modified"; or it might not, e.g. "all users".
 
 By default, query components *automatically* fetch their data over the network 
 once they are added to the page, although you can [configure the fetching 
@@ -45,15 +54,11 @@ or via `@rollup/plugin-graphql`, etc. See the [buildless
 development](/guides/getting-started/buildless-development/) guide for more 
 info.
 
-<code-copy>
-
-  ```graphql
-  query HelloQuery {
-    hello { name greeting }
-  }
-  ```
-
-</code-copy>
+```graphql copy
+query HelloQuery {
+  hello { name greeting }
+}
+```
 
 Apollo Elements give you three ways to define query components:
 1. Using the `<apollo-query>` HTML element
@@ -76,49 +81,42 @@ query's variables are static, adding a <abbr title="JavaScript Object
   Notation">JSON</abbr> script as a child of the element to initialize them and 
 start the query.
 
-<code-copy>
-  <template webc:raw>
-
-  ```html
-  <apollo-query>
-    <script type="application/graphql">
-      query HelloQuery($name: String, $greeting: String) {
-        helloWorld(name: $name, greeting: $greeting) {
-          name
-          greeting
-        }
+```html copy
+<apollo-query>
+  <script type="application/graphql">
+    query HelloQuery($name: String, $greeting: String) {
+      helloWorld(name: $name, greeting: $greeting) {
+        name
+        greeting
       }
-    </script>
+    }
+  </script>
 
-    <script type="application/json">
-      {
-        "greeting": "How's it going",
-        "name": "Dude"
-      }
-    </script>
+  <script type="application/json">
+    {
+      "greeting": "How's it going",
+      "name": "Dude"
+    }
+  </script>
 
-    <template>
-      <style>
-        #greeting { font-weight: bold; }
-        #name { font-style: italic; }
-      </style>
-      <span id="greeting">{{ data.helloWorld.greeting }}</span>,
-      <span id="greeting">{{ data.helloWorld.name }}</span>,
-    </template>
-  </apollo-query>
-  ```
+  <template>
+    <style>
+      #greeting { font-weight: bold; }
+      #name { font-style: italic; }
+    </style>
+    <span id="greeting">{%raw%}{{ data.helloWorld.greeting }}{%endraw%}</span>,
+    <span id="greeting">{%raw%}{{ data.helloWorld.name }}{%endraw%}</span>,
+  </template>
+</apollo-query>
+```
 
-</template>
-</code-copy>
+Read more about `<apollo-query>` in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/).
 
-Read more about `<apollo-query>` in the [`<apollo-query>` HTML element 
-guide](/guides/usage/queries/html/).
-
-<!-- ## TODO: query controller  -->
+<!--- ## TODO: query controller  --->
 
 ## Custom Query Elements
 
-<!-- maintain links to the old heading -->
+<!--- maintain links to the old heading --->
 <a id="query-elements"></a>
 
 Apollo Elements gives you multiple options for defining your own custom query 
@@ -136,13 +134,9 @@ In any case, setting your element's query property or class field (or using
 can change the query via the `query` DOM property at any time to reinitialize 
 the subscription.
 
-<code-copy>
-
-  ```js copy
-  document.querySelector('hello-query').query = HelloQuery;
-  ```
-
-</code-copy>
+```js copy
+document.querySelector('hello-query').query = HelloQuery;
+```
 
 Apollo client ensures that the component always has the latest data by {% 
 footnoteref "observablequery", "This is different from <a 
@@ -164,212 +158,29 @@ property is true). The following example shows how a simple query element
 written with different component libraries (or none) renders it's state.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-
-  ```html
-  <apollo-query>
-    <script type="application/graphql">
-      query HelloQuery {
-        hello { name greeting }
-      }
-    </script>
-    <template>
-      <article class="{{ loading ? 'skeleton' : '' }}">
-        <p id="error" ?hidden="{{ !error }}">{{ error.message }}</p>
-        <p>
-          {{ data.greeting || 'Hello' }},
-          {{ data.name || 'Friend' }}
-        </p>
-      </article>
-    </template>
-  </apollo-query>
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```ts
-  import { ApolloQueryMixins } from '@apollo-elements/mixins/apollo-query-mixin';
-
-  import HelloQuery from './Hello.query.graphql';
-
-  const template = document.createElement('template');
-  template.innerHTML = `
-    <article class="skeleton">
-      <p id="error" hidden></p>
-      <p id="data"></p>
-    </article>
-  `;
-
-  template.content.querySelector('#data').append(new Text('Hello'));
-  template.content.querySelector('#data').append(new Text(', '));
-  template.content.querySelector('#data').append(new Text('Friend'));
-  template.content.querySelector('#data').append(new Text('!'));
-
-  export class HelloQueryElement extends
-  ApolloQueryMixin(HTMLElement)<Data, Variables> {
-    query = HelloQuery;
-
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' })
-        .append(template.content.cloneNode(true));
-      this.render();
-    }
-
-    $(selector) { return this.shadowRoot.querySelector(selector); }
-
-    #data: Data = null;
-    get data() { return this.#data; }
-    set data(value: Data) { this.#data = value; this.render(); }
-
-    #loading = false;
-    get loading() { return this.#loading; }
-    set loading(value: boolean) { this.#loading = value; this.render(); }
-
-    #error: Error | ApolloError = null;
-    get error() { return this.#error; }
-    set error(value: ApolloError) { this.#error = value; this.render(); }
-
-    render() {
-      if (this.loading)
-        this.$('article').classList.add('skeleton');
-      else
-        this.$('article').classList.remove('skeleton');
-
-      if (this.error) {
-        this.$('#error').hidden = false;
-        this.$('#error').textContent = this.error.message;
-      } else {
-        this.$('#error').hidden = true;
-        const [greetingNode, , nameNode] = this.$('#data').childNodes;
-        greetingNode.data = this.data?.hello?.greeting ?? 'Hello';
-        nameNode.data = this.data?.hello?.name ?? 'Friend';
-      }
-    }
-  }
-
-  customElements.define('hello-query', HelloQueryElement);
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  import { ApolloQueryController } from '@apollo-elements/core';
-  import { LitElement, html } from 'lit';
-  import { customElement } from 'lit/decorators.js';
-  import { HelloQuery } from './Hello.query.graphql';
-
-  @customElement('hello-query')
-  export class HelloQueryElement extends LitElement {
-    query = new ApolloQueryController(this, HelloQuery);
-
-    render() {
-      return html`
-        <article class=${classMap({ skeleton: this.query.loading })}>
-          <p id="error" ?hidden=${!this.query.error}>${this.query.error?.message}</p>
-          <p>
-            ${this.query.data?.greeting ?? 'Hello'},
-            ${this.query.data?.name ?? 'Friend'}
-          </p>
-        </article>
-      `;
-    }
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```ts
-  import { useQuery, component, html } from '@apollo-elements/haunted';
-  import { classMap } from 'lit/directives/class-map.js';
-  import { HelloQuery } from './Hello.query.graphql';
-
-  function HelloQueryElement() {
-    const { data, loading, error } = useQuery(HelloQuery, { noAutoSubscribe: true });
-
-    const greeting = data?.hello?.greeting ?? 'Hello';
-    const name = data?.hello?.name ?? 'Friend';
-
-    return html`
-      <article class=${classMap({ loading })}>
-        <p id="error" ?hidden=${!error}>${error?.message}</p>
-        <p>${greeting}, ${name}!</p>
-      </article>
-    `;
-  }
-
-  customElements.define('hello-query', component(Hello));
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```jsx
-  import { useQuery, c } from '@apollo-elements/atomico';
-  import { HelloQuery } from './Hello.query.graphql';
-
-  function HelloQueryElement() {
-    const { data, loading, error } = useQuery(HelloQuery, { noAutoSubscribe: true });
-
-    const greeting = data?.hello?.greeting ?? 'Hello';
-    const name = data?.hello?.name ?? 'Friend';
-
-    return (
-      <host shadowDom>
-        <article class={loading ? 'loading' : ''}>
-          <p id="error" hidden={!error}>{error?.message}</p>
-          <p>{greeting}, {name}!</p>
-        </article>
-      </host>
-    );
-  }
-
-  customElements.define('hello-query', c(Hello));
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```ts
-  import { client, query, define, html } from '@apollo-elements/hybrids';
-  import { HelloQuery } from './Hello.query.graphql';
-
-  define('hello-query', {
-    client: client(),
-    query: query(HelloQuery),
-    render: ({ data, error, loading }) => html`
-      <article class=${loading ? 'skeleton' : ''}>
-        <p id="error" hidden=${!error}>${error?.message}</p>
-        <p>
-          ${data?.hello?.greeting ?? 'Hello'},
-          ${data?.hello?.name ?? 'Friend'}
-        </p>
-      </article>
-    `,
-  });
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/rendering/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/rendering/mixins.ts"></code-tab>
+  <code-tab tab-id="lit" src="snippets/rendering/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/rendering/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/rendering/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/rendering/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/rendering/hybrids.js"></code-tab>
 </code-tabs>
 
 ## Query Variables
 
-Some queries have variables, which you can use to customize the response from 
-the GraphQL server:
+Some queries have variables, which you can use to customize the response from the GraphQL server:
 
 <code-copy>
 
-  ```graphql
-  query HelloQuery($name: String, $greeting: String) {
-    helloWorld(name: $name, greeting: $greeting) {
-      name
-      greeting
-    }
+```graphql
+query HelloQuery($name: String, $greeting: String) {
+  helloWorld(name: $name, greeting: $greeting) {
+    name
+    greeting
   }
-  ```
+}
+```
 
 </code-copy>
 
@@ -381,12 +192,12 @@ the query arguments:
 
 <code-copy>
 
-  ```js
-  root.querySelector('hello-query').variables = {
-    greeting: "How's it going",
-    name: 'Dude'
-  };
-  ```
+```js
+root.querySelector('hello-query').variables = {
+  greeting: "How's it going",
+  name: 'Dude'
+};
+```
 
 </code-copy>
 
@@ -398,120 +209,13 @@ factory](/api/libraries/hybrids/query/) take a second options parameter with a
 `variables` property.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-
-  ```html
-  <apollo-query>
-    <script type="application/graphql">
-      query HelloQuery {
-        hello { name greeting }
-      }
-    </script>
-    <script type="application/json">
-      {
-        "greeting": "How's it going",
-        "name": "Dude"
-      }
-    </script>
-    <template>
-      <article class="{{ loading ? 'skeleton' : '' }}">
-        <p id="error" ?hidden="{{ !error }}">{{ error.message }}</p>
-        <p>
-          {{ data.greeting || 'Hello' }},
-          {{ data.name || 'Friend' }}
-        </p>
-      </article>
-    </template>
-  </apollo-query>
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```ts
-  export class HelloQueryElement extends ApolloQueryMixin(HTMLElement)<Data, Variables> {
-    query = HelloQuery;
-
-    variables = {
-      greeting: "How's it going",
-      name: 'Dude'
-    };
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  export class HelloQueryElement extends LitElement {
-    query = new ApolloQueryController(this, HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      },
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.fast">
-
-  ```ts
-  @customElement({ name: 'hello-query', template })
-  export class HelloQueryElement extends FASTElement {
-    query = new ApolloQueryBehavior(this, HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      },
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```ts
-  function Hello() {
-    const { data } = useQuery(HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      }
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```jsx
-  function Hello() {
-    const { data } = useQuery(HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      }
-    });
-    return <host>...</host>;
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```ts
-  define('hello-query', {
-    query: query(HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      }
-    }),
-  });
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/variables/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/variables/mixins.ts"></code-tab>
+  <code-tab tab-id="lit" src="snippets/variables/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/variables/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/variables/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/variables/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/variables/hybrids.js"></code-tab>
 </code-tabs>
 
 Variables can be non-nullable i.e. required. To prevent your element from fetching until it has all it's required variables, see [validating variables](/guides/cool-tricks/validating-variables/).
@@ -540,101 +244,16 @@ If you want to keep your element from automatically subscribing, you can opt out
 of the default behaviour by setting the `noAutoSubscribe` DOM property.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-
-  ```html
-  <apollo-query no-auto-subscribe>
-    <script type="application/graphql">...</script>
-
-    <template>...</template>
-  </apollo-query>
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```ts
-  class LazyGreeting extends HelloQueryElement {
-    noAutoSubscribe = true;
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  export class HelloQueryElement extends LitElement {
-    query = new ApolloQueryController(this, HelloQuery, {
-      noAutoSubscribe: true,
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      },
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.fast">
-
-  ```ts
-  class LazyGreeting extends FASTElement {
-    query = new ApolloQueryController(this, HelloQuery, {
-      noAutoSubscribe: true,
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      },
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```ts
-  function Hello() {
-    const { data } = useQuery(HelloQuery, { noAutoSubscribe: true });
-
-    const greeting = data?.greeting ?? 'Hello';
-    const name = data?.name ?? 'Friend';
-
-    return html`
-      <p>${greeting}, ${name}!</p>
-    `;
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```tsx
-  function Hello() {
-    const { data } = useQuery(HelloQuery, { noAutoSubscribe: true });
-
-    const greeting = data?.greeting ?? 'Hello';
-    const name = data?.name ?? 'Friend';
-
-    return <host><p>{greeting}, {name}!</p></host>;
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```ts
-  define('lazy-hello-world', {
-    query: query(HelloQuery, { noAutoSubscribe: true }),
-  });
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/noAutoSubscribe/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/noAutoSubscribe/mixins.ts"></code-tab>
+  <code-tab tab-id="lit" src="snippets/noAutoSubscribe/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/noAutoSubscribe/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/noAutoSubscribe/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/noAutoSubscribe/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/noAutoSubscribe/hybrids.js"></code-tab>
 </code-tabs>
 
-
-Once you do, the element won't fetch any data unless you call its 
-[`subscribe()`][subscribe] or 
-[`executeQuery()`](/api/core/interfaces/query/#executequery) methods.
+Once you do, the element won't fetch any data unless you call its [`subscribe()`](/api/core/interfaces/query/#subscribe) or [`executeQuery()`](/api/core/interfaces/query/#executequery) methods.
 
 <code-copy>
 
@@ -645,9 +264,7 @@ Once you do, the element won't fetch any data unless you call its
 
 </code-copy>
 
-You can also set the boolean `no-auto-subscribe` attribute to the element 
-instance. Bear in mind that `no-auto-subscribe` is a boolean attribute, so it's 
-presence indicates truthiness, and its absence indicates falsiness.
+You can also set the boolean `no-auto-subscribe` attribute to the element instance. Bear in mind that `no-auto-subscribe` is a boolean attribute, so it's presence indicates truthiness, and its absence indicates falsiness.
 
 <code-copy>
 
@@ -662,13 +279,16 @@ presence indicates truthiness, and its absence indicates falsiness.
 
 </code-copy>
 
-<inline-notification type="warning"> NOTE, the `no-auto-subscribe` attribute 
-  comes built-in for query class elements e.g. 
-  `@apollo-elements/mixins/apollo-query-mixin.js` for [controllers](/api/core/), 
-  [hybrids](/api/libraries/hybrids/) components or 
-  [haunted](/api/libraries/haunted/) `useQuery` hooks, you can pass the 
-  `noAutoSubscribe` option to the controller, but you'll be in charge of reading 
-  the attribute yourself.</inline-notification>
+<inline-notification type="warning">
+
+NOTE, the `no-auto-subscribe` attribute comes built-in for query class elements 
+e.g. `@apollo-elements/mixins/apollo-query-mixin.js` for 
+[controllers](/api/core/), [hybrids](/api/libraries/hybrids/) components or 
+[haunted](/api/libraries/haunted/) `useQuery` hooks, you can pass the 
+`noAutoSubscribe` option to the controller, but you'll be in charge of reading 
+the attribute yourself.
+
+</inline-notification>
 
 ### Overriding `shouldSubscribe`
 
@@ -679,238 +299,34 @@ returns `true`. If you wish to customize that behaviour, override the method
 with your own custom predicate, like this example which checks for the presence 
 of a query param in the page URL:
 
-
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-    <template webc:raw>
-
-   ```html
-  <no-auto-fetch-query>...</no-auto-fetch-query>
-  <script type="module">
-    import { ApolloQueryElement } from '@apollo-elements/components';
-
-    class NoAutoFetchQuery extends ApolloQueryElement {
-      /**
-       * Prevent fetching if the URL contains a `?noAutoFetch` query param
-       */
-      shouldSubscribe() {
-        const { searchParams } = new URL(location.href);
-        return !searchParams.has('noAutoFetch');
-      }
-    }
-
-    customElements.define('no-auto-fetch-query', NoAutoFetchQuery);
-  </script>
-  ```
-
-    </template>
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```ts
-  class PageQueryElement extends ApolloQueryMixin(HTMLElement)<typeof PageQuery> {
-    query = PageQuery;
-
-    /**
-     * Prevent fetching if the URL contains a `?noAutoFetch` query param
-     */
-    override shouldSubscribe(): boolean {
-      const { searchParams } = new URL(location.href);
-      return !searchParams.has('noAutoFetch');
-    }
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  export class HelloQueryElement extends LitElement {
-    query = new ApolloQueryController(this, HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      },
-
-      /**
-       * Prevent fetching if the URL contains a `?noAutoFetch` query param
-       */
-      shouldSubscribe(): boolean {
-        const { searchParams } = new URL(location.href);
-        return !searchParams.has('noAutoFetch');
-      },
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.fast">
-
-  ```ts
-  class PageQueryElement extends FASTElement {
-    query = new ApolloQueryController(this, HelloQuery, {
-      variables: {
-        greeting: "How's it going",
-        name: 'Dude'
-      },
-
-      /**
-       * Prevent fetching if the URL contains a `?noAutoFetch` query param
-       */
-      shouldSubscribe(): boolean {
-        const { searchParams } = new URL(location.href);
-        return !searchParams.has('noAutoFetch');
-      },
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```ts
-  function PageQueryElement() {
-    const { data } = useQuery(PageQuery, {
-      /**
-       * Prevent fetching if the URL contains a `?noAutoFetch` query param
-       */
-      shouldSubscribe(): boolean {
-        const { searchParams } = new URL(location.href);
-        return !searchParams.has('noAutoFetch');
-      }
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```ts
-  function PageQueryElement() {
-    const { data } = useQuery(PageQuery, {
-      /**
-       * Prevent fetching if the URL contains a `?noAutoFetch` query param
-       */
-      shouldSubscribe(): boolean {
-        const { searchParams } = new URL(location.href);
-        return !searchParams.has('noAutoFetch');
-      }
-    });
-    return <host>...</host>
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```ts
-  define('page-query', {
-    query: query(PageQuery, {
-      /**
-       * Prevent fetching if the URL contains a `?noAutoFetch` query param
-       */
-      shouldSubscribe() {
-        const { searchParams } = new URL(location.href);
-        return !searchParams.has('noAutoFetch');
-      },
-    }),
-  });
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/shouldSubscribe/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/shouldSubscribe/mixins.ts"></code-tab>
+  <code-tab tab-id="lit" src="snippets/shouldSubscribe/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/shouldSubscribe/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/shouldSubscribe/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/shouldSubscribe/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/shouldSubscribe/hybrids.js"></code-tab>
 </code-tabs>
 
 ### Setting a `FetchPolicy`
 
-[Fetch Policies][fetchpolicies] are how Apollo client internally manages query 
-behaviour. The default fetch policy for queries is `cache-first` meaning that 
-Apollo client will first check to see if a given operation (i.e. query-variables 
-pair) already has complete data in the cache. If so, it will *not* fetch over 
-the network. Set the `fetchPolicy` property on your component to configure.
+[Fetch 
+Policies](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy) 
+are how Apollo client internally manages query behaviour. The default fetch 
+policy for queries is `cache-first` meaning that Apollo client will first check 
+to see if a given operation (i.e. query-variables pair) already has complete 
+data in the cache. If so, it will *not* fetch over the network. Set the 
+`fetchPolicy` property on your component to configure.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-    <template webc:raw>
-
-  ```html
-  <apollo-query fetch-policy="cache-only">
-    <script type="application/graphql">...</script>
-
-    <template>...</template>
-  </apollo-query>
-  ```
-
-    </template>
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```ts
-  import type { FetchPolicy } from '@apollo/client/core';
-
-  class CacheOnlyQueryElement extends ApolloQueryMixin(HTMLElement)<typeof HeavySlowQuery> {
-    query = HeavySlowQuery;
-
-    fetchPolicy: FetchPolicy = 'cache-only';
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  export class HeavySlowQueryElement extends LitElement {
-    query = new ApolloQueryController(this, HeavySlowQuery, {
-      fetchPolicy: 'cache-only',
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.fast">
-
-  ```ts
-  class HeavySlowQueryElement extends FASTElement {
-    query = new ApolloQueryBehavior(this, HeavySlowQuery, {
-      fetchPolicy: 'cache-only',
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```ts tab haunted
-  function HeavySlowQueryElement() {
-    const { data } = useQuery(HeavySlowQuery, {
-      fetchPolicy: 'cache-only',
-    });
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```tsx tab atomico
-  function HeavySlowQueryElement() {
-    const { data } = useQuery(HeavySlowQuery, {
-      fetchPolicy: 'cache-only',
-    });
-    return <host>...</host>;
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```ts tab hybrids
-  define('heavy-slow-query', {
-    query: query(HeavySlowQuery, {
-      fetchPolicy: 'cache-only',
-    }),
-  });
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/fetchPolicy/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/fetchPolicy/mixins.ts"></code-tab>
+  <code-tab tab-id="lit" src="snippets/fetchPolicy/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/fetchPolicy/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/fetchPolicy/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/fetchPolicy/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/fetchPolicy/hybrids.js"></code-tab>
 </code-tabs>
 
 You can also use the `fetch-policy` attribute on individual elements (if they 
@@ -918,35 +334,34 @@ implement the ApolloElement interface, e.g. `<apollo-query>` or elements with
 `ApolloQueryMixin`):
 
 <code-copy>
-  <template webc:raw>
 
   ```html
-<apollo-query fetch-policy="network-only">
-  <script type="application/graphql">
+  <apollo-query fetch-policy="network-only">
+    <script type="application/graphql">
     query AlwaysFresh {
       messages(sort: desc) {
         id message
       }
     }
-  </script>
-  <template>
-    <h2>Latest Message:</h2>
-    <template type="if" if="{{ data }}">
-      <p>{{ data.messages[0].message }}</p>
+    </script>
+    <template>
+      <h2>Latest Message:</h2>{%raw%}
+      <template type="if" if="{{ data }}">
+        <p>{{ data.messages[0].message }}</p>
+      </template>{%endraw%}
     </template>
-  </template>
-</apollo-query>
+  </apollo-query>
   ```
 
-  </template>
 </code-copy>
 
 If you want your query to fire once over the network, but subsequently to only 
-use the client-side cache, use the [`nextFetchPolicy`][nextfetchpolicy] 
-property.
+use the client-side cache, use the 
+[`nextFetchPolicy`](/api/core/interfaces/query/#nextfetchpolicy) property.
 
 If you want your component to automatically subscribe, but only if its required 
-variables are present, see [Validating Variables][validate-vars].
+variables are present, see [Validating 
+Variables](/guides/cool-tricks/validating-variables/).
 
 ## Reacting to Updates
 As we've seen query elements set their `data` property whenever the query 
@@ -957,31 +372,18 @@ reactivity systems ensure that your element renders when the data changes.
 If you want to run other side effects, here are some options:
 
 - use your library's reactivity system, e.g. `updated` for Lit
-- define [`onData`][ondata] callback
-- listen for the `apollo-query-result` and `apollo-error` [events][query-events]
-- call the [`executeQuery`][execute-query] method and `await` it's result.
+- define [`onData`](/api/core/interfaces/query/lifecycle/#ondata) callback
+- listen for the `apollo-query-result` and `apollo-error` 
+[events](/api/core/interfaces/query/lifecycle/#events)
+- call the [`executeQuery`](/api/core/interfaces/query/#executequery) method and 
+`await` it's result.
 
-For more information, see [query element lifecycle][query-lifecycle]
+For more information, see [query element 
+lifecycle](/api/core/interfaces/query/lifecycle/)
 
 ## Next Steps
 
-Read about the [`<apollo-query>` HTML element][query-el],
-dive into the [`ApolloQuery` API][api] and [component 
-lifecycle][query-lifecycle]
-or continue on to the [mutations guide][mutations].
-
-[api]: /api/core/interfaces/query/
-[query-el]: /guides/usage/queries/html/
-[query-lifecycle]: /api/core/interfaces/query/lifecycle/
-[query-events]: /api/core/interfaces/query/lifecycle/#events
-[mutations]: /guides/usage/mutations/
-[ondata]: /api/core/interfaces/query/lifecycle/#ondata
-[execute-query]: /api/core/interfaces/query/#executequery
-[validate-vars]: /guides/cool-tricks/validating-variables/
-[nextfetchpolicy]: /api/core/interfaces/query/#nextfetchpolicy
-[fetchpolicies]: https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy
-[subscribe]: /api/core/interfaces/query/#subscribe
-[mdn-ce]: https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
-[encap]: https://www.wikiwand.com/en/Encapsulation_(computer_programming)
-[getreq]: https://www.wikiwand.com/en/Hypertext_Transfer_Protocol#/Request_methods
-[sql]: https://www.wikiwand.com/en/SQL
+Read about the [`<apollo-query>` HTML element](/guides/usage/queries/html/),
+dive into the [`ApolloQuery` API](/api/core/interfaces/query/) and [component 
+lifecycle](/api/core/interfaces/query/lifecycle/)
+or continue on to the [mutations guide](/guides/usage/mutations/).

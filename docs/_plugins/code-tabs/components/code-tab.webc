@@ -1,11 +1,23 @@
+<script webc:setup>
+  const getLang = (language, src) => language ?? src.split('.').pop();
+  const getFileContent = (src, $data) => readFileSync(resolveRelativeToInput(src, $data.page));
+  const markdownCodeblockify = (content, lang) => `\`\`\`${lang}\n${content}\n\`\`\``;
+</script>
 <code-tab webc:root="override"
           @attributes
-          :data-id="tab?.id"
-          :data-label="tab?.label"
-          :data-icon-href="tab?.iconHref">
-
-<slot></slot>
-
+          :data-id="tabId"
+          :data-label="$data.codeTabs[tabId]?.label"
+          :data-icon-href="$data.codeTabs[tabId]?.iconHref">
+  <script webc:type="js">
+  const { src } = webc.attributes;
+  if (src) {
+    const content = getFileContent(src, $data);
+    const lang = getLang(language, src)
+    renderTemplate(markdownCodeblockify(content, lang), 'md');
+  } else {
+    `<slot></slot>`
+  }
+  </script>
 </code-tab>
 
 <script>

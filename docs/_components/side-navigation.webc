@@ -1,9 +1,14 @@
 <style>
   #sidebar-nav {
-    overflow: auto;
     display: block;
-    margin-top: 40px;
     padding: 0 20px;
+    background: var(--page-background, #fff);
+  }
+
+  #sidebar-nav ul,
+  #sidebar-nav ol {
+    list-style-type: none;
+    padding: 7px 0 10px 15px;
   }
 
   #sidebar-nav a {
@@ -22,8 +27,12 @@
     text-transform: uppercase;
   }
 
+  #sidebar-nav nav.toc li {
+    padding: 4px 0;
+  }
+
   /* line on the left to indicate current page */
-  #sidebar-nav > ul > li > ul li.current ul li.anchor.current::before {
+  #sidebar-nav nav.toc li.current::before {
     content: '';
     height: 1.6em;
     width: 3px;
@@ -37,7 +46,7 @@
     padding: 7px 0;
   }
 
-  #sidebar-nav > ul > li > ul li.current a:not(.anchor) {
+  #sidebar-nav > ul > li > ul li.current > a {
     font-weight: bold;
   }
 
@@ -50,19 +59,13 @@
   }
 
   /* Hide below 3rd level by default */
-  #sidebar-nav > ul > li > ul > li:not(.current) ul {
+  #sidebar-nav > ul > li > ul > li:not(.current) ul:not(.has-current) {
     display: none;
   }
 
   #sidebar-nav {
     background: var(--page-background, #fff);
     width: 80%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    max-height: 100vh;
-    overflow: auto;
   }
 
   #sidebar-nav .logo-link {
@@ -97,7 +100,6 @@
 
   #sidebar-nav {
     width: 100%;
-    position: static;
     max-height: calc(100vh - 70px);
   }
 
@@ -105,6 +107,10 @@
     #sidebar-nav {
       padding: 0 25px 0 0;
     }
+    #sidebar-nav {
+      width: max-content;
+    }
+
   }
 </style>
 
@@ -128,12 +134,40 @@ function forSection(collections, section) {
 }
 function renderNavListItem(entry, page) {
   const current = entry.url === page.url;
+  const hasCurrent = entry.children.some(child => child.url === page.url);
   return /* html */`
   <li class="${current ? 'current' : ''}">
-    <a href="${entry.url}">${entry.title}</a>${!current ? '' : `
+    <a href="${entry.url}">${webc.escapeText(entry.title)}</a>${!current ? '' : `
     <template webc:nokeep @html="toc(content)"></template>`}${!entry.children?.length ? '' : `
-    <ul>${entry.children.map(child => renderNavListItem(child, page)).join('\n')}</ul>`}
+    <ul class="${hasCurrent ? 'has-current': ''}">${entry.children.map(child => renderNavListItem(child, page)).join('\n')}</ul>`}
   </li>`;
 }
 </script>
 
+<script type="module" webc:bucket="modules">
+const links = document.querySelectorAll('#sidebar-nav a[href^="#"]');
+const IO = new IntersectionObserver(entries => activate(entries.findLast(x => x.isIntersecting)?.target?.id), {
+  rootMargin: '-50% 0px',
+});
+
+function activate(id) {
+  if (id) {
+    for (const link of links) {
+      const current = new URL(link.href).hash === `#${id}`;
+      link.closest('li').classList.toggle('current', current);
+    }
+  }
+}
+
+links.forEach(link => {
+  const id = link.href.split('#').pop();
+  const header = document.getElementById(id);
+  if (header) {
+    IO.observe(header);
+    link.addEventListener('click', event => activate(id));
+  } else {
+    console.log(id);
+  }
+});
+links[0].closest('li').classList.toggle('current', !document.querySelector('.toc li.current'));
+</script>

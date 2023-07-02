@@ -1,6 +1,11 @@
 <style>
+  #sidebar {
+    display: none; /* for loading */
+  }
+
   #main-sidebar {
     display: block;
+    padding-inline-start: var(--main-padding-inline);
   }
 
   #main-sidebar > ul {
@@ -15,16 +20,39 @@
   }
 
   @media screen and (min-width: 1024px) {
-    #main-sidebar {
-      position: sticky;
-      height: 100%;
-      left: 0;
-      top: 70px;
-      overflow-y: auto;
-      scroll-behavior: smooth;
+    #sidebar {
+      display: block;
       min-width: 270px;
       z-index: 10;
-      margin-right: 50px;
+      position: sticky;
+      top: 78px;
+      max-height: calc(100vh - 78px);
+      overflow-y: auto;
+    }
+
+    #sidebar .sidebar-bottom {
+      display: none;
+    }
+
+    #sidebar hr {
+      margin: 30px 0 10px 0;
+      background: linear-gradient(90deg, rgba(204, 204, 204, 1) 0%, rgba(255, 255, 255, 0) 80%);
+    }
+
+    #sidebar .logo-link {
+      display: none;
+    }
+
+    rocket-navigation {
+      padding: 0 25px 0 0;
+    }
+
+    body[layout='layout-sidebar'] #sidebar,
+    body[layout='layout-index'] #sidebar {
+      display: block;
+    }
+    #main-sidebar {
+      min-width: 270px;
     }
 
     #main-sidebar .sidebar-bottom {

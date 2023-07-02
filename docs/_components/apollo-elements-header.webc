@@ -1,7 +1,7 @@
 <style>
 #main-header {
   padding-block: 20px;
-  padding-inline: calc((100vw - 1200px) / 2 + 20px);
+  padding-inline: var(--main-padding-inline);
   top: 0;
   position: sticky;
   z-index: 100;
@@ -77,6 +77,7 @@
 }
 
 </style>
+
 <header id="main-header" webc:root="override">
   <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
     <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">

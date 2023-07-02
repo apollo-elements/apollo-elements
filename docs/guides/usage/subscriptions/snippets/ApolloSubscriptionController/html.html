@@ -1,0 +1,52 @@
+<apollo-client id="messages-client">
+  <apollo-query id="messages-query">
+    <script type="application/graphql" src="Messages.query.graphql"></script>
+    <template>
+      <link rel="stylesheet" href="messages.css">
+      <ol>
+        <template type="repeat" repeat="{{ data.messages ?? [] }}">
+          <li>
+            <h4>
+              <time datetime="{{ date }}">{{ formatDate(item.date) }}</time>
+              <span class="user">{{ item.user }} said:</span>
+            </h4>
+            <p>{{ item.message }}</p>
+          </li>
+        </template>
+      </ol>
+    </template>
+  </apollo-query>
+
+  <apollo-subscription id="messages-subscription">
+    <script type="application/graphql" src="MessageSent.subscription.graphql"></script>
+    <template>
+      <mwc-snackbar labeltext="{{ data.messagesSent.user }} sent a message!"></mwc-snackbar>
+    </template>
+  </apollo-subscription>
+</apollo-client>
+
+<script type="module">
+  import '@apollo-elements/components';
+  import '@material/mwc-snackbar';
+
+  import { client } from './client';
+
+  const q = document.getElementById('messages-query');
+  const s = document.getElementById('messages-subscription');
+
+  q.formatDate = function formatDate(iso) { /*...*/ };
+
+  s.addEventListener('apollo-subscription-result', async event => {
+    // update the query element
+    const { client, subscriptionResult: { data: { messageSent } } } = event.detail;
+    const { query } = q;
+    const cached = client.readQuery({ query });
+    client.writeQuery({ query, data: { messages: [...cached.messages, messageSent] } });
+
+    // Display the notification
+    await s.updateComplete;
+    s.$('mwc-snackbar').show();
+  });
+
+  document.getElementById('messages-client').client = client;
+</script>

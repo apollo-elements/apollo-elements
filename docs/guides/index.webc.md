@@ -27,8 +27,6 @@ installationSnippets:
   }
 </style>
 
-# Guides
-
 Apollo Elements helps you build full-scale, high-performance GraphQL frontends 
 with state-of-the-art web technologies. Use your favourite web components base 
 library like [lit](../api/libraries/lit-apollo/) or 
@@ -40,8 +38,7 @@ generator to bootstrap a project.
   <code-tab webc:for="s of installationSnippets"
       :data-id="`${s.pm}`"
       :data-label="`${s.label}`"
-      :data-icon-href="`/assets/icons/${s.pm}.svg`">
-    <template webc:type="11ty"
+      :data-icon-href="`/assets/icons/${s.pm}.svg`"><template webc:type="11ty"
               11ty:type="njk"
               :@snippet="s.snippet">{% highlight 'bash' %}{{ snippet }}{% endhighlight %}</template>
   </code-tab>

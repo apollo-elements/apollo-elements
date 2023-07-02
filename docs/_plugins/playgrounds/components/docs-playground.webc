@@ -274,19 +274,14 @@ ${file.content}
       }
     }
 
-    constructor() {
-      super();
-      this.show = this.show.bind(this);
-      this.button.addEventListener('click', this.show);
-    }
-
     connectedCallback() {
+      this.button.addEventListener('click', this.show);
       window.requestIdleCallback?.(() => import('playground-elements'));
       if (location.hash === `#${this.id}`)
         this.show();
     }
 
-    async show() {
+    show = async () => {
       this.setAttribute('loading', '');
       this.button.disabled = true;
       await import('playground-elements');

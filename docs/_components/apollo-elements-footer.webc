@@ -28,7 +28,6 @@
   }
 }
 
-
 #footer-menu {
   margin-inline: auto;
   width: 100%;
@@ -57,6 +56,7 @@
   }
 }
 </style>
+
 <footer id="main-footer" webc:root="override">
   <div id="footer-menu">
     <div class="content-area">
@@ -125,7 +125,3 @@
     </div>
   </div>
 </footer>
-
-<svg id="icon-sprite-sheet" aria-hidden="true">
-  <defs @raw="getBundle('html', 'svg')"></defs>
-</svg>

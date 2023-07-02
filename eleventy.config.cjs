@@ -114,7 +114,7 @@ module.exports = function(eleventyConfig) {
 
   // eleventyConfig.addPlugin(SlideDecks);
   // eleventyConfig.addPlugin(eleventyRocketNav);
-  // eleventyConfig.addPlugin(EleventyRenderPlugin);
+  eleventyConfig.addPlugin(EleventyRenderPlugin);
 
   // const IMPORT_MAP_BASE = `{{ORIGIN}}/_merged_assets/_static/apollo-elements`;
   // eleventyConfig.addPlugin(playgroundElements, {
@@ -147,7 +147,6 @@ module.exports = function(eleventyConfig) {
   //     'codesandbox-button': '/_merged_assets/_static/apollo-elements/sandbox.js',
   //     'css-value-doc': '/_merged_assets/_static/custom-elements-manifest/css-value-doc.js',
   //     'docs-playground': '/_merged_assets/_static/playground-elements/docs-playground.js',
-  //     'inline-notification': '@rocket/launch/inline-notification/inline-notification.js',
   //     'json-viewer': '/_merged_assets/_static/custom-elements-manifest/json-viewer.js',
   //     'type-doc': '/_merged_assets/_static/custom-elements-manifest/type-doc.js',
   //     'wcd-snippet': '/_merged_assets/_static/webcomponents-dev/wcd-snippet.js',

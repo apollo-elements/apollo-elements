@@ -1,3 +1,4 @@
+// @ts-check
 const fs = require('node:fs/promises');
 
 /** @param{import('@11ty/eleventy/src/UserConfig.js')} eleventyConfig */
@@ -7,24 +8,23 @@ module.exports = function(eleventyConfig) {
     compile: x => () => x,
     compileOptions: {
       permalink(contents, path) {
-        // return () => false;
-        return () => path.includes('/icons/') ? false : undefined;
+        return () => path.startsWith('./docs/icons/') ? false : undefined;
       }
     },
     async getData(inputPath) {
       const content = await fs.readFile(inputPath, 'utf-8');
+      const isIcon = inputPath.startsWith('./docs/icons/');
       const [,title] = content.match(/<title>(.*)<\/title>/m) ?? [];
-      return { title, eleventyExcludeFromCollections: true };
+      return {
+        title,
+        eleventyExcludeFromCollections: !isIcon,
+      };
     }
   });
-  eleventyConfig.addShortcode('icon', function icon(name, kwargs) {
-    this.ctx.page.icons ||= new Set();
-    this.ctx.page.icons.add(name);
-    const { __keywords, ...attrs } = kwargs ?? {}
-    const attributes =
-      Object.entries(attrs)
-        .map(([name, value]) => ` ${name}="${value}"`)
-        .join('');
-    return `<svg ${attributes}><use href="#${name}-icon"></use></svg>`;
+
+  const icons = new WeakMap();
+  eleventyConfig.addJavaScriptFunction('getIcons', function(page) {
+    if (!icons.has(page)) icons.set(page, new Map());
+    return icons.get(page);
   });
 };

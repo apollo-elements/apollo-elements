@@ -1,0 +1,22 @@
+<apollo-query>
+  <script type="application/graphql">
+    query HelloQuery {
+      hello { name greeting }
+    }
+  </script>
+  <script type="application/json">
+    {
+      "greeting": "How's it going",
+      "name": "Dude"
+    }
+  </script>
+  <template>
+    <article class="{{ loading ? 'skeleton' : '' }}">
+      <p id="error" ?hidden="{{ !error }}">{{ error.message }}</p>
+      <p>
+        {{ data.greeting || 'Hello' }},
+        {{ data.name || 'Friend' }}
+      </p>
+    </article>
+  </template>
+</apollo-query>

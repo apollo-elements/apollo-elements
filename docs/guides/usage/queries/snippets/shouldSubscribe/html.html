@@ -1,0 +1,16 @@
+<no-auto-fetch-query>...</no-auto-fetch-query>
+<script type="module">
+  import { ApolloQueryElement } from '@apollo-elements/components';
+
+  class NoAutoFetchQuery extends ApolloQueryElement {
+    /**
+     * Prevent fetching if the URL contains a `?noAutoFetch` query param
+     */
+    shouldSubscribe() {
+      const { searchParams } = new URL(location.href);
+      return !searchParams.has('noAutoFetch');
+    }
+  }
+
+  customElements.define('no-auto-fetch-query', NoAutoFetchQuery);
+</script>

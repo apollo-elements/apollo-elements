@@ -1,9 +1,10 @@
+<!---
+
 <script webc:setup>
 const getIconTemplate = name => $data.collections.icon?.find(x => x.fileSlug === name);
 </script>
 <template webc:type="11ty"
           11ty:type="njk"
-          :@page="$data.page"
           :@icon="getIconTemplate(name)">
   {%- if icon -%}
     {%- html 'svg' -%}
@@ -15,3 +16,13 @@ const getIconTemplate = name => $data.collections.icon?.find(x => x.fileSlug ===
     :aria-hidden="ariaHidden ?? false"
     @attributes><use :href="`#${name}-icon`"></svg>
 
+--->
+
+<script webc:type="js">
+getIcons($data.page)
+  .set(name, $data.collections.icon?.find(x => x.fileSlug === name)?.content), '';
+</script>
+
+<svg webc:root="override"
+    :aria-hidden="ariaHidden ?? false"
+    @attributes><use :href="`#${name}-icon`"></svg>
