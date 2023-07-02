@@ -1,13 +1,11 @@
 ---
-title: '`apollo-mutation` element'
+title: '<apollo-mutation> element'
 permalink: /guides/usage/mutations/html/index.html
 eleventyNavigation:
   order: 10
 templateEngineOverride: webc,md
 subtitle: "Using <apollo-mutation> element"
 ---
-
-# apollo-mutation Element
 
 <inline-notification type="tip">
 
@@ -87,10 +85,8 @@ The following example will update the user with id "007" once every 500
 milliseconds, starting the last time the user performed a 'keyup' (i.e. raised 
 their finger) while focussed on one of the inputs.
 
-<template webc:raw>
-
 ```html
-<apollo-mutation data-user-id="007" debounce="500">
+<apollo-mutation data-user-id="007" debounce="500" webc:raw>
   <label>Name: <input data-variable="name" trigger="keyup"/></label>
   <label>Age:  <input data-variable="age" trigger="keyup" type="number"/></label>
   <script type="application/graphql">
@@ -103,8 +99,6 @@ their finger) while focussed on one of the inputs.
   &lt;/script>
 </apollo-mutation>
 ```
-
-</template>
 
 ## Data Templates
 
@@ -144,221 +138,13 @@ For cases like those, listen for the `will-mutate` event and prevent it's
 default action to stop the mutation.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-  <template webc:raw>
-
-  ```html
-  <apollo-mutation>
-    <button trigger>Publish</button>
-    <script type="application/graphql">
-      mutation CreatePost($input: CreatePostInput) {
-        createPost(input: $input) {
-          id
-          body
-          title
-        }
-      }
-    </script>
-  </apollo-mutation>
-
-  <script>
-    document.currentScript.getRootNode()
-      .querySelector('apollo-mutation')
-      .addEventListener('will-mutate', function onWillMutate(event) {
-        onWillMutate(event) {
-          // Post exists, don't mutate.
-          // Toggle the host component's edit state instead.
-          if (new URL(location.href).searchParams.has('postId')) {
-            event.preventDefault();
-            this.querySelector('[trigger]').textContent = 'Edit';
-          }
-        }
-      });
-  </script>
-  ```
-
-  </template>
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```js
-  const template = document.createElement('template');
-  template.innerHTML = `
-    <apollo-mutation>
-      <button>Publish</button>
-    </apollo-mutation>
-  `;
-
-  class PostsDashboard extends HTMLElement {
-    $(selector) { return this.shadowRoot.querySelector(selector); }
-
-    editing = false;
-
-    #postId;
-    get postId() { return this.#postId; }
-    set postId(v) {
-      this.#postId = v;
-      this.$('button').textContent = !!v ? 'Edit' : 'Publish';
-    }
-
-    constructor() {
-      super();
-      this
-        .attachShadow({ mode: 'open' })
-        .append(template.content.cloneNode(true));
-
-      this.$('apollo-mutation').mutation = CreatePostMutation;
-      this.$('apollo-mutation').addEventListener('will-mutate', this.onWillMutate.bind(this));
-    }
-
-    onWillMutate(event) {
-      // Post exists, don't mutate.
-      // Toggle the host component's edit state instead.
-      if (this.postId) {
-        event.preventDefault();
-        this.editing = !this.editing;
-      }
-    }
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  class PostsDashboard extends LitElement {
-    @property({ type: String }) postId;
-
-    @property({ type: Boolean }) editing = false;
-
-    onWillMutate(event) {
-      // Post exists, don't mutate.
-      // Toggle the host component's edit state instead.
-      if (this.postId) {
-        event.preventDefault();
-        this.editing = !this.editing;
-      }
-    }
-
-    render() {
-      return html`
-        <apollo-mutation
-            .mutation="${CreatePostMutation}"
-            @will-mutate="${this.onWillMutate}">
-          <button>${this.postId ? 'Edit' : 'Publish'}</button>
-        </apollo-mutation>
-      `;
-    }
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.fast">
-
-  ```ts
-  const template: ViewTemplate<PostsDashboard> = html`
-    <apollo-mutation
-        .mutation="${x => CreatePostMutation}"
-        @will-mutate="${(x, e) => x.onWillMutate(e)}">
-      <fast-button>${x => x.postId ? 'Edit' : 'Publish'}</fast-button>
-    </apollo-mutation>
-  `;
-  @customElement({ name: 'posts-dashboard', template })
-  class PostsDashboard extends FASTElement {
-    onWillMutate(event) {
-      // Post exists, don't mutate.
-      // Toggle the host component's edit state instead.
-      if (this.postId) {
-        event.preventDefault();
-        this.editing = !this.editing;
-      }
-    }
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```js
-  function PostsDashboard {
-    const [postId, setPostId] = useState(undefined);
-    const [editing, setEditing] = useState(false);
-
-    function onWillMutate(event) {
-      // Post exists, don't mutate.
-      // Toggle the host component's edit state instead.
-      if (postId) {
-        event.preventDefault();
-        setEditing(!editing);
-      }
-    }
-
-    return html`
-      <apollo-mutation
-          .mutation="${CreatePostMutation}"
-          @will-mutate="${onWillMutate}">
-        <button>${postId ? 'Edit' : 'Publish'}</button>
-      </apollo-mutation>
-    `;
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```jsx
-  function PostsDashboard {
-    const [postId, setPostId] = useState(undefined);
-    const [editing, setEditing] = useState(false);
-
-    function onWillMutate(event) {
-      // Post exists, don't mutate.
-      // Toggle the host component's edit state instead.
-      if (postId) {
-        event.preventDefault();
-        setEditing(!editing);
-      }
-    }
-
-    return (
-      <host>
-        <apollo-mutation
-            mutation={CreatePostMutation}
-            onwill-mutate={onWillMutate}>
-          <button>{postId ? 'Edit' : 'Publish'}</button>
-        </apollo-mutation>
-      </host>
-    );
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```js
-  function onWillMutate(host, event) {
-    // Post exists, don't mutate.
-    // Toggle the host component's edit state instead.
-    if (host.postId) {
-      event.preventDefault();
-      host.editing = !host.editing;
-    }
-  }
-
-  define('posts-dashboard', {
-    postId: property(),
-    editing: property(false),
-    render: host => html`
-      <apollo-mutation
-          mutation="${CreatePostMutation}"
-          onwill-mutate="${onWillMutate}">
-        <button>${host.postId ? 'Edit' : 'Publish'}</button>
-      </apollo-mutation>
-    `,
-  });
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/publish/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/publish/mixins.js"></code-tab>
+  <code-tab tab-id="lit" src="snippets/publish/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/publish/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/publish/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/publish/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/publish/hybrids.js"></code-tab>
 </code-tabs>
 
 ## Example: Navigating on Mutation
@@ -369,10 +155,9 @@ use the `href` attribute:
 
 
 <code-copy>
-  <template webc:raw>
 
   ```html
-  <apollo-mutation href="/posts/latest/" input-key="input">
+  <apollo-mutation href="/posts/latest/" input-key="input" webc:raw>
     <label>Title <input data-variable="title"/></label>
     <label>Body <textarea data-variable="body"></textarea></label>
 
@@ -388,7 +173,6 @@ use the `href` attribute:
   </apollo-mutation>
   ```
 
-  </template>
 </code-copy>
 
 

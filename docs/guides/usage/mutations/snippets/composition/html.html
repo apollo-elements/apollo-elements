@@ -1,0 +1,51 @@
+<apollo-query>
+  <script type="application/graphql">
+    query User($userId: ID!) {
+      user(userId: $userId) { id isMe name birthday picture }
+    }
+  </script>
+  <template>
+    <h2>Profile</h2>
+
+    <dl ?hidden="{%raw%}{{ loading || !data }}{%endraw%}">
+      <dt>Name</dt>
+      <dd>{%raw%}{{ data.user.name }}{%endraw%}</dd>
+
+      <dt>Picture</dt>
+      <dd><img .src="{%raw%}{{ data.user.picture }}{%endraw%}"/></dd>
+
+      <dt>Birthday</dt>
+      <dd>{%raw%}{{ data.user.birthday }}{%endraw%}</dd>
+    </dl>
+
+    <form ?hidden="{%raw%}{{ !data.user.isMe }}{%endraw%}">
+      <h3>Edit</h3>
+      <apollo-mutation input-key="input">
+        <script type="application/graphql">
+          mutation UpdateProfileMutation($input: UpdateProfileInput) {
+            id
+            name
+            picture
+            birthday
+          }
+        </script>
+        <label for="name">Name</label>
+        <input id="name"
+               data-variable="name"
+               .value="{%raw%}{{ data.user.name }}{%endraw%}"/>
+
+        <label for="picture">Picture (URL)</label>
+        <input id="picture"
+               data-variable="picture"
+               .value="{%raw%}{{ data.user.picture }}{%endraw%}"/>
+
+        <label for="birthday">Birthday</label>
+        <input id="birthday"
+               data-variable="birthday" type="date"
+               .value="{%raw%}{{ data.user.birthday }}{%endraw%}"/>
+
+        <button trigger>Save</button>
+      </apollo-mutation>
+    </form>
+  </template>
+</apollo-query>

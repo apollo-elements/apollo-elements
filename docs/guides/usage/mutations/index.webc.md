@@ -7,8 +7,6 @@ templateEngineOverride: webc,md
 description: How to use Apollo Elements to write declarative GraphQL mutation web components
 ---
 
-# Mutations
-
 Mutation components combine a <abbr title="Graph query language">GraphQL</abbr> 
 mutation with a custom element which you would typically define with a <abbr 
   title="document object model">DOM</abbr> template and optionally some custom 
@@ -58,10 +56,9 @@ element from `@apollo-elements/components`. Provide the GraphQL mutation,
 variable input fields, and result template as children of the element.
 
 <code-copy>
-  <template webc:raw>
 
   ```html
-  <apollo-mutation>
+  <apollo-mutation webc:raw>
     <script type="application/graphql">
       mutation AddUser($name: String) {
         addUser(name: $name) {
@@ -70,21 +67,20 @@ variable input fields, and result template as children of the element.
       }
     </script>
 
-  <label for="username">Name</label>
-  <input id="username" data-variable="name"/>
+    <label for="username">Name</label>
+    <input id="username" data-variable="name"/>
 
-  <button trigger>Add User</button>
+    <button trigger>Add User</button>
 
     <template>
-    <slot></slot>
-    <template type="if" if="{{ data }}">
-    <p>{{ data.user.name }} added!</p>
-    </template>
+      <slot></slot>
+      <template type="if" if="{{ data }}">
+        <p>{{ data.user.name }} added!</p>
+      </template>
     </template>
   </apollo-mutation>
   ```
 
-  </template>
 </code-copy>
 
 Read more about declarative mutations in [using `<apollo-mutation>`](./html/) and [composing mutations](./composition/) or check out the [mutation component API docs](/api/components/apollo-mutation/).
@@ -94,7 +90,6 @@ Read more about declarative mutations in [using `<apollo-mutation>`](./html/) an
 Add a mutation to your component by creating an [`ApolloMutationController`](/api/core/controllers/mutation/). Call it's `mutate()` method to fire the mutation. You can use it on any element which implements `ReactiveControllerHost`, e.g. `LitElement`, or you can use it on `HTMLElement` if you apply `ControllerHostMixin` from [`@apollo-elements/mixins`](/api/libraries/mixins/controller-host-mixin/)
 
 <code-copy>
-  <template webc:raw>
 
   ```js
   import { LitElement, html } from 'lit';
@@ -111,7 +106,6 @@ Add a mutation to your component by creating an [`ApolloMutationController`](/ap
   }
   ```
 
-  </template>
 </code-copy>
 
 ## Custom Mutation Elements
@@ -124,323 +118,13 @@ Unlike query and subscription components, mutation components don't automaticall
 As such, you can only expect your component's `data` property to be truthy once the mutation resolves.
 
 <code-tabs collection="libraries" default-tab="lit">
-  <code-tab @tab="$data.codeTabs.html">
-    <template webc:raw>
-
-  ```html
-  <apollo-mutation>
-    <template>
-      <p-card>
-        <h2 slot="heading">Add User</h2>
-
-        <dl ?hidden="{{ !data }}">
-          <dt>Name</dt>  <dd>{{ data.name }}</dd>
-          <dt>Added</dt> <dd>{{ dateString(data.timestamp) }}</dd>
-        </dl>
-
-        <slot slot="actions"></slot>
-      </p-card>
-    </template>
-
-    <mwc-textfield outlined
-        label="User Name"
-        data-variable="name"></mwc-textfield>
-
-    <mwc-button label="Add User" trigger></mwc-button>
-  </apollo-mutation>
-
-  <script>
-    document.currentScript.getRootNode()
-      .querySelector('apollo-mutation')
-      .extras = {
-        dateString(timestamp) {
-          return new Date(timestamp).toDateString();
-        }
-      }
-  </script>
-  ```
-
-    </template>
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.mixins">
-
-  ```ts
-  import type { ResultOf, VariablesOf } from '@graphql-typed-document-node/core';
-
-  import { ApolloMutationMixin } from '@apollo-elements/mixins/apollo-mutation-mixin';
-
-  import { AddUserMutation } from './AddUser.mutation.graphql';
-
-  const template = document.createElement('template');
-  template.innerHTML = `
-    <p-card>
-      <h2 slot="heading">Add User</h2>
-
-      <dl hidden>
-        <dt>Name</dt>  <dd data-field="name"></dd>
-        <dt>Added</dt> <dd data-field="timestamp"></dd>
-      </dl>
-
-      <mwc-textfield slot="actions" label="User Name" outlined></mwc-textfield>
-      <mwc-button slot="actions" label="Add User"></mwc-button>
-    </p-card>
-  `;
-
-  export class AddUserElement extends ApolloMutation<typeof AddUserMutation> {
-    mutation = AddUserMutation;
-
-    #data: ResultOf<typeof AddUserMutation>;
-    get data(): ResultOf<typeof AddUserMutation> { return this.#data; }
-    set data(data: ResultOf<typeof AddUserMutation>) { this.render(this.#data = data); }
-
-    $(selector) { return this.shadowRoot.querySelector(selector); }
-
-    constructor() {
-      super();
-      this
-        .attachShadow({ mode: 'open' })
-        .append(template.content.cloneNode(true));
-      this.onInput = this.onInput.bind(this);
-      this.$('mwc-textfield').addEventListener('click', this.onInput);
-      this.$('mwc-button').addEventListener('click', () => this.mutate());
-    }
-
-    onInput({ target: { value: name } }) {
-      this.variables = { name };
-    }
-
-    render(data) {
-      this.$('dl').hidden = !!data;
-      if (data) {
-        const timestamp = new Date(data.timestamp).toDateString();
-        const { name } = data;
-        for (const [key, value] of Object.entries({ name, timestamp })
-          this.$(`[data-field="${key}"]`).textContent = value;
-      }
-    }
-  }
-
-  customElements.define('add-user', component(AddUser));
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.lit">
-
-  ```ts
-  import { ApolloMutationController } from '@apollo-elements/core';
-  import { html, TemplateResult } from 'lit';
-  import { customElement } from 'lit/decorators.js';
-
-  import { AddUserMutation } from './AddUser.mutation.graphql';
-
-  @customElement('add-user')
-  export class AddUserElement extends LitElement {
-    mutation = new ApolloMutationController(this, AddUserMutation);
-
-    render(): TemplateResult {
-      const name = this.mutation.data.name ?? '';
-      const timestamp =
-          !this.mutation.data ? ''
-        : new Date(this.mutation.data.timestamp).toDateString();
-
-      return html`
-        <p-card>
-          <h2 slot="heading">Add User</h2>
-
-          <dl ?hidden="${!this.data}">
-            <dt>Name</dt>  <dd>${name}</dd>
-            <dt>Added</dt> <dd>${timestamp}</dd>
-          </dl>
-
-          <mwc-textfield slot="actions"
-              label="User Name"
-              outlined
-              @input="${this.onInput}"></mwc-textfield>
-          <mwc-button slot="actions"
-              label="Add User"
-              @input="${() => this.mutation.mutate()}"></mwc-button>
-        </p-card>
-      `;
-    }
-
-    onInput({ target: { value: name } }) {
-      this.mutation.variables = { name };
-    }
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.fast">
-
-  ```ts
-  import type { Binding, ViewTemplate } from '@microsoft/fast-element';
-
-  import { ApolloMutationBehavior } from '@apollo-elements/fast';
-
-  import { FASTElement, customElement, html } from '@microsoft/fast-element';
-
-  import { AddUserMutation } from './AddUser.mutation.graphql';
-
-  const getName: Binding<AddUserElement> =
-     x =>
-       x.mutation.data?.name ?? ''
-
-  const getTimestamp: Binding<AddUserElement> =
-    x =>
-      x.mutation.data ? new Date(x.mutation.data.timestamp).toDateString() : '';
-
-  const setVariables: Binding<AddUserElement) =
-    (x, { target: { value: name } }) => {
-      x.mutation.variables = { name };
-    }
-
-  const template: ViewTemplate<AddUserElement> = html`
-    <fast-card>
-      <h2>Add User</h2>
-
-      <dl ?hidden="${x => !x.mutation.data}">
-        <dt>Name</dt>  <dd>${getName}</dd>
-        <dt>Added</dt> <dd>${getTimestamp}</dd>
-      </dl>
-
-      <fast-text-field @input="${setVariables}">User Name</fast-text-field>
-      <fast-button @input="${x => x.mutation.mutate()}">Add User</fast-button>
-    </fast-card>
-  `;
-  @customElement({ name: 'add-user' template })
-  export class AddUserElement extends FASTElement {
-    mutation = new ApolloMutationBehavior(this, AddUserMutation);
-  }
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.haunted">
-
-  ```ts
-  import { useMutation } from '@apollo-elements/haunted/useMutation';
-  import { useState, component, html } from 'haunted';
-  import { AddUserMutation } from './AddUser.mutation.graphql';
-
-  function AddUser() {
-    const [addUser, { called, data }] = useMutation(AddUserMutation);
-    const [variables, setVariables] = useState({ });
-
-    const onInput = event => setVariables({ name: event.target.value }));
-
-    const name = data.name ?? '';
-    const timestamp = data ? new Date(data.timestamp).toDateString() : '';
-
-    return html`
-      <p-card>
-        <h2 slot="heading">Add User</h2>
-
-        <dl ?hidden="${!data}">
-          <dt>Name</dt>  <dd>${name}</dd>
-          <dt>Added</dt> <dd>${timestamp}</dd>
-        </dl>
-
-        <mwc-textfield slot="actions"
-            label="User Name"
-            outlined
-            @input="${onInput}"></mwc-textfield>
-        <mwc-button slot="actions"
-            label="Add User"
-            @input="${() => addUser({ variables })}"></mwc-button>
-      </p-card>
-    `;
-  }
-
-  customElements.define('add-user', component(AddUser));
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.atomico">
-
-  ```tsx
-  import { useMutation } from '@apollo-elements/atomico/useMutation';
-  import { useState, c } from 'atomico';
-  import { AddUserMutation } from './AddUser.mutation.graphql';
-
-  function AddUser() {
-    const [addUser, { called, data }] = useMutation(AddUserMutation);
-    const [variables, setVariables] = useState({ });
-
-    const onInput = event => setVariables({ name: event.target.value }));
-
-    const name = data.name ?? '';
-    const timestamp = data ? new Date(data.timestamp).toDateString() : '';
-
-    return (
-      <host shadowDom>
-        <p-card>
-          <h2 slot="heading">Add User</h2>
-          <dl hidden={!data}>
-            <dt>Name</dt>  <dd>${name}</dd>
-            <dt>Added</dt> <dd>${timestamp}</dd>
-          </dl>
-          <mwc-textfield slot="actions"
-              label="User Name"
-              outlined
-              oninput={onInput}></mwc-textfield>
-          <mwc-button slot="actions"
-              label="Add User"
-              oninput={() => addUser({ variables })}></mwc-button>
-        </p-card>
-      </host>
-    );
-  }
-
-  customElements.define('add-user', c(AddUser));
-  ```
-
-  </code-tab>
-  <code-tab @tab="$data.codeTabs.hybrids">
-
-  ```ts
-  import { mutation, define, html } from '@apollo-elements/hybrids';
-
-  import { AddUserMutation } from './AddUser.mutation.graphql';
-
-  type AddUserElement = {
-    mutation: ApolloMutationController<typeof AddUserMutation>;
-  }
-
-  const onInput =
-    (host, event) =>
-      setVariables({ name: event.target.value }));
-
-  const mutate =
-    host =>
-      host.mutate();
-
-  define<AddUserElement>('add-user', {
-    mutation: mutation(AddUserMutation),
-    render: ({ mutation }) => {
-      const name = mutation.data?.name ?? '';
-      const timestamp = mutation.data ? new Date(mutation.data.timestamp).toDateString() : '';
-      return html`
-        <p-card>
-          <h2 slot="heading">Add User</h2>
-
-          <dl ?hidden="${!mutation.data}">
-            <dt>Name</dt>  <dd>${name}</dd>
-            <dt>Added</dt> <dd>${timestamp}</dd>
-          </dl>
-
-          <mwc-textfield slot="actions"
-              label="User Name"
-              outlined
-              @input="${onInput}"></mwc-textfield>
-          <mwc-button slot="actions"
-              label="Add User"
-              @input="${mutate}"></mwc-button>
-        </p-card>
-      `;
-    },
-  })
-  ```
-
-  </code-tab>
+  <code-tab tab-id="html" src="snippets/addUser/html.html"></code-tab>
+  <code-tab tab-id="mixins" src="snippets/addUser/mixins.ts"></code-tab>
+  <code-tab tab-id="lit" src="snippets/addUser/lit.ts"></code-tab>
+  <code-tab tab-id="fast" src="snippets/addUser/fast.ts"></code-tab>
+  <code-tab tab-id="haunted" src="snippets/addUser/haunted.js"></code-tab>
+  <code-tab tab-id="atomico" src="snippets/addUser/atomico.jsx"></code-tab>
+  <code-tab tab-id="hybrids" src="snippets/addUser/hybrids.js"></code-tab>
 </code-tabs>
 
 The key here is the `<mwc-button>` element which, on click, calls the element's 

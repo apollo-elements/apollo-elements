@@ -1,0 +1,27 @@
+<apollo-mutation>
+  <button trigger>Publish</button>
+  <script type="application/graphql">
+    mutation CreatePost($input: CreatePostInput) {
+      createPost(input: $input) {
+        id
+        body
+        title
+      }
+    }
+  </script>
+</apollo-mutation>
+
+<script>
+  document.currentScript.getRootNode()
+    .querySelector('apollo-mutation')
+    .addEventListener('will-mutate', function onWillMutate(event) {
+      onWillMutate(event) {
+        // Post exists, don't mutate.
+        // Toggle the host component's edit state instead.
+        if (new URL(location.href).searchParams.has('postId')) {
+          event.preventDefault();
+          this.querySelector('[trigger]').textContent = 'Edit';
+        }
+      }
+    });
+</script>
