@@ -7,8 +7,6 @@ templateEngineOverride: webc,md
 description: Optimize your GraphQL web app with code splitting and lazy loading
 ---
 
-# Code Splitting
-
 Code splitting or lazy-loading is the process of writing an app such that the 
 user only loads the code they need when they need it, instead of loading the 
 entire app in one huge bundle up front.
@@ -32,7 +30,7 @@ user role:
 
 <code-copy>
 
-  ```ts copy
+  ```ts
   // router.ts
   export const router = new Router({
     routes: [{

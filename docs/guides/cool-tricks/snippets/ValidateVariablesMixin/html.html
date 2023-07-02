@@ -1,0 +1,13 @@
+<p>
+  You can subclass <code>ApolloQueryElement</code>
+  to apply mixins.
+</p>
+
+<validated-variables-query></validated-variables-query>
+
+<script type="module">
+import { ApolloQueryElement } from '@apollo-elements/components/apollo-query';
+customElements.define(
+  'validated-variables-query',
+  class ValidatedApolloQuery extends ValidateVariablesMixin(ApolloQueryElement) {});
+</script>
