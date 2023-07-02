@@ -1,6 +1,6 @@
 ---
 title: Code Splitting
-permalink: /guides/cool-tricks/asyncronous-client/index.html
+permalink: /guides/cool-tricks/code-splitting/index.html
 eleventyNavigation:
   order: 20
 templateEngineOverride: webc,md
