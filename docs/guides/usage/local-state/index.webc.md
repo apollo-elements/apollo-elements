@@ -6,7 +6,6 @@ eleventyNavigation:
 templateEngineOverride: webc,md
 description: Introductory recipes for managing local state with Apollo Elements
 ---
-# Local State
 
 Apollo Client 3 provides a number of ways to manage local state in your app.
 

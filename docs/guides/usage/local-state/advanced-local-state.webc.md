@@ -6,7 +6,6 @@ eleventyNavigation:
 templateEngineOverride: webc,md
 description: Advanced recipes for Apollo Elements to manage local state
 ---
-# Advanced Local State
 
 <style>
 figure {

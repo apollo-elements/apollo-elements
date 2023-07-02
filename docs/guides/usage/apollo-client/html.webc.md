@@ -1,12 +1,10 @@
 ---
-title: Apollo Client element
+title: '<apollo-client> element'
 permalink: /guides/usage/apollo-client/html/index.html
 eleventyNavigation:
   order: 10
 templateEngineOverride: webc,md
 ---
-
-# apollo-client element
 
 When building your GraphQL app using Apollo Elements HTML components, use 
 `<apollo-client>` to set up the client instance. You can mix-and-match, using 
