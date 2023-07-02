@@ -14,7 +14,7 @@
     text-transform: uppercase;
   }
 
-  :host([type='tip']) {
+  :host {
     background-color: var(--inline-notification-tip-background-color, rgba(221, 221, 221, 0.3));
     border-color: var(--inline-notification-tip-border-color, #42b983);
   }
@@ -45,9 +45,7 @@
     line-height: 1.7;
   }
   </style>
-  <slot name="title">
-    <h3 @html="title || type"></h3>
-  </slot>
+  <h3 @html="title ?? type ?? 'tip'"></h3>
 
   <slot webc:nokeep></slot>
 

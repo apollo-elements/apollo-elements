@@ -81,34 +81,38 @@ query's variables are static, adding a <abbr title="JavaScript Object
   Notation">JSON</abbr> script as a child of the element to initialize them and 
 start the query.
 
-```html copy
-<apollo-query>
-  <script type="application/graphql">
-    query HelloQuery($name: String, $greeting: String) {
-      helloWorld(name: $name, greeting: $greeting) {
-        name
-        greeting
+<code-copy>
+
+  ```html
+  <apollo-query webc:raw>
+    <script type="application/graphql">
+      query HelloQuery($name: String, $greeting: String) {
+        helloWorld(name: $name, greeting: $greeting) {
+          name
+          greeting
+        }
       }
-    }
-  </script>
+    </script>
 
-  <script type="application/json">
-    {
-      "greeting": "How's it going",
-      "name": "Dude"
-    }
-  </script>
+    <script type="application/json">
+      {
+        "greeting": "How's it going",
+        "name": "Dude"
+      }
+    </script>
 
-  <template>
-    <style>
-      #greeting { font-weight: bold; }
-      #name { font-style: italic; }
-    </style>
-    <span id="greeting">{%raw%}{{ data.helloWorld.greeting }}{%endraw%}</span>,
-    <span id="greeting">{%raw%}{{ data.helloWorld.name }}{%endraw%}</span>,
-  </template>
-</apollo-query>
-```
+    <template>
+      <style>
+        #greeting { font-weight: bold; }
+        #name { font-style: italic; }
+      </style>
+      <span id="greeting">{{ data.helloWorld.greeting }}</span>,
+      <span id="greeting">{{ data.helloWorld.name }}</span>,
+    </template>
+  </apollo-query>
+  ```
+
+</code-copy>
 
 Read more about `<apollo-query>` in the [`<apollo-query>` HTML element guide](/guides/usage/queries/html/).
 
@@ -134,9 +138,13 @@ In any case, setting your element's query property or class field (or using
 can change the query via the `query` DOM property at any time to reinitialize 
 the subscription.
 
-```js copy
+<code-copy>
+
+```js
 document.querySelector('hello-query').query = HelloQuery;
 ```
+
+</code-copy>
 
 Apollo client ensures that the component always has the latest data by {% 
 footnoteref "observablequery", "This is different from <a 
@@ -345,10 +353,10 @@ implement the ApolloElement interface, e.g. `<apollo-query>` or elements with
     }
     </script>
     <template>
-      <h2>Latest Message:</h2>{%raw%}
+      <h2>Latest Message:</h2>
       <template type="if" if="{{ data }}">
         <p>{{ data.messages[0].message }}</p>
-      </template>{%endraw%}
+      </template>
     </template>
   </apollo-query>
   ```
