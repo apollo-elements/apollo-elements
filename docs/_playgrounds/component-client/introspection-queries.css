@@ -1,0 +1,2 @@
+ul { margin: 0 }
+strong.described::after { content: ': '; }

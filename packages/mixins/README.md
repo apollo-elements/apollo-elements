@@ -21,7 +21,7 @@ A set of [class mixin functions](https://alligator.io/js/class-composition/#comp
 
 Apollo element mixins are distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
-```bash
+```sh
 npm install --save @apollo-elements/mixins
 ```
 

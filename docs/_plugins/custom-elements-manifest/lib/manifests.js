@@ -1,4 +1,4 @@
-import { propIs } from './fp.js';
+import { propIs } from './fp.cjs';
 
 const pathIs = propIs('path');
 

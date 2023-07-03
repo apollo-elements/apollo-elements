@@ -4,7 +4,7 @@ name: Loading HTML Components
 
 ### 📥 Install via NPM
 
-```bash
+```sh
 npm i @apollo-elements/components
 ```
 ```js

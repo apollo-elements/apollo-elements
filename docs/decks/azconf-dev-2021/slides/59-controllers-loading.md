@@ -4,7 +4,7 @@ name: Loading Controllers
 
 ### 📥 Install via NPM
 
-```bash
+```sh
 npm i @apollo-elements/core
 ```
 

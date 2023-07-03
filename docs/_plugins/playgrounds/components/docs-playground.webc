@@ -1,3 +1,78 @@
+<script webc:setup>
+  const enc = s => s?.replace(/[\u00A0-\u9999<>\&]/g, i => `&#${i.charCodeAt(0)}`);
+  const isIndex = x => x === 'index.html';
+  const getContent = file => file?.content;
+  const getLang = filePath => filePath.split('.').pop();
+  const htmlencode = str => str.replace('</'+'script>', '&lt;/script>');
+
+  function hidestuff(filename, content) {
+    return !isIndex(filename) ? content : `<!-- playground-hide -->
+<!doctype html>
+<head>
+  <style>
+    body {
+      font-family: 'Open sans', sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: white;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- playground-hide-end -->
+${content}
+<!-- playground-hide -->
+</body>
+<!-- playground-hide-end -->
+`;
+  }
+
+  
+
+  function getSamples(playgroundName, selectedFile = 'index.html') {
+    const files = getPlaygroundFiles(playgroundName);
+    const samples = files.map(function filePathToSampleConfig(filename) {
+      const content = readPlaygroundFile(filename, playgroundName);
+      const selected = filename === selectedFile;
+      return {
+        content: hidestuff(filename, content),
+        mimetype: `sample/${getLang(filename)}`,
+        selected,
+        filename,
+      };
+    });
+    return samples.sort((a, b) => a.selected ? -1 : 0);
+  }
+
+  function generateSnippet(playgroundName, selectedFile = 'index.html') {
+    try {
+      const samples = getSamples(playgroundName);
+      const snippet = samples.find(x => x.filename === selectedFile);
+      if (snippet) {
+        const content = getContent(snippet);
+        let redacted = content;
+        const redactRe = /<!-- playground-hide -->(.*?)<!-- playground-hide-end -->/s;
+        while (redactRe.test(redacted))
+          redacted = redacted.replace(redactRe, '');
+        const lang = getLang(snippet.filename)
+        return this.highlight(lang, redacted.trim()).trim();
+      } else {
+        console.log(`No snippet for ${playgroundName}`);
+        return '';
+      }
+    } catch(e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  function escapeScriptEndTags(content) {
+    return content.replaceAll('</'+'script>', '&lt;/script>');
+  }
+
+</script>
 <noscript>
   <style>
   docs-playground:not(:defined) {
@@ -9,7 +84,6 @@
   }
   </style>
 </noscript>
-
 <style>
 
 :root {
@@ -49,47 +123,6 @@
 }
 
 </style>
-
-<script webc:setup>
-  const enc = s => s?.replace(/[\u00A0-\u9999<>\&]/g, i => `&#${i.charCodeAt(0)}`);
-  const isIndex = x => x.fileSlug === 'index' || x.fileSlug === 'index.playground';
-  const getFiles = ($data, playgroundName) =>
-    $data.collections.playground?.filter(x => x.data.playgroundName === playgroundName) ?? [];
-  const getContent = file => file?.content;
-  const getSnippetFile = files =>
-    files.find(isIndex);
-  const getLang = file => {
-    const ext = file?.template?.parsed.ext.replace('.', '')
-    return ext === 'html' ? 'markup' : ext;
-  };
-  const htmlencode = str => str.replace('</'+'script>', '&lt;/script>');
-  const hidestuff = (file) => !isIndex(file) ? file.content : `<!-- playground-hide -->
-<!doctype html>
-<head>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<!-- playground-hide-end -->
-${file.content}
-<!-- playground-hide -->
-</body>
-<!-- playground-hide-end -->
-`;
-  const playgroundsDir = './docs/_playgrounds/'
-  const getSamples = ($data, playgroundName) =>
-    getFiles($data, playgroundName)
-      .map(x => ({
-        filename: x.inputPath
-          .replace(playgroundsDir, '')
-          .replace(`${x.data.playgroundName}/`, '')
-          .replace('.playground', ''),
-        mimetype: `sample/${x?.template?.parsed.ext.replace('.', '')}`,
-        selected: x === getSnippetFile(getFiles($data, playgroundName)),
-        content: htmlencode(hidestuff(x)),
-      }))
-      .sort((a, b) => a.selected ? -1 : 0);
-</script>
-
 <template shadowroot="open" shadowrootmode="open">
   <style>
     :host {
@@ -200,16 +233,14 @@ ${file.content}
       }
     }
   </style>
-
   <template webc:raw webc:nokeep><slot id="snippet"></slot></template>
-
   <playground-ide>
-    <script webc:for="file of getSamples($data, playgroundName)"
+    <script webc:for="file of getSamples(playgroundName, selectedFile)"
             webc:keep
             :filename="file.filename"
             :type="file.mimetype"
             :selected="file.selected"
-            @raw="file.content"></script>
+            @raw="escapeScriptEndTags(file.content)"></script>
     <script type="sample/css">
       html,
       body {
@@ -219,7 +250,6 @@ ${file.content}
       }
     </script>
   </playground-ide>
-
   <button part="button">
     <span id="edit">▶️ Edit Live</span>
 
@@ -241,18 +271,14 @@ ${file.content}
       </svg>
     </slot>
   </button>
-
 </template>
-
-<script webc:type="js" :@snippet="getSnippetFile(getFiles($data, playgroundName))">this.highlight(
-  getLang(snippet),
-  getContent(snippet),
-);</script>
-
+<script webc:type="js">generateSnippet(playgroundName)</script>
 <script type="module" webc:keep>
   import '/assets/dsd.js';
   class DocsPlayground extends HTMLElement {
     static is = 'docs-playground';
+
+    static importSpecifier = 'https://unpkg.com/playground-elements?module';
 
     static observedAttributes = ['show', 'playground-url'];
 
@@ -276,7 +302,7 @@ ${file.content}
 
     connectedCallback() {
       this.button.addEventListener('click', this.show);
-      window.requestIdleCallback?.(() => import('playground-elements'));
+      window.requestIdleCallback?.(() => import(DocsPlayground.importSpecifier));
       if (location.hash === `#${this.id}`)
         this.show();
     }
@@ -284,7 +310,7 @@ ${file.content}
     show = async () => {
       this.setAttribute('loading', '');
       this.button.disabled = true;
-      await import('playground-elements');
+      await import(DocsPlayground.importSpecifier);
       await customElements.whenDefined('playground-ide');
       this.setAttribute('show', '');
       this.button.disabled = false;

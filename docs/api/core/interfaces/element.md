@@ -1,8 +1,11 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 className: ApolloElementElement
 module: types.js
+title: ApolloElement
+eleventyNavigation:
+  order: 00
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -11,13 +14,17 @@ module: types.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Core >> Interfaces >> ApolloElement || 00
-
-Common base interface for Apollo Elements. Provides reactivity for `data`, `error`, `errors`, `loading`, and `variables` fields.
+Common base interface for Apollo Elements. Provides reactivity for `data`, 
+`error`, `errors`, `loading`, and `variables` fields.
 
 ## Type Parameters
 
-Every implemention of `ApolloElement` takes either one or two type parameters. A single parameter is either a `TypedDocumentNode` or the operation's result type, in which case the variables type defaults to `OperationVariables`, which is an object of arbitrary string keys and unknown values. If you pass two parameters, the first is the operation's result type, the second is the operation's variables type.
+Every implemention of `ApolloElement` takes either one or two type parameters. A 
+single parameter is either a `TypedDocumentNode` or the operation's result type, 
+in which case the variables type defaults to `OperationVariables`, which is an 
+object of arbitrary string keys and unknown values. If you pass two parameters, 
+the first is the operation's result type, the second is the operation's 
+variables type.
 
 The following examples demonstrate passing type arguments to a query component.
 

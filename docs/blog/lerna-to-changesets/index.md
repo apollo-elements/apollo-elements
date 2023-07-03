@@ -15,7 +15,7 @@ updated: Last Modified
 
 Remove lerna along with associated config and packages, we don't need them anymore.
 
-```bash
+```sh
 rm lerna.
 yarn remove -W \
   lerna \
@@ -24,7 +24,7 @@ yarn remove -W \
 ```
 
 Install changesets and bootstrap the config.
-```bash
+```sh
 yarn add -WD @changesets/cli
 yarn changeset init
 ```
@@ -33,7 +33,7 @@ And since this is open source, we'll set "access" to "public" in `.changeset/con
 
 Next we'll update our commitlint config:
 
-```bash
+```sh
 yarn add -WD commitlint-plugin-workspace-scopes
 ```
 
@@ -100,7 +100,7 @@ jobs:
 ```
 
 That `yarn release` script runs the following commands
-```bash
+```sh
 yarn clean
 yarn workspaces run prepublishOnly
 
@@ -137,7 +137,7 @@ jobs:
 
 `yarn release:prerelease` does
 
-```bash
+```sh
 yarn changeset pre enter next
 yarn changeset version
 git add .
@@ -157,7 +157,7 @@ Previously, we did the lerna equivalent of those via npm-run-all scripts, and we
 The PR which added changesets was horribly large, with no end to its scope in sight (sue me).
 Using git's interactive rebase command, we can add in changesets after the fact:
 
-```bash
+```sh
 git rebase --interactive origin/main
 ```
 

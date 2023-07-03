@@ -7,7 +7,7 @@ attrs: progressive
 
 ## Dashboard SPAs
 
-```bash
+```sh
 npm init @apollo-elements
 ```
 

@@ -1,0 +1,29 @@
+<apollo-subscription>
+  <script type="application/graphql">
+    subscription NewMessages {
+      newMessage {
+        id
+        message
+        author {
+          id
+          name
+          picture
+        }
+      }
+    }
+  </script>
+
+  <template>
+    <small><em>This demo is blocked by an <a target="_blank" rel="nofollow noreferer" href="https://github.com/apollographql/apollo-feature-requests/issues/299">issue in <code>SchemaLink</code></a>.</small>
+
+    <sl-alert type="primary" duration="3000" closable open>
+      <sl-icon slot="icon" name="info-circle"></sl-icon>
+      <article>
+        <img src="{{ data.newMessage.author.picture }}"
+             alt="{{ data.newMessage.author.name }}"
+             title="{{ data.newMessage.author.name }}"/>
+        <span>{{ data.newMessage.message }}</span>
+      </article>
+    </sl-alert>
+  </template>
+</apollo-subscription>

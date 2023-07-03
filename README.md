@@ -14,7 +14,7 @@
 
 Apollo Elements offers packages based on a variety of underlying web component authoring libraries. You can pick the one that suits your project in order to keep your app sizes small.
 
-```bash
+```sh
 npm init @apollo-elements
 ```
 
@@ -55,7 +55,7 @@ Reactive GraphQL controllers contain sharable, reusable, and stackable logic.
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/core@next
 ```
 
@@ -82,7 +82,7 @@ Write GraphQL apps in HTML.
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/components@next
 ```
 
@@ -130,7 +130,7 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/mixins@next
 ```
 
@@ -153,7 +153,7 @@ These base classes extend from [`LitElement`](https://lit.dev), so you can quick
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/lit-apollo@next
 ```
 
@@ -176,7 +176,7 @@ These base classes extend from [`FASTElement`](https://fast.design), with all it
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/fast@next
 ```
 
@@ -200,7 +200,7 @@ Apollo hooks for web components, with [haunted](https://github.com/matthewp/haun
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/haunted@next
 ```
 
@@ -224,7 +224,7 @@ Alternate hooks implementation for web components, with [atomico](https://atomic
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/atomico@next
 ```
 
@@ -248,7 +248,7 @@ Descriptor factories and object spreads you can roll into your [hybrids](https:/
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/hybrids@next
 ```
 
@@ -269,7 +269,7 @@ These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonj
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/gluon@next
 ```
 
@@ -293,7 +293,7 @@ These custom elements fire [polymer](https://polymer-library.polymer-project.org
 
 <code-copy>
 
-```bash
+```sh
 npm i -S @apollo-elements/polymer@next
 ```
 

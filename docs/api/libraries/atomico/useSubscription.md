@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/atomico'
 module: useSubscription.js
+title: useSubscription
+eleventyNavigation:
+  order: 30
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,136 +13,9 @@ module: useSubscription.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Atomico >> useSubscription || 30
-
 Apollo `useSubscription` hook for web components.
 
 Read the [subscription component guides](/guides/usage/subscriptions/) for examples and tips.
 
-```ts playground subscription-factory user-added.ts
-import { useSubscription, useState, c, html, css } from '@apollo-elements/atomico';
+<docs-playground id="atomico-subscription" playground-name="atomico-subscription"></docs-playground>
 
-import { client } from './client.js';
-
-import { UserAddedSubscription } from './UserAdded.subscription.graphql.js';
-
-import '@material/mwc-snackbar';
-
-function UserAdded() {
-  const [last, setLast] = useState('');
-
-  const [opened, setOpened] = useState(false);
-
-  const { data } = useSubscription(UserAddedSubscription, {
-    client,
-    onData({ subscriptionData }) {
-      setLast(subscriptionData.data.userAdded.name);
-      setOpened(true);
-    },
-  });
-
-  return html`
-    <host shadowDom>
-      <mwc-snackbar
-          labeltext="${data?.name} Joined!"
-          open=${opened}
-      ></mwc-snackbar>
-    </host>
-  `;
-};
-
-UserAdded.styles = css`
-  :host {
-    display: block;
-  }
-`;
-
-customElements.define('user-added', c(UserAdded));
-```
-
-```css playground-file subscription-factory user-added.css
-```
-
-```ts playground-file subscription-factory UserAdded.subscription.graphql.ts
-import type { User } from './client';
-import type { TypedDocumentNode } from '@apollo/client/core';
-import { gql } from '@apollo/client/core';
-export const UserAddedSubscription: TypedDocumentNode<{ userAdded: User }> =  gql`
-  subscription UserAddedSubscription  {
-    userAdded {
-      id
-      name
-    }
-  }
-`;
-```
-
-```html playground-file subscription-factory index.html
-<script>window.process=window.process||{env: {}}</script>
-<script type="module" src="user-added.js"></script>
-<user-added></user-added>
-<button>Add User</button>
-<small><em>This demo is blocked by an <a target="_blank" rel="nofollow noreferer" href="https://github.com/apollographql/apollo-feature-requests/issues/299">issue in <code>SchemaLink</code></a>.</small>
-```
-
-```ts playground-file subscription-factory client.ts
-import { SchemaLink } from '@apollo/client/link/schema';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { addMocksToSchema, createMockStore } from '@graphql-tools/mock';
-import { ApolloClient, InMemoryCache } from '@apollo/client/core';
-import { subscribe } from 'event-iterator';
-
-export interface User {
-  id: number;
-  name: string;
-  status?: 'DELETED';
-};
-
-const typeDefs = `
-  type User {
-    name: String
-    id: ID
-  }
-
-  type Subscription {
-    userAdded: User
-  }
-
-  schema {
-    subscription: Subscription
-  }
-`;
-
-const USERS: User[] = [
-  { id: 1, name: 'Neil' }
-];
-
-const getNextUserId = () => Math.max(...USERS.map(x => x.id)) + 1;
-
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers: {
-    Subscription: {
-      userAdded: {
-        subscribe: () => subscribe.call(document.querySelector('button'), 'click'),
-        resolve: () => makeNextUser()
-      }
-    }
-  }
-});
-
-const store = createMockStore({ schema });
-
-function makeNextUser() {
-  const id = getNextUserId();
-  return {
-    name: store.get('User', id, 'name'),
-    id: store.get('User', id, 'id'),
-  };
-}
-
-export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new SchemaLink({ schema }),
-});
-```

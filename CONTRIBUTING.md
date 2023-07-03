@@ -65,7 +65,7 @@ If you'd like to add a new feature to Apollo Elements, please open a feature req
 - Test your changes
 - Add or update documentation (inline, in `/docs`, or both)
 - Add a changeset by running
-  ```bash
+  ```sh
   npx changeset
   ```
 

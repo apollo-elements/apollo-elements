@@ -1,8 +1,11 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 module: apollo-subscription-controller.js
 description: Subscription Controller for Apollo Elements
+title: ApolloSubscriptionController
+eleventyNavigation:
+  order: 40
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -11,19 +14,27 @@ description: Subscription Controller for Apollo Elements
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Core >> Controllers >> ApolloSubscriptionController || 40
+`ApolloSubscriptionController` lets you subscribe to real-time updated from your 
+GraphQL server. Pass it a GraphQL subscription document, and any options you 
+choose, and it will update its host when it's state (e.g. `data`, `error`, or 
+`loading`) changes.
 
-`ApolloSubscriptionController` lets you subscribe to real-time updated from your GraphQL server. Pass it a GraphQL subscription document, and any options you choose, and it will update its host when it's state (e.g. `data`, `error`, or `loading`) changes.
-
-The (optional) third argument to the constructor is an [`ApolloSubscriptionControllerOptions`](#options) object.
+The (optional) third argument to the constructor is an 
+[`ApolloSubscriptionControllerOptions`](#options) object.
 
 <inline-notification type="tip">
 
-Apollo Elements controllers are not limited to Lit. Use them with any object that [implements the `ReactiveControllerHost` interface](https://lit.dev/docs/composition/controllers/). See [`ControllerHostMixin`](/api/libraries/mixins/controller-host-mixin/) for an example.
+Apollo Elements controllers are not limited to Lit. Use them with any object 
+that [implements the `ReactiveControllerHost` 
+interface](https://lit.dev/docs/composition/controllers/). See 
+[`ControllerHostMixin`](/api/libraries/mixins/controller-host-mixin/) for an 
+example.
 
 </inline-notification>
 
-```ts copy
+<code-copy>
+
+```ts
 import { ApolloSubscriptionController } from '@apollo-elements/core';
 import { customElement, query } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
@@ -50,3 +61,5 @@ class UserJoined extends LitElement {
   }
 }
 ```
+
+</code-copy>

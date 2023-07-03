@@ -1,5 +1,20 @@
 /**
- * @param {import('./lib/getCustomElementsManifests').Options & import('./eleventy/custom-elements-manifest').CEMOptions} options
- * @return {Partial<import('@rocket/cli/dist-types/types/preset').RocketPreset>}
+ * @typedef {object} CEMOptions
+ * @property {{ packageName?: string; keepExtension?: boolean; max?: number; }} [imports]
+ * @property {boolean} [typeLinksNewTab=false]
+ * @property {Record<string, string>} [typeLinks]
  */
-export function customElementsManifest(options: import('./lib/getCustomElementsManifests').Options & import('./eleventy/custom-elements-manifest').CEMOptions): Partial<import('@rocket/cli/dist-types/types/preset').RocketPreset>;
+/**
+ * @param  {*} eleventyConfig
+ * @param  {CEMOptions} options
+ */
+export function customElementsManifestPlugin(eleventyConfig: any, options: CEMOptions): void;
+export type CEMOptions = {
+    imports?: {
+        packageName?: string;
+        keepExtension?: boolean;
+        max?: number;
+    };
+    typeLinksNewTab?: boolean;
+    typeLinks?: Record<string, string>;
+};

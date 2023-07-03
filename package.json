@@ -143,6 +143,7 @@
     "eslint-plugin-easy-loops": "^1.0.1",
     "event-iterator": "^2.0.0",
     "execa": "^6.1.0",
+    "glob": "^10.3.1",
     "graphql": "^16.3.0",
     "graphql-subscriptions": "^2.0.0",
     "graphql-tag": "^2.12.6",

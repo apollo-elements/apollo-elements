@@ -1,0 +1,26 @@
+<script webc:type="js">
+const highlighted = {
+  npm: highlight('shell', npm ?? ''),
+  yarn: highlight('shell', yarn ?? ''),
+  pnpm: highlight('shell', pnpm ?? ''),
+};
+/* html */`
+<code-tabs collection="package-managers"
+           default-tab="npm"
+           align="end">
+  <code-tab data-id="npm"
+            data-label="NPM"
+            data-icon-href="/assets/icons/npm.svg"
+  >${highlighted.npm}</code-tab>
+  <code-tab data-id="yarn"
+            data-label="Yarn"
+            data-icon-href="/assets/icons/yarn.svg"
+  >${highlighted.yarn}</code-tab>
+  <code-tab data-id="pnpm"
+            data-label="PNPM"
+            data-icon-href="/assets/icons/pnpm.svg"
+  >${highlighted.pnpm}</code-tab>
+</code-tabs>
+`;
+
+</script>

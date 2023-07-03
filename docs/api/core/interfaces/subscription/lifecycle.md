@@ -1,8 +1,7 @@
 ---
 description: Details on how to Apollo Elements GraphQL subscription components work.
+title: Component Lifecycle
 ---
-
-# Core >> Interfaces >> ApolloSubscription >> Component Lifecycle || 20
 
 ## `connectedCallback`
 On connecting to the DOM, the element reads it's `subscription` and `variables` properties either from JavaScript, or from it's [script children](/guides/cool-tricks/inline-graphql-scripts/), and initializes a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to watch for changes to those children.

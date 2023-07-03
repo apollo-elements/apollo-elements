@@ -15,7 +15,7 @@ name: Try It
     ```
 
 - Business SDKs
-    ```bash
+    ```sh
     npm install @ourcorp/html-sdk
     ```
 

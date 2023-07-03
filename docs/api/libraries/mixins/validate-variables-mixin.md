@@ -1,7 +1,8 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/mixins'
 module: validate-variables-mixin.js
+title: ValidateVariablesMixin
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -9,8 +10,6 @@ module: validate-variables-mixin.js
      corresponding to the package name and module in this YAML front-matter block.
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
-
-# Web Component Libraries >> Class Mixins >> ValidateVariablesMixin
 
 Optional mixin which prevents queries from automatically subscribing until their non-nullable variables are defined.
 

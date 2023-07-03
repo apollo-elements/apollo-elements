@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/lit-apollo'
 module: apollo-query.js
+title: ApolloQuery
+eleventyNavigation:
+  order: 20
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,54 +13,20 @@ module: apollo-query.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> lit-apollo >> ApolloQuery || 20
-
 <inline-notification type="tip" title="Looking for Controllers?">
 
-Looking for reactive Apollo query controllers? See [`@apollo-elements/core/apollo-query-controller`](/api/core/controllers/query/).
+Looking for reactive Apollo query controllers? See 
+[`@apollo-elements/core/apollo-query-controller`](/api/core/controllers/query/).
 
 </inline-notification>
 
-`ApolloQuery` inherits from `ApolloElement` and implements the [`ApolloQueryInterface`](/api/core/interfaces/query/).
+`ApolloQuery` inherits from `ApolloElement` and implements the 
+[`ApolloQueryInterface`](/api/core/interfaces/query/).
 
 ## Demo
 
-<launches-playground>
+<docs-playground id="lit-apollo-query" playground-name="lit-apollo-query"></docs-playground>
 
-    <playground-file name="launches.ts" language="typescript">
-```ts
-import { ApolloQuery, html } from '@apollo-elements/lit-apollo';
-import { customElement } from 'lit/decorators.js';
-import { LaunchesQuery } from './Launches.query.graphql.js';
-import { style } from './SpacexLaunches.css.js';
-import '@apollo-elements/components/apollo-client';
+Read the [query component guides](../../../../guides/usage/queries/) for more 
+examples and tips.
 
-@customElement('spacex-launches')
-class SpacexLaunches extends ApolloQuery<typeof LaunchesQuery> {
-  static readonly styles = style;
-
-  variables = { limit: 3 };
-
-  query = LaunchesQuery;
-
-  render() {
-    const launches = this.data?.launchesPast ?? [];
-    return html`
-      <ol>${launches.map(x => html`
-        <li>
-          <article>
-            <span>${x.mission_name ?? ''}</span>
-            <img .src="${x.links?.mission_patch_small}" alt="Badge" role="presentation"/>
-          </article>
-        </li>`)}
-      </ol>
-    `;
-  }
-}
-```
-    </playground-file>
-
-
-</launches-playground>
-
-Read the [query component guides](../../../../guides/usage/queries/) for more examples and tips.

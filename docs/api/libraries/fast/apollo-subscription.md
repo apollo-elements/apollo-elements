@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/fast'
 module: apollo-subscription-behavior.js
+title: ApolloSubscriptionBehavior
+eleventyNavigation:
+  order: 40
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,8 +13,10 @@ module: apollo-subscription-behavior.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> FAST >> ApolloSubscriptionBehavior || 40
+`ApolloSubscriptionBehavior` extends 
+[`ApolloSubscriptionController`](/api/core/controllers/query/) and implements 
+the [`Behavior`](https://www.fast.design/docs/api/fast-element.behavior) 
+interface.
 
-`ApolloSubscriptionBehavior` extends [`ApolloSubscriptionController`](/api/core/controllers/query/) and implements the [`Behavior`](https://www.fast.design/docs/api/fast-element.behavior) interface.
-
-Read the [subscription component guides](/guides/usage/subscriptions/) for examples and tips.
+Read the [subscription component guides](/guides/usage/subscriptions/) for 
+examples and tips.

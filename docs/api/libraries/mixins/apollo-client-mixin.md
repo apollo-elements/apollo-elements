@@ -1,7 +1,8 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/mixins'
 module: apollo-client-mixin.js
+title: ApolloClientMixin
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -9,8 +10,6 @@ module: apollo-client-mixin.js
      corresponding to the package name and module in this YAML front-matter block.
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
-
-# Web Component Libraries >> Class Mixins >> ApolloClientMixin
 
 Mixin which associates an `ApolloClient` instance with a custom element class.
 

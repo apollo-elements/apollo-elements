@@ -1,8 +1,11 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 className: ApolloSubscriptionElement
 module: types.js
+title: ApolloSubscription
+eleventyNavigation:
+  order: 30
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -11,8 +14,7 @@ module: types.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Core >> Interfaces >> ApolloSubscription || 30
-
-Subscription components update in real time in reaction to events on your GraphQL server. They are ideal for uses like chat rooms or stock tickers.
+Subscription components update in real time in reaction to events on your 
+GraphQL server. They are ideal for uses like chat rooms or stock tickers.
 
 Subscription components inherit the [ApolloElementInterface](../element/).

@@ -1,8 +1,11 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 module: decorators.js
 description: Property Decorators for Apollo Elements
+title: Decorators
+eleventyNavigation:
+  order: 50
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -11,9 +14,9 @@ description: Property Decorators for Apollo Elements
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Core >> Helpers >> Decorators || 50
-
-Decorators for Apollo Elements. Used internally to reflect properties from controllers to their elements. Normally you shouldn't need to import these directly.
+Decorators for Apollo Elements. Used internally to reflect properties from 
+controllers to their elements. Normally you shouldn't need to import these 
+directly.
 
 ```ts
 import { controlled } from '@apollo-elements/core/decorators';

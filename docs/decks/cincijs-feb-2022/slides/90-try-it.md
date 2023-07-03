@@ -8,7 +8,7 @@ attrs: progressive
 <section reveal>
 
 ### Business SDKs
-```bash
+```sh
 npm install @ourcorp/html-sdk
 ```
 

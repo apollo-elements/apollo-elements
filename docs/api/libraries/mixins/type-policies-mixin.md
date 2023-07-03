@@ -1,7 +1,8 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/mixins'
 module: type-policies-mixin.js
+title: TypePoliciesMixin
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -9,8 +10,6 @@ module: type-policies-mixin.js
      corresponding to the package name and module in this YAML front-matter block.
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
-
-# Web Component Libraries >> Class Mixins >> TypePoliciesMixin
 
 Optional mixin which lets you declare type policies for a component's query.
 

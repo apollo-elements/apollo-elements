@@ -34,7 +34,7 @@ Apollo Elements' `lit-apollo` is distributed through `npm`, the node package man
 
 <code-copy>
 
-```bash
+```sh
 npm install --save @apollo-elements/lit-apollo
 ```
 

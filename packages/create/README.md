@@ -15,7 +15,7 @@
 
 To quickly get started with apollo-elements, generate a skeleton app with this command
 
-```bash
+```sh
 npm init @apollo-elements
 ```
 
@@ -23,7 +23,7 @@ Which will prompt you to generate a full app, or a component thereof.
 
 ## App Generator
 
-```bash
+```sh
 npm init @apollo-elements -- app
 ```
 
@@ -31,7 +31,7 @@ Generate an Apollo Elements Skeleton App
 
 ### Example
 
-```bash
+```sh
 npm init @apollo-elements -- \
   app \
     --pkg-manager yarn \
@@ -73,28 +73,28 @@ The generated app comes with plenty of bells-and-whistles:
 
 These npm scripts help you get your work done in style:
 
-```bash
+```sh
 npm start
 yarn start
 ```
 
 runs the code generator and the development server in watch mode
 
-```bash
+```sh
 npm run build
 yarn build
 ```
 
 bundles the app into `/build`. The build will bundle and minify your javascript, and minify your HTML. Just upload to your static file host and you're good.
 
-```bash
+```sh
 npm run lint
 yarn lint
 ```
 
 Lint your app with an opinionated set of rules for JavaScript and TypeScript
 
-```bash
+```sh
 npm test
 yarn test
 ```
@@ -103,7 +103,7 @@ The generator currently doesn't offer strong opinions on testing your UI compone
 
 ## Component Generator
 
-```bash
+```sh
 npm init @apollo-elements -- component
 ```
 
@@ -111,7 +111,7 @@ Generate an Apollo Element
 
 ### Example
 
-```bash
+```sh
 npm init @apollo-elements -- \
   component \
     --type mutation \

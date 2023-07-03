@@ -95,12 +95,12 @@
 
   To migrate,
 
-  ```bash
+  ```sh
   npm r -S lit-element lit-html
   npm i -S lit @apollo-elements/lit-apollo@latest
   ```
 
-  ```bash
+  ```sh
   yarn remove lit-element lit-html
   yarn add lit @apollo-elements/lit-apollo@latest
   ```
@@ -238,12 +238,12 @@
 
   To migrate,
 
-  ```bash
+  ```sh
   npm r -S lit-element lit-html
   npm i -S @apollo-elements/lit-apollo
   ```
 
-  ```bash
+  ```sh
   yarn remove lit-element lit-html
   yarn add @apollo-elements/lit-apollo
   ```

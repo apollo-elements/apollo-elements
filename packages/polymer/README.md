@@ -19,7 +19,7 @@
 ## 🔧 Installation
 `apollo-elements` are distributed through `npm` the node package manager. To install a copy of the latest version of these elements in your project's `node_modules` directory, first [Install npm on your system](https://www.npmjs.com/get-npm), then run the following command in your project's root directory:
 
-```bash
+```sh
 npm install --save @apollo-elements/polymer
 ```
 

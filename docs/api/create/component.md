@@ -1,10 +1,16 @@
-# Generator >> Component || 10
+---
+title: Component
+eleventyNavigation:
+  order: 10
+---
 
 Generate an Apollo Element
 
 ## Example
 
-```bash copy
+<code-copy>
+
+```sh
 npm init @apollo-elements -- \
   component \
     --type mutation \
@@ -18,6 +24,8 @@ npm init @apollo-elements -- \
     --no-codegen
     --overwrite
 ```
+
+</code-copy>
 
 ## Options
 

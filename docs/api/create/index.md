@@ -1,4 +1,8 @@
-# Generator || 30
+---
+title: Generator
+eleventyNavigation:
+  order: 30
+---
 
 ![Screenshot of CLI Wizard](../../../packages/create/create-screenshot.png)
 

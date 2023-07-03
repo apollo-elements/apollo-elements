@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/mixins'
 module: apollo-subscription-mixin.js
+title: ApolloSubscriptionMixin
+eleventyNavigation:
+  order: 40
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,8 +13,8 @@ module: apollo-subscription-mixin.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Class Mixins >> ApolloSubscriptionMixin || 40
+`ApolloSubscriptionMixin` applies `ApolloElementMixin` and the 
+[`ApolloSubscriptionInterface`](/api/core/interfaces/subscription/).
 
-`ApolloSubscriptionMixin` applies `ApolloElementMixin` and the [`ApolloSubscriptionInterface`](/api/core/interfaces/subscription/).
-
-Read the [subscription component guides](../../../../guides/usage/subscriptions/) for examples and tips.
+Read the [subscription component 
+guides](../../../../guides/usage/subscriptions/) for examples and tips.

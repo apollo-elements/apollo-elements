@@ -1,0 +1,20 @@
+<script type="module" src="components.js"></script>
+<apollo-client uri="https://api.spacex.land/graphql">
+  <apollo-mutation refetch-queries="LatestUsers">
+    <script type="application/graphql" src="InsertUser.mutation.graphql"></script>
+    <template>
+      <link rel="stylesheet" href="InsertUser.css"/>
+      <p-card>
+        <h2 slot="heading">Add a User</h2>
+        <p>Complete the form to add a user.</p>
+
+        <p ?hidden="{{ !data }}">{{ data.insert_users.returning[0].name }} added!</p>
+
+        <slot slot="actions"></slot>
+      </p-card>
+    </template>
+
+    <mwc-textfield data-variable="name" label="User name" outlined></mwc-textfield>
+    <mwc-button trigger label="Add user"></mwc-button>
+  </apollo-mutation>
+</apollo-client>

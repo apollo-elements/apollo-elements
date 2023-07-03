@@ -1,40 +1,17 @@
-# Generator >> App || 00
+---
+title: App
+eleventyNavigation:
+  order: 10
+---
 
 Generate an Apollo Elements skeleton app.
 
 ## Example
 
 <code-tabs collection="package-managers" default-tab="npm" align="end">
-
-```bash tab npm
-npm init @apollo-elements -- \
-  app \
-    --uri '/graphql' \
-    --install \
-    --start \
-    --overwrite
-```
-
-```bash tab yarn
-npm init @apollo-elements -- \
-  app \
-    --pkg-manager yarn \
-    --uri '/graphql' \
-    --install \
-    --start \
-    --overwrite
-```
-
-```bash tab pnpm
-pnpm init @apollo-elements -- \
-  app \
-    --pkg-manager pnpm \
-    --uri '/graphql' \
-    --install \
-    --start \
-    --overwrite
-```
-
+  <code-tab tab-id="npm" src="snippets/app/npm.sh"></code-tab>
+  <code-tab tab-id="npm" src="snippets/app/yarn.sh"></code-tab>
+  <code-tab tab-id="npm" src="snippets/app/pnpm.sh"></code-tab>
 </code-tabs>
 
 ## Options

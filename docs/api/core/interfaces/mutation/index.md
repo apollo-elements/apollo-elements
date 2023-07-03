@@ -1,8 +1,11 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 className: ApolloMutationElement
 module: types.js
+title: ApolloMutation
+eleventyNavigation:
+  order: 20
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -11,8 +14,8 @@ module: types.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Core >> Interfaces >> ApolloMutation || 20
-
-Mutation components affect your app's state by issuing mutations to the GraphQL server. Manage your cache by implementing an [updater](#updater) function, and provide the perception of performance with [Optimistic UI](#optimisticresponse).
+Mutation components affect your app's state by issuing mutations to the GraphQL 
+server. Manage your cache by implementing an [updater](#updater) function, and 
+provide the perception of performance with [Optimistic UI](#optimisticresponse).
 
 Mutation components inherit the [ApolloElementInterface](../element/).

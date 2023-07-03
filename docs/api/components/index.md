@@ -1,22 +1,14 @@
-# Components || 20
+---
+title: Components
+eleventyNavigation:
+  order: 20
+---
 
 Utility components that help you factor your graphql-based app.
 
-<code-tabs collection="package-managers" default-tab="npm" align="end">
-
-```bash tab npm
-npm i -S @apollo-elements/components
-```
-
-```bash tab yarn
-yarn add @apollo-elements/components
-```
-
-```bash tab pnpm
-pnpm add @apollo-elements/components
-```
-
-</code-tabs>
+<npm-snippets npm="npm i -S @apollo-elements/components"
+              yarn="yarn add @apollo-elements/components"
+              pnpm="pnpm add @apollo-elements/components"></npm-snippets>
 
 - [`<apollo-client>`](./apollo-client/) provides all it's children (even across open shadow roots) with a client instance.
 - [`<apollo-mutation>`](./apollo-mutation/) lets you write declarative mutation components without subclassing.
@@ -25,7 +17,9 @@ pnpm add @apollo-elements/components
 
 -----
 
-```html copy
+<code-copy webc:raw>
+
+```html
 <apollo-client uri="/graphql">
   <apollo-query>
     <script type="application/graphql" src="QuoteQuery.graphql"></script>
@@ -33,9 +27,9 @@ pnpm add @apollo-elements/components
       { "name": "Neil Armstrong" }
     </script>
     <template>
-      <figure ?hidden="{%raw%}{{ !data }}{%endraw%}">
-        <blockquote>{%raw%}{{ data.quote }}{%endraw%}</blockquote>
-        <figcaption>—{%raw%}{{ data.name }}{%endraw%}</figcaption>
+      <figure ?hidden="{{ !data }}">
+        <blockquote>{{ data.quote }}</blockquote>
+        <figcaption>—{{ data.name }}</figcaption>
       </figure>
     </template>
   </apollo-query>
@@ -43,8 +37,8 @@ pnpm add @apollo-elements/components
   <apollo-subscription>
     <script type="application/graphql" src="TMinus.subscription.graphql"></script>
     <template>
-      <p ?hidden="{%raw%}{{ !data }}{%endraw%}">
-        T-Minus <time datetime="{%raw%}{{ data.datetime }}{%endraw%}">{%raw%}{{ data.countdown }}{%endraw%}</time>
+      <p ?hidden="{{ !data }}">
+        T-Minus <time datetime="{{ data.datetime }}">{{ data.countdown }}</time>
       </p>
     </template>
   </apollo-subscription>
@@ -62,3 +56,5 @@ pnpm add @apollo-elements/components
   </apollo-mutation>
 </apollo-client>
 ```
+
+</code-copy>

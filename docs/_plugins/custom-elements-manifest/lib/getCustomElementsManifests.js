@@ -4,7 +4,7 @@ import hirestime from 'hirestime';
 import { readFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { globby } from 'globby';
+import { glob } from 'glob';
 import { getModule } from './manifests.js';
 
 
@@ -72,7 +72,7 @@ async function collateManifests(options) {
     : options?.packages
   ) ?? 'packages/*/package.json';
 
-  cached = globby(packages, { cwd }).then(packageJsons => packageJsons.reduce(async (acc, path) =>
+  cached = glob(packages, { cwd }).then(packageJsons => packageJsons.reduce(async (acc, path) =>
     Object.assign(
       await acc,
       await getPackage({ path, cwd })

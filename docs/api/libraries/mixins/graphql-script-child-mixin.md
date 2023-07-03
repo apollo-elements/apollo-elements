@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/mixins'
 module: graphql-script-child-mixin.js
+title: GraphQLScriptChildMixin
+eleventyNavigation:
+  order: 70
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -10,6 +13,6 @@ module: graphql-script-child-mixin.js
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Web Component Libraries >> Class Mixins >> GraphQLScriptChildMixin || 70
-
-`GraphQLScriptChildMixin` allows Apollo elements to read their GraphQL document (i.e. query, mutation, or subscription) and variables from HTML `<script type="application/graphql">` or `<script type="application/json">` elements
+`GraphQLScriptChildMixin` allows Apollo elements to read their GraphQL document 
+(i.e. query, mutation, or subscription) and variables from HTML `<script 
+type="application/graphql">` or `<script type="application/json">` elements

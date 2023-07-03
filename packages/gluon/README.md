@@ -23,7 +23,7 @@ Gluon is a simple, unopinionated UI library which uses `lit-html` for templating
 ## 🔧 Installation
 Apollo Gluon elements are distributed through `npm`, the node package manager. To install a copy of the latest version in your project's `node_modules` directory, [install npm on your system](https://www.npmjs.com/get-npm) then run the following command in your project's root directory:
 
-```bash
+```sh
 npm install --save @apollo-elements/gluon
 ```
 

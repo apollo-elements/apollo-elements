@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 description: Apollo Elements core library helpers
+title: Library Functions
+eleventyNavigation:
+  order: 100
 modules:
   - lib/create-apollo-client.js
   - lib/has-all-variables.js
@@ -14,5 +17,3 @@ modules:
      corresponding to the package name and module in this YAML front-matter block.
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
-
-# Core >> Helpers >> Library Functions || 100

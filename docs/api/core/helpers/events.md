@@ -1,9 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/core'
 module: events.js
 moduleContents: multiple
 description: Events for Apollo Elements
+title: Events
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -12,9 +13,8 @@ description: Events for Apollo Elements
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-# Core >> Helpers >> Events
-
-`<apollo-client>` listens for `apollo-element-connected` and `apollo-element-disconnected` events to manage their client reference.
+`<apollo-client>` listens for `apollo-element-connected` and 
+`apollo-element-disconnected` events to manage their client reference.
 
 ```ts
 const APOLLO_ELEMENTS = new Set();

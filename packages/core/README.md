@@ -32,7 +32,7 @@ Apollo Elements is distributed through `npm`, the node package manager. To insta
 
 <code-copy>
 
-```bash
+```sh
 npm install --save @apollo-elements/core
 ```
 

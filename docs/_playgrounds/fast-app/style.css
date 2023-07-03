@@ -1,0 +1,12 @@
+body {
+  display: grid;
+  background-color: #111;
+  color: white;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  place-items: center center;
+  height: 100vh;
+}
+
+fast-design-system-provider {
+  height: 100%;
+}

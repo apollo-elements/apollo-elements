@@ -12,26 +12,21 @@ eleventyImport:
   <h1 :id="slugify(title)">
     <a :href="`#${slugify(title)}`" class="header-anchor" @text="title"></a>
   </h1>
+
   <template webc:nokeep @html="content"></template>
+
   <footer class="content-footer">
     <p>
       Caught a mistake or want to contribute to the documentation?
-      <a :href="`${$data.site.gitSiteUrl}/edit/main/${page.inputPath}`">Edit this page on GitHub!</a>
+      <a :href="`${$data.site.gitSiteUrl}/edit/main/${page.inputPath}`">
+        Edit this page on GitHub!
+      </a>
     </p>
   </footer>
   <template webc:type="11ty" 11ty:type="njk">{% footnotes %}</template>
 </main>
 
 <apollo-elements-footer></apollo-elements-footer>
-
-<svg id="icon-sprite-sheet" aria-hidden="true">
-  <defs>
-    <g webc:for="entry of Array.from(getIcons($data.page).entries())"
-        :id="`${entry[0]}-icon`"
-        @html="entry[1]"
-    ></g>
-  </defs>
-</svg>
 
 <script type="module" webc:bucket="modules">
   import '/assets/dsd.js';
@@ -41,5 +36,5 @@ eleventyImport:
 <noscript>
   <link rel="stylesheet" href="/assets/static/search/noscript.css">
   <link rel="stylesheet" href="/assets/static/noscript.css">
-  <style @raw="getBundle('css', 'noscript)" webc:keep></style>
+  <style @raw="getBundle('css', 'noscript')" webc:keep></style>
 </noscript>

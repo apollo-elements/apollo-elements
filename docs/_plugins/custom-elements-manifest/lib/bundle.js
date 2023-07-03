@@ -14,7 +14,7 @@ export async function bundle({ path }) {
     minify: process.env.CI === 'true',
     sourcemap: true,
     format: 'esm',
-    target: 'es2020',
+    target: 'es2022',
     outdir: 'docs/_merged_assets/_static/custom-elements-manifest',
     plugins: [litCssPlugin()],
     entryPoints: {

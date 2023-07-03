@@ -1,7 +1,10 @@
 ---
-layout: layout-api
+layout: sidebar.webc # layout-api
 package: '@apollo-elements/polymer'
 module: polymer-apollo-subscription.js
+title: polymer-apollo-subscription
+eleventyNavigation:
+  order: 30
 ---
 <!-- ----------------------------------------------------------------------------------------
      Welcome! This file includes automatically generated API documentation.
@@ -9,5 +12,3 @@ module: polymer-apollo-subscription.js
      corresponding to the package name and module in this YAML front-matter block.
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
-
-# Web Component Libraries >> Polymer >> polymer-apollo-subscription || 30
