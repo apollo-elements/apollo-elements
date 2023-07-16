@@ -1,0 +1,20 @@
+<slot></slot>
+
+<template webc:nokeep webc:for="declaration of $data.cem.get(package).getDeclarationsForModule(module)">
+  <cem-class webc:if="declaration.kind === 'class'" :@declaration="declaration"></cem-class>
+  <cem-mixin webc:if="declaration.kind === 'mixin'" :@declaration="declaration"></cem-mixin>
+  <cem-function webc:if="declaration.kind === 'function'" :@declaration="declaration"></cem-function>
+  <cem-variable webc:if="declaration.kind === 'variable'" :@declaration="declaration"></cem-variable>
+</template>
+
+<template webc:nokeep webc:if="module">
+  <link-heading :level="exportsHeading ?? 2">Exports</link-heading>
+  <cem-exports @module="module"></cem-exports>
+</template>
+
+<template webc:if="debug" webc:nokeep>
+  <h2 @text="module"></h2>
+  <json-viewer>
+    <script type="application/json" @text="module"></script>
+  </json-viewer>
+</template>

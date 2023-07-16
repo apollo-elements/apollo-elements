@@ -1,0 +1,19 @@
+<slot></slot>
+
+<template webc:if="cem.modules.length" webc:nokeep webc:for="mod of cem.modules">
+  <link-heading level="2" @text="mod.path"></link-heading>
+  <cem-module @module="mod"></cem-module>
+</template>
+<cem-module webc:elif="cem.module" @module="cem.module"></cem-module>
+<cem-module webc:else @module="cem.index"></cem-module>
+
+<script type="module" webc:keep>
+  if (location.hash) {
+    const anchor = document.querySelector(location.hash)
+    const doc = anchor && anchor.closest('type-doc');
+    if (doc) {
+      doc.expanded = true;
+      doc.scrollIntoView();
+    }
+  }
+</script>

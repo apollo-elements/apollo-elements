@@ -233,7 +233,7 @@ ${content}
       }
     }
   </style>
-  <template webc:raw webc:nokeep><slot id="snippet"></slot></template>
+  <slot id="snippet"></slot>
   <playground-ide>
     <script webc:for="file of getSamples(playgroundName, selectedFile)"
             webc:keep
@@ -274,7 +274,7 @@ ${content}
 </template>
 <script webc:type="js">generateSnippet(playgroundName)</script>
 <script type="module" webc:keep>
-  import '/assets/dsd.js';
+  import { polyfillDeclarativeShadowDOM } from '/assets/dsd.js';
   class DocsPlayground extends HTMLElement {
     static is = 'docs-playground';
 
@@ -298,6 +298,11 @@ ${content}
           if (this.playgroundUrl !== next)
             this.playgroundUrl = next;
       }
+    }
+
+    constructor() {
+      super();
+      polyfillDeclarativeShadowDOM(this);
     }
 
     connectedCallback() {

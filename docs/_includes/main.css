@@ -44,7 +44,7 @@
   --yellow-300: #FFF176;
 
   /* root layout */
-  --main-padding-inline: calc((100vw - 1200px) / 2 + 20px);
+  --main-padding-inline: clamp(20px, calc((100vw - 1200px) / 2 + 20px), 200px);
 
   /* theme */
   --primary-color-accent: var(--blue-grey-100);

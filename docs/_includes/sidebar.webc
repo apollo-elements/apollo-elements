@@ -29,7 +29,6 @@ eleventyImport:
 <apollo-elements-footer></apollo-elements-footer>
 
 <script type="module" webc:bucket="modules">
-  import '/assets/dsd.js';
   import '/assets/components/code-copy.js';
 </script>
 

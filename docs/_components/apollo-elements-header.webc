@@ -153,3 +153,8 @@
   </ul>
 
 </header>
+
+<script type="module" webc:bucket="modules">
+document.getElementById('mobile-menu-trigger').addEventListener('click', function() {
+  document.getElementById('sidebar').toggle();
+})

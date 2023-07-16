@@ -1,0 +1,3 @@
+<slot></slot>
+
+<script type="module" webc:keep>import '/assets/components/side-drawer.js';</script>

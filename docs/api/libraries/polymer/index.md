@@ -42,6 +42,8 @@ all it's deeply nested children.
 
 If you prefer, you can use Polymer's two-way binding to set an element's client property, instead of nesting the apollo elements under an `<apollo-client>` element.
 
+<template webc:nokeep webc:raw>
+
 ```html
 <apollo-client uri="/graphql" client="{{ownClient}}"></apollo-client>
 <apollo-client uri="https://api.spacex.land/graphql" client="{{spaceXClient}}"></apollo-client>
@@ -67,6 +69,8 @@ If you prefer, you can use Polymer's two-way binding to set an element's client 
   <span>[[launchesData.launches.0.mission_name]]</span>.
 </p>
 ```
+
+</template>
 
 <cem-package-header package="@apollo-elements/polymer"></cem-package-header>
 

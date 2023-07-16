@@ -1,0 +1,122 @@
+<template webc:nokeep
+          webc:type="11ty"
+          11ty:type="md"
+          @raw="declaration.summary"></template>
+<template webc:nokeep
+          webc:type="11ty"
+          11ty:type="md"
+          @raw="declaration.description"></template>
+<script webc:setup>
+  const privateFields = getPrivateFields(declaration);
+  const privateMethods = getPrivateMethods(declaration);
+  const slots = getSlots(declaration);
+  const cssParts = getCssParts(declaration);
+  const cssProperties = getCssProperties(declaration);
+  const events = getEvents(declaration);
+  const offset = modules ? 1 : 0;
+  const prefix = moduleContents !== 'multiple' ? '' : `${declaration.name}-`;
+</script>
+<cem-members :@members="getAttributes(declaration)"
+             kind="attribute"
+             title="Attributes"></cem-members>
+<cem-members :@members="getFields(declaration)"
+             kind="field"
+             title="Properties"></cem-members>
+<cem-members :@members="getMethods(declaration)"
+             kind="method"
+             title="Methods"></cem-members>
+<div hidden>
+{% block beforeParts %}{% endblock %}
+{% if cssParts.length %}
+  {{ linkHeading('CSS Shadow Parts', prefix=prefix, level=2, levelOffset=offset) }}
+  <table class="css-parts-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cssPart in (cssParts | sortClassMembers) %}
+        <tr>
+          <td>{{ cssPart.name }}</td>
+          <td>{{ cssPart.description }}</td>
+        </tr>
+        {% if cssPart.summary %}
+          {% renderTemplate 'njk,md' %}{{ cssPart.summary | safe }}{% endrenderTemplate %}
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% block beforeCssCustomProperties %}{% endblock %}
+{% if cssProperties.length %}
+  {{ linkHeading('CSS Custom Properties', prefix=prefix, level=2, levelOffset=offset) }}
+  <table class="css-custom-properties-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Default Value</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cssProp in (cssProperties | sortClassMembers) %}
+        <tr>
+          <td>{{ cssProp.name }}</td>
+          <td>
+            <css-value-doc>
+              {{ codeBlock(cssProp.default, lang="css") if cssProp.default else '' }}
+            </css-value-doc>
+          </td>
+          <td>{{ cssProp.description }}</td>
+        </tr>
+        {% if cssProp.summary %}
+          {% renderTemplate 'njk,md' %}{{ cssProp.summary | safe }}{% endrenderTemplate %}
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% block beforeEvents %}{% endblock %}
+{% if events.length %}
+  {{ linkHeading('Events', prefix=prefix, level=2, levelOffset=offset) }}
+  <table class="events-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in (events | sortClassMembers) %}
+        <tr>
+          <td>{{ event.name }}</td>
+          <td>{{ codeBlock(event.type.text) | linkToTypes | safe }}</td>
+          <td>{% renderTemplate 'njk,md' %}{{ event.description | safe }}{% endrenderTemplate %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %} {# events #}
+
+{% block beforePrivate %}{% endblock %}
+{% if privateFields.length or privateMethods.length %}
+  <details>
+    <summary id="private-api-toggle">Private API</summary>
+
+    {% if privateFields.length %}
+      {{ linkHeading('Private Properties', prefix=prefix, level=2, levelOffset=offset, anchor=false) }}
+      {% for property in (privateFields | sortClassMembers) %}{% include "./property.njk" %}{% endfor %}
+    {% endif %}
+
+    {% if privateMethods.length %}
+      {{ linkHeading('Private Methods', prefix=prefix, level=2, levelOffset=offset, anchor=false) }}
+      {% for method in (privateMethods | sortClassMembers) %}{% include "./method.njk" %}{% endfor %}
+    {% endif %}
+  </details>
+{% endif %}
+</div>

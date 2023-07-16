@@ -18,8 +18,8 @@ export async function bundle({ path }) {
     outdir: 'docs/_merged_assets/_static/custom-elements-manifest',
     plugins: [litCssPlugin()],
     entryPoints: {
-      'css-value-doc': join(path, 'components', 'css-value-doc', 'css-value-doc.ts'),
-      'type-doc': join(path, 'components', 'type-doc', 'type-doc.ts'),
+      // 'css-value-doc': join(path, 'components', 'css-value-doc', 'css-value-doc.ts'),
+      // 'type-doc': join(path, 'components', 'type-doc', 'type-doc.ts'),
       'json-viewer': '@power-elements/json-viewer',
     },
   }).catch(() => process.exit(1));

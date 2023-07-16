@@ -1,0 +1,10 @@
+<template webc:nokeep webc:if="members.length">
+  <link-heading level="2" :offset="offset" :text="title"></link-heading>
+  <type-doc webc:for="member of members"
+            webc:if="member"
+            :@member="member"
+            :kind="member.kind"
+            :name="member.name"
+            :data-name="member.name"
+            :data-inherited-from="member?.inheritedFrom?.name ?? false"></type-doc>
+</template>

@@ -1,9 +1,6 @@
 ---
-layout: sidebar.webc # layout-api
-package: '@apollo-elements/core'
-module: apollo-controller.js
-description: Core Controllers for Apollo Elements
 title: ApolloController
+description: Core Controllers for Apollo Elements
 eleventyNavigation:
   order: 10
 ---
@@ -14,8 +11,12 @@ eleventyNavigation:
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
+<cem-module package="@apollo-elements/core" module="apollo-controller.js">
+
 `ApolloController` is the abstract base class at the heart of Apollo Elements. 
 You should not import `ApolloController` directly, instead use the subclasses: 
 [`ApolloQueryController`](/api/core/controllers/query/), 
 [`ApolloMutationController`](/api/core/controllers/mutation/), and 
 [`ApolloSubscriptionController`](/api/core/controllers/subscription/).
+
+</cem-module>

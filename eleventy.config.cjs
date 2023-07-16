@@ -1,6 +1,4 @@
 // @ts-check
-const path = require('node:path');
-
 const anchor = require('markdown-it-anchor');
 
 // const eleventyRocketNav = require('@rocket/eleventy-rocket-nav');
@@ -28,7 +26,8 @@ module.exports = function(eleventyConfig) {
   // rocketSearch()...
 
   eleventyConfig.amendLibrary('md', /** @param{import('markdown-it')}md*/md =>
-    md.use(anchor, { permalink: anchor.permalink.headerLink() }));
+    md.set({ breaks: false })
+      .use(anchor, { permalink: anchor.permalink.headerLink() }));
 
   eleventyConfig.setQuietMode(true);
   eleventyConfig.addDataExtension('yaml,yml', content => yaml.parse(content));

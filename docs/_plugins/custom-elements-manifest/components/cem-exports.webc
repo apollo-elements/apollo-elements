@@ -1,0 +1,6 @@
+<code-copy>
+  {{- codeBlock(moduleData | manifestModuleImports(
+    packageName=packageName,
+    splitLines=splitLines
+  ) | safe | trim) -}}
+</code-copy>

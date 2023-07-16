@@ -1,8 +1,4 @@
 <style>
-  #sidebar {
-    display: none; /* for loading */
-  }
-
   #main-sidebar {
     display: block;
     padding-inline-start: var(--main-padding-inline);
@@ -21,12 +17,16 @@
 
   @media screen and (min-width: 1024px) {
     #sidebar {
+      --sidebar-content-position: relative;
+      --side-drawer-background-display: none;
+      --side-drawer-translate: none;
+      --side-drawer-shadow: none;
+      visibility: visible;
       display: block;
       min-width: 270px;
       z-index: 10;
       position: sticky;
       top: 78px;
-      max-height: calc(100vh - 78px);
       overflow-y: auto;
     }
 
@@ -71,7 +71,7 @@
 </style>
 
 <aside id="main-sidebar" webc:root="override">
-  <rocket-drawer id="sidebar">
+  <side-drawer id="sidebar">
     <side-navigation :@collections="$data.collections"
                      :@section="$data.section"
                      :@content="content">
@@ -80,5 +80,6 @@
         <a webc:if="$data.site.helpUrl" :href="url($data.site.helpUrl)">Help and Feedback</a>
       </div>
     </side-navigation>
-  </rocket-drawer>
+  </side-drawer>
 </aside>
+
