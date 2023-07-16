@@ -1,6 +1,26 @@
+<script webc:setup>
+function formatExports(exports, specifier) {
+  const max = 80;
+  const names = exports.filter(x=> x.kind === 'js').map(x => x.name);
+  const sideEffects = exports.filter(x => x.kind === 'custom-element-definition');
+  const namedOneLiner = (names.length ? `import { ${names.join(', ')} } from '${specifier}';` : '');
+  const sideEffectImports = (sideEffects.length && `import '${specifier}';`);
+  const namedImports = (namedOneLiner?.length <= max) ? namedOneLiner
+    : namedOneLiner
+      .replace(/{ /, '{\n  ')
+      .replace(/(\w), (\w)/g, '$1,\n  $2')
+      .replace(/ }/, '\n}')
+      .replace(', }', ' }');
+  return [sideEffectImports, namedImports].filter(Boolean).join('\n');
+}
+</script>
 <code-copy>
-  {{- codeBlock(moduleData | manifestModuleImports(
-    packageName=packageName,
-    splitLines=splitLines
-  ) | safe | trim) -}}
+  <template webc:nokeep
+            webc:type="11ty"
+            11ty:type="njk,md"
+            :@snippets="formatExports(exports, package)">
+```ts
+{{ snippets | safe }}
+```
+  </template>
 </code-copy>

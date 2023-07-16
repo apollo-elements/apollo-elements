@@ -32,6 +32,10 @@ class CEM {
   getDeclarationsForModule(module) {
     return this.manifest.modules.find(x => x.path === module).declarations
   }
+
+  getExportsForModule(module) {
+    return this.manifest.modules.find(x => x.path === module).exports
+  }
 }
 
 /**

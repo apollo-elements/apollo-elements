@@ -36,7 +36,7 @@
        webc:keep
        webc:if="importMap" @raw="JSON.stringify(importMap, null, watch ? 2 : 0)"></script>
     <script webc:if="importMap" async src="https://ga.jspm.io/npm:es-module-shims@1.7.3/dist/es-module-shims.js" crossorigin="anonymous" webc:keep></script>
-    <script :type="'module'" :src="getBundleFileUrl('js', 'modules')" webc:keep></script>
+    <script type="module" :src="getBundleFileUrl('js', 'modules')" webc:keep></script>
     <!--- <script @raw="getBundle('js')" webc:keep></script> --->
     <noscript>
       <link rel="stylesheet" href="/assets/static/search/noscript.css">

@@ -166,8 +166,8 @@ body[layout^='layout-home'] #main-header a:hover {
 #mobile-menu-trigger {
   color: inherit;
   border: none;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   box-sizing: content-box;
   background: none;
   padding: 0;

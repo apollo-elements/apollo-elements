@@ -20,7 +20,7 @@ export async function bundle({ path }) {
     sourcemap: true,
     format: 'esm',
     target: 'es2020',
-    outdir: 'docs/_merged_assets/_static/webcomponents-dev',
+    outdir: 'docs/assets/_static/webcomponents-dev',
     plugins: [replace({ ESBUILD_BUNDLED_WCD_HTML })],
     entryPoints: {
       'wcd-snippet': join(path, 'components', 'wcd-snippet', 'wcd-snippet.ts'),

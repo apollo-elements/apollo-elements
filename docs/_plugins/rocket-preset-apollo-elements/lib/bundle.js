@@ -14,7 +14,7 @@ const __dirname = resolve(dirname(fileURLToPath(import.meta.url)));
 // adjustPluginOptions(rollupPluginHTML, ({ exclude, ...options }) => ({ ...options, exclude: [
 //   ...Array.isArray(exclude) ? exclude : [exclude].filter(Boolean),
 //   '**/playground-service-worker-proxy.html',
-//   '**/{_assets,_merged_assets}/**/*.{html,js}',
+//   '**/{_assets,assets}/**/*.{html,js}',
 //   '**/_static/apollo-elements/**/*',
 //   '**/_static/apollo-elements/*',
 // ] }));
@@ -29,7 +29,7 @@ async function build(opts) {
     sourcemap: true,
     format: 'esm',
     target: 'es2020',
-    outdir: 'docs/_merged_assets/_static/apollo-elements',
+    outdir: 'docs/assets/_static/apollo-elements',
     ...opts,
     plugins: [
       monorepoResolvePlugin({ scope: '@apollo-elements', external: opts.external }),

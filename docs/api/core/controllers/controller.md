@@ -11,7 +11,8 @@ eleventyNavigation:
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-<cem-module package="@apollo-elements/core" module="apollo-controller.js">
+<cem-module package="@apollo-elements/core"
+            module="apollo-controller.js">
 
 `ApolloController` is the abstract base class at the heart of Apollo Elements. 
 You should not import `ApolloController` directly, instead use the subclasses: 

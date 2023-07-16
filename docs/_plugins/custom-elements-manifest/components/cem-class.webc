@@ -1,21 +1,15 @@
-<template webc:nokeep
-          webc:type="11ty"
-          11ty:type="md"
-          @raw="declaration.summary"></template>
-<template webc:nokeep
-          webc:type="11ty"
-          11ty:type="md"
-          @raw="declaration.description"></template>
 <script webc:setup>
-  const privateFields = getPrivateFields(declaration);
-  const privateMethods = getPrivateMethods(declaration);
-  const slots = getSlots(declaration);
-  const cssParts = getCssParts(declaration);
-  const cssProperties = getCssProperties(declaration);
-  const events = getEvents(declaration);
   const offset = modules ? 1 : 0;
   const prefix = moduleContents !== 'multiple' ? '' : `${declaration.name}-`;
 </script>
+
+<template webc:nokeep
+          webc:type="11ty"
+          11ty:type="njk,md">{{declaration.summary}}</template>
+<template webc:nokeep
+          webc:type="11ty"
+          11ty:type="njk,md">{{declaration.description}}</template>
+
 <cem-members :@members="getAttributes(declaration)"
              kind="attribute"
              title="Attributes"></cem-members>
@@ -25,84 +19,12 @@
 <cem-members :@members="getMethods(declaration)"
              kind="method"
              title="Methods"></cem-members>
+
+<cem-css-parts :@parts="getCssParts(declaration)"></cem-css-parts>
+<cem-css-properties :@properties="getCssProperties(declaration)"></cem-css-properties>
+<cem-events :@events="getEvents(declaration)"></cem-events>
+
 <div hidden>
-{% block beforeParts %}{% endblock %}
-{% if cssParts.length %}
-  {{ linkHeading('CSS Shadow Parts', prefix=prefix, level=2, levelOffset=offset) }}
-  <table class="css-parts-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cssPart in (cssParts | sortClassMembers) %}
-        <tr>
-          <td>{{ cssPart.name }}</td>
-          <td>{{ cssPart.description }}</td>
-        </tr>
-        {% if cssPart.summary %}
-          {% renderTemplate 'njk,md' %}{{ cssPart.summary | safe }}{% endrenderTemplate %}
-        {% endif %}
-      {% endfor %}
-    </tbody>
-  </table>
-{% endif %}
-
-{% block beforeCssCustomProperties %}{% endblock %}
-{% if cssProperties.length %}
-  {{ linkHeading('CSS Custom Properties', prefix=prefix, level=2, levelOffset=offset) }}
-  <table class="css-custom-properties-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Default Value</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cssProp in (cssProperties | sortClassMembers) %}
-        <tr>
-          <td>{{ cssProp.name }}</td>
-          <td>
-            <css-value-doc>
-              {{ codeBlock(cssProp.default, lang="css") if cssProp.default else '' }}
-            </css-value-doc>
-          </td>
-          <td>{{ cssProp.description }}</td>
-        </tr>
-        {% if cssProp.summary %}
-          {% renderTemplate 'njk,md' %}{{ cssProp.summary | safe }}{% endrenderTemplate %}
-        {% endif %}
-      {% endfor %}
-    </tbody>
-  </table>
-{% endif %}
-
-{% block beforeEvents %}{% endblock %}
-{% if events.length %}
-  {{ linkHeading('Events', prefix=prefix, level=2, levelOffset=offset) }}
-  <table class="events-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for event in (events | sortClassMembers) %}
-        <tr>
-          <td>{{ event.name }}</td>
-          <td>{{ codeBlock(event.type.text) | linkToTypes | safe }}</td>
-          <td>{% renderTemplate 'njk,md' %}{{ event.description | safe }}{% endrenderTemplate %}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% endif %} {# events #}
-
 {% block beforePrivate %}{% endblock %}
 {% if privateFields.length or privateMethods.length %}
   <details>

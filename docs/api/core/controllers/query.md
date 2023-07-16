@@ -37,3 +37,7 @@ example.
 
 <docs-playground id="query-controller"
     playground-name="query-controller"></docs-playground>
+
+<cem-module package="@apollo-elements/core"
+            module="apollo-query-controller.js">
+</cem-module>

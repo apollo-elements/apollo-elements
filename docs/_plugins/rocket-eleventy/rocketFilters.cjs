@@ -14,7 +14,7 @@ function inlineFilePath(filePath) {
 const rocketFilters = {
   configFunction: (eleventyConfig, { _inputDirCwdRelative }) => {
     eleventyConfig.addFilter('asset', function (inPath) {
-      return inPath.replace('_assets/', '_merged_assets/');
+      return inPath.replace('_assets/', 'assets/');
     });
 
     eleventyConfig.addFilter('toAbsPath', function (inPath) {

@@ -37,7 +37,7 @@ export function webcomponentsDev() {
       //   ...options ?? {},
       //   specifiers: {
       //     ...options?.specifiers,
-      //     'wcd-snippet': '/_merged_assets/_static/webcomponents-dev/wcd-snippet.js',
+      //     'wcd-snippet': '/assets/_static/webcomponents-dev/wcd-snippet.js',
       //   },
       // })),
 

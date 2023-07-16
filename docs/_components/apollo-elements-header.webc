@@ -57,6 +57,7 @@
   width: 30px;
   height: 30px;
   vertical-align: middle;
+  display: block !important;
 }
 
 @media (min-width: 1024px) {
@@ -155,6 +156,10 @@
 </header>
 
 <script type="module" webc:bucket="modules">
-document.getElementById('mobile-menu-trigger').addEventListener('click', function() {
-  document.getElementById('sidebar').toggle();
-})
+const drawer = document.querySelector('#sidebar');
+
+// Toggle button
+document.getElementById('mobile-menu-trigger').addEventListener('click', function () {
+  drawer.open = !drawer.open;
+});
+</script>

@@ -2,6 +2,7 @@ api/types/*.md
 _includes
 api/*/_assets/**/*
 blog/*/_assets/**/*
+assets/_static
 type-tables
 _plugins
 

@@ -15,7 +15,7 @@ export async function bundle({ path }) {
     sourcemap: true,
     format: 'esm',
     target: 'es2022',
-    outdir: 'docs/_merged_assets/_static/custom-elements-manifest',
+    outdir: 'docs/assets/_static/custom-elements-manifest',
     plugins: [litCssPlugin()],
     entryPoints: {
       // 'css-value-doc': join(path, 'components', 'css-value-doc', 'css-value-doc.ts'),

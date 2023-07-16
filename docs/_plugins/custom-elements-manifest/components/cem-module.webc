@@ -8,8 +8,10 @@
 </template>
 
 <template webc:nokeep webc:if="module">
-  <link-heading :level="exportsHeading ?? 2">Exports</link-heading>
-  <cem-exports @module="module"></cem-exports>
+  <link-heading :level="exportsHeading ?? 2" text="Exports"></link-heading>
+  <cem-exports :module="module"
+               :package="package"
+               :@exports="$data.cem.get(package).getExportsForModule(module)"></cem-exports>
 </template>
 
 <template webc:if="debug" webc:nokeep>

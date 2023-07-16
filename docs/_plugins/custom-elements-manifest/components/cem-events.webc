@@ -1,0 +1,32 @@
+<script webc:setup>
+function codeBlock(type, lang='ts') {
+  return renderTemplate(`~~~${lang}\n${type}\n~~~`, 'njk,md');
+}
+</script>
+<slot></slot>
+<template webc:if="events.length"></template>
+  <link-heading text="Events"
+                :prefix=prefix
+                level=2
+                offset=offset></link-heading>
+  <table class="events-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr webc:for="event of sortClassMembers(events)">
+        <td @html="event.name"></td>
+        <template webc:is="td"
+                  webc:type="11ty"
+                  11ty:type="njk,md">{{ codeBlock(event.type.text) | linkToTypes | safe }}</template>
+        <template webc:is="td"
+                  webc:type="11ty"
+                  11ty:type="njk,md">{{ event.description | safe }}</template>
+      </tr>
+    </tbody>
+  </table>
+

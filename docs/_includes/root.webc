@@ -4,6 +4,8 @@ eleventyImport:
   collections:
   - icon
 ---
+<link rel="stylesheet" href="../assets/markdown.css">
+<link rel="stylesheet" href="../assets/prism.css">
 <apollo-elements-header></apollo-elements-header>
 <main @html="content"></main>
 <apollo-elements-footer></apollo-elements-footer>

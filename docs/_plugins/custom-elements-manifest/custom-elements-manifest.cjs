@@ -35,6 +35,7 @@ const {
  * @param  {CEMOptions} options
  */
 module.exports = function customElementsManifestPlugin(eleventyConfig, options) {
+  const linkifyTypes = linkToTypes(options);
   eleventyConfig.on('eleventy.before', async function() {
     const { bundle } = await import('./lib/bundle.js')
     await bundle({path: __dirname});
@@ -45,7 +46,13 @@ module.exports = function customElementsManifestPlugin(eleventyConfig, options) 
     return getCustomElementsManifests();
   });
 
-  eleventyConfig.addFilter('linkToTypes', linkToTypes(options));
+  eleventyConfig.addFilter('linkToTypes', async function(...args) {
+    return linkifyTypes(...args);
+  });
+
+  eleventyConfig.addFilter('codeBlock', async function(type, lang='ts') {
+    return this.renderTemplate(`~~~${lang}\n${type}\n~~~`, 'njk,md');
+  })
 
   eleventyConfig.addFilter('prettyJson', prettyJson);
   eleventyConfig.addFilter('split', split);

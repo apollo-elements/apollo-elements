@@ -1,0 +1,27 @@
+<slot></slot>
+
+<template webc:if="parts.length">
+  <link-heading text="CSS Shadow Parts"
+                :prefix=prefix
+                level=2
+                offset=offset></link-heading>
+  <table class="css-parts-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr webc:for="cssPart of sortClassMembers(cssParts)">
+        <td @html="cssPart.name"></td>
+        <td @html="cssPart.description"></td>
+      </tr>
+        <!---
+        {% if cssPart.summary %}
+          {% renderTemplate 'njk,md' %}{{ cssPart.summary | safe }}{% endrenderTemplate %}
+        {% endif %}
+        --->
+    </tbody>
+  </table>
+</template>

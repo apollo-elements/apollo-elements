@@ -1,0 +1,33 @@
+<slot></slot>
+
+<template webc:if="properties.length">
+  <link-heading text="CSS Custom Properties"
+                :prefix=prefix
+                level=2
+                offset=offset></link-heading>
+  <table class="css-custom-properties-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Default Value</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr webc:for="cssProp of sortClassMembers(cssProperties)">
+        <td @html="cssProp.name"></td>
+        <td>
+          <css-value-doc>
+            {{ codeBlock(cssProp.default, lang="css") if cssProp.default else '' }}
+          </css-value-doc>
+        </td>
+        <td @html="cssProp.description"></td>
+      </tr>
+      <!---
+      {% if cssProp.summary %}
+        {% renderTemplate 'njk,md' %}{{ cssProp.summary | safe }}{% endrenderTemplate %}
+      {% endif %}
+      --->
+    </tbody>
+  </table>
+</template>

@@ -132,9 +132,9 @@ async function screenshot({ inPath, outPath }) {
  */
 async function createPageSocialImage(sourceUrl, svgString, { rocketConfig }) {
   if (!CACHE.get(sourceUrl)) {
-    const inputDir = join(__dirname, '..', '/_merged_assets/social/');
+    const inputDir = join(process.cwd(), 'assets/social/');
     await fs.promises.mkdir(inputDir, { recursive: true });
-    const outputDir = join(rocketConfig.outputDevDir, '_merged_assets', 'social');
+    const outputDir = join(rocketConfig.outputDevDir, 'assets', 'social');
     await fs.promises.mkdir(outputDir, { recursive: true });
 
     const inPath = join(inputDir, sourceUrl);
@@ -146,7 +146,7 @@ async function createPageSocialImage(sourceUrl, svgString, { rocketConfig }) {
 
     const hash = await checksumFile(outPath);
     const hashedPath = outPath.replace('.png', `-${hash}.png`).replace(/-+/g, '-');
-    const url = hashedPath.replace('_site-dev', '');
+    const url = hashedPath.replace('_site', '');
 
     await fs.promises.rename(outPath, hashedPath);
 

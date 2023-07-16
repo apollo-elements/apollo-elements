@@ -1,10 +1,27 @@
 <script webc:setup>
-const linkToTypes = (x => x);
-function codeBlock(type, lang='ts') {
-  return renderTemplate(`~~~${lang}\n${type}\n~~~`, 'njk,md');
+async function codeBlock(type, lang='ts') {
+  const tpl = await renderTemplate(`~~~${lang}\n${type}\n~~~`, 'njk,md')
+  return tpl.trim();
+}
+function getModuleLink(member, allPosts) {
+  let found = false;
+  if (member.inheritedFrom?.module) {
+    for (const post of allPosts) {
+      if (!found && member.inheritedFrom.package) {
+        if (post.data.package == member.inheritedFrom.package
+         && post.data.module == member.inheritedFrom.module) {
+          found = url(post.url);
+        } else if (post.data.module == member.inheritedFrom.module) {
+          found = url(post.url);
+        }
+      }
+    }
+  }
+  return found || '';
 }
 </script>
 <template shadowrootmode="open" webc:if="member">
+  <link rel="stylesheet" href="/assets/prism.css">
   <style>
     :host {
       position: relative;
@@ -17,6 +34,9 @@ function codeBlock(type, lang='ts') {
     .visually-hidden {
       position: absolute;
       clip: rect(1px, 1px, 1px, 1px);
+    }
+    :host(:not([data-inherited-from])) #inheritance {
+      display: none;
     }
     header {
       display: flex;
@@ -105,11 +125,11 @@ function codeBlock(type, lang='ts') {
     :host([data-inherited-from]:not([data-empty-body])) header ::slotted([slot="name"]) {
       cursor: pointer;
     }
-    :host([data-inherited-from]) header #type,
+    :host([data-inherited-from]) header .type-annotation,
     :host([data-inherited-from]) header ::slotted([slot="type"]) {
       display: none !important;
     }
-    type-doc:not([data-inherited-from]) [slot="type"]::before {
+    type-doc:not([data-inherited-from]) .type-annotation::before {
       content: 'type: ';
     }
     :host([kind="return"]) #body,
@@ -125,26 +145,86 @@ function codeBlock(type, lang='ts') {
       }
     }
     @media (min-width: 500px) {
-      :host([data-inherited-from]) header #type,
+      :host([data-inherited-from]) header .type-annotation,
       :host([data-inherited-from]) header ::slotted([slot="type"]) {
         display: inline !important;
       }
     }
+    h1, h2, h3, h4, h5, h6,
+    header pre {
+      margin: 0 !important;
+      padding: 0 !important;
+      --markdown-syntax-background-color: transparent;
+    }
+    /* FIXME: webc is rendering wrapping p */
+    header p {
+      display: contents;
+    }
+    p:empty {
+      display: none;
+    }
+    .anchor {
+      visibility: hidden;
+      position: relative;
+      left: -10px;
+      float: left;
+      line-height: 1;
+      margin-left: -20px;
+      padding-right: 4px;
+      color: var(--markdown-octicon-link, #1b1f23);
+      fill: currentcolor;
+    }
+    :hover .anchor {
+      visibility: visible;
+    }
+    #name,
+    #attribute {
+      --mono: 1;
+      --heading-font-family: var(--type-doc-header-font-family);
+      font-family: var(--heading-font-family);
+      font-variation-settings:
+        "MONO" var(--mono, 1),
+        "CASL" var(--casl, 0),
+        "wght" var(--wght, 500),
+        "slnt" var(--slnt, 0),
+        "CRSV" var(--CRSV, 0.5);
+      margin: 0;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      color: var(--markdown-syntax-function-color);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    :host([kind="return"]) #name {
+      color: inherit;
+    }
+    :host([kind="property"]) #attribute {
+      color: var(--markdown-syntax-punctuation-color);
+    }
   </style>
   <header>
     <link-heading id="name" level="3" :text="member?.name"></link-heading>
-    <span class="visually-hidden"></span>
-    <span webc:if="attribute" @text="attribute"></span>
-    <template id="type" webc:nokeep @html="type"></template>
-    <div id="inheritance">
-      <span webc:if="member.inheritedFrom">
+    <div class="visually-hidden"></div>
+    <div webc:if="member.attribute" @text="member.attribute"></div>
+    <template class="type-annotation"
+              id="type"
+              webc:is="div"
+              webc:if="member?.type?.text"
+              webc:type="11ty"
+              11ty:type="njk,md">{{ codeBlock(member.type.text) | linkToTypes | safe | trim }}</template>
+    <div id="inheritance" webc:if="member.inheritedFrom">
+      <span>
         <em>inherited from</em>
-        <a webc:if="getModuleLink(member).length"
-          :href="`${getModuleLink(member)}#${member.name.toLowerCase()}`"
+        <a webc:if="getModuleLink(member, $data.collections.all).length"
+          :href="`${getModuleLink(member, $data.collections.all)}#${member.name.toLowerCase()}`"
           @text="member.inheritedFrom.name"></a>
         <span webc:else @text="member.inheritedFrom.name"></span>
       </span>
-      <button id="toggle" aria-label="Toggle details" aria-controls="body">
+      <button id="toggle"
+          aria-label="Toggle details"
+          aria-controls="body"
+         :aria-expanded="!!member.inheritedFrom">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d="M0 0h24v24H0z" fill="none"/>
           <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" fill="currentColor"/>
@@ -152,15 +232,11 @@ function codeBlock(type, lang='ts') {
       </button>
     </div>
   </header>
-  <article id="body">
-    <template webc:nokeep
-              webc:type="11ty"
-              11ty:type="njk,md"
-              @html="member.summary"></template>
-    <template webc:nokeep
-              webc:type="11ty"
-              11ty:type="njk,md"
-              @html="member.description"></template>
+  <article id="body" :hidden="!!member.inheritedFrom">
+    <template webc:type="11ty"
+              11ty:type="njk,md">{{member.summary|safe}}</template>
+    <template webc:type="11ty"
+              11ty:type="njk,md">{{member.description|safe}}</template>
   </article>
 </template>
 <script webc:bucket="modules">
@@ -172,7 +248,7 @@ customElements.define('type-doc', class TypeDoc extends HTMLElement {
 
   get #emptyBody() { return this.hasAttribute('data-empty-body'); }
   get #isInherited() { return this.hasAttribute('data-inherited-from'); }
-  get #expanded() { return this.#button.getAttribute('aria-expanded') === 'true'; }
+  get #expanded() { return this.#button?.getAttribute('aria-expanded') === 'true' ?? true; }
 
   constructor() {
     super();
@@ -181,18 +257,18 @@ customElements.define('type-doc', class TypeDoc extends HTMLElement {
     this.#button = this.shadowRoot.getElementById('toggle');
     this.#body = this.shadowRoot.getElementById('body');
     this.#inheritance = this.shadowRoot.getElementById('inheritance');
-    this.#button.addEventListener('click', this.toggle);
+    this.#button?.addEventListener('click', this.toggle.bind(this));
   }
 
   connectedCallback() {
-    this.#inheritance.hidden = this.#isInherited;
-    this.#button.disabled = this.#emptyBody;
+    if (this.#button)
+      this.#button.disabled = this.#emptyBody;
     this.#cloneHeading();
   }
 
   toggle() {
-    this.#button.setAttribute('aria-expanded', !this.#emptyBody && !this.#expanded);
-    this.#body.hidden = isInherited && !this.#expanded;
+    this.#button?.setAttribute('aria-expanded', !this.#emptyBody && !this.#expanded);
+    this.#body.hidden = this.#isInherited && !this.#expanded;
   }
 
   #cloneHeading() {
