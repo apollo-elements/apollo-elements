@@ -29,8 +29,6 @@ ${content}
 `;
   }
 
-  
-
   function getSamples(playgroundName, selectedFile = 'index.html') {
     const files = getPlaygroundFiles(playgroundName);
     const samples = files.map(function filePathToSampleConfig(filename) {
@@ -75,56 +73,57 @@ ${content}
 </script>
 <noscript>
   <style>
-  docs-playground:not(:defined) {
-    opacity: 1 !important;
-  }
+    docs-playground:not(:defined) {
+      opacity: 1 !important;
+    }
 
-  docs-playground > pre {
-    margin-bottom: 0;
-  }
+    docs-playground > pre {
+      margin-bottom: 0;
+    }
   </style>
 </noscript>
 <style>
 
-:root {
-  /* playground */
-  --playground-code-attribute-color: var(--markdown-syntax-attr-name-color);
-  --playground-code-atom-color: var(--markdown-syntax-keyword-color);
-  --playground-code-default-color: var(--markdown-syntax-color);
-  --playground-code-punctuation-color: var(--markdown-syntax-punctuation-color);
-  --playground-code-property-color: var(--markdown-syntax-class-name-color);
-  --playground-code-string-color: var(--markdown-syntax-string-color);
-  --playground-code-function-color: var(--markdown-syntax-function-color);
-  --playground-code-operator-color: var(--markdown-syntax-operator-color);
-  --playground-code-comment-color: var(--markdown-syntax-comment-color);
-  --playground-code-number-color: var(--markdown-syntax-number-color);
-  --playground-code-boolean-color: var(--markdown-syntax-boolean-color);
-  --playground-code-tag-color: var(--markdown-syntax-tag-color);
-  --playground-code-variable-color: var(--markdown-syntax-variable-color);
-  --playground-code-def-color: var(--markdown-syntax-variable-color);
-  --playground-code-background-color: var(--markdown-syntax-background-color);
-  --playground-code-callee-color: var(--markdown-syntax-function-color);
-  --playground-code-keyword-color: var(--markdown-syntax-keyword-color);
-  --playground-code-variable-2-color: var(--markdown-syntax-attr-name-color);
-  --playground-code-selection-background: var(--markdown-table-row-odd-background-color, #f6f8fa);
-  --playground-code-cursor-color: var(--markdown-syntax-color);
-  --playground-code-background: var(--markdown-syntax-background-color);
-  --playground-tab-bar-background: var(--page-background);
-  --playground-tab-bar-foreground-color: var(--primary-text-color);
-  --playground-preview-toolbar-background: var(--page-background);
-  --playground-preview-toolbar-foreground-color: var(--primary-text-color);
-  --playground-highlight-color: var(--primary-color);
-  --playground-code-builtin-color: var(--markdown-blockquote-color);
-  --playground-snippet-button-background: var(--code-button-background);
-  --playground-snippet-button-focus-background: var(--code-button-focus-background);
-  --playground-snippet-button-focus-color: var(--code-button-focus-color);
-  --playground-snippet-outer-background-color: var(--page-background);
-  --playground-snippet-focus-border-color: var(--primary-color);
-}
+  :root {
+    /* playground */
+    --playground-code-attribute-color: var(--markdown-syntax-attr-name-color);
+    --playground-code-atom-color: var(--markdown-syntax-keyword-color);
+    --playground-code-default-color: var(--markdown-syntax-color);
+    --playground-code-punctuation-color: var(--markdown-syntax-punctuation-color);
+    --playground-code-property-color: var(--markdown-syntax-class-name-color);
+    --playground-code-string-color: var(--markdown-syntax-string-color);
+    --playground-code-function-color: var(--markdown-syntax-function-color);
+    --playground-code-operator-color: var(--markdown-syntax-operator-color);
+    --playground-code-comment-color: var(--markdown-syntax-comment-color);
+    --playground-code-number-color: var(--markdown-syntax-number-color);
+    --playground-code-boolean-color: var(--markdown-syntax-boolean-color);
+    --playground-code-tag-color: var(--markdown-syntax-tag-color);
+    --playground-code-variable-color: var(--markdown-syntax-variable-color);
+    --playground-code-def-color: var(--markdown-syntax-variable-color);
+    --playground-code-background-color: var(--markdown-syntax-background-color);
+    --playground-code-callee-color: var(--markdown-syntax-function-color);
+    --playground-code-keyword-color: var(--markdown-syntax-keyword-color);
+    --playground-code-variable-2-color: var(--markdown-syntax-attr-name-color);
+    --playground-code-selection-background: var(--markdown-table-row-odd-background-color, #f6f8fa);
+    --playground-code-cursor-color: var(--markdown-syntax-color);
+    --playground-code-background: var(--markdown-syntax-background-color);
+    --playground-tab-bar-background: var(--page-background);
+    --playground-tab-bar-foreground-color: var(--primary-text-color);
+    --playground-preview-toolbar-background: var(--page-background);
+    --playground-preview-toolbar-foreground-color: var(--primary-text-color);
+    --playground-highlight-color: var(--primary-color);
+    --playground-code-builtin-color: var(--markdown-blockquote-color);
+    --playground-snippet-button-background: var(--code-button-background);
+    --playground-snippet-button-focus-background: var(--code-button-focus-background);
+    --playground-snippet-button-focus-color: var(--code-button-focus-color);
+    --playground-snippet-outer-background-color: var(--page-background);
+    --playground-snippet-focus-border-color: var(--primary-color);
+  }
 
 </style>
 <template shadowroot="open" shadowrootmode="open">
   <style>
+
     :host {
       display: block;
       box-sizing: border-box;
@@ -152,6 +151,7 @@ ${content}
 
     #snippet {
       display: block;
+      overflow: hidden;
     }
 
     #snippet,
@@ -212,9 +212,8 @@ ${content}
       border-right-color: var(--playground-snippet-outer-background-color, var(--page-background));
     }
 
-    #snippet::slotted(pre[class*="language-"]) {
-      margin-bottom: 0 !important;
-      border-radius: 6px !important;
+    ::slotted(pre) {
+      margin: 0 !important;
     }
 
     :host([loading]) #edit,
@@ -226,14 +225,10 @@ ${content}
       display: inline-block;
     }
 
-    @media (prefers-color-scheme: dark) {
-      playground-ide::part(preview) {
-        background: black;
-        color: white;
-      }
-    }
   </style>
-  <slot id="snippet"></slot>
+  <!-- because of webc 0.11.1 poor support for DSD, we'll add this in with a transform imperatively add this. -->
+  <!--- <slot id="snippet" webc:keep></slot> --->
+  <webc-dsd-slot-workaround id="snippet"></webc-dsd-slot-workaround>
   <playground-ide>
     <script webc:for="file of getSamples(playgroundName, selectedFile)"
             webc:keep
@@ -253,7 +248,7 @@ ${content}
   <button part="button">
     <span id="edit">▶️ Edit Live</span>
 
-    <slot name="loader">
+    <slot name="loader" webc:keep>
       <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
       <svg id="loading" width="90" height="20" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="var(--primary-text-color)">
         <circle cx="15" cy="15" r="15">
@@ -306,13 +301,13 @@ ${content}
     }
 
     connectedCallback() {
-      this.button.addEventListener('click', this.show);
+      this.button.addEventListener('click', () => this.show());
       window.requestIdleCallback?.(() => import(DocsPlayground.importSpecifier));
       if (location.hash === `#${this.id}`)
         this.show();
     }
 
-    show = async () => {
+    async show() {
       this.setAttribute('loading', '');
       this.button.disabled = true;
       await import(DocsPlayground.importSpecifier);

@@ -1,4 +1,3 @@
-code[class*='language-'],
 pre[class*='language-'] {
   color: var(--markdown-syntax-color, #393a34);
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
