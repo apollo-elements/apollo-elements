@@ -226,8 +226,9 @@ ${content}
     }
 
   </style>
-  <!-- because of webc 0.11.1 poor support for DSD, we'll add this in with a transform imperatively add this. -->
-  <!--- <slot id="snippet" webc:keep></slot> --->
+  <!--- because of webc 0.11.1 poor support for DSD, we'll add this in with a transform imperatively add this.
+  <slot id="snippet" webc:keep></slot>
+  --->
   <webc-dsd-slot-workaround id="snippet"></webc-dsd-slot-workaround>
   <playground-ide>
     <script webc:for="file of getSamples(playgroundName, selectedFile)"
