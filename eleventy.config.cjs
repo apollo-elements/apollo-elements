@@ -19,6 +19,7 @@ const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
 const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
 const CustomElementsManifestPlugin = require('./docs/_plugins/custom-elements-manifest/custom-elements-manifest.cjs');
+const DSDWorkaroundPlugin = require('./docs/_plugins/webc-dsd-workaround.cjs');
 
 const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
@@ -112,6 +113,7 @@ module.exports = function(eleventyConfig) {
       'npm:@11ty/eleventy-plugin-syntaxhighlight/*.webc',
     ],
   });
+  eleventyConfig.addPlugin(DSDWorkaroundPlugin);
 
   // eleventyConfig.addPlugin(SlideDecks);
 

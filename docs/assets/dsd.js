@@ -7,12 +7,19 @@ export function polyfillDeclarativeShadowDOM(x) {
     if (seen.has(x)) return;
     try {
       const mode = template.getAttribute('shadowrootmode') ?? template.getAttribute('shadowroot');
-      if (!template.parentElement) throw new Error('no parent');
-      const shadowRoot = template.parentElement.attachShadow({ mode });
-      shadowRoot.append(template.content);
-      template.remove();
-      seen.add(x);
-      polyfillDeclarativeShadowDOM(template.parentElement?.shadowRoot);
+      const target = template.parentElement
+      if (!target) throw new Error('no parent');
+      if (target.shadowRoot && !target.shadowRoot.children.length) {
+        console.log(target.tagName)
+      } else {
+        target.attachShadow({ mode });
+      }
+      if (!target.shadowRoot?.children?.length) {
+        target.shadowRoot.append(template.content);
+        template.remove();
+        seen.add(x);
+      }
+      polyfillDeclarativeShadowDOM(target?.shadowRoot);
     } catch(e) {
       console.group(`Could not polyfill DSD for ${template.parentElement ?? template.localName}`);
       console.error(e);
