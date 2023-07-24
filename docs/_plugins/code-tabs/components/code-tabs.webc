@@ -27,12 +27,13 @@ code-copy > pre {
 <slot></slot>
 
 <script type="module" webc:bucket="modules">
-  import { polyfillDeclarativeShadowDOM } from '/assets/dsd.js';
+  // import * as CodeTabsDsdPoly from '/assets/dsd.js';
+  // document
+  //   .querySelectorAll('code-copy,code-copy')
+  //   .forEach(CodeTabsDsdPoly.polyfillDeclarativeShadowDOM);
   import '@lit-labs/ssr-client/lit-element-hydrate-support.js';
   import '/assets/components/code-tabs.js';
   import '/assets/components/code-copy.js';
-  document.querySelectorAll('code-copy').forEach(polyfillDeclarativeShadowDOM);
-  document.querySelectorAll('code-tabs').forEach(polyfillDeclarativeShadowDOM);
   addEventListener('tab-selected', async (e) => {
     import('@power-elements/codesandbox-button');
     await customElements.whenDefined('codesandbox-button');

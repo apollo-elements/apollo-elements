@@ -179,10 +179,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   word-wrap: break-word;
-  grid-template-areas:
-    'h h'
-    's b'
-    'f f';
 }
 
 #main-header { grid-area: h; }
@@ -196,7 +192,6 @@ main {
   position: relative;
   min-width: 0;
   margin-inline: auto;
-  padding-inline: 20px calc(20px + var(--main-padding-inline));
 }
 
 main > * {

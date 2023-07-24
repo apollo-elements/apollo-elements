@@ -5,8 +5,18 @@ eleventyImport:
     - icon
 ---
 <style>
+  body {
+    grid-template-columns:
+      minmax(20px, 1fr) minmax(1fr, 1200px) minmax(20px, 1fr);
+    grid-template-areas:
+      'h h h'
+      'x b y'
+      'f f f';
+  }
+
   main {
     padding-block-start: 50px;
+    grid-area: b;
   }
 
   .page-logo {

@@ -18,8 +18,8 @@ export function polyfillDeclarativeShadowDOM(x) {
         target.shadowRoot.append(template.content);
         template.remove();
         seen.add(x);
+        polyfillDeclarativeShadowDOM(target?.shadowRoot);
       }
-      polyfillDeclarativeShadowDOM(target?.shadowRoot);
     } catch(e) {
       console.group(`Could not polyfill DSD for ${template.parentElement ?? template.localName}`);
       console.error(e);

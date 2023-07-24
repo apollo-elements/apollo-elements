@@ -4,6 +4,17 @@ eleventyImport:
   collections:
   - icon
 ---
+<style>
+  body {
+    grid-template-areas:
+      'h h'
+      's b'
+      'f f';
+  }
+  main {
+    padding-inline: 20px calc(20px + var(--main-padding-inline));
+  }
+</style>
 <apollo-elements-header></apollo-elements-header>
 
 <apollo-elements-sidebar :@content="content"></apollo-elements-sidebar>

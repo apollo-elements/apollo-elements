@@ -57,7 +57,7 @@ ${content}
         const lang = getLang(snippet.filename)
         return this.highlight(lang, redacted.trim()).trim();
       } else {
-        console.log(`No snippet for ${playgroundName}`);
+        console.log(`No snippet ${selectedFile} for ${playgroundName}`);
         return '';
       }
     } catch(e) {
