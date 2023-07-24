@@ -10,6 +10,10 @@
   padding: 7px 0 10px 15px;
 }
 
+.toc ol {
+  margin-bottom: 0;
+}
+
 #sidebar-nav a {
   text-decoration: none;
   color: var(--primary-text-color);

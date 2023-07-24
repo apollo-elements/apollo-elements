@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="blog-posts.css">
+<main class="markdown-body">
+  <h1>Apollo Elements Blog</h1>
+  <template @html="content"></template>
+  <div class="articles">
+    <article webc:for="post of collections.posts"
+             webc:if="post.data.published">
+      <aside>
+        <a webc:if="post.data.cover_image || post.data.socialMediaImage"
+          :href="url(post.url)" class="thumbnail" aria-label="read more">
+          <img alt="read more"
+              :src="url(post.data.cover_image || post.data.socialMediaImage)">
+        </a>
+      </aside>
+      <header>
+        <h2>
+          <a :href="url(post.url)" @text="post.data.title"></a>
+        </h2>
+        <time :datetime="post.date"
+              @text="formatDate(post.date)"></time>
+      </header>
+      <div class="content">
+        <p @html="post.data.description"></p>
+        <a class="read" :href="url(post.url)">Read more</a>
+      </div>
+    </article>
+  </div>
+</main>

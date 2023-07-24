@@ -7,12 +7,26 @@ eleventyImport:
 <link rel="stylesheet" href="sidebar.css">
 <apollo-elements-header></apollo-elements-header>
 
-<apollo-elements-sidebar :@content="content"></apollo-elements-sidebar>
+<apollo-elements-sidebar :@content="content">
+  <div class="sidebar-tags">
+    <h3>Date</h3>
+    <div @text="page.date.toDateString()"></div>
+  </div>
+  <div class="sidebar-tags">
+    <h3>Tags</h3>
+    <div class="tags">
+      <span class="tag"
+            webc:for="tag of tags" @text="tag"></span>
+    </div>
+  </div>
+</apollo-elements-sidebar>
 
 <main>
-  <h1 :id="slugify(title)">
+  <h1 :id="slugify(title)" webc:if="title">
     <a :href="`#${slugify(title)}`" class="header-anchor" @text="title"></a>
   </h1>
+
+  <img webc:if="cover_image" alt="" :src="url(cover_image)">
 
   <template webc:nokeep @html="content"></template>
 

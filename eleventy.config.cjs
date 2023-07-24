@@ -1,6 +1,7 @@
 // @ts-check
 const anchor = require('markdown-it-anchor');
 
+/* eslint-disable max-len */
 // const eleventyRocketNav = require('@rocket/eleventy-rocket-nav');
 // const rocketCollections = require('./docs/_plugins/rocket-eleventy/rocketCollections.cjs');
 // const apolloElements = require('./docs/_plugins/rocket-preset-apollo-elements/index.cjs');
@@ -19,7 +20,9 @@ const Playgrounds = require('./docs/_plugins/playgrounds/playgrounds.cjs');
 const CodeTabs = require('./docs/_plugins/code-tabs/code-tabs.cjs');
 const Icons = require('./docs/_plugins/icons.cjs');
 const CustomElementsManifestPlugin = require('./docs/_plugins/custom-elements-manifest/custom-elements-manifest.cjs');
-const DSDWorkaroundPlugin = require('./docs/_plugins/webc-dsd-workaround.cjs');
+const DSDWorkaroundPlugin = require('./docs/_plugins/webc-dsd-slot-workaround/webc-dsd-slot-workaround.cjs');
+const PagefindPlugin = require('./docs/_plugins/page-find/page-find.cjs');
+/* eslint-enable max-len */
 
 const yaml = require('yaml');
 /** @type{import('@11ty/eleventy/src/UserConfig')} */
@@ -41,6 +44,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter('formatDate', date =>
     date instanceof Date ? date.toDateString() : date);
 
+  eleventyConfig.addPlugin(PagefindPlugin);
   eleventyConfig.addPlugin(TocPlugin);
   eleventyConfig.addPlugin(Footnotes);
   eleventyConfig.addPlugin(Icons);
@@ -108,6 +112,7 @@ module.exports = function(eleventyConfig) {
     components: [
       'docs/_components/**/*.webc',
       'docs/_plugins/playgrounds/components/**/*.webc',
+      'docs/_plugins/page-find/components/**/*.webc',
       'docs/_plugins/code-tabs/components/**/*.webc',
       'docs/_plugins/custom-elements-manifest/components/**/*.webc',
       'npm:@11ty/eleventy-plugin-syntaxhighlight/*.webc',

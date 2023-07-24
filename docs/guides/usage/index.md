@@ -8,8 +8,6 @@ templateEngineOverride: webc,md
 description: Learn the ins-and-outs of the Apollo client to help you write expressive web apps with Apollo Elements
 ---
 
-# Usage
-
 Once you've [gotten set up](/guides/getting-started/), it's time to start 
 building your app's components. What does building an app with GraphQL look 
 like? What kinds of components does it have? This introductory guide will help 

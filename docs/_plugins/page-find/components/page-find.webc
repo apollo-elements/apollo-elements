@@ -1,0 +1,31 @@
+<template shadowrootmode="open">
+  <link rel=stylesheet href="/_pagefind/pagefind-ui.css">
+  <style>
+    :host {
+      display: inline-block;
+    }
+  </style>
+  <div id="page-find"></div>
+</template>
+
+<script webc:keep>
+customElements.define('page-find', class PageFind extends HTMLElement {
+  constructor() {
+    super();
+    if (!this.shadowRoot) this.#stamp();
+    this.#init();
+  }
+
+  async #stamp() {
+    const { polyfillDeclarativeShadowDOM } = await import('/assets/dsd.js');
+    polyfillDeclarativeShadowDOM(this);
+  }
+
+  async #init() {
+    await import('/_pagefind/pagefind-ui.js');
+    new PagefindUI({
+      element: this.shadowRoot.getElementById('page-find'),
+    });
+  }
+});
+</script>

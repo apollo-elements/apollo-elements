@@ -6,8 +6,6 @@ templateEngineOverride: webc,md
 description: Build a high-performance GraphQL web app with Apollo Elements
 ---
 
-# Getting Started
-
 <style>
   #apollo-elements-cycle-diagram .entity {
     letter-spacing: -2.6px;

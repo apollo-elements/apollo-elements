@@ -1,82 +1,81 @@
 <style>
-#main-header {
-  padding-block: 20px;
-  padding-inline: var(--main-padding-inline);
-  top: 0;
-  position: sticky;
-  z-index: 100;
-  background-color: var(--page-background);
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 30px;
-  gap: 50px;
-}
-
-#main-header a {
-  text-decoration: none;
-  color: var(--primary-text-color);
-  transition: color 0.3s ease-in-out;
-  font-weight: bold;
-  order: 2;
-}
-
-#main-header a, #main-header .social-link, #main-header rocket-search {
-  order: initial !important;
-}
-
-#main-header .logo-link {
-  color: var(--primary-color);
-  font-size: 19px;
-  font-weight: bold;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  vertical-align: middle;
-}
-
-#mobile-menu-trigger {
-	color: inherit;
-	border: none;
-	width: 20px;
-	height: 20px;
-	box-sizing: content-box;
-	background: none;
-	padding: 0;
-}
-
-#social-links {
-  display: none;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-#main-header svg {
-  width: 30px;
-  height: 30px;
-  vertical-align: middle;
-  display: block !important;
-}
-
-@media (min-width: 1024px) {
-  #social-links {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-  }
-  .social-link {
-    display: block;
-  }
   #main-header {
-    gap: 25px;
+    padding-block: 20px;
+    padding-inline: var(--main-padding-inline);
+    top: 0;
+    position: sticky;
+    z-index: 100;
+    background-color: var(--page-background);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 30px;
+    gap: 50px;
   }
-  #mobile-menu-trigger {
-    display: none;
-  }
-}
 
+  #main-header a {
+    text-decoration: none;
+    color: var(--primary-text-color);
+    transition: color 0.3s ease-in-out;
+    font-weight: bold;
+    order: 2;
+  }
+
+  #main-header a, #main-header .social-link, #main-header rocket-search {
+    order: initial !important;
+  }
+
+  #main-header .logo-link {
+    color: var(--primary-color);
+    font-size: 19px;
+    font-weight: bold;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  #mobile-menu-trigger {
+    color: inherit;
+    border: none;
+    width: 20px;
+    height: 20px;
+    box-sizing: content-box;
+    background: none;
+    padding: 0;
+  }
+
+  #social-links {
+    display: none;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #main-header svg {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    display: block !important;
+  }
+
+  @media (min-width: 1024px) {
+    #social-links {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .social-link {
+      display: block;
+    }
+    #main-header {
+      gap: 25px;
+    }
+    #mobile-menu-trigger {
+      display: none;
+    }
+  }
 </style>
 
 <header id="main-header" webc:root="override">
@@ -91,11 +90,7 @@
     <span>Apollo Elements</span>
   </a>
 
-  <rocket-search style="display:block;height:38.3333px" class="search" json-url="/assets/static/rocket-search-index.json">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" style="width: 25px;">
-      <path d="M51.6 96.7c11 0 21-3.9 28.8-10.5l35 35c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2c1.6-1.6 1.6-4.2 0-5.8l-35-35c6.5-7.8 10.5-17.9 10.5-28.8 0-24.9-20.2-45.1-45.1-45.1-24.8 0-45.1 20.3-45.1 45.1 0 24.9 20.3 45.1 45.1 45.1zm0-82c20.4 0 36.9 16.6 36.9 36.9C88.5 72 72 88.5 51.6 88.5S14.7 71.9 14.7 51.6c0-20.3 16.6-36.9 36.9-36.9z"></path>
-    </svg>
-  </rocket-search>
+  <page-find></page-find>
 
   <nav>
     <a href="/guides/" class="">Guides</a>

@@ -6,8 +6,6 @@ templateEngineOverride: webc,md
 description: Use Apollo Elements to asynchronously create your apollo client before loading your views, e.g. to fetch an auth token
 ---
 
-# Asynchronous Client
-
 In some cases, you may want to wait for your Apollo client to do some initial 
 asynchronous setup (for example reloading a persistent cache or getting a user 
 token) before you can make your client available to your app.

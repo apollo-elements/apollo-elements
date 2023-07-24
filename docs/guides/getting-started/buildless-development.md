@@ -5,8 +5,6 @@ eleventyNavigation:
   order: 20
 ---
 
-# Buildless Development
-
 You can run your apollo-elements app without using a build step with the [web 
 dev server](https://modern-web.dev/docs/dev-server/overview/).
 

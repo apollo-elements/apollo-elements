@@ -1,0 +1,7 @@
+title: Apollo Elements Blog
+layout: root.webc
+pagination:
+  data: collections.posts
+  size: 10
+  reverse: true
+  alias: posts

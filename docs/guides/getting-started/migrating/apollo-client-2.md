@@ -3,7 +3,6 @@ title: From Apollo Client 2.0
 eleventyNavigation:
   order: 20
 ---
-# From Apollo Client 2.0
 
 Apollo Client 3 and Apollo Elements 3 both bring with them significant breaking 
 changes. When upgrading your app to `@apollo-elements` 3, follow these steps to 

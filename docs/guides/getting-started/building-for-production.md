@@ -5,8 +5,6 @@ eleventyNavigation:
 description: How to use Apollo Elements with Rollup to build your GraphQL-based app for production
 ---
 
-# Building for Production
-
 Since [you can't import Apollo client directly into the 
 browser](https://github.com/apollographql/apollo-client/issues/3047), you'll 
 need transpile and bundle the `@apollo/client/core` package to use it in your 

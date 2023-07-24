@@ -1,0 +1,10 @@
+body {
+  grid-template-areas:
+    'h h'
+    's b'
+    'f f';
+}
+
+main {
+  padding-inline: 20px calc(20px + var(--main-padding-inline));
+}

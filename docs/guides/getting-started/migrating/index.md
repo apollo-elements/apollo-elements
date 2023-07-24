@@ -5,8 +5,6 @@ eleventyNavigation:
 description: How to update your Apollo Elements 2 app to Apollo Elements 3
 ---
 
-# Migrating
-
 > Migrating from Apollo Client 2? See the [previous migration 
 > guide](./apollo-client-2/)
 

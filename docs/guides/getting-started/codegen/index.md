@@ -5,8 +5,6 @@ eleventyNavigation:
 description: How to use Apollo Elements and GraphQL Code Generator to improve the experience of developing with GraphQL and web components.
 ---
 
-# Codegen
-
 Using the `@graphql-codegen/cli` package and its plugins, you can automatically 
 generate TypeScript typings from your schema and query documents.
 

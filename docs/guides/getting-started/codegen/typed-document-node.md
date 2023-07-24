@@ -5,8 +5,6 @@ eleventyNavigation:
 description: Strongly typed GraphQL operation components with less boilerplate
 ---
 
-# TypedDocumentNode
-
 [TypedDocumentNode](https://the-guild.dev/blog/typed-document-node) is a new 
 technique where the `query`, `mutation`, or `subscription` object for your 
 components comes with it's `data` and `variables` types built in. Before 
