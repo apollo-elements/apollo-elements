@@ -57,6 +57,7 @@ function getModuleLink(member, allPosts) {
       background: none;
       border: none;
       margin-inline-end: 3px;
+      vertical-align: middle;
     }
     #inheritance button[disabled] {
       display: none;
@@ -240,7 +241,6 @@ function getModuleLink(member, allPosts) {
   </article>
 </template>
 <script webc:bucket="modules">
-import { polyfillDeclarativeShadowDOM } from '/assets/dsd.js';
 customElements.define('type-doc', class TypeDoc extends HTMLElement {
   #button;
   #inheritance;
@@ -248,12 +248,16 @@ customElements.define('type-doc', class TypeDoc extends HTMLElement {
 
   get #emptyBody() { return this.hasAttribute('data-empty-body'); }
   get #isInherited() { return this.hasAttribute('data-inherited-from'); }
-  get #expanded() { return this.#button?.getAttribute('aria-expanded') === 'true' ?? true; }
+
+  get expanded() { return this.#button.getAttribute('aria-expanded') === 'true'; }
+  set expanded(e) {
+    this.#button.setAttribute('aria-expanded', (!!e).toString());
+    this.#expandedChanged();
+  }
 
   constructor() {
     super();
-    if (!this.shadowRoot)
-      polyfillDeclarativeShadowDOM(this);
+    if (!this.shadowRoot) this.#stamp()
     this.#button = this.shadowRoot.getElementById('toggle');
     this.#body = this.shadowRoot.getElementById('body');
     this.#inheritance = this.shadowRoot.getElementById('inheritance');
@@ -261,14 +265,26 @@ customElements.define('type-doc', class TypeDoc extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.#button)
-      this.#button.disabled = this.#emptyBody;
+    this.#button.disabled = this.#emptyBody;
     this.#cloneHeading();
   }
 
   toggle() {
-    this.#button?.setAttribute('aria-expanded', !this.#emptyBody && !this.#expanded);
-    this.#body.hidden = this.#isInherited && !this.#expanded;
+    this.expanded = !this.expanded;
+  }
+
+  #stamp() {
+    const template = this.querySelector('template[shadowrootmode]')
+    if (template) {
+      this.attachShadow({ mode: template.getAttribute('shadowrootmode') })
+        .append(template.content);
+      template.remove();
+    }
+  }
+
+  #expandedChanged() {
+    this.#body.hidden = this.#isInherited && !this.expanded;
+    this.toggleAttribute('expanded', this.expanded);
   }
 
   #cloneHeading() {
