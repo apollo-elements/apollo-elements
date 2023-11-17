@@ -1,3 +1,5 @@
+![Am Yisrael Chai - עם ישראל חי](https://bennypowers.dev/assets/flag.am.yisrael.chai.png)
+
 <div align="center">
   <img src="./docs/logo.svg" alt="Apollo Elements" width="256" height="256"/>
   <h1>🚀 Apollo Elements 👩‍🚀</h1>
