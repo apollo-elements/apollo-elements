@@ -72,6 +72,6 @@ declare module '*.css' {
 ## Recommended Optimizations
 Apply these plugins to further reduce your bundle sizes.
 
-- [rollup-plugin-terser](https://npm.im/rollup-plugin-terser)
+- [@rollup/plugin-terser](https://www.npmjs.com/package/@rollup/plugin-terser)
 - [rollup-plugin-minify-html-literals](https://npm.im/rollup-plugin-minify-html-literals)
 - [@open-wc/rollup-plugin-html](https://npm.im/@open-wc/rollup-plugin-html)
