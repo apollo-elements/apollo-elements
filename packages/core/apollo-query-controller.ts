@@ -162,7 +162,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
-      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
       partialRefetch: this.options.partialRefetch,
       pollInterval: this.options.pollInterval,
       returnPartialData: this.options.returnPartialData,
@@ -246,7 +246,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
-      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
       partialRefetch: this.options.partialRefetch,
       pollInterval: this.options.pollInterval,
       refetchWritePolicy: this.options.refetchWritePolicy,
@@ -303,7 +303,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
         fetchPolicy:
             this.options.fetchPolicy === 'cache-and-network' ? undefined/* c8 ignore next */
           : this.options.fetchPolicy,
-        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
         partialRefetch: this.options.partialRefetch,
         returnPartialData: this.options.returnPartialData,
         ...params,
