@@ -1,6 +1,6 @@
 import type { ComponentDocument, Data, Variables } from '@apollo-elements/core/types';
 
-import type { FetchResult, MutationOptions } from '@apollo/client/core';
+import type { FetchResult, MutationOptions } from '@apollo/client';
 
 import { useController } from '@atomico/hooks/use-controller';
 

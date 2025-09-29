@@ -9,7 +9,7 @@ import { aTimeout, defineCE, expect, nextFrame } from '@open-wc/testing';
 
 import { fixture } from 'atomico/test-dom';
 
-import { ApolloError } from '@apollo/client/core';
+// ApolloError removed in Apollo Client v4
 
 import { setupClient, teardownClient, resetMessages } from '@apollo-elements/test';
 
@@ -283,8 +283,9 @@ describe('[atomico] useSubscription', function() {
 
       it('reads document from query', function() {
         expect(subscription.subscription)
-          .to.be.ok
-          .and.to.equal(subscription.document);
+          .to.be.ok;
+        expect(subscription.subscription)
+          .to.equal(subscription.document);
       });
 
       describe('setting subscription', function() {
@@ -394,9 +395,11 @@ describe('[atomico] useSubscription', function() {
             message: 'error',
           });
           expect(s.error, 'element error')
-            .to.be.ok
-            .and.to.equal(s.error)
-            .and.to.be.an.instanceof(ApolloError);
+            .to.be.ok;
+          expect(s.error)
+            .to.equal(s.error);
+          expect(s.error)
+            .to.be.an.instanceof(Error);
         });
       });
 
@@ -532,8 +535,9 @@ describe('[atomico] useSubscription', function() {
           };
           expect(s.data).to.deep.equal(data);
           expect(s.options.onData)
-            .to.have.calledOnce
-            .and.to.have.been.calledWithMatch({
+            .to.have.calledOnce;
+          expect(s.options.onData)
+            .to.have.been.calledWithMatch({
               subscriptionData: {
                 data,
                 loading: false,
@@ -630,17 +634,20 @@ describe('[atomico] useSubscription', function() {
         expect(subscription.data?.nullableParam?.nullable, 'data.nullableParam.nullable')
           .to.equal('Hello World');
         expect(subscription.loading, 'loading')
-          .to.equal(subscription.loading)
-          .and.to.be.false;
+          .to.equal(subscription.loading);
+        expect(subscription.loading)
+          .to.be.false;
         expect(subscription.error, 'error')
-          .to.equal(subscription.error)
-          .and.to.not.be.ok;
+          .to.equal(subscription.error);
+        expect(subscription.error)
+          .to.not.be.ok;
       });
 
       it('calls onData', function() {
         expect(subscription.options.onData)
-          .to.have.been.calledOnce
-          .and.to.have.been.calledWithMatch({
+          .to.have.been.calledOnce;
+        expect(subscription.options.onData)
+          .to.have.been.calledWithMatch({
             // client: subscription.client,
             subscriptionData: {
               loading: false,
@@ -672,8 +679,9 @@ describe('[atomico] useSubscription', function() {
             (subscription.options.onData as SinonSpy).lastCall.args;
           expect(res).to.be.empty;
           expect(client, 'client')
-            .to.equal(subscription.client)
-            .and.to.equal(window.__APOLLO_CLIENT__);
+            .to.equal(subscription.client);
+          expect(client)
+            .to.equal(window.__APOLLO_CLIENT__);
           expect(subscriptionData, 'client').to.deep.equal({
             loading: false,
             error: null,
@@ -709,9 +717,10 @@ describe('[atomico] useSubscription', function() {
           const [messages, setMessages] = useState<string[]>([]);
 
           useEffect(() => {
-            if (data?.messageSent?.message)
-              setMessages([...messages, data.messageSent.message]);
-          }, [data]);
+            if (data?.messageSent?.message) {
+              setMessages(prevMessages => [...prevMessages, data.messageSent.message]);
+            }
+          }, [data?.messageSent?.message]);
 
           return html`
             <host shadowDom>

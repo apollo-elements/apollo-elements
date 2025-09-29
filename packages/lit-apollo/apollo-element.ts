@@ -1,4 +1,4 @@
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 import type { PropertyDeclaration } from 'lit';
 
@@ -51,7 +51,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
   /** @summary The Apollo Client instance. */
   @controlled()
   @state()
-    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
+    client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null;
 
   /**
    * @summary Operation document.
@@ -85,7 +85,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends LitElement {
   /** @summary Latest error */
   @controlled()
   @state()
-    error: Error | ApolloError | null = null;
+    error: Error | null = null;
 
   /** @summary Latest errors */
   @controlled()

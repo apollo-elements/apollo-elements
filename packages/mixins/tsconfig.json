@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.settings.json",
-  "include": ["."],
-  "exclude": ["node_modules"],
+  "include": ["*.ts"],
+  "exclude": ["node_modules", "lib"],
   "compilerOptions": {
-    "outDir": ".",
+    "outDir": "./lib",
     "rootDir": "."
   },
   "references": [

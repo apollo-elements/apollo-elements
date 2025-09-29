@@ -3,6 +3,7 @@ import type { ApolloSubscriptionController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { aTimeout, expect, fixture, nextFrame } from '@open-wc/testing';
+// @ts-ignore: hybrids does not have TypeScript declarations
 import { define, html } from 'hybrids';
 import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
@@ -35,7 +36,7 @@ describe('[hybrids] subscription factory', function() {
         define<H>({
           tag,
           subscription: subscription(S.NullableParamSubscription, { noAutoSubscribe: true }),
-          render: host => {
+          render: (host: H) => {
             return html`
               <output id="data">${stringify(host.subscription.data)}</output>
               <output id="error">${stringify(host.subscription.error)}</output>

@@ -1,4 +1,4 @@
-import type { ApolloClient, ApolloError, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import type { Data, GraphQLError, Variables } from '@apollo-elements/core/types';
 import type { ApolloController, VariablesOf } from '@apollo-elements/core';
 
@@ -25,15 +25,19 @@ export class PolymerApolloElement<D = unknown, V = VariablesOf<D>>
   /** @ignore */
   [last] = new Map<keyof this, unknown>();
 
-  declare client: ApolloClient<NormalizedCacheObject>;
+  declare client: ApolloClient;
 
   declare context?: Record<string, unknown>;
 
   declare variables: Variables<D, V> | null;
 
+  declare controller: ApolloController<D, V>;
+
+  declare dispatchEvent: (event: Event) => boolean;
+
   @notify() data: Data<D> | null = null;
 
-  @notify() error: Error | ApolloError | null = null;
+  @notify() error: Error | null = null;
 
   @notify() errors: readonly GraphQLError[] = [];
 

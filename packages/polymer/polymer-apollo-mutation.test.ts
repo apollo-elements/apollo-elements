@@ -1,10 +1,10 @@
 import type * as I from '@apollo-elements/core/types';
 
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import { aTimeout, fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
 
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 
 import { stub, spy } from 'sinon';
 
@@ -47,9 +47,9 @@ class TestableApolloMutation<D, V = I.VariablesOf<D>>
     return template;
   }
 
-  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+  $(id: string) { return this.shadowRoot.getElementById(id); }
 
-  observed: Array<keyof TestableApolloMutation<D, V>> = [
+  observed: Array<string> = [
     'called',
     'data',
     'error',
@@ -66,7 +66,7 @@ class TestableApolloMutation<D, V = I.VariablesOf<D>>
   render() {
     if (!this.shadowRoot) return;
     for (const key of this.observed)
-      this.$(key)!.textContent = stringify(this[key]);
+      this.$(key)!.textContent = stringify(this[key as keyof this]);
   }
 
   update() {

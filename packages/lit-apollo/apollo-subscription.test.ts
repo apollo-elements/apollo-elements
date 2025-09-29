@@ -1,5 +1,5 @@
 import type * as I from '@apollo-elements/core/types';
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import { defineCE, expect, fixture } from '@open-wc/testing';
 
@@ -15,7 +15,7 @@ import {
   setupSubscriptionClass,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D, V extends C.OperationVariables = C.OperationVariables>
   extends ApolloSubscription<D, V> implements TestableElement {
   render(): TemplateResult {
     return html`
@@ -25,7 +25,7 @@ class TestableApolloSubscription<D, V = I.VariablesOf<D>>
     `;
   }
 
-  $(id: keyof this) { return this.shadowRoot?.getElementById(id as string) ?? null; }
+  $(id: string) { return this.shadowRoot?.getElementById(id) ?? null; }
 
   async hasRendered() {
     await this.updateComplete;
@@ -88,7 +88,8 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
   typeCheck() {
     this.offsetHeight; // HTMLElement
     this.updateComplete; // LitElement
-    this.client?.getResolvers(); // ApolloClient
+    // Note: getResolvers removed in Apollo Client v4
+    // this.client?.getResolvers(); // ApolloClient
     this.loading = true;
     this.document?.definitions.map(x => x.kind); // DocumentNode
     this.error?.stack;
@@ -101,8 +102,9 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
 
     // ApolloElementInterface
     assertType<Record<string, unknown>>             (this.context!);
-    if (isApolloError(this.error!))
-      assertType<readonly I.GraphQLError[]>           (this.error.graphQLErrors);
+    // Note: graphQLErrors removed in Apollo Client v4
+    // if (isApolloError(this.error!))
+    //   assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
     assertType<C.DocumentNode>                          (this.subscription!);

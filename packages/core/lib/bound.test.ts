@@ -28,7 +28,8 @@ describe('@bound', function() {
       }
       const instance = new Class();
       const { x } = instance;
-      expect(x()).to.equal(0).and.to.equal(instance.x());
+      expect(x()).to.equal(0);
+      expect(x()).to.equal(instance.x());
     });
   });
 });

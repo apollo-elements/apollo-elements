@@ -9,32 +9,37 @@ import type {
 } from '@apollo-elements/core/types';
 
 import type {
-  ApolloError,
   ApolloQueryResult,
   DocumentNode,
   ObservableQuery,
+  OperationVariables,
   QueryOptions,
+  RefetchWritePolicy,
   SubscribeToMoreOptions,
   SubscriptionOptions,
+  WatchQueryFetchPolicy,
   WatchQueryOptions,
-  ObservableSubscription,
-  FetchMoreQueryOptions,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
-import { NetworkStatus } from '@apollo/client/core';
+import type { Subscription } from 'rxjs';
+
+import { NetworkStatus } from '@apollo/client';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
 import { bound } from './lib/bound.js';
 
 export interface ApolloQueryControllerOptions<D, V = VariablesOf<D>> extends
-    ApolloControllerOptions<D, V>,
-    Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
+    ApolloControllerOptions<D, V> {
   variables?: Variables<D, V>;
   noAutoSubscribe?: boolean;
-  shouldSubscribe?: (options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>) => boolean;
+  shouldSubscribe?: (options?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>) => boolean;
   onData?: (data: Data<D>) => void;
   onError?: (error: Error) => void;
+  fetchPolicy?: WatchQueryFetchPolicy;
+  pollInterval?: number;
+  nextFetchPolicy?: WatchQueryFetchPolicy;
+  refetchWritePolicy?: RefetchWritePolicy;
 }
 
 export class ApolloQueryController<D, V = VariablesOf<D>>
@@ -118,7 +123,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     super.hostDisconnected();
   }
 
-  private shouldSubscribe(opts?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean {
+  private shouldSubscribe(opts?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>): boolean {
     return this.options.shouldSubscribe?.(opts) ?? true;/* c8 ignore next */
   }
 
@@ -126,7 +131,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
    * Determines whether the element is able to automatically subscribe
    */
   private canSubscribe(
-    options?: Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>
+    options?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
   ): boolean {
     /* c8 ignore next 4 */
     return (
@@ -162,10 +167,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
-      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
-      partialRefetch: this.options.partialRefetch,
       pollInterval: this.options.pollInterval,
-      returnPartialData: this.options.returnPartialData,
       nextFetchPolicy: this.options.nextFetchPolicy,
       ...params,
     }) as ObservableQuery<Data<D>, Variables<D, V>>;
@@ -174,23 +176,23 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   private nextData(result: ApolloQueryResult<Data<D>>): void {
     this.emitter.dispatchEvent(new CustomEvent('apollo-query-result', { detail: result }));
     const { data, error, errors, loading, networkStatus, partial } = this;
-    this.data = result.data;
+    this.data = (result.data as Data<D>) ?? null;
     this.error = result.error ?? null;/* c8 ignore next */
-    this.errors = result.errors ?? [];
+    this.errors = result.error ? [result.error] : [];
     this.loading = result.loading ?? false;/* c8 ignore next */
-    this.networkStatus = result.networkStatus;
+    this.networkStatus = result.networkStatus ?? NetworkStatus.ready;
     this.partial = result.partial ?? false;
-    this.options.onData?.(result.data);/* c8 ignore next */
+    this.options.onData?.(this.data!);/* c8 ignore next */
     this.notify({ data, error, errors, loading, networkStatus, partial });
   }
 
-  private nextError(apolloError: ApolloError): void {
-    const { error, loading } = this;
-    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
-    this.error = apolloError;
+  private nextError(error: Error): void {
+    const { error: prevError, loading } = this;
+    this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: error }));
+    this.error = error;
     this.loading = false;
-    this.options.onError?.(apolloError);/* c8 ignore next */
-    this.notify({ error, loading });
+    this.options.onError?.(error);/* c8 ignore next */
+    this.notify({ error: prevError, loading });
   }
 
   protected override clientChanged(): void {
@@ -214,7 +216,8 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   }
 
   protected override optionsChanged(options: ApolloQueryControllerOptions<D, V>): void {
-    this.observableQuery?.setOptions?.(options);
+    // Apollo Client v4: reobserve() replaces setOptions()
+    this.observableQuery?.reobserve(options);
   }
 
   /**
@@ -234,7 +237,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
    */
   @bound public subscribe(
     params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ObservableSubscription {
+  ): Subscription {
     if (this.observableQuery)
       this.observableQuery.stopPolling(); /* c8 ignore next */ // covered
 
@@ -246,11 +249,8 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
-      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
-      partialRefetch: this.options.partialRefetch,
       pollInterval: this.options.pollInterval,
       refetchWritePolicy: this.options.refetchWritePolicy,
-      returnPartialData: this.options.returnPartialData,
       ...params,
     });
 
@@ -274,7 +274,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+  @bound public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
     options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
     return this.observableQuery?.subscribeToMore(options);
@@ -294,25 +294,21 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
       this.loading = true;
       this.notify({ loading });
 
-      const result = await this.client.query<Data<D>, Variables<D, V>>({
+      const result = await this.client.query({
         // It's better to let Apollo client throw this error, if needs be
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         query: this.query!, variables: this.variables!,
         context: this.options.context,
         errorPolicy: this.options.errorPolicy,
-        fetchPolicy:
-            this.options.fetchPolicy === 'cache-and-network' ? undefined/* c8 ignore next */
-          : this.options.fetchPolicy,
-        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
-        partialRefetch: this.options.partialRefetch,
-        returnPartialData: this.options.returnPartialData,
+        fetchPolicy: this.options.fetchPolicy,
+        // removed deprecated options for Apollo Client v4
         ...params,
       });
       if (result) // NB: not sure why, but sometimes this returns undefined
-        this.nextData(result);
-      return result;/* c8 ignore next */
+        this.nextData(result as ApolloQueryResult<Data<D>>);
+      return result as ApolloQueryResult<Data<D>>;/* c8 ignore next */
     } catch (error) {
-      this.nextError(error as ApolloError);
+      this.nextError(error as Error);
       throw error;
     }
   }
@@ -346,15 +342,15 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     options.variables ??= undefined;
 
     this.observableQuery ??=
-      this.watchQuery(options as WatchQueryOptions<Variables<D, V>, this['data']>);
+      this.watchQuery(options);
 
-    return (this.observableQuery as unknown as ObservableQuery<Data<TD>, TV>)
-      .fetchMore(options as FetchMoreQueryOptions<TV, Data<TD>>)
-      .then(x => {
+    return (this.observableQuery)
+      .fetchMore(options)
+      .then((x: any) => {
         const { loading } = this;
         this.loading = false;
         this.notify({ loading });
-        return x;
+        return x as ApolloQueryResult<Data<TD>>;
       });
   }
 

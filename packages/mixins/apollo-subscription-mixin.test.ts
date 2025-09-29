@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type * as I from '@apollo-elements/core/types';
 
@@ -22,7 +22,7 @@ import {
   setupSubscriptionClass,
 } from '@apollo-elements/test/subscription.test';
 
-class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D = unknown, V extends C.OperationVariables = C.OperationVariables>
   extends ApolloSubscriptionMixin(HTMLElement)<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -37,9 +37,9 @@ class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
     return template;
   }
 
-  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+  $(id: string) { return this.shadowRoot.getElementById(id); }
 
-  observed: Array<keyof this> = ['data', 'error', 'loading'];
+  observed: Array<string> = ['data', 'error', 'loading'];
 
   constructor() {
     super();
@@ -50,7 +50,7 @@ class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
   render() {
     this.observed?.forEach(property => {
       if (this.$(property))
-        this.$(property)!.textContent = stringify(this[property]);
+        this.$(property)!.textContent = stringify(this[property as keyof this]);
     });
   }
 
@@ -92,7 +92,7 @@ export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeChe
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>  (this.client!);
+    assertType<C.ApolloClient>(this.client!);
     assertType<Record<string, unknown>>                  (this.context!);
     assertType<boolean>                                  (this.loading);
     assertType<C.DocumentNode>                           (this.document!);
@@ -103,15 +103,17 @@ export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeChe
     assertType<'a'>                                      (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                      (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>              (this.error.graphQLErrors);
+    // Note: isApolloError and graphQLErrors removed in Apollo Client v4
+    // if (isApolloError(this.error))
+    //   assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
 
     // ApolloSubscriptionInterface
     assertType<C.DocumentNode>                          (this.subscription!);
     assertType<TypeCheckVars>                           (this.variables!);
     assertType<C.FetchPolicy>                           (this.fetchPolicy!);
     assertType<string>                                  (this.fetchPolicy);
-    assertType<boolean>                                 (this.notifyOnNetworkStatusChange!);
+    // Note: notifyOnNetworkStatusChange removed in Apollo Client v4
+    // assertType<boolean>(this.notifyOnNetworkStatusChange!);
     assertType<number>                                  (this.pollInterval!);
     assertType<boolean>                                 (this.skip);
     assertType<boolean>                                 (this.noAutoSubscribe);

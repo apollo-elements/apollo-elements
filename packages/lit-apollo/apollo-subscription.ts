@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type {
   ComponentDocument,
@@ -24,7 +24,7 @@ import { state, property } from '@lit/reactive-element/decorators.js';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloSubscription<D = unknown, V extends C.OperationVariables = C.OperationVariables & VariablesOf<D>> extends ApolloElement<D, V> {
   static readonly is = 'apollo-subscription';
 
   controller = new ApolloSubscriptionController<D, V>(this, null, {
@@ -126,7 +126,7 @@ export class ApolloSubscription<D = unknown, V = VariablesOf<D>> extends ApolloE
   /**
    * Callback for when error is updated
    */
-  onError?(error: C.ApolloError): void;
+  onError?(error: Error): void;
 
   /**
    * Callback for when subscription completes.

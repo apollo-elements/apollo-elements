@@ -1,5 +1,5 @@
 import type * as I from '@apollo-elements/core/types';
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import { expect, defineCE, fixture } from '@open-wc/testing';
 
@@ -55,7 +55,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
     });
 
     describe('setting client', function() {
-      const mock = {} as C.ApolloClient<C.NormalizedCacheObject>;
+      const mock = {} as C.ApolloClient;
       beforeEach(function() {
         element.client = mock;
       });
@@ -136,14 +136,16 @@ class TypeCheck extends ApolloElement {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
+    assertType<C.ApolloClient>(this.client!);
     assertType<boolean>                             (this.loading);
     assertType<C.DocumentNode>                      (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<string>                              (this.error.message);
-    if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
+    if (isApolloError(this.error)) {
+      // Note: graphQLErrors property removed in Apollo Client v4
+      // assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
+    }
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
   }

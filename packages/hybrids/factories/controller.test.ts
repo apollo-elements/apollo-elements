@@ -1,6 +1,7 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
 
 import { nextFrame, expect, fixture } from '@open-wc/testing';
+// @ts-ignore: hybrids does not have TypeScript declarations
 import { define, html, Component } from 'hybrids';
 
 import { controller, HybridsControllerHost } from './controller';
@@ -69,7 +70,7 @@ describe('[hybrids] controller factory', function() {
       define({
         tag,
         clock: controller(ClockController, 100000000),
-        render: host => html`<output>${host.clock.value.getSeconds()}</output>`,
+        render: (host: typeof element) => html`<output>${host.clock.value.getSeconds()}</output>`,
       } as Component<typeof element>);
 
       element = await fixture(`<${tag}></${tag}>`);

@@ -1,12 +1,12 @@
-import type { Operation } from '@apollo/client/core';
+import type { ApolloLink } from "@apollo/client";
 
 import { expect } from '@open-wc/testing';
 
-import { gql } from '@apollo/client/core';
+import { gql } from "@apollo/client";
 
 import { hasAllVariables } from './has-all-variables';
 
-function pass(description: string, operation: Partial<Operation>): Mocha.Suite {
+function pass(description: string, operation: Partial<ApolloLink.Operation>): Mocha.Suite {
   return describe(description, function() {
     return it('passes', function() {
       expect(hasAllVariables(operation)).to.be.true;
@@ -14,7 +14,7 @@ function pass(description: string, operation: Partial<Operation>): Mocha.Suite {
   });
 }
 
-function fail(description: string, operation: Partial<Operation>): Mocha.Suite {
+function fail(description: string, operation: Partial<ApolloLink.Operation>): Mocha.Suite {
   return describe(description, function() {
     return it('fails', function() {
       expect(hasAllVariables(operation)).to.be.false;

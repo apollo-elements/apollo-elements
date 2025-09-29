@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type {
   ComponentDocument,
@@ -83,9 +83,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     onError?(_error: Error): void;
 
-    updater?(
-      ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
-    ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
+    updater?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 
     override attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);

@@ -2,16 +2,14 @@ import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from
 
 import type {
   ApolloClient,
-  ApolloError,
   ErrorPolicy,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+  ErrorLike,
+} from '@apollo/client';
 
 
 import type {
   ComponentDocument,
   Data,
-  GraphQLError,
   Variables,
   VariablesOf,
 } from '@apollo-elements/core/types';
@@ -22,7 +20,7 @@ import { ApolloControllerConnectedEvent, ApolloControllerDisconnectedEvent } fro
 
 export interface ApolloControllerOptions<D, V> {
   /** The `ApolloClient` instance for the controller. */
-  client?: ApolloClient<NormalizedCacheObject>;
+  client?: ApolloClient;
   /** Variables for the operation. */
   variables?: Variables<D, V>;
   /** Context passed to the link execution chain. */
@@ -58,7 +56,7 @@ implements ReactiveController {
 
   #options: ApolloControllerOptions<D, V> = {};
 
-  #client: ApolloClient<NormalizedCacheObject> | null = null;
+  #client: ApolloClient | null = null;
 
   #document: ComponentDocument<D, V> | null = null;
 
@@ -71,10 +69,10 @@ implements ReactiveController {
   data: Data<D> | null = null;
 
   /** @summary Latest error from the operation, or `null`. */
-  error: ApolloError | null = null;
+  error: Error | null = null;
 
   /** @summary Latest errors from the operation, or `[]`. */
-  errors: readonly GraphQLError[] = [];
+  errors: readonly ErrorLike[] = [];
 
   /** @summary Whether a request is in-flight. */
   loading = false;
@@ -83,11 +81,11 @@ implements ReactiveController {
   @ApolloController.o options: ApolloControllerOptions<D, V>;
 
   /** @summary The `ApolloClient` instance for this controller. */
-  get client(): ApolloClient<NormalizedCacheObject> | null {
+  get client(): ApolloClient | null {
     return this.#client;
   }
 
-  set client(v: ApolloClient<NormalizedCacheObject> | null) {
+  set client(v: ApolloClient | null) {
     const client = this.#client;
     this.#client = v;
     this.clientChanged?.(v); /* c8 ignore next */ // covered
@@ -158,7 +156,7 @@ implements ReactiveController {
   protected variablesChanged?(variables?: Variables<D, V> | null): void;
 
   /** @summary callback for when the Apollo client changes. */
-  protected clientChanged?(client?: ApolloClient<NormalizedCacheObject> | null): void;
+  protected clientChanged?(client?: ApolloClient | null): void;
 
   /** @summary callback for when the options change. */
   protected optionsChanged?(options?: ApolloControllerOptions<D, V>): void;

@@ -1,8 +1,8 @@
-import type { InMemoryCacheConfig, NormalizedCacheObject } from '@apollo/client/core';
+import type { InMemoryCacheConfig } from '@apollo/client';
 
 import type * as S from './schema';
 
-import { ApolloClient, InMemoryCache } from '@apollo/client/core';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';
@@ -13,7 +13,7 @@ import TestSchema from './graphql/test.schema.graphql';
 
 declare global {
   interface Window {
-    __APOLLO_CLIENT__?: ApolloClient<NormalizedCacheObject>;
+    __APOLLO_CLIENT__?: ApolloClient;
     __APOLLO_STATE__?: InMemoryCacheConfig;
   }
 }
@@ -143,10 +143,10 @@ export function teardownClient(): void {
   window.__APOLLO_CLIENT__ = undefined;
 }
 
-export function makeClient({ connectToDevTools = false } = {}): ApolloClient<NormalizedCacheObject> {
+export function makeClient({ connectToDevTools = false } = {}): ApolloClient {
   // Create the Apollo Client
   return new ApolloClient({
-    connectToDevTools,
+    devtools: { enabled: connectToDevTools },
     link: new SchemaLink({ schema }),
     defaultOptions: {
       watchQuery: {
@@ -163,15 +163,43 @@ export function makeClient({ connectToDevTools = false } = {}): ApolloClient<Nor
           fields: {
             messages: {
               keyArgs: false,
-              merge(p = [], n) {
-                return [...p, ...n];
+              merge(existing = [], incoming, { readField, mergeObjects }) {
+                // If incoming is a complete replacement (from subscription updateQuery),
+                // just return it to avoid duplication
+                if (incoming.length > existing.length) {
+                  return incoming;
+                }
+                // Otherwise, append new messages
+                return [...existing, ...incoming];
               },
             },
 
             pages: {
               keyArgs: false,
-              merge(p = [], n) {
-                return [...p, ...n];
+              merge(existing = [], incoming) {
+                // If incoming data contains elements that overlap with existing data,
+                // deduplicate to avoid showing duplicate pages
+                if (existing.length === 0) {
+                  return incoming;
+                }
+
+                // Find the highest value in existing data
+                const maxExisting = Math.max(...existing);
+                const minIncoming = Math.min(...incoming);
+
+                // If incoming starts where existing ends, it's pagination (fetchMore)
+                if (minIncoming > maxExisting) {
+                  return [...existing, ...incoming];
+                }
+
+                // If there's overlap, merge without duplication
+                const combined = [...existing];
+                for (const item of incoming) {
+                  if (!combined.includes(item)) {
+                    combined.push(item);
+                  }
+                }
+                return combined.sort((a, b) => a - b);
               },
             },
           },

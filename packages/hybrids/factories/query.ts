@@ -1,5 +1,6 @@
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
+import type { DocumentNode, TypedDocumentNode } from '@apollo/client';
 
+// @ts-ignore: hybrids does not have TypeScript declarations
 import type { Descriptor } from 'hybrids';
 
 import { controller } from './controller.js';

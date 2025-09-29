@@ -1,30 +1,30 @@
 import { expect } from '@open-wc/testing';
-import { gql } from '@apollo/client/core';
+import { gql } from "@apollo/client";
 
 import { isClientOperation } from './is-client-operation';
 import { createOperation } from '@apollo/client/link/utils';
 
 // ALL CLIENT operations
 const queryClientDirective =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query @client {
         foo
       }
     `,
-  });
+  }, {} as any);
 
 const singleTopLevelClient =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo @client
       }
     `,
-  });
+  }, {} as any);
 
 const singleTopLevelWithChildClient =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo {
@@ -32,50 +32,50 @@ const singleTopLevelWithChildClient =
         }
       }
     `,
-  });
+  }, {} as any);
 
 // ALL NETWORK operations
 const singleTopLevelNetwork =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo
       }
     `,
-  });
+  }, {} as any);
 
 const singleTopLevelNonClient =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo @hasRole(role: admin)
       }
     `,
-  });
+  }, {} as any);
 
 // MIXED operations
 const mixedOp1 =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo
         bar @client
       }
     `,
-  });
+  }, {} as any);
 
 const mixedOp2 =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo @hasRole(role: admin)
         bar @client
       }
     `,
-  });
+  }, {} as any);
 
 const deepButClient =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo @hasRole(role: admin) {
@@ -88,10 +88,10 @@ const deepButClient =
         }
       }
     `,
-  });
+  }, {} as any);
 
 const deepButMixed =
-  createOperation({}, {
+  createOperation({
     query: gql`
       query {
         foo @hasRole(role: admin) {
@@ -106,7 +106,7 @@ const deepButMixed =
         }
       }
     `,
-  });
+  }, {} as any);
 
 
 describe('[lib] isClientOperation', function() {

@@ -1,4 +1,4 @@
-import type { SubscriptionOptions } from '@apollo/client/core';
+import type { SubscriptionOptions } from '@apollo/client';
 
 import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
 

@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type {
   ComponentDocument,
@@ -26,7 +26,7 @@ import { controlled } from '@apollo-elements/core/decorators';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
+export class ApolloSubscription<D, V extends C.OperationVariables = C.OperationVariables & VariablesOf<D>> extends ApolloElement<D, V> {
   controller = new ApolloSubscriptionBehavior<D, V>(this, null, {
     shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
     onData: data => this.onSubscriptionData?.(data),
@@ -146,7 +146,7 @@ export class ApolloSubscription<D, V = VariablesOf<D>> extends ApolloElement<D, 
   /**
    * Callback for when error is updated
    */
-  onError?(error: C.ApolloError): void;
+  onError?(error: Error): void;
 
   /**
    * Callback for when subscription completes.

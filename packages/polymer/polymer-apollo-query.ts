@@ -1,5 +1,5 @@
 import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 import { ApolloQueryMixin } from '@apollo-elements/mixins/apollo-query-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 import { notify } from './notify-decorator.js';

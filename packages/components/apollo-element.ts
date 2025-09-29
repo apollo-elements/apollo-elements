@@ -10,9 +10,8 @@ import type { ReactiveElement } from 'lit';
 
 import type {
   ApolloClient,
-  ApolloError,
   NormalizedCacheObject,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import { controlled } from '@apollo-elements/core/decorators';
 
@@ -28,7 +27,7 @@ export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
   /** @summary The Apollo Client instance. */
   @controlled()
   @state()
-    client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
+    client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
   /** @summary Whether a request is in flight. */
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;
@@ -44,7 +43,7 @@ export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
   @controlled() @state() document: ComponentDocument<D, V> | null = null;
 
   /** @summary Latest error */
-  @controlled() @state() error: Error | ApolloError | null = null;
+  @controlled() @state() error: Error | null = null;
 
   /** @summary Latest errors */
   @controlled() @state() errors: readonly GraphQLError[] = [];
@@ -52,9 +51,9 @@ export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
   /** @summary Operation variables. */
   @controlled() @state() variables: Variables<D, V> | null = null;
 
-  requestUpdate(name?: string, old?: unknown): void {
-    super.requestUpdate(name, (
-      this.constructor as typeof ReactiveElement
-    ).getPropertyOptions(name as string).type === Boolean ? !!this[name as keyof this] : old);
-  }
+  // requestUpdate(name?: string, old?: unknown): void {
+  //   super.requestUpdate(name, (
+  //     this.constructor as typeof ReactiveElement
+  //   ).getPropertyOptions(name as string).type === Boolean ? !!this[name as keyof this] : old);
+  // }
 }

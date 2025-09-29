@@ -1,5 +1,5 @@
 import type { Data, Variables, VariablesOf } from '@apollo-elements/core/types';
-import type { ApolloError, DocumentNode } from '@apollo/client/core';
+import type { DocumentNode } from '@apollo/client';
 import type { ApolloMutationElement } from './apollo-mutation.js';
 
 export type MutationEventType = (
@@ -11,7 +11,7 @@ export type MutationEventType = (
 
 export interface MutationEventDetail<D, V = VariablesOf<D>> {
   data?: Data<D> | null;
-  error?: Error | ApolloError | null;
+  error?: Error | null;
   variables?: Variables<D, V> | null;
   element: ApolloMutationElement<D, V>;
   mutation: DocumentNode | null;

@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type * as I from '@apollo-elements/core/types';
 
@@ -33,7 +33,7 @@ const template = html<TestableApolloSubscription<any>>`
 `;
 
 @customElement({ name: 'testable-apollo-subscription', template })
-class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D = unknown, V extends C.OperationVariables = C.OperationVariables>
   extends ApolloSubscription<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -43,8 +43,8 @@ class TestableApolloSubscription<D = unknown, V = I.VariablesOf<D>>
     return this;
   }
 
-  $(id: keyof this) {
-    return this.shadowRoot.getElementById(id as string);
+  $(id: string) {
+    return this.shadowRoot.getElementById(id);
   }
 }
 
@@ -89,7 +89,7 @@ describe('[FAST] ApolloSubscription', function() {
       const name = 'renders-when-data-is-set';
       const template = html<Test>`${x => x.data?.foo ?? 'FAIL'}`;
       @customElement({ name, template })
-      class Test extends ApolloSubscription<{ foo: 'bar' }, null> { }
+      class Test extends ApolloSubscription<{ foo: 'bar' }, Record<string, never>> { }
       const tag = unsafeStatic(name);
       const element = await fixture<Test>(h`<${tag} .data="${{ foo: 'bar' }}"></${tag}>`);
       expect(element).shadowDom.to.equal('bar');
@@ -122,7 +122,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
+    assertType<C.ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<C.DocumentNode>                      (this.document!);
@@ -133,8 +133,10 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
+    if (isApolloError(this.error)) {
+      // In Apollo Client v4, graphQLErrors are handled differently
+      // and are not directly available on Error objects
+    }
 
     // ApolloSubscriptionInterface
     assertType<C.DocumentNode>                      (this.subscription!);

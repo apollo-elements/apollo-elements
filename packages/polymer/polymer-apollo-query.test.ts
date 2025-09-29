@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/core/types';
 
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
@@ -36,7 +36,7 @@ class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
     return template;
   }
 
-  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+  $(id: string) { return this.shadowRoot.getElementById(id); }
 
   constructor() {
     super();
@@ -82,9 +82,6 @@ describe('[polymer] <polymer-apollo-query>', function() {
       const queryStub = stub(element.client, 'query');
 
       queryStub.resolves({
-        loading: false,
-        partial: undefined,
-        networkStatus: 7,
         data: { messages: ['hi'] },
       });
 

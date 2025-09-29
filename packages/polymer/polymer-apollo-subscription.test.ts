@@ -1,4 +1,5 @@
 import type * as I from '@apollo-elements/core/types';
+import type * as C from '@apollo/client';
 
 import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';
 
@@ -18,7 +19,7 @@ import * as S from '@apollo-elements/test/schema';
 
 import './polymer-apollo-subscription';
 
-class TestableApolloSubscription<D, V = I.VariablesOf<D>>
+class TestableApolloSubscription<D, V extends C.OperationVariables = C.OperationVariables>
   extends PolymerApolloSubscription<D, V>
   implements TestableElement {
   declare shadowRoot: ShadowRoot;
@@ -33,7 +34,7 @@ class TestableApolloSubscription<D, V = I.VariablesOf<D>>
     return template;
   }
 
-  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+  $(id: string) { return this.shadowRoot.getElementById(id); }
 
   constructor() {
     super();

@@ -6,7 +6,7 @@ import type {
   VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import { FASTElement, observable } from '@microsoft/fast-element';
 import { ApolloController } from '@apollo-elements/core/apollo-controller';
@@ -45,7 +45,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
   @observable
   @hosted()
   @controlled()
-    client: C.ApolloClient<C.NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null;
+    client: C.ApolloClient | null = window.__APOLLO_CLIENT__ ?? null;
 
   /**
    * @summary Operation document.
@@ -78,7 +78,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
   /** @summary Latest error */
   @hosted()
   @controlled()
-    error: Error | C.ApolloError | null = null;
+    error: Error | null = null;
 
   /** @summary Latest errors */
   @hosted()

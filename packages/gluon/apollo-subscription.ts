@@ -1,4 +1,5 @@
 import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
+import type * as C from '@apollo/client';
 
 import { ApolloElement } from './apollo-element.js';
 import { ApolloSubscriptionMixin } from '@apollo-elements/mixins/apollo-subscription-mixin';
@@ -15,7 +16,7 @@ export { html } from '@gluon/gluon';
  * See [`ApolloSubscriptionInterface`](https://apolloelements.dev/api/core/interfaces/subscription) for more information on events
  *
  */
-export class ApolloSubscription<D = unknown, V = VariablesOf<D>>
+export class ApolloSubscription<D = unknown, V extends C.OperationVariables = C.OperationVariables>
   extends ApolloSubscriptionMixin(ApolloElement as Constructor<ApolloElement<unknown>>)<D, V> {
   /** @summary Latest subscription data. */
   declare data: Data<D> | null;

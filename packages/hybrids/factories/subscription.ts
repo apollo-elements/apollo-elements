@@ -1,5 +1,6 @@
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client/core';
+import type { DocumentNode, TypedDocumentNode, OperationVariables } from '@apollo/client';
 
+// @ts-ignore: hybrids does not have TypeScript declarations
 import type { Descriptor } from 'hybrids';
 
 import { controller } from './controller.js';
@@ -17,7 +18,7 @@ import {
  * @return Hybrids descriptor for a [ApolloMutationController](/api/core/controllers/subscription/)
  */
 
-export function subscription<E extends HTMLElement, D, V>(
+export function subscription<E extends HTMLElement, D, V extends OperationVariables>(
   subscriptionDocument?: DocumentNode | null,
   options?: ApolloSubscriptionControllerOptions<D, V>,
 ): Descriptor<E, ApolloSubscriptionController<D, V>>

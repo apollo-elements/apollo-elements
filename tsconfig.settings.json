@@ -11,10 +11,11 @@
     "importHelpers": true,
     "inlineSources": true,
     "module": "es2022",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "noEmitOnError": false,
     "sourceMap": true,
     "strict": true,
+    "skipLibCheck": true,
     "target": "es2022",
     "useDefineForClassFields": false,
     "paths": {

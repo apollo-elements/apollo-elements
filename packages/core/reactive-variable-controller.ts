@@ -1,4 +1,4 @@
-import type { ReactiveVar } from '@apollo/client/core';
+import type { ReactiveVar } from "@apollo/client";
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
 /** Fired when a reactive variable's value changes */

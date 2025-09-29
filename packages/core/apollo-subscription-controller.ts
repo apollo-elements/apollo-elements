@@ -10,24 +10,24 @@ import type {
 
 import type {
   ApolloClient,
-  ApolloError,
   DocumentNode,
   FetchPolicy,
   FetchResult,
   NormalizedCacheObject,
   Observable,
+  OperationVariables,
   SubscriptionOptions,
   WatchQueryOptions,
-  ObservableSubscription,
-} from '@apollo/client/core';
+} from '@apollo/client';
+
+import type { Subscription } from 'rxjs';
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
 import { bound } from './lib/bound.js';
 
 export interface ApolloSubscriptionControllerOptions<D, V = VariablesOf<D>>
-          extends ApolloControllerOptions<D, V>,
-          Partial<WatchQueryOptions<Variables<D, V>, Data<D>>> {
+          extends ApolloControllerOptions<D, V> {
   variables?: Variables<D, V>;
   fetchPolicy?: FetchPolicy;
   noAutoSubscribe?: boolean;
@@ -35,18 +35,18 @@ export interface ApolloSubscriptionControllerOptions<D, V = VariablesOf<D>>
   shouldResubscribe?: boolean;
   skip?: boolean;
   onData?: (detail: {
-    client: ApolloClient<NormalizedCacheObject>;
+    client: ApolloClient;
     subscriptionData: { data: Data<D> | null; loading: boolean; error: null; };
   }) => void;
   onComplete?: () => void;
-  onError?: (error: ApolloError) => void;
+  onError?: (error: Error) => void;
 }
 
-export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
+export class ApolloSubscriptionController<D = unknown, V extends OperationVariables = Variables<D, any>>
   extends ApolloController<D, V> implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
 
-  private observableSubscription?: ObservableSubscription;
+  private observableSubscription?: Subscription;
 
   /** @summary Options to customize the subscription and to interface with the controller. */
   declare options: ApolloSubscriptionControllerOptions<D, V>;
@@ -96,7 +96,7 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
    * Determines whether the element is able to automatically subscribe
    */
   private canSubscribe(
-    options?: Partial<SubscriptionOptions<Variables<D, V> | null, Data<D>>>
+    options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
   ): boolean {
     /* c8 ignore next 4 */
     return (
@@ -127,13 +127,13 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      variables: this.variables,
+      variables: this.variables ?? undefined,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
       ...rest,
       query,
-    });
+    } as any) as any;
   }
 
   /**
@@ -141,6 +141,19 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
    */
   private nextData(result: FetchResult<Data<D>>) {
     const { data, error, errors, loading } = this;
+
+    // In Apollo Client v4, subscription errors come through the error field (singular)
+    if ((result as any).error) {
+      this.nextError((result as any).error);
+      return;
+    }
+
+    // Also check for GraphQL errors in the errors array
+    if (result.errors && result.errors.length > 0) {
+      this.nextError(result.errors[0] as any);
+      return;
+    }
+
     // If we got to this line without a client, it's because of user error
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const client = this.client!;
@@ -149,7 +162,7 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
     this.emitter.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
     this.data = result?.data ?? null;
     this.error = null;
-    this.errors = result?.errors ?? [];
+    this.errors = result?.errors ? result.errors as any : [];
     this.loading = false;
     this.options.onData?.(detail); /* c8 ignore next */ // covered
     this.notify({ data, error, errors, loading });
@@ -158,7 +171,7 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
   /**
    * Sets `error` and `loading` on the instance when the subscription errors.
    */
-  private nextError(apolloError: ApolloError) {
+  private nextError(apolloError: Error) {
     const { error, loading } = this;
     this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
     this.error = apolloError;
@@ -196,13 +209,13 @@ export class ApolloSubscriptionController<D = unknown, V = VariablesOf<D>>
     if (doc === this.#lastSubscriptionDocument)
       return;/* c8 ignore next */
     this.cancel();
-    if (this.canSubscribe({ query }) && this.shouldSubscribe({ query })) /* c8 ignore next */
+    if (this.canSubscribe({ query } as any) && this.shouldSubscribe({ query } as any)) /* c8 ignore next */
       this.subscribe();/* c8 ignore next */
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
-    if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))/* c8 ignore next */
+    if (this.canSubscribe({ variables } as any) && this.shouldSubscribe({ variables } as any))/* c8 ignore next */
       this.subscribe();/* c8 ignore next */
   }
 

@@ -1,4 +1,5 @@
 import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
+import type { OperationVariables } from '@apollo/client';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';
 
@@ -30,7 +31,7 @@ import { PolymerApolloElement } from './polymer-apollo-element.js';
  * @fires {PolymerChangeEvent<readonly GraphQLError[]>} errors-changed
  * @fires {PolymerChangeEvent<boolean>} loading-changed
  */
-export class PolymerApolloSubscription<D = unknown, V = VariablesOf<D>>
+export class PolymerApolloSubscription<D = unknown, V extends OperationVariables = OperationVariables>
   extends ApolloSubscriptionMixin(
     PolymerApolloElement as Constructor<PolymerApolloElement<unknown>>
   )<D, V> {

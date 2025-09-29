@@ -1,12 +1,14 @@
 import type {
   ApolloQueryResult,
   ErrorPolicy,
+  OperationVariables,
   QueryOptions,
   SubscribeToMoreOptions,
   WatchQueryFetchPolicy,
   WatchQueryOptions,
-  ObservableSubscription,
-} from '@apollo/client/core';
+} from '@apollo/client';
+
+import type { Subscription } from 'rxjs';
 
 import type {
   ComponentDocument,
@@ -26,7 +28,7 @@ import {
   ApolloQueryControllerOptions,
 } from '@apollo-elements/core/apollo-query-controller';
 
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 
 import { controlled } from '@apollo-elements/core/decorators';
 
@@ -62,7 +64,7 @@ declare global { interface HTMLElementTagNameMap { 'apollo-query': ApolloQueryEl
  *          </template>
  *
  *          <script type="module">
- *            import { gql } from '@apollo/client/core';
+ *            import { gql } from '@apollo/client';
  *            const el = document.getElementById('query-element');
  *            el.query = gql`
  *              query MyProfile($size: Int) {
@@ -232,7 +234,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @bound public subscribe(
     params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): ObservableSubscription {
+  ): Subscription {
     return this.controller.subscribe(params);
   }
 
@@ -244,7 +246,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  @bound public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+  @bound public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
     options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);

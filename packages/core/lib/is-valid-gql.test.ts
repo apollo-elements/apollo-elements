@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { gql } from '@apollo/client/core';
+import { gql } from "@apollo/client";
 
 import { isValidGql } from './is-valid-gql';
 

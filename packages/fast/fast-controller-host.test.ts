@@ -12,6 +12,8 @@ describe('[FAST] FASTControllerHost', function() {
     }
 
     const el = await fixture<A>('<a-l></a-l>');
-    expect(el.b.host).to.equal(el.c.host).and.to.be.an.instanceof(FASTControllerHost);
+    (expect(el.b.host)
+      .to.equal(el.c.host) as any)
+      .and.to.be.an.instanceof(FASTControllerHost);
   });
 });

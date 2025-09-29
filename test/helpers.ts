@@ -2,7 +2,7 @@ import { spy, stub, SinonSpy, SinonStub } from 'sinon';
 
 import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
 
-import type { ObservableSubscription } from '@apollo/client/core';
+import type { Subscription } from 'rxjs';
 import type {
   ApolloElementElement,
   ApolloMutationElement,
@@ -15,12 +15,16 @@ import type { Entries } from '@apollo-elements/core/types';
 
 import { defineCE, fixture } from '@open-wc/testing';
 
+import * as S from './schema';
+
 // 🐤 quack quack 🦆
-export function isSubscription(x: unknown): x is ObservableSubscription {
+export function isSubscription(x: unknown): x is Subscription {
   return (
     !!x &&
     typeof x === 'object' &&
-    x!.constructor.toString().startsWith('function Subscription')
+    (x!.constructor.toString().startsWith('function Subscription') ||
+     // Apollo Client v4 compatibility: check for unsubscribe method
+     (typeof (x as any).unsubscribe === 'function'))
   );
 }
 
@@ -42,7 +46,9 @@ export function isSubscription(x: unknown): x is ObservableSubscription {
  */
 export function assertType<T>(x: T): asserts x is T { x; }
 
-export { isApolloError } from '@apollo/client/core';
+export function isApolloError(error: any): error is Error {
+  return error instanceof Error;
+}
 
 export const stringify =
   (x: unknown): string =>
@@ -135,3 +141,51 @@ export const setupMutationClass = setupClass<TestableElement & Omit<ApolloMutati
       Test.prototype.onError = opts?.properties.onError;
   },
 });
+
+/**
+ * Mock common test queries in Apollo Client cache to avoid "Missing field" warnings
+ * and "Unknown query named" warnings in refetchQueries tests.
+ * @param client - Apollo Client instance, defaults to window.__APOLLO_CLIENT__
+ */
+export function mockQueriesInCache(client = window.__APOLLO_CLIENT__) {
+  if (!client) return;
+
+  // Mock HelloQuery
+  client.cache.writeQuery({
+    query: S.HelloQuery,
+    data: { helloWorld: { name: 'test', greeting: 'hello' } }
+  });
+
+  // Mock MessagesQuery
+  client.cache.writeQuery({
+    query: S.MessagesQuery,
+    data: { messages: [{ message: 'test' }] }
+  });
+
+  // Mock NoParamQuery
+  client.cache.writeQuery({
+    query: S.NoParamQuery,
+    data: { noParam: { noParam: 'test' } }
+  });
+
+  // Mock NonNullableParamQuery
+  client.cache.writeQuery({
+    query: S.NonNullableParamQuery,
+    variables: { nonNull: 'test' },
+    data: { nonNullParam: { nonNull: 'test' } }
+  });
+
+  // Mock NullableParamQuery
+  client.cache.writeQuery({
+    query: S.NullableParamQuery,
+    variables: { nullable: 'test' },
+    data: { nullableParam: { nullable: 'test' } }
+  });
+
+  // Mock PaginatedQuery
+  client.cache.writeQuery({
+    query: S.PaginatedQuery,
+    variables: { offset: 0, limit: 10 },
+    data: { pages: [1, 2, 3] }
+  });
+}

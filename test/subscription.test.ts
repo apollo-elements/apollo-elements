@@ -6,7 +6,7 @@ import { SetupFunction } from './types';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { gql, ApolloClient, InMemoryCache } from '@apollo/client/core';
+import { gql, ApolloClient, InMemoryCache } from '@apollo/client';
 
 import { spy, SinonSpy } from 'sinon';
 import { makeClient, setupClient, teardownClient } from './client';
@@ -79,7 +79,8 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         expect(element?.skip, 'skip').to.be.false;
 
         // options fields
-        expect(element?.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
+        // Note: notifyOnNetworkStatusChange removed in Apollo Client v4
+        // expect(element?.notifyOnNetworkStatusChange, 'notifyOnNetworkStatusChange').to.be.undefined;
         expect(element?.fetchPolicy, 'fetchPolicy').to.be.undefined;
         expect(element?.errorPolicy, 'errorPolicy').to.be.undefined;
         expect(element?.onError, 'onError').to.be.undefined;
@@ -142,10 +143,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         describe('subscribe({ subscription, client })', async function() {
-          let client: ApolloClient<any>|undefined;
+          let client: ApolloClient|undefined;
 
           beforeEach(function() {
-            client = new ApolloClient({ cache: new InMemoryCache() });
+            client = makeClient();
             spy(client, 'subscribe');
             element?.subscribe({ client, subscription: S.NullableParamSubscription });
           });
@@ -413,10 +414,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           describe('subscribe({ subscription, client })', async function() {
-            let client: ApolloClient<any>|undefined;
+            let client: ApolloClient|undefined;
 
             beforeEach(function() {
-              client = new ApolloClient({ cache: new InMemoryCache() });
+              client = makeClient();
               spy(client, 'subscribe');
             });
 

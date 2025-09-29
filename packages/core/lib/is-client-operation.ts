@@ -1,4 +1,4 @@
-import type { Operation } from '@apollo/client/core';
+import type { ApolloLink } from "@apollo/client";
 import type {
   DefinitionNode,
   DirectiveNode,
@@ -7,7 +7,7 @@ import type {
   SelectionNode,
 } from 'graphql';
 
-import { hasDirectives } from '@apollo/client/utilities';
+import { hasDirectives } from "@apollo/client/utilities/internal";
 
 const FAIL_DIRECTIVE = Symbol('NO_DIRECTIVE') as unknown as DirectiveNode;
 
@@ -30,7 +30,7 @@ const getDirectives =
     if (!hasSelections(x))
       return [...acc, ...directives];
     else
-      return [...acc, ...x.selectionSet?.selections.reduce(getDirectives, []) ?? []];
+      return [...acc, ...(x.selectionSet?.selections.reduce(getDirectives, []) ?? [])];
   };
 
 /**
@@ -43,7 +43,7 @@ const getDirectives =
  * @param  operation Operation to check
  * @return           Whether the operation is client-side-only, i.e. true when the Operation will make no network calls.
  */
-export function isClientOperation(operation: Operation): boolean {
+export function isClientOperation(operation: ApolloLink.Operation): boolean {
   const query = operation?.query;
   const definitions = query?.definitions;
 

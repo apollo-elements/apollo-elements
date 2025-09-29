@@ -10,7 +10,8 @@ import type {
   VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type { ApolloError, FetchPolicy, FetchResult, MutationOptions } from '@apollo/client/core';
+import type { FetchPolicy, ApolloClient, FetchResult, MutationOptions } from "@apollo/client";
+
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
@@ -94,7 +95,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
       update: this.options.update,
       variables: this.variables ?? undefined,
       ...params,
-    })
+    } as any)
       .then(this.onCompletedMutation.bind(this, mutationId))
       .catch(this.onMutationError.bind(this, mutationId));
   }
@@ -127,8 +128,8 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
       this.loading = false;
       if (!this.options.ignoreResults) {
         this.error = null;
-        this.data = response.data ?? null;/* c8 ignore next */
-        this.errors = response.errors ?? [];
+        this.data = (response.data as Data<D>) ?? null;/* c8 ignore next */
+        this.errors = response.errors ? response.errors as any : [];
         this.options.onCompleted?.(this.data); /* c8 ignore next */
       }
       this.notify({ data, error, errors, loading });
@@ -139,7 +140,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
   /**
    * Callback for when a mutation fails.
    */
-  private onMutationError(mutationId: number, apolloError: ApolloError): never {
+  private onMutationError(mutationId: number, apolloError: Error): never {
     this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
     const { data, error, loading } = this;
     if (this.isMostRecentMutation(mutationId)) {

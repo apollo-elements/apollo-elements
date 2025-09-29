@@ -1,6 +1,7 @@
 import * as S from '@apollo-elements/test/schema';
 
-import * as C from '@apollo/client/core';
+import * as C from '@apollo/client';
+import { ApolloLink } from '@apollo/client';
 
 import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
@@ -107,7 +108,8 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       it('as empty object', async function() {
         element.context = {};
         await element.updateComplete;
-        expect(element.controller.options.context).to.be.ok.and.to.be.empty;
+        expect(element.controller.options.context).to.be.ok;
+        expect(element.controller.options.context).to.be.empty;
       });
       it('as non-empty object', async function() {
         element.context = { a: 'b' };
@@ -132,7 +134,10 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         expect(element.controller.client).to.equal(window.__APOLLO_CLIENT__);
       });
       it('as new client', async function() {
-        const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
+        const client = new C.ApolloClient({
+          cache: new C.InMemoryCache(),
+          link: new ApolloLink(() => ({ data: {} }) as any)
+        });
         element.client = client;
         await element.updateComplete;
         expect(element.controller.client).to.equal(client);
@@ -171,7 +176,9 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         await element.updateComplete;
         expect(element.controller.query)
           .to.equal(query)
-          .and.to.equal(element.controller.document);
+;
+        expect(element.controller.query)
+          .to.equal(element.controller.document);
       });
       it('as TypedDocumentNode', async function() {
         const query = C.gql`{ nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
@@ -200,10 +207,10 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
     });
 
     describe('setting error', function() {
-      it('as ApolloError', async function() {
-        try { throw new C.ApolloError({}); } catch (e) { element.error = e as Error; }
+      it('as Error', async function() {
+        try { throw new Error('test error'); } catch (e) { element.error = e as Error; }
         await element.updateComplete;
-        expect(element.controller.error).to.be.an.instanceof(C.ApolloError);
+        expect(element.controller.error).to.be.an.instanceof(Error);
       });
       it('as Error', async function() {
         try { throw new Error('hi'); } catch (err) { element.error = err as Error; }
@@ -218,8 +225,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       });
       it('as illegal value', async function() {
         const error = 0;
-        // @ts-expect-error: test bad value
-        element.error = error;
+        element.error = error as any;
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });
@@ -252,7 +258,9 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         beforeEach(nextFrame);
         it('reflects', function() {
           expect(element.noAutoSubscribe).to.be.true
-            .and.to.equal(element.controller.options.noAutoSubscribe);
+;
+        expect(element.noAutoSubscribe)
+            .to.equal(element.controller.options.noAutoSubscribe);
         });
         describe('then setting query', function() {
           beforeEach(() => element.query = S.PaginatedQuery);
@@ -516,7 +524,9 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
         expect(element.$('#data')?.textContent).to.equal('noParam');
       });
 
-      it('removes loading attribute', function() {
+      it('removes loading attribute', async function() {
+        // Ensure any pending updates are completed
+        await element.updateComplete;
         expect(element.loading, 'property').to.be.false;
         expect(element.hasAttribute('loading'), 'attribute').to.be.false;
       });

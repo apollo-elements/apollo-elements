@@ -1,4 +1,5 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
+import type { Subscription } from 'rxjs';
 
 import type {
   ComponentDocument,
@@ -12,7 +13,7 @@ import type {
 
 import type { ApolloQueryElement } from '@apollo-elements/core/types';
 
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
@@ -235,7 +236,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * Override to prevent subscribing unless your conditions are met.
      */
     shouldSubscribe(
-      options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
+      options?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
     ): boolean {
       return (void options, true);
     }
@@ -245,8 +246,8 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * @param params options for controlling how the subscription subscribes
      */
     subscribe(
-      params?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
-    ): C.ObservableSubscription {
+      params?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
+    ): Subscription {
       return this.controller.subscribe(params);
     }
 
@@ -258,7 +259,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * then a `{ subscriptionData: TSubscriptionResult }` object,
      * and returns an object with updated query data based on the new results.
      */
-    subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+    subscribeToMore<TSubscriptionVariables extends C.OperationVariables, TSubscriptionData>(
       options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
     ): void | (() => void) {
       return this.controller.subscribeToMore(options);

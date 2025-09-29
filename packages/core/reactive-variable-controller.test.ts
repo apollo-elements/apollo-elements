@@ -3,7 +3,7 @@ import { PropertyValues, ReactiveElement } from 'lit';
 import { defineCE, expect, fixture } from '@open-wc/testing';
 
 import { ReactiveVariableController, VariableChangeEvent } from './reactive-variable-controller';
-import { makeVar } from '@apollo/client/core';
+import { makeVar } from "@apollo/client";
 
 describe('[core] ReactiveVariableController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
@@ -32,8 +32,9 @@ describe('[core] ReactiveVariableController', function() {
 
       it('has default properties', function() {
         expect(element.value, 'value')
-          .to.equal(element.variable?.value)
-          .and.to.equal(0);
+          .to.equal(element.variable?.value);
+        expect(element.value)
+          .to.equal(0);
       });
 
       describe('updating the value', function() {
@@ -50,8 +51,9 @@ describe('[core] ReactiveVariableController', function() {
         it('should fire a change event', function() {
           expect(event).to.be.an.instanceof(VariableChangeEvent);
           expect(event.value)
-            .to.equal(element.value)
-            .and.to.equal(element.variable?.value);
+            .to.equal(element.value);
+          expect(event.value)
+            .to.equal(element.variable?.value);
         });
       });
     });

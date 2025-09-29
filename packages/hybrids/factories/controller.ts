@@ -1,4 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-element';
+// @ts-ignore: hybrids does not have TypeScript declarations
 import type { Descriptor } from 'hybrids';
 
 type Constructor<T> = { new (...a: any[]): T; }
@@ -68,11 +69,11 @@ export function controller<E extends HTMLElement, C extends ReactiveController>(
 ): Descriptor<E, C> {
   const controllers = new WeakMap<E, ReactiveController>();
   return {
-    get(element) {
+    get(element: E) {
       const c = controllers.get(element) as C;
       return (x => x)(c);
     },
-    connect(element, key, invalidate) {
+    connect(element: E, key: string, invalidate: Invalidate) {
       if (!hosts.get(element))
         hosts.set(element, new HybridsControllerHost(element));
 
