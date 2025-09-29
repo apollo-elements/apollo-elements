@@ -1,8 +1,8 @@
-import type { DocumentNode, ApolloError } from '@apollo/client/core';
+import type { DocumentNode } from '@apollo/client';
 
 import type { Constructor, CustomElement } from '@apollo-elements/core/types';
 
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
@@ -20,7 +20,7 @@ function GraphQLScriptChildMixinImplementation<
   B extends Constructor<CustomElement & {
     document: DocumentNode|null;
     variables: unknown|null;
-    error: Error|ApolloError|null;
+    error: Error|null;
   }>
 >(superclass: B): B {
   class GraphQLScriptChild extends superclass {

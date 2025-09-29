@@ -4,24 +4,24 @@ import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 import type {
   ApolloClient,
-  ApolloError,
   ApolloQueryResult,
   DocumentNode,
   ErrorPolicy,
-  FetchMoreOptions,
   FetchPolicy,
   FetchResult,
   MutationOptions,
   NetworkStatus,
-  NormalizedCacheObject,
   OperationVariables,
   QueryOptions,
   SubscribeToMoreOptions,
   SubscriptionOptions,
   WatchQueryFetchPolicy,
   WatchQueryOptions,
-  ObservableSubscription,
-} from '@apollo/client/core';
+} from '@apollo/client';
+
+import { GraphQLError } from 'graphql';
+
+import type { Subscription } from 'rxjs';
 
 import type {
   ApolloController,
@@ -35,9 +35,9 @@ export type Value<T> = T[keyof T];
 
 export type Entries<T> = [keyof T, Value<T>][];
 
-export type MutationUpdaterFn<D, V> = Required<MutationOptions<D, V>>['update'];
+export type MutationUpdaterFn<D, V extends OperationVariables = OperationVariables> = Required<MutationOptions<D, V>>['update'];
 
-export type GraphQLError = ApolloError['graphQLErrors'][number];
+// GraphQLError is now imported directly from @apollo/client
 
 export type ComponentDocument<D, V> =
     D extends TypedDocumentNode<infer TD, infer TV> ? TypedDocumentNode<TD, TV>
@@ -49,10 +49,9 @@ export type Data<D> =
   : D;
 
 export type Variables<D, V> =
-    D extends TypedDocumentNode<infer _, infer TV> ? TV
+    D extends TypedDocumentNode<infer _, infer TV> ? TV extends OperationVariables ? TV : OperationVariables
   : V extends OperationVariables ? V
-  : V extends any ? any
-  : unknown;
+  : OperationVariables;
 
 export type VariablesOf<E> =
     E extends TypedDocumentNode<infer _, infer V> ? V
@@ -74,15 +73,8 @@ export type OptimisticResponseType<D, V> =
   ((vars: Variables<D, V>) =>
     Data<D>);
 
-export type FetchMoreParams<D, V> =
-  FetchMoreQueryOptions<Variables<D, V>, Data<D>> &
-  FetchMoreOptions<Data<D>, Variables<D, V>>
+export type FetchMoreParams<D, V> = QueryOptions<Variables<D, V>, Data<D>>
 
-export interface FetchMoreQueryOptions<TVariables, TData = any> {
-    query?: DocumentNode | TypedDocumentNode<TData, TVariables>;
-    variables?: Partial<TVariables>;
-    context?: any;
-}
 
 /**
  * Type that represents a class
@@ -124,10 +116,10 @@ export interface SubscriptionResult<TData> {
   /** subscription data */
   data: TData | null;
   /** subscription error */
-  error: ApolloError | null;
+  error: Error | null;
 }
 
-export interface SubscriptionDataOptions<D = unknown, V = OperationVariables> {
+export interface SubscriptionDataOptions<D = unknown, V extends OperationVariables = OperationVariables> {
   context: SubscriptionOptions<V, D>['context'];
   subscription: DocumentNode | ComponentDocument<D, V>;
   variables?: Variables<D, V>;
@@ -136,12 +128,12 @@ export interface SubscriptionDataOptions<D = unknown, V = OperationVariables> {
   shouldResubscribe?:
     | boolean
     | ((options: SubscriptionDataOptions<D, V>) => boolean);
-  client?: ApolloClient<NormalizedCacheObject>;
+  client?: ApolloClient;
   skip?: boolean;
 }
 
 export interface OnSubscriptionDataParams<TData = unknown> {
-  client: ApolloClient<NormalizedCacheObject>;
+  client: ApolloClient;
   subscriptionData: SubscriptionResult<TData>;
 }
 
@@ -166,7 +158,7 @@ export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> exten
   static readonly documentType: 'document'|'query'|'mutation'|'subscription';
   static get observedAttributes(): string[]
   /** @summary The Apollo Client instance. */
-  public client: ApolloClient<NormalizedCacheObject> | null;
+  public client: ApolloClient | null;
   public controller: ApolloController<D, V>;
   /**
    * GraphQL operation document i.e. query, subscription, or mutation.
@@ -180,7 +172,7 @@ export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> exten
   /** @summary Operation variables. */
   public variables: Variables<D, V> | null;
   /** @summary Latest error */
-  public error: Error | ApolloError | null;
+  public error: Error | null;
   /** @summary Latest errors */
   public errors: readonly GraphQLError[];
   /** @summary Whether a request is in flight. */
@@ -307,9 +299,7 @@ export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    *          }
    * ```
    */
-  public updater?(
-    ...params: Parameters<MutationUpdaterFn<Data<D>, Variables<D, V>>>
-  ): ReturnType<MutationUpdaterFn<Data<D>, Variables<D, V>>>;
+  public updater?(...params: any[]): any;
 
   /**
    * This resolves a single mutation according to the options specified and returns a
@@ -402,8 +392,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * @attr no-auto-subscribe
    */
   public noAutoSubscribe: boolean;
-  /** @summary Whether or not updates to the network status should trigger next on the observer of this query. */
-  public notifyOnNetworkStatusChange?: boolean;
+  // notifyOnNetworkStatusChange has been removed in Apollo Client v4
   /**
    * If data was read from the cache with missing fields,
    * partial will be true. Otherwise, partial will be falsy.
@@ -411,26 +400,12 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * @summary True when the query returned partial data.
    */
   public readonly partial?: boolean;
-  /**
-   * If true, perform a query refetch if the query result is marked as being partial,
-   * and the returned data is reset to an empty Object by the Apollo Client QueryManager
-   * (due to a cache miss).
-   *
-   * The default value is false for backwards-compatibility's sake,
-   * but should be changed to true for most use-cases.
-   *
-   * @summary Set to retry any partial query results.
-   */
-  public partialRefetch?: boolean;
+  // partialRefetch has been removed in Apollo Client v4
   /** @summary The time interval (in milliseconds) on which this query should be refetched from the server. */
   public pollInterval?: number;
   /** @summary A GraphQL document containing a single query. */
   public query: DocumentNode | ComponentDocument<D, V> | null;
-  /**
-   * Opt into receiving partial results from the cache for queries
-   * that are not fully satisfied by the cache.
-   */
-  public returnPartialData?: boolean;
+  // returnPartialData has been removed in Apollo Client v4
   /**
    * Optional callback for when a query is completed.
    * @param data the query data.
@@ -459,7 +434,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   public subscribe(
     params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
-  ): ObservableSubscription
+  ): Subscription
 
   /**
    * Lets you pass a GraphQL subscription and updateQuery function
@@ -469,7 +444,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+  public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
     options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): void | (() => void)
 
@@ -503,7 +478,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
  * @fires {ApolloSubscriptionResultEvent} apollo-subscription-result - The subscription updated
  * @fires {CustomEvent<ApolloError>} apollo-error - The subscription produced an error
  */
-export declare class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
+export declare class ApolloSubscriptionElement<D = unknown, V extends OperationVariables = Variables<D, any>>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'subscription';
   public controller: ApolloSubscriptionController<D, V>;
@@ -540,10 +515,7 @@ export declare class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
    * @attr no-auto-subscribe
    */
   public noAutoSubscribe: boolean;
-  /**
-   * @summary Whether or not updates to the network status should trigger next on the observer of this subscription.
-   */
-  public notifyOnNetworkStatusChange?: boolean;
+  // notifyOnNetworkStatusChange has been removed in Apollo Client v4
   /**
    * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
@@ -563,7 +535,7 @@ export declare class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
   /**
    * Callback for when error is updated
    */
-  public onError?(error: ApolloError): void
+  public onError?(error: Error): void
   /**
    * @summary Resets the subscription and subscribes.
    */
@@ -581,8 +553,10 @@ export declare class ApolloSubscriptionElement<D = unknown, V = VariablesOf<D>>
   ): boolean;
 }
 
+export { GraphQLError };
+
 declare global {
   interface Window {
-    __APOLLO_CLIENT__?: ApolloClient<NormalizedCacheObject>;
+    __APOLLO_CLIENT__?: ApolloClient;
   }
 }

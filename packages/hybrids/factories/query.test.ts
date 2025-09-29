@@ -3,11 +3,12 @@ import type { ApolloQueryController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { expect, fixture, nextFrame } from '@open-wc/testing';
+// @ts-ignore: hybrids does not have TypeScript declarations
 import { define, html } from 'hybrids';
 import { setupClient, teardownClient, stringify } from '@apollo-elements/test';
 
 import { query } from './query';
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 
 let counter = 0;
 
@@ -35,7 +36,7 @@ describe('[hybrids] query factory', function() {
         define<H>({
           tag,
           query: query(S.NullableParamQuery, { noAutoSubscribe: true }),
-          render: host => {
+          render: (host: H) => {
             return html`
               <output id="called">${stringify(host.query.called)}</output>
               <output id="data">${stringify(host.query.data)}</output>

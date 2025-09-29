@@ -22,9 +22,7 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "npm-run-all analyze build:*",
-    "build:tsc": "tsc -b .",
-    "build:babel": "babel --source-maps --ignore '*.config.js' --plugins @babel/plugin-proposal-class-static-block --out-dir . .",
+    "build": "tsc -b .",
     "analyze": "custom-elements-manifest analyze --litelement",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
@@ -48,8 +46,8 @@
   "dependencies": {
     "@apollo-elements/core": "^2.1.2",
     "@apollo-elements/mixins": "^5.0.3",
-    "@apollo/client": "^3.5.4",
+    "@apollo/client": "^4.0.6",
     "stampino": "^0.6.2",
-    "tslib": "^2.3.1"
+    "tslib": "^2.8.1"
   }
 }

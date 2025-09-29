@@ -1,9 +1,8 @@
 import type {
   ApolloClient,
-  ApolloError,
   ErrorPolicy,
   NormalizedCacheObject,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import type {
   ComponentDocument,
@@ -48,7 +47,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 
     /** @summary The Apollo Client instance. */
     @controlled()
-      client: ApolloClient<NormalizedCacheObject> | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
+      client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
 
     declare controller: ApolloController<D, V>;
 
@@ -69,7 +68,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
     @controlled() variables: Variables<D, V> | null = null;
 
     /** @summary Latest error. */
-    @controlled() error: Error | ApolloError | null = null;
+    @controlled() error: Error | null = null;
 
     /** @summary Latest errors. */
     @controlled() errors: readonly GraphQLError[] = [];

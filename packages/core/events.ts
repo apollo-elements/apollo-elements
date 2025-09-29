@@ -2,11 +2,9 @@ import type { ApolloController } from './apollo-controller.js';
 import type { Data } from '@apollo-elements/core/types';
 import type {
   ApolloClient,
-  ApolloError,
-  ApolloQueryResult,
-  FetchResult,
-  NormalizedCacheObject,
-} from '@apollo/client/core';
+  ObservableQuery,
+  ApolloLink,
+} from '@apollo/client';
 
 type ApolloEventType = `apollo-${'controller'|'element'}-${'connected'|'disconnected'}`;
 type ApolloElementEventType = `apollo-element-${'disconnected'|'connected'}`;
@@ -17,13 +15,13 @@ interface ApolloControllerHost extends HTMLElement {
 }
 
 export type ApolloQueryResultEvent<TData = unknown> =
-  CustomEvent<ApolloQueryResult<TData>>;
+  CustomEvent<ObservableQuery.Result<TData>>;
 
 export type ApolloMutationResultEvent<TData = unknown> =
-  CustomEvent<FetchResult<TData>>;
+  CustomEvent<ApolloLink.Result<TData>>;
 
 export type ApolloSubscriptionResultEvent<D = unknown> = CustomEvent<{
-  client: ApolloClient<NormalizedCacheObject>;
+  client: ApolloClient;
   subscriptionData: {
     data: Data<D> | null;
     loading: boolean;
@@ -88,7 +86,7 @@ declare global {
     'apollo-controller-disconnected': ApolloControllerDisconnectedEvent<ApolloController>;
     'apollo-element-connected': ApolloElementEvent;
     'apollo-element-disconnected': ApolloElementEvent;
-    'apollo-error': CustomEvent<ApolloError>;
+    'apollo-error': CustomEvent<Error>;
     'apollo-mutation-result': ApolloMutationResultEvent;
     'apollo-query-result': ApolloQueryResultEvent;
     'apollo-subscription-result': ApolloSubscriptionResultEvent;

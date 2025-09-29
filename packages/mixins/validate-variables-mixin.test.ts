@@ -1,5 +1,5 @@
 import type { ApolloQueryElement } from '@apollo-elements/core/types';
-import type { DocumentNode } from '@apollo/client/core';
+import type { DocumentNode } from '@apollo/client';
 
 import { defineCE, expect, fixtureSync, nextFrame } from '@open-wc/testing';
 import { ValidateVariablesMixin } from './validate-variables-mixin';

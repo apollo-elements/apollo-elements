@@ -4,7 +4,6 @@ import * as S from '@apollo-elements/test/schema';
 
 import * as E from './events';
 
-import { ApolloError } from '@apollo/client/core';
 
 import { ReactiveElement } from 'lit';
 
@@ -12,7 +11,7 @@ import { ApolloSubscriptionController } from './apollo-subscription-controller';
 
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
+import { resetMessages, setupClient, teardownClient, mockQueriesInCache } from '@apollo-elements/test';
 
 import { spy, SinonSpy } from 'sinon';
 
@@ -21,7 +20,7 @@ describe('[core] ApolloSubscriptionController', function() {
     class MirroringHost<D extends TypedDocumentNode<any, any> = TypedDocumentNode<any, any>>
       extends ReactiveElement {
       declare subscription: D extends TypedDocumentNode<infer TD, infer TV>
-        ? ApolloSubscriptionController<TD, TV>
+        ? ApolloSubscriptionController<TD, TV extends import('@apollo/client').OperationVariables ? TV : any>
         : ApolloSubscriptionController<any, any>;
 
       data?: this['subscription']['data'];
@@ -197,17 +196,27 @@ describe('[core] ApolloSubscriptionController', function() {
     describe('with global client', function() {
       beforeEach(setupClient);
 
+      beforeEach(mockQueriesInCache);
+
       afterEach(teardownClient);
 
       describe('setting shouldSubscribe to constant false', function() {
         let element: MirroringHost<typeof S.NullableParamSubscription>;
+        let errorCallCount = 0;
+        let lastError: any = null;
 
         beforeEach(async function define() {
+          errorCallCount = 0;
+          lastError = null;
+
           class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               shouldSubscribe: () => false,
               onData: spy(),
-              onError: spy(),
+              onError: (error: any) => {
+                errorCallCount++;
+                lastError = error;
+              },
             });
           }
 
@@ -265,18 +274,18 @@ describe('[core] ApolloSubscriptionController', function() {
 
         it('does not fetch data', function() {
           expect(element.subscription?.options?.onData).to.not.have.been.called;
-          expect(element.subscription?.options?.onError).to.not.have.been.called;
+          expect(errorCallCount).to.equal(0);
         });
 
         describe('when query will reject', function() {
           beforeEach(function() { element.subscription.variables = { nullable: 'error' }; });
           describe('calling subscribe()', function() {
             beforeEach(function() { element.subscription.subscribe(); });
-            beforeEach(nextFrame);
+            beforeEach(() => aTimeout(50));
             it('calls onError', function() {
-              expect(element.subscription.options.onError).to.have.been.calledWithMatch({
-                message: 'error',
-              });
+              expect(errorCallCount).to.equal(1);
+              expect(lastError).to.be.ok;
+              expect(lastError.message).to.equal('error');
             });
           });
         });
@@ -284,13 +293,21 @@ describe('[core] ApolloSubscriptionController', function() {
 
       describe('with noAutoSubscribe option and NullableParamSubscription', function() {
         let element: MirroringHost<typeof S.NullableParamSubscription>;
+        let errorCallCount = 0;
+        let lastError: any = null;
 
         beforeEach(async function define() {
+          errorCallCount = 0;
+          lastError = null;
+
           class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               noAutoSubscribe: true,
               onData: spy(),
-              onError: spy(),
+              onError: (error: any) => {
+                errorCallCount++;
+                lastError = error;
+              },
               onComplete: spy(),
             });
           }
@@ -334,13 +351,15 @@ describe('[core] ApolloSubscriptionController', function() {
 
           it('sets error', function() {
             expect(element.subscription.error?.message, 'message').to.equal('error');
-            expect(element.subscription.options.onError).to.have.been.calledWithMatch({
-              message: 'error',
-            });
+            expect(errorCallCount).to.equal(1);
+            expect(lastError).to.be.ok;
+            expect(lastError.message).to.equal('error');
             expect(element.error, 'element error')
-              .to.be.ok
-              .and.to.equal(element.subscription.error)
-              .and.to.be.an.instanceof(ApolloError);
+              .to.be.ok;
+            expect(element.error)
+              .to.equal(element.subscription.error);
+            expect(element.error)
+              .to.be.an.instanceof(Error);
           });
         });
 
@@ -603,16 +622,19 @@ describe('[core] ApolloSubscriptionController', function() {
 
         it('sets data, error, and loading', function() {
           expect(element.subscription.data, 'data')
-            .to.equal(element.data)
-            .and.to.not.be.undefined;
+            .to.equal(element.data);
+          expect(element.subscription.data)
+            .to.not.be.undefined;
           expect(element.subscription.data?.nullableParam?.nullable, 'data.nullableParam.nullable')
             .to.equal('Hello World');
           expect(element.subscription.loading, 'loading')
-            .to.equal(element.loading)
-            .and.to.be.false;
+            .to.equal(element.loading);
+          expect(element.subscription.loading)
+            .to.be.false;
           expect(element.subscription.error, 'error')
-            .to.equal(element.error)
-            .and.to.not.be.ok;
+            .to.equal(element.error);
+          expect(element.subscription.error)
+            .to.not.be.ok;
         });
 
         it('calls onData', function() {
@@ -650,8 +672,9 @@ describe('[core] ApolloSubscriptionController', function() {
               (element.subscription.options.onData as SinonSpy).lastCall.args;
             expect(res).to.be.empty;
             expect(client, 'client')
-              .to.equal(element.subscription.client)
-              .and.to.equal(window.__APOLLO_CLIENT__);
+              .to.equal(element.subscription.client);
+            expect(client)
+              .to.equal(window.__APOLLO_CLIENT__);
             expect(subscriptionData, 'client').to.deep.equal({
               loading: false,
               error: null,
@@ -663,13 +686,13 @@ describe('[core] ApolloSubscriptionController', function() {
               },
             });
             expect(element.data, 'element.data')
-              .to.equal(element.subscription.data)
-              .and.to.deep.equal({
-                nullableParam: {
-                  __typename: 'Nullable',
-                  nullable: 'אין עוד מלבדו',
-                },
-              });
+              .to.equal(element.subscription.data);
+            expect(element.data).to.deep.equal({
+              nullableParam: {
+                __typename: 'Nullable',
+                nullable: 'אין עוד מלבדו',
+              },
+            });
           });
         });
 

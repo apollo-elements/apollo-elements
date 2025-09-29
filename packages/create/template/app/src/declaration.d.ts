@@ -1,5 +1,5 @@
 declare module '*.graphql' {
-  import { DocumentNode } from '@apollo/client/core';
+  import { DocumentNode } from '@apollo/client';
   const defaultDocument: DocumentNode;
   export default defaultDocument;
 }

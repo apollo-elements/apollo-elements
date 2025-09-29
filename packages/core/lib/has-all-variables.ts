@@ -1,5 +1,5 @@
 import type { DefinitionNode, OperationDefinitionNode, VariableDefinitionNode } from 'graphql';
-import type { Operation } from '@apollo/client/core';
+import type { ApolloLink } from "@apollo/client";
 
 /** isOperationDefinition :: DefinitionNode -> Boolean */
 function isOperationDefinition(definition: DefinitionNode): definition is OperationDefinitionNode {
@@ -45,7 +45,7 @@ function getVariableValue(x: VariableDefinitionNode) {
  * @param operation The GraphQL operation to validate.
  * @return Whether the operation has all it's required variables.
  */
-export function hasAllVariables(operation: Partial<Operation>): boolean {
+export function hasAllVariables(operation: Partial<ApolloLink.Operation>): boolean {
   try {
     return operation.query?.definitions
       ?.filter(isOperationDefinition)

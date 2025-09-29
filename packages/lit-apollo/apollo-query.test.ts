@@ -1,5 +1,5 @@
 import type * as I from '@apollo-elements/core/types';
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type { PropertyValues, TemplateResult } from 'lit';
 
@@ -19,7 +19,7 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 
 import { ApolloQuery } from './apollo-query';
 import { LitElement } from 'lit';
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 
 import { spy, SinonSpy } from 'sinon';
 
@@ -34,8 +34,8 @@ class TestableApolloQuery<D, V = I.VariablesOf<D>> extends ApolloQuery<D, V> imp
     `;
   }
 
-  $(id: keyof this) {
-    return this.shadowRoot!.getElementById(id as string);
+  $(id: string) {
+    return this.shadowRoot!.getElementById(id);
   }
 
   async hasRendered() {
@@ -194,7 +194,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
+    assertType<C.ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<C.DocumentNode>                      (this.document!);
@@ -205,8 +205,10 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<'a'>                                 (this.data.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
+    if (isApolloError(this.error)) {
+      // Note: graphQLErrors removed in Apollo Client v4
+      // assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
+    }
 
     // ApolloQueryInterface
     assertType<C.DocumentNode>                      (this.query!);

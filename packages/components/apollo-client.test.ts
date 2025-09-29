@@ -12,9 +12,9 @@ import type {
 
 import type { ApolloQueryController } from '@apollo-elements/core';
 
-import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client/core';
+import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client';
 
-import { ApolloClient, TypedDocumentNode } from '@apollo/client/core';
+import { ApolloClient, TypedDocumentNode } from '@apollo/client';
 
 import { ApolloController } from '@apollo-elements/core';
 
@@ -105,8 +105,8 @@ describe('<apollo-client>', function() {
       customElements.define('query-element', QueryElement);
     });
 
-    let client: ApolloClient<NormalizedCacheObject> | undefined;
-    let cached: ApolloClient<NormalizedCacheObject> | undefined;
+    let client: ApolloClient | undefined;
+    let cached: ApolloClient | undefined;
     let element: ApolloClientElement | null;
     let shallow: ShallowElement<any> | null;
     let deep: DeepElement | null;
@@ -268,7 +268,7 @@ describe('<apollo-client>', function() {
         });
 
         it('loads the type policies', function() {
-          expect(client?.readQuery({ query: gql`{ user @client }` }).user).to.equal(user);
+          expect((client?.readQuery({ query: gql`{ user @client }` }) as any).user).to.equal(user);
         });
 
         it('returns the set typePolicies', function() {
@@ -418,7 +418,7 @@ describe('<apollo-client>', function() {
             const { tagName } = FIXTURES.hybrids;
             Hybrids.define({
               tag: tagName,
-              render: host => Hybrids.html`${JSON.stringify(host.query.data)}`,
+              render: (host: any) => Hybrids.html`${JSON.stringify(host.query.data)}`,
               query: Hybrids.query(TagNameQuery, { variables: { tagName } }),
             } as Hybrids.Component<HTMLElement & { query: ApolloQueryController<typeof TagNameQuery> }>);
           },

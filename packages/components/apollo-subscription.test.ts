@@ -1,6 +1,7 @@
 import * as S from '@apollo-elements/test/schema';
 
-import * as C from '@apollo/client/core';
+import * as C from '@apollo/client';
+import { ApolloLink } from '@apollo/client';
 
 import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
@@ -59,7 +60,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       it('standby', async function() {
         element.setAttribute('fetch-policy', 'standby');
         await element.updateComplete;
-        expect(element.fetchPolicy === 'standby').to.be.true;
+        expect(element.fetchPolicy as any === 'standby').to.be.true;
         expect(element.fetchPolicy).to.equal(element.controller.options.fetchPolicy);
       });
       it('forwards an illegal value', async function() {
@@ -103,7 +104,8 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       it('as empty object', async function() {
         element.context = {};
         await element.updateComplete;
-        expect(element.controller.options.context).to.be.ok.and.to.be.empty;
+        expect(element.controller.options.context).to.be.ok;
+        expect(element.controller.options.context).to.be.empty;
       });
       it('as non-empty object', async function() {
         element.context = { a: 'b' };
@@ -125,7 +127,10 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
         expect(element.controller.client).to.equal(window.__APOLLO_CLIENT__);
       });
       it('as new client', async function() {
-        const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
+        const client = new C.ApolloClient({
+          cache: new C.InMemoryCache(),
+          link: new ApolloLink(() => ({ data: {} }) as any)
+        });
         element.client = client;
         await element.updateComplete;
         expect(element.controller.client).to.equal(client);
@@ -159,20 +164,21 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
 
     describe('setting subscription', function() {
       it('as DocumentNode', async function() {
-        const subscription = C.gql`{ nullable }`;
+        const subscription = S.NoParamSubscription;
         element.subscription = subscription;
         await element.updateComplete;
         expect(element.controller.subscription)
-          .to.equal(subscription)
-          .and.to.equal(element.controller.document);
+          .to.equal(subscription);
+        expect(element.controller.subscription)
+          .to.equal(element.controller.document);
       });
       it('as TypedDocumentNode', async function() {
-        const subscription = C.gql`{ nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
+        const subscription = S.NullableParamSubscription as C.TypedDocumentNode<{ nullableParam: { nullable: string }}, { nullable: string }>;
         element.subscription = subscription;
         await element.updateComplete;
         expect(element.controller.subscription).to.equal(subscription);
         const l = element as unknown as ApolloSubscriptionElement<typeof subscription>;
-        l.data = { a: 'b' };
+        l.data = { nullableParam: { nullable: 'test' } };
         // @ts-expect-error: can't assign bad data type
         l.data = { b: 'c' };
         // @ts-expect-error: can't assign bad variables type
@@ -193,9 +199,9 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
     });
 
     describe('setting error', function() {
-      it('as ApolloError', async function() {
-        let error: C.ApolloError;
-        try { throw new C.ApolloError({}); } catch (e) { error = e as C.ApolloError; }
+      it('as Error', async function() {
+        let error: Error;
+        try { throw new Error('test error'); } catch (e) { error = e as Error; }
         element.error = error;
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
@@ -205,7 +211,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
         try {
           throw new Error();
         } catch (err) {
-          error = err as C.ApolloError;
+          error = err as Error;
           element.error = error;
         }
         await element.updateComplete;
@@ -219,8 +225,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       });
       it('as illegal value', async function() {
         const error = 0;
-        // @ts-expect-error: test bad value
-        element.error = error;
+        element.error = error as any;
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });

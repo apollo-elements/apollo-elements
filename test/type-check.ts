@@ -1,12 +1,12 @@
-import { ApolloClient, DocumentNode, ErrorPolicy, FetchPolicy, FetchResult, isApolloError, NetworkStatus, NormalizedCacheObject, TypedDocumentNode, WatchQueryFetchPolicy, WatchQueryOptions } from '@apollo/client/core';
+import { ApolloClient, DocumentNode, ErrorPolicy, FetchPolicy, FetchResult, NetworkStatus, NormalizedCacheObject, TypedDocumentNode, WatchQueryFetchPolicy, WatchQueryOptions } from '@apollo/client';
 import * as S from './schema';
 
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 import * as C from '@apollo-elements/core';
 import { useQuery, useMutation, useSubscription } from '@apollo-elements/haunted';
 import { LitElement } from 'lit';
 
-import { assertType } from '@apollo-elements/test';
+import { assertType, isApolloError } from '@apollo-elements/test';
 
 import * as Mixins from '@apollo-elements/mixins';
 
@@ -175,7 +175,7 @@ export class TypeCheckPolymerMutationManual extends Polymer.PolymerApolloMutatio
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<ApolloClient (this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
@@ -229,7 +229,7 @@ export class PolymerMutationManuallyTypedTypeCheck extends Polymer.PolymerApollo
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<ApolloClient (this.client);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
@@ -269,7 +269,7 @@ export class PolymerQueryManuallyTypedCheck extends Polymer.PolymerApolloQuery<D
     /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client);
+    assertType<ApolloClient (this.client);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);

@@ -1,13 +1,12 @@
 import type {
   ApolloClient,
-  ApolloError,
   NormalizedCacheObject,
   TypedDocumentNode,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import * as S from '@apollo-elements/test/schema';
 
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 import { html } from 'haunted';
 import { useMutation } from './useMutation';
 import { component } from 'haunted';
@@ -117,8 +116,8 @@ function TDNTypeCheck() {
   assertType<TypeCheckData>(data!);
   assertType<boolean>(called);
   assertType<boolean>(loading);
-  assertType<ApolloClient<NormalizedCacheObject>>(client!);
-  assertType<Error|ApolloError>(error!);
+  assertType<ApolloClient>(client!);
+  assertType<Error>(error!);
 
   (async function() {
     const r = await mutate({ variables: { c: 'c', d: 12 } });
@@ -132,8 +131,8 @@ function ManuallyTypedTypeCheck() {
   assertType<TypeCheckData>(data!);
   assertType<boolean>(called);
   assertType<boolean>(loading);
-  assertType<ApolloClient<NormalizedCacheObject>>(client!);
-  assertType<Error|ApolloError>(error!);
+  assertType<ApolloClient>(client!);
+  assertType<Error>(error!);
 
   (async function() {
     const r = await mutate({ variables: { c: 'c', d: 12 } });

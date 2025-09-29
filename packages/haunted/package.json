@@ -23,9 +23,7 @@
   "scripts": {
     "prepublishOnly": "npm run analyze && npm run build",
     "analyze": "custom-elements-manifest analyze",
-    "build": "run-s build:*",
-    "build:tsc": "tsc -b .",
-    "build:babel": "babel --source-maps --ignore '*.config.js' --plugins @babel/plugin-proposal-class-static-block --out-dir . .",
+    "build": "tsc -b .",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
   "repository": {

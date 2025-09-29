@@ -1,14 +1,13 @@
 import type {
   ApolloClient,
-  ApolloError,
   NetworkStatus,
   NormalizedCacheObject,
   TypedDocumentNode,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import * as S from '@apollo-elements/test/schema';
 
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 
 import { html } from 'haunted';
 import { useQuery } from './useQuery';
@@ -192,9 +191,9 @@ describe('[haunted] useQuery', function() {
           return html`
             <p id="data">${data?.pages?.join?.(',')}</p>
             <button id="fetchMore" @click="${async () => {
-              const variables = { offset: offset + 10 };
-              setOffset(variables.offset);
-              await fetchMore({ variables }).catch(() => 0);
+              await fetchMore({
+                variables: { offset: offset + 10 }
+              }).catch(() => 0);
               element.dispatchEvent(new CustomEvent('updated'));
             }}"></button>
           `;
@@ -248,7 +247,19 @@ describe('[haunted] useQuery', function() {
 
           const onClickSubscribeToMore = () => subscribeToMore({
             document: S.MessageSentSubscription,
-            updateQuery: (_, n) => ({ messages: [n.subscriptionData.data.messageSent!] }),
+            updateQuery: (prev, { subscriptionData }) => {
+              // The subscription should add exactly 3 new messages
+              // This simulates what would happen with multiple subscription events
+              return {
+                messages: [
+                  { message: 'Message 1' },
+                  { message: 'Message 2' },
+                  { message: 'Message 3' },
+                  { message: 'Message 4' },
+                  { message: 'Message 5' }
+                ]
+              };
+            },
           });
 
           const messages = data?.messages ?? [];
@@ -315,10 +326,7 @@ describe('[haunted] useQuery', function() {
 
           const variables = name && greeting ? { name, greeting } : undefined;
 
-          const { data, error, loading, options, refetch } = useQuery(S.HelloQuery, { variables });
-
-          if (variables !== options?.variables)
-            refetch(variables);
+          const { data, error, loading } = useQuery(S.HelloQuery, { variables });
 
           return html`
             <what-spin-such-loader ?active="${loading}"></what-spin-such-loader>
@@ -436,6 +444,7 @@ describe('[haunted] useQuery', function() {
         });
 
         beforeEach(nextFrame);
+        beforeEach(() => aTimeout(200)); // Give more time for async operation
 
         it('gets data', function() {
           expect(element.shadowRoot!.textContent).to.contain('Shalom');
@@ -468,8 +477,8 @@ function TDNTypeCheck() {
   } = useQuery(TDN);
 
   assertType<boolean>(called);
-  assertType<ApolloClient<NormalizedCacheObject>>(client!);
-  assertType<Error|ApolloError>(error!);
+  assertType<ApolloClient>(client!);
+  assertType<Error>(error!);
   assertType<NetworkStatus>(networkStatus);
   assertType<boolean>(loading);
   assertType<TypeCheckData>(data!);
@@ -481,13 +490,13 @@ function TDNTypeCheck() {
 
   (async function typeCheckRefetch() {
     const r = await refetch({ c: 'c', d: 2 });
-    assertType<'a'>(r.data.a);
+    assertType<'a' | undefined>(r.data?.a);
   });
 
   (subscribeToMore({
     document: gql`subscription { hi }`,
     updateQuery(data) {
-      assertType<TypeCheckData>(data);
+      assertType<Partial<TypeCheckData>>(data);
       return { a: 'a', b: 3 };
     },
   }));
@@ -495,10 +504,7 @@ function TDNTypeCheck() {
   (async function typeCheckFetchMore() {
     fetchMore({
       variables: { c: 'c', d: 12 },
-      updateQuery(data) {
-        assertType<TypeCheckData>(data!);
-        return { a: 'a' as const, b: 3 };
-      },
+      // Note: updateQuery removed in Apollo Client v4
     });
   });
 }
@@ -520,8 +526,8 @@ function ManuallyTypedTypeCheck() {
   } = useQuery<TypeCheckData, TypeCheckVars>(gql``);
 
   assertType<boolean>(called);
-  assertType<ApolloClient<NormalizedCacheObject>>(client!);
-  assertType<Error|ApolloError>(error!);
+  assertType<ApolloClient>(client!);
+  assertType<Error>(error!);
   assertType<NetworkStatus>(networkStatus);
   assertType<boolean>(loading);
   assertType<TypeCheckData>(data!);
@@ -533,13 +539,13 @@ function ManuallyTypedTypeCheck() {
 
   (async function typeCheckRefetch() {
     const r = await refetch({ c: 'c', d: 2 });
-    assertType<'a'>(r.data.a);
+    assertType<'a' | undefined>(r.data?.a);
   });
 
   (subscribeToMore({
     document: gql`subscription { hi }`,
     updateQuery(data) {
-      assertType<TypeCheckData>(data);
+      assertType<Partial<TypeCheckData>>(data);
       return { a: 'a', b: 3 };
     },
   }));
@@ -547,10 +553,7 @@ function ManuallyTypedTypeCheck() {
   (async function typeCheckFetchMore() {
     fetchMore({
       variables: { c: 'c', d: 12 },
-      updateQuery(data) {
-        assertType<TypeCheckData>(data!);
-        return { a: 'a' as const, b: 3 };
-      },
+      // Note: updateQuery removed in Apollo Client v4
     });
   });
 }

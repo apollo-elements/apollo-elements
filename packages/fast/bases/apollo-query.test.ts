@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import type * as I from '@apollo-elements/core/types';
 
@@ -12,7 +12,7 @@ import { unsafeStatic, html as h } from 'lit/static-html.js';
 
 import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 import { describeQuery } from '@apollo-elements/test/query.test';
 import { spy, useFakeTimers, SinonSpy, SinonFakeTimers } from 'sinon';
 
@@ -44,8 +44,8 @@ class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
     return this;
   }
 
-  $(id: keyof this) {
-    return this.shadowRoot!.getElementById(id as string);
+  $(id: string) {
+    return this.shadowRoot!.getElementById(id);
   }
 }
 
@@ -146,7 +146,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
+    assertType<C.ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<C.DocumentNode>                      (this.document!);
@@ -156,8 +156,10 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<string>                              (this.error.message);
     assertType<'a'>                                 (this.data.a);
     assertType<number>                              (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
+    if (isApolloError(this.error)) {
+      // In Apollo Client v4, graphQLErrors are handled differently
+      // and are not directly available on Error objects
+    }
 
     // ApolloQueryInterface
     assertType<C.DocumentNode>                      (this.query!);

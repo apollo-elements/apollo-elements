@@ -2,7 +2,7 @@ import type * as I from '@apollo-elements/core/types';
 import type * as S from './schema';
 import type { ApolloMutationElement } from '@apollo-elements/core';
 
-import { ApolloClient, ApolloError, InMemoryCache } from '@apollo/client/core';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 import { SetupFunction } from './types';
 
@@ -15,11 +15,11 @@ import {
 
 import { match, spy, SinonSpy } from 'sinon';
 
-import { setupClient, teardownClient } from './client';
+import { makeClient, setupClient, teardownClient } from './client';
 
-import { NoParamMutation, NullableParamMutation } from './schema';
+import { NoParamMutation, NullableParamMutation, HelloQuery, MessagesQuery, NoParamQuery } from './schema';
 
-import { restoreSpies, stringify, waitForRender } from './helpers';
+import { restoreSpies, stringify, waitForRender, mockQueriesInCache } from './helpers';
 import { TestableElement } from './types';
 
 export interface DescribeMutationComponentOptions<E extends Omit<ApolloMutationElement<any, any>, 'update'|'updated'> = ApolloMutationElement<any, any>> {
@@ -87,7 +87,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
       describe('setting observed properties', function() {
         describe('client', function() {
-          const client = new ApolloClient({ cache: new InMemoryCache(), connectToDevTools: false });
+          const client = makeClient({ connectToDevTools: false });
           it('renders', async function() {
             element.client = client;
             await element.hasRendered();
@@ -252,6 +252,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
     describe('with global client available', function() {
       beforeEach(setupClient);
+      beforeEach(mockQueriesInCache);
 
       afterEach(teardownClient);
 
@@ -352,7 +353,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         });
 
         describe('with refetchQueries property set as string[]', function() {
-          const refetchQueries = ['A'];
+          const refetchQueries = [{ query: HelloQuery }];
           beforeEach(function() {
             element.refetchQueries = refetchQueries;
           });
@@ -778,7 +779,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         });
 
         describe('when mutation rejects', function() {
-          let error: ApolloError;
+          let error: Error;
 
           beforeEach(function setVariablesToError() {
             element.variables = { nullable: 'error' };
@@ -789,7 +790,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
               await element.mutate();
               expect.fail('no error');
             } catch (e) {
-              error = e as ApolloError;
+              error = e as Error;
             }
           });
 
@@ -862,6 +863,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           let spies: Record<Exclude<keyof typeof element, symbol> | string, SinonSpy>;
 
           beforeEach(setupClient);
+      beforeEach(mockQueriesInCache);
 
           beforeEach(async function setupElement() {
             class Test extends Klass<typeof S.NullableParamMutation> {
@@ -949,7 +951,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             });
 
             describe('when mutation rejects', function() {
-              let error: ApolloError;
+              let error: Error;
 
               beforeEach(function setVariablesToError() {
                 element.variables = { nullable: 'error' };
@@ -960,7 +962,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
                   await element.mutate();
                   expect.fail('no error');
                 } catch (e) {
-                  error = e as ApolloError;
+                  error = e as Error;
                 }
               });
 

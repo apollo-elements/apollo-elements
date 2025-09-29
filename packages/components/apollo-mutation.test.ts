@@ -1,10 +1,8 @@
 import type { SinonSpy, SinonStub } from 'sinon';
 
-import * as C from '@apollo/client/core';
+import * as C from '@apollo/client';
 
 import * as S from '@apollo-elements/test';
-
-import { ApolloError } from '@apollo/client/core';
 
 import {
   aTimeout,
@@ -19,7 +17,7 @@ import { html } from 'lit/static-html.js';
 
 import { match, spy, stub } from 'sinon';
 
-import { setupClient, teardownClient } from '@apollo-elements/test';
+import { setupClient, teardownClient, makeClient } from '@apollo-elements/test';
 
 import './apollo-mutation';
 
@@ -110,9 +108,11 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         element.context = {};
         await element.updateComplete;
         expect(element.controller.options.context)
-          .to.be.ok
-          .to.equal(element.context).and
-          .and.to.be.empty;
+          .to.be.ok;
+        expect(element.controller.options.context)
+          .to.equal(element.context);
+        expect(element.controller.options.context)
+          .to.be.empty;
       });
       it('as non-empty object', async function() {
         element.context = { a: 'b' };
@@ -136,7 +136,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         expect(element.controller.client).to.equal(window.__APOLLO_CLIENT__);
       });
       it('as new client', async function() {
-        const client = new C.ApolloClient({ cache: new C.InMemoryCache() });
+        const client = makeClient();
         element.client = client;
         await element.updateComplete;
         expect(element.controller.client).to.equal(client);
@@ -212,8 +212,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         element.mutation = mutation;
         await element.updateComplete;
         expect(element.controller.mutation)
-          .to.equal(mutation)
-          .and.to.equal(element.controller.document);
+          .to.equal(mutation);
+        expect(element.controller.mutation)
+          .to.equal(element.controller.document);
       });
       it('as TypedDocumentNode', async function() {
         const mutation = C.gql`mutation { nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
@@ -242,15 +243,16 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('setting error', function() {
-      it('as ApolloError', async function() {
-        let error: C.ApolloError | undefined = undefined;
-        try {
-          error = new C.ApolloError({ });
-          element.error = error;
-        } catch { null; }
-        await element.updateComplete;
-        expect(element.controller.error).to.equal(error);
-      });
+      // Note: ApolloError removed in Apollo Client v4
+      // it('as ApolloError', async function() {
+      //   let error: C.ApolloError | undefined = undefined;
+      //   try {
+      //     error = new C.ApolloError({ });
+      //     element.error = error;
+      //   } catch { null; }
+      //   await element.updateComplete;
+      //   expect(element.controller.error).to.equal(error);
+      // });
       it('as Error', async function() {
         let error: Error;
         try {
@@ -270,8 +272,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
       it('as illegal value', async function() {
         const error = 0;
-        // @ts-expect-error: test bad value
-        element.error = error;
+        element.error = error as any;
         await element.updateComplete;
         expect(element.controller.error).to.equal(error);
       });
@@ -369,14 +370,15 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
     it('sets refetchQueries', function() {
       expect(element.refetchQueries)
-        .to.deep.equal(['A', 'B', 'C', 'D', 'E'])
-        .and.to.deep.equal(element.controller.options.refetchQueries);
+        .to.deep.equal(['A', 'B', 'C', 'D', 'E']);
+      expect(element.refetchQueries)
+        .to.deep.equal(element.controller.options.refetchQueries);
       element.refetchQueries = ['a', 'b'];
       element.refetchQueries = result => ['a', {
         query: C.gql`{}` as C.TypedDocumentNode<D, V>,
         variables: {
           data: result.data?.i,
-          context: result.context,
+          context: (result as any).context,
           errors: result.errors!.map(x => x.message),
         },
       }];
@@ -1234,7 +1236,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('toggles input disabled property', async function() {
         expect(event.detail.element).to.equal(element);
         expect(event.detail.data).to.equal(element.data);
-        expect(input.disabled).to.be.false.and.to.not.equal(disabledAfterTyping);
+        expect(input.disabled).to.be.false;
+        expect(input.disabled).to.not.equal(disabledAfterTyping);
       });
 
       it('uses input variables', function() {
@@ -1265,7 +1268,8 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       it('toggles input disabled property', async function() {
         expect(event.detail.element).to.equal(element);
         expect(event.detail.data).to.equal(element.data);
-        expect(input.disabled).to.be.false.and.to.not.equal(disabledAfterTyping);
+        expect(input.disabled).to.be.false;
+        expect(input.disabled).to.not.equal(disabledAfterTyping);
       });
 
       it('uses input variables', function() {
@@ -1410,7 +1414,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         setTimeout(() => element.querySelector('button')!.click());
         const event = await oneEvent(element, MutationErrorEvent.type);
         expect(event.detail.element).to.equal(element);
-        expect(event.detail.error).to.be.an.instanceOf(ApolloError);
+        expect(event.detail.error).to.be.an.instanceOf(Error);
       });
     });
   });

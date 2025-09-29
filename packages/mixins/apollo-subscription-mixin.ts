@@ -1,4 +1,5 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
 
 import type {
   ComponentDocument,
@@ -18,12 +19,12 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V = VariablesOf<D>>(...a: any[]): InstanceType<B> & ApolloSubscriptionElement<D, V>;
+  new <D, V extends OperationVariables = OperationVariables>(...a: any[]): InstanceType<B> & ApolloSubscriptionElement<D, V>;
   documentType: 'subscription';
 }
 
 function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
-  class MixedApolloSubscriptionElement<D, V = VariablesOf<D>>
+  class MixedApolloSubscriptionElement<D, V extends OperationVariables = OperationVariables>
     extends ApolloElementMixin(superclass)<D, V> {
     static override documentType = 'subscription' as const;
 
@@ -87,7 +88,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
 
     onSubscriptionComplete?(): void
 
-    onError?(error: C.ApolloError): void
+    onError?(error: Error): void
 
     public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void {
       return this.controller.subscribe(params);

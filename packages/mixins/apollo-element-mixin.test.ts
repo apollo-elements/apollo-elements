@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/core/types';
 
-import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client';
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
@@ -280,15 +280,16 @@ class TypeCheck extends Test {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly I.GraphQLError[]>           (this.errors!);
     assertType<string>                              (this.error.message);
-    if (isApolloError(this.error))
-      (this.error.graphQLErrors);
+    // Note: graphQLErrors property removed in Apollo Client v4
+    // if (isApolloError(this.error))
+    //   (this.error.graphQLErrors);
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
   }

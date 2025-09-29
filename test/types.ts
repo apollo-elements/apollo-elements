@@ -1,3 +1,4 @@
+/// <reference types="chai" />
 import type { SinonSpy, SinonStub } from 'sinon';
 
 export type Library =
@@ -10,7 +11,7 @@ export type Library =
 
 export interface TestableElement {
   hasRendered(): Promise<this>;
-  $(id: keyof this): HTMLElement|null;
+  $(id: string): HTMLElement|null;
 }
 
 export interface SetupOptions<T extends HTMLElement> {
@@ -30,3 +31,13 @@ export interface SetupResult<T extends TestableElement> {
 export type SetupFunction<Base extends HTMLElement & TestableElement> =
   <T extends Base>(options?: SetupOptions<T>) =>
     Promise<SetupResult<T>>;
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Chai {
+    interface Equal {
+      (value: unknown, message?: string, options?: unknown): Chai.Assertion;
+      (value: unknown, options?: unknown): Chai.Assertion;
+    }
+  }
+}

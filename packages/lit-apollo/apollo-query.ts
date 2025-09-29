@@ -1,4 +1,5 @@
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
+import type { Subscription } from 'rxjs';
 
 import type {
   ComponentDocument,
@@ -15,7 +16,7 @@ import {
 
 import { controlled } from '@apollo-elements/core/decorators';
 
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 
 import { property, state } from 'lit/decorators.js';
 
@@ -53,7 +54,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * Override to prevent subscribing unless your conditions are met
    */
   shouldSubscribe(
-    options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
+    options?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
   ): boolean {
     return (void options, true);
   }
@@ -224,7 +225,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    */
   public subscribe(
     params?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
-  ): C.ObservableSubscription {
+  ): Subscription {
     return this.controller.subscribe(params);
   }
 
@@ -236,7 +237,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * then a `{ subscriptionData: TSubscriptionResult }` object,
    * and returns an object with updated query data based on the new results.
    */
-  public subscribeToMore<TSubscriptionVariables, TSubscriptionData>(
+  public subscribeToMore<TSubscriptionVariables extends C.OperationVariables, TSubscriptionData>(
     options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);

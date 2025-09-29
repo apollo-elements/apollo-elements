@@ -15,11 +15,10 @@ import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing
 
 import {
   ApolloClient,
-  ApolloError,
   gql,
   NormalizedCacheObject,
   TypedDocumentNode,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import { setupClient, teardownClient, resetMessages, assertType } from '@apollo-elements/test';
 
@@ -364,7 +363,7 @@ describe('[haunted] useSubscription', function() {
           expect(element.subscription.error, 'element error')
             .to.be.ok
             .and.to.equal(element.subscription.error)
-            .and.to.be.an.instanceof(ApolloError);
+            .and.to.be.an.instanceof(Error);
         });
       });
 
@@ -713,8 +712,8 @@ function TDNTypeCheck() {
   } = useSubscription(TDN);
 
   assertType<boolean>(called);
-  assertType<ApolloClient<NormalizedCacheObject>>(client!);
-  assertType<Error|ApolloError>(error!);
+  assertType<ApolloClient>(client!);
+  assertType<Error>(error!);
   assertType<boolean>(loading);
   assertType<TypeCheckData>(data!);
   assertType<TypeCheckVars>(variables!);
@@ -737,8 +736,8 @@ function ManuallyTypedTypeCheck() {
   } = useSubscription<TypeCheckData, TypeCheckVars>(gql``);
 
   assertType<boolean>(called);
-  assertType<ApolloClient<NormalizedCacheObject>>(client!);
-  assertType<Error|ApolloError>(error!);
+  assertType<ApolloClient>(client!);
+  assertType<Error>(error!);
   assertType<boolean>(loading);
   assertType<TypeCheckData>(data!);
   assertType<TypeCheckVars>(variables!);

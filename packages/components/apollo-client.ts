@@ -3,7 +3,7 @@ import type {
   InMemoryCache,
   NormalizedCacheObject,
   TypePolicies,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import type { ApolloController, ApolloEvent, ApolloElementElement } from '@apollo-elements/core';
 
@@ -20,15 +20,15 @@ template.innerHTML = /* html */`
 const DOCUMENT_TYPES = ['document', 'query', 'mutation', 'subscription'];
 
 function isInMemoryCache(
-  cache?: ApolloClient<NormalizedCacheObject>['cache']
+  cache?: ApolloClient['cache']
 ): cache is InMemoryCache {
   return !!cache && ('policies' in cache);
 }
 
-function isApolloElement(element: Node): element is ApolloElementElement {
-  return element instanceof HTMLElement && (
-    DOCUMENT_TYPES.includes((element.constructor as typeof ApolloElementElement).documentType)
-  );
+function isApolloElement(element: Node): element is ApolloElementElement & { controller: ApolloController } {
+  return element instanceof HTMLElement &&
+    'controller' in element &&
+    DOCUMENT_TYPES.includes((element.constructor as typeof ApolloElementElement).documentType);
 }
 
 function hasShadowRoot(node: Node): node is HTMLElement & { shadowRoot: ShadowRoot } {
@@ -49,7 +49,7 @@ function claimApolloElement(event: ApolloEvent): ApolloController | void {
  *
  * @element apollo-client
  *
- * @fires {CustomEvent<{ client: ApolloClient<NormalizedCacheObject> }>} client-changed - The client changed
+ * @fires {CustomEvent<{ client: ApolloClient}> client-changed - The client changed
  *
  * @example <caption>Generate a simple ApolloClient instance</caption>
  * ```html
@@ -93,7 +93,7 @@ export class ApolloClientElement extends HTMLElement {
   ];
 
   /** @summary Private reference to the `ApolloClient` instance */
-  #client: ApolloClient<NormalizedCacheObject> | null = null;
+  #client: ApolloClient | null = null;
 
   /** @summary Private storage of child `ApolloController`s */
   #instances: Set<ApolloController> = new Set();
@@ -106,11 +106,11 @@ export class ApolloClientElement extends HTMLElement {
    *
    * Set the `client` property to update all of this element's deep children.
    */
-  get client(): ApolloClient<NormalizedCacheObject> | null {
+  get client(): ApolloClient | null {
     return this.#client;
   }
 
-  set client(client: ApolloClient<NormalizedCacheObject> | null) {
+  set client(client: ApolloClient | null) {
     this.#client = client;
     this.dispatchEvent(new CustomEvent('client-changed', { detail: {
       // to support Polymer-style 2-way binding
@@ -198,7 +198,7 @@ export class ApolloClientElement extends HTMLElement {
    * @summary Creates an Apollo client and assigns it to child elements
    * @return An `ApolloClient` instance.
    */
-  public async createApolloClient(): Promise<ApolloClient<NormalizedCacheObject>> {
+  public async createApolloClient(): Promise<ApolloClient> {
     const { typePolicies, validateVariables } = this;
     const { uri } = this;
     const { createApolloClient } = await import('@apollo-elements/core/lib/create-apollo-client');
@@ -213,8 +213,10 @@ export class ApolloClientElement extends HTMLElement {
 
   private async addDeepInstance(child: Node): Promise<void> {
     await new Promise(requestAnimationFrame);
-    if (isApolloElement(child))
-      this.#instances.add(child.controller);
+    if (isApolloElement(child)) {
+      const apolloChild = child as ApolloElementElement & { controller: ApolloController };
+      this.#instances.add(apolloChild.controller);
+    }
     if (!hasShadowRoot(child)) return;
     for (const grandchild of child.shadowRoot.children)
       this.addDeepInstance(grandchild);

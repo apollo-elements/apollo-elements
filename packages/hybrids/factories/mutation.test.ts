@@ -3,6 +3,7 @@ import type { ApolloMutationController } from '@apollo-elements/core';
 import * as S from '@apollo-elements/test';
 
 import { expect, fixture, nextFrame } from '@open-wc/testing';
+// @ts-ignore: hybrids does not have TypeScript declarations
 import { define, html } from 'hybrids';
 import {
   setupClient,
@@ -13,7 +14,7 @@ import {
 } from '@apollo-elements/test';
 
 import { mutation } from './mutation';
-import { gql } from '@apollo/client/core';
+import { gql } from '@apollo/client';
 
 let counter = 0;
 
@@ -42,7 +43,7 @@ describe('[hybrids] mutation factory', function() {
           tag,
           mutation: mutation(S.NullableParamMutation),
           $: (host: H) => (id: string) => host.shadowRoot!.getElementById(id),
-          hasRendered: host => async () => {
+          hasRendered: (host: H) => async () => {
             await nextFrame();
             await host.mutation.host.updateComplete;
             return host;

@@ -1,4 +1,4 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
 
 /**
@@ -7,11 +7,11 @@ import type { ApolloElementElement, Constructor } from '@apollo-elements/core/ty
  * @param superclass An element that implements the `ApolloElementInterface`.
  */
 export function ApolloClientMixin<B extends Constructor<ApolloElementElement<any, any>>>( // eslint-disable-line @typescript-eslint/no-explicit-any
-  client: ApolloClient<NormalizedCacheObject>,
+  client: ApolloClient,
   superclass: B
 ): B {
   return class extends superclass {
     /** The client specified with `ApolloClientMixin`. */
-    client: ApolloClient<NormalizedCacheObject> = client;
+    client: ApolloClient = client;
   };
 }

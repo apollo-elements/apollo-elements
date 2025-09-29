@@ -28,6 +28,7 @@ const rootDir = dirname(fileURLToPath(new URL(import.meta.url)));
 export default ({
   nodeResolve: {
     extensions: ['.ts', '.mjs', '.js', '.css', '.graphql'],
+    exportConditions: ['production'], // Use production builds of lit packages
   },
 
   browsers: [playwrightLauncher()],

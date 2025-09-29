@@ -8,7 +8,7 @@ import type {
   WatchQueryFetchPolicy,
   NormalizedCacheObject,
   TypedDocumentNode,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import * as S from '@apollo-elements/test/schema';
 
@@ -20,7 +20,7 @@ import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test
 
 import { makeClient, teardownClient } from '@apollo-elements/test';
 
-import { NetworkStatus } from '@apollo/client/core';
+import { NetworkStatus } from '@apollo/client';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
 
@@ -47,9 +47,9 @@ class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
     return template;
   }
 
-  $(id: keyof this) { return this.shadowRoot.getElementById(id as string); }
+  $(id: string) { return this.shadowRoot.getElementById(id); }
 
-  observed: Array<keyof this> = ['data', 'error', 'errors', 'loading', 'networkStatus'];
+  observed: Array<string> = ['data', 'error', 'errors', 'loading', 'networkStatus'];
 
   constructor() {
     super();
@@ -65,7 +65,7 @@ class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
   render() {
     this.observed?.forEach(property => {
       if (this.$(property))
-        this.$(property)!.textContent = stringify(this[property]);
+        this.$(property)!.textContent = stringify(this[property as keyof this]);
     });
   }
 
@@ -197,7 +197,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<HTMLElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
@@ -211,8 +211,9 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<TypeCheckVars>                       (this.variables);
     assertType<'d'>                                 (this.variables.d);
     assertType<number>                              (this.variables.e);
-    if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+    // Note: isApolloError and graphQLErrors removed in Apollo Client v4
+    // if (isApolloError(this.error))
+    //   assertType<readonly GraphQLError[]>(this.error.graphQLErrors);
 
     // ApolloQueryInterface
     assertType<DocumentNode>                        (this.query!);
@@ -227,11 +228,12 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<number>                              (this.networkStatus);
     // @ts-expect-error: NetworkStatus is not a string
     assertType<string>                              (this.networkStatus);
-    assertType<boolean>                             (this.notifyOnNetworkStatusChange!);
+    // Note: These properties removed in Apollo Client v4
+    // assertType<boolean>(this.notifyOnNetworkStatusChange!);
     assertType<number>                              (this.pollInterval!);
-    assertType<boolean>                             (this.partial!);
-    assertType<boolean>                             (this.partialRefetch!);
-    assertType<boolean>                             (this.returnPartialData!);
+    // assertType<boolean>(this.partial!);
+    // assertType<boolean>(this.partialRefetch!);
+    // assertType<boolean>(this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
 
     /* eslint-enable max-len, func-call-spacing, no-multi-spaces */

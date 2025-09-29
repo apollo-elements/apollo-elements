@@ -1,4 +1,4 @@
-import type { BaseOptions, AppOptions, ComponentOptions } from './options';
+import type { BaseOptions, AppOptions, ComponentOptions, Operation } from './options';
 
 import { app } from './app.js';
 import { component } from './component.js';
@@ -18,6 +18,8 @@ export type PromptOptions<T> =
 const ERR_BAD_CE_TAG_NAME =
   'Custom element tag names must contain a hyphen (-)';
 
+const PACKAGE_MANAGERS = ['npm','yarn'] as const
+
 function normalizeOptions<T extends BaseOptions>(options: T): T {
   return Object.fromEntries(Object.entries(options).flatMap(([key, value]) => [
     [key, value],
@@ -25,7 +27,11 @@ function normalizeOptions<T extends BaseOptions>(options: T): T {
   ])) as T;
 }
 
-export async function promptApp(options: PromptOptions<AppOptions>): Promise<AppOptions> {
+export async function promptApp(
+  options: {
+    pkgManager: string
+  },
+): Promise<AppOptions> {
   return {
     ...options,
     ...await inquirer.prompt([{
@@ -58,7 +64,12 @@ export async function promptApp(options: PromptOptions<AppOptions>): Promise<App
 }
 
 export async function promptComponent(
-  options?: PromptOptions<ComponentOptions>
+  options?: Partial<{
+    pkgManager: string;
+    operationName: Operation;
+    edit: boolean;
+    subdir: string;
+  }>
 ): Promise<ComponentOptions> {
   return {
     ...options,
@@ -98,16 +109,11 @@ export async function prompt(): Promise<void> {
 
   const { version } = require('./package.json');
 
-  const pkgManager: 'npm'|'yarn' =
-      process.argv0 === 'npm' ? process.argv0
-    : process.argv0 === 'yarn' ? process.argv0
-    : 'npm';
-
   const { argv: pargv } = Yargs(process.argv)
-    .scriptName(`${pkgManager ?? 'npm'} init @apollo-elements`)
+    .scriptName(`npm init @apollo-elements`)
     .option('pkgManager', {
-      type: 'string',
-      default: pkgManager,
+      choices: PACKAGE_MANAGERS,
+      default: 'npm',
       description: 'Preferred package manager',
     })
     .option('schemaPath', {
@@ -218,7 +224,7 @@ export async function prompt(): Promise<void> {
         throw new Error(ERR_BAD_CE_TAG_NAME);
       else
         return true;
-    });
+    })
 
   const argv = await pargv;
 
@@ -262,8 +268,11 @@ export async function prompt(): Promise<void> {
             .then(component);
       }
     }
-  } catch (error: any) {
-    if (error?.command?.includes?.('build:codegen'))
+  } catch (error) {
+    if (typeof error === 'object'
+      && error !== null && 'command' in error
+      && typeof error.command === 'string'
+      && error?.command?.includes?.('build:codegen'))
       return;
     else
       console.error(error);

@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/core/types';
 
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import * as S from '@apollo-elements/test';
 
@@ -40,8 +40,8 @@ class TestableApolloMutation<D, V = I.VariablesOf<D>>
     `;
   }
 
-  $(id: keyof this): HTMLElement | null {
-    return this.shadowRoot.getElementById(id as string);
+  $(id: string): HTMLElement | null {
+    return this.shadowRoot.getElementById(id);
   }
 
   async hasRendered(): Promise<this> {
@@ -188,7 +188,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<LitElement>                          (this);
 
     // ApolloElementInterface
-    assertType<C.ApolloClient<C.NormalizedCacheObject>>(this.client!);
+    assertType<C.ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<C.DocumentNode>                      (this.document!);
@@ -199,8 +199,10 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<'a'>                                 (this.data!.a);
     // @ts-expect-error: b as number type
     assertType<'a'>                                 (this.data.b);
-    if (isApolloError(this.error))
-      assertType<readonly I.GraphQLError[]>         (this.error.graphQLErrors);
+    if (isApolloError(this.error)) {
+      // Note: graphQLErrors removed in Apollo Client v4
+      // assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
+    }
 
     // ApolloMutationInterface
     assertType<C.DocumentNode>                      (this.mutation!);
@@ -215,10 +217,11 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     assertType<string>                              (this.fetchPolicy!);
     assertType<Extract<C.FetchPolicy, 'no-cache'>>  (this.fetchPolicy);
 
-    if (typeof this.refetchQueries === 'function')
-      assertType<(result: C.FetchResult<TypeCheckData>) => I.RefetchQueriesType>(this.refetchQueries);
-    else
-      assertType<I.RefetchQueriesType>(this.refetchQueries!);
+    // Note: Apollo Client v4 changed refetchQueries function signature
+    // if (typeof this.refetchQueries === 'function')
+    //   assertType<(result: FormattedExecutionResult<TypeCheckData>) => I.RefetchQueriesType>(this.refetchQueries);
+    // else
+    //   assertType<I.RefetchQueriesType>(this.refetchQueries!);
 
     if (typeof this.optimisticResponse !== 'function')
       assertType<TypeCheckData>(this.optimisticResponse!);

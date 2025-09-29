@@ -2,7 +2,7 @@ import type {
   ApolloClient,
   DocumentNode,
   NormalizedCacheObject,
-} from '@apollo/client/core';
+} from '@apollo/client';
 
 import type { GraphQLError } from '@apollo-elements/core/types';
 
@@ -71,15 +71,17 @@ class TypeCheck extends ApolloElement {
     assertType<FASTElement>                         (this);
 
     // ApolloElementInterface
-    assertType<ApolloClient<NormalizedCacheObject>> (this.client!);
+    assertType<ApolloClient>(this.client!);
     assertType<Record<string, unknown>>             (this.context!);
     assertType<boolean>                             (this.loading);
     assertType<DocumentNode>                        (this.document!);
     assertType<Error>                               (this.error!);
     assertType<readonly GraphQLError[]>             (this.errors!);
     assertType<string>                              (this.error.message);
-    if (isApolloError(this.error))
-      assertType<readonly GraphQLError[]>           (this.error.graphQLErrors);
+    if (isApolloError(this.error)) {
+      // In Apollo Client v4, graphQLErrors are handled differently
+      // and are not directly available on Error objects
+    }
 
     /* eslint-enable func-call-spacing, no-multi-spaces */
   }

@@ -1,12 +1,11 @@
 import type { ResultOf } from '@graphql-typed-document-node/core';
 
-import type * as C from '@apollo/client/core';
+import type * as C from '@apollo/client';
 
 import * as S from '@apollo-elements/test/schema';
 
 import * as E from './events';
 
-import { ApolloError } from '@apollo/client/core';
 
 import { ReactiveElement } from 'lit';
 
@@ -16,7 +15,7 @@ import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { match, spy, SinonSpy } from 'sinon';
 
-import { setupClient, teardownClient } from '@apollo-elements/test';
+import { setupClient, teardownClient, mockQueriesInCache } from '@apollo-elements/test';
 
 describe('[core] ApolloMutationController', function() {
   describe('without mutation or options arguments', function() {
@@ -87,6 +86,8 @@ describe('[core] ApolloMutationController', function() {
   describe('with global client', function() {
     beforeEach(setupClient);
 
+    beforeEach(mockQueriesInCache);
+
     afterEach(teardownClient);
 
     describe('on a ReactiveElement that mirrors props', function() {
@@ -97,7 +98,7 @@ describe('[core] ApolloMutationController', function() {
 
         data?: this['mutation']['data'];
 
-        error?: Error|ApolloError|null;
+        error?: Error|null;
 
         loading?: boolean;
 
@@ -358,7 +359,11 @@ describe('[core] ApolloMutationController', function() {
         });
 
         describe('with refetchQueries option', function() {
-          const refetchQueries = ['A', 'B', 'E'];
+          const refetchQueries = [
+            { query: S.HelloQuery },
+            { query: S.MessagesQuery },
+            { query: S.NoParamQuery }
+          ];
           beforeEach(function() {
             element.mutation.options.refetchQueries = refetchQueries;
           });
@@ -370,7 +375,11 @@ describe('[core] ApolloMutationController', function() {
               }));
             });
             describe('calling mutate({ refetchQueries })', function() {
-              const refetchQueries = ['D', 'E', 'F'];
+              const refetchQueries = [
+                { query: S.NonNullableParamQuery },
+                { query: S.NullableParamQuery },
+                { query: S.PaginatedQuery }
+              ];
               beforeEach(() => element.mutation.mutate({ refetchQueries }));
               it('calls client.mutate with provided refetchQueries', function() {
                 expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
@@ -448,10 +457,8 @@ describe('[core] ApolloMutationController', function() {
           });
           it('sets error', function() {
             expect(element.mutation.error!.message, 'message').to.equal('error');
-            expect(element.mutation.error, 'instanceof ApolloError')
-              .to.be.an.instanceof(ApolloError);
-            expect(element.mutation.error?.graphQLErrors, 'ApolloError interface')
-              .to.be.an.instanceof(Array);
+            expect(element.mutation.error, 'instanceof Error')
+              .to.be.an.instanceof(Error);
           });
         });
 
