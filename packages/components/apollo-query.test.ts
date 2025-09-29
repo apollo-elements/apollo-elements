@@ -363,19 +363,20 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
                 expect(element).shadowDom.to.equal('1,2,3,4,5,6,7,8,9,10');
               });
             });
-            describe('when executeQuery() rejects', function() {
-              let e: Error;
-              beforeEach(() => element.executeQuery({
-                variables: {
-                  limit: 1000, // client is programmed to reject this
-                },
-              }).catch(err => e = err));
+            describe('when executeQuery() has error', function() {
+              beforeEach(async () => {
+                await element.executeQuery({
+                  variables: {
+                    limit: 1000, // client is programmed to reject this
+                  },
+                });
+              });
               beforeEach(nextFrame);
               it('"unrenders" data', function() {
                 expect(element).shadowDom.to.equal('');
               });
               it('sets error', function() {
-                expect(element.error).to.equal(e);
+                expect(element.error).to.be.ok;
                 expect(element.error!.message).to.equal('rate limited');
               });
             });

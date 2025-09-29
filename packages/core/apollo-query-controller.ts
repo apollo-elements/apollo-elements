@@ -46,6 +46,8 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   extends ApolloController<D, V> implements ReactiveController {
   private observableQuery?: ObservableQuery<Data<D>, Variables<D, V>>;
 
+  private querySubscription?: Subscription;
+
   private pollingInterval?: number;
 
   /** @summary Options to customize the query and to interface with the controller. */
@@ -120,7 +122,38 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
   override hostDisconnected(): void {
     this.#hasDisconnected = true;
+    // Properly clean up the RxJS subscription to prevent unhandled promise rejections
+    this.cleanupSubscription();
     super.hostDisconnected();
+  }
+
+  private cleanupSubscription(): void {
+    if (this.querySubscription) {
+      try {
+        this.querySubscription.unsubscribe();
+      } catch (error) {
+        // Silently handle AbortError and other cancellation errors
+        // These are expected when cleaning up ongoing operations
+        if (error instanceof Error && error.name !== 'AbortError') {
+          console.warn('Error during subscription cleanup:', error);
+        }
+      } finally {
+        this.querySubscription = undefined;
+      }
+    }
+
+    // Also properly cleanup the ObservableQuery to prevent ongoing operations
+    if (this.observableQuery) {
+      try {
+        // Stop any polling operations
+        this.observableQuery.stopPolling();
+      } catch (error) {
+        // Silently handle cleanup errors
+        if (error instanceof Error && error.name !== 'AbortError') {
+          console.warn('Error during ObservableQuery cleanup:', error);
+        }
+      }
+    }
   }
 
   private shouldSubscribe(opts?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>): boolean {
@@ -228,7 +261,16 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   @bound public async refetch(variables?: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>> {
     if (!this.observableQuery)
       throw new Error('Cannot refetch without an ObservableQuery'); /* c8 ignore next */ // covered
-    return this.observableQuery.refetch(variables as Variables<D, V>);
+    try {
+      return await this.observableQuery.refetch(variables as Variables<D, V>);
+    } catch (error) {
+      // Handle AbortError gracefully during cleanup
+      if (error instanceof Error && error.name === 'AbortError') {
+        // Return a minimal result instead of throwing
+        return { data: this.data, loading: false, networkStatus: NetworkStatus.ready } as ApolloQueryResult<Data<D>>;
+      }
+      throw error;
+    }
   }
 
   /**
@@ -238,6 +280,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   @bound public subscribe(
     params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
   ): Subscription {
+    // Clean up any existing subscription to prevent leaks
+    this.cleanupSubscription();
+
     if (this.observableQuery)
       this.observableQuery.stopPolling(); /* c8 ignore next */ // covered
 
@@ -260,10 +305,47 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     this.loading = true;
     this.notify({ loading });
 
-    return this.observableQuery?.subscribe({
+    // Immediately catch any internal Apollo Client promises
+    // by using the observable's internal promise if available
+    if ('then' in this.observableQuery) {
+      (this.observableQuery as any).then?.(
+        () => {},
+        (error: Error) => {
+          // Handle promise rejections from Apollo Client internals
+          try {
+            this.nextError(error);
+          } catch {
+            // Prevent further propagation
+          }
+        }
+      );
+    }
+
+    // Store the subscription so we can properly clean it up later
+    this.querySubscription = this.observableQuery.subscribe({
       next: this.nextData.bind(this),
-      error: this.nextError.bind(this),
+      error: (error: Error) => {
+        // Handle errors within the stream to prevent unhandled promise rejections
+        try {
+          // Silently handle AbortError during cleanup
+          if (error instanceof Error && error.name === 'AbortError') {
+            // AbortError is expected during cleanup, just clear the subscription
+            this.querySubscription = undefined;
+            return;
+          }
+          this.nextError(error);
+        } catch (handlingError) {
+          // If error handling itself fails, log but don't propagate
+          console.warn('Error in error handler:', handlingError);
+        }
+      },
+      complete: () => {
+        // Handle completion to ensure clean termination
+        this.querySubscription = undefined;
+      }
     });
+
+    return this.querySubscription;
   }
 
   /**
@@ -308,6 +390,14 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
         this.nextData(result as ApolloQueryResult<Data<D>>);
       return result as ApolloQueryResult<Data<D>>;/* c8 ignore next */
     } catch (error) {
+      // Handle AbortError gracefully during cleanup
+      if (error instanceof Error && error.name === 'AbortError') {
+        // AbortError is expected during cleanup, just reset loading state
+        const { loading } = this;
+        this.loading = false;
+        this.notify({ loading }); // notify of the change
+        return { data: null, loading: false, networkStatus: NetworkStatus.ready } as ApolloQueryResult<Data<D>>;
+      }
       this.nextError(error as Error);
       throw error;
     }
@@ -351,6 +441,16 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
         this.loading = false;
         this.notify({ loading });
         return x as ApolloQueryResult<Data<TD>>;
+      })
+      .catch((error: Error) => {
+        // Handle AbortError gracefully during cleanup
+        if (error.name === 'AbortError') {
+          const { loading } = this;
+          this.loading = false;
+          this.notify({ loading });
+          return { data: this.data, loading: false, networkStatus: NetworkStatus.ready } as ApolloQueryResult<Data<TD>>;
+        }
+        throw error;
       });
   }
 
