@@ -85,7 +85,11 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
   /** @summary Flags an element that's ready and able to auto subscribe */
   @controlled({ readonly: true }) @state() canAutoSubscribe = false;
 
-  @controlled() @state() options: ApolloQueryControllerOptions<D, V> = {};
+  @controlled() @state() options: ApolloQueryControllerOptions<D, V> = {
+    // Default to 'all' error policy for UI components to prevent unhandled promise rejections
+    // and allow graceful rendering of both data and errors in templates
+    errorPolicy: 'all' as const,
+  };
 
   /**
    * `networkStatus` is useful if you want to display a different loading indicator (or no indicator at all)

@@ -66,6 +66,7 @@ export default ({
         globalThis.process ??= { env: {} };
         // suppress advertising
         globalThis.__APOLLO_DEVTOOLS_GLOBAL_HOOK__ = () => void 0;
+
       </script>
       </head>
       <body>
