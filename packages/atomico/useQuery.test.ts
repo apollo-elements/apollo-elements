@@ -19,7 +19,7 @@ import { sendKeys } from '@web/test-runner-commands';
 
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
+import { useFakeTimers, SinonFakeTimers } from 'sinon';
 
 describe('[atomico] useQuery', function() {
   function What() { return html`<div></div>`; }
@@ -35,14 +35,15 @@ describe('[atomico] useQuery', function() {
       describe('with HelloQuery and a jaunty little template', function() {
         let element: HTMLElement & { updated: Promise<void>; };
 
-        let refetchSpy: SinonSpy;
+        let refetchCallCount = 0;
+        let originalRefetch: ApolloQueryController<typeof S.HelloQuery>['refetch'];
 
         let startPolling: ApolloQueryController<typeof S.HelloQuery>['startPolling'];
         let stopPolling: ApolloQueryController<typeof S.HelloQuery>['stopPolling'];
         let executeQuery: ApolloQueryController<typeof S.HelloQuery>['executeQuery'];
 
         afterEach(function() {
-          refetchSpy?.restore?.();
+          refetchCallCount = 0;
         });
 
         beforeEach(async function define() {
@@ -53,7 +54,11 @@ describe('[atomico] useQuery', function() {
 
             useEffect(() => {
               ({ executeQuery, stopPolling, startPolling } = con);
-              refetchSpy = spy(con, 'refetch');
+              originalRefetch = con.refetch;
+              con.refetch = (...args) => {
+                refetchCallCount++;
+                return originalRefetch.apply(con, args);
+              };
             }, [con]);
 
             return html`
@@ -86,7 +91,7 @@ describe('[atomico] useQuery', function() {
           beforeEach(() => clock.tick(3500));
 
           it('refetches', function() {
-            expect(refetchSpy).to.have.been.calledThrice;
+            expect(refetchCallCount).to.equal(3);
           });
 
           describe('then stopPolling', function() {
@@ -94,7 +99,7 @@ describe('[atomico] useQuery', function() {
             beforeEach(() => clock.tick(5000));
 
             it('stops calling refetch', function() {
-              expect(refetchSpy).to.have.been.calledThrice;
+              expect(refetchCallCount).to.equal(3);
             });
           });
         });
@@ -123,11 +128,16 @@ describe('[atomico] useQuery', function() {
 
       let ex: ApolloQueryController<typeof S.NullableParamQuery>['executeQuery'];
 
-      const onError = spy();
-      const onData = spy();
+      let onErrorCalled = false;
+      let onDataCalled = false;
 
-      afterEach(() => onError.resetHistory());
-      afterEach(() => onData.resetHistory());
+      const onError = () => { onErrorCalled = true; };
+      const onData = () => { onDataCalled = true; };
+
+      afterEach(() => {
+        onErrorCalled = false;
+        onDataCalled = false;
+      });
 
       beforeEach(async function define() {
         function Hello() {
@@ -155,7 +165,7 @@ describe('[atomico] useQuery', function() {
 
       describe('stam', function() {
         it('calls onData', function() {
-          expect(onData).to.have.been.called;
+          expect(onDataCalled).to.be.true;
         });
       });
 
@@ -167,7 +177,7 @@ describe('[atomico] useQuery', function() {
         beforeEach(nextFrame);
 
         it('calls onError', function() {
-          expect(onError).to.have.been.called;
+          expect(onErrorCalled).to.be.true;
         });
 
         it('renders the error', function() {
@@ -182,16 +192,21 @@ describe('[atomico] useQuery', function() {
     describe('fetchMore', function() {
       let element: HTMLElement & { updated: Promise<void>; };
 
-      const onError = spy();
-      const onData = spy();
+      let onErrorCalled = false;
+      let onDataCalled = false;
+
+      const onError = () => { onErrorCalled = true; };
+      const onData = () => { onDataCalled = true; };
 
       let offset: number;
       let setOffset: (x: number) => void;
       let data: S.PaginatedQueryData | null;
       let fetchMore: ApolloQueryController<typeof S.PaginatedQuery>['fetchMore'];
 
-      afterEach(() => onError.resetHistory());
-      afterEach(() => onData.resetHistory());
+      afterEach(() => {
+        onErrorCalled = false;
+        onDataCalled = false;
+      });
 
       beforeEach(async function define() {
         function Hello() {
@@ -248,11 +263,16 @@ describe('[atomico] useQuery', function() {
 
       let subscribeToMore: ApolloQueryController<typeof S.MessagesQuery>['subscribeToMore'];
 
-      const onError = spy();
-      const onData = spy();
+      let onErrorCalled = false;
+      let onDataCalled = false;
 
-      afterEach(() => onError.resetHistory());
-      afterEach(() => onData.resetHistory());
+      const onError = () => { onErrorCalled = true; };
+      const onData = () => { onDataCalled = true; };
+
+      afterEach(() => {
+        onErrorCalled = false;
+        onDataCalled = false;
+      });
       afterEach(resetMessages);
 
       beforeEach(async function define() {
