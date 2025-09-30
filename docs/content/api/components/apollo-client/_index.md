@@ -31,7 +31,7 @@ Reuse the same query component for two different GraphQL endpoints.
 {{</playground-file>}}
 
 {{<playground-file "client-component" "introspection-queries.css">}}
-{{<include introspection-queries.js>}}
+{{<include introspection-queries.css>}}
 {{</playground-file>}}
 
 {{<playground-file "client-component" "IntrospectionQueries.query.graphql.js">}}
