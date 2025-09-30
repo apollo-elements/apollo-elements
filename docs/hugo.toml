@@ -62,14 +62,16 @@ defaultContentLanguageInSubdir = false
 
 # Minification settings
 [minify]
+  disableHTML = false
+  disableCSS = false
+  disableJS = true
+  disableJSON = false
+  disableSVG = false
+  disableXML = false
   [minify.tdewolff.html]
     keepDefaultAttrVals = true
     keepEndTags = true
     keepWhitespace = false
-  [minify.tdewolff.js]
-    keepVarNames = true
-    precision = 0
-    version = 2022
 
 # Site parameters
 [params]
