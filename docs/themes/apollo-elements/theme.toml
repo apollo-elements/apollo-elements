@@ -1,0 +1,17 @@
+# Apollo Elements Hugo Theme
+name = "apollo-elements"
+license = "MIT"
+licenselink = "https://github.com/apollo-elements/apollo-elements/blob/main/LICENCE.md"
+description = "Modern Hugo theme for Apollo Elements with Lit-SSR and web components"
+tags = ["documentation", "web-components", "graphql", "apollo", "lit"]
+features = ["lit-ssr", "declarative-shadow-dom", "code-playground", "api-docs"]
+min_version = "0.140.0"
+
+[author]
+  name = "Apollo Elements Team"
+  homepage = "https://apolloelements.dev"
+
+[original]
+  name = "Apollo Elements"
+  homepage = "https://apolloelements.dev"
+  repo = "https://github.com/apollo-elements/apollo-elements"

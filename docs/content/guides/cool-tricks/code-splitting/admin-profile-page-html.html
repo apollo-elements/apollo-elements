@@ -1,0 +1,12 @@
+<p>HTML apps should set all their type policies on the <code>apollo-client</code> element</p>
+<apollo-client>...</apollo-client>
+<script>
+  import('./typePolicies')
+    .then(({ UserTypePolicies }) => {
+      document
+        .currentScript
+        .getRootNode()
+        .querySelector('apollo-client')
+        .typePolicies = UserTypePolicies;
+    });
+</script>

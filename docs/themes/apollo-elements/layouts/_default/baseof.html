@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang | default `en` }}"
+      dir="{{ .Site.Params.dir | default `ltr` }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body class="{{ .Type }}-page {{ if .Params.sidebar }}with-sidebar{{ end }}"
+      data-lit-ssr="{{ .Site.Params.litSSR.enable }}">
+  {{ partial "header.html" . }}
+
+  {{ if .Params.sidebar }}
+    {{ partial (printf "%s-sidebar.html" .Params.sidebar) . }}
+  {{ end }}
+
+  <main id="main">{{ block "main" . }}{{ end }}</main>
+
+  {{ partial "footer.html" . }}
+
+  <!-- Apollo Elements Web Components -->
+  {{ partial "web-components.html" . }}
+
+  <!-- Lit-SSR Hydration Scripts -->
+  {{ if .Site.Params.litSSR.enable }}
+    {{ partial "lit-ssr-hydration.html" . }}
+  {{ end }}
+
+  <!-- Analytics -->
+  {{ if .Site.Params.googleAnalytics }}
+    {{ template "_internal/google_analytics.html" . }}
+  {{ end }}
+</body>
+</html>

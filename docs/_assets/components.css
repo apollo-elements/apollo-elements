@@ -10,3 +10,7 @@ code-tabs[collection="libraries"] {
 code-tabs[collection="package-managers"] {
   --code-tabs-icon-height: 18px;
 }
+
+code-tabs .highlight {
+  margin-bottom: 0;
+}

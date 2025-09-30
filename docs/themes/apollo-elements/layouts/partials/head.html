@@ -1,0 +1,132 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{{ .Description | default .Site.Params.description }}">
+<meta name="author" content="{{ .Site.Params.author }}">
+<meta name="generator" content="Hugo {{ hugo.Version }} + Lit-SSR">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:title" content="{{ .Title | default .Site.Title }}">
+<meta property="og:description" content="{{ .Description | default .Site.Params.description }}">
+<meta property="og:image" content="{{ .Site.BaseURL }}/_assets/brand-logos/apollo-elements-social.png">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ .Permalink }}">
+<meta property="twitter:title" content="{{ .Title | default .Site.Title }}">
+<meta property="twitter:description" content="{{ .Description | default .Site.Params.description }}">
+<meta property="twitter:image" content="{{ .Site.BaseURL }}/_assets/brand-logos/apollo-elements-social.png">
+<meta property="twitter:site" content="{{ .Site.Params.twitter }}">
+
+<!-- Title -->
+<title>
+  {{- if .IsHome }}
+    {{ .Site.Title }}
+  {{- else }}
+    {{ .Title }} | {{ .Site.Title }}
+  {{- end }}
+</title>
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ .Permalink }}">
+
+<!-- RSS Feed -->
+{{ with .OutputFormats.Get "rss" }}
+  <link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{ end }}
+
+<!-- Favicon - Apollo Elements original -->
+<link rel="icon" href="/favicon.ico">
+
+<!-- Apollo Elements Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap" rel="stylesheet">
+
+<!-- Web Components Polyfills -->
+<script>
+  // Feature detection for web components
+  if (!('customElements' in window) || !('attachShadow' in Element.prototype)) {
+    document.write('<script src="/_assets/polyfills/webcomponents.js"><\/script>');
+  }
+</script>
+
+<!-- Dynamic Import Maps for Web Components -->
+{{- partial "import-map.html" . -}}
+
+<!-- Declarative Shadow DOM support is built into modern browsers -->
+
+<!-- Theme Detection and Setup -->
+<script>
+  // Set theme before page renders to prevent flash
+  (function() {
+    const theme = localStorage.getItem('theme') ||
+                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+
+<!-- Hugo Pipes Asset Pipeline -->
+{{/* Process main CSS - simplified for debugging */}}
+{{ $css := resources.Get "css/main.css" }}
+{{ if $css }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{ else }}
+  <!-- CSS file not found - fallback styling -->
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: #333;
+    }
+    h1, h2, h3 { color: #0066cc; }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+  </style>
+{{ end }}
+
+{{/* Process main JavaScript with esbuild */}}
+{{ $js := resources.Get "js/main.js" }}
+{{ if $js }}
+  {{ if hugo.IsProduction }}
+    {{ $js = $js | js.Build (dict "minify" true "target" "es2020" "format" "iife") | resources.Fingerprint "sha256" }}
+  {{ else }}
+    {{ $js = $js | js.Build (dict "target" "es2020" "format" "iife" "sourcemap" "external") }}
+  {{ end }}
+  <script src="{{ $js.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $js.Data.Integrity }}"{{ end }} defer></script>
+{{ end }}
+
+{{/* Original Apollo Elements styles are now integrated into main.css */}}
+
+<!-- Service Worker Registration DISABLED for Hugo development -->
+<script>
+  // Disable service worker during Hugo development
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister();
+        console.log('Apollo Elements: Service Worker unregistered for Hugo development');
+      }
+    });
+  }
+</script>
+
+<!-- Preload critical resources -->
+<link rel="preload" href="{{ .Site.BaseURL }}/index.json" as="fetch" crossorigin>
+
+<!-- Performance monitoring -->
+<script>
+  // Basic performance monitoring
+  window.addEventListener('load', () => {
+    if ('performance' in window) {
+      const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+      console.log('Apollo Elements: Page load time:', loadTime + 'ms');
+    }
+  });
+</script>

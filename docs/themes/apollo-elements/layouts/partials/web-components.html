@@ -1,0 +1,560 @@
+<!-- Apollo Elements Web Components - Inline for MIME type compatibility -->
+<script type="module">
+  // Import Lit using import map
+  import { LitElement, html, css } from 'lit';
+  // Import codesandbox-button from npm
+  import '@power-elements/codesandbox-button';
+  // Import docs-playground component
+  import '/js/components/docs-playground.js';
+  // Import apollo-search component
+  import '/js/components/apollo-search.js';
+
+  // Wibbler Wobbler Component (original from main branch)
+  const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+  class MouseController {
+    down = false;
+    pos = { x: 0, y: 0 };
+
+    onMousemove = e => {
+      this.pos = { x: e.clientX, y: e.clientY };
+      this.host.requestUpdate();
+    };
+
+    onMousedown = e => {
+      this.down = true;
+      this.host.requestUpdate();
+    };
+
+    onMouseup = e => {
+      this.down = false;
+      this.host.requestUpdate();
+    };
+
+    constructor(host) {
+      this.host = host;
+      host.addController(this);
+    }
+
+    hostConnected() {
+      window.addEventListener('mousemove', this.onMousemove);
+      window.addEventListener('mousedown', this.onMousedown);
+      window.addEventListener('mouseup', this.onMouseup);
+    }
+
+    hostDisconnected() {
+      window.removeEventListener('mousemove', this.onMousemove);
+      window.removeEventListener('mousedown', this.onMousedown);
+      window.removeEventListener('mouseup', this.onMouseup);
+    }
+  }
+
+  class WibblerWobbler extends LitElement {
+    static is = 'wibbler-wobbler';
+
+    createRenderRoot() { return this; }
+
+    offset = -40;
+    mouse = new MouseController(this);
+    mo = new MutationObserver(() => this.setup());
+    ro = new ResizeObserver(() => this.setup());
+
+    connectedCallback() {
+      super.connectedCallback();
+      this.mo.observe(this, { childList: true });
+      this.ro.observe(this);
+      // Initial setup
+      requestAnimationFrame(() => this.setup());
+    }
+
+    async setup() {
+      await customElements.whenDefined('code-tabs')
+      this.tabs = this.querySelector('code-tabs');
+      if (!this.tabs) return;
+      await this.tabs.updateComplete;
+      await this.updateComplete;
+      this.svg = this.querySelector('svg');
+      const { x, y, width, height } = this.svg.getBoundingClientRect();
+      this.pivot = { x: x + (width / 2), y: y + (height / 2) };
+      const buttons = this.tabs.shadowRoot.querySelectorAll('button');
+      this.minAngle = this.getAngleTo(buttons.item(0).getBoundingClientRect());
+      const lastButtonRect = buttons.item(buttons.length - 1).getBoundingClientRect()
+      this.maxAngle = this.getAngleTo({
+        x: lastButtonRect.x + lastButtonRect.width,
+        y: lastButtonRect.y + lastButtonRect.height,
+      });
+    }
+
+    getAngleTo({ x, y }) {
+      const dx = this.pivot.x - x;
+      const dy = this.pivot.y - y;
+      return Math.atan2(dy, dx) * 180 / Math.PI;
+    }
+
+    update(changed) {
+      this.animate()
+      super.update(changed);
+    }
+
+    animate() {
+      if (
+        !this.tabs ||
+        this.tabs.selectedItem ||
+        (this.mouse.pos.y > this.pivot.y) ||
+        (this.getBoundingClientRect().y - this.mouse.pos.y) > 325
+      ) return;
+      const { minAngle, maxAngle, offset } = this;
+      const deg = clamp(Math.abs(this.getAngleTo(this.mouse.pos)), minAngle, maxAngle);;
+      this.svg.style.setProperty('--deg', `${offset + deg}deg`);
+      const id = this.tabs?.shadowRoot?.querySelector?.('button:hover')?.dataset?.id ?? 'nothing';
+      const hovered = this.querySelector(`[data-id="${id}"]`)
+      this.svg.style.setProperty('--fw-color', hovered?.dataset?.color);
+    }
+  }
+
+  // Code Tabs Component (simplified version for Hugo)
+  const INSTANCES = new Set();
+
+  class CodeTabs extends LitElement {
+    static properties = {
+      defaultTab: { attribute: 'default-tab' },
+      align: { reflect: true },
+      collection: { type: String },
+      selectedIndex: { type: Number, attribute: 'selected-index', reflect: true }
+    };
+
+    static styles = css`
+      :host {
+        margin-block-end: var(--markdown-syntax-margin-block-end, 16px);
+        display: block;
+        position: relative;
+        background: transparent;
+        overflow: hidden;
+      }
+
+      [hidden] { display: none !important; }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      img {
+        height: var(--code-tabs-icon-height, 24px);
+        width: auto;
+      }
+
+      #tabs,
+      #tabpanels {
+        --code-tabs-border: 1px solid var(--code-tabs-border-color, transparent);
+      }
+
+      :host(:is(:focus-within, :hover)) :is(#tabs, #tabpanels) {
+        --code-tabs-border: 1px solid var(--code-tabs-border-focus-color, var(--primary-color));
+      }
+
+      :host(:is(:focus-within, :hover)) #tabs button {
+        border-block-end-color: var(--code-tabs-border-focus-color, var(--primary-color));
+      }
+
+      #tabs {
+        display: flex;
+        background: var(--code-tabs-tabs-background);
+        overflow-x: auto;
+        z-index: 2;
+        position: relative;
+        inset-block-end: -1px;
+      }
+
+      #tabs button {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--code-button-color, inherit);
+        position: relative;
+        padding: 9px 16px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        background: var(--code-button-background, var(--markdown-table-row-odd-background-color));
+        outline: none;
+        transition: color, background 0.1s ease;
+        border-start-start-radius: var(--code-border-radius);
+        border-start-end-radius: var(--code-border-radius);
+        border-block-end: var(--code-tabs-border);
+        border-block-end-color: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+      }
+
+      #tabs button:focus,
+      #tabs button:hover {
+        color: var(--code-button-focus-color, inherit);
+        background: var(--code-button-focus-background, var(--primary-lines-color));
+      }
+
+      #tabs button[selected] {
+        background: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+        border: var(--code-tabs-border);
+        border-block-start: 2px solid var(--code-tabs-selected-highlight-color, var(--markdown-link-color));
+        border-block-end-color: var(--code-tabs-background, var(--markdown-syntax-background-color, #f6f8fa));
+        border-block-end-width: 0;
+        padding: 9px 15px 11px 15px;
+        text-decoration: none;
+      }
+
+      #tabs button img:not([src]) {
+        display: none;
+      }
+
+      #tabpanels {
+        background: var(--code-tabs-tabpanel-background, var(--markdown-syntax-background-color, #f6f8fa));
+        border-radius: var(--code-border-radius);
+        border-start-start-radius: 0;
+        border-start-end-radius: 0;
+        overflow: hidden;
+        min-height: var(--code-tabs-min-height, 1px);
+        z-index: 1;
+        position: relative;
+        border: var(--code-tabs-border);
+      }
+
+      #default {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      ::slotted(code-tab:not([selected])) {
+        display: none !important;
+      }
+
+      ::slotted(code-tab[selected]) {
+        display: block !important;
+      }
+    `;
+
+    constructor() {
+      super();
+      this.selectedIndex = 0;
+      this.align = 'start';
+      this.tabs = [];
+      this.items = [];
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      this.initialSelectedIndex = parseInt(this.getAttribute('selected-index')) || 0;
+      if (this.collection) {
+        INSTANCES.add(this);
+      }
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      INSTANCES.delete(this);
+    }
+
+    firstUpdated() {
+      // Wait a microtask for slot content to be available
+      requestAnimationFrame(() => {
+        this.initTabs();
+        if (this.items.length > 0) {
+          this.selectIndex(this.getInitialSelectedIndex());
+        }
+      });
+    }
+
+    updated(changed) {
+      if (changed.has('collection') && this.collection) {
+        INSTANCES.add(this);
+      }
+    }
+
+    initTabs() {
+      this.items = Array.from(this.querySelectorAll('code-tab')).map(tab => ({
+        dataset: {
+          id: tab.dataset.id,
+          label: tab.dataset.label || tab.dataset.id,
+          iconHref: tab.dataset.iconHref,
+          color: tab.dataset.color
+        },
+        element: tab
+      }));
+      this.requestUpdate();
+    }
+
+    getInitialSelectedIndex() {
+      // Always show default slot if present (for initial "click a tab" state)
+      if (this.querySelector('[slot=default]')) {
+        // Clear any stored selection so default always shows on page load
+        if (this.collection) {
+          localStorage.removeItem(`code-tabs-selected-${this.collection}`);
+        }
+        return -1;
+      }
+
+      const stored = this.collection ? localStorage.getItem(`code-tabs-selected-${this.collection}`) : null;
+      if (stored) {
+        const index = this.items.findIndex(x => x.dataset.id === stored);
+        if (index >= 0) return index;
+      }
+
+      if (this.defaultTab) {
+        const index = this.items.findIndex(x => x.dataset.id === this.defaultTab);
+        if (index >= 0) return index;
+      }
+
+      return this.initialSelectedIndex || 0;
+    }
+
+    selectIndex(index) {
+      // Remove selection from all tabs
+      this.items.forEach(item => {
+        item.element.removeAttribute('selected');
+      });
+
+      this.selectedIndex = index;
+
+      if (index >= 0 && this.items[index]) {
+        this.items[index].element.setAttribute('selected', '');
+        this.selectedItem = this.items[index].element;
+      } else {
+        this.selectedItem = null;
+      }
+
+      this.requestUpdate();
+      this.onSelect();
+    }
+
+    selectId(idToSelect) {
+      const index = this.items.findIndex(({ dataset: { id } }) => id === idToSelect);
+      if (index >= 0 && this.selectedIndex !== index) {
+        this.selectIndex(index);
+      }
+    }
+
+    onSelect() {
+      // Update button states
+      this.updateComplete.then(() => {
+        const buttons = this.shadowRoot.querySelectorAll('[role="tab"]');
+        buttons.forEach((button, i) => {
+          button.removeAttribute('selected');
+          button.setAttribute('aria-selected', this.selectedIndex === i);
+          button.setAttribute('tabindex', this.selectedIndex === i ? '0' : '-1');
+        });
+
+        const selectedButton = buttons[this.selectedIndex];
+        if (selectedButton) {
+          selectedButton.setAttribute('selected', '');
+          // Smooth scroll to selected tab
+          const { left } = selectedButton.getBoundingClientRect();
+          this.shadowRoot.getElementById('tabs').scrollTo({ behavior: 'smooth', left });
+        }
+      });
+
+      // Dispatch custom event
+      this.dispatchEvent(new CustomEvent('select', {
+        detail: { selectedIndex: this.selectedIndex, selectedItem: this.selectedItem },
+        bubbles: true
+      }));
+    }
+
+    onClickTab(event) {
+      const button = event.target.closest('button');
+      if (!button) return;
+
+      const buttons = Array.from(this.shadowRoot.querySelectorAll('[role="tab"]'));
+      const index = buttons.indexOf(button);
+
+      if (index >= 0) {
+        this.selectIndex(index);
+
+        if (this.collection && this.items[index]) {
+          const { id } = this.items[index].dataset;
+          localStorage.setItem(`code-tabs-selected-${this.collection}`, id);
+          // Sync with other instances
+          INSTANCES.forEach(instance => {
+            if (instance !== this) {
+              instance.selectId(id);
+            }
+          });
+        }
+      }
+    }
+
+    render() {
+      const items = this.items || [];
+      return html`
+        <div id="tabs" role="tablist" part="tablist">
+          ${items.map(({ dataset: { id, iconHref, label } }, i) => html`
+          <button role="tab"
+                  part="tab"
+                  data-id="${id}"
+                  id="button-${id}"
+                  aria-selected="${this.selectedIndex === i}"
+                  aria-controls="${id}"
+                  tabindex="${this.selectedIndex === i || (this.selectedIndex < 0 && i === 0) ? 0 : -1}"
+                  ?selected="${this.selectedIndex === i}"
+                  @click="${this.onClickTab}">
+            ${iconHref ? html`<img src="${iconHref}" role="presentation"/>` : ''}
+            ${label}
+          </button>
+          `)}
+        </div>
+
+        <div id="tabpanels" part="tabpanels">
+          <slot @slotchange="${this.onSlotchange}"></slot>
+          <div id="default" ?hidden="${this.selectedItem}" part="default-container">
+            <slot name="default"></slot>
+          </div>
+        </div>
+      `;
+    }
+
+    onSlotchange() {
+      // Re-initialize when slot content changes
+      setTimeout(() => {
+        this.initTabs();
+        // Don't auto-select if we have a default slot - let it show
+        // Only auto-select if we're at -1 but there's no default slot content
+        if (this.selectedIndex < 0 && this.items.length > 0 && !this.querySelector('[slot=default]')) {
+          this.selectIndex(0);
+        }
+      }, 0);
+    }
+  }
+
+  class CodeTab extends LitElement {
+    static properties = {
+      selected: { type: Boolean, reflect: true },
+      noCopy: { type: Boolean, attribute: 'no-copy' }
+    };
+
+    static styles = css`
+      :host(:not([selected])) {
+        display: none;
+      }
+
+      :host([selected]) {
+        display: block;
+      }
+
+      [part="content"] {
+        display: flex;
+        flex: 1;
+      }
+
+      ::slotted(pre) {
+        margin-block-end: 0 !important;
+      }
+    `;
+
+    render() {
+      return html`<div part="content"><slot></slot></div>`;
+    }
+  }
+
+  class ThemeToggle extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' });
+    }
+
+    connectedCallback() {
+      this.render();
+      this.shadowRoot.querySelector('button').addEventListener('click', () => this.toggle());
+      this.updateIcon();
+    }
+
+    toggle() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      this.updateIcon();
+    }
+
+    updateIcon() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      const darkIcon = this.shadowRoot.querySelector('.theme-icon-dark');
+      const lightIcon = this.shadowRoot.querySelector('.theme-icon-light');
+
+      if (theme === 'dark') {
+        darkIcon.style.display = 'none';
+        lightIcon.style.display = 'block';
+      } else {
+        darkIcon.style.display = 'block';
+        lightIcon.style.display = 'none';
+      }
+    }
+
+    render() {
+      this.shadowRoot.innerHTML = `
+        <style>
+          button {
+            background: none;
+            border: none;
+            color: inherit;
+            padding: var(--space-sm, 0.5rem);
+            border-radius: var(--radius-md, 6px);
+            cursor: pointer;
+            transition: all var(--transition-fast, 0.15s ease);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          button:hover {
+            color: var(--primary-color);
+            background: var(--color-surface-secondary);
+          }
+        </style>
+        <button type="button" aria-label="Toggle theme">
+          <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+        </button>
+      `;
+    }
+  }
+
+  customElements.define('wibbler-wobbler', WibblerWobbler);
+  customElements.define('code-tabs', CodeTabs);
+  customElements.define('code-tab', CodeTab);
+  customElements.define('theme-toggle', ThemeToggle);
+
+  console.log('Apollo Elements web components loaded successfully');
+
+  // Initialize framework demos
+  document.addEventListener('DOMContentLoaded', () => {
+    const demos = document.getElementById('demos');
+    if (demos) {
+      demos.addEventListener('select', loadDemo);
+
+      function loadDemo() {
+        const selectedTab = demos.querySelector('[selected]');
+        const sandbox = selectedTab?.querySelector('codesandbox-button');
+        if (sandbox) {
+          // Set theme based on current theme
+          const currentTheme = document.documentElement.getAttribute('data-theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          sandbox.theme = currentTheme;
+          sandbox.showDemo = true;
+        }
+      }
+
+      // Listen for theme changes to update sandbox themes
+      document.addEventListener('themechange', (event) => {
+        const sandboxes = demos.querySelectorAll('codesandbox-button');
+        sandboxes.forEach(sandbox => {
+          sandbox.theme = event.detail.theme;
+        });
+      });
+
+      console.log('Framework demos initialized');
+    }
+  });
+</script>

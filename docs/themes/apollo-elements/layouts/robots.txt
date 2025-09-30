@@ -1,0 +1,30 @@
+User-agent: *
+{{- if hugo.IsProduction }}
+Disallow:
+Sitemap: {{ "/sitemap.xml" | absURL }}
+{{- else }}
+Disallow: /
+{{- end }}
+
+# Allow access to assets
+Allow: /_assets/
+Allow: /assets/
+Allow: /_merged_assets/
+
+# Allow search engines to index public content
+{{- if hugo.IsProduction }}
+Allow: /guides/
+Allow: /api/
+Allow: /blog/
+Allow: /search/
+{{- end }}
+
+# Block development and admin areas
+Disallow: /admin/
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /themes/
+Disallow: /layouts/
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1

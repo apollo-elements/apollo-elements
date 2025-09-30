@@ -1,0 +1,118 @@
+{{ define "main" }}
+<h1 class="section-title">{{ .Title }}</h1>
+
+{{ if .Parent }}
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol class="breadcrumb-list">
+      <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+      {{ if ne .Parent.Title "Home" }}
+        <li class="breadcrumb-item">
+          <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a>
+        </li>
+      {{ end }}
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ .Title }}
+      </li>
+    </ol>
+  </nav>
+{{ end }}
+
+{{ if .Description }}
+<p class="section-description">{{ .Description }}</p>
+{{ end }}
+
+{{ if .Content }}
+<section class="section-content">
+  <div class="prose">
+    {{ .Content }}
+
+    {{/* Render API documentation if package and module are specified */}}
+    {{ if and .Params.package .Params.module }}
+      {{ partial "render-api-docs.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+<!-- Page Navigation (Prev/Next) -->
+{{ $parent := .Parent }}
+{{ if $parent }}
+  {{ $pages := slice }}
+  {{ range $parent.RegularPages }}
+    {{ $pages = $pages | append . }}
+  {{ end }}
+  {{ range $parent.Sections }}
+    {{ $pages = $pages | append . }}
+  {{ end }}
+  {{ $pages = sort $pages "Weight" }}
+
+  {{ $currentIndex := -1 }}
+  {{ range $index, $page := $pages }}
+    {{ if eq $page.RelPermalink $.RelPermalink }}
+      {{ $currentIndex = $index }}
+    {{ end }}
+  {{ end }}
+
+  {{ if ge $currentIndex 0 }}
+    {{ $prevPage := cond (gt $currentIndex 0) (index $pages (sub $currentIndex 1)) nil }}
+    {{ $nextPage := cond (lt $currentIndex (sub (len $pages) 1)) (index $pages (add $currentIndex 1)) nil }}
+
+    {{ if or $prevPage $nextPage }}
+      <nav class="page-nav" aria-label="Page navigation">
+        {{ if $prevPage }}
+          <a href="{{ $prevPage.RelPermalink }}" class="page-nav-prev" rel="prev">
+            <span class="page-nav-label">← Previous</span>
+            <span class="page-nav-title">{{ $prevPage.Title }}</span>
+          </a>
+        {{ end }}
+
+        {{ if $nextPage }}
+          <a href="{{ $nextPage.RelPermalink }}" class="page-nav-next" rel="next">
+            <span class="page-nav-label">Next →</span>
+            <span class="page-nav-title">{{ $nextPage.Title }}</span>
+          </a>
+        {{ end }}
+      </nav>
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<!-- List page scripts -->
+<script type="module">
+  // Add search functionality for large lists
+  const pageCards = document.querySelectorAll('.page-card');
+  if (pageCards.length > 10) {
+    // Create search input
+    const searchContainer = document.createElement('div');
+    searchContainer.className = 'list-search';
+    searchContainer.innerHTML = `
+      <input type="search"
+             placeholder="Search ${pageCards.length} items..."
+             class="search-input"
+             aria-label="Search content">
+    `;
+
+    const sectionHeader = document.querySelector('.section-header .container');
+    sectionHeader.appendChild(searchContainer);
+
+    const searchInput = searchContainer.querySelector('.search-input');
+
+    // Search functionality
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      pageCards.forEach(card => {
+        const title = card.querySelector('.page-card-title').textContent.toLowerCase();
+        const excerpt = card.querySelector('.page-card-excerpt')?.textContent.toLowerCase() || '';
+        const matches = title.includes(query) || excerpt.includes(query);
+        card.style.display = matches ? '' : 'none';
+      });
+
+      // Update count
+      const visibleCards = Array.from(pageCards).filter(card => card.style.display !== 'none');
+      searchInput.placeholder = `Search ${visibleCards.length} of ${pageCards.length} items...`;
+    });
+  }
+</script>
+{{ end }}

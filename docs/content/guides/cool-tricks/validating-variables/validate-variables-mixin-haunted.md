@@ -1,0 +1,1 @@
+> There's no `ValidateVariablesMixin` for haunted, so use one of the other techniques.

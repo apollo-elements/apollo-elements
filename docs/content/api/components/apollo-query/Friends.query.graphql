@@ -1,0 +1,4 @@
+query Friends {
+  me { id name picture }
+  friends { id name picture }
+}

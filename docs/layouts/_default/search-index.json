@@ -1,0 +1,39 @@
+{{- $pages := where .Site.RegularPages "Type" "!=" "search" -}}
+{{- $index := slice -}}
+
+{{- range $pages -}}
+  {{- $content := .Plain | htmlUnescape -}}
+  {{- $content = $content | replaceRE "\\s+" " " -}}
+  {{- $content = $content | replaceRE "^\\s+|\\s+$" "" -}}
+
+  {{- $tags := slice -}}
+  {{- if .Params.tags -}}
+    {{- $tags = .Params.tags -}}
+  {{- end -}}
+
+  {{- $category := "" -}}
+  {{- if .Section -}}
+    {{- $category = .Section -}}
+  {{- end -}}
+
+  {{- $item := dict
+    "id" .RelPermalink
+    "title" .Title
+    "url" .RelPermalink
+    "content" $content
+    "summary" (.Summary | htmlUnescape | replaceRE "\\s+" " ")
+    "date" .Date.Format "2006-01-02"
+    "category" $category
+    "section" .Section
+    "tags" $tags
+    "weight" (.Params.weight | default 0)
+  -}}
+
+  {{- $index = $index | append $item -}}
+{{- end -}}
+
+{
+  "documents": {{ $index | jsonify }},
+  "generated": "{{ now.Format "2006-01-02T15:04:05Z07:00" }}",
+  "count": {{ len $index }}
+}

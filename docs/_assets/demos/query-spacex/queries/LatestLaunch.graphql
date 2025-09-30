@@ -1,0 +1,9 @@
+query LatestLaunch {
+  launchLatest {
+    id
+    launch_date_utc
+    links { mission_patch }
+    mission_name
+    rocket { rocket_name }
+  }
+}

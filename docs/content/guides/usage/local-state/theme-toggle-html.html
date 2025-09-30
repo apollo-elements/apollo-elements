@@ -1,0 +1,17 @@
+<apollo-query>
+  <template>
+    <button @click="{{ toggleTheme }}">
+      Change to {{ data.theme === 'dark' ? 'light' : 'dark' }} theme
+    </button>
+  </template>
+</apollo-query>
+
+<script>
+  document.currentScript.getRootNode()
+    .querySelector('apollo-query')
+    .extras = {
+      toggleTheme() {
+        // TBD
+      }
+    }
+</script>

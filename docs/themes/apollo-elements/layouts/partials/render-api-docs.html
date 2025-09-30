@@ -1,0 +1,84 @@
+{{/* render-api-docs.html - Server-side API documentation rendering from custom-elements manifest */}}
+
+{{- $pkg := .Params.package | default "" -}}
+{{- $module := .Params.module | default "" -}}
+
+{{- if and $pkg $module -}}
+  {{/* Load the manifest data for this package */}}
+  {{- $manifest := index .Site.Data "custom-elements-manifests" $pkg -}}
+
+  {{- if $manifest -}}
+    {{/* Find the module in the manifest - take the one with most declarations/members */}}
+    {{- $matchingModules := slice -}}
+    {{- range $manifest.modules -}}
+      {{- if eq .path $module -}}
+        {{- $matchingModules = $matchingModules | append . -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{/* Select the module with the most complete info (most members) */}}
+    {{- $selectedModule := index $matchingModules 0 -}}
+    {{- if gt (len $matchingModules) 1 -}}
+      {{- range $matchingModules -}}
+        {{- $currentTotal := 0 -}}
+        {{- range .declarations -}}
+          {{- if .members -}}
+            {{- $currentTotal = add $currentTotal (len .members) -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- $selectedTotal := 0 -}}
+        {{- range $selectedModule.declarations -}}
+          {{- if .members -}}
+            {{- $selectedTotal = add $selectedTotal (len .members) -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- if gt $currentTotal $selectedTotal -}}
+          {{- $selectedModule = . -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{/* Render the selected module */}}
+    {{- with $selectedModule -}}
+      {{/* Generate ToC from declarations and store in page scratch */}}
+      {{- range .declarations -}}
+        {{- if eq .kind "class" -}}
+          {{- $.Scratch.Set "apiToc" (partial "cem/render-toc.html" .) -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{/* Render its declarations */}}
+      {{- range .declarations -}}
+        {{- if eq .kind "class" -}}
+          {{ partial "cem/render-class.html" . }}
+        {{- end -}}
+      {{- end -}}
+
+      {{/* Render exports section */}}
+      {{- with .exports -}}
+        <h2 id="exports" class="" slot="">
+          <a class="anchor" href="#exports">
+            {{ partial "cem/octicon-link.html" $ }}
+          </a>Exports
+        </h2>
+        {{- range . -}}
+          <p><code>{{ .kind }} {{ .name }}</code>{{ with .declaration }}{{ if .module }} from <code>{{ .module }}</code>{{ end }}{{ end }}</p>
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else -}}
+    <div class="api-error">
+      <p>⚠️ No API manifest found for package: <code>{{ $pkg }}</code></p>
+    </div>
+  {{- end -}}
+
+{{- else -}}
+  <div class="api-error">
+    <p>⚠️ Missing package or module parameters in front matter. Add:</p>
+    <pre>package: "packagename"
+module: "path/to/module.js"</pre>
+  </div>
+{{- end -}}

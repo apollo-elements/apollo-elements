@@ -1,0 +1,349 @@
+{{ define "main" }}
+<div class="error-page">
+  <div class="container">
+    <div class="error-content">
+      <!-- Error Illustration -->
+      <div class="error-illustration">
+        <svg width="200" height="150" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Rocket -->
+          <g class="rocket">
+            <path d="M100 30L110 60L90 60Z" fill="var(--color-primary)" opacity="0.8"/>
+            <circle cx="100" cy="45" r="3" fill="white"/>
+            <path d="M95 60L105 60L100 70Z" fill="var(--color-primary)" opacity="0.6"/>
+          </g>
+          <!-- Stars -->
+          <circle cx="50" cy="40" r="2" fill="var(--color-primary)" opacity="0.4"/>
+          <circle cx="150" cy="50" r="1.5" fill="var(--color-primary)" opacity="0.6"/>
+          <circle cx="170" cy="30" r="1" fill="var(--color-primary)" opacity="0.5"/>
+          <circle cx="30" cy="70" r="1.5" fill="var(--color-primary)" opacity="0.4"/>
+          <!-- Orbit lines -->
+          <circle cx="100" cy="75" r="40" stroke="var(--color-border)" stroke-width="1" fill="none" opacity="0.3"/>
+          <circle cx="100" cy="75" r="60" stroke="var(--color-border)" stroke-width="1" fill="none" opacity="0.2"/>
+        </svg>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message">
+        <h1 class="error-title">404</h1>
+        <h2 class="error-subtitle">Page Not Found</h2>
+        <p class="error-description">
+          The page you're looking for seems to have drifted into space.
+          Let's get you back on course to explore Apollo Elements.
+        </p>
+      </div>
+
+      <!-- Search Box -->
+      <div class="error-search">
+        <div class="search-box">
+          <input type="search"
+                 id="error-search-input"
+                 placeholder="Search the documentation..."
+                 aria-label="Search documentation">
+          <button type="button" onclick="performErrorSearch()" class="search-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="error-navigation">
+        <h3>Popular Destinations</h3>
+        <div class="nav-grid">
+          <a href="/guides/" class="nav-card">
+            <div class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.11 3.89,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.11,3 19,3M19,19H5V5H19V19Z"/>
+              </svg>
+            </div>
+            <div class="nav-content">
+              <h4>Guides</h4>
+              <p>Learn how to build with Apollo Elements</p>
+            </div>
+          </a>
+
+          <a href="/api/" class="nav-card">
+            <div class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+              </svg>
+            </div>
+            <div class="nav-content">
+              <h4>API Documentation</h4>
+              <p>Complete reference for components and libraries</p>
+            </div>
+          </a>
+
+          <a href="/blog/" class="nav-card">
+            <div class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M17,11H7V12H17V11M17,14H7V15H17V14M17,17H7V18H17V17Z"/>
+              </svg>
+            </div>
+            <div class="nav-content">
+              <h4>Blog</h4>
+              <p>Latest updates and tutorials</p>
+            </div>
+          </a>
+
+          <a href="/guides/getting-started/" class="nav-card">
+            <div class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/>
+              </svg>
+            </div>
+            <div class="nav-content">
+              <h4>Getting Started</h4>
+              <p>New to Apollo Elements? Start here</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Home Link -->
+      <div class="error-home">
+        <a href="/" class="home-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/>
+          </svg>
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  padding: var(--space-2xl) 0;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.error-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-illustration {
+  margin-bottom: var(--space-xl);
+  opacity: 0.8;
+}
+
+.rocket {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.error-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 var(--space-sm) 0;
+  line-height: 1;
+}
+
+.error-subtitle {
+  font-size: 1.5rem;
+  color: var(--color-heading);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.error-description {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
+
+.error-search {
+  margin-bottom: var(--space-2xl);
+}
+
+.search-box {
+  display: flex;
+  max-width: 400px;
+  margin: 0 auto;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.search-box:focus-within {
+  border-color: var(--color-primary);
+}
+
+#error-search-input {
+  flex: 1;
+  padding: var(--space-md);
+  border: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+#error-search-input:focus {
+  outline: none;
+}
+
+.search-button {
+  padding: var(--space-md);
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.search-button:hover {
+  background: var(--color-primary-hover);
+}
+
+.error-navigation {
+  margin-bottom: var(--space-2xl);
+}
+
+.error-navigation h3 {
+  margin-bottom: var(--space-lg);
+  color: var(--color-heading);
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.nav-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+.nav-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.nav-content {
+  text-align: left;
+}
+
+.nav-content h4 {
+  margin: 0 0 var(--space-xs) 0;
+  color: var(--color-heading);
+  font-size: 1.125rem;
+}
+
+.nav-content p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.home-link:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .error-title {
+    font-size: 3rem;
+  }
+
+  .error-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .nav-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-card {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-sm);
+  }
+
+  .nav-content {
+    text-align: center;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .error-illustration svg {
+    opacity: 0.7;
+  }
+}
+</style>
+
+<script>
+function performErrorSearch() {
+  const input = document.getElementById('error-search-input');
+  const query = input.value.trim();
+  if (query) {
+    window.location.href = `/search/?q=${encodeURIComponent(query)}`;
+  }
+}
+
+// Handle Enter key in search input
+document.getElementById('error-search-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    performErrorSearch();
+  }
+});
+
+// Auto-focus search input
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('error-search-input').focus();
+});
+</script>
+{{ end }}

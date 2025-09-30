@@ -1,7 +1,0 @@
-query LaunchesQuery($limit: Int) {
-  launchesPast(limit: $limit) {
-    id
-    mission_name
-    links { mission_patch_small }
-  }
-}

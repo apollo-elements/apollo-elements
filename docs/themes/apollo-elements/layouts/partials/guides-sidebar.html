@@ -1,0 +1,272 @@
+<!-- Guides Sidebar Navigation -->
+<aside class="guides-sidebar">
+  <nav class="sidebar-nav" aria-label="Guides Navigation">
+    {{ $currentPage := . }}
+    {{ $guidesSection := .Site.GetPage "/guides" }}
+
+    {{ if $guidesSection }}
+      <ul class="sidebar-menu">
+        {{ range $guidesSection.Sections.ByWeight }}
+          {{ $section := . }}
+          <li class="sidebar-item {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}active{{ end }}">
+            <a href="{{ .RelPermalink }}" class="sidebar-link {{ if $currentPage.Eq . }}current{{ end }}">
+              {{ .Title }}
+            </a>
+
+            <!-- ToC for current section page -->
+            {{ if and ($currentPage.Eq .) $currentPage.TableOfContents }}
+              <div class="sidebar-toc-inline">
+                <h4 class="sidebar-toc-title">On This Page</h4>
+                {{ $currentPage.TableOfContents }}
+              </div>
+            {{ end }}
+
+            <!-- Subsections and pages -->
+            {{ if or .Sections .RegularPages }}
+              <ul class="sidebar-submenu">
+                <!-- Direct pages of this section -->
+                {{ range .RegularPages.ByWeight }}
+                  <li class="sidebar-subitem">
+                    <a href="{{ .RelPermalink }}" class="sidebar-sublink {{ if $currentPage.Eq . }}current{{ end }}">
+                      {{ .Title }}
+                    </a>
+
+                    <!-- ToC for current regular page -->
+                    {{ if and ($currentPage.Eq .) $currentPage.TableOfContents }}
+                      <div class="sidebar-toc-inline">
+                        <h4 class="sidebar-toc-title">On This Page</h4>
+                        {{ $currentPage.TableOfContents }}
+                      </div>
+                    {{ end }}
+                  </li>
+                {{ end }}
+
+                <!-- Subsections -->
+                {{ range .Sections.ByWeight }}
+                  <li class="sidebar-subitem {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}active{{ end }}">
+                    <a href="{{ .RelPermalink }}" class="sidebar-sublink {{ if $currentPage.Eq . }}current{{ end }}">
+                      {{ .Title }}
+                    </a>
+
+                    <!-- ToC for current subsection page -->
+                    {{ if and ($currentPage.Eq .) $currentPage.TableOfContents }}
+                      <div class="sidebar-toc-inline">
+                        <h4 class="sidebar-toc-title">On This Page</h4>
+                        {{ $currentPage.TableOfContents }}
+                      </div>
+                    {{ end }}
+
+                    <!-- Third level pages and sections - only show for current section -->
+                    {{ if or .RegularPages .Sections }}
+                      {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}
+                        <ul class="sidebar-tertiary">
+                          {{ range .RegularPages.ByWeight }}
+                            <li class="sidebar-tertiary-item">
+                              <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
+                                {{ .Title }}
+                              </a>
+                            </li>
+                          {{ end }}
+                          {{ range .Sections.ByWeight }}
+                            <li class="sidebar-tertiary-item">
+                              <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
+                                {{ .Title }}
+                              </a>
+
+                              <!-- ToC for current third-level section page -->
+                              {{ if and ($currentPage.Eq .) $currentPage.TableOfContents }}
+                                <div class="sidebar-toc-inline">
+                                  <h4 class="sidebar-toc-title">On This Page</h4>
+                                  {{ $currentPage.TableOfContents }}
+                                </div>
+                              {{ end }}
+                            </li>
+                          {{ end }}
+                        </ul>
+                      {{ end }}
+                    {{ end }}
+                  </li>
+                {{ end }}
+              </ul>
+            {{ end }}
+          </li>
+        {{ end }}
+      </ul>
+    {{ end }}
+  </nav>
+</aside>
+
+<style>
+  .guides-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-md));
+    max-height: calc(100vh - var(--header-height) - var(--space-xl));
+    overflow-y: auto;
+    padding: var(--space-lg);
+  }
+
+  .sidebar-nav {
+    font-size: 0.9rem;
+  }
+
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-item {
+    margin-bottom: var(--space-sm);
+  }
+
+  .sidebar-link {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--primary-text-color);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .sidebar-link:hover {
+    background: var(--color-surface-secondary);
+    color: var(--primary-color);
+  }
+
+  .sidebar-link.current {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .sidebar-submenu {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-xs) 0 0 var(--space-md);
+  }
+
+  .sidebar-subitem {
+    margin-bottom: var(--space-xs);
+  }
+
+  .sidebar-sublink {
+    display: block;
+    padding: var(--space-xs) var(--space-md);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    font-size: 0.875rem;
+  }
+
+  .sidebar-sublink:hover {
+    background: var(--color-surface-secondary);
+    color: var(--primary-color);
+  }
+
+  .sidebar-sublink.current {
+    background: light-dark(rgba(160, 0, 255, 0.1), rgba(160, 0, 255, 0.2));
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  .sidebar-tertiary {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-xs) 0 0 var(--space-md);
+  }
+
+  .sidebar-tertiary-item {
+    margin-bottom: var(--space-xs);
+  }
+
+  .sidebar-tertiary-link {
+    display: block;
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 400;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    font-size: 0.8125rem;
+    opacity: 0.9;
+  }
+
+  .sidebar-tertiary-link:hover {
+    opacity: 1;
+    color: var(--primary-color);
+  }
+
+  .sidebar-tertiary-link.current {
+    color: var(--primary-color);
+    font-weight: 600;
+    opacity: 1;
+  }
+
+  /* Expand active sections */
+  .sidebar-item.active > .sidebar-submenu,
+  .sidebar-subitem.active > .sidebar-tertiary {
+    display: block;
+  }
+
+  /* Table of Contents - Inline with navigation */
+  .sidebar-toc-inline {
+    margin: var(--space-md) 0 var(--space-md) var(--space-md);
+  }
+
+  .sidebar-toc-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-sm) 0;
+    padding: 0 var(--space-md);
+  }
+
+  .sidebar-toc-inline #TableOfContents {
+    margin: 0;
+  }
+
+  .sidebar-toc-inline ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 var(--space-md);
+  }
+
+  .sidebar-toc-inline li {
+    margin: 0;
+  }
+
+  .sidebar-toc-inline a {
+    display: block;
+    padding: var(--space-xs) var(--space-md);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .sidebar-toc-inline a:hover {
+    background: var(--color-surface-secondary);
+    color: var(--primary-color);
+  }
+
+  .sidebar-toc-inline > nav > ul > li > ul {
+    margin-left: var(--space-md);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .guides-sidebar {
+      position: relative;
+      top: 0;
+      max-height: none;
+      border-right: none;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--space-lg);
+    }
+  }
+</style>

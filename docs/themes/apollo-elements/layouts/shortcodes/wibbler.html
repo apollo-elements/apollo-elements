@@ -1,0 +1,232 @@
+{{- $animation := .Get "animation" | default "wobble" -}}
+{{- $duration := .Get "duration" | default "2s" -}}
+{{- $delay := .Get "delay" | default "0s" -}}
+{{- $trigger := .Get "trigger" | default "viewport" -}}
+{{- $id := .Get "id" | default (printf "wibbler-%d" now.Unix) -}}
+
+<!-- Simplified Wibbler Wobbler Animation Component -->
+<div id="{{ $id }}"
+     class="wibbler-container"
+     data-animation="{{ $animation }}"
+     data-duration="{{ $duration }}"
+     data-delay="{{ $delay }}"
+     data-trigger="{{ $trigger }}">
+  {{ .Inner }}
+</div>
+
+<!-- Wibbler Styles -->
+<style>
+  .wibbler-container {
+    display: block;
+    margin: 2rem 0;
+  }
+
+  /* Animation definitions */
+  @keyframes wobble {
+    0% { transform: translateX(0%) rotate(0deg); }
+    15% { transform: translateX(-25px) rotate(-5deg); }
+    30% { transform: translateX(20px) rotate(3deg); }
+    45% { transform: translateX(-15px) rotate(-3deg); }
+    60% { transform: translateX(10px) rotate(2deg); }
+    75% { transform: translateX(-5px) rotate(-1deg); }
+    100% { transform: translateX(0%) rotate(0deg); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+  }
+
+  @keyframes slide-in {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Apply animations based on data-animation attribute */
+  .wibbler-container[data-animation="wobble"] {
+    animation: wobble var(--duration, 2s) ease-in-out var(--delay, 0s) infinite;
+  }
+
+  .wibbler-container[data-animation="float"] {
+    animation: float var(--duration, 3s) ease-in-out var(--delay, 0s) infinite;
+  }
+
+  .wibbler-container[data-animation="pulse"] {
+    animation: pulse var(--duration, 2s) ease-in-out var(--delay, 0s) infinite;
+  }
+
+  .wibbler-container[data-animation="slide-in"] {
+    animation: slide-in var(--duration, 0.8s) ease-out var(--delay, 0s) both;
+  }
+
+  .wibbler-container[data-animation="fade-in"] {
+    animation: fade-in var(--duration, 0.6s) ease-out var(--delay, 0s) both;
+  }
+
+  /* Mouse interaction animations */
+  .wibbler-container.mouse-interactive svg {
+    transition: transform 0.3s ease;
+    will-change: transform;
+  }
+
+  .wibbler-container.mouse-interactive:hover svg {
+    transform: rotate(var(--mouse-rotation, 0deg)) scale(var(--mouse-scale, 1.1));
+  }
+
+  /* Pause animations on hover for better UX */
+  .wibbler-container:hover {
+    animation-play-state: paused;
+  }
+
+  /* Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .wibbler-container {
+      animation: none !important;
+    }
+  }
+
+  /* Special styling for demo containers */
+  .wibbler-container .demo-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e1e5e9);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .wibbler-container .demo-container {
+      background: var(--color-surface-dark, #1a1a1a);
+      border-color: var(--color-border-dark, #404040);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+  }
+</style>
+
+<!-- Simplified Wibbler Animation Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wibbler = document.getElementById('{{ $id }}');
+    if (!wibbler) return;
+
+    // Set up CSS custom properties
+    const duration = wibbler.getAttribute('data-duration') || '{{ $duration }}';
+    const delay = wibbler.getAttribute('data-delay') || '{{ $delay }}';
+    const animation = wibbler.getAttribute('data-animation') || '{{ $animation }}';
+    const trigger = wibbler.getAttribute('data-trigger') || '{{ $trigger }}';
+
+    wibbler.style.setProperty('--duration', duration);
+    wibbler.style.setProperty('--delay', delay);
+
+    // Enhanced mouse interaction for SVGs
+    const svg = wibbler.querySelector('svg');
+    if (svg) {
+      wibbler.classList.add('mouse-interactive');
+
+      // Mouse position tracking for dynamic rotation
+      let mouseX = 0;
+      let mouseY = 0;
+
+      wibbler.addEventListener('mousemove', (e) => {
+        const rect = wibbler.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        mouseX = e.clientX - centerX;
+        mouseY = e.clientY - centerY;
+
+        // Calculate rotation based on mouse position
+        const rotation = Math.atan2(mouseY, mouseX) * (180 / Math.PI) * 0.1;
+        const scale = 1 + Math.min(Math.abs(mouseX) + Math.abs(mouseY), 100) / 1000;
+
+        wibbler.style.setProperty('--mouse-rotation', rotation + 'deg');
+        wibbler.style.setProperty('--mouse-scale', scale);
+      });
+
+      wibbler.addEventListener('mouseleave', () => {
+        wibbler.style.setProperty('--mouse-rotation', '0deg');
+        wibbler.style.setProperty('--mouse-scale', '1');
+      });
+
+      // Tab hover interaction
+      const tabContainer = document.querySelector('[data-collection="frameworks"]');
+      if (tabContainer) {
+        const tabButtons = tabContainer.querySelectorAll('.tab-button');
+
+        tabButtons.forEach(button => {
+          button.addEventListener('mouseenter', () => {
+            const color = button.getAttribute('data-color');
+            if (color && svg) {
+              svg.style.setProperty('--fw-color', color);
+              svg.style.filter = `drop-shadow(0 0 8px ${color}40)`;
+            }
+          });
+
+          button.addEventListener('mouseleave', () => {
+            if (svg) {
+              svg.style.setProperty('--fw-color', 'transparent');
+              svg.style.filter = 'none';
+            }
+          });
+        });
+      }
+    }
+
+    // Viewport-triggered animations
+    if (trigger === 'viewport') {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-viewport');
+              entry.target.style.animationPlayState = 'running';
+            } else {
+              entry.target.classList.remove('in-viewport');
+              if (animation === 'slide-in' || animation === 'fade-in') {
+                entry.target.style.animationPlayState = 'paused';
+              }
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: '0px 0px -10% 0px'
+        }
+      );
+
+      observer.observe(wibbler);
+    }
+
+    // Manual trigger support
+    if (trigger === 'manual') {
+      wibbler.addEventListener('trigger-animation', () => {
+        wibbler.classList.add('animate');
+        wibbler.style.animationPlayState = 'running';
+
+        // Remove animate class after animation completes
+        const durationMs = parseFloat(duration) * 1000;
+        const delayMs = parseFloat(delay) * 1000;
+
+        setTimeout(() => {
+          wibbler.classList.remove('animate');
+        }, durationMs + delayMs);
+      });
+    }
+
+    // Start animation immediately for non-triggered animations
+    if (trigger !== 'viewport' && trigger !== 'manual') {
+      wibbler.style.animationPlayState = 'running';
+    }
+  });
+</script>

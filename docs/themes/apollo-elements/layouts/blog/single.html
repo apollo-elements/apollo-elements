@@ -1,0 +1,571 @@
+{{ define "main" }}
+<article class="blog-post">
+  <div class="container">
+    <!-- Post Header -->
+    <header class="post-header">
+      {{ if .Params.cover_image }}
+        <div class="post-cover">
+          <img src="{{ .Params.cover_image }}" alt="{{ .Title }}" class="cover-image">
+        </div>
+      {{ end }}
+
+      <div class="post-header-content">
+        <div class="post-breadcrumb">
+          <a href="/blog/">Blog</a>
+          <span class="breadcrumb-separator">→</span>
+          <span>{{ .Title }}</span>
+        </div>
+
+        <h1 class="post-title">{{ .Title }}</h1>
+
+        <div class="post-meta">
+          <div class="post-meta-primary">
+            <time datetime="{{ .Date.Format "2006-01-02" }}" class="post-date">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19Z"/>
+              </svg>
+              {{ .Date.Format "January 2, 2006" }}
+            </time>
+
+            {{ if .ReadingTime }}
+              <span class="reading-time">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z"/>
+                </svg>
+                {{ .ReadingTime }} min read
+              </span>
+            {{ end }}
+
+            {{ if .GitInfo }}
+              <span class="last-updated">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.64,5.61C9.15,2.14 14.85,2.14 18.36,5.61L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"/>
+                </svg>
+                Updated {{ .GitInfo.AuthorDate.Format "Jan 2, 2006" }}
+              </span>
+            {{ end }}
+          </div>
+
+          {{ if .Params.tags }}
+            <div class="post-tags">
+              {{ range .Params.tags }}
+                <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="tag">{{ . }}</a>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+
+        {{ if .Params.description }}
+          <div class="post-description">
+            <p>{{ .Params.description }}</p>
+          </div>
+        {{ end }}
+      </div>
+    </header>
+
+    <!-- Post Content -->
+    <div class="post-content-wrapper">
+      <div class="post-content">
+        {{ .Content }}
+      </div>
+
+      <!-- Table of Contents -->
+      {{ if .TableOfContents }}
+        <aside class="post-toc">
+          <div class="toc-container">
+            <h3>Table of Contents</h3>
+            {{ .TableOfContents }}
+          </div>
+        </aside>
+      {{ end }}
+    </div>
+
+    <!-- Post Footer -->
+    <footer class="post-footer">
+      <!-- Social Sharing -->
+      <div class="post-sharing">
+        <h3>Share this post</h3>
+        <div class="sharing-buttons">
+          <a href="https://twitter.com/intent/tweet?url={{ .Permalink | absURL }}&text={{ .Title | htmlEscape }}"
+             target="_blank"
+             rel="noopener"
+             class="share-button twitter"
+             aria-label="Share on Twitter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z"/>
+            </svg>
+            Twitter
+          </a>
+
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ .Permalink | absURL }}"
+             target="_blank"
+             rel="noopener"
+             class="share-button linkedin"
+             aria-label="Share on LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+            </svg>
+            LinkedIn
+          </a>
+
+          <a href="https://news.ycombinator.com/submitlink?u={{ .Permalink | absURL }}&t={{ .Title | htmlEscape }}"
+             target="_blank"
+             rel="noopener"
+             class="share-button hackernews"
+             aria-label="Share on Hacker News">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.77,11H15.73L18.5,6H16.26L14.5,9.5L12.74,6H10.5L13.27,11H10.23L6.5,4V20H8.5V13H10.23L12,16.5L13.77,13H15.5V20H17.5V4L18.77,11Z"/>
+            </svg>
+            Hacker News
+          </a>
+
+          <button class="share-button copy-link" onclick="copyPostLink()" aria-label="Copy link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z"/>
+            </svg>
+            Copy Link
+          </button>
+        </div>
+      </div>
+
+      <!-- Related Posts -->
+      {{ $related := .Site.RegularPages.Related . | first 3 }}
+      {{ if $related }}
+        <div class="related-posts">
+          <h3>Related Posts</h3>
+          <div class="related-posts-grid">
+            {{ range $related }}
+              <article class="related-post">
+                {{ if .Params.cover_image }}
+                  <div class="related-post-cover">
+                    <a href="{{ .RelPermalink }}">
+                      <img src="{{ .Params.cover_image }}" alt="{{ .Title }}" loading="lazy">
+                    </a>
+                  </div>
+                {{ end }}
+                <div class="related-post-content">
+                  <h4><a href="{{ .RelPermalink }}">{{ .Title }}</a></h4>
+                  <time class="related-post-date">{{ .Date.Format "Jan 2, 2006" }}</time>
+                </div>
+              </article>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+
+      <!-- Navigation -->
+      <nav class="post-navigation">
+        {{ with .PrevInSection }}
+          <a href="{{ .RelPermalink }}" class="nav-link nav-prev">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"/>
+            </svg>
+            <div class="nav-text">
+              <span class="nav-label">Previous Post</span>
+              <span class="nav-title">{{ .Title }}</span>
+            </div>
+          </a>
+        {{ end }}
+
+        {{ with .NextInSection }}
+          <a href="{{ .RelPermalink }}" class="nav-link nav-next">
+            <div class="nav-text">
+              <span class="nav-label">Next Post</span>
+              <span class="nav-title">{{ .Title }}</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+            </svg>
+          </a>
+        {{ end }}
+      </nav>
+    </footer>
+  </div>
+</article>
+
+<style>
+.blog-post {
+  padding: var(--space-xl) 0;
+}
+
+.post-header {
+  margin-bottom: var(--space-2xl);
+}
+
+.post-cover {
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.cover-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.post-breadcrumb {
+  margin-bottom: var(--space-md);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.post-breadcrumb a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.breadcrumb-separator {
+  margin: 0 var(--space-sm);
+}
+
+.post-title {
+  margin: 0 0 var(--space-lg) 0;
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.post-meta {
+  margin-bottom: var(--space-lg);
+}
+
+.post-meta-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  align-items: center;
+  margin-bottom: var(--space-md);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.post-meta-primary > * {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.post-tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.tag:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.post-description {
+  padding: var(--space-lg);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-primary);
+}
+
+.post-description p {
+  margin: 0;
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.post-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.post-content {
+  max-width: none;
+  line-height: 1.7;
+}
+
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+.post-content h2 {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-sm);
+}
+
+.post-content pre {
+  margin: var(--space-lg) 0;
+}
+
+.post-content blockquote {
+  border-left: 4px solid var(--color-primary);
+  margin: var(--space-lg) 0;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
+}
+
+.post-toc {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-lg));
+}
+
+.toc-container {
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+
+.toc-container h3 {
+  margin: 0 0 var(--space-md) 0;
+  font-size: 1rem;
+  color: var(--color-heading);
+}
+
+.toc-container ul {
+  margin: 0;
+  padding-left: var(--space-md);
+  list-style: none;
+}
+
+.toc-container li {
+  margin-bottom: var(--space-xs);
+}
+
+.toc-container a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+.toc-container a:hover {
+  color: var(--color-primary);
+}
+
+.post-footer {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.post-sharing {
+  margin-bottom: var(--space-2xl);
+  text-align: center;
+}
+
+.post-sharing h3 {
+  margin-bottom: var(--space-lg);
+}
+
+.sharing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.share-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.share-button.twitter:hover {
+  border-color: #1da1f2;
+  color: #1da1f2;
+}
+
+.share-button.linkedin:hover {
+  border-color: #0077b5;
+  color: #0077b5;
+}
+
+.share-button.hackernews:hover {
+  border-color: #ff6600;
+  color: #ff6600;
+}
+
+.related-posts {
+  margin-bottom: var(--space-2xl);
+}
+
+.related-posts h3 {
+  margin-bottom: var(--space-lg);
+}
+
+.related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+.related-post {
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--transition-fast);
+}
+
+.related-post:hover {
+  transform: translateY(-2px);
+}
+
+.related-post-cover img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.related-post-content {
+  padding: var(--space-md);
+}
+
+.related-post-content h4 {
+  margin: 0 0 var(--space-sm) 0;
+  font-size: 1rem;
+}
+
+.related-post-content a {
+  color: var(--color-heading);
+  text-decoration: none;
+}
+
+.related-post-content a:hover {
+  color: var(--color-primary);
+}
+
+.related-post-date {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.post-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+  background: var(--color-surface);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.nav-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.nav-label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.nav-title {
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .post-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .post-toc {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 2rem;
+  }
+
+  .post-meta-primary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .sharing-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .post-navigation {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .related-posts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+function copyPostLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const button = document.querySelector('.copy-link');
+    const originalText = button.innerHTML;
+    button.innerHTML = button.innerHTML.replace('Copy Link', 'Copied!');
+    setTimeout(() => {
+      button.innerHTML = originalText;
+    }, 2000);
+  });
+}
+</script>
+{{ end }}

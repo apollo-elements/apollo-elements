@@ -1,0 +1,6 @@
+{{- $playgroundId := .Get 0 -}}
+{{- $filename := .Get 1 -}}
+{{- $content := .Inner -}}
+
+<template data-playground-id="{{ $playgroundId }}"
+          data-filename="{{ $filename }}">{{ $content }}</template>

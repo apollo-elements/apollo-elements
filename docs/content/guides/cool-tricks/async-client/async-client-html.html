@@ -1,0 +1,46 @@
+<apollo-client>
+  <apollo-query no-auto-subscribe>
+    <template>
+      <template type="if" if="{{ data }}">
+        <h1>👋 {{ data.userSession.name }}!</h1>
+        <p>
+          <span>Your last activity was</span>
+          <time>{{ getTime(data) }}</time>
+        </p>
+      </template>
+    </template>
+  <apollo-query>
+</apollo-client>
+
+<script>
+  (async function() {
+    const { formatDistance } = await import('date-fns/esm');
+    const { getClient } = await import('./client');
+    const { UserSessionQuery } = await import('./UserSession.query.graphql.js');
+
+    const root = document.currentScript.getRootNode();
+    const queryEl = root.querySelector('apollo-query');
+    const clientEl = root.querySelector('apollo-client');
+
+    clientEl.client = await getClient();
+
+    queryEl.extras = {
+      getTime(data) {
+        if (!data || !data.userSession.lastActive)
+          return ''
+        else {
+          return formatDistance(
+            data.userSession.lastActive,
+            Date.now(), {
+              addSuffix: true
+          });
+        }
+      },
+    };
+
+    queryEl.query = UserSessionQuery;
+    queryEl.subscribe();
+
+  })();
+</script>
+

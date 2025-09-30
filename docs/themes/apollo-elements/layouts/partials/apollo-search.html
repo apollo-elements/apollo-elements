@@ -1,0 +1,210 @@
+<apollo-search>
+  <template shadowrootmode="open">
+    <style>
+      :host {
+        position: relative;
+        display: block;
+        width: 100%;
+        max-width: 400px;
+        @media (max-width: 768px) { max-width: 100%; }
+
+      #input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-surface);
+        color: var(--color-text);
+        font-size: 0.875rem;
+        transition: all var(--transition-fast);
+        outline: none;
+        &:focus {
+          border-color: var(--color-primary);
+          box-shadow: 0 0 0 3px rgba(160, 0, 255, 0.1);
+        }
+      }
+
+      #icon {
+        position: absolute;
+        left: 0.75rem;
+        color: var(--color-text-secondary);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      #clear {
+        position: absolute;
+        right: 0.75rem;
+        background: none;
+        border: none;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: var(--radius-sm);
+        transition: all var(--transition-fast);
+        opacity: 0;
+        visibility: hidden;
+        &.visible {
+          opacity: 1;
+          visibility: visible;
+        }
+        &:hover {
+          color: var(--color-text);
+          background: var(--color-surface-secondary);
+        }
+      }
+
+      #results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        margin-top: 0.5rem;
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        &.visible { display: block; }
+        @media (max-width: 768px) { max-height: 300px; }
+      }
+
+      #header {
+        padding: 0.75rem 1rem 0.5rem;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-surface-secondary);
+      }
+
+      #count {
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+      }
+
+      li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        border-bottom: 1px solid var(--color-border);
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      a {
+        display: block;
+        padding: 0.75rem 1rem;
+        text-decoration: none;
+        color: var(--color-text);
+        transition: all var(--transition-fast);
+        &:hover,
+        &.focused {
+          background: var(--color-surface-secondary);
+          color: var(--color-primary);
+        }
+      }
+
+      .title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        font-size: 0.875rem;
+      }
+
+      .excerpt {
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        line-height: 1.4;
+      }
+
+      .highlight {
+        background: var(--primary-color-lighter);
+        color: var(--primary-color-darker);
+        padding: 0.125rem 0.25rem;
+        border-radius: var(--radius-sm);
+        font-weight: 500;
+      }
+
+      #no-results {
+        padding: 2rem 1rem;
+        text-align: center;
+        color: var(--color-text-secondary);
+        p {
+          margin: 0 0 0.5rem 0;
+        }
+      }
+
+      #suggestion {
+        font-size: 0.875rem;
+        a {
+          color: var(--color-primary);
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    </style>
+
+    <div id="input-wrapper">
+      <svg id="icon"
+           width="16"
+           height="16"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input type="search"
+             placeholder="Search documentation..."
+             autocomplete="off"
+             spellcheck="false">
+      <button type="button"
+              id="clear"
+              title="Clear search">
+        <svg width="14"
+             height="14"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="results">
+      <div id="header">
+        <span id="count"></span>
+      </div>
+      <ol></ol>
+      <div id="no-results" style="display: none;">
+        <p>No results found</p>
+        <p id="suggestion">Try different keywords or browse the <a href="/guides/">guides</a> section.</p>
+      </div>
+    </div>
+  </template>
+  <!-- Search Result Item Template (shared by all search instances) -->
+  <template id="serp">
+    <li>
+      <a>
+        <div class="title"></div>
+        <div class="excerpt"></div>
+      </a>
+    </li>
+  </template>
+</apollo-search>

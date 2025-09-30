@@ -1,0 +1,157 @@
+# Hugo Configuration for Apollo Elements
+baseURL = "https://apolloelements.dev"
+languageCode = "en-us"
+title = "Apollo Elements"
+theme = "apollo-elements"
+
+# Content and build settings
+contentDir = "content"
+dataDir = "data"  # Use Hugo-compatible data directory
+layoutDir = "layouts"
+staticDir = "_assets"  # Use existing _assets as static
+publishDir = "../_site"  # Output to same location as Rocket
+
+# Performance and build settings
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+enableRobotsTXT = true
+enableGitInfo = true
+enableEmoji = true
+
+# Modern Hugo features
+disableKinds = []
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
+# URL structure (preserve existing URLs from Rocket)
+[permalinks]
+  blog = "/blog/:title/"
+
+# This section moved to line 134 to avoid duplication
+
+# Markup settings for web components and code highlighting
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true  # Allow HTML in markdown (needed for web components)
+    [markup.goldmark.parser]
+      [markup.goldmark.parser.attribute]
+        block = true
+        title = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+  [markup.highlight]
+    style = "github"
+    lineNos = false
+    lineNumbersInTable = false
+    noClasses = false
+    codeFences = true
+    guessSyntax = true
+
+# Asset processing with Hugo Pipes
+[build]
+  [build.buildStats]
+    enable = true
+  [build.cachebusters]
+    source = "assets/.*\\.(js|ts|jsx|tsx|css|sass|scss)$"
+    target = "(js|css)"
+    noJSConfigInAssets = true
+
+# Site parameters
+[params]
+  description = "Build high-performance GraphQL web apps with Apollo Elements"
+  author = "Apollo Elements Team"
+  version = "3.0"
+
+  # SEO and social
+  twitter = "@ApolloElements"
+  github = "https://github.com/apollo-elements/apollo-elements"
+
+  # Analytics
+  googleAnalytics = "G-3H2TDNQDBR"
+
+  # Feature flags
+  enableSearch = true
+  enableBlog = true
+  enablePlayground = true
+  enableCodeTabs = true
+
+  # API endpoints
+  graphqlEndpoint = "https://main--spacex-l4uc6p.apollographos.net/graphql"
+
+  # Lit-SSR settings
+  [params.litSSR]
+    enable = true
+    hydrate = true
+    declarativeShadowDOM = true
+
+# Menu configuration
+[[menu.main]]
+  name = "Guides"
+  url = "/guides/"
+  weight = 10
+
+[[menu.main]]
+  name = "API"
+  url = "/api/"
+  weight = 20
+
+[[menu.main]]
+  name = "Blog"
+  url = "/blog/"
+  weight = 30
+
+# Social links
+[[menu.social]]
+  name = "GitHub"
+  url = "https://github.com/apollo-elements/apollo-elements"
+  weight = 10
+
+[[menu.social]]
+  name = "Twitter"
+  url = "https://twitter.com/ApolloElements"
+  weight = 20
+
+[[menu.social]]
+  name = "Discord"
+  url = "https://discord.gg/2FgMbKf"
+  weight = 30
+
+# Module configuration for Hugo modules
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.140.0"
+
+# Output formats for different content types
+[outputFormats]
+  [outputFormats.SearchIndex]
+    baseName = "index"
+    mediaType = "application/json"
+    isPlainText = true
+    notAlternative = true
+
+# Define custom output formats per content type
+[outputs]
+  home = ["HTML", "RSS", "SearchIndex"]
+  page = ["HTML"]
+  section = ["HTML", "RSS"]
+
+# Image processing settings for performance
+[imaging]
+  quality = 85
+  resampleFilter = "CatmullRom"
+  hint = "photo"
+  anchor = "Smart"
+
+# Caching for better performance
+[caches]
+  [caches.getresource]
+    dir = ":cacheDir/:project"
+    maxAge = "24h"
+  [caches.images]
+    dir = ":cacheDir/images"
+    maxAge = "24h"

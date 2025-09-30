@@ -1,0 +1,47 @@
+body {
+  --p-card-background-elevation1: #222;
+  --p-card-divider: #333;
+  background-color: #111;
+  color: white;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  place-items: center center;
+  height: 100vh;
+}
+
+body,
+main,
+p-card::part(content) {
+  display: grid;
+  gap: 8px;
+}
+
+hello-query {
+  font-size: 48px;
+}
+
+p-card::part(content) {
+  grid-template-columns: 1fr 4fr;
+  align-items: center;
+}
+
+input,
+button {
+  color: inherit;
+  border: none;
+  min-height: 40px;
+}
+
+input {
+  background: none;
+  border-bottom: 1px dashed currentColor;
+  font-family: "Recursive Mono", monospace;
+}
+
+button {
+  background: #333;
+}
+
+form h2,
+button {
+  grid-column: span 2;
+}

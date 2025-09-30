@@ -1,0 +1,425 @@
+{{- $collection := .Get "collection" | default "libraries" -}}
+{{- $defaultTab := .Get "default" | default "" -}}
+{{- $inner := .Inner -}}
+
+<!-- DEBUG: Inner content length: {{ len $inner }} -->
+<!-- Code Tabs using web component -->
+<code-tabs collection="{{ $collection }}" {{ if $defaultTab }}default-tab="{{ $defaultTab }}"{{ end }}>
+{{- /* Split by <div class="highlight" data-tab="..."> blocks */ -}}
+{{- $blocks := split $inner "<div class=\"highlight\" data-tab=\"" -}}
+<!-- DEBUG: Number of blocks: {{ len $blocks }} -->
+{{- range $index, $block := $blocks -}}
+  {{- if ne $index 0 -}}
+    {{- /* Extract tab name (everything before first "> */ -}}
+    {{- $parts := split $block "\">" -}}
+    {{- $tabName := index $parts 0 -}}
+    {{- /* Get the rest of the content (the highlight div content) */ -}}
+    {{- $content := index $parts 1 -}}
+    {{- /* Find closing </div> */ -}}
+    {{- $contentParts := split $content "</div>" -}}
+    {{- $highlightContent := index $contentParts 0 -}}
+  <code-tab data-id="{{ $tabName }}" data-label="{{ $tabName }}">
+    <div class="highlight">{{ $highlightContent | safeHTML }}</div>
+  </code-tab>
+  {{- end -}}
+{{- end -}}
+</code-tabs>
+
+<!-- Old implementation below commented out for reference -->
+<!--
+{{- $id := .Get "id" | default (printf "code-tabs-%d" now.Unix) -}}
+{{- $collection := .Get "collection" | default "libraries" -}}
+{{- $defaultTab := .Get "default" | default "" -}}
+
+<div id="{{ $id }}" class="code-tabs-container" data-collection="{{ $collection }}">
+
+  <div class="tabs-nav" role="tablist">
+    {{ if .Inner }}
+      <button class="tab-button active"
+              role="tab"
+              data-tab="default"
+              aria-selected="true">
+        <span class="tab-icon">📝</span>
+        <span class="tab-label">Demo</span>
+      </button>
+    {{ end }}
+
+    {{ if eq $collection "frameworks" }}
+      {{ $frameworks := slice
+        (dict "id" "angular" "label" "Angular" "color" "#dd0031")
+        (dict "id" "preact" "label" "Preact" "color" "#673ab8")
+        (dict "id" "react" "label" "React" "color" "#61dafb")
+        (dict "id" "svelte" "label" "Svelte" "color" "#ff3e00")
+        (dict "id" "vue" "label" "Vue" "color" "#41b883")
+      }}
+
+      {{ range $frameworks }}
+        <button class="tab-button"
+                role="tab"
+                data-tab="{{ .id }}"
+                data-color="{{ .color }}"
+                aria-selected="false">
+          <span class="tab-icon" style="color: {{ .color }};">🏗️</span>
+          <span class="tab-label">{{ .label }}</span>
+        </button>
+      {{ end }}
+    {{ end }}
+
+    <!-- Library tabs -->
+    {{ if eq $collection "libraries" }}
+      {{ $libraries := slice
+        (dict "id" "html" "label" "HTML")
+        (dict "id" "lit" "label" "Lit")
+        (dict "id" "fast" "label" "FAST")
+        (dict "id" "gluon" "label" "Gluon")
+        (dict "id" "haunted" "label" "Haunted")
+        (dict "id" "atomico" "label" "Atomico")
+        (dict "id" "hybrids" "label" "Hybrids")
+        (dict "id" "mixins" "label" "Vanilla")
+        (dict "id" "polymer" "label" "Polymer")
+      }}
+
+      {{ range $libraries }}
+        <button class="tab-button"
+                role="tab"
+                data-tab="{{ .id }}"
+                aria-selected="false">
+          <span class="tab-icon">📦</span>
+          <span class="tab-label">{{ .label }}</span>
+        </button>
+      {{ end }}
+    {{ end }}
+  </div>
+
+  <!-- Tab Content Panels -->
+  <div class="tabs-content">
+    <!-- Default content panel -->
+    {{ if .Inner }}
+      <div class="tab-panel active"
+           id="{{ $id }}-default"
+           role="tabpanel"
+           data-tab="default"
+           aria-labelledby="{{ $id }}-default-tab">
+        {{ .Inner }}
+      </div>
+    {{ end }}
+
+    <!-- Slot content will be populated by JavaScript -->
+    {{ if eq $collection "frameworks" }}
+      {{ range (slice "angular" "preact" "react" "svelte" "vue") }}
+        <div class="tab-panel"
+             id="{{ $id }}-{{ . }}"
+             role="tabpanel"
+             data-tab="{{ . }}"
+             aria-labelledby="{{ $id }}-{{ . }}-tab">
+          <div class="tab-placeholder">
+            <p>Loading {{ . | title }} demo...</p>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+
+    {{ if eq $collection "libraries" }}
+      {{ range (slice "html" "lit" "fast" "gluon" "haunted" "atomico" "hybrids" "mixins" "polymer") }}
+        <div class="tab-panel"
+             id="{{ $id }}-{{ . }}"
+             role="tabpanel"
+             data-tab="{{ . }}"
+             aria-labelledby="{{ $id }}-{{ . }}-tab">
+          <div class="tab-placeholder">
+            <p>Loading {{ . | title }} example...</p>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+  </div>
+</div>
+
+<!-- Code Tabs Styles -->
+<style>
+  .code-tabs-container {
+    display: block;
+    margin: 1.5rem 0;
+    border: 1px solid var(--color-border, #e1e5e9);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-surface, #ffffff);
+  }
+
+  .tabs-nav {
+    display: flex;
+    background: var(--color-surface-secondary, #f8f9fa);
+    border-bottom: 1px solid var(--color-border, #e1e5e9);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #6c757d);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    position: relative;
+    &:hover {
+      color: var(--color-primary, #a0f);
+      background: rgba(160, 0, 255, 0.05);
+    }
+    &.active {
+      color: var(--color-primary, #a0f);
+      background: var(--color-surface, #ffffff);
+      border-bottom-color: var(--color-primary, #a0f);
+    }
+  }
+
+  .tab-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .tab-label {
+    flex-shrink: 0;
+  }
+
+  .tabs-content {
+    min-height: 300px;
+  }
+
+  .tab-panel {
+    display: none;
+    padding: 1.5rem;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .tab-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--color-text-secondary, #6c757d);
+    font-style: italic;
+  }
+
+  /* Default tab content styling */
+  .tab-panel svg {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+    display: block;
+    color: var(--color-primary, #a0f);
+    opacity: 0.6;
+  }
+
+  .tab-panel p {
+    text-align: center;
+    color: var(--color-text-secondary, #6c757d);
+    margin: 0;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    .code-tabs-container {
+      border-color: var(--color-border-dark, #404040);
+      background: var(--color-surface-dark, #1a1a1a);
+    }
+
+    .tabs-nav {
+      background: var(--color-surface-secondary-dark, #222222);
+      border-bottom-color: var(--color-border-dark, #404040);
+    }
+
+    .tab-button.active {
+      background: var(--color-surface-dark, #1a1a1a);
+    }
+
+    .tab-placeholder {
+      color: var(--color-text-secondary-dark, #a1a1a1);
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .tab-button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .tab-icon {
+      font-size: 0.9rem;
+    }
+
+    .tabs-content {
+      min-height: 250px;
+    }
+
+    .tab-panel {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<!-- Tab Functionality Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('{{ $id }}');
+    if (!container) return;
+
+    const tabButtons = container.querySelectorAll('.tab-button');
+    const tabPanels = container.querySelectorAll('.tab-panel');
+
+    // Tab switching function
+    function switchTab(targetTab) {
+      // Update buttons
+      tabButtons.forEach(button => {
+        const isActive = button.getAttribute('data-tab') === targetTab;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-selected', isActive);
+      });
+
+      // Update panels
+      tabPanels.forEach(panel => {
+        const isActive = panel.getAttribute('data-tab') === targetTab;
+        panel.classList.toggle('active', isActive);
+      });
+
+      // Populate content for framework tabs if needed
+      if (container.getAttribute('data-collection') === 'frameworks') {
+        populateFrameworkContent(targetTab);
+      }
+    }
+
+    // Add click listeners to tab buttons
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+        switchTab(targetTab);
+      });
+    });
+
+    // Populate framework content dynamically
+    function populateFrameworkContent(framework) {
+      const panel = container.querySelector(`[data-tab="${framework}"]`);
+      if (!panel || panel.querySelector('.codesandbox-container')) return;
+
+      const placeholder = panel.querySelector('.tab-placeholder');
+      if (placeholder) {
+        placeholder.innerHTML = `
+          <div class="codesandbox-container">
+            <div class="framework-demo">
+              <div class="demo-header">
+                <h4>${framework.charAt(0).toUpperCase() + framework.slice(1)} Demo</h4>
+                <p>Apollo Elements integration with ${framework.charAt(0).toUpperCase() + framework.slice(1)}</p>
+              </div>
+              <div class="demo-content">
+                <p>🚀 Interactive ${framework.charAt(0).toUpperCase() + framework.slice(1)} demo would load here</p>
+                <button onclick="window.open('https://codesandbox.io/s/apollo-elements-in-${framework}', '_blank')"
+                        class="demo-button">
+                  Open in CodeSandbox
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Initialize with default tab or first tab
+    {{ if $defaultTab }}
+    switchTab('{{ $defaultTab }}');
+    {{ else }}
+    if (tabButtons.length > 0) {
+      const firstTab = tabButtons[0].getAttribute('data-tab');
+      switchTab(firstTab);
+    }
+    {{ end }}
+
+    // Handle slot content insertion for shortcode content
+    setTimeout(() => {
+      // Look for slot content in script tags or other elements
+      const slots = document.querySelectorAll('[slot]');
+      slots.forEach(slot => {
+        const slotName = slot.getAttribute('slot');
+        const targetPanel = container.querySelector(`[data-tab="${slotName}"]`);
+        if (targetPanel) {
+          const placeholder = targetPanel.querySelector('.tab-placeholder');
+          if (placeholder) {
+            placeholder.parentNode.replaceChild(slot, placeholder);
+          }
+        }
+      });
+    }, 100);
+  });
+</script>
+
+<style>
+  code-tabs .highlight {
+    width: 100%;
+  }
+  .framework-demo {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .demo-header h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--color-primary);
+  }
+
+  .demo-header p {
+    margin: 0 0 1.5rem 0;
+    color: var(--color-text-secondary);
+    opacity: 0.8;
+  }
+
+  .demo-content {
+    background: var(--color-surface-secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .demo-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    margin-top: 1rem;
+  }
+
+  .demo-button:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+</style>

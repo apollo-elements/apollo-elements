@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  counter-reset: item;
+}
+
+form {
+  display: grid;
+  grid-template-columns: auto min-content;
+}
+
+label {
+  display: contents;
+}
+
+output {
+  grid-column: 1 / -1;
+}

@@ -1,0 +1,3 @@
+toggleTheme() {
+  themeVar(this.nextTheme);
+}

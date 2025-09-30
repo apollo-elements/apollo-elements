@@ -1,0 +1,109 @@
+{{/* render-method.html - Renders a method in <type-doc> format with DSD */}}
+{{- $method := . -}}
+{{- $id := $method.name | lower -}}
+{{- $emptyBody := and (not $method.summary) (not $method.description) (not $method.parameters) (not $method.return) -}}
+
+<type-doc kind="method" data-method="{{ $method.name }}"{{- if $emptyBody }} data-empty-body{{- end -}}>
+  <template shadowrootmode="open">
+    {{ partial "cem/type-doc-styles.html" . }}
+    <header>
+      <slot name="name"></slot>
+      <span class="visually-hidden"></span>
+      <slot name="attribute"></slot>
+      <slot name="type"></slot>
+    </header>
+    <article id="body">
+      <slot></slot>
+    </article>
+  </template>
+
+  <h3 id="{{ $id }}" class="" slot="name">
+    <a class="anchor" href="#{{ $id }}">
+      {{ partial "cem/octicon-link.html" . }}
+    </a>{{ $method.name }}
+  </h3>
+  {{- if $method.privacy -}}<em slot="name">{{ $method.privacy }}</em>{{- end -}}
+  {{- if $method.async -}}<em slot="name">async</em>{{- end -}}
+  {{- if $method.optional -}}<span slot="name">(optional)</span>{{- end -}}
+
+  {{- with $method.summary -}}
+    {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+  {{- end -}}
+
+  {{- with $method.description -}}
+    {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+  {{- end -}}
+
+  {{- with $method.parameters -}}
+    <h4 id="{{ $id }}-parameters" class="parameter">
+      <a class="anchor" href="#{{ $id }}-parameters">
+        {{ partial "cem/octicon-link.html" $ }}
+      </a>Parameters
+    </h4>
+    {{- range . -}}
+      {{- $paramEmptyBody := and (not .summary) (not .description) -}}
+      <type-doc kind="parameter" data-parameter="{{ .name }}"{{- if $paramEmptyBody }} data-empty-body{{- end -}}>
+        <template shadowrootmode="open">
+          {{ partial "cem/type-doc-styles.html" $ }}
+          <header>
+            <span aria-hidden="true">
+              <slot name="name"></slot>
+            </span>
+            <span class="visually-hidden"></span>
+            <slot name="attribute"></slot>
+            <slot name="type"></slot>
+          </header>
+          <article id="body">
+            <slot></slot>
+          </article>
+        </template>
+
+        <h4 slot="name">{{ .name }}</h4>
+        {{- with .type -}}
+          <span slot="type">{{ highlight .text "typescript" "" }}</span>
+        {{- end -}}
+        {{- with .summary -}}
+          {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+        {{- end -}}
+        {{- with .description -}}
+          {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+        {{- end -}}
+      </type-doc>
+    {{- end -}}
+  {{- end -}}
+
+  {{- with $method.return -}}
+    {{- $returnEmptyBody := and (not .summary) (not .description) -}}
+    <type-doc kind="return"{{- if $returnEmptyBody }} data-empty-body{{- end -}}>
+      <template shadowrootmode="open">
+        {{ partial "cem/type-doc-styles.html" $ }}
+        <header>
+          <span aria-hidden="true">
+            <slot name="name"></slot>
+          </span>
+          <span class="visually-hidden"></span>
+          <slot name="attribute"></slot>
+          <slot name="type"></slot>
+        </header>
+        <article id="body">
+          <slot></slot>
+        </article>
+      </template>
+
+      <h4 id="{{ $id }}-returns" slot="name" class="return">
+        <a class="anchor" href="#{{ $id }}-returns">
+          {{ partial "cem/octicon-link.html" $ }}
+        </a>Returns
+      </h4>
+      {{- with .type -}}
+        <span slot="type">{{ highlight .text "typescript" "" }}</span>
+      {{- end -}}
+      {{- with .summary -}}
+        {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+      {{- end -}}
+      {{- with .description -}}
+        {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+      {{- end -}}
+    </type-doc>
+  {{- end -}}
+</type-doc>

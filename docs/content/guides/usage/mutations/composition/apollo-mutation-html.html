@@ -1,0 +1,51 @@
+<apollo-query>
+  <script type="application/graphql">
+    query User($userId: ID!) {
+      user(userId: $userId) { id isMe name birthday picture }
+    }
+  </script>
+  <template>
+    <h2>Profile</h2>
+
+    <dl ?hidden="{{ loading || !data }}">
+      <dt>Name</dt>
+      <dd>{{ data.user.name }}</dd>
+
+      <dt>Picture</dt>
+      <dd><img .src="{{ data.user.picture }}"/></dd>
+
+      <dt>Birthday</dt>
+      <dd>{{ data.user.birthday }}</dd>
+    </dl>
+
+    <form ?hidden="{{ !data.user.isMe }}">
+      <h3>Edit</h3>
+      <apollo-mutation input-key="input">
+        <script type="application/graphql">
+          mutation UpdateProfileMutation($input: UpdateProfileInput) {
+            id
+            name
+            picture
+            birthday
+          }
+        </script>
+        <label for="name">Name</label>
+        <input id="name"
+               data-variable="name"
+               .value="{{ data.user.name }}"/>
+
+        <label for="picture">Picture (URL)</label>
+        <input id="picture"
+               data-variable="picture"
+               .value="{{ data.user.picture }}"/>
+
+        <label for="birthday">Birthday</label>
+        <input id="birthday"
+               data-variable="birthday" type="date"
+               .value="{{ data.user.birthday }}"/>
+
+        <button trigger>Save</button>
+      </apollo-mutation>
+    </form>
+  </template>
+</apollo-query>

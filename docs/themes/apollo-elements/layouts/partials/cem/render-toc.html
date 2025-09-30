@@ -1,0 +1,63 @@
+{{/* render-toc.html - Generates a ToC for API documentation from CEM data */}}
+{{- $declaration := . -}}
+
+{{/* Separate members into public and private */}}
+{{- $publicFields := slice -}}
+{{- $privateFields := slice -}}
+{{- $publicMethods := slice -}}
+{{- $privateMethods := slice -}}
+{{- $seenNames := slice -}}
+
+{{- range $declaration.members -}}
+  {{- $shouldAdd := not (in $seenNames .name) -}}
+
+  {{- if $shouldAdd -}}
+    {{- $seenNames = $seenNames | append .name -}}
+
+    {{- if eq .kind "field" -}}
+      {{- if or (eq .privacy "private") (eq .privacy "protected") -}}
+        {{- $privateFields = $privateFields | append . -}}
+      {{- else -}}
+        {{- $publicFields = $publicFields | append . -}}
+      {{- end -}}
+    {{- else if eq .kind "method" -}}
+      {{- if or (eq .privacy "private") (eq .privacy "protected") -}}
+        {{- $privateMethods = $privateMethods | append . -}}
+      {{- else -}}
+        {{- $publicMethods = $publicMethods | append . -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<ul>
+  {{- if $publicFields -}}
+    <li>
+      <a href="#properties">Properties</a>
+    </li>
+  {{- end -}}
+
+  {{- if $publicMethods -}}
+    <li>
+      <a href="#methods">Methods</a>
+    </li>
+  {{- end -}}
+
+  {{- with $declaration.events -}}
+    <li>
+      <a href="#events">Events</a>
+    </li>
+  {{- end -}}
+
+  {{- if $privateFields -}}
+    <li>
+      <a href="#private-properties">Private Properties</a>
+    </li>
+  {{- end -}}
+
+  {{- if $privateMethods -}}
+    <li>
+      <a href="#private-methods">Private Methods</a>
+    </li>
+  {{- end -}}
+</ul>

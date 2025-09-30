@@ -1,0 +1,306 @@
+{{- $package := .Get "package" | default "" -}}
+{{- $element := .Get "element" | default "" -}}
+{{- $type := .Get "type" | default "element" -}}
+{{- $section := .Get "section" | default "overview" -}}
+
+<!-- API Documentation Component -->
+<div class="api-docs-container" data-package="{{ $package }}" data-element="{{ $element }}">
+
+  {{ if eq $type "element" }}
+    <!-- Custom Element Documentation -->
+    <div class="custom-element-docs">
+      {{ if $element }}
+        <!-- Element Header -->
+        <header class="element-header">
+          <h2 class="element-name">
+            <code>&lt;{{ $element }}&gt;</code>
+          </h2>
+
+          <!-- Element meta info from manifest -->
+          <div class="element-meta">
+            <span class="element-package">{{ $package }}</span>
+            {{ with .Get "since" }}
+              <span class="element-since">Since v{{ . }}</span>
+            {{ end }}
+          </div>
+        </header>
+
+        <!-- Element Description -->
+        {{ with .Get "description" }}
+          <div class="element-description">
+            <p>{{ . | markdownify }}</p>
+          </div>
+        {{ end }}
+
+        <!-- Usage Example -->
+        {{ if .Inner }}
+          <div class="element-usage">
+            <h3>Usage</h3>
+            <div class="code-example">
+              {{ .Inner }}
+            </div>
+          </div>
+        {{ end }}
+
+        <!-- Properties Section -->
+        {{ if eq $section "properties" }}
+          <div class="element-properties">
+            <h3>Properties</h3>
+            <type-doc package="{{ $package }}" element="{{ $element }}" type="properties">
+              <p>Loading properties documentation...</p>
+            </type-doc>
+          </div>
+        {{ end }}
+
+        <!-- Events Section -->
+        {{ if eq $section "events" }}
+          <div class="element-events">
+            <h3>Events</h3>
+            <type-doc package="{{ $package }}" element="{{ $element }}" type="events">
+              <p>Loading events documentation...</p>
+            </type-doc>
+          </div>
+        {{ end }}
+
+        <!-- Methods Section -->
+        {{ if eq $section "methods" }}
+          <div class="element-methods">
+            <h3>Methods</h3>
+            <type-doc package="{{ $package }}" element="{{ $element }}" type="methods">
+              <p>Loading methods documentation...</p>
+            </type-doc>
+          </div>
+        {{ end }}
+
+        <!-- CSS Custom Properties -->
+        {{ if eq $section "css-props" }}
+          <div class="element-css-props">
+            <h3>CSS Custom Properties</h3>
+            <css-value-doc package="{{ $package }}" element="{{ $element }}">
+              <p>Loading CSS properties documentation...</p>
+            </css-value-doc>
+          </div>
+        {{ end }}
+
+        <!-- Slots Section -->
+        {{ if eq $section "slots" }}
+          <div class="element-slots">
+            <h3>Slots</h3>
+            <type-doc package="{{ $package }}" element="{{ $element }}" type="slots">
+              <p>Loading slots documentation...</p>
+            </type-doc>
+          </div>
+        {{ end }}
+
+        <!-- Complete API Overview -->
+        {{ if eq $section "overview" }}
+          <div class="element-overview">
+            <div class="api-section">
+              <h3>Properties</h3>
+              <type-doc package="{{ $package }}" element="{{ $element }}" type="properties">
+                <p>Loading properties...</p>
+              </type-doc>
+            </div>
+
+            <div class="api-section">
+              <h3>Methods</h3>
+              <type-doc package="{{ $package }}" element="{{ $element }}" type="methods">
+                <p>Loading methods...</p>
+              </type-doc>
+            </div>
+
+            <div class="api-section">
+              <h3>Events</h3>
+              <type-doc package="{{ $package }}" element="{{ $element }}" type="events">
+                <p>Loading events...</p>
+              </type-doc>
+            </div>
+
+            <div class="api-section">
+              <h3>CSS Custom Properties</h3>
+              <css-value-doc package="{{ $package }}" element="{{ $element }}">
+                <p>Loading CSS properties...</p>
+              </css-value-doc>
+            </div>
+
+            <div class="api-section">
+              <h3>Slots</h3>
+              <type-doc package="{{ $package }}" element="{{ $element }}" type="slots">
+                <p>Loading slots...</p>
+              </type-doc>
+            </div>
+          </div>
+        {{ end }}
+
+      {{ else }}
+        <!-- Package Overview -->
+        <div class="package-overview">
+          <h2>{{ $package | title }} API Reference</h2>
+          <json-viewer package="{{ $package }}">
+            <p>Loading API documentation...</p>
+          </json-viewer>
+        </div>
+      {{ end }}
+    </div>
+
+  {{ else if eq $type "interface" }}
+    <!-- Interface Documentation -->
+    <div class="interface-docs">
+      <h2>{{ .Get "name" }} Interface</h2>
+      <type-doc package="{{ $package }}" type="interface" name="{{ .Get "name" }}">
+        <p>Loading interface documentation...</p>
+      </type-doc>
+    </div>
+
+  {{ else if eq $type "class" }}
+    <!-- Class Documentation -->
+    <div class="class-docs">
+      <h2>{{ .Get "name" }} Class</h2>
+      <type-doc package="{{ $package }}" type="class" name="{{ .Get "name" }}">
+        <p>Loading class documentation...</p>
+      </type-doc>
+    </div>
+
+  {{ else if eq $type "function" }}
+    <!-- Function Documentation -->
+    <div class="function-docs">
+      <h2>{{ .Get "name" }}()</h2>
+      <type-doc package="{{ $package }}" type="function" name="{{ .Get "name" }}">
+        <p>Loading function documentation...</p>
+      </type-doc>
+    </div>
+  {{ end }}
+
+</div>
+
+<!-- API Documentation Styles -->
+<style>
+  .api-docs-container {
+    margin: 2rem 0;
+  }
+
+  .element-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border, #e1e5e9);
+  }
+
+  .element-name {
+    margin: 0 0 0.5rem 0;
+    font-family: var(--font-mono, 'Monaco', 'Menlo', monospace);
+    font-size: 1.5rem;
+    color: var(--color-primary, #0066cc);
+  }
+
+  .element-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #6c757d);
+  }
+
+  .element-package {
+    background: var(--color-surface-secondary, #f8f9fa);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono, monospace);
+  }
+
+  .element-since {
+    background: var(--color-success-surface, #d4edda);
+    color: var(--color-success, #155724);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .element-description {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--color-surface-secondary, #f8f9fa);
+    border-radius: 6px;
+    border-left: 4px solid var(--color-primary, #0066cc);
+  }
+
+  .element-usage {
+    margin: 1.5rem 0;
+  }
+
+  .api-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border, #e1e5e9);
+    border-radius: 8px;
+  }
+
+  .api-section h3 {
+    margin: 0 0 1rem 0;
+    color: var(--color-heading, #1a1a1a);
+    border-bottom: 1px solid var(--color-border, #e1e5e9);
+    padding-bottom: 0.5rem;
+  }
+
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    .element-header {
+      border-bottom-color: var(--color-border-dark, #404040);
+    }
+
+    .element-package {
+      background: var(--color-surface-secondary-dark, #2a2a2a);
+      color: var(--color-text-dark, #e1e1e1);
+    }
+
+    .element-since {
+      background: var(--color-success-surface-dark, #1e3a2e);
+      color: var(--color-success-dark, #4caf50);
+    }
+
+    .element-description {
+      background: var(--color-surface-secondary-dark, #2a2a2a);
+      border-left-color: var(--color-primary-dark, #4a90e2);
+    }
+
+    .api-section {
+      border-color: var(--color-border-dark, #404040);
+      background: var(--color-surface-dark, #1a1a1a);
+    }
+
+    .api-section h3 {
+      color: var(--color-heading-dark, #e1e1e1);
+      border-bottom-color: var(--color-border-dark, #404040);
+    }
+  }
+
+  /* Loading states */
+  type-doc:not([hydrated]),
+  css-value-doc:not([hydrated]),
+  json-viewer:not([hydrated]) {
+    display: block;
+    min-height: 3rem;
+    background: var(--color-surface-secondary, #f8f9fa);
+    border-radius: 4px;
+    padding: 1rem;
+    color: var(--color-text-secondary, #6c757d);
+    font-style: italic;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    type-doc:not([hydrated]),
+    css-value-doc:not([hydrated]),
+    json-viewer:not([hydrated]) {
+      background: var(--color-surface-secondary-dark, #2a2a2a);
+      color: var(--color-text-secondary-dark, #a1a1a1);
+    }
+  }
+</style>
+
+<!-- Progressive Enhancement Script -->
+<script type="module">
+  document.addEventListener('DOMContentLoaded', () => {
+    // Import API documentation components
+    import('/_merged_assets/_static/custom-elements-manifest/type-doc.js');
+    import('/_merged_assets/_static/custom-elements-manifest/css-value-doc.js');
+    import('/_merged_assets/_static/custom-elements-manifest/json-viewer.js');
+  });
+</script>

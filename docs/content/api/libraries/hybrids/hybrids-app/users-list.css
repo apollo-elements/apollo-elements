@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  counter-reset: item;
+}
+
+form {
+  display: grid;
+  grid-template-columns: auto min-content;
+}
+
+label {
+  display: contents;
+}
+
+ol {
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  counter-increment: item;
+}
+
+li::before {
+  content: counter(item);
+  margin-inline-end: 4px;
+}
+
+li button {
+  margin-inline-start: auto;
+}
