@@ -1,0 +1,44 @@
+<apollo-client id="messages-client">
+  <apollo-query id="messages-query">
+    <script type="application/graphql" src="Messages.query.graphql"></script>
+    <template>
+      <link rel="stylesheet" href="messages.css"/>
+      <ol>
+        <template type="repeat" repeat="{{ data.messages ?? [] }}">
+          <li>
+            <h4>
+              <time datetime="{{ date }}">{{ formatDate(item.date) }}</time>
+              <span class="user">{{ item.user }} said:</span>
+            </h4>
+            <p>{{ item.message }}</p>
+          </li>
+        </template>
+      </ol>
+    </template>
+  </apollo-query>
+</apollo-client>
+<script type="module">
+  import '@apollo-elements/components';
+  import { client } from './client';
+  import { MessageSentSubscription } from './MessageSent.subscription.graphql.js';
+
+  const element = document.getElementById('messages-query');
+
+  element.formatDate = function formatDate(iso) {
+    try { return new Date(iso).toDateString(); }
+    catch { return ''; }
+  };
+
+  element.subscribeToMore({
+    document: MessageSentSubscription
+    updateQuery(prev, { subscriptionData }) {
+      if (!subscriptionData.data) return prev;
+      return {
+        ...prev,
+        messages: [...prev.messages, subscriptionData.data.messageSent]
+      };
+    },
+  }) = subscribeToMore;
+
+  document.getElementById('messages-client').client = client;
+</script>

@@ -1,0 +1,57 @@
+<!-- Lit-SSR Hydration Scripts -->
+{{ if .Site.Params.litSSR.enable }}
+
+<!-- Load Lit components for hydration -->
+<script type="module">
+  // Apollo Elements components disabled for simplified demo
+  console.log('Apollo Elements components would be loaded here');
+
+  // Declarative shadow DOM hydration disabled for demo
+  console.log('Shadow DOM hydration would occur here');
+
+  // Handle web component loading states
+  // Wait for all custom elements to be defined
+  const componentNames = [
+    'apollo-client',
+    'apollo-query',
+    'apollo-mutation',
+    'apollo-subscription',
+    'code-tabs',
+    'docs-playground',
+    'search-component'
+  ];
+
+  await Promise.all(
+    componentNames.map(name =>
+      customElements.whenDefined(name)));
+
+  // Remove loading states
+  for (const el of document.querySelectorAll('[data-loading]')) {
+    el.removeAttribute('data-loading');
+  }
+
+  // Dispatch ready event
+  document.dispatchEvent(new CustomEvent('apollo-elements-ready'));
+</script>
+
+<!-- Progressive enhancement for code playgrounds -->
+{{ if .Site.Params.enablePlayground }}
+<script type="module">
+  // docs-playground is loaded via web-components.html import
+  const playgrounds = document.querySelectorAll('docs-playground');
+  if (playgrounds.length > 0) {
+    for (const playground of playgrounds) {
+      playground.removeAttribute('data-loading');
+    }
+  }
+</script>
+{{ end }}
+
+<!-- Code tabs are loaded via main.js - removed duplicate loading script -->
+
+<!-- Service Worker disabled for demo -->
+<script>
+  console.log('Service Worker would be registered here for offline support');
+</script>
+
+{{ end }}

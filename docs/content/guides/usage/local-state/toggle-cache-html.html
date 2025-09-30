@@ -1,0 +1,22 @@
+<apollo-client>
+  <apollo-query>
+    <!-- ... -->
+  </apollo-query>
+</apollo-client>
+
+<script>
+  {
+    const queryEl =
+      document.currentScript.getRootNode()
+        .querySelector('apollo-query')
+    queryEl.extras = {
+      toggleTheme() {
+        const theme = queryEl.data.theme === 'light' ? 'dark' : 'light';
+        queryEl.client.writeQuery({
+          query: queryEl.query,
+          data: { theme },
+        });
+      }
+    };
+  }
+</script>

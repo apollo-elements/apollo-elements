@@ -1,0 +1,22 @@
+<apollo-query>
+  <!-- Use a script child like so,
+       or set the `query` DOM property on the element -->
+  <script type="application/json">
+    query Users {
+      users {
+        id
+        name
+        picture
+      }
+    }
+  </script>
+  <template>
+    <h2>Astronauts</h2>
+    <template type="repeat" repeat="{{ data.users }}">
+      <astro-naut id="{{ item.id }}" name="{{ item.name }}">
+        <img src="{{ item.picture }}"
+             alt="Portrait of {{ item.name }}"/>
+      </astro-naut>
+    </template>
+  </template>
+</apollo-query>

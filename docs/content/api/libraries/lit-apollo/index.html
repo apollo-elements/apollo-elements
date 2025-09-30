@@ -1,0 +1,30 @@
+<script type="module" src="Hello.js"></script>
+<main>
+  <hello-query></hello-query>
+  <form>
+    <p-card>
+      <h2 slot="heading">Query Variables</h2>
+      <label for="greeting">Greeting</label>
+      <input id="greeting" name="greeting" value="Howdy"/>
+      <label for="name">Name</label>
+      <input id="name" name="name" value="Partner"/>
+      <button slot="actions" type="submit">Query</button>
+    </p-card>
+  </form>
+</main>
+
+<script type="module">
+  const form = document.querySelector('form');
+  const query = document.querySelector('hello-query');
+
+  /**
+   * Setting variables automatically updates the query
+   * @see https://apolloelements.dev/api/interfaces/query/#variables
+   */
+  function onSubmit(event) {
+    event.preventDefault();
+    query.variables = Object.fromEntries(new FormData(form).entries());
+  }
+
+  form.addEventListener('submit', onSubmit);
+</script>

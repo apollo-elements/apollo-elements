@@ -1,0 +1,327 @@
+{{ define "main" }}
+<div class="search-page">
+  <div class="container">
+    <header class="search-header">
+      <h1>{{ .Title }}</h1>
+      <p class="search-description">{{ .Description | default "Search the Apollo Elements documentation" }}</p>
+    </header>
+
+    <!-- Search Input -->
+    <div class="search-input-container">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search documentation..."
+          autocomplete="off"
+          aria-label="Search documentation"
+        >
+        <button type="button" id="search-clear" class="search-clear" aria-label="Clear search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Search Suggestions -->
+      <div id="search-suggestions" class="search-suggestions" hidden>
+        <div class="suggestions-header">
+          <span>Quick Links</span>
+        </div>
+        <ul class="suggestions-list">
+          <li><a href="/guides/getting-started/">Getting Started</a></li>
+          <li><a href="/guides/usage/queries/">Queries</a></li>
+          <li><a href="/guides/usage/mutations/">Mutations</a></li>
+          <li><a href="/api/components/">Components</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Search Results -->
+    <div id="search-results" class="search-results" hidden>
+      <div class="results-header">
+        <span id="results-count">0 results</span>
+        <span id="search-time"></span>
+      </div>
+      <div id="results-list" class="results-list">
+        <!-- Results will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div id="no-results" class="no-results" hidden>
+      <div class="no-results-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" opacity="0.3">
+          <path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+      </div>
+      <h3>No results found</h3>
+      <p>Try different keywords or browse our <a href="/guides/">guides</a> and <a href="/api/">API documentation</a>.</p>
+    </div>
+
+    <!-- Search Tips -->
+    <div class="search-tips">
+      <h3>Search Tips</h3>
+      <ul>
+        <li>Use specific terms like "apollo-query" or "mutations"</li>
+        <li>Try different variations of your search terms</li>
+        <li>Browse by category using the navigation menu</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+.search-page {
+  padding: var(--space-xl) 0;
+  min-height: 70vh;
+}
+
+.search-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.search-header h1 {
+  margin-bottom: var(--space-sm);
+}
+
+.search-description {
+  color: var(--color-text-secondary);
+  font-size: 1.125rem;
+}
+
+.search-input-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-md);
+  color: var(--color-text-secondary);
+  z-index: 2;
+}
+
+#search-input {
+  width: 100%;
+  padding: var(--space-md) var(--space-md) var(--space-md) 3rem;
+  font-size: 1.125rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.search-clear {
+  position: absolute;
+  right: var(--space-md);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.search-clear:hover {
+  color: var(--color-text);
+  background: var(--color-surface-secondary);
+}
+
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  margin-top: var(--space-xs);
+}
+
+.suggestions-header {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions-list li {
+  margin: 0;
+}
+
+.suggestions-list a {
+  display: block;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.suggestions-list a:hover {
+  background: var(--color-surface-secondary);
+}
+
+.search-results {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+#results-count {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+#search-time {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.result-item {
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-fast);
+}
+
+.result-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.result-title {
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.result-title a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.result-title a:hover {
+  color: var(--color-primary-hover);
+}
+
+.result-url {
+  font-size: 0.875rem;
+  color: var(--color-success);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-family-mono);
+}
+
+.result-excerpt {
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.result-excerpt mark {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+}
+
+.no-results {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+}
+
+.no-results-icon {
+  margin-bottom: var(--space-lg);
+}
+
+.no-results h3 {
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+}
+
+.no-results p {
+  color: var(--color-text-secondary);
+  font-size: 1.125rem;
+}
+
+.search-tips {
+  max-width: 600px;
+  margin: var(--space-2xl) auto 0;
+  padding: var(--space-lg);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
+}
+
+.search-tips h3 {
+  margin: 0 0 var(--space-md) 0;
+  color: var(--color-heading);
+}
+
+.search-tips ul {
+  margin: 0;
+  padding-left: var(--space-lg);
+}
+
+.search-tips li {
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .search-input-container {
+    margin: 0 var(--space-md) var(--space-xl);
+  }
+
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .search-tips {
+    margin-left: var(--space-md);
+    margin-right: var(--space-md);
+  }
+}
+</style>
+
+<script type="module">
+  import '/themes/apollo-elements/assets/js/search.js';
+</script>
+{{ end }}

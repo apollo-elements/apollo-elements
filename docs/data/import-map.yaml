@@ -1,0 +1,112 @@
+# Import Map Configuration for Apollo Elements Documentation
+# This file defines the module resolution for web components and dependencies
+
+# Apollo Elements packages
+apollo_elements:
+  core:
+    path: "/_merged_assets/_static/apollo-elements/core"
+    exports:
+      - "apollo-controller.js"
+      - "apollo-mutation-controller.js"
+      - "apollo-query-controller.js"
+      - "apollo-subscription-controller.js"
+      - "reactive-variable-controller.js"
+
+  components:
+    path: "/_merged_assets/_static/apollo-elements/components"
+    exports:
+      - "apollo-client.js"
+      - "apollo-query.js"
+      - "apollo-mutation.js"
+      - "apollo-subscription.js"
+
+  mixins:
+    path: "/_merged_assets/_static/apollo-elements/mixins"
+    exports:
+      - "apollo-element-mixin.js"
+      - "apollo-client-mixin.js"
+      - "apollo-mutation-mixin.js"
+      - "apollo-query-mixin.js"
+      - "apollo-subscription-mixin.js"
+
+# Apollo Client packages
+apollo_client:
+  core:
+    path: "/_merged_assets/_static/apollo-client/core"
+    exports:
+      - "index.js"
+      - "ApolloClient.js"
+      - "ApolloError.js"
+      - "ObservableQuery.js"
+
+  utilities:
+    path: "/_merged_assets/_static/apollo-client/utilities"
+    exports:
+      - "index.js"
+      - "graphql.js"
+
+# Lit packages
+lit:
+  core:
+    path: "/_merged_assets/_static/lit"
+    exports:
+      - "index.js"
+      - "lit-element.js"
+      - "lit-html.js"
+
+  reactive_element:
+    path: "/_merged_assets/_static/lit/reactive-element"
+    exports:
+      - "reactive-element.js"
+
+# GraphQL tools
+graphql:
+  core:
+    path: "/_merged_assets/_static/graphql"
+    exports:
+      - "index.js"
+      - "language.js"
+      - "utilities.js"
+
+# Playground elements (for documentation demos)
+playground_elements:
+  core:
+    path: "/_merged_assets/_static/playground-elements"
+    exports:
+      - "playground-project.js"
+      - "playground-file-editor.js"
+      - "playground-preview.js"
+
+# Custom documentation components
+docs_components:
+  core:
+    path: "/components"
+    exports:
+      - "code-tabs.js"
+      - "api-docs.js"
+      - "wibbler.js"
+      - "codesandbox-button.js"
+
+# External CDN dependencies (fallbacks)
+cdn_fallbacks:
+  enabled: true
+  base_url: "https://cdn.skypack.dev"
+  packages:
+    - name: "lit"
+      version: "^3.0.0"
+    - name: "@apollo/client"
+      version: "^3.8.0"
+    - name: "graphql"
+      version: "^16.0.0"
+
+# Development overrides
+development:
+  local_packages: true
+  source_maps: true
+  polyfills: true
+
+# Production optimizations
+production:
+  minified: true
+  bundled: true
+  integrity_hashes: true

@@ -1,0 +1,237 @@
+{{ define "main" }}
+<div class="single-page">
+  {{ if .Params.sidebar }}
+  <!-- Page Title for sidebar layout -->
+  <h1 class="section-title">
+    {{ if .Parent }}
+      {{ .Parent.Title }}: {{ .Title }}
+    {{ else }}
+      {{ .Title }}
+    {{ end }}
+  </h1>
+  {{ else }}
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="container">
+      {{ if .Section }}
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+              <a href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/{{ .Section }}/">{{ .Section | title }}</a>
+            </li>
+            {{ if ne .Section .CurrentSection.Title }}
+              <li class="breadcrumb-item">
+                <a href="{{ .CurrentSection.RelPermalink }}">{{ .CurrentSection.Title }}</a>
+              </li>
+            {{ end }}
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ .Title }}
+            </li>
+          </ol>
+        </nav>
+      {{ end }}
+
+      <h1 class="page-title">{{ .Title }}</h1>
+
+      {{ if .Description }}
+        <p class="page-description">{{ .Description }}</p>
+      {{ end }}
+
+      <!-- Page Meta -->
+      <div class="page-meta">
+        {{ if .Date }}
+          <time class="page-date" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ if eq .Section "blog" }}Published{{ else }}Updated{{ end }}
+            {{ .Date.Format "January 2, 2006" }}
+          </time>
+        {{ end }}
+
+        {{ if .ReadingTime }}
+          <span class="reading-time">{{ .ReadingTime }} min read</span>
+        {{ end }}
+
+        {{ if .Params.tags }}
+          <div class="page-tags">
+            {{ range .Params.tags }}
+              <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </header>
+  {{ end }}
+
+  <!-- Page Content -->
+  <div class="page-content">
+    <div class="container">
+      <div class="prose-content">
+          <div class="prose">
+            {{ .Content }}
+
+            {{/* Render API documentation if package and module are specified */}}
+            {{ if and .Params.package .Params.module }}
+              {{ partial "render-api-docs.html" . }}
+            {{ end }}
+          </div>
+
+          <!-- Page Navigation -->
+          {{ $currentPage := . }}
+          {{ $parent := .Parent }}
+          {{ if $parent }}
+            {{ $pages := slice }}
+            {{ range $parent.RegularPages }}
+              {{ $pages = $pages | append . }}
+            {{ end }}
+            {{ range $parent.Sections }}
+              {{ $pages = $pages | append . }}
+            {{ end }}
+            {{ $pages = sort $pages "Weight" }}
+
+            {{ $prev := "" }}
+            {{ $next := "" }}
+            {{ $found := false }}
+            {{ range $index, $page := $pages }}
+              {{ if eq $page $currentPage }}
+                {{ $found = true }}
+                {{ if gt $index 0 }}
+                  {{ $prev = index $pages (sub $index 1) }}
+                {{ end }}
+                {{ if lt $index (sub (len $pages) 1) }}
+                  {{ $next = index $pages (add $index 1) }}
+                {{ end }}
+              {{ end }}
+            {{ end }}
+
+            {{ if or $prev $next }}
+              <nav class="page-nav" aria-label="Page navigation">
+                {{ if $prev }}
+                  <a href="{{ $prev.RelPermalink }}" class="page-nav-prev">
+                    <span class="page-nav-label">← Previous</span>
+                    <span class="page-nav-title">{{ $prev.Title }}</span>
+                  </a>
+                {{ end }}
+
+                {{ if $next }}
+                  <a href="{{ $next.RelPermalink }}" class="page-nav-next">
+                    <span class="page-nav-label">Next →</span>
+                    <span class="page-nav-title">{{ $next.Title }}</span>
+                  </a>
+                {{ end }}
+              </nav>
+            {{ end }}
+          {{ end }}
+
+          <!-- Related Content -->
+          {{ $related := .Site.RegularPages.Related . | first 3 }}
+          {{ if $related }}
+            <aside class="related-content">
+              <h2 class="related-title">Related Articles</h2>
+              <ul class="related-list">
+                {{ range $related }}
+                  <li class="related-item">
+                    <a href="{{ .RelPermalink }}" class="related-link">
+                      <h3 class="related-item-title">{{ .Title }}</h3>
+                      <p class="related-item-excerpt">{{ .Summary | truncate 100 }}</p>
+                    </a>
+                  </li>
+                {{ end }}
+              </ul>
+            </aside>
+          {{ end }}
+
+        {{ if not .Params.sidebar }}
+        <!-- Sidebar -->
+        <aside class="content-sidebar">
+          <!-- Table of Contents -->
+          {{ if .TableOfContents }}
+            <div class="toc-container">
+              <h2 class="toc-title">Table of Contents</h2>
+              <div class="toc">
+                {{ .TableOfContents }}
+              </div>
+            </div>
+          {{ end }}
+
+          <!-- Edit Page Link -->
+          {{ if .Site.Params.github }}
+            <div class="edit-page">
+              <a href="{{ .Site.Params.github }}/edit/main/docs/{{ .File.Path }}"
+                 class="edit-link"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                Edit this page on GitHub
+              </a>
+            </div>
+          {{ end }}
+
+          <!-- API Documentation Links -->
+          {{ if eq .Section "api" }}
+            <div class="api-nav">
+              <h3 class="api-nav-title">API Reference</h3>
+              <ul class="api-nav-list">
+                <li><a href="/api/core/">Core</a></li>
+                <li><a href="/api/components/">Components</a></li>
+                <li><a href="/api/libraries/">Libraries</a></li>
+              </ul>
+            </div>
+          {{ end }}
+
+          <!-- Guides Navigation -->
+          {{ if eq .Section "guides" }}
+            <div class="guides-nav">
+              <h3 class="guides-nav-title">Guides</h3>
+              <ul class="guides-nav-list">
+                <li><a href="/guides/getting-started/">Getting Started</a></li>
+                <li><a href="/guides/usage/">Usage</a></li>
+                <li><a href="/guides/cool-tricks/">Cool Tricks</a></li>
+              </ul>
+            </div>
+          {{ end }}
+        </aside>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Single page scripts -->
+<script type="module">
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocLinks = document.querySelectorAll('.toc a, .sidebar-toc-inline a');
+
+    // Add smooth scrolling to TOC links
+    tocLinks.forEach(link => {
+      if (link.getAttribute('href')?.startsWith('#')) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
+    });
+
+    // Highlight current section in TOC
+    const headings = document.querySelectorAll('h2[id], h3[id], h4[id]');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(link => link.classList.remove('active'));
+          const correspondingLink = document.querySelector(`.toc a[href="#${entry.target.id}"], .sidebar-toc-inline a[href="#${entry.target.id}"]`);
+          if (correspondingLink) {
+            correspondingLink.classList.add('active');
+          }
+        }
+      });
+    }, { rootMargin: '-20% 0% -35% 0%' });
+
+    headings.forEach(heading => observer.observe(heading));
+  });
+</script>
+{{ end }}

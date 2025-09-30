@@ -1,0 +1,25 @@
+<apollo-client>
+  <apollo-query>
+
+    <script type="application/graphql" src="Friends.query.graphql"></script>
+
+    <template>
+      <link rel="stylesheet" href="Friends.css"/>
+      <h1>Friends</h1>
+      <p>Hello, {{ data.me.name }}. Here are your friends.</p>
+      <ul>
+        <template type="repeat" repeat="{{ data.friends ?? [] }}">
+          <li data-id="{{ item.id }}"
+              data-index="{{ index }}">
+            <figure>
+              <img .src="{{ item.picture }}" role="presentation">
+              <figcaption>{{ item.name }}</figcaption>
+            </figure>
+          </li>
+        </template>
+      </ul>
+    </template>
+
+  </apollo-query>
+</apollo-client>
+<script type="module" src="client.js"></script>

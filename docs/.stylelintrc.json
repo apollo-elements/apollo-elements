@@ -1,0 +1,19 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "custom-property-pattern": "^([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+    "selector-class-pattern": "^([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "at-rule-no-vendor-prefix": null,
+    "selector-no-vendor-prefix": null,
+    "media-feature-range-notation": "prefix",
+    "no-invalid-position-at-import-rule": null
+  },
+  "ignoreFiles": [
+    "public/**",
+    "resources/**",
+    "node_modules/**",
+    "themes/apollo-elements/static/**"
+  ]
+}

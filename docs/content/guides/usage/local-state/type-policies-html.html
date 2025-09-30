@@ -1,0 +1,16 @@
+<apollo-client>
+  <apollo-query>
+    <!-- ... -->
+  </apollo-query>
+</apollo-client>
+
+<script>
+  import('./typePolicies')
+    .then(({ typePolicies }) => {
+      // In the case of HTML components,
+      // register type policies on the <apollo-client> element
+      document.currentScript.getRootNode()
+        .querySelector('apollo-client')
+        .typePolicies = typePolicies;
+    });
+</script>

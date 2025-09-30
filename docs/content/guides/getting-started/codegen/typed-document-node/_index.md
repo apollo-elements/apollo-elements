@@ -1,0 +1,68 @@
+---
+title: TypedDocumentNode
+weight: 50
+description: Strongly typed GraphQL operation components with less boilerplate
+sidebar: guides
+---
+
+[TypedDocumentNode](https://the-guild.dev/blog/typed-document-node) is a new technique where the `query`, `mutation`, or `subscription` object for your components comes with it's `data` and `variables` types built in. Before `TypedDocumentNode`, if you wanted to strongly type your GraphQL operations, you would need to define the `data` and `variables` types manually, or use `graphql-codegen` to create those types, which you could manually apply to operations.
+
+```graphql
+query TypedQuery($var: String) {
+  typed {
+    id
+    name
+  }
+}
+```
+
+### Generating `TypedDocumentNode`s
+Using `TypedDocumentNode` and [graphql-codegen](https://graphql-code-generator.com/docs/plugins/typed-document-node), you can somewhat simplify the process. You can take a variety of approaches here.
+
+## Transpile `.graphql` to `.ts` in-place
+Under this approach, you configure `graphql-codegen` to generate a single TypeScript files corresponding to each of your GraphQL operations, e.g. `src/components/typed/TypedQuery.query.graphql` -> `src/components/types/TypedQuery.query.graphql.ts`
+
+```ts
+import { TypedQuery } from './TypedQuery.query.graphql';
+```
+
+- ✅ Single import per operation aids code splitting
+- ❌ Requires another file watcher for development
+
+## Bundle `.graphql` operations into a single `operations.ts` file
+Under this approach, you configure `graphql-codegen` to create a single TypeScript file that exports runtime objects for each operation. e.g. `src/components/**/*.{query,mutation,subscription}.graphql` -> `src/codegen/operations.ts`
+
+```ts
+import { TypedQuery } from '../../codegen/operations';
+```
+
+- ✅ Keeps code-generated files in one place
+- ❌ Monolithic file for operations could be a bundle-size concern
+
+## Generate a single `operations.d.ts`
+
+Under this approach, you configure `graphql-codegen` to output a single, types-only TypeScript file. You would then use a [build tool](../building-for-production.md) and/or [dev-server plugin](../buildless-development.md) to import the GraphQL files. This approach is most like the old `graphql-codegen` workflow that did not use `TypedDocumentNode`.
+
+```ts
+import type { TypedQueryDocument } from '../../codegen/operations';
+import TypedQuery from './Typed.query.graphql';
+```
+
+- ✅ Simpler migration from old workflow
+- ❌ Requires tooling to load GraphQL files
+
+## Using them in Components
+
+When you pass your `TypedDocumentNode` to a controller (or haunted hook, or hybrids factory), TypeScript will infer the return type. If you're using a component class (e.g. `class extends ApolloQuery`), pass the `TypedDocumentNode` objects' type as the first type argument to your component constructors.
+
+These examples assume you followed the first approach outlined above. If you are generating types, omit the `typeof` operator.
+
+<code-tabs collection="libraries" default-tab="lit">
+  {{<code-tab package="html" lang="ts">}}{{<include typed-html.ts>}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include typed-mixins.ts>}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include typed-lit.ts>}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include typed-fast.ts>}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include typed-haunted.ts>}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include typed-atomico.tsx>}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include typed-hybrids.ts>}}{{</code-tab>}}
+</code-tabs>

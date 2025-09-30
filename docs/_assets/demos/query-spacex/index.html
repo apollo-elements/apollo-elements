@@ -1,0 +1,20 @@
+<apollo-client uri="https://main--spacex-l4uc6p.apollographos.net/graphql">
+  <apollo-query>
+    <script type="application/graphql" src="queries/LatestLaunch.graphql"></script>
+    <template>
+      <link rel="stylesheet" href="components/spacex-launch.css"/>
+      <article class="{{ data ? 'resolved' : 'loading' }}">
+        <h2>Latest Launch</h2>
+        <img .src="{{ data.launchLatest.links.mission_patch }}"
+             alt="mission patch"/>
+        <p>
+          Mission {{ data.launchLatest.id }},
+                   <strong>{{ data.launchLatest.mission_name }}</strong>
+          Launched <time>{{ data.launchLatest.launch_date_utc }}</time>
+          aboard   <strong>{{ data.launchLatest.rocket.rocket_name }}</strong>
+        </p>
+      </article>
+    </template>
+  </apollo-query>
+</apollo-client>
+<script src="type-policies.js" type="module"></script>

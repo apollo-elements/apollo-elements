@@ -1,0 +1,138 @@
+<header id="main-header" class="site-header" role="banner">
+  <div class="content-area">
+    <!-- Logo and Site Title -->
+    <a href="/" class="logo-link" aria-label="Apollo Elements Home">
+      <svg class="brand-logo" width="40" height="40" viewBox="0 0 512 512" fill="currentColor">
+        <g fill="none" fill-rule="evenodd">
+          <path fill="#FFF" d="M288.5,18.7638837 L445.202503,109.236116 C465.313573,120.847248 477.702503,142.305504 477.702503,165.527767 L477.702503,346.472233 C477.702503,369.694496 465.313573,391.152752 445.202503,402.763884 L288.5,493.236116 C268.38893,504.847248 243.61107,504.847248 223.5,493.236116 L66.7974966,402.763884 C46.6864266,391.152752 34.2974966,369.694496 34.2974966,346.472233 L34.2974966,165.527767 C34.2974966,142.305504 46.6864266,120.847248 66.7974966,109.236116 L223.5,18.7638837 C243.61107,7.15275208 268.38893,7.15275208 288.5,18.7638837 Z"/>
+          <g fill="#000" fill-rule="nonzero" transform="translate(67 122.5)">
+            <polygon points="0 133.396 45.196 .5 101 .5 51.691 132.999 88.733 266.477 39.336 266.5"/>
+            <polygon points="277 134.004 322.196 .5 378 .5 328.691 134.004 365.733 266.477 316.336 266.5" transform="rotate(180 327.5 133.5)"/>
+            <polygon points="158.486 .5 220.463 .5 310 266.442 253.912 266.442 189.487 57.087 153.31 171.604 208.991 171.604 224.287 221.446 139.722 221.446 125.088 266.5 69 266.5"/>
+          </g>
+        </g>
+      </svg>
+      <span class="brand-text">{{ .Site.Title }}</span>
+    </a>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav" role="navigation" aria-label="Main Navigation">
+      {{ range .Site.Menus.main }}
+        <a href="{{ .URL }}" class="nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
+           {{ if hasPrefix .URL "http" }}target="_blank" rel="noopener noreferrer"{{ end }}>
+          {{ .Name }}
+        </a>
+      {{ end }}
+    </nav>
+
+    <!-- Search -->
+    {{ if .Site.Params.enableSearch }}
+      <div class="search">
+        {{ partial "apollo-search.html" . }}
+      </div>
+    {{ end }}
+
+    <!-- Social Links -->
+    {{ range .Site.Menus.social }}
+      <a href="{{ .URL }}" class="social-link" aria-label="{{ .Name }}"
+         target="_blank" rel="noopener noreferrer">
+        {{ $iconPath := printf "_assets/brand-logos/%s.svg" (.Name | lower) }}
+        {{ readFile $iconPath | safeHTML }}
+      </a>
+    {{ end }}
+
+    <!-- Mobile Menu Toggle -->
+    <button type="button" class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+      <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Theme Toggle -->
+    <theme-toggle></theme-toggle>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" role="navigation" aria-label="Mobile Navigation" hidden>
+    {{ if .Site.Params.enableSearch }}
+    <div class="mobile-search">
+      {{ partial "apollo-search.html" . }}
+    </div>
+    {{ end }}
+
+    <ul class="mobile-nav-list">
+      {{ range .Site.Menus.main }}
+        <li class="mobile-nav-item">
+          <a href="{{ .URL }}" class="mobile-nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}">
+            {{ .Name }}
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+
+    <div class="mobile-social">
+      {{ range .Site.Menus.social }}
+        <a href="{{ .URL }}" class="mobile-social-link" aria-label="{{ .Name }}"
+           target="_blank" rel="noopener noreferrer">
+          {{ $iconPath := printf "_assets/brand-logos/%s.svg" (.Name | lower) }}
+          {{ readFile $iconPath | safeHTML }}
+          <span>{{ .Name }}</span>
+        </a>
+      {{ end }}
+    </div>
+  </nav>
+</header>
+
+<!-- Header Scripts -->
+<script type="module">
+  // Theme initialization - runs immediately to prevent flash
+  (function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  })();
+
+  const mobileToggle = document.querySelector('.mobile-menu-toggle');
+  const mobileNav = document.querySelector('.mobile-nav');
+
+  // Mobile menu toggle
+  mobileToggle?.addEventListener('click', () => {
+    const isHidden = mobileNav.hasAttribute('hidden');
+    const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+    const closeIcon = mobileToggle.querySelector('.close-icon');
+
+    if (isHidden) {
+      mobileNav.removeAttribute('hidden');
+      mobileToggle.setAttribute('aria-expanded', 'true');
+      hamburgerIcon.style.display = 'none';
+      closeIcon.style.display = 'block';
+    } else {
+      mobileNav.setAttribute('hidden', '');
+      mobileToggle.setAttribute('aria-expanded', 'false');
+      hamburgerIcon.style.display = 'block';
+      closeIcon.style.display = 'none';
+    }
+  });
+
+  // Close mobile menu when clicking on a link
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (mobileNav && !mobileNav.hasAttribute('hidden')) {
+        mobileNav.setAttribute('hidden', '');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        hamburgerIcon.style.display = 'block';
+        closeIcon.style.display = 'none';
+      }
+    });
+  });
+</script>

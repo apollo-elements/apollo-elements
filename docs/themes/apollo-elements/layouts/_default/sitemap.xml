@@ -1,0 +1,42 @@
+{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  {{ range .Data.Pages }}
+  {{ if not .Params.sitemap_exclude }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    {{ if not .Date.IsZero }}
+    <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    {{ end }}
+    {{ with .Params.sitemap_changefreq }}<changefreq>{{ . }}</changefreq>{{ end }}
+    {{ if eq .Section "blog" }}
+    <changefreq>weekly</changefreq>
+    {{ else if eq .Kind "page" }}
+    <changefreq>monthly</changefreq>
+    {{ else }}
+    <changefreq>weekly</changefreq>
+    {{ end }}
+    {{ with .Params.sitemap_priority }}<priority>{{ . }}</priority>{{ else }}
+    {{ if .IsHome }}
+    <priority>1.0</priority>
+    {{ else if eq .Section "guides" }}
+    <priority>0.9</priority>
+    {{ else if eq .Section "api" }}
+    <priority>0.8</priority>
+    {{ else if eq .Section "blog" }}
+    <priority>0.7</priority>
+    {{ else }}
+    <priority>0.5</priority>
+    {{ end }}
+    {{ end }}
+    {{ if .Params.cover_image }}
+    <image:image>
+      <image:loc>{{ .Params.cover_image | absURL }}</image:loc>
+      <image:title>{{ .Title | htmlEscape }}</image:title>
+    </image:image>
+    {{ end }}
+  </url>
+  {{ end }}
+  {{ end }}
+</urlset>

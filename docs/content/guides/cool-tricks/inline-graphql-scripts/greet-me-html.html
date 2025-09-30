@@ -1,0 +1,16 @@
+<apollo-query>
+  <script type="application/graphql">
+    query Greeting {
+      greeting {
+        name
+        greeting
+      }
+    }
+  </script>
+  <template>
+    <p>
+      {{ data.greeting || 'Hello' }},
+      {{ data.name || 'friend' }}
+    </p>
+  </template>
+</apollo-query>

@@ -1,0 +1,14 @@
+<apollo-mutation>
+  <template>
+    <loading-overlay ?active="{{ loading }}"></loading-overlay>
+
+    <label>New Post <textarea data-variable="content"></textarea></label>
+
+    <button ?hidden="{{ data }}" trigger>Post!</button>
+
+    <article ?hidden="{{ !data }}">
+      <strong>Post Succeeded!</strong>
+      <p>{{ data.summary }}</p>
+    </article>
+  </template>
+</apollo-mutation>

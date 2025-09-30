@@ -1,0 +1,543 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "apollo-element.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`ApolloElement`\n\n🚀 Custom element base class for apollo gluon elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
+          "name": "ApolloElement",
+          "members": [
+            {
+              "kind": "method",
+              "name": "update"
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "readonly": true
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "package": "@apollo-elements/mixins/apollo-element-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "GluonElement",
+            "package": "@gluon/gluon"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloElement",
+          "declaration": {
+            "name": "ApolloElement",
+            "module": "apollo-element.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-element.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`ApolloElement`\n\n🚀 Custom element base class for apollo gluon elements.\n\nSee [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events",
+          "name": "ApolloElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "Record<string, unknown> | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "type": {
+                "text": "Promise<boolean>"
+              },
+              "readonly": true
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloElementMixin",
+              "package": "@apollo-elements/mixins/apollo-element-mixin"
+            }
+          ],
+          "superclass": {
+            "module": "apollo-element.ts"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloElement",
+          "declaration": {
+            "name": "ApolloElement",
+            "module": "apollo-element.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-mutation.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`ApolloMutation`\n\n👩‍🚀 Custom element base class to issue mutations via your Apollo cache.\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events",
+          "name": "ApolloMutation",
+          "mixins": [
+            {
+              "name": "ApolloMutationMixin",
+              "package": "@apollo-elements/mixins/apollo-mutation-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutation",
+          "declaration": {
+            "name": "ApolloMutation",
+            "module": "apollo-mutation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-mutation.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`ApolloMutation`\n\n👩‍🚀 Custom element base class to issue mutations via your Apollo cache.\n\nSee [`ApolloMutationInterface`](https://apolloelements.dev/api/core/interfaces/mutation) for more information on events",
+          "name": "ApolloMutation",
+          "members": [
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "summary": "Latest mutation data.",
+              "description": ""
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "description": "An object that maps from the name of a variable as used in the mutation GraphQL document to that variable's value.",
+              "summary": "Mutation variables."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloMutationMixin",
+              "package": "@apollo-elements/mixins/apollo-mutation-mixin"
+            }
+          ],
+          "superclass": {
+            "module": "apollo-mutation.ts"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutation",
+          "declaration": {
+            "name": "ApolloMutation",
+            "module": "apollo-mutation.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-query.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "🚀 `ApolloQuery`\n\nCustom element base class that connects to your Apollo cache.\n\nSee [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events",
+          "name": "ApolloQuery",
+          "mixins": [
+            {
+              "name": "ApolloQueryMixin",
+              "package": "@apollo-elements/mixins/apollo-query-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQuery",
+          "declaration": {
+            "name": "ApolloQuery",
+            "module": "apollo-query.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-query.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "🚀 `ApolloQuery`\n\nCustom element base class that connects to your Apollo cache.\n\nSee [`ApolloQueryInterface`](https://apolloelements.dev/api/core/interfaces/query) for more information on events",
+          "name": "ApolloQuery",
+          "members": [
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "summary": "Latest query data.",
+              "description": ""
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "description": "An object that maps from the name of a variable as used in the query GraphQL document to that variable's value.",
+              "summary": "Query variables."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloQueryMixin",
+              "package": "@apollo-elements/mixins/apollo-query-mixin"
+            }
+          ],
+          "superclass": {
+            "module": "apollo-query.ts"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQuery",
+          "declaration": {
+            "name": "ApolloQuery",
+            "module": "apollo-query.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-subscription.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.",
+          "name": "ApolloSubscription",
+          "mixins": [
+            {
+              "name": "ApolloSubscriptionMixin",
+              "package": "@apollo-elements/mixins/apollo-subscription-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "ApolloElement",
+            "module": "/apollo-element.js"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscription",
+          "declaration": {
+            "name": "ApolloSubscription",
+            "module": "apollo-subscription.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "apollo-subscription.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`ApolloSubscription`\n\n🚀 Custom element base class that updates with an Apollo GraphQL subscription.",
+          "name": "ApolloSubscription",
+          "members": [
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Data<D> | null"
+              },
+              "summary": "Latest subscription data.",
+              "description": ""
+            },
+            {
+              "kind": "field",
+              "name": "variables",
+              "type": {
+                "text": "Variables<D, V> | null"
+              },
+              "description": "An object that maps from the name of a variable as used in the subscription GraphQL document to that variable's value.",
+              "summary": "Subscription variables."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ApolloSubscriptionMixin",
+              "package": "@apollo-elements/mixins/apollo-subscription-mixin"
+            }
+          ],
+          "superclass": {
+            "module": "apollo-subscription.ts"
+          },
+          "tagName": ""
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "@gluon/gluon"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscription",
+          "declaration": {
+            "name": "ApolloSubscription",
+            "module": "apollo-subscription.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElement",
+          "declaration": {
+            "name": "ApolloElement",
+            "module": "./apollo-element.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQuery",
+          "declaration": {
+            "name": "ApolloQuery",
+            "module": "./apollo-query.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutation",
+          "declaration": {
+            "name": "ApolloMutation",
+            "module": "./apollo-mutation.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscription",
+          "declaration": {
+            "name": "ApolloSubscription",
+            "module": "./apollo-subscription.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "render",
+          "declaration": {
+            "name": "render",
+            "package": "lit-html"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "lit-html"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApolloElement",
+          "declaration": {
+            "name": "ApolloElement",
+            "module": "./apollo-element.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloQuery",
+          "declaration": {
+            "name": "ApolloQuery",
+            "module": "./apollo-query.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloMutation",
+          "declaration": {
+            "name": "ApolloMutation",
+            "module": "./apollo-mutation.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApolloSubscription",
+          "declaration": {
+            "name": "ApolloSubscription",
+            "module": "./apollo-subscription.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "render",
+          "declaration": {
+            "name": "render",
+            "package": "lit-html"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "html",
+          "declaration": {
+            "name": "html",
+            "package": "lit-html"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "extends": ["eslint:recommended", "prettier"],
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "ignorePatterns": [
+    "public/**",
+    "resources/**",
+    "node_modules/**",
+    "themes/apollo-elements/static/**"
+  ]
+}

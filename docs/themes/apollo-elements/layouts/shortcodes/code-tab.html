@@ -1,0 +1,64 @@
+{{- $package := .Get "package" -}}
+{{- $lang := .Get "lang" -}}
+{{- $label := "" -}}
+{{- $icon := "" -}}
+{{- if not $lang -}}
+  {{- $lang = "ts" -}}
+{{- end -}}
+{{- if eq $package "html" -}}
+  {{- $label = "HTML" -}}
+  {{- $icon = "/brand-logos/html5.svg" -}}
+  {{- if not (.Get "lang") -}}
+    {{- $lang = "html" -}}
+  {{- end -}}
+{{- else if eq $package "mixins" -}}
+  {{- $label = "Vanilla" -}}
+  {{- $icon = "/brand-logos/js.svg" -}}
+{{- else if eq $package "lit" -}}
+  {{- $label = "Lit" -}}
+  {{- $icon = "/brand-logos/lit.svg" -}}
+{{- else if eq $package "fast" -}}
+  {{- $label = "FAST" -}}
+  {{- $icon = "/brand-logos/fast.svg" -}}
+{{- else if eq $package "haunted" -}}
+  {{- $label = "Haunted" -}}
+  {{- $icon = "/brand-logos/haunted.svg" -}}
+{{- else if eq $package "hybrids" -}}
+  {{- $label = "Hybrids" -}}
+  {{- $icon = "/brand-logos/hybrids.svg" -}}
+{{- else if eq $package "atomico" -}}
+  {{- $label = "Atomico" -}}
+  {{- $icon = "/brand-logos/atomico.svg" -}}
+  {{- if not (.Get "lang") -}}
+    {{- $lang = "jsx" -}}
+  {{- end -}}
+{{- else if eq $package "gluon" -}}
+  {{- $label = "Gluon" -}}
+  {{- $icon = "/brand-logos/js.svg" -}}
+{{- else if eq $package "polymer" -}}
+  {{- $label = "Polymer" -}}
+  {{- $icon = "/brand-logos/polymer.svg" -}}
+{{- else if eq $package "npm" -}}
+  {{- $label = "npm" -}}
+  {{- $icon = "/brand-logos/npm.svg" -}}
+  {{- if not (.Get "lang") -}}
+    {{- $lang = "bash" -}}
+  {{- end -}}
+{{- else if eq $package "yarn" -}}
+  {{- $label = "yarn" -}}
+  {{- $icon = "/brand-logos/yarn.svg" -}}
+  {{- if not (.Get "lang") -}}
+    {{- $lang = "bash" -}}
+  {{- end -}}
+{{- else if eq $package "pnpm" -}}
+  {{- $label = "pnpm" -}}
+  {{- $icon = "/brand-logos/pnpm.svg" -}}
+  {{- if not (.Get "lang") -}}
+    {{- $lang = "bash" -}}
+  {{- end -}}
+{{- end -}}
+<code-tab data-id="{{ $package }}"
+          data-label="{{ $label }}"
+          data-icon-href="{{ $icon }}">
+  {{- highlight (trim .Inner "\n\r ") $lang "linenos=false" -}}
+</code-tab>

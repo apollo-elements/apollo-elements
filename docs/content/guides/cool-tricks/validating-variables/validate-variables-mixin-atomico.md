@@ -1,0 +1,1 @@
+> There's no `ValidateVariablesMixin` for atomico, so use one of the other techniques.

@@ -1,0 +1,55 @@
+{
+  "name": "apollo-elements-docs",
+  "version": "1.0.0",
+  "description": "Apollo Elements Documentation Site",
+  "main": "themes/apollo-elements/assets/js/main.js",
+  "scripts": {
+    "build": "hugo --minify",
+    "build:dev": "hugo -D --buildDrafts",
+    "serve": "hugo server -D --bind 0.0.0.0 --baseURL http://localhost",
+    "serve:fast": "hugo server -D --disableFastRender=false --bind 0.0.0.0",
+    "clean": "rm -rf public resources",
+    "lint:css": "stylelint 'themes/apollo-elements/assets/css/**/*.css'",
+    "lint:js": "eslint 'themes/apollo-elements/assets/js/**/*.js'",
+    "format": "prettier --write 'themes/apollo-elements/assets/**/*.{css,js}'",
+    "test:build": "hugo --minify --destination public-test",
+    "analyze": "hugo --templateMetrics --templateMetricsHints"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "postcss-cli": "^10.1.0",
+    "postcss-import": "^15.1.0",
+    "postcss-nested": "^6.0.1",
+    "postcss-preset-env": "^9.3.0",
+    "prettier": "^3.1.0"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollo-elements/apollo-elements.git",
+    "directory": "docs"
+  },
+  "keywords": [
+    "apollo",
+    "graphql",
+    "web-components",
+    "lit",
+    "documentation",
+    "hugo"
+  ],
+  "author": "Benny Powers <web@bennypowers.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apollo-elements/apollo-elements/issues"
+  },
+  "homepage": "https://apolloelements.dev"
+}

@@ -1,0 +1,96 @@
+{{/* render-class.html - Renders a class declaration from custom-elements manifest */}}
+{{- $declaration := . -}}
+
+{{- if $declaration.summary -}}
+  {{ $declaration.summary | markdownify }}
+{{- end -}}
+
+{{- if $declaration.description -}}
+  {{ $declaration.description | markdownify }}
+{{- end -}}
+
+{{/* Separate members into public and private, deduplicating by name */}}
+{{- $publicFields := slice -}}
+{{- $privateFields := slice -}}
+{{- $publicMethods := slice -}}
+{{- $privateMethods := slice -}}
+{{- $seenNames := slice -}}
+
+{{- range $declaration.members -}}
+  {{- $shouldAdd := not (in $seenNames .name) -}}
+
+  {{- if $shouldAdd -}}
+    {{- $seenNames = $seenNames | append .name -}}
+
+    {{- if eq .kind "field" -}}
+      {{- if or (eq .privacy "private") (eq .privacy "protected") -}}
+        {{- $privateFields = $privateFields | append . -}}
+      {{- else -}}
+        {{- $publicFields = $publicFields | append . -}}
+      {{- end -}}
+    {{- else if eq .kind "method" -}}
+      {{- if or (eq .privacy "private") (eq .privacy "protected") -}}
+        {{- $privateMethods = $privateMethods | append . -}}
+      {{- else -}}
+        {{- $publicMethods = $publicMethods | append . -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Public Properties */}}
+{{- if $publicFields -}}
+  <h2 id="properties">
+    <a class="anchor" href="#properties">
+      {{ partial "cem/octicon-link.html" . }}
+    </a>Properties
+  </h2>
+
+  {{- range $publicFields -}}
+    {{ partial "cem/render-property.html" . }}
+  {{- end -}}
+{{- end -}}
+
+{{/* Public Methods */}}
+{{- if $publicMethods -}}
+  <h2 id="methods">
+    <a class="anchor" href="#methods">
+      {{ partial "cem/octicon-link.html" . }}
+    </a>Methods
+  </h2>
+
+  {{- range $publicMethods -}}
+    {{ partial "cem/render-method.html" . }}
+  {{- end -}}
+{{- end -}}
+
+{{/* Events */}}
+{{- with $declaration.events -}}
+  <h2 id="events">
+    <a class="anchor" href="#events">
+      {{ partial "cem/octicon-link.html" . }}
+    </a>Events
+  </h2>
+
+  {{- range . -}}
+    {{ partial "cem/render-event.html" . }}
+  {{- end -}}
+{{- end -}}
+
+{{/* Private Properties */}}
+{{- if $privateFields -}}
+  <h2 id="private-properties">Private Properties</h2>
+
+  {{- range $privateFields -}}
+    {{ partial "cem/render-property.html" . }}
+  {{- end -}}
+{{- end -}}
+
+{{/* Private Methods */}}
+{{- if $privateMethods -}}
+  <h2 id="private-methods">Private Methods</h2>
+
+  {{- range $privateMethods -}}
+    {{ partial "cem/render-method.html" . }}
+  {{- end -}}
+{{- end -}}

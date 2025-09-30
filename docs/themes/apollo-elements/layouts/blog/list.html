@@ -1,0 +1,502 @@
+{{ define "main" }}
+<div class="blog-list">
+  <div class="container">
+    <!-- Blog Header -->
+    <header class="blog-header">
+      <h1>{{ .Title }}</h1>
+      {{ with .Content }}
+        <div class="blog-description">
+          {{ . }}
+        </div>
+      {{ end }}
+    </header>
+
+    <!-- Blog Posts -->
+    <div class="blog-posts">
+      {{ $paginator := .Paginate .Pages 10 }}
+
+      {{ range $paginator.Pages }}
+        <article class="blog-post-card">
+          {{ if .Params.cover_image }}
+            <div class="post-cover">
+              <a href="{{ .RelPermalink }}">
+                <img src="{{ .Params.cover_image }}"
+                     alt="{{ .Title }}"
+                     loading="lazy">
+              </a>
+            </div>
+          {{ end }}
+
+          <div class="post-content">
+            <header class="post-header">
+              <h2 class="post-title">
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </h2>
+
+              <div class="post-meta">
+                <time datetime="{{ .Date.Format "2006-01-02" }}" class="post-date">
+                  {{ .Date.Format "January 2, 2006" }}
+                </time>
+
+                {{ if .Params.tags }}
+                  <div class="post-tags">
+                    {{ range .Params.tags }}
+                      <span class="tag">{{ . }}</span>
+                    {{ end }}
+                  </div>
+                {{ end }}
+
+                {{ if .ReadingTime }}
+                  <span class="reading-time">{{ .ReadingTime }} min read</span>
+                {{ end }}
+              </div>
+            </header>
+
+            <div class="post-excerpt">
+              {{ if .Params.description }}
+                <p>{{ .Params.description }}</p>
+              {{ else }}
+                {{ .Summary }}
+              {{ end }}
+            </div>
+
+            <footer class="post-footer">
+              <a href="{{ .RelPermalink }}" class="read-more-link">
+                Read More
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+                </svg>
+              </a>
+            </footer>
+          </div>
+        </article>
+      {{ end }}
+
+      <!-- Pagination -->
+      {{ if gt $paginator.TotalPages 1 }}
+        <nav class="pagination" aria-label="Blog pagination">
+          <div class="pagination-info">
+            <span>Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+            <span class="pagination-count">{{ len $paginator.Pages }} of {{ .Site.RegularPages | len }} posts</span>
+          </div>
+
+          <div class="pagination-links">
+            {{ if $paginator.HasPrev }}
+              <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"/>
+                </svg>
+                Previous
+              </a>
+            {{ end }}
+
+            <div class="pagination-numbers">
+              {{ range $paginator.Pagers }}
+                {{ if eq . $paginator }}
+                  <span class="pagination-link pagination-current" aria-current="page">
+                    {{ .PageNumber }}
+                  </span>
+                {{ else }}
+                  <a href="{{ .URL }}" class="pagination-link">
+                    {{ .PageNumber }}
+                  </a>
+                {{ end }}
+              {{ end }}
+            </div>
+
+            {{ if $paginator.HasNext }}
+              <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next">
+                Next
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+                </svg>
+              </a>
+            {{ end }}
+          </div>
+        </nav>
+      {{ end }}
+    </div>
+
+    <!-- Blog Sidebar -->
+    <aside class="blog-sidebar">
+      <!-- Search -->
+      <div class="sidebar-section">
+        <h3>Search Blog</h3>
+        <div class="blog-search">
+          <input type="search"
+                 placeholder="Search posts..."
+                 id="blog-search-input"
+                 aria-label="Search blog posts">
+        </div>
+      </div>
+
+      <!-- Recent Posts -->
+      <div class="sidebar-section">
+        <h3>Recent Posts</h3>
+        <ul class="recent-posts">
+          {{ range first 5 (where .Site.RegularPages "Section" "blog") }}
+            <li>
+              <a href="{{ .RelPermalink }}" class="recent-post-link">
+                <span class="recent-post-title">{{ .Title }}</span>
+                <time class="recent-post-date">{{ .Date.Format "Jan 2, 2006" }}</time>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+
+      <!-- Tag Cloud -->
+      {{ $tags := slice }}
+      {{ range .Site.Taxonomies.tags }}
+        {{ $tags = $tags | append . }}
+      {{ end }}
+      {{ if gt (len $tags) 0 }}
+        <div class="sidebar-section">
+          <h3>Tags</h3>
+          <div class="tag-cloud">
+            {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+              <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}"
+                 class="tag-cloud-item"
+                 style="font-size: {{ add 0.8 (mul 0.4 (div (len $taxonomy.Pages) 10)) }}rem;">
+                {{ $name }}
+                <span class="tag-count">{{ len $taxonomy.Pages }}</span>
+              </a>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+    </aside>
+  </div>
+</div>
+
+<style>
+.blog-list {
+  padding: var(--space-xl) 0;
+}
+
+.blog-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.blog-header h1 {
+  margin-bottom: var(--space-md);
+}
+
+.blog-description {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.blog-posts {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.blog-post-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  margin-bottom: var(--space-xl);
+}
+
+.blog-post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.post-cover img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.blog-post-card:hover .post-cover img {
+  transform: scale(1.02);
+}
+
+.post-content {
+  padding: var(--space-lg);
+}
+
+.post-title {
+  margin: 0 0 var(--space-md) 0;
+}
+
+.post-title a {
+  color: var(--color-heading);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.post-title a:hover {
+  color: var(--color-primary);
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  margin-bottom: var(--space-md);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.post-date {
+  font-weight: 500;
+}
+
+.post-tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.reading-time {
+  opacity: 0.8;
+}
+
+.post-excerpt {
+  color: var(--color-text);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+}
+
+.post-footer {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-md);
+}
+
+.read-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.read-more-link:hover {
+  color: var(--color-primary-hover);
+  transform: translateX(2px);
+}
+
+/* Pagination */
+.pagination {
+  grid-column: 1 / -1;
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.pagination-info {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  color: var(--color-text-secondary);
+}
+
+.pagination-count {
+  display: block;
+  font-size: 0.875rem;
+  margin-top: var(--space-xs);
+}
+
+.pagination-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.pagination-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  min-width: 40px;
+  justify-content: center;
+}
+
+.pagination-link:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.pagination-current {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* Sidebar */
+.blog-sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-lg));
+}
+
+.sidebar-section {
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.sidebar-section h3 {
+  margin: 0 0 var(--space-md) 0;
+  color: var(--color-heading);
+  font-size: 1.125rem;
+}
+
+.blog-search input {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.recent-posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-posts li {
+  margin-bottom: var(--space-sm);
+}
+
+.recent-post-link {
+  display: block;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.recent-post-link:hover {
+  background: var(--color-surface);
+}
+
+.recent-post-title {
+  display: block;
+  color: var(--color-text);
+  font-weight: 500;
+  margin-bottom: var(--space-xs);
+}
+
+.recent-post-date {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tag-cloud-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+  font-size: 0.875rem;
+}
+
+.tag-cloud-item:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.tag-count {
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .blog-posts {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .blog-sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .post-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .pagination-links {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .pagination-numbers {
+    order: -1;
+  }
+
+  .blog-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+// Simple blog search functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('blog-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if (query) {
+          window.location.href = `/search/?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+  }
+});
+</script>
+{{ end }}

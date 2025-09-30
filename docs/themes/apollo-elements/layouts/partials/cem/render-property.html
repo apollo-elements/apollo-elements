@@ -1,0 +1,44 @@
+{{/* render-property.html - Renders a property in <type-doc> format with DSD */}}
+{{- $property := . -}}
+{{- $id := $property.name | lower -}}
+{{- $isInherited := false -}}
+{{- $emptyBody := and (not $property.summary) (not $property.description) -}}
+
+<type-doc kind="property" data-property="{{ $property.name }}"{{- if $emptyBody }} data-empty-body{{- end -}}>
+  <template shadowrootmode="open">
+    {{ partial "cem/type-doc-styles.html" . }}
+    <header>
+      <span aria-hidden="true">
+        <slot name="name"></slot>
+      </span>
+      <span class="visually-hidden"></span>
+      <slot name="attribute"></slot>
+      <slot name="type"></slot>
+    </header>
+    <article id="body">
+      <slot></slot>
+    </article>
+  </template>
+
+  <h3 id="{{ $id }}" slot="name">
+    <a class="anchor" href="#{{ $id }}">
+      {{ partial "cem/octicon-link.html" . }}
+    </a>{{ $property.name }}
+  </h3>
+  {{- if $property.privacy -}}<em slot="name">{{ $property.privacy }}</em>{{- end -}}
+  {{- if $property.static -}}<em slot="name">static</em>{{- end -}}
+  {{- if $property.optional -}}<span slot="name">(optional)</span>{{- end -}}
+  {{- if $property.readonly -}}<span slot="name">(read-only)</span>{{- end -}}
+
+  {{- with $property.type -}}
+    <span slot="type">{{ highlight .text "typescript" "" }}</span>
+  {{- end -}}
+
+  {{- with $property.summary -}}
+    {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+  {{- end -}}
+
+  {{- with $property.description -}}
+    {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
+  {{- end -}}
+</type-doc>

@@ -1,0 +1,7 @@
+{{- $playgroundId := .Get 0 -}}
+{{- $lang := .Get 1 | default "html" -}}
+{{- $content := trim .Inner "\n\r " -}}
+
+<docs-playground id="{{ $playgroundId }}">
+  {{- highlight $content $lang "linenos=false" -}}
+</docs-playground>

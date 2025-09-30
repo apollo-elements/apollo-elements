@@ -1,0 +1,17 @@
+html {
+  background: light-dark(white, black);
+  color: light-dark(black, white);
+}
+
+output {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+output.resolved {
+  opacity: 1;
+}
+
+output.transparent {
+  opacity: 0;
+}

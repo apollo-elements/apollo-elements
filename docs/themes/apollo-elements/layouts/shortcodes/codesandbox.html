@@ -1,0 +1,394 @@
+{{- $sandboxId := .Get "sandbox" -}}
+{{- if not $sandboxId -}}
+  {{- $sandboxId = .Get "id" -}}
+{{- end -}}
+{{- $module := .Get "module" | default "/src/index.js" -}}
+{{- $theme := .Get "theme" | default "auto" -}}
+{{- $view := .Get "view" | default "preview" -}}
+{{- $hidenavigation := .Get "hidenavigation" | default "1" -}}
+{{- $expanddevtools := .Get "expanddevtools" | default "0" -}}
+{{- $fontsize := .Get "fontsize" | default "14" -}}
+{{- $editorsize := .Get "editorsize" | default "50" -}}
+{{- $slot := .Get "slot" | default "" -}}
+
+<!-- Simplified CodeSandbox Embed -->
+<div class="codesandbox-container" {{ if $slot }}slot="{{ $slot }}"{{ end }}>
+  <div class="codesandbox-embed">
+    <div class="embed-header">
+      <div class="embed-title">
+        <svg class="codesandbox-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2 6l10.455-6L22.91 6 23 17.95 12.455 24 2 18V6zm2.088 2.481v4.757l3.345 1.86v3.516l3.972 2.296v-8.272L4.088 8.481zm16.739 0l-7.317 4.157v8.272l3.972-2.296V15.1l3.345-1.861V8.48zM5.134 6.601l7.303 4.144 7.32-4.18-3.871-2.197-3.41 1.945-3.43-1.968L5.133 6.6z"/>
+        </svg>
+        <span>{{ $sandboxId }}</span>
+      </div>
+      <div class="embed-actions">
+        <button onclick="openCodeSandbox('{{ $sandboxId }}', '{{ $module }}')" class="codesandbox-btn">
+          <span>Open in CodeSandbox</span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+            <path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="embed-preview">
+      {{ if .Inner }}
+        {{ .Inner }}
+      {{ else }}
+        <div class="preview-placeholder">
+          <div class="code-preview">
+            <div class="code-header">
+              <span class="file-name">{{ $module }}</span>
+            </div>
+            <div class="code-content">
+              <div class="code-line">
+                <span class="line-number">1</span>
+                <span class="code-text">
+                  <span class="keyword">import</span>
+                  <span class="string">'@apollo-elements/lit-apollo'</span>
+                </span>
+              </div>
+              <div class="code-line">
+                <span class="line-number">2</span>
+                <span class="code-text">
+                  <span class="keyword">import</span>
+                  <span class="identifier">{ ApolloQuery }</span>
+                </span>
+              </div>
+              <div class="code-line">
+                <span class="line-number">3</span>
+                <span class="code-text">// Apollo Elements demo...</span>
+              </div>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <p>Interactive Apollo Elements demo</p>
+            <button onclick="openCodeSandbox('{{ $sandboxId }}', '{{ $module }}')" class="preview-btn">
+              ▶ Run Demo
+            </button>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<!-- CodeSandbox Styles -->
+<style>
+  .codesandbox-container {
+    display: block;
+    width: 100%;
+    margin: 0;
+  }
+
+  .codesandbox-embed {
+    border: 1px solid var(--color-border, #e1e5e9);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-surface, #ffffff);
+    min-height: 300px;
+  }
+
+  .embed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface-secondary, #f8f9fa);
+    border-bottom: 1px solid var(--color-border, #e1e5e9);
+  }
+
+  .embed-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text, #333);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .codesandbox-icon {
+    color: #040404;
+    flex-shrink: 0;
+  }
+
+  .embed-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .codesandbox-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #151515;
+    color: #ffffff;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .codesandbox-btn:hover {
+    background: #252525;
+    border-color: #555555;
+    transform: translateY(-1px);
+  }
+
+  .embed-preview {
+    padding: 0;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .preview-placeholder {
+    display: flex;
+    height: 100%;
+    min-height: 250px;
+  }
+
+  .code-preview {
+    flex: 1;
+    background: var(--markdown-syntax-background-color, #f6f8fa);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .code-header {
+    padding: 0.5rem 1rem;
+    background: var(--color-surface-secondary, #f1f3f4);
+    border-bottom: 1px solid var(--color-border, #e1e5e9);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #666);
+  }
+
+  .file-name {
+    font-family: var(--font-family-mono, monospace);
+    font-weight: 500;
+  }
+
+  .code-content {
+    padding: 1rem;
+    font-family: var(--font-family-mono, monospace);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .code-line {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .line-number {
+    color: var(--color-text-secondary, #999);
+    width: 1.5rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .code-text {
+    flex: 1;
+  }
+
+  .keyword {
+    color: var(--markdown-syntax-keyword-color, #0066cc);
+    font-weight: 500;
+  }
+
+  .string {
+    color: var(--markdown-syntax-string-color, #008800);
+  }
+
+  .identifier {
+    color: var(--markdown-syntax-function-color, #6f42c1);
+  }
+
+  .preview-actions {
+    flex: 0 0 auto;
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--color-surface, #ffffff);
+    border-left: 1px solid var(--color-border, #e1e5e9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 200px;
+  }
+
+  .preview-actions p {
+    margin: 0 0 1rem 0;
+    color: var(--color-text-secondary, #666);
+    font-size: 0.875rem;
+  }
+
+  .preview-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary, #a0f);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+  }
+
+  .preview-btn:hover {
+    background: var(--color-primary-hover, #8800dd);
+    transform: translateY(-1px);
+  }
+
+  /* Dark mode adjustments */
+  @media (prefers-color-scheme: dark) {
+    .codesandbox-embed {
+      border-color: var(--color-border-dark, #404040);
+      background: var(--color-surface-dark, #1a1a1a);
+    }
+
+    .embed-header {
+      background: var(--color-surface-secondary-dark, #222);
+      border-bottom-color: var(--color-border-dark, #404040);
+    }
+
+    .embed-title {
+      color: var(--color-text-dark, #fff);
+    }
+
+    .codesandbox-icon {
+      color: #ffffff;
+    }
+
+    .code-preview {
+      background: var(--markdown-syntax-background-color, #0d1117);
+    }
+
+    .code-header {
+      background: var(--color-surface-secondary-dark, #161b22);
+      border-bottom-color: var(--color-border-dark, #404040);
+      color: var(--color-text-secondary-dark, #a1a1a1);
+    }
+
+    .preview-actions {
+      background: var(--color-surface-dark, #1a1a1a);
+      border-left-color: var(--color-border-dark, #404040);
+    }
+
+    .preview-actions p {
+      color: var(--color-text-secondary-dark, #a1a1a1);
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .preview-placeholder {
+      flex-direction: column;
+    }
+
+    .preview-actions {
+      border-left: none;
+      border-top: 1px solid var(--color-border, #e1e5e9);
+      min-width: auto;
+    }
+
+    .embed-header {
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<!-- CodeSandbox Functionality -->
+<script>
+  // Global function to open CodeSandbox
+  window.openCodeSandbox = function(sandboxId, module) {
+    if (!sandboxId) {
+      console.warn('No sandbox ID provided');
+      return;
+    }
+
+    // Construct CodeSandbox URL
+    let url = `https://codesandbox.io/s/${sandboxId}`;
+
+    // Add module parameter if provided
+    if (module && module !== '/src/index.js') {
+      url += `?module=${encodeURIComponent(module)}`;
+    }
+
+    // Add theme parameter based on current theme
+    const theme = document.documentElement.getAttribute('data-theme') ||
+                 (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    const separator = url.includes('?') ? '&' : '?';
+    url += `${separator}theme=${theme}`;
+
+    // Open in new tab
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  // Enhanced preview interaction
+  document.addEventListener('DOMContentLoaded', () => {
+    const containers = document.querySelectorAll('.codesandbox-container');
+
+    containers.forEach(container => {
+      const preview = container.querySelector('.preview-placeholder');
+      if (preview) {
+        // Add hover effect to preview
+        preview.addEventListener('mouseenter', () => {
+          preview.style.transform = 'scale(1.02)';
+          preview.style.transition = 'transform 0.3s ease';
+        });
+
+        preview.addEventListener('mouseleave', () => {
+          preview.style.transform = 'scale(1)';
+        });
+
+        // Add click to open functionality
+        preview.addEventListener('click', (e) => {
+          if (e.target.tagName !== 'BUTTON') {
+            const sandboxId = container.closest('[data-sandbox-id]')?.getAttribute('data-sandbox-id');
+            const module = container.closest('[data-module]')?.getAttribute('data-module');
+            if (sandboxId) {
+              openCodeSandbox(sandboxId, module);
+            }
+          }
+        });
+      }
+    });
+
+    // Handle slot content if present
+    setTimeout(() => {
+      containers.forEach(container => {
+        if (container.hasAttribute('slot')) {
+          const slotName = container.getAttribute('slot');
+          const tabContainer = document.querySelector(`[data-collection="frameworks"]`);
+
+          if (tabContainer) {
+            const targetPanel = tabContainer.querySelector(`[data-tab="${slotName}"]`);
+            if (targetPanel) {
+              const placeholder = targetPanel.querySelector('.tab-placeholder');
+              if (placeholder) {
+                placeholder.style.display = 'none';
+                targetPanel.appendChild(container);
+                container.removeAttribute('slot');
+              }
+            }
+          }
+        }
+      });
+    }, 200);
+  });
+</script>
