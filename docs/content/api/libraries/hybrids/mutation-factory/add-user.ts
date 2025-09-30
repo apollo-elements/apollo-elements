@@ -14,7 +14,7 @@ const onSubmitForm = (host, e) => {
 define('add-user', {
   addUser: mutation(AddUserMutation),
   render: ({ users, addUser }) => html`
-    <link🤡 rel="stylesheet" href="add-user.css">
+    <link rel="stylesheet" href="add-user.css">
     <form onsubmit=${onSubmitForm}>
       <label>Name <input id="name" disabled="${addUser.loading}"></label>
       <button disabled="${addUser.loading}">Submit</button>

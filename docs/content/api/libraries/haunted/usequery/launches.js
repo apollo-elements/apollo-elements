@@ -11,7 +11,7 @@ function Launches(hostElement) {
   const launches = data?.launchesPast ?? [];
 
   return html`
-    <link🤡 rel="stylesheet" href="launches.css"/>
+    <link rel="stylesheet" href="launches.css"/>
     <ol>${launches.map(x => html`
       <li>
         <article>

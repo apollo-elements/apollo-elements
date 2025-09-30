@@ -8,7 +8,7 @@ function Launches() {
 
   return (
     <host shadowDom>
-      <link🤡 rel="stylesheet" href="launches.css"/>
+      <link rel="stylesheet" href="launches.css"/>
       <ol>{launches.map(x => (
         <li>
           <article>

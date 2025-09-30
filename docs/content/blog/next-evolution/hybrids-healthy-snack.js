@@ -9,7 +9,7 @@ define('healthy-snack', {
   render(host) {
     const snack = [ ...host.fruits.data?.fruits ?? [], ...host.veggies.data?.veggies ?? [] ];
     return html`
-      <link🤡 rel="stylesheet" href="healthy-snack.css"/>
+      <link rel="stylesheet" href="healthy-snack.css"/>
       <ul>${snack.map(x => html`<li>${x}</li>`)}</ul>
     `;
   }
