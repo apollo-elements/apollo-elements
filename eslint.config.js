@@ -54,7 +54,7 @@ export default [
 
   // Config files override
   {
-    files: ['rocket.config.js', 'web-test-runner.config.js', 'plugins/resolve-local.js'],
+    files: ['web-test-runner.config.js', 'plugins/resolve-local.js'],
     languageOptions: {
       parserOptions: {
         ecmaVersion: 2022,

@@ -55,14 +55,10 @@ packages/fast/bases/*.js.map
 !packages/gluon/gluon.d.ts
 !packages/docs/rollup.config.js
 
-## Rocket ignore files
-docs/_merged_data/
-docs/_merged_assets/
-docs/_merged_includes/
-_site-dev
+## Apollo Elements docs ignores
 _site
 
-## Apollo Elements docs ignores
+
 docs/_data/customElementsManifests
 *.draft.md
 packages/*/docs/*.yml

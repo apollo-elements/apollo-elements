@@ -1,6 +1,6 @@
 [build]
   publish = "_site/"
-  command = "npm run postinstall && npm run docs"
+  command = "npm run postinstall && npm run build:codegen && npm run analyze && cd docs && npm install && npm run build"
 
 [[plugins]]
   package = "netlify-plugin-a11y"
