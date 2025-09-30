@@ -1,5 +1,6 @@
 {
   "name": "apollo-elements-docs",
+  "private": true,
   "version": "1.0.0",
   "description": "Apollo Elements Documentation Site",
   "main": "themes/apollo-elements/assets/js/main.js",
@@ -13,7 +14,7 @@
     "lint:js": "eslint 'themes/apollo-elements/assets/js/**/*.js'",
     "format": "prettier --write 'themes/apollo-elements/assets/**/*.{css,js}'",
     "test:build": "hugo --minify --destination public-test",
-    "analyze": "hugo --templateMetrics --templateMetricsHints"
+    "metrics": "cd $(npm prefix) && hugo --templateMetrics --templateMetricsHints"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
