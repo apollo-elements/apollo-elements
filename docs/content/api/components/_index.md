@@ -7,15 +7,9 @@ sidebar: api
 Utility components that help you factor your graphql-based app.
 
 <code-tabs collection="package-managers" default-tab="npm">
-  <code-tab data-id="npm" data-label="npm" data-icon-href="/brand-logos/npm.svg">
-    {{< highlight bash "linenos=false" >}}npm i -S @apollo-elements/components{{< /highlight >}}
-  </code-tab>
-  <code-tab data-id="yarn" data-label="yarn" data-icon-href="/brand-logos/yarn.svg">
-    {{< highlight bash "linenos=false" >}}yarn add @apollo-elements/components{{< /highlight >}}
-  </code-tab>
-  <code-tab data-id="pnpm" data-label="pnpm" data-icon-href="/brand-logos/pnpm.svg">
-    {{< highlight bash "linenos=false" >}}pnpm add @apollo-elements/components{{< /highlight >}}
-  </code-tab>
+  {{<code-tab package="npm">}}npm i -S @apollo-elements/components{{</code-tab>}}
+  {{<code-tab package="yarn">}}yarn add @apollo-elements/components{{</code-tab>}}
+  {{<code-tab package="pnpm">}}pnpm add @apollo-elements/components{{</code-tab>}}
 </code-tabs>
 
 - [`<apollo-client>`](./apollo-client/) provides all it's children (even across open shadow roots) with a client instance.
