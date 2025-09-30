@@ -65,13 +65,16 @@ defaultContentLanguageInSubdir = false
   disableHTML = false
   disableCSS = false
   disableJS = true
-  disableJSON = false
+  disableJSON = true
   disableSVG = false
   disableXML = false
   [minify.tdewolff.html]
     keepDefaultAttrVals = true
     keepEndTags = true
     keepWhitespace = false
+    keepConditionalComments = true
+    keepDocumentTags = true
+    keepQuotes = true
 
 # Site parameters
 [params]

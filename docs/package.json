@@ -5,7 +5,7 @@
   "description": "Apollo Elements Documentation Site",
   "main": "themes/apollo-elements/assets/js/main.js",
   "scripts": {
-    "build": "hugo --minify",
+    "build": "hugo",
     "build:dev": "hugo -D --buildDrafts",
     "serve": "hugo server -D --bind 0.0.0.0 --baseURL http://localhost",
     "serve:fast": "hugo server -D --disableFastRender=false --bind 0.0.0.0",
