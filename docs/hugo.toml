@@ -60,6 +60,17 @@ defaultContentLanguageInSubdir = false
     target = "(js|css)"
     noJSConfigInAssets = true
 
+# Minification settings
+[minify]
+  [minify.tdewolff.html]
+    keepDefaultAttrVals = true
+    keepEndTags = true
+    keepWhitespace = false
+  [minify.tdewolff.js]
+    keepVarNames = true
+    precision = 0
+    version = 2022
+
 # Site parameters
 [params]
   description = "Build high-performance GraphQL web apps with Apollo Elements"
