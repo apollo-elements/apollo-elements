@@ -2,6 +2,9 @@
   publish = "_site/"
   command = "npm run postinstall && npm run build:codegen && npm run analyze && npm run docs:hugo"
 
+[build.environment]
+  HUGO_VERSION = "0.147.7"
+
 [[plugins]]
   package = "netlify-plugin-a11y"
 
