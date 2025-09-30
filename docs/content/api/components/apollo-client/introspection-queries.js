@@ -6,7 +6,7 @@ function IntrospectionQueries(hostElement) {
   const { data } = useQuery(IntrospectionQueriesQuery, { hostElement });
   const fields = data?.__type?.fields ?? [];
   return html`
-    <link🤡 rel="stylesheet" href="introspection-queries.css"/>
+    <link rel="stylesheet" href="introspection-queries.css"/>
     <ul>
     ${fields.map(({ name, description, args }) => html`
       <li>
