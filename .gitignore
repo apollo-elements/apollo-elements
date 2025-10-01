@@ -49,6 +49,10 @@ packages/fast/bases/*.d.ts
 packages/fast/bases/*.js
 packages/fast/bases/*.js.map
 
+packages/mixins/lib/*.d.ts
+packages/mixins/lib/*.js
+packages/mixins/lib/*.js.map
+
 !custom-elements-manifest.config.js
 
 !packages/*/global.d.ts
