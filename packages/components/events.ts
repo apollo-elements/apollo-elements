@@ -31,7 +31,7 @@ export class MutationEvent<D, V = VariablesOf<D>> extends CustomEvent<MutationEv
   }
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 /**
  * Fired when the element is about to mutate.

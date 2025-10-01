@@ -191,7 +191,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
 
   private static toVariables<T>(acc: T, element: InputLikeElement): T {
     // querySelectorAll ensures the data-variable attr exists
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     return { ...acc, [element.dataset.variable!]: element.value };
   }
 
@@ -447,7 +447,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   }
 
   private onLightDomMutation(records: MutationRecord[]) {
-    /* eslint-disable easy-loops/easy-loops */
+     
     for (const record of records) {
       for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
         const type = this.#listeners.get(node);
@@ -461,7 +461,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
           this.addTriggerListener(node);
       }
     }
-    /* eslint-enable easy-loops/easy-loops */
+     
   }
 
   private onSlotchange(): void {
@@ -511,7 +511,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
     const url =
         typeof this.resolveURL !== 'function' ? href
         // If we get here without `data`, it's due to user error
-      : await this.resolveURL(this.data!, triggeringElement); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      : await this.resolveURL(this.data!, triggeringElement);  
 
     history.replaceState(data, WillNavigateEvent.type, url);
   }

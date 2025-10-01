@@ -130,7 +130,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
 class TypeCheck extends ApolloElement {
   typeCheck() {
-    /* eslint-disable func-call-spacing, no-multi-spaces */
+     
 
     assertType<HTMLElement>                         (this);
     assertType<LitElement>                          (this);
@@ -147,6 +147,6 @@ class TypeCheck extends ApolloElement {
       // assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
     }
 
-    /* eslint-enable func-call-spacing, no-multi-spaces */
+     
   }
 }

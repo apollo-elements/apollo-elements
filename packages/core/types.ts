@@ -519,7 +519,7 @@ export declare class ApolloSubscriptionElement<D = unknown, V extends OperationV
   /**
    * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
-  public shouldResubscribe: boolean | ((options: SubscriptionDataOptions<Data<D>, Variables<D, V>>) => boolean); // eslint-disable-line max-len
+  public shouldResubscribe: boolean | ((options: SubscriptionDataOptions<Data<D>, Variables<D, V>>) => boolean);  
   /**
    * @summary If true, the query will be skipped entirely
    */

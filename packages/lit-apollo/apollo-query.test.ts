@@ -189,7 +189,7 @@ type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+     
     assertType<HTMLElement>                         (this);
     assertType<LitElement>                          (this);
 
@@ -232,7 +232,7 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.noAutoSubscribe);
     assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
-    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+     
   }
 }
 

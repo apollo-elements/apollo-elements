@@ -2,7 +2,6 @@ import type * as I from '@apollo-elements/core/types';
 import { defineCE, expect, fixtureSync } from '@open-wc/testing';
 import { TypePoliciesMixin } from './type-policies-mixin';
 import { ApolloQueryMixin } from './apollo-query-mixin';
-import { setupClient, teardownClient } from '@apollo-elements/test';
 import { gql, ApolloClient, InMemoryCache } from '@apollo/client';
 import { SchemaLink } from '@apollo/client/link/schema';
 import { makeExecutableSchema } from '@graphql-tools/schema';

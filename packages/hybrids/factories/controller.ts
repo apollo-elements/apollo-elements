@@ -30,7 +30,7 @@ export class HybridsControllerHost extends EventTarget implements ReactiveContro
 
   removeController(controller: ReactiveController): void {
     this.#controllers.delete(controller);
-    // eslint-disable-next-line easy-loops/easy-loops
+     
     for (const [key, r] of this.#keys) {
       if (r.controller === controller)
         this.#keys.delete(key);
