@@ -73,6 +73,7 @@ describe('[core] ApolloMutationController', function() {
 
     describe('with non-function onCompleted option', function() {
       beforeEach(function() {
+        // @ts-expect-error: Test intentionally uses specific document type with generic element type
         element.mutation.mutation = S.NoParamMutation;
         // @ts-expect-error: branches testing
         element.mutation.options.onCompleted = true;
@@ -86,7 +87,7 @@ describe('[core] ApolloMutationController', function() {
   describe('with global client', function() {
     beforeEach(setupClient);
 
-    beforeEach(mockQueriesInCache);
+    beforeEach(() => mockQueriesInCache());
 
     afterEach(teardownClient);
 
@@ -141,7 +142,7 @@ describe('[core] ApolloMutationController', function() {
           });
           describe('set mutation', function() {
             beforeEach(() => element.mutation.variables = { nullable: '' });
-            // @ts-expect-error: wrong mutation document!
+            // @ts-expect-error: Test intentionally uses specific document type with generic element type
             beforeEach(() => element.mutation.mutation = S.UpdateUserMutation);
             it('sets document', function() {
               expect(element.mutation.document).to.equal(S.UpdateUserMutation);
@@ -162,7 +163,7 @@ describe('[core] ApolloMutationController', function() {
         });
 
         describe('calling mutate()', function() {
-          let p: Promise<C.FetchResult<ResultOf<typeof element.mutation.mutation>>>;
+          let p: Promise<C.ApolloLink.Result<ResultOf<typeof element.mutation.mutation>>>;
           beforeEach(() => void (p = element.mutation.mutate()));
           it('sets loading', function() {
             expect(element.mutation.loading).to.be.true;
@@ -207,7 +208,7 @@ describe('[core] ApolloMutationController', function() {
             element.mutation.options.ignoreResults = true;
           });
           describe('calling mutate()', function() {
-            let p: Promise<C.FetchResult<ResultOf<typeof element.mutation.mutation>>>;
+            let p: Promise<C.ApolloLink.Result<ResultOf<typeof element.mutation.mutation>>>;
             beforeEach(() => void (p = element.mutation.mutate()));
             it('sets loading', function() {
               expect(element.mutation.loading).to.be.true;
@@ -464,7 +465,7 @@ describe('[core] ApolloMutationController', function() {
 
         describe('destructuring mutate', function() {
           let mutate: (typeof element.mutation)['mutate'];
-          let p: Promise<C.FetchResult<ResultOf<typeof element.mutation.mutation>>>;
+          let p: Promise<C.ApolloLink.Result<ResultOf<typeof element.mutation.mutation>>>;
           beforeEach(() => (element.mutation.options.onCompleted! as SinonSpy).resetHistory());
           beforeEach(() => ({ mutate } = element.mutation));
           beforeEach(() => void (p = mutate()));

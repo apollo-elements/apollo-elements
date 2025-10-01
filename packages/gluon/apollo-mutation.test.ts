@@ -57,9 +57,10 @@ type TypeCheckVars = { d: 'd', e: number };
 
 class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                                   (this);
+    // @ts-expect-error: TypeCheck class doesn't fully implement GluonElement (missing createRenderRoot)
     assertType<GluonElement>                                  (this);
 
     // ApolloElementInterface
@@ -103,7 +104,7 @@ class TypeCheck extends ApolloMutation<TypeCheckData, TypeCheckVars> {
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>      (this.optimisticResponse);
 
-     
+
   }
 }
 

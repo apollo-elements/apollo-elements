@@ -38,7 +38,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 
     static get observedAttributes(): string[] {
       return [
-        ...super.observedAttributes ?? [], /* c8 ignore next */ // covered
+        ...super.observedAttributes ?? [],  // covered
         'error-policy',
         'fetch-policy',
       ];
@@ -46,7 +46,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 
     /** @summary The Apollo Client instance. */
     @controlled()
-      client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
+      client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null;  // covered
 
     declare controller: ApolloController<D, V>;
 
@@ -103,7 +103,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
 
     attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       type ThisPolicy = `${'error'|'fetch'}Policy`;
-      /* c8 ignore start */ // covered
+       // covered
       switch (name) {
         case 'error-policy':
         case 'fetch-policy': {
@@ -114,7 +114,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
         }
       }
       super.attributeChangedCallback?.(name, oldVal, newVal);
-      /* c8 ignore stop */
+
     }
 
     connectedCallback(): void {
@@ -126,7 +126,7 @@ function ApolloElementMixinImplementation<B extends Constructor & {
     disconnectedCallback(): void {
       this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
       window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
-      super.disconnectedCallback?.(); /* c8 ignore start */ // manual testing showed that both cases were hit
+      super.disconnectedCallback?.();  // manual testing showed that both cases were hit
     }
 
     /**

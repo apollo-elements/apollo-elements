@@ -3,9 +3,9 @@ import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from
 import type {
   ApolloClient,
   ErrorPolicy,
-  ErrorLike,
 } from '@apollo/client';
 
+import type { GraphQLFormattedError } from 'graphql';
 
 import type {
   ComponentDocument,
@@ -44,7 +44,12 @@ export interface ApolloControllerOptions<D, V> {
 export abstract class ApolloController<D = unknown, V = VariablesOf<D>>
 implements ReactiveController {
   /** @internal */
-  static o(proto: ApolloController, _: string): void {
+  static o(
+    // we need to let tsc infer types downstream
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    proto: ApolloController<any, any>,
+    _: string,
+  ): void {
     Object.defineProperty(proto, 'options', {
       get() { return this.#options; },
       set(v) {
@@ -61,7 +66,7 @@ implements ReactiveController {
   #document: ComponentDocument<D, V> | null = null;
 
   /** @summary The event emitter to use when firing events, usually the host element. */
-  protected emitter: EventTarget;
+  public emitter: EventTarget;
 
   called = true;
 
@@ -72,7 +77,7 @@ implements ReactiveController {
   error: Error | null = null;
 
   /** @summary Latest errors from the operation, or `[]`. */
-  errors: readonly ErrorLike[] = [];
+  errors: readonly GraphQLFormattedError[] = [];
 
   /** @summary Whether a request is in-flight. */
   loading = false;
@@ -88,7 +93,7 @@ implements ReactiveController {
   set client(v: ApolloClient | null) {
     const client = this.#client;
     this.#client = v;
-    this.clientChanged?.(v); /* c8 ignore next */ // covered
+    this.clientChanged?.(v);  // covered
     this.notify({ client });
   }
 
@@ -97,16 +102,16 @@ implements ReactiveController {
 
   set document(document: ComponentDocument<D, V> | null) {
     if (document === this.#document)
-      return; /* c8 ignore next */ // covered
+      return;  // covered
     else if (!document)
-      this.#document = null; /* c8 ignore next */ // covered
-    else if (!isValidGql(document)) { /* c8 ignore next */ // covered
+      this.#document = null;  // covered
+    else if (!isValidGql(document)) {  // covered
       const name = (this.constructor.name).replace(/Apollo(\w+)(Controller|Behavior)/, '$1');
       throw new TypeError(`${name} must be a parsed GraphQL document.`);
     } else {
       this.#document = document;
       this.notify({ document });
-      this.documentChanged?.(document);/* c8 ignore next */
+      this.documentChanged?.(document);
     }
   }
 
@@ -117,17 +122,17 @@ implements ReactiveController {
 
   set variables(variables: Variables<D, V> | null) {
     if (!variables)
-      delete this.options.variables;/* c8 ignore next */ // covered
+      delete this.options.variables; // covered
     else if (variables === this.options.variables)
-      return; /* c8 ignore next */ // covered
+      return;  // covered
     else
       this.options.variables = variables;
     this.notify({ variables });
-    this.variablesChanged?.(variables);/* c8 ignore next */
+    this.variablesChanged?.(variables);
   }
 
   constructor(public host: ReactiveControllerHost, options?: ApolloControllerOptions<D, V>) {
-    /* c8 ignore start */ // these are all covered
+     // these are all covered
     if (host instanceof EventTarget)
       this.emitter = host;
     else if (options?.hostElement instanceof EventTarget)
@@ -137,7 +142,7 @@ implements ReactiveController {
     this.options = options ?? {};
     this.client = this.options.client ?? window.__APOLLO_CLIENT__ ?? null;
     host.addController?.(this);
-    /* c8 ignore stop */
+
   }
 
   /** @summary requests an update on the host with the provided properties. */

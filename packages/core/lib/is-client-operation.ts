@@ -2,14 +2,28 @@ import type { ApolloLink } from "@apollo/client";
 import type {
   DefinitionNode,
   DirectiveNode,
+  DocumentNode,
   OperationDefinitionNode,
   FieldNode,
   SelectionNode,
 } from 'graphql';
 
-import { hasDirectives } from "@apollo/client/utilities/internal";
-
 const FAIL_DIRECTIVE = Symbol('NO_DIRECTIVE') as unknown as DirectiveNode;
+
+/**
+ * Simple check if document has any directives with the given names
+ * Replaces deprecated hasDirectives from @apollo/client/utilities/internal
+ */
+function hasDirectives(directiveNames: string[], doc?: DocumentNode): boolean {
+  if (!doc?.definitions) return false;
+
+  return doc.definitions.some(def => {
+    if (def.kind === 'OperationDefinition') {
+      return def.directives?.some(d => directiveNames.includes(d.name.value));
+    }
+    return false;
+  });
+}
 
 const hasSelections =
   (x: FieldNode | SelectionNode):
@@ -47,12 +61,12 @@ export function isClientOperation(operation: ApolloLink.Operation): boolean {
   const query = operation?.query;
   const definitions = query?.definitions;
 
-  if (!hasDirectives(['client'], query)) /* c8 ignore next */ // covered
-    return false; /* c8 ignore next */
+  if (!hasDirectives(['client'], query))  // covered
+    return false;
 
   return definitions.reduce((acc: boolean, definition) => {
-    if (!isOperationDefinition(definition)) /* c8 ignore next */ // this is a typeguard, basically
-      return acc && true; /* c8 ignore next */
+    if (!isOperationDefinition(definition))  // this is a typeguard, basically
+      return acc && true;
 
     else if (definition.directives?.length && definition.directives.every(isClientDirective))
       return acc && true;

@@ -14,18 +14,27 @@ import { fixture } from 'atomico/test-dom';
 import { setupClient, teardownClient, resetMessages } from '@apollo-elements/test';
 
 // Simple spy replacement function
-function createSpy() {
+interface Spy<T extends (...args: any[]) => any = (...args: any[]) => any> {
+  (...args: Parameters<T>): ReturnType<T>;
+  called: () => boolean;
+  callCount: () => number;
+  lastCall: { args: any[] };
+  calls: any[][];
+  resetHistory: () => void;
+}
+
+function createSpy<T extends (...args: any[]) => any = (...args: any[]) => any>(): Spy<T> {
   let called = false;
   let callCount = 0;
   let lastArgs: any[] = [];
   let calls: any[][] = [];
 
-  const spy = (...args: any[]) => {
+  const spy = ((...args: any[]) => {
     called = true;
     callCount++;
     lastArgs = args;
     calls.push(args);
-  };
+  }) as Spy<T>;
 
   spy.called = () => called;
   spy.callCount = () => callCount;
@@ -288,6 +297,8 @@ describe('[atomico] useSubscription', function() {
       };
 
       let subscription: typeof element['subscription'];
+      const onDataSpy = createSpy();
+      const onErrorSpy = createSpy();
 
       beforeEach(async function define() {
         const Component = c(
@@ -295,8 +306,8 @@ describe('[atomico] useSubscription', function() {
             subscription =
               useSubscription(S.NullableParamSubscription, {
                 shouldSubscribe: () => false,
-                onData: createSpy(),
-                onError: createSpy(),
+                onData: onDataSpy,
+                onError: onErrorSpy,
               });
             return html`<host></host>`;
           }
@@ -341,8 +352,8 @@ describe('[atomico] useSubscription', function() {
       beforeEach(() => aTimeout(100));
 
       it('does not fetch data', function() {
-        expect(subscription?.options?.onData?.called()).to.be.false;
-        expect(subscription?.options?.onError?.called()).to.be.false;
+        expect(onDataSpy.called()).to.be.false;
+        expect(onErrorSpy.called()).to.be.false;
       });
 
       describe('when query will reject', function() {
@@ -351,7 +362,7 @@ describe('[atomico] useSubscription', function() {
           beforeEach(function() { subscription.subscribe(); });
           beforeEach(nextFrame);
           it('calls onError', function() {
-            expect(subscription.options.onError.called()).to.be.true;
+            expect(onErrorSpy.called()).to.be.true;
             // Error argument structure may vary, just verify onError was called
           });
         });
@@ -366,13 +377,17 @@ describe('[atomico] useSubscription', function() {
         S.NullableParamSubscriptionVariables
       >;
 
+      const onDataSpy2 = createSpy();
+      const onErrorSpy2 = createSpy();
+      const onCompleteSpy = createSpy();
+
       beforeEach(async function define() {
         function Renderer(this: typeof element) {
           const subscription = useSubscription(S.NullableParamSubscription, {
             noAutoSubscribe: true,
-            onData: createSpy(),
-            onError: createSpy(),
-            onComplete: createSpy(),
+            onData: onDataSpy2,
+            onError: onErrorSpy2,
+            onComplete: onCompleteSpy,
           });
           useEffect(() => { s = subscription; }, [subscription]);
           return html`<host></host>`;
@@ -388,14 +403,14 @@ describe('[atomico] useSubscription', function() {
       beforeEach(nextFrame);
 
       let subscribeCallArgs: any[] = [];
-      let originalSubscribe: typeof s.client.subscribe;
+      let originalSubscribe: NonNullable<typeof s.client>['subscribe'];
 
       beforeEach(function spyClientSubscription() {
         originalSubscribe = s.client!.subscribe;
-        s.client!.subscribe = (...args) => {
+        s.client!.subscribe = ((...args: Parameters<typeof originalSubscribe>) => {
           subscribeCallArgs.push(args[0]); // Store the arguments
           return originalSubscribe.apply(s.client!, args);
-        };
+        }) as typeof originalSubscribe;
       });
 
       afterEach(function restoreClientSubscription() {
@@ -411,7 +426,7 @@ describe('[atomico] useSubscription', function() {
       });
 
       it('does not subscribe', function() {
-        expect(s.options?.onData?.called()).to.be.false;
+        expect(onDataSpy2.called()).to.be.false;
       });
 
       describe('when subscribe() rejects', function() {
@@ -425,7 +440,7 @@ describe('[atomico] useSubscription', function() {
 
         it('sets error', function() {
           expect(s.error).to.be.ok;
-          expect(s.options.onError.called()).to.be.true;
+          expect(onErrorSpy2.called()).to.be.true;
           // Error argument structure may vary, just verify onError was called
           expect(s.error, 'element error')
             .to.be.ok;
@@ -572,8 +587,8 @@ describe('[atomico] useSubscription', function() {
             },
           };
           expect(s.data).to.deep.equal(data);
-          expect(s.options.onData.callCount()).to.equal(1);
-          const callArg = s.options.onData.lastCall.args[0];
+          expect(onDataSpy2.callCount()).to.equal(1);
+          const callArg = onDataSpy2.lastCall.args[0];
           if (callArg?.subscriptionData) {
             expect(callArg.subscriptionData.data).to.deep.equal(data);
             expect(callArg.subscriptionData.loading).to.be.false;
@@ -631,12 +646,16 @@ describe('[atomico] useSubscription', function() {
         S.NullableParamSubscriptionVariables
       >;
 
+      const onDataSpy3 = createSpy();
+      const onCompleteSpy3 = createSpy();
+      const onErrorSpy3 = createSpy();
+
       beforeEach(async function define() {
         function Renderer(this: typeof element) {
           subscription = useSubscription(S.NullableParamSubscription, {
-            onData: createSpy(),
-            onComplete: createSpy(),
-            onError: createSpy(),
+            onData: onDataSpy3,
+            onComplete: onCompleteSpy3,
+            onError: onErrorSpy3,
           });
           return html`<host></host>`;
         }
@@ -694,8 +713,8 @@ describe('[atomico] useSubscription', function() {
       });
 
       it('calls onData', function() {
-        expect(subscription.options.onData.callCount()).to.equal(1);
-        const callArg = subscription.options.onData.lastCall.args[0];
+        expect(onDataSpy3.callCount()).to.equal(1);
+        const callArg = onDataSpy3.lastCall.args[0];
         if (callArg?.subscriptionData) {
           expect(callArg.subscriptionData.loading).to.be.false;
           expect(callArg.subscriptionData.error).to.be.null;
@@ -716,8 +735,8 @@ describe('[atomico] useSubscription', function() {
         beforeEach(() => aTimeout(50));
 
         it('refetches', function() {
-          expect(subscription.options.onData.callCount()).to.equal(2);
-          const callArg = subscription.options.onData.lastCall.args[0];
+          expect(onDataSpy3.callCount()).to.equal(2);
+          const callArg = onDataSpy3.lastCall.args[0];
           if (callArg?.client) {
             expect(callArg.client).to.equal(subscription.client);
           }
@@ -749,8 +768,9 @@ describe('[atomico] useSubscription', function() {
           const [messages, setMessages] = useState<string[]>([]);
 
           useEffect(() => {
-            if (data?.messageSent?.message) {
-              setMessages(prevMessages => [...prevMessages, data.messageSent.message]);
+            const message = data?.messageSent?.message;
+            if (message) {
+              setMessages(prevMessages => [...prevMessages, message]);
             }
           }, [data?.messageSent?.message]);
 

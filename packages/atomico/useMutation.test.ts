@@ -1,7 +1,6 @@
 import type {
   ApolloClient,
-  FetchResult,
-  MutationOptions,
+  ApolloLink,
   TypedDocumentNode,
 } from '@apollo/client';
 
@@ -30,10 +29,10 @@ describe('[atomico] useMutation', function() {
         let element: HTMLElement & { updated: Promise<void> };
 
         let mutateFn: (
-          params?: Partial<MutationOptions<S.UpdateUserMutationData,
+          params?: Partial<ApolloClient.MutateOptions<S.UpdateUserMutationData,
           S.UpdateUserMutationVariables>>
         ) =>
-          Promise<FetchResult<S.UpdateUserMutationData>>;
+          Promise<ApolloLink.Result<S.UpdateUserMutationData>>;
 
         let variables: S.UpdateUserMutationVariables;
 

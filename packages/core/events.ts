@@ -48,7 +48,11 @@ export class ApolloElementEvent<T = ApolloControllerHost> extends ApolloEvent<T>
   }
 }
 
-export abstract class ApolloControllerEvent<T extends ApolloController> extends ApolloEvent {
+export abstract class ApolloControllerEvent<
+  // we need to let tsc infer types downstream
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends ApolloController<any, any>,
+> extends ApolloEvent {
   public abstract controller: T;
   public abstract type: ApolloControllerEventType
   constructor(type: ApolloControllerEventType) {
@@ -59,7 +63,11 @@ export abstract class ApolloControllerEvent<T extends ApolloController> extends 
 /**
  * @summary Fired when a controlled element connects to the DOM
  */
-export class ApolloControllerConnectedEvent<T extends ApolloController>
+export class ApolloControllerConnectedEvent<
+  // we need to let tsc infer types downstream
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends ApolloController<any, any> = ApolloController<any, any>,
+>
   extends ApolloControllerEvent<T> {
   public static type = 'apollo-controller-connected' as const;
   public declare type: 'apollo-controller-connected';
@@ -71,7 +79,11 @@ export class ApolloControllerConnectedEvent<T extends ApolloController>
 /**
  * @summary Fired when a controlled element disconnects from the DOM
  */
-export class ApolloControllerDisconnectedEvent<T extends ApolloController>
+export class ApolloControllerDisconnectedEvent<
+  // we need to let tsc infer types downstream
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends ApolloController<any, any> = ApolloController<any, any>,
+>
   extends ApolloControllerEvent<T> {
   public static type = 'apollo-controller-disconnected' as const;
   public declare type: 'apollo-controller-disconnected';

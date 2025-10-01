@@ -191,7 +191,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
   variables = { d: 'd' as const, e: 0 };
 
   typeCheck(): void {
-     
+
 
     assertType<HTMLElement>                         (this);
 
@@ -235,7 +235,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
     // assertType<boolean>(this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
 
-     
+
   }
 }
 

@@ -47,7 +47,9 @@ class TestableApolloQuery<D, V = I.VariablesOf<D>> extends ApolloQuery<D, V> imp
 
 describe('[lit-apollo] ApolloQuery', function() {
   describeQuery({
+    // @ts-expect-error: TestableApolloQuery constructor signature doesn't exactly match expected type
     setupFunction: setupQueryClass(TestableApolloQuery),
+    // @ts-expect-error: TestableApolloQuery constructor signature doesn't exactly match expected type
     class: TestableApolloQuery,
   });
 
@@ -138,6 +140,7 @@ describe('[lit-apollo] ApolloQuery', function() {
   describe('with a client and a query', function() {
     class Test extends ApolloQuery {
       noAutoSubscribe = true;
+      // @ts-expect-error: Test intentionally uses specific document type with generic element type
       query = S.HelloQuery;
       client = makeClient({ connectToDevTools: false });
       updated(changed: PropertyValues<this>) {
@@ -189,7 +192,7 @@ type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-     
+
     assertType<HTMLElement>                         (this);
     assertType<LitElement>                          (this);
 
@@ -230,9 +233,10 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.partialRefetch!);
     assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
+    // @ts-expect-error: ApolloQueryControllerOptions is not directly assignable to WatchQueryOptions
+    assertType<Partial<C.ApolloClient.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>          (this.options!);
 
-     
+
   }
 }
 

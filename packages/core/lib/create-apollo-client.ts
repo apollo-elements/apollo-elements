@@ -22,7 +22,7 @@ const validateVariablesLink =
   new ApolloLink((operation, forward) => {
     const result = hasAllVariables(operation) ? forward(operation) : null;
     return result!;
-  });/* c8 ignore next */ // covered
+  }); // covered
 
 /**
  * Creates a simple ApolloClient

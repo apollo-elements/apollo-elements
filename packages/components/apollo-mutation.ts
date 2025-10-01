@@ -11,8 +11,8 @@ import type {
 import type { PropertyValues } from 'lit';
 
 import type {
-  FetchResult,
-  MutationOptions,
+  ApolloLink,
+  ApolloClient,
   ErrorPolicy,
 } from '@apollo/client';
 
@@ -250,7 +250,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
     const { isButton, isLink } = ApolloMutationElement;
     return this.triggers.map(x => {
       if (isLink(x) && isButton(x.firstElementChild))
-        /* c8 ignore next 3 */
+
         return x.firstElementChild;
       else
         return x;
@@ -449,7 +449,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
     for (const record of records) {
       for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
         const type = this.#listeners.get(node);
-        if (type == null) return; /* c8 ignore next */
+        if (type == null) return;
         node.removeEventListener(type, this.onTriggerEvent);
         this.#listeners.delete(node);
       }
@@ -593,8 +593,8 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   public updater?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 
   public mutate(
-    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
-  ): Promise<FetchResult<Data<D>>> {
-    return this.controller.mutate({ ...params, update: this.updater });
+    params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>
+  ): Promise<ApolloLink.Result<Data<D>>> {
+    return this.controller.mutate({ ...params, ...(this.updater ? { update: this.updater } : {}) } as Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>);
   }
 }

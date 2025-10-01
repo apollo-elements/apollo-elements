@@ -154,9 +154,10 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                         (this);
+    // @ts-expect-error: TypeCheck class doesn't fully implement GluonElement (missing createRenderRoot)
     assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
@@ -199,9 +200,10 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     // Note: returnPartialData removed in Apollo Client v4
     // assertType<boolean>(this.returnPartialData!);
     assertType<boolean>                                 (this.noAutoSubscribe);
-    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
+    // @ts-expect-error: ApolloQueryControllerOptions is not directly assignable to WatchQueryOptions
+    assertType<Partial<C.ApolloClient.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
 
-     
+
   }
 }
 

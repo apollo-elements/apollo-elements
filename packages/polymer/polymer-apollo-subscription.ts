@@ -40,7 +40,7 @@ export class PolymerApolloSubscription<D = unknown, V extends OperationVariables
 
 customElements.define(PolymerApolloSubscription.is, PolymerApolloSubscription);
 
- 
+
 declare global { interface HTMLElementTagNameMap {
   'polymer-apollo-subscription': PolymerApolloSubscription<unknown>;
 } }

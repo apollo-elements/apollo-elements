@@ -21,7 +21,9 @@ export class PolymerChangeEvent<T> extends CustomEvent<{ value: T }> {
  */
 export function notify(opts: DefineOptions = {}) {
   return function<T extends HTMLElement & ReactiveControllerHost & {
-    controller: ApolloController;
+    // we need to let tsc infer types downstream
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    controller: ApolloController<any, any>;
   }>(
     proto: T,
     name: keyof T

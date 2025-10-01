@@ -69,6 +69,7 @@ describe('createApolloClient()', function() {
     describe('querying NonNull without params', function() {
       beforeEach(async function() {
         fetchCalled = false; // Reset before each test
+        // @ts-expect-error: Testing validation with invalid null value
         await client!.query({ query: S.NonNullableParamQuery, variables: { nonNull: null } }).catch(() => null);
       });
 

@@ -66,7 +66,7 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       it('has default properties', function() {
-         
+
         // fields
         expect(element.subscription.client, 'client').to.not.be.ok;
         expect(element.subscription.data, 'data').to.not.be.ok;
@@ -76,7 +76,7 @@ describe('[core] ApolloSubscriptionController', function() {
         expect(element.subscription.subscription, 'query').to.not.be.ok;
         expect(element.subscription.variables, 'variables').to.not.be.ok;
         expect(element.subscription.canAutoSubscribe, 'canAutoSubscribe').to.be.false;
-         
+
       });
 
 
@@ -196,7 +196,7 @@ describe('[core] ApolloSubscriptionController', function() {
     describe('with global client', function() {
       beforeEach(setupClient);
 
-      beforeEach(mockQueriesInCache);
+      beforeEach(() => mockQueriesInCache());
 
       afterEach(teardownClient);
 

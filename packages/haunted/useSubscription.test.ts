@@ -4,8 +4,9 @@ import type { ReactiveControllerHost } from 'lit';
 import type {
   ApolloSubscriptionController,
   ApolloSubscriptionControllerOptions,
-  GraphQLError,
 } from '@apollo-elements/core';
+
+import type { GraphQLFormattedError } from 'graphql';
 
 import { html } from 'haunted';
 import { useSubscription } from './useSubscription';
@@ -718,7 +719,7 @@ function TDNTypeCheck() {
   assertType<TypeCheckVars>(variables!);
   assertType<ApolloSubscriptionControllerOptions<TypeCheckData, TypeCheckVars>>(options);
   assertType<ReactiveControllerHost>(host);
-  assertType<readonly GraphQLError[]>(errors);
+  assertType<readonly GraphQLFormattedError[]>(errors);
 }
 
 function ManuallyTypedTypeCheck() {
@@ -742,5 +743,5 @@ function ManuallyTypedTypeCheck() {
   assertType<TypeCheckVars>(variables!);
   assertType<ApolloSubscriptionControllerOptions<TypeCheckData, TypeCheckVars>>(options);
   assertType<ReactiveControllerHost>(host);
-  assertType<readonly GraphQLError[]>(errors);
+  assertType<readonly GraphQLFormattedError[]>(errors);
 }

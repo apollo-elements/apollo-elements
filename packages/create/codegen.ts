@@ -70,7 +70,7 @@ function logNameError(options: BaseOptions, error: ExecaError): void {
   }
 }
 
-function logListrError(options: BaseOptions, error: ExecaError): void {
+function logListrError(options: BaseOptions, error: { errors: Error[] }): void {
   if (options.silent)
     return;
   console.log(
@@ -114,12 +114,16 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
     if (!options.silent)
       console.log(greenBright('Done!'));
   } catch (error) {
-    if (!isExecaError(error))
-      logAnyError(options, error)
-    else if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
+    if (!isExecaError(error)) {
+      if (typeof error === 'object'
+        && error
+        && 'errors' in error
+        && Array.isArray(error.errors))
+        logListrError(options, error as { errors: Error[] });
+      else
+        logAnyError(options, error);
+    } else if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
       logNameError(options, error);
-    else if (error?.name === 'ListrError')
-      logListrError(options, error);
     else
       logError(options, error);
   }

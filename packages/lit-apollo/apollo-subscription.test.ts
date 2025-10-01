@@ -97,7 +97,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     // @ts-expect-error: b as number type
     this.data?.b === 'b';
 
-     
+
 
     // ApolloElementInterface
     assertType<Record<string, unknown>>             (this.context!);
@@ -116,7 +116,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
 
-     
+
   }
 }
 

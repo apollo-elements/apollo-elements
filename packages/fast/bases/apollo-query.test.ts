@@ -100,10 +100,10 @@ describe('[FAST] ApolloQuery', function() {
   describe('polling', function() {
     const name = 'polling-and-timers';
     @customElement({ name })
-    class Test extends ApolloQuery {
+    class Test extends ApolloQuery<typeof S.NullableParamQuery> {
       query = S.NullableParamQuery;
     }
-    let element: ApolloQuery;
+    let element: Test;
     let clock: SinonFakeTimers;
     beforeEach(async function() {
       element = await fixture<Test>(`<${name}></${name}>`);
@@ -140,7 +140,7 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                         (this);
     assertType<FASTElement>                         (this);
@@ -182,9 +182,10 @@ class TypeCheck extends ApolloQuery<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.partialRefetch!);
     assertType<boolean>                             (this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
-    assertType<Partial<C.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
+    // @ts-expect-error: ApolloQueryControllerOptions is not directly assignable to WatchQueryOptions
+    assertType<Partial<C.ApolloClient.WatchQueryOptions<TypeCheckVars, TypeCheckData>>>(this.options!);
 
-     
+
   }
 }
 

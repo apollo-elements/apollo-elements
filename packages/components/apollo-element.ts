@@ -25,7 +25,7 @@ export class ApolloElement<D, V = VariablesOf<D>> extends StampinoRender {
   /** @summary The Apollo Client instance. */
   @controlled()
   @state()
-    client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null; /* c8 ignore next */ // covered
+    client: ApolloClient | null = window.__APOLLO_CLIENT__ ?? null;  // covered
 
   /** @summary Whether a request is in flight. */
   @controlled() @property({ reflect: true, type: Boolean }) loading = false;

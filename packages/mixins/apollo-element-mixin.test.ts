@@ -275,7 +275,7 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
 
 class TypeCheck extends Test {
   typeCheck(): void {
-     
+
 
     assertType<HTMLElement>                         (this);
 
@@ -291,6 +291,6 @@ class TypeCheck extends Test {
     // if (isApolloError(this.error))
     //   (this.error.graphQLErrors);
 
-     
+
   }
 }

@@ -47,7 +47,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
   controller = new ApolloQueryBehavior<D, V>(this, null, {
     shouldSubscribe: options => this.readyToReceiveDocument && this.shouldSubscribe(options),
     onData: data => this.onData?.(data),
-    onError: error => this.onError?.(error), /* c8 ignore next */ // covered
+    onError: error => this.onError?.(error),
   });
 
   /**
@@ -55,7 +55,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * Override to prevent subscribing unless your conditions are met
    */
   shouldSubscribe(
-    options?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
+    options?: Partial<C.ApolloClient.WatchQueryOptions<Data<D>, Variables<D, V>>>
   ): boolean {
     return (void options, true);
   }
@@ -222,7 +222,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    */
   public async refetch(
     variables?: Variables<D, V>
-  ): Promise<C.ApolloQueryResult<Data<D>>> {
+  ) {
     return this.controller.refetch(variables);
   }
 
@@ -231,7 +231,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * @param params options for controlling how the subscription subscribes
    */
   public subscribe(
-    params?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
+    params?: Partial<C.ApolloClient.WatchQueryOptions<Data<D>, Variables<D, V>>>
   ): Subscription {
     return this.controller.subscribe(params);
   }
@@ -245,7 +245,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * and returns an object with updated query data based on the new results.
    */
   public subscribeToMore<TSubscriptionVariables extends C.OperationVariables, TSubscriptionData>(
-    options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: C.ObservableQuery.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData, Variables<D, V>>
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }
@@ -254,8 +254,8 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    * Executes a Query once and updates the with the result
    */
   public async executeQuery(
-    params?: Partial<C.QueryOptions<Variables<D, V>, Data<D>>>
-  ): Promise<C.ApolloQueryResult<Data<D>>> {
+    params?: Partial<C.ApolloClient.QueryOptions<Data<D>, Variables<D, V>>>
+  ): Promise<C.ObservableQuery.Result<Data<D>>> {
     return this.controller.executeQuery(params);
   }
 
@@ -271,7 +271,7 @@ export class ApolloQuery<D = unknown, V = VariablesOf<D>> extends ApolloElement<
    */
   public async fetchMore(
     params?: Partial<FetchMoreParams<D, V>>
-  ): Promise<C.ApolloQueryResult<Data<D>>> {
+  ): Promise<C.ObservableQuery.Result<Data<D>>> {
     return this.controller.fetchMore(params);
   }
 

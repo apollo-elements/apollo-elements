@@ -54,8 +54,8 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
 
     controller = new ApolloSubscriptionController<D, V>(this, null, {
       shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
-      onData: data => this.onSubscriptionData?.(data), /* c8 ignore next */ // covered
-      onComplete: () => this.onSubscriptionComplete?.(), /* c8 ignore next */ // covered
+      onData: data => this.onSubscriptionData?.(data),  // covered
+      onComplete: () => this.onSubscriptionComplete?.(),  // covered
       onError: error => this.onError?.(error),
     });
 
@@ -106,7 +106,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
      * Override to prevent subscribing unless your conditions are met
      */
     shouldSubscribe(
-      options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
+      options?: Partial<C.ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>>
     ): boolean {
       return (void options, true);
     }

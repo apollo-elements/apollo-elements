@@ -1,4 +1,4 @@
-import type { SubscriptionOptions } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
 
 import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
 
@@ -9,7 +9,7 @@ import { hasAllVariables } from '@apollo-elements/core/lib/has-all-variables';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type ControllerElementConstructor = Constructor<ApolloElementElement<any, any> & {
-  shouldSubscribe?(options?: Partial<SubscriptionOptions>): boolean;
+  shouldSubscribe?(options?: Partial<ApolloClient.SubscribeOptions>): boolean;
   controller: C.ApolloQueryController<any, any> | C.ApolloSubscriptionController<any, any>
 }> /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -24,11 +24,11 @@ function ValidateVariablesMixinImpl<B extends ControllerElementConstructor>(supe
     constructor(..._: any[]) {
       super();
       const { shouldSubscribe } = this.controller.options;
-      this.controller.options.shouldSubscribe = (x?: Partial<SubscriptionOptions>) =>
+      this.controller.options.shouldSubscribe = (x?: Partial<ApolloClient.SubscribeOptions>) =>
         (shouldSubscribe?.(x) ?? true) && this.shouldSubscribe(x);
     }
 
-    override shouldSubscribe(options?: Partial<SubscriptionOptions>) {
+    override shouldSubscribe(options?: Partial<ApolloClient.SubscribeOptions>) {
       const query = options?.query ?? this.document ?? undefined;
       const variables = options?.variables ?? this.variables ?? undefined;
       return hasAllVariables({ query, variables });

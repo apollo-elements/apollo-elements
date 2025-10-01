@@ -162,6 +162,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
       describe('setting mutation with NoParam mutation', function() {
         beforeEach(function setMutation() {
+          // @ts-expect-error: Test intentionally uses specific document type with generic element type
           element.mutation = NoParamMutation;
         });
 
@@ -252,7 +253,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
     describe('with global client available', function() {
       beforeEach(setupClient);
-      beforeEach(mockQueriesInCache);
+      beforeEach(() => mockQueriesInCache());
 
       afterEach(teardownClient);
 
@@ -863,7 +864,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           let spies: Record<Exclude<keyof typeof element, symbol> | string, SinonSpy>;
 
           beforeEach(setupClient);
-      beforeEach(mockQueriesInCache);
+      beforeEach(() => mockQueriesInCache());
 
           beforeEach(async function setupElement() {
             class Test extends Klass<typeof S.NullableParamMutation> {

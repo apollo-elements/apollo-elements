@@ -86,7 +86,7 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeCheckVars> {
   typeCheck(): void {
-     
+
 
     assertType<HTMLElement>                         (this);
 
@@ -117,7 +117,7 @@ export class TypeCheck extends TestableApolloSubscription<TypeCheckData, TypeChe
     assertType<boolean>                                 (this.skip);
     assertType<boolean>                                 (this.noAutoSubscribe);
 
-     
+
   }
 }
 type TDN = C.TypedDocumentNode<TypeCheckData, TypeCheckVars>;

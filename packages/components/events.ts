@@ -31,7 +31,7 @@ export class MutationEvent<D, V = VariablesOf<D>> extends CustomEvent<MutationEv
   }
 }
 
- 
+
 
 /**
  * Fired when the element is about to mutate.

@@ -1,11 +1,9 @@
 import type {
-  ApolloQueryResult,
   ErrorPolicy,
+  ObservableQuery,
   OperationVariables,
-  QueryOptions,
-  SubscribeToMoreOptions,
+  ApolloClient,
   WatchQueryFetchPolicy,
-  WatchQueryOptions,
 } from '@apollo/client';
 
 import type { Subscription } from 'rxjs';
@@ -228,7 +226,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @bound public async refetch(
     variables?: Variables<D, V>
-  ): Promise<ApolloQueryResult<Data<D>>> {
+  ) {
     return this.controller.refetch(variables);
   }
 
@@ -237,7 +235,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * @param params options for controlling how the subscription subscribes
    */
   @bound public subscribe(
-    params?: Partial<WatchQueryOptions<Variables<D, V>, Data<D>>>
+    params?: Partial<ApolloClient.WatchQueryOptions<Data<D>, Variables<D, V>>>
   ): Subscription {
     return this.controller.subscribe(params);
   }
@@ -251,7 +249,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * and returns an object with updated query data based on the new results.
    */
   @bound public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
-    options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: ObservableQuery.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData, Variables<D, V>>
   ): (() => void) | void {
     return this.controller.subscribeToMore(options);
   }
@@ -260,8 +258,8 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * Executes a Query once and updates the with the result
    */
   @bound public async executeQuery(
-    params?: Partial<QueryOptions<Variables<D, V>, Data<D>>>
-  ): Promise<ApolloQueryResult<Data<D>>> {
+    params?: Partial<ApolloClient.QueryOptions<Data<D>, Variables<D, V>>>
+  ): Promise<ObservableQuery.Result<Data<D>>> {
     return this.controller.executeQuery(params);
   }
 
@@ -277,7 +275,7 @@ export class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   @bound public async fetchMore(
     params?: Partial<FetchMoreParams<D, V>>
-  ): Promise<ApolloQueryResult<Data<D>>> {
+  ): Promise<ObservableQuery.Result<Data<D>>> {
     return this.controller.fetchMore(params);
   }
 

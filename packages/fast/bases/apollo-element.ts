@@ -38,7 +38,7 @@ export class ApolloElement<D = unknown, V = VariablesOf<D>> extends FASTElement 
     this.readyToReceiveDocument = false;
     this.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
     window.dispatchEvent(new ApolloElementEvent('apollo-element-disconnected', this));
-    super.disconnectedCallback?.(); /* c8 ignore start */ // manual testing showed that both cases were hit
+    super.disconnectedCallback?.();  // manual testing showed that both cases were hit
   }
 
   /** @summary The Apollo Client instance */
