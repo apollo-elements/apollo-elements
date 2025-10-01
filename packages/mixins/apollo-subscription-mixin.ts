@@ -61,7 +61,7 @@ function ApolloSubscriptionMixinImpl<B extends Constructor>(superclass: B): Mixi
 
     @controlled() subscription: ComponentDocument<D, V> | null = null;
 
-    @controlled({ readonly: true }) declare readonly canAutoSubscribe: boolean;
+    @controlled({ readonly: true }) canAutoSubscribe!: boolean;
 
     @controlled({ path: 'options' }) context?: Record<string, unknown>;
 

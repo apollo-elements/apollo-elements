@@ -81,7 +81,11 @@ export default ({
     resolveLocalFilesFromTypeScriptSources({ rootDir }),
     graphql(),
     commonjs({ include: cjsIncludes, ignoreDynamicRequires: false }),
-    esbuildPlugin({ ts: true }),
+    esbuildPlugin({
+      ts: true,
+      target: 'es2022',
+      tsconfig: './tsconfig.settings.json',
+    }),
     sendKeysPlugin(),
     {
       name: 'fake it for gluon',
