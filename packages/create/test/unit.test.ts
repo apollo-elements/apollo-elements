@@ -25,6 +25,7 @@ test(`npm init @apollo-elements app`, async function(t) {
   const { stdout } = await execaCommand(`tree -I 'node_modules' ${cwd}`);
   let actual = stdout
     .replace(cwd, '/cwd/scaffolded-app/')
+    // eslint-disable-next-line no-control-regex
     .replace(/\x1b\[[0-9;]*m/g, ''); // Strip ANSI color codes
   let expect = await getFixture('AFTER_APP.txt');
   // Remove summary line at the end (matches "N directories, M files")
@@ -44,6 +45,7 @@ test(`npm init @apollo-elements component`, async function(t) {
   const { stdout } = await execaCommand(`tree -I 'node_modules' ${cwd}`);
   let aTree = stdout
     .replace(cwd, '/cwd/scaffolded-app/')
+    // eslint-disable-next-line no-control-regex
     .replace(/\x1b\[[0-9;]*m/g, ''); // Strip ANSI color codes
   let eTree = await getFixture('AFTER_COMPONENT.txt');
   // Remove summary line at the end (matches "N directories, M files")
