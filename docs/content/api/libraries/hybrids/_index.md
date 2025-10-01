@@ -19,34 +19,19 @@ Hybrids is a unique web components framework which combines aspects of functiona
 
 Import the `query`, `mutation`, and `subscription` descriptor factories and use them in your [hybrids](https://hybrids.js.org) to connect them to your Apollo cache.
 
-{{<docs-playground "hybrids-app" "ts">}}
-{{<include users-list.ts>}}
+{{<docs-playground id="hybrids-app" lang="ts">}}
+  {{<playground-file name="users-list.ts" include="users-list.ts" />}}
+  {{<playground-file name="users-list.css" include="users-list.css" />}}
+
+  {{<playground-file name="Users.query.graphql.ts" include="Users.query.graphql.ts" />}}
+
+  {{<playground-file name="AddUser.mutation.graphql.ts" include="AddUser.mutation.graphql.ts" />}}
+
+  {{<playground-file name="RemoveUser.mutation.graphql.ts" include="RemoveUser.mutation.graphql.ts" />}}
+
+  {{<playground-file name="style.css" include="style.css" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
-
-{{<playground-file "hybrids-app" "users-list.css">}}
-{{<include users-list.css>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-app" "Users.query.graphql.ts">}}
-{{<include Users.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-app" "AddUser.mutation.graphql.ts">}}
-{{<include AddUser.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-app" "RemoveUser.mutation.graphql.ts">}}
-{{<include RemoveUser.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-app" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-app" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-app" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}

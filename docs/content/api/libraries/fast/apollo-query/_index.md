@@ -19,25 +19,12 @@ sidebar: api
 
 ## Demo
 
-{{<docs-playground "fast-query" "ts">}}
-{{<include launches.ts>}}
+{{<docs-playground id="fast-query" lang="ts">}}
+  {{<playground-file name="launches.ts" include="launches.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="style.css" include="style.css" />}}
+  {{<playground-file name="launches.css.js" include="launches.css.js" />}}
+  {{<playground-file name="Launches.query.graphql.ts" include="../../../../../static/assets/libraries/_assets/Launches.query.graphql.ts" />}}
 {{</docs-playground>}}
-
-
-{{<playground-file "fast-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-query" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-query" "launches.css.js">}}
-{{<include launches.css.js>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-query" "Launches.query.graphql.ts">}}
-{{<include Launches.query.graphql.ts>}}
-{{</playground-file>}}
 
 Read the [query component guides](/guides/usage/queries/) for more examples and tips.

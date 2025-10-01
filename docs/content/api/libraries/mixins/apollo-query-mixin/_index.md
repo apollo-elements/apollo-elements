@@ -19,15 +19,9 @@ sidebar: api
 
 ## Demo
 
-{% set query %}<!-- TODO: Include file '../_assets/Launches.query.graphql' - needs Hugo shortcode or static asset -->{% endset %}
-{% set style %}<!-- TODO: Include file '../_assets/SpacexLaunches.css' - needs Hugo shortcode or static asset -->{% endset %}
-
-{{<docs-playground "mixins-query" "ts">}}
-{{<include launches.js>}}
+{{<docs-playground id="mixins-query" lang="ts">}}
+  {{<playground-file name="launches.js" include="launches.js" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
 {{</docs-playground>}}
-
-{{<playground-file "mixins-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
 
 Read the [query component guides](../../../../guides/usage/queries/) for more examples and tips.

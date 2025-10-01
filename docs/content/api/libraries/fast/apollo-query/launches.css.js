@@ -1,6 +1,19 @@
 import { css } from '@microsoft/fast-element';
 export const styles = css`
-<!-- TODO: Include file ../_assets/SpacexLaunches.css - needs Hugo shortcode or static asset -->
+:host {
+  --image-size: 40px;
+}
+
+li img {
+  height: var(--image-size);
+  width: auto;
+}
+
+li article {
+  height: var(--image-size);
+  display: flex;
+  justify-content: space-between;
+}
 
 fast-card {
   display: grid;

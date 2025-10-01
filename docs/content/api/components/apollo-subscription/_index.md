@@ -25,6 +25,6 @@ This page has detailed API documentation for `<apollo-subscription>`. See the [`
 
 ## Live Demo
 
-{{<docs-playground "subscription-component" "html">}}
-{{<include index.html>}}
+{{<docs-playground id="subscription-component" lang="html">}}
+  {{<playground-file name="index.html" include="index.html" />}}
 {{</docs-playground>}}

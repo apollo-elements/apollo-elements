@@ -25,20 +25,11 @@ Looking for reactive Apollo query controllers? See [`@apollo-elements/core/apoll
 
 ## Demo
 
-{{<docs-playground "lit-apollo-query" "ts">}}
-{{<include launches.ts>}}
+{{<docs-playground id="lit-apollo-query" lang="ts">}}
+  {{<playground-file name="launches.ts" include="launches.ts" />}}
+  {{<playground-file name="Launches.query.graphql.ts" include="../../../../../static/assets/libraries/_assets/Launches.query.graphql.ts" />}}
+  {{<playground-file name="SpacexLaunches.css.js" include="../../../../../static/assets/libraries/_assets/SpacexLaunches.css.js" />}}
+  {{<playground-file name="index.html" include="../../../../../static/assets/libraries/_assets/index.spacex-launches.html" />}}
 {{</docs-playground>}}
-
-{{<playground-file "lit-apollo-query" "Launches.query.graphql.ts">}}
-{{<include Launches.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "lit-apollo-query" "SpacexLaunches.css.js">}}
-{{<include SpacexLaunches.css.js>}}
-{{</playground-file>}}
-
-{{<playground-file "lit-apollo-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
 
 Read the [query component guides](../../../../guides/usage/queries/) for more examples and tips.

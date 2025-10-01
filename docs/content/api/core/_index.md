@@ -17,26 +17,15 @@ This also introduces a separation between GraphQL operations (like queries or mu
   {{<code-tab package="pnpm">}}pnpm add @apollo-elements/core{{</code-tab>}}
 </code-tabs>
 
-{{<docs-playground "controller-host" "ts">}}
-{{<include profile-home.ts>}}
+{{<docs-playground id="controller-host" lang="ts">}}
+  {{<playground-file name="profile-home.ts" include="profile-home.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="Profile.query.graphql.ts" include="Profile.query.graphql.ts" />}}
+
+  {{<playground-file name="UpdateProfile.mutation.graphql.ts" include="UpdateProfile.mutation.graphql.ts" />}}
+
+  {{<playground-file name="FriendCameOnline.subscription.graphql.ts" include="FriendCameOnline.subscription.graphql.ts" />}}
+
+  {{<playground-file name="client.js" include="client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "controller-host" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "controller-host" "Profile.query.graphql.ts">}}
-{{<include Profile.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "controller-host" "UpdateProfile.mutation.graphql.ts">}}
-{{<include UpdateProfile.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "controller-host" "FriendCameOnline.subscription.graphql.ts">}}
-{{<include FriendCameOnline.subscription.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "controller-host" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}

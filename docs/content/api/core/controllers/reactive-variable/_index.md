@@ -24,18 +24,11 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 
 </inline-notification>
 
-{{<docs-playground "reactive-variable-controller" "ts">}}
-{{<include profile-page.ts>}}
+{{<docs-playground id="reactive-variable-controller" lang="ts">}}
+  {{<playground-file name="profile-page.ts" include="profile-page.ts" />}}
+  {{<playground-file name="profile-page.css.ts" include="profile-page.css.ts" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="router.ts" include="router.ts" />}}
 {{</docs-playground>}}
-
-{{<playground-file "reactive-variable-controller" "profile-page.css.ts">}}
-{{<include profile-page.css.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "reactive-variable-controller" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "reactive-variable-controller" "router.ts">}}
-{{<include router.ts>}}
-{{</playground-file>}}

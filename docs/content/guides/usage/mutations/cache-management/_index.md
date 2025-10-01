@@ -24,25 +24,25 @@ And this component definition:
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include blog-post-html.html>}}
+{{<include "blog-post-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include blog-post-mixins.ts>}}
+{{<include "blog-post-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include blog-post-lit.ts>}}
+{{<include "blog-post-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include blog-post-fast.ts>}}
+{{<include "blog-post-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include blog-post-haunted.ts>}}
+{{<include "blog-post-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include blog-post-atomico.tsx>}}
+{{<include "blog-post-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include blog-post-hybrids.ts>}}
+{{<include "blog-post-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -73,25 +73,25 @@ Instead, you can define an `updater` method on `BlogPost` which instructs the ap
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include cache-update-html.html>}}
+{{<include "cache-update-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include cache-update-mixins.ts>}}
+{{<include "cache-update-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include cache-update-lit.ts>}}
+{{<include "cache-update-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include cache-update-fast.ts>}}
+{{<include "cache-update-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include cache-update-haunted.ts>}}
+{{<include "cache-update-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include cache-update-atomico.tsx>}}
+{{<include "cache-update-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include cache-update-hybrids.ts>}}
+{{<include "cache-update-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -101,25 +101,25 @@ The `summary`, `datePosted`, and `url` fields that `BlogPostMutation` returns in
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include optimistic-response-html.html>}}
+{{<include "optimistic-response-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include optimistic-response-mixins.ts>}}
+{{<include "optimistic-response-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include optimistic-response-lit.ts>}}
+{{<include "optimistic-response-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include optimistic-response-fast.ts>}}
+{{<include "optimistic-response-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include optimistic-response-haunted.ts>}}
+{{<include "optimistic-response-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include optimistic-response-atomico.tsx>}}
+{{<include "optimistic-response-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include optimistic-response-hybrids.ts>}}
+{{<include "optimistic-response-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 

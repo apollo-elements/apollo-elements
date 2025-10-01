@@ -16,13 +16,13 @@ Add it to your custom components via the `graphql-script-child-mixin`.
 Say you had a `<greet-me>` element which extends `ApolloQuery`.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}} {{<include greet-me-html.html>}} {{</code-tab>}}
-  {{<code-tab package="mixins">}} {{<include greet-me-mixins.ts>}} {{</code-tab>}}
-  {{<code-tab package="lit">}} {{<include greet-me-lit.ts>}} {{</code-tab>}}
-  {{<code-tab package="fast">}} {{<include greet-me-fast.ts>}} {{</code-tab>}}
-  {{<code-tab package="haunted">}} {{<include greet-me-haunted.ts>}} {{</code-tab>}}
-  {{<code-tab package="atomico">}} {{<include greet-me-atomico.tsx>}} {{</code-tab>}}
-  {{<code-tab package="hybrids">}} {{<include greet-me-hybrids.ts>}} {{</code-tab>}}
+  {{<code-tab package="html">}} {{<include "greet-me-html.html">}} {{</code-tab>}}
+  {{<code-tab package="mixins">}} {{<include "greet-me-mixins.ts">}} {{</code-tab>}}
+  {{<code-tab package="lit">}} {{<include "greet-me-lit.ts">}} {{</code-tab>}}
+  {{<code-tab package="fast">}} {{<include "greet-me-fast.ts">}} {{</code-tab>}}
+  {{<code-tab package="haunted">}} {{<include "greet-me-haunted.ts">}} {{</code-tab>}}
+  {{<code-tab package="atomico">}} {{<include "greet-me-atomico.tsx">}} {{</code-tab>}}
+  {{<code-tab package="hybrids">}} {{<include "greet-me-hybrids.ts">}} {{</code-tab>}}
 </code-tabs>
 
 You can add it to your page like so, and it will start querying.

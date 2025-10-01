@@ -8,7 +8,7 @@ sidebar: guides
 Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each component in your app reads it's data from the graph with a [query](../usage/queries/), and can change the state of the app with [mutations](../usage/mutations/) or through one of the [local state](../usage/local-state/) techniques.
 
 <figure id="apollo-elements-cycle-diagram">
-  {{<include cycle.svg>}}
+  {{<include "cycle.svg">}}
   <figcaption>
     Circular flow chart showing the essential UI loop for Apollo Elements apps: <a href="../usage/queries/">Queries</a> fetch data from the server, render them via component templates to the DOM, where <a href="../usage/mutations/">mutation components</a> fire in response to user events, and update the Apollo cache, which in turn notifies connected query elements.
   </figcaption>
@@ -19,9 +19,9 @@ Apollo Elements apps use GraphQL and Apollo Client to manage their state. Each c
 Apollo Elements comes with an app and component generator. Start the generator with this command:
 
 <code-tabs collection="package-managers" default-tab="npm">
-  {{<code-tab package="npm">}}{{<include init-npm.sh>}}{{</code-tab>}}
-  {{<code-tab package="yarn">}}{{<include init-yarn.sh>}}{{</code-tab>}}
-  {{<code-tab package="pnpm">}}{{<include init-pnpm.sh>}}{{</code-tab>}}
+  {{<code-tab package="npm">}}{{<include "init-npm.sh">}}{{</code-tab>}}
+  {{<code-tab package="yarn">}}{{<include "init-yarn.sh">}}{{</code-tab>}}
+  {{<code-tab package="pnpm">}}{{<include "init-pnpm.sh">}}{{</code-tab>}}
 </code-tabs>
 
 This starts a CLI wizard that asks you some questions about your app, then scaffold the project for you. The generated app comes with plenty of bells-and-whistles:

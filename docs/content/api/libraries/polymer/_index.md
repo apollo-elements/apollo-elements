@@ -27,23 +27,14 @@ These custom elements fire [polymer](https://polymer-library.polymer-project.org
 
 This example uses [`<apollo-client>`](/api/components/apollo-client/) to create a client and assign it to `<apollo-query>`. There's no need to explicitly assign the `client` property, since `<apollo-client>` automatically sets the client on all it's deeply nested children.
 
-{{<docs-playground "polymer-apollo" "ts">}}
-{{<include Hello.ts>}}
-{{</docs-playground>}}
+{{<docs-playground id="polymer-apollo" lang="ts">}}
+  {{<playground-file name="Hello.ts" include="Hello.ts" />}}
+  {{<playground-file name="Hello.query.graphql.js" include="Hello.query.graphql.js" />}}
 
-{{<playground-file "polymer-apollo" "Hello.query.graphql.js">}}
-{{<include Hello.query.graphql.js>}}
-{{</playground-file>}}
+  {{<playground-file name="client.js" include="client.js" />}}
 
-{{<playground-file "polymer-apollo" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}
-
-{{<playground-file "polymer-apollo" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-### Using Two-Way Binding to Set the Client
+  {{<playground-file name="index.html" include="index.html" />}}
+{{</docs-playground>}}### Using Two-Way Binding to Set the Client
 
 If you prefer, you can use Polymer's two-way binding to set an element's client property, instead of nesting the apollo elements under an `<apollo-client>` element.
 

@@ -60,38 +60,38 @@ export const AdminTypePolicies = {
 import `TypePoliciesMixin` from the mixins package to easily register type policies on a component. For example, in `src/components/profile/profile.ts` you can use `UserTypePolicies`
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}} {{<include profile-page-html.html>}} {{</code-tab>}}
-  {{<code-tab package="mixins">}} {{<include profile-page-mixins.ts>}} {{</code-tab>}}
-  {{<code-tab package="lit">}} {{<include profile-page-lit.ts>}} {{</code-tab>}}
-  {{<code-tab package="fast">}} {{<include profile-page-fast.ts>}} {{</code-tab>}}
-  {{<code-tab package="haunted">}} {{<include profile-page-haunted.ts>}} {{</code-tab>}}
-  {{<code-tab package="atomico">}} {{<include profile-page-atomico.tsx>}} {{</code-tab>}}
-  {{<code-tab package="hybrids">}} {{<include profile-page-hybrids.ts>}} {{</code-tab>}}
+  {{<code-tab package="html">}} {{<include "profile-page-html.html">}} {{</code-tab>}}
+  {{<code-tab package="mixins">}} {{<include "profile-page-mixins.ts">}} {{</code-tab>}}
+  {{<code-tab package="lit">}} {{<include "profile-page-lit.ts">}} {{</code-tab>}}
+  {{<code-tab package="fast">}} {{<include "profile-page-fast.ts">}} {{</code-tab>}}
+  {{<code-tab package="haunted">}} {{<include "profile-page-haunted.ts">}} {{</code-tab>}}
+  {{<code-tab package="atomico">}} {{<include "profile-page-atomico.tsx">}} {{</code-tab>}}
+  {{<code-tab package="hybrids">}} {{<include "profile-page-hybrids.ts">}} {{</code-tab>}}
 </code-tabs>
 
 And you can lazy-load that same code for use in `src/components/admin-profile/admin-profile.ts`.
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include admin-profile-page-html.html>}}
+{{<include "admin-profile-page-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include admin-profile-page-mixins.ts>}}
+{{<include "admin-profile-page-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include admin-profile-page-lit.ts>}}
+{{<include "admin-profile-page-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include admin-profile-page-fast.ts>}}
+{{<include "admin-profile-page-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include admin-profile-page-haunted.ts>}}
+{{<include "admin-profile-page-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include admin-profile-page-atomico.tsx>}}
+{{<include "admin-profile-page-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include admin-profile-page-hybrids.ts>}}
+{{<include "admin-profile-page-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 

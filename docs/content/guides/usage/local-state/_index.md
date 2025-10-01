@@ -47,25 +47,25 @@ Let's define a custom element that displays a button to toggle the theme.
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include theme-toggle-html.html>}}
+{{<include "theme-toggle-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include theme-toggle-mixins.ts>}}
+{{<include "theme-toggle-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include theme-toggle-lit.ts>}}
+{{<include "theme-toggle-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include theme-toggle-fast.ts>}}
+{{<include "theme-toggle-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include theme-toggle-haunted.ts>}}
+{{<include "theme-toggle-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include theme-toggle-atomico.tsx>}}
+{{<include "theme-toggle-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include theme-toggle-hybrids.ts>}}
+{{<include "theme-toggle-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -104,25 +104,25 @@ or we can use [`TypePoliciesMixin`](/guides/cool-tricks/code-splitting/#typepoli
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include type-policies-html.html>}}
+{{<include "type-policies-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include type-policies-mixins.ts>}}
+{{<include "type-policies-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include type-policies-lit.ts>}}
+{{<include "type-policies-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include type-policies-fast.ts>}}
+{{<include "type-policies-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include type-policies-haunted.ts>}}
+{{<include "type-policies-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include type-policies-atomico.tsx>}}
+{{<include "type-policies-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include type-policies-hybrids.ts>}}
+{{<include "type-policies-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -130,25 +130,25 @@ All that's left is to define the `toggleTheme` function to actually update the c
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include toggle-cache-html.html>}}
+{{<include "toggle-cache-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include toggle-cache-mixins.ts>}}
+{{<include "toggle-cache-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include toggle-cache-lit.ts>}}
+{{<include "toggle-cache-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include toggle-cache-fast.ts>}}
+{{<include "toggle-cache-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include toggle-cache-haunted.ts>}}
+{{<include "toggle-cache-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include toggle-cache-atomico.tsx>}}
+{{<include "toggle-cache-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include toggle-cache-hybrids.ts>}}
+{{<include "toggle-cache-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -182,25 +182,25 @@ Last, we'll refactor the `toggleTheme` method to directly update the value of `t
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include toggle-reactive-html.js>}}
+{{<include "toggle-reactive-html.js">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include toggle-reactive-mixins.ts>}}
+{{<include "toggle-reactive-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include toggle-reactive-lit.ts>}}
+{{<include "toggle-reactive-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include toggle-reactive-fast.ts>}}
+{{<include "toggle-reactive-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include toggle-reactive-haunted.ts>}}
+{{<include "toggle-reactive-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include toggle-reactive-atomico.tsx>}}
+{{<include "toggle-reactive-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include toggle-reactive-hybrids.ts>}}
+{{<include "toggle-reactive-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -226,25 +226,25 @@ Now in order to update the theme, we need to perform two steps:
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include toggle-storage-html.js>}}
+{{<include "toggle-storage-html.js">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include toggle-storage-mixins.ts>}}
+{{<include "toggle-storage-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include toggle-storage-lit.ts>}}
+{{<include "toggle-storage-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include toggle-storage-fast.ts>}}
+{{<include "toggle-storage-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include toggle-storage-haunted.ts>}}
+{{<include "toggle-storage-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include toggle-storage-atomico.tsx>}}
+{{<include "toggle-storage-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include toggle-storage-hybrids.ts>}}
+{{<include "toggle-storage-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 

@@ -22,18 +22,9 @@ Inherits from [`ApolloMutationInterface`](/api/core/interfaces/mutation/)
 
 ## Live Demo
 
-{{<docs-playground "mutation-component" "html">}}
-{{<include index.html>}}
+{{<docs-playground id="mutation-component" lang="html">}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="InsertUser.mutation.graphql" include="InsertUser.mutation.graphql"/ />}}
+  {{<playground-file name="InsertUser.css" include="InsertUser.css"/ />}}
+  {{<playground-file name="components.js" include="components.js"/ />}}
 {{</docs-playground>}}
-
-{{<playground-file "mutation-component" "InsertUser.mutation.graphql">}}
-{{<include InsertUser.mutation.graphql>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-component" "InsertUser.css">}}
-{{<include InsertUser.css>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-component" "components.js">}}
-{{<include components.js>}}
-{{</playground-file>}}

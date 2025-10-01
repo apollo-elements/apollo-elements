@@ -25,38 +25,21 @@ sidebar: api
 
 `@apollo-elements/fast` base classes extend from [`FASTElement`](https://fast.design), with all it's ergonomics and reactivity.
 
-{{<docs-playground "apollo-fast" "ts">}}
-{{<include Profile.ts>}}
+{{<docs-playground id="apollo-fast" lang="ts">}}
+  {{<playground-file name="Profile.ts" include="Profile.ts" />}}
+  {{<playground-file name="user-profile.css.js" include="user-profile.css.js" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="style.css" include="style.css" />}}
+
+  {{<playground-file name="Profile.query.graphql.ts" include="Profile.query.graphql.ts" />}}
+
+  {{<playground-file name="Countries.query.graphql.ts" include="Countries.query.graphql.ts" />}}
+
+  {{<playground-file name="UpdateProfile.mutation.graphql.ts" include="UpdateProfile.mutation.graphql.ts" />}}
+
+  {{<playground-file name="client.ts" include="client.ts" />}}
+
+  {{<playground-file name="countries.ts" include="countries.ts" />}}
 {{</docs-playground>}}
-
-{{<playground-file "apollo-fast" "user-profile.css.js">}}
-{{<include user-profile.css.js>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "Profile.query.graphql.ts">}}
-{{<include Profile.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "Countries.query.graphql.ts">}}
-{{<include Countries.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "UpdateProfile.mutation.graphql.ts">}}
-{{<include UpdateProfile.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-fast" "countries.ts">}}
-{{<include countries.ts>}}
-{{</playground-file>}}

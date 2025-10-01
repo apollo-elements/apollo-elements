@@ -9,9 +9,9 @@ Generate an Apollo Elements skeleton app.
 ## Example
 
 <code-tabs collection="package-managers" default-tab="npm">
-  {{<code-tab package="npm">}}{{<include app-npm.sh>}}{{</code-tab>}}
-  {{<code-tab package="yarn">}}{{<include app-yarn.sh>}}{{</code-tab>}}
-  {{<code-tab package="pnpm">}}{{<include app-pnpm.sh>}}{{</code-tab>}}
+  {{<code-tab package="npm">}}{{<include "app-npm.sh">}}{{</code-tab>}}
+  {{<code-tab package="yarn">}}{{<include "app-yarn.sh">}}{{</code-tab>}}
+  {{<code-tab package="pnpm">}}{{<include "app-pnpm.sh">}}{{</code-tab>}}
 </code-tabs>
 
 ## Options

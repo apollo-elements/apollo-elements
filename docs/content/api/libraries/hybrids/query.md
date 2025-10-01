@@ -15,22 +15,13 @@ sidebar: api
 ------------------------------------------------------------------------------------------ -->
 
 
-{{<docs-playground "hybrids-query" "ts">}}
-{{<include users-list.ts>}}
+{{<docs-playground id="hybrids-query" lang="ts">}}
+  {{<playground-file name="users-list.ts" include="users-list.ts" />}}
+  {{<playground-file name="users-list.css" include="users-list.css" />}}
+
+  {{<playground-file name="Users.query.graphql.ts" include="Users.query.graphql.ts" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
-
-{{<playground-file "hybrids-query" "users-list.css">}}
-{{<include users-list.css>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-query" "Users.query.graphql.ts">}}
-{{<include Users.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "hybrids-query" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}

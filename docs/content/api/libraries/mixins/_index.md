@@ -19,31 +19,16 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 
 Use the `ApolloQueryMixin`, `ApolloMutationMixin`, or `ApolloSubscriptionMixin` to add GraphQL behaviour to any base class.
 
-{{<docs-playground "apollo-mixins" "js">}}
-{{<include Hello.ts>}}
+{{<docs-playground id="apollo-mixins" lang="js">}}
+  {{<playground-file name="Hello.ts" include="Hello.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="style.css" include="style.css" />}}
+  {{<playground-file name="Hello.query.graphql.ts" include="Hello.query.graphql.ts" />}}
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
 
-{{<playground-file "apollo-mixins" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-mixins" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-mixins" "Hello.query.graphql.ts">}}
-{{<include Hello.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-mixins" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}
-
-<!-- TODO: Review and move to Hugo CSS -->
-<!-- STYLE BLOCK:
-
-#apollo-mixins {
-  --playground-preview-width: 300px;
-}
-
--->
+<style>
+  #apollo-mixins {
+    --playground-preview-width: 300px;
+  }
+</style>

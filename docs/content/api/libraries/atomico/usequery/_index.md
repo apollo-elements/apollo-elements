@@ -25,20 +25,11 @@ Apollo `useQuery` hook for web components.
 }
 </style>
 
-{{<docs-playground "use-query" "js">}}
-{{<include launches.js>}}
+{{<docs-playground id="use-query" lang="js">}}
+  {{<playground-file name="launches.js" include="launches.js" />}}
+  {{<playground-file name="index.html" include="../../../../../static/assets/libraries/_assets/index.spacex-launches.html" />}}
+  {{<playground-file name="Launches.query.graphql.ts" include="../../../../../static/assets/libraries/_assets/Launches.query.graphql.ts" />}}
+  {{<playground-file name="client.js" include="../../../../../static/assets/libraries/_assets/client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "use-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "use-query" "Launches.query.graphql.ts">}}
-{{<include Launches.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "use-query" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}
 
 Read the [query component guides](/guides/usage/queries/) for more examples and tips.

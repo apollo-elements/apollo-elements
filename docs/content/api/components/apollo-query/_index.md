@@ -25,18 +25,11 @@ This page has detailed API documentation for `<apollo-query>`. See the [`<apollo
 
 ## Live Demo
 
-{{<docs-playground "query-component" "html">}}
-{{<include index.html>}}
+{{<docs-playground id="query-component" lang="html">}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="Friends.query.graphql" include="Friends.query.graphql" />}}
+
+  {{<playground-file name="Friends.css" include="Friends.css" />}}
+
+  {{<playground-file name="client.js" include="client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "query-component" "Friends.query.graphql">}}
-{{<include Friends.query.graphql>}}
-{{</playground-file>}}
-
-{{<playground-file "query-component" "Friends.css">}}
-{{<include Friends.css>}}
-{{</playground-file>}}
-
-{{<playground-file "query-component" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}

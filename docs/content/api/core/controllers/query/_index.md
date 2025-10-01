@@ -26,22 +26,13 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 
 </inline-notification>
 
-{{<docs-playground "query-controller" "ts">}}
-{{<include profile-home.ts>}}
+{{<docs-playground id="query-controller" lang="ts">}}
+  {{<playground-file name="profile-home.ts" include="profile-home.ts" />}}
+  {{<playground-file name="profile-home.css.ts" include="profile-home.css.ts" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="Profile.query.graphql.ts" include="Profile.query.graphql.ts" />}}
+
+  {{<playground-file name="client.js" include="client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "query-controller" "profile-home.css.ts">}}
-{{<include profile-home.css.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "query-controller" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "query-controller" "Profile.query.graphql.ts">}}
-{{<include Profile.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "query-controller" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}

@@ -54,12 +54,12 @@ export default {
 These plugins let you import CSS tagged-template literals and GraphQL files as JavaScript objects. With them, you can do fun tricks in your source modules:
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include building-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include building-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include building-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include building-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include building-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include building-hybrids.js>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "building-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "building-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "building-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "building-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "building-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "building-hybrids.js">}}{{</code-tab>}}
 </code-tabs>
 
 To avoid build steps altogether, bundle and export your Apollo client separately, then import it into your browser-friendly component modules, perhaps using a tool like [snowpack](https://snowpack.dev)

@@ -17,22 +17,13 @@ sidebar: api
 
 Use the `subscription` factory to add a GraphQL subscription to you hybrids element.
 
-{{<docs-playground "subscription-factory" "ts">}}
-{{<include user-added.ts>}}
+{{<docs-playground id="subscription-factory" lang="ts">}}
+  {{<playground-file name="user-added.ts" include="user-added.ts" />}}
+  {{<playground-file name="user-added.css" include="user-added.css" />}}
+
+  {{<playground-file name="UserAdded.subscription.graphql.ts" include="UserAdded.subscription.graphql.ts" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
-
-{{<playground-file "subscription-factory" "user-added.css">}}
-{{<include user-added.css>}}
-{{</playground-file>}}
-
-{{<playground-file "subscription-factory" "UserAdded.subscription.graphql.ts">}}
-{{<include UserAdded.subscription.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "subscription-factory" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "subscription-factory" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}
