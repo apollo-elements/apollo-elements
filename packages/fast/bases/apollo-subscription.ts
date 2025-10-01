@@ -1,5 +1,4 @@
 import type * as C from '@apollo/client';
-
 import type {
   ComponentDocument,
   Data,
@@ -31,7 +30,7 @@ export class ApolloSubscription<D, V extends C.OperationVariables = C.OperationV
     shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
     onData: data => this.onSubscriptionData?.(data),
     onComplete: () => this.onSubscriptionComplete?.(),
-    onError: error => this.onError?.(error),
+    onError: errors => this.onError?.(errors),
   });
 
   /** @summary Flags an element that's ready and able to auto subscribe */
@@ -144,7 +143,7 @@ export class ApolloSubscription<D, V extends C.OperationVariables = C.OperationV
   onSubscriptionData?(result: OnSubscriptionDataParams<Data<D>>): void;
 
   /**
-   * Callback for when error is updated
+   * Callback for when errors are updated
    */
   onError?(error: Error): void;
 

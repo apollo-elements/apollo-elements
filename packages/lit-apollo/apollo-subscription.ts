@@ -31,7 +31,7 @@ export class ApolloSubscription<D = unknown, V extends C.OperationVariables = C.
     shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
     onData: data => this.onSubscriptionData?.(data),
     onComplete: () => this.onSubscriptionComplete?.(),
-    onError: error => this.onError?.(error),
+    onError: errors => this.onError?.(errors),
   });
 
   /** @summary Flags an element that's ready and able to auto subscribe */
