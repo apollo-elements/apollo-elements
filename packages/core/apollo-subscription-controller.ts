@@ -201,13 +201,15 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     if (doc === this.#lastSubscriptionDocument)
       return;
     this.cancel();
-    if (this.canSubscribe() && this.shouldSubscribe())
+    const opts = doc ? { query: doc as DocumentNode } : undefined;
+    if (this.canSubscribe(opts) && this.shouldSubscribe(opts))
       this.subscribe();
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
-    if (this.canSubscribe() && this.shouldSubscribe())
+    const opts = variables !== undefined ? { variables } : undefined;
+    if (this.canSubscribe(opts) && this.shouldSubscribe(opts))
       this.subscribe();
   }
 
