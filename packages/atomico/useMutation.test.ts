@@ -2,7 +2,6 @@ import type {
   ApolloClient,
   FetchResult,
   MutationOptions,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 

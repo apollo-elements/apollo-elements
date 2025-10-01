@@ -94,7 +94,7 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
   typeCheck(): void {
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+     
 
     assertType<HTMLElement>                         (this);
 
@@ -137,13 +137,13 @@ export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVa
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 
-    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+     
   }
 }
 
 type TCV = { hey: 'yo' }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 export class AccessorTest extends TestableApolloMutation<TypeCheckData, TCV> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables(): TCV {
@@ -154,7 +154,7 @@ export class AccessorTest extends TestableApolloMutation<TypeCheckData, TCV> {
 export class PropertyTest extends TestableApolloMutation<TypeCheckData, TCV> {
   variables = { hey: 'yo' as const };
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
+ 
 
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends TestableApolloMutation<TDN> {

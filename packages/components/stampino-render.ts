@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-types */
 import type { TemplateHandlers } from './stampino.bundled.js';
 import { ReactiveElement, PropertyValues, ReactiveControllerHost } from '@lit/reactive-element';
 import { render } from './stampino.bundled.js';

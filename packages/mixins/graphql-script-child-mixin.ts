@@ -44,7 +44,7 @@ function GraphQLScriptChildMixinImplementation<
      * declarative GraphQL document or JSON-variable scripts
      */
     private onDOMMutation(records: MutationRecord[]): void {
-      // eslint-disable-next-line easy-loops/easy-loops
+       
       for (const { target: node, addedNodes = [] } of records) {
         this.matchNode(node);
         for (const added of addedNodes)

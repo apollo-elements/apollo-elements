@@ -192,7 +192,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
   variables = { d: 'd' as const, e: 0 };
 
   typeCheck(): void {
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+     
 
     assertType<HTMLElement>                         (this);
 
@@ -236,7 +236,7 @@ class TypeCheck extends TestableApolloQuery<TypeCheckData, TypeCheckVars> {
     // assertType<boolean>(this.returnPartialData!);
     assertType<boolean>                             (this.noAutoSubscribe);
 
-    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+     
   }
 }
 

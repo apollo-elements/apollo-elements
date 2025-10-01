@@ -126,7 +126,7 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     this.#lastSubscriptionDocument = query;
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       variables: this.variables ?? undefined,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
@@ -155,7 +155,7 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     }
 
     // If we got to this line without a client, it's because of user error
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const client = this.client!;
     const subscriptionData = { data: result?.data ?? null, loading: false, error: null };
     const detail = { client, subscriptionData };

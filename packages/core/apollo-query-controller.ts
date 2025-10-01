@@ -194,7 +194,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     return this.client.watchQuery({
       // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       query: this.query!,
       variables: this.variables ?? undefined,
       context: this.options.context,
@@ -288,7 +288,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     this.observableQuery = this.watchQuery({
       // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       query: this.query!,
       variables: this.variables ?? undefined,
       context: this.options.context,
@@ -378,7 +378,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
       const result = await this.client.query({
         // It's better to let Apollo client throw this error, if needs be
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+         
         query: this.query!, variables: this.variables!,
         context: this.options.context,
         errorPolicy: this.options.errorPolicy,
@@ -422,7 +422,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     const options = {
       // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       query: this.query!,
       context: this.options.context,
       variables: this.variables ?? undefined,

@@ -212,7 +212,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       switch (name) { /* c8 ignore next */ // covered
         case 'next-fetch-policy':
           // to allow for case where this.nextFetchPolicy is undefined
-          // eslint-disable-next-line eqeqeq
+           
           if (this.nextFetchPolicy != newVal)
             this.nextFetchPolicy = newVal as C.WatchQueryFetchPolicy; /* c8 ignore next */ // covered
           break;

@@ -65,7 +65,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
 
 class TypeCheck extends ApolloElement {
   typeCheck() {
-    /* eslint-disable func-call-spacing, no-multi-spaces */
+     
 
     assertType<HTMLElement>                         (this);
     assertType<FASTElement>                         (this);
@@ -83,6 +83,6 @@ class TypeCheck extends ApolloElement {
       // and are not directly available on Error objects
     }
 
-    /* eslint-enable func-call-spacing, no-multi-spaces */
+     
   }
 }

@@ -83,7 +83,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
 
     return this.client.mutate<Data<D>, Variables<D, V>>({
       // It's better to let Apollo client throw this error
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       mutation: this.mutation!,
 
       awaitRefetchQueries: this.options.awaitRefetchQueries,

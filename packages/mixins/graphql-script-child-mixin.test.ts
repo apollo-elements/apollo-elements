@@ -57,12 +57,12 @@ import {
   ApolloSubscriptionMixin,
 } from '@apollo-elements/mixins';
 
-/* eslint-disable max-len */
+ 
 class ApolloElementElement<D> extends ApolloElementMixin(HTMLElement)<D> {}
 class ApolloMutationElement<D> extends ApolloMutationMixin(HTMLElement)<D> {}
 class ApolloQueryElement<D> extends ApolloQueryMixin(HTMLElement)<D> {}
 class ApolloSubscriptionElement<D> extends ApolloSubscriptionMixin(HTMLElement)<D> {}
-/* eslint-enable max-len */
+ 
 
 describe('GraphQLScriptChildMixin', function() {
   beforeEach(setupClient);
@@ -660,7 +660,7 @@ import {
   ApolloQuery as LitApolloQuery,
 } from '@apollo-elements/lit-apollo';
 
-/* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+ 
 async function TypeCheck() {
   type D = { a: 'a', b: number };
   type V = { d: 'd', e: number };
@@ -844,8 +844,8 @@ async function TypeCheck() {
       assertType<boolean>(this.skip);
       assertType<boolean>(this.noAutoSubscribe);
 
-      /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+       
     }
   }
 }
-/* eslint-enable func-call-spacing, no-multi-spaces */
+ 

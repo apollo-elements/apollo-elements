@@ -66,7 +66,7 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       it('has default properties', function() {
-        /* eslint-disable max-len */
+         
         // fields
         expect(element.subscription.client, 'client').to.not.be.ok;
         expect(element.subscription.data, 'data').to.not.be.ok;
@@ -76,7 +76,7 @@ describe('[core] ApolloSubscriptionController', function() {
         expect(element.subscription.subscription, 'query').to.not.be.ok;
         expect(element.subscription.variables, 'variables').to.not.be.ok;
         expect(element.subscription.canAutoSubscribe, 'canAutoSubscribe').to.be.false;
-        /* eslint-enable max-len */
+         
       });
 
 

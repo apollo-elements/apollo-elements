@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 import easyLoops from 'eslint-plugin-easy-loops';
+import globals from 'globals';
 
 export default [
   // Base config for all JavaScript/TypeScript files
@@ -12,18 +13,11 @@ export default [
       parserOptions: {
         ecmaVersion: 2022,
         sourceType: 'module',
-        project: './tsconfig.json',
+        project: ['./tsconfig.json', './packages/*/tsconfig.json'],
       },
       globals: {
-        console: 'readonly',
-        process: 'readonly',
-        Buffer: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        global: 'readonly',
-        module: 'readonly',
-        require: 'readonly',
-        exports: 'readonly',
+        ...globals.node,
+        ...globals.browser,
       },
     },
     plugins: {
@@ -54,23 +48,31 @@ export default [
 
   // Config files override
   {
-    files: ['web-test-runner.config.js', 'plugins/resolve-local.js'],
+    files: ['web-test-runner.config.js', 'plugins/**/*.js', 'test/**/*.js'],
     languageOptions: {
+      parser: tsparser,
       parserOptions: {
         ecmaVersion: 2022,
+        sourceType: 'module',
       },
     },
   },
 
   // Test files override
   {
-    files: ['packages/**/*.test.ts', 'test/**/*.ts'],
+    files: ['packages/**/*.test.ts', 'packages/**/*.test.js'],
+    languageOptions: {
+      globals: {
+        ...globals.mocha,
+      },
+    },
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', {
         varsIgnorePattern: 'TypeCheck|ApolloQueryElement|LitApolloQueryController'
       }],
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
 
@@ -94,12 +96,21 @@ export default [
       '**/node_modules/**',
       'dist/**',
       'build/**',
+      'coverage/**',
+      '**/coverage/**',
       '**/*.js.map',
       '**/*.d.ts',
       '_site/**',
       '_site-dev/**',
-      'docs/_data/**',
+      'docs/**',
+      'test/**',
+      'plugins/**',
+      'packages/**/*.js',
       'packages/*/custom-elements.json',
+      'packages/*/custom-elements-manifest.config.js',
+      'packages/create/template/**',
+      'eslint.config.js',
+      'web-test-runner.config.js',
     ],
   },
 ];

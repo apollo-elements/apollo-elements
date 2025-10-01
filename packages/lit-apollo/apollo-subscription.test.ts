@@ -98,7 +98,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     // @ts-expect-error: b as number type
     this.data?.b === 'b';
 
-    /* eslint-disable max-len, func-call-spacing, no-multi-spaces */
+     
 
     // ApolloElementInterface
     assertType<Record<string, unknown>>             (this.context!);
@@ -117,7 +117,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                               (this.skip);
     assertType<boolean>                               (this.noAutoSubscribe);
 
-    /* eslint-enable max-len, func-call-spacing, no-multi-spaces */
+     
   }
 }
 

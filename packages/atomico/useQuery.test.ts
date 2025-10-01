@@ -2,7 +2,6 @@ import type { ApolloQueryController } from '@apollo-elements/core';
 import type {
   ApolloClient,
   NetworkStatus,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 
@@ -255,6 +254,13 @@ describe('[atomico] useQuery', function() {
             <p id="data">1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</p>
           `);
         });
+
+        it('calls onData', function() {
+          expect(onDataCalled).to.be.true;
+        });
+        it('does not call onError', function() {
+          expect(onErrorCalled).to.be.false;
+        });
       });
     });
 
@@ -263,16 +269,6 @@ describe('[atomico] useQuery', function() {
 
       let subscribeToMore: ApolloQueryController<typeof S.MessagesQuery>['subscribeToMore'];
 
-      let onErrorCalled = false;
-      let onDataCalled = false;
-
-      const onError = () => { onErrorCalled = true; };
-      const onData = () => { onDataCalled = true; };
-
-      afterEach(() => {
-        onErrorCalled = false;
-        onDataCalled = false;
-      });
       afterEach(resetMessages);
 
       beforeEach(async function define() {
@@ -311,7 +307,7 @@ describe('[atomico] useQuery', function() {
           subscribeToMore({
             document: S.MessageSentSubscription,
             updateQuery: (prev, { subscriptionData }) => ({
-              messages: [...(prev.messages || []), subscriptionData.data.messageSent]
+              messages: [...(prev.messages || []), subscriptionData.data.messageSent ?? null]
             }),
           });
         });
@@ -498,7 +494,7 @@ type TypeCheckVars = { c: 'c'; d: number };
 const TDN: TypedDocumentNode<TypeCheckData, TypeCheckVars> =
   gql`query TypedQuery($c: String, $d: Int) { a b }`;
 
-function TDNTypeCheck() {
+export function TDNTypeCheck() {
   const {
     called,
     client,
