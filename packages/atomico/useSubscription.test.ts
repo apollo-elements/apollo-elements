@@ -381,6 +381,12 @@ describe('[atomico] useSubscription', function() {
       const onErrorSpy2 = createSpy();
       const onCompleteSpy = createSpy();
 
+      beforeEach(function resetSpies() {
+        onDataSpy2.resetHistory();
+        onErrorSpy2.resetHistory();
+        onCompleteSpy.resetHistory();
+      });
+
       beforeEach(async function define() {
         function Renderer(this: typeof element) {
           const subscription = useSubscription(S.NullableParamSubscription, {
@@ -649,6 +655,12 @@ describe('[atomico] useSubscription', function() {
       const onDataSpy3 = createSpy();
       const onCompleteSpy3 = createSpy();
       const onErrorSpy3 = createSpy();
+
+      beforeEach(function resetSpies() {
+        onDataSpy3.resetHistory();
+        onCompleteSpy3.resetHistory();
+        onErrorSpy3.resetHistory();
+      });
 
       beforeEach(async function define() {
         function Renderer(this: typeof element) {
