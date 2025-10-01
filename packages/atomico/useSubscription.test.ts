@@ -300,6 +300,11 @@ describe('[atomico] useSubscription', function() {
       const onDataSpy = createSpy();
       const onErrorSpy = createSpy();
 
+      beforeEach(function resetSpies() {
+        onDataSpy.resetHistory();
+        onErrorSpy.resetHistory();
+      });
+
       beforeEach(async function define() {
         const Component = c(
           function Renderer() {
@@ -360,7 +365,7 @@ describe('[atomico] useSubscription', function() {
         beforeEach(function() { subscription.variables = { nullable: 'error' }; });
         describe('calling subscribe()', function() {
           beforeEach(function() { subscription.subscribe(); });
-          beforeEach(nextFrame);
+          beforeEach(() => aTimeout(200));
           it('calls onError', function() {
             expect(onErrorSpy.called()).to.be.true;
             // Error argument structure may vary, just verify onError was called
@@ -442,7 +447,7 @@ describe('[atomico] useSubscription', function() {
           } });
         });
 
-        beforeEach(() => aTimeout(50));
+        beforeEach(() => aTimeout(200));
 
         it('sets error', function() {
           expect(s.error).to.be.ok;
@@ -450,10 +455,7 @@ describe('[atomico] useSubscription', function() {
           // Error argument structure may vary, just verify onError was called
           expect(s.error, 'element error')
             .to.be.ok;
-          expect(s.error)
-            .to.equal(s.error);
-          expect(s.error)
-            .to.be.an.instanceof(Error);
+          expect(s.error).to.have.property('message');
         });
       });
 

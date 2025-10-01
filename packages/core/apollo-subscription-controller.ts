@@ -136,15 +136,13 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   private nextData(result: ApolloLink.Result<Data<D>>) {
     const { data, error, errors, loading } = this;
 
-    // In Apollo Client v4, subscription errors come through the error field (singular)
-    if ((result as any).error) {
-      this.nextError((result as any).error);
-      return;
-    }
+    // Apollo Client subscriptions return error (singular) in the next callback, not errors (plural)
+    // See: https://github.com/apollographql/apollo-client/blob/main/src/react/hooks/useSubscription.ts
+    type SubscriptionResult = { loading?: boolean; data?: Data<D> | null; error?: Error };
+    const subResult = result as SubscriptionResult;
 
-    // Also check for GraphQL errors in the errors array
-    if (result.errors && result.errors.length > 0) {
-      this.nextError(result.errors[0] as any);
+    if (subResult.error) {
+      this.nextError(subResult.error);
       return;
     }
 
@@ -155,7 +153,6 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     this.emitter.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
     this.data = result?.data ?? null;
     this.error = null;
-    this.errors = result?.errors ? result.errors : [];
     this.loading = false;
     this.options.onData?.(detail);
     this.notify({ data, error, errors, loading });
@@ -201,14 +198,18 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     if (doc === this.#lastSubscriptionDocument)
       return;
     this.cancel();
-    const opts = doc ? { query: doc as DocumentNode } : undefined;
+    const opts = doc ? {
+      query: doc,
+    } as Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>> : undefined;
     if (this.canSubscribe(opts) && this.shouldSubscribe(opts))
       this.subscribe();
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
-    const opts = variables !== undefined ? { variables } : undefined;
+    const opts = variables !== undefined ? {
+      variables,
+    } as Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>> : undefined;
     if (this.canSubscribe(opts) && this.shouldSubscribe(opts))
       this.subscribe();
   }
