@@ -296,13 +296,11 @@ describe('[core] ApolloSubscriptionController', function() {
         let errorCallCount = 0;
         let lastError: any = null;
         let dataCallCount = 0;
-        let completeCallCount = 0;
 
         beforeEach(async function define() {
           errorCallCount = 0;
           lastError = null;
           dataCallCount = 0;
-          completeCallCount = 0;
 
           class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
@@ -312,7 +310,6 @@ describe('[core] ApolloSubscriptionController', function() {
                 errorCallCount++;
                 lastError = error;
               },
-              onComplete: () => { completeCallCount++; },
             });
           }
 
