@@ -10,7 +10,6 @@ import { ApolloSubscriptionMixin } from './apollo-subscription-mixin';
 
 import {
   assertType,
-  isApolloError,
   setupClient,
   teardownClient,
   stringify,

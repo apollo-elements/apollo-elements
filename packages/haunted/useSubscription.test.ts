@@ -16,7 +16,6 @@ import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing
 import {
   ApolloClient,
   gql,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 

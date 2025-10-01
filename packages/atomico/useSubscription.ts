@@ -1,4 +1,4 @@
-import type { ComponentDocument, VariablesOf } from '@apollo-elements/core/types';
+import type { ComponentDocument } from '@apollo-elements/core/types';
 import type { OperationVariables } from '@apollo/client';
 
 import { useController } from '@atomico/hooks/use-controller';

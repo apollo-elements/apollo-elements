@@ -6,9 +6,7 @@ export function splitCommasAndTrim(value: string): string[] {
     .filter(Boolean);
 }
 
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
-type ObjectOrArray = object | any[];
-/* eslint-enable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
+type ObjectOrArray = object | unknown[];
 
 /**
  * Is an object or array empty?

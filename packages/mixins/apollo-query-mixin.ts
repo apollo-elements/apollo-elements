@@ -25,7 +25,11 @@ import {
 } from '@apollo-elements/core/apollo-query-controller';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V = VariablesOf<D>>(...a: any[]): InstanceType<B> & ApolloQueryElement<D, V>;
+  new <D, V = VariablesOf<D>>(
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...a: any[]
+  ): InstanceType<B> & ApolloQueryElement<D, V>;
   documentType: 'query',
 }
 
@@ -35,7 +39,7 @@ type MixinInstance<B extends Constructor> = B & {
 function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstance<B> {
   class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
     extends ApolloElementMixin(superclass)<D, V> {
-    static override documentType: 'query' = 'query';
+    static override documentType = 'query' as const;
 
     static override get observedAttributes(): string[] {
       return [

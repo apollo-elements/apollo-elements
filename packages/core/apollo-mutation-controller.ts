@@ -10,7 +10,7 @@ import type {
   VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type { FetchPolicy, ApolloClient, FetchResult, MutationOptions } from "@apollo/client";
+import type { FetchPolicy, FetchResult, MutationOptions } from "@apollo/client";
 
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
@@ -59,7 +59,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
     options?: ApolloMutationControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(mutation ?? null);/* c8 ignore next */
+    this.init(mutation ?? null);
   }
 
   /**
@@ -70,7 +70,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
     params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
   ): Promise<FetchResult<Data<D>>> {
     if (!this.client)
-      throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/'); /* c8 ignore next */ // covered
+      throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
     const mutationId = this.generateMutationId();
 
     const { called = false, data, error, errors, loading } = this;
@@ -83,7 +83,6 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
 
     return this.client.mutate<Data<D>, Variables<D, V>>({
       // It's better to let Apollo client throw this error
-       
       mutation: this.mutation!,
 
       awaitRefetchQueries: this.options.awaitRefetchQueries,
@@ -95,7 +94,7 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
       update: this.options.update,
       variables: this.variables ?? undefined,
       ...params,
-    } as any)
+    })
       .then(this.onCompletedMutation.bind(this, mutationId))
       .catch(this.onMutationError.bind(this, mutationId));
   }
@@ -128,9 +127,9 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
       this.loading = false;
       if (!this.options.ignoreResults) {
         this.error = null;
-        this.data = (response.data as Data<D>) ?? null;/* c8 ignore next */
-        this.errors = response.errors ? response.errors as any : [];
-        this.options.onCompleted?.(this.data); /* c8 ignore next */
+        this.data = (response.data as Data<D>) ?? null;
+        this.errors = response.errors ? response.errors : [];
+        this.options.onCompleted?.(this.data);
       }
       this.notify({ data, error, errors, loading });
     }

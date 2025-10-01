@@ -72,6 +72,8 @@ const DEFAULT_QUERY_FIELDS = `  # replace with your fields
 
 const DEFAULT_SUBSCRIPTION_FIELDS = DEFAULT_QUERY_FIELDS;
 
+// mixins are notoriously hard to type in ts.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function memoize<T extends(...args: any[]) => unknown>(fn: T): T {
   if (!fn)
     throw new Error('Trying to memoize non-function');
@@ -315,7 +317,7 @@ export async function component(options: ComponentOptions): Promise<void> {
 
   try {
     fs.statSync(join(options.directory, 'package.json'));
-  } catch (error) {
+  } catch {
     return console.log('‼️ No package.json found.', '👉 Scaffold an app first');
   }
 

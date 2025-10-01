@@ -12,7 +12,7 @@ import { controlled } from '@apollo-elements/core/decorators';
 import { customElement, state, property } from '@lit/reactive-element/decorators.js';
 
 declare global { interface HTMLElementTagNameMap {
-  'apollo-subscription': ApolloSubscriptionElement<any>
+  'apollo-subscription': ApolloSubscriptionElement
 } }
 
 /**

@@ -6,11 +6,9 @@ import type {
 } from '@apollo-elements/core/types';
 
 import type { ApolloController, VariablesOf } from '@apollo-elements/core';
-import type { ReactiveElement } from 'lit';
 
 import type {
   ApolloClient,
-  NormalizedCacheObject,
 } from '@apollo/client';
 
 import { controlled } from '@apollo-elements/core/decorators';

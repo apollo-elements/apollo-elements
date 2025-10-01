@@ -1,4 +1,4 @@
-import type { NormalizedCacheObject, TypePolicies } from "@apollo/client";
+import type { TypePolicies } from "@apollo/client";
 
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/client";
 

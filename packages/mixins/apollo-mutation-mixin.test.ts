@@ -3,8 +3,6 @@ import type {
   DocumentNode,
   ErrorPolicy,
   FetchPolicy,
-  FetchResult,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 

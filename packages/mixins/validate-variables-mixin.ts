@@ -19,11 +19,13 @@ type ControllerElementConstructor = Constructor<ApolloElementElement<any, any> &
  */
 function ValidateVariablesMixinImpl<B extends ControllerElementConstructor>(superclass: B): B {
   class ValidateVariablesElement extends superclass {
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(..._: any[]) {
       super();
       const { shouldSubscribe } = this.controller.options;
       this.controller.options.shouldSubscribe = (x?: Partial<SubscriptionOptions>) =>
-        (shouldSubscribe?.(x) ?? true) && this.shouldSubscribe(x);/* c8 ignore next */
+        (shouldSubscribe?.(x) ?? true) && this.shouldSubscribe(x);
     }
 
     override shouldSubscribe(options?: Partial<SubscriptionOptions>) {

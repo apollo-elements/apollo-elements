@@ -1,4 +1,4 @@
-import type { Constructor, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
+import type { Constructor, Data, Variables } from '@apollo-elements/core/types';
 import type * as C from '@apollo/client';
 
 import { ApolloElement } from './apollo-element.js';

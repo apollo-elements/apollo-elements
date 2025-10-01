@@ -6,7 +6,6 @@ import type {
   DocumentNode,
   ErrorPolicy,
   WatchQueryFetchPolicy,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 
@@ -14,7 +13,7 @@ import * as S from '@apollo-elements/test/schema';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
+import { assertType, stringify, TestableElement } from '@apollo-elements/test';
 
 import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test';
 

@@ -56,7 +56,7 @@ export type Variables<D, V> =
 export type VariablesOf<E> =
     E extends TypedDocumentNode<infer _, infer V> ? V
   : E extends ApolloElementElement<infer D, infer V> ? Variables<D, V>
-  : E extends any ? any
+  : E extends unknown ? unknown
   : unknown;
 
 export type NextFetchPolicyFunction<D, V> =
@@ -80,6 +80,8 @@ export type FetchMoreParams<D, V> = QueryOptions<Variables<D, V>, Data<D>>
  * Type that represents a class
  */
 export type Constructor<T = CustomElement> = {
+  // mixins are notoriously hard to type in ts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new (...a: any[]): T;
 }
 
@@ -144,7 +146,11 @@ export declare class ControllerHost extends HTMLElement implements ReactiveContr
   addController(controller: ReactiveController): void
   removeController(controller: ReactiveController): void
   get updateComplete(): Promise<boolean>;
+  // mixins are notoriously hard to type in ts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected update(...args: any[]): void
+  // mixins are notoriously hard to type in ts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected updated(...args: any[]): void
 }
 
@@ -299,6 +305,8 @@ export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    *          }
    * ```
    */
+  // mixins are notoriously hard to type in ts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public updater?(...params: any[]): any;
 
   /**
@@ -478,7 +486,10 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
  * @fires {ApolloSubscriptionResultEvent} apollo-subscription-result - The subscription updated
  * @fires {CustomEvent<ApolloError>} apollo-error - The subscription produced an error
  */
-export declare class ApolloSubscriptionElement<D = unknown, V extends OperationVariables = Variables<D, any>>
+export declare class ApolloSubscriptionElement<
+  D = unknown,
+  V extends OperationVariables = Variables<D, unknown>,
+>
   extends ApolloElementElement<D, V> {
   static readonly documentType: 'subscription';
   public controller: ApolloSubscriptionController<D, V>;

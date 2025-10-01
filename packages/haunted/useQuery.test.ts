@@ -1,7 +1,6 @@
 import type {
   ApolloClient,
   NetworkStatus,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 
@@ -178,7 +177,7 @@ describe('[haunted] useQuery', function() {
 
       beforeEach(async function define() {
         function Hello(this: HTMLElement) {
-          const [offset, setOffset] = useState(0);
+          const [offset] = useState(0);
 
           const { data, fetchMore } = useQuery(S.PaginatedQuery, {
             onData,
@@ -247,7 +246,7 @@ describe('[haunted] useQuery', function() {
 
           const onClickSubscribeToMore = () => subscribeToMore({
             document: S.MessageSentSubscription,
-            updateQuery: (prev, { subscriptionData }) => {
+            updateQuery: () => {
               // The subscription should add exactly 3 new messages
               // This simulates what would happen with multiple subscription events
               return {

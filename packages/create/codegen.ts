@@ -1,5 +1,5 @@
 import path from 'path';
-import { execa, ExecaReturnValue } from 'execa';
+import { execa, ExecaReturnValue, ExecaError } from 'execa';
 import { AppOptions, BaseOptions, ComponentOptions } from './options.js';
 import { getOperationFileName, getUnprefixedTagName } from './component.js';
 import Chalk from 'chalk';
@@ -7,9 +7,8 @@ const { blue, cyan, yellow, red, greenBright } = Chalk;
 
 const cwd = process.cwd();
 
-interface ExecaError {
-  stdout: string;
-  errors: Error[];
+function isExecaError(error: unknown): error is ExecaError {
+  return typeof error == "object" && !!error && 'stdout' in error && typeof error.stdout === 'string'
 }
 
 function getFailedFilename(options: ComponentOptions): string {
@@ -81,6 +80,17 @@ function logListrError(options: BaseOptions, error: ExecaError): void {
   error.errors.forEach((e: Error) => console.log(e.message));
 }
 
+function logAnyError(options: BaseOptions, error: unknown): void {
+  if (options.silent) return;
+  const filename = getFilename(options);
+  console.log(
+    `${yellow('WARNING:')} Code generation failed. Do the generated GraphQL operations match your schema?`,
+    `         Check ${filename}`,
+    `\n${red('ORIGINAL ERROR:')}\n`,
+    error
+  );
+}
+
 function logError(options: BaseOptions, error: ExecaError): void {
   if (options.silent) return;
   const filename = getFilename(options);
@@ -103,8 +113,10 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
     await execa(options.pkgManager, getCLIArgs(options), { cwd, all: true });
     if (!options.silent)
       console.log(greenBright('Done!'));
-  } catch (error: any) {
-    if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
+  } catch (error) {
+    if (!isExecaError(error))
+      logAnyError(options, error)
+    else if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
       logNameError(options, error);
     else if (error?.name === 'ListrError')
       logListrError(options, error);

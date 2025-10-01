@@ -2,7 +2,6 @@ import type { ApolloElementElement } from '@apollo-elements/core/types';
 import {
   ApolloClient,
   InMemoryCache,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 import { SchemaLink } from '@apollo/client/link/schema';

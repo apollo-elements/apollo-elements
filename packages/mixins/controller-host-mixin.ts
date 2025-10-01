@@ -30,6 +30,8 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
         this.#updateComplete;
     }
 
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args);
       INITIALIZED.set(this, true);
@@ -76,6 +78,8 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
         this.doUpdate();
     }
 
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     update(...args: any[]) {
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.update === 'function') super.update(...args);/* c8 ignore next */
@@ -83,6 +87,8 @@ function ControllerHostMixinImpl<T extends Constructor<CustomElement>>(
         this.#controllers.forEach(c => c.hostUpdate?.());/* c8 ignore next */
     }
 
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updated(...args: any[]) {
       // @ts-expect-error: superclass may or may not have it
       if (typeof super.updated === 'function') super.updated(...args);/* c8 ignore next */

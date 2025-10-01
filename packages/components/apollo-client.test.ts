@@ -1,4 +1,3 @@
- 
 import type * as I from '@apollo-elements/core/types';
 
 import type { SinonSpy } from 'sinon';
@@ -12,7 +11,7 @@ import type {
 
 import type { ApolloQueryController } from '@apollo-elements/core';
 
-import { gql, NormalizedCacheObject, TypePolicies } from '@apollo/client';
+import { gql, TypePolicies } from '@apollo/client';
 
 import { ApolloClient, TypedDocumentNode } from '@apollo/client';
 

@@ -1,4 +1,4 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
 import type { ApolloElementElement, Constructor } from '@apollo-elements/core/types';
 
 /**

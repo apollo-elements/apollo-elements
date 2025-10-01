@@ -2,6 +2,8 @@ import type { ReactiveController, ReactiveControllerHost } from '@lit/reactive-e
 // @ts-ignore: hybrids does not have TypeScript declarations
 import type { Descriptor } from 'hybrids';
 
+// mixins are notoriously hard to type in ts.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Constructor<T> = { new (...a: any[]): T; }
 
 type Invalidate = (options?: { force?: boolean }) => void;
@@ -30,7 +32,6 @@ export class HybridsControllerHost extends EventTarget implements ReactiveContro
 
   removeController(controller: ReactiveController): void {
     this.#controllers.delete(controller);
-     
     for (const [key, r] of this.#keys) {
       if (r.controller === controller)
         this.#keys.delete(key);
@@ -65,6 +66,8 @@ const hosts = new WeakMap<HTMLElement, HybridsControllerHost>();
 
 export function controller<E extends HTMLElement, C extends ReactiveController>(
   Controller: Constructor<C>,
+  // mixins are notoriously hard to type in ts.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...args: any[]
 ): Descriptor<E, C> {
   const controllers = new WeakMap<E, ReactiveController>();

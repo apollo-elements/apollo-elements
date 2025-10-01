@@ -8,7 +8,6 @@ import type {
   OnSubscriptionDataParams,
   SubscriptionDataOptions,
   Variables,
-  VariablesOf,
 } from '@apollo-elements/core/types';
 
 import type { ApolloSubscriptionElement } from '@apollo-elements/core/types';
@@ -19,7 +18,11 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { controlled } from '@apollo-elements/core/decorators';
 
 type MixinInstance<B extends Constructor> = B & {
-  new <D, V extends OperationVariables = OperationVariables>(...a: any[]): InstanceType<B> & ApolloSubscriptionElement<D, V>;
+  new <D, V extends OperationVariables = OperationVariables>(
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...a: any[]
+  ): InstanceType<B> & ApolloSubscriptionElement<D, V>;
   documentType: 'subscription';
 }
 

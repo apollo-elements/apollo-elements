@@ -10,7 +10,7 @@ export class FASTControllerHost implements ReactiveControllerHost {
   removeController(controller: ReactiveController): void { this.#controllers.delete(controller); }
 
   /** Shouldn't need an implementation, since FAST's reactivity model is pull-based */
-  requestUpdate(): void { null; }
+  requestUpdate(): void { }
 
   get updateComplete(): Promise<boolean> {
     return DOM.nextUpdate().then(() => true);

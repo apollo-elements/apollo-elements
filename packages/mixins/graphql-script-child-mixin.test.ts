@@ -14,7 +14,6 @@ import {
   setupMutationClass,
   setupSubscriptionClass,
   stringify,
-  isApolloError,
   TestableElement,
 } from '@apollo-elements/test';
 
@@ -57,12 +56,10 @@ import {
   ApolloSubscriptionMixin,
 } from '@apollo-elements/mixins';
 
- 
 class ApolloElementElement<D> extends ApolloElementMixin(HTMLElement)<D> {}
 class ApolloMutationElement<D> extends ApolloMutationMixin(HTMLElement)<D> {}
 class ApolloQueryElement<D> extends ApolloQueryMixin(HTMLElement)<D> {}
 class ApolloSubscriptionElement<D> extends ApolloSubscriptionMixin(HTMLElement)<D> {}
- 
 
 describe('GraphQLScriptChildMixin', function() {
   beforeEach(setupClient);
@@ -660,14 +657,11 @@ import {
   ApolloQuery as LitApolloQuery,
 } from '@apollo-elements/lit-apollo';
 
- 
-async function TypeCheck() {
+export async function TypeCheck() {
   type D = { a: 'a', b: number };
   type V = { d: 'd', e: number };
 
-  const Doc: C.TypedDocumentNode<D, V> = {} as C.TypedDocumentNode<D, V>;
-
-  class TypeCheckElement extends GraphQLScriptChildMixin(ApolloElementElement)<typeof Doc> {
+  class TypeCheckElement extends GraphQLScriptChildMixin(ApolloElementElement)<C.TypedDocumentNode<D, V>> {
     typeCheck(): void {
       assertType<HTMLElement>                         (this);
 
@@ -704,7 +698,7 @@ async function TypeCheck() {
     }
   }
 
-  class TypeCheckQuery extends GraphQLScriptChildMixin(ApolloQueryElement)<typeof Doc> {
+  class TypeCheckQuery extends GraphQLScriptChildMixin(ApolloQueryElement)<C.TypedDocumentNode<D, V>> {
     variables = { d: 'd' as const, e: 0 };
 
     typeCheck(): void {
@@ -769,7 +763,7 @@ async function TypeCheck() {
     }
   }
 
-  class TypeCheckMutation extends GraphQLScriptChildMixin(ApolloMutationElement)<typeof Doc> {
+  class TypeCheckMutation extends GraphQLScriptChildMixin(ApolloMutationElement)<C.TypedDocumentNode<D, V>> {
     typeCheck(): void {
       assertType<HTMLElement>(this);
 
@@ -813,7 +807,7 @@ async function TypeCheck() {
     }
   }
 
-  class TypeCheckSubscription extends GraphQLScriptChildMixin(ApolloSubscriptionElement)<typeof Doc> {
+  class TypeCheckSubscription extends GraphQLScriptChildMixin(ApolloSubscriptionElement)<C.TypedDocumentNode<D, V>> {
     typeCheck(): void {
       assertType<HTMLElement>(this);
 

@@ -1,6 +1,6 @@
 import type * as I from '@apollo-elements/core/types';
 
-import type { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client';
+import type { ApolloClient, DocumentNode } from '@apollo/client';
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
@@ -9,7 +9,7 @@ import { expect } from '@open-wc/testing';
 import { defineCE, fixture } from '@open-wc/testing';
 
 import { ApolloElementMixin } from './apollo-element-mixin';
-import { assertType, isApolloError } from '@apollo-elements/test';
+import { assertType } from '@apollo-elements/test';
 
 import * as S from '@apollo-elements/test/schema';
 
