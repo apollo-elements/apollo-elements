@@ -25,7 +25,7 @@ const schema = makeExecutableSchema({
       async addUser(_, { name }) {
         const id = Math.max(...USERS.map(x => x.id)) + 1
         const user = { id, name }
-        USERS.push[user]
+        USERS.push(user)
         return user;
       }
     },
