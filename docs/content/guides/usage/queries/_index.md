@@ -87,13 +87,13 @@ Apollo client ensures that the component always has the latest data by {% footno
 When the `ObservableQuery` subscription produces new data (e.g. on response from the GraphQL server, or if local state changes), it sets the element's `data`, `loading` and `error` properties (as well as `errors` if `returnPartialData` property is true). The following example shows how a simple query element written with different component libraries (or none) renders it's state.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include hello-query-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include hello-query-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include hello-query-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include hello-query-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include hello-query-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include hello-query-atomico.jsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include hello-query-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "hello-query-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "hello-query-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "hello-query-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "hello-query-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "hello-query-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "hello-query-atomico.jsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "hello-query-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 ## Query Variables
@@ -120,13 +120,13 @@ root.querySelector('hello-query').variables = {
 For class-based components (e.g. vanilla, `lit-apollo`, or `FAST`), you can apply arguments by setting the `variables` class field, while the [`ApolloQueryController`](/api/core/controllers/query/), [`useQuery` haunted hook](/api/libraries/haunted/useQuery/) and [`query` hybrids factory](/api/libraries/hybrids/query/) take a second options parameter with a `variables` property.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include variables-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include variables-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include variables-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include variables-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include variables-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include variables-atomico.jsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include variables-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "variables-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "variables-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "variables-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "variables-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "variables-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "variables-atomico.jsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "variables-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 Variables can be non-nullable i.e. required. To prevent your element from fetching until it has all it's required variables, see [validating variables](/guides/cool-tricks/validating-variables/).
@@ -149,13 +149,13 @@ You can call your component's [`executeQuery()`](/api/core/interfaces/query/#exe
 If you want to keep your element from automatically subscribing, you can opt out of the default behaviour by setting the `noAutoSubscribe` DOM property.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include no-auto-subscribe-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include no-auto-subscribe-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include no-auto-subscribe-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include no-auto-subscribe-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include no-auto-subscribe-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include no-auto-subscribe-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include no-auto-subscribe-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "no-auto-subscribe-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "no-auto-subscribe-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "no-auto-subscribe-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "no-auto-subscribe-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "no-auto-subscribe-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "no-auto-subscribe-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "no-auto-subscribe-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 Once you do, the element won't fetch any data unless you call its [`subscribe()`](/api/core/interfaces/query/#subscribe) or [`executeQuery()`](/api/core/interfaces/query/#executequery) methods.
@@ -187,13 +187,13 @@ NOTE, the `no-auto-subscribe` attribute comes built-in for query class elements 
 The query component class' protected [`shouldSubscribe`](/api/core/interfaces/query/#shouldsubscribe) method controls whether or not to subscribe to updates. The default implementation constantly returns `true`. If you wish to customize that behaviour, override the method with your own custom predicate, like this example which checks for the presence of a query param in the page URL:
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include should-subscribe-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include should-subscribe-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include should-subscribe-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include should-subscribe-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include should-subscribe-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include should-subscribe-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include should-subscribe-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "should-subscribe-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "should-subscribe-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "should-subscribe-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "should-subscribe-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "should-subscribe-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "should-subscribe-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "should-subscribe-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 ### Setting a `FetchPolicy`
@@ -201,13 +201,13 @@ The query component class' protected [`shouldSubscribe`](/api/core/interfaces/qu
 [Fetch Policies](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy) are how Apollo client internally manages query behaviour. The default fetch policy for queries is `cache-first` meaning that Apollo client will first check to see if a given operation (i.e. query-variables pair) already has complete data in the cache. If so, it will *not* fetch over the network. Set the `fetchPolicy` property on your component to configure.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include fetch-policy-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include fetch-policy-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include fetch-policy-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include fetch-policy-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include fetch-policy-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include fetch-policy-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include fetch-policy-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "fetch-policy-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "fetch-policy-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "fetch-policy-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "fetch-policy-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "fetch-policy-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "fetch-policy-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "fetch-policy-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 You can also use the `fetch-policy` attribute on individual elements (if they implement the ApolloElement interface, e.g. `<apollo-query>` or elements with `ApolloQueryMixin`):

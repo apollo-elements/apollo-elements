@@ -1,0 +1,34 @@
+{{- $content := . -}}
+{{- $content = trim $content "\n\r" -}}
+{{- $lines := split $content "\n" -}}
+
+{{- /* Find minimum indentation */ -}}
+{{- $minIndent := 1000 -}}
+{{- range $lines -}}
+  {{- if . -}}
+    {{- $trimmed := . | strings.TrimLeft " \t" -}}
+    {{- if $trimmed -}}
+      {{- $indent := sub (len .) (len $trimmed) -}}
+      {{- if lt $indent $minIndent -}}
+        {{- $minIndent = $indent -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Remove minimum indentation from each line */ -}}
+{{- $dedented := slice -}}
+{{- range $lines -}}
+  {{- if . -}}
+    {{- $trimmed := . | strings.TrimLeft " \t" -}}
+    {{- if $trimmed -}}
+      {{- $dedented = $dedented | append (substr . $minIndent) -}}
+    {{- else -}}
+      {{- $dedented = $dedented | append "" -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $dedented = $dedented | append "" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- delimit $dedented "\n" -}}

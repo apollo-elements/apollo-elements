@@ -80,23 +80,14 @@ Templates use [stampino](https://npm.im/stampino) and [jexpr](https://npm.im/jex
 
 </inline-notification>
 
-{{<docs-playground "add-user" "html">}}
-{{<include index.html>}}
-{{</docs-playground>}}
+{{<docs-playground id="add-user" lang="html">}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="add-user.css" include="add-user.css" />}}
 
-{{<playground-file "add-user" "add-user.css">}}
-{{<include add-user.css>}}
-{{</playground-file>}}
+  {{<playground-file name="AddUser.mutation.graphql" include="AddUser.mutation.graphql" />}}
 
-{{<playground-file "add-user" "AddUser.mutation.graphql">}}
-{{<include AddUser.mutation.graphql>}}
-{{</playground-file>}}
-
-{{<playground-file "add-user" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}
-
-<inline-notification type="tip">
+  {{<playground-file name="client.js" include="client.js" />}}
+{{</docs-playground>}}<inline-notification type="tip">
 
 When using shadow DOM templates, be sure you either add a `<slot>` element or use `variables-for` and `trigger-for` attribute on sibling nodes, so that your controls remain visible.
 
@@ -109,13 +100,13 @@ Learn more about template expressions and bindings in the [`<apollo-query>` HTML
 In some cases you might want to prevent a mutation, for example, if clicking the button is meant to create a new entity, but subsequently toggle it's edit state. For cases like those, listen for the `will-mutate` event and prevent it's default action to stop the mutation.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include mixins.js>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include haunted.js>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include atomico.jsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include hybrids.js>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "mixins.js">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "haunted.js">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "atomico.jsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "hybrids.js">}}{{</code-tab>}}
 </code-tabs>
 
 ## Example: Navigating on Mutation

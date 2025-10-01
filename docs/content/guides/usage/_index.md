@@ -45,8 +45,6 @@ In a GraphQL app, you'll use [queries and mutations](https://graphql.org/learn/q
 </dl>
 </figure>
 
-<!-- TODO: Icon "space-capsule" - needs Hugo shortcode -->
-
 A query is a self-contained slice of the _state of your app's data graph_, and a mutation is a self-contained _action to affect a slice of your graph_. They fit naturally into the data-driven web components development model, since a web component is a self-contained unit of HTML UI with programmer-defined behaviours.
 
 Using Apollo Elements, you'll build [query components](./queries/) to fetch and display data from the graph and [mutation components](./mutations/) to make changes to the graph. You can also publish self-contained GraphQL components for others to use in their apps, for example if multiple teams work on the same large dashboard app.
@@ -92,13 +90,13 @@ With Apollo Elements, you can write declarative templates and styles for your co
 The tabs below demonstrate multiple ways to write the same query component:
 
 <code-tabs collection="libraries" default-tab="html">
-  {{<code-tab package="html">}}{{<include astronauts-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include astronauts-mixins.js>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include astronauts-lit.js>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include astronauts-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include astronauts-haunted.js>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include astronauts-atomico.jsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include astronauts-hybrids.js>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "astronauts-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "astronauts-mixins.js">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "astronauts-lit.js">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "astronauts-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "astronauts-haunted.js">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "astronauts-atomico.jsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "astronauts-hybrids.js">}}{{</code-tab>}}
 </code-tabs>
 
 Apollo Elements doesn't lock you in to one way of working. You can build an app's components piecemeal from several different libraries using multiple different paradigms, and they can all consume each other, communicate with each other, and coexist with one another, and couldn't we use some more of that?

@@ -9,11 +9,30 @@ class SpacexLaunches extends PolymerElement {
   static get template() {
     return html`
       <style>
-        {{ style | trim | indent(8) }}
+                :host {
+          --image-size: 40px;
+        }
+
+        li img {
+          height: var(--image-size);
+          width: auto;
+        }
+
+        li article {
+          height: var(--image-size);
+          display: flex;
+          justify-content: space-between;
+        }
       </style>
       <polymer-apollo-query data="{{ data }}">
         <script type="application/graphql">
-          {{ query | trim | indent(10) }}
+                    query LaunchesQuery($limit: Int) {
+            launchesPast(limit: $limit) {
+              id
+              mission_name
+              links { mission_patch_small }
+            }
+          }
         </script>
         <script type="application/json">
           { "limit": 3 }

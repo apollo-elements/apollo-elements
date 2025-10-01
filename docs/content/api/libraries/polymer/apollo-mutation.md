@@ -19,18 +19,11 @@ sidebar: api
 
 See [ApolloMutationInterface](/api/core/interfaces/mutation/) for more information.
 
-{{<docs-playground "polymer-apollo" "js">}}
-{{<include AddUser.js>}}
+{{<docs-playground id="polymer-apollo" lang="js">}}
+  {{<playground-file name="AddUser.js" include="AddUser.js" />}}
+  {{<playground-file name="Hello.query.graphql.js" include="Hello.query.graphql.js" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="elements.js" include="elements.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "polymer-apollo" "Hello.query.graphql.js">}}
-{{<include Hello.query.graphql.js>}}
-{{</playground-file>}}
-
-{{<playground-file "polymer-apollo" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "polymer-apollo" "elements.js">}}
-{{<include elements.js>}}
-{{</playground-file>}}

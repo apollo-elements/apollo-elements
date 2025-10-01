@@ -12,7 +12,7 @@ That is to say, whether you create a query element with `lit-apollo`, `haunted`,
 
 <figure aria-label="Inheritance diagram">
 
-  <!-- TODO: Include SVG file ./mermaid-inheritance.svg - needs Hugo shortcode or static asset -->
+  {{<include path="../../../../static/assets/core/interfaces/mermaid-inheritance.svg">}}
 
   <figcaption class="visually-hidden">
 

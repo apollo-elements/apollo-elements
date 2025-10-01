@@ -21,20 +21,11 @@ Read the [mutation component guides](../../../../guides/usage/mutations/) for ex
 
 ## Live Demo
 
-{{<docs-playground "use-mutation" "js">}}
-{{<include AddUser.js>}}
+{{<docs-playground id="use-mutation" lang="js">}}
+  {{<playground-file name="AddUser.js" include="AddUser.js" />}}
+  {{<playground-file name="AddUser.mutation.graphql.ts" include="AddUser.mutation.graphql.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="client.js" include="client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "use-mutation" "AddUser.mutation.graphql.ts">}}
-{{<include AddUser.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "use-mutation" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "use-mutation" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}
 
 Read the [mutation component guides](/guides/usage/mutations/) for examples and tips.

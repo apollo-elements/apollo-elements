@@ -17,15 +17,14 @@ sidebar: api
 
 ## Demo
 
-{% set query %}<!-- TODO: Include file '../_assets/Launches.query.graphql' - needs Hugo shortcode or static asset -->{% endset %}
-{% set style %}<!-- TODO: Include file '../_assets/SpacexLaunches.css' - needs Hugo shortcode or static asset -->{% endset %}
-
-{{<docs-playground "gluon-query" "ts">}}
-{{<include launches.js>}}
+{{<docs-playground id="gluon-query" lang="ts">}}
+  {{<playground-file name="launches.js" include="launches.js" />}}
+  {{<playground-file name="index.html"
+                     include="../../../../../static/assets/libraries/_assets/index.spacex-launches.html"/>}}
+  {{<playground-file name="Launches.query.graphql"
+                     include="../../../../../static/assets/libraries/_assets/Launches.query.graphql"/>}}
+  {{<playground-file name="SpacexLaunches.css"
+                     include="../../../../../static/assets/libraries/_assets/SpacexLaunches.css"/>}}
 {{</docs-playground>}}
-
-{{<playground-file "gluon-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
 
 Read the [query component guides](../../../../guides/usage/queries/) for more examples and tips.

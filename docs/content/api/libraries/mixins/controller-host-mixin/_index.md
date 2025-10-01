@@ -16,22 +16,10 @@ sidebar: api
 
 Mixin which adds the `ReactiveController` interface to your element. You can use this to render updates from your controllers by implementing an `update` method that calls `super.update()`.
 
-{{<docs-playground "mouse-controller" "js">}}
-{{<include color-picker.js>}}
+{{<docs-playground id="mouse-controller" lang="js">}}
+  {{<playground-file name="color-picker.js" include="color-picker.js" />}}
+  {{<playground-file name="color-picker.css" include="color-picker.css" />}}
+  {{<playground-file name="mouse-controller.js" include="mouse-controller.js" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="style.css" include="style.css" />}}
 {{</docs-playground>}}
-
-{{<playground-file "mouse-controller" "color-picker.css">}}
-{{<include color-picker.css>}}
-{{</playground-file>}}
-
-{{<playground-file "mouse-controller" "mouse-controller.js">}}
-{{<include mouse-controller.js>}}
-{{</playground-file>}}
-
-{{<playground-file "mouse-controller" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "mouse-controller" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}

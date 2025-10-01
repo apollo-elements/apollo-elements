@@ -52,13 +52,13 @@ If you'd prefer to avoid assigning to the `window`, you have more options...
 Pass the `client` param to controllers to specify the client instance
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include controller-client-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include controller-client-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include controller-client-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include controller-client-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include controller-client-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include controller-client-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include controller-client-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "controller-client-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "controller-client-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "controller-client-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "controller-client-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "controller-client-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "controller-client-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "controller-client-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 ## Elements' `ApolloClientMixin`
@@ -66,13 +66,13 @@ Pass the `client` param to controllers to specify the client instance
 Import `ApolloClientMixin` from `@apollo-elements/mixins` and apply it to your components' classes to connect them to a specific client:
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include client-mixin-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include client-mixin-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include client-mixin-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include client-mixin-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include client-mixin-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include client-mixin-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include client-mixin-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "client-mixin-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "client-mixin-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "client-mixin-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "client-mixin-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "client-mixin-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "client-mixin-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "client-mixin-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 ## Next Steps

@@ -1,6 +1,25 @@
-{{- $playgroundId := .Get 0 -}}
-{{- $filename := .Get 1 -}}
-{{- $content := .Inner -}}
+{{- $playgroundId := .Parent.Get "id" -}}
+{{- $filename := .Get "name" -}}
+{{- $includePath := .Get "include" -}}
+{{- $content := "" -}}
+{{- if $includePath -}}
+  {{- $page_dir := .Page.File.Dir -}}
+  {{- $content_path := path.Clean (path.Join "content" $page_dir $includePath) -}}
+  {{- $content = readFile $content_path -}}
+{{- else -}}
+  {{- $content = .Inner -}}
+{{- end -}}
 
-<template data-playground-id="{{ $playgroundId }}"
-          data-filename="{{ $filename }}">{{ $content }}</template>
+{{- /* Dedent content to remove common leading whitespace */ -}}
+{{- $content = partial "dedent.html" $content -}}
+
+{{- /* Set preview content for parent if this is the first file */ -}}
+{{- $scratchKey := printf "playground-%s-has-preview" $playgroundId -}}
+{{- if not (.Page.Scratch.Get $scratchKey) -}}
+  {{- .Page.Scratch.Set (printf "playground-%s-preview" $playgroundId) $content -}}
+  {{- .Page.Scratch.Set $scratchKey true -}}
+{{- end -}}
+
+{{- /* Trim leading/trailing whitespace from template tag */ -}}
+<template data-playground-id="{{- $playgroundId -}}"
+          data-filename="{{- $filename -}}">{{- $content -}}</template>

@@ -19,12 +19,10 @@ sidebar: api
 
 ## Demo
 
-{{<docs-playground "gluon-query" "ts">}}
-{{<include launches.js>}}
+{{<docs-playground id="gluon-query" lang="ts">}}
+  {{<playground-file name="launches.js" include="launches.js" />}}
+  {{<playground-file name="index.html"
+                     include="../../../../../static/assets/libraries/_assets/index.spacex-launches.html" />}}
 {{</docs-playground>}}
-
-{{<playground-file "gluon-query" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
 
 Read the [query component guides](../../../../guides/usage/queries/) for more examples and tips.

@@ -19,31 +19,16 @@ Gluon is a minimalist web components base class that templates components with `
 
 Import `ApolloQuery`, `ApolloMutation`, or `ApolloSubscription` to define your components.
 
-{{<docs-playground "apollo-gluon" "ts">}}
-{{<include Hello.ts>}}
+{{<docs-playground id="apollo-gluon" lang="ts">}}
+  {{<playground-file name="Hello.ts" include="Hello.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="style.css" include="style.css" />}}
+  {{<playground-file name="Hello.query.graphql.ts" include="Hello.query.graphql.ts" />}}
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
 
-{{<playground-file "apollo-gluon" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-gluon" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-gluon" "Hello.query.graphql.ts">}}
-{{<include Hello.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-gluon" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}
-
-<!-- TODO: Review and move to Hugo CSS -->
-<!-- STYLE BLOCK:
-
-#apollo-gluon {
-  --playground-preview-width: 300px;
-}
-
--->
+<style>
+  #apollo-gluon {
+    --playground-preview-width: 300px;
+  }
+</style>

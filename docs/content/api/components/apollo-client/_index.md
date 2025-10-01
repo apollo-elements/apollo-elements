@@ -22,19 +22,11 @@ Use `<apollo-client>` for a declarative way to create a simple Apollo Client, or
 
 Reuse the same query component for two different GraphQL endpoints.
 
-{{<docs-playground "client-component" "html">}}
-{{<include index.html>}}
+{{<docs-playground id="client-component" lang="html">}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="introspection-queries.js" include="introspection-queries.js" />}}
+
+  {{<playground-file name="introspection-queries.css" include="introspection-queries.css" />}}
+
+  {{<playground-file name="IntrospectionQueries.query.graphql.js" include="IntrospectionQueries.query.graphql.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "client-component" "introspection-queries.js">}}
-{{<include introspection-queries.js>}}
-{{</playground-file>}}
-
-{{<playground-file "client-component" "introspection-queries.css">}}
-{{<include introspection-queries.css>}}
-{{</playground-file>}}
-
-{{<playground-file "client-component" "IntrospectionQueries.query.graphql.js">}}
-{{<include IntrospectionQueries.query.graphql.js>}}
-{{</playground-file>}}
-

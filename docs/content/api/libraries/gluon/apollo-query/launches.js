@@ -8,7 +8,13 @@ class SpacexLaunches extends ApolloQuery {
     super();
     this.variables = { limit: 3 };
     this.query = gql`
-      {{ query | trim | indent(6) }}
+      query LaunchesQuery($limit: Int) {
+        launchesPast(limit: $limit) {
+          id
+          mission_name
+          links { mission_patch_small }
+        }
+      }
     `;
   }
 
@@ -16,7 +22,20 @@ class SpacexLaunches extends ApolloQuery {
     const launches = this.data?.launchesPast ?? [];
     return html`
       <style>
-        {{ style | trim | indent(8) }}
+        :host {
+          --image-size: 40px;
+        }
+
+        li img {
+          height: var(--image-size);
+          width: auto;
+        }
+
+        li article {
+          height: var(--image-size);
+          display: flex;
+          justify-content: space-between;
+        }
       </style>
       <ol>${launches.map(x => html`
         <li>

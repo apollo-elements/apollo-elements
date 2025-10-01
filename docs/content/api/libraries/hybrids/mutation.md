@@ -17,22 +17,13 @@ sidebar: api
 
 Use the `mutation` factory to add a GraphQL mutation to you hybrids element.
 
-{{<docs-playground "mutation-factory" "ts">}}
-{{<include add-user.ts>}}
+{{<docs-playground id="mutation-factory" lang="ts">}}
+  {{<playground-file name="add-user.ts" include="add-user.ts" />}}
+  {{<playground-file name="add-user.css" include="add-user.css" />}}
+
+  {{<playground-file name="AddUser.mutation.graphql.ts" include="AddUser.mutation.graphql.ts" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
-
-{{<playground-file "mutation-factory" "add-user.css">}}
-{{<include add-user.css>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-factory" "AddUser.mutation.graphql.ts">}}
-{{<include AddUser.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-factory" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-factory" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}

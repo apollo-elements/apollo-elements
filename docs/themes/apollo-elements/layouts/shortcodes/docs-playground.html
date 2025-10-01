@@ -1,109 +1,115 @@
-{{- $playgroundId := .Get 0 -}}
-{{- $lang := .Get 1 | default "html" -}}
-{{- $content := trim .Inner "\n\r " -}}
+{{- $playgroundId := .Get "id" -}}
+{{- $lang := .Get "lang" -}}
+
+{{- /* Process children first to populate scratch */ -}}
+{{- $inner := .Inner -}}
+
+{{- /* Get preview content from scratch (set by first playground-file) */ -}}
+{{- $content := .Page.Scratch.Get (printf "playground-%s-preview" $playgroundId) -}}
 
 <docs-playground id="{{ $playgroundId }}">
   <template shadowrootmode="open">
     <style>
-:host {
-  display: block;
-  box-sizing: border-box;
-  position: relative;
-  width: 100%;
-  height: auto;
-}
+      :host {
+        display: block;
+        box-sizing: border-box;
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
 
-playground-ide {
-  display: none;
-  border: 0;
-  overflow: hidden;
+      playground-ide {
+        display: none;
+        border: 0;
+        overflow: hidden;
 
-  --playground-code-font-family: monospace;
-  --playground-code-font-size: 14px;
-  --playground-border: none;
-}
+        --playground-code-font-family: monospace;
+        --playground-code-font-size: 14px;
+        --playground-border: none;
+      }
 
-#snippet,
-playground-ide {
-  width: 100%;
-  height: 100%;
-  border-radius: var(--playground-snippet-border-radius, 6px);
-}
+      #snippet,
+      playground-ide {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--playground-snippet-border-radius, 6px);
+      }
 
-#snippet {
-  display: block;
-}
+      #snippet {
+        display: block;
+        box-sizing: border-box;
+      }
 
-#snippet,
-button {
-  border: 1px solid var(--playground-snippet-border-color, transparent);
-  transition: border-color 0.2s ease-in-out;
-  will-change: border-color;
-}
+      #snippet,
+      button {
+        border: 1px solid var(--playground-snippet-border-color, transparent);
+        transition: border-color 0.2s ease-in-out;
+        will-change: border-color;
+      }
 
-:host([show]) playground-ide {
-  display: flex;
-  width: var(--playground-ide-width, 100%);
-  height: var(--playground-ide-height, 600px);
-}
+      :host([show]) playground-ide {
+        display: flex;
+        width: var(--playground-ide-width, 100%);
+        height: var(--playground-ide-height, 600px);
+      }
 
-button {
-  background: var(--playground-snippet-button-background);
-  border-end-end-radius: 6px;
-  border-start-start-radius: 6px;
-  color: inherit;
-  cursor: pointer;
-  display: block;
-  font-size: 16px;
-  outline: none;
-  padding: 9px 16px;
-  position: absolute;
-  bottom: 0;
-  right: -2px;
-  transition:
-    border-color 0.2s ease-in-out,
-    background 0.1s ease,
-    color 0.1s ease;
-}
+      button {
+        background: var(--playground-snippet-button-background);
+        border-end-end-radius: 6px;
+        border-start-start-radius: 6px;
+        color: inherit;
+        cursor: pointer;
+        display: block;
+        font-size: 16px;
+        outline: none;
+        padding: 9px 16px;
+        position: absolute;
+        bottom: 0;
+        right: -2px;
+        transition:
+          border-color 0.2s ease-in-out,
+          background 0.1s ease,
+          color 0.1s ease;
+      }
 
-button:focus,
-button:hover {
-  color: var(--playground-snippet-button-focus-color, var(--code-button-focus-color));
-  background: var(--playground-snippet-button-focus-background, var(--code-button-focus-background));
-  border-bottom-color: var(--playground-snippet-button-focus-background, var(--code-button-focus-background)) !important;
-  border-right-color: var(--playground-snippet-button-focus-background, var(--code-button-focus-background)) !important;
-}
+      button:focus,
+      button:hover {
+        color: var(--playground-snippet-button-focus-color, var(--code-button-focus-color));
+        background: var(--playground-snippet-button-focus-background, var(--code-button-focus-background));
+        border-bottom-color: var(--playground-snippet-button-focus-background, var(--code-button-focus-background)) !important;
+        border-right-color: var(--playground-snippet-button-focus-background, var(--code-button-focus-background)) !important;
+      }
 
-:host([show]) #snippet,
-:host([show]) button {
-  display: none;
-}
+      :host([show]) #snippet,
+      :host([show]) button {
+        display: none;
+      }
 
-:host(:not([show]):focus-within) #snippet,
-:host(:not([show]):hover) #snippet {
-  border-color: var(--playground-snippet-focus-border-color, black);
-}
+      :host(:not([show]):focus-within) #snippet,
+      :host(:not([show]):hover) #snippet {
+        border-color: var(--playground-snippet-focus-border-color, black);
+      }
 
-:host(:not([show]):focus-within) button,
-:host(:not([show]):hover) button {
-  border-top-color: var(--playground-snippet-focus-border-color, black);
-  border-left-color: var(--playground-snippet-focus-border-color, black);
-  border-bottom-color: var(--playground-snippet-outer-background-color, var(--page-background));
-  border-right-color: var(--playground-snippet-outer-background-color, var(--page-background));
-}
+      :host(:not([show]):focus-within) button,
+      :host(:not([show]):hover) button {
+        border-top-color: var(--playground-snippet-focus-border-color, black);
+        border-left-color: var(--playground-snippet-focus-border-color, black);
+        border-bottom-color: var(--playground-snippet-outer-background-color, var(--page-background));
+        border-right-color: var(--playground-snippet-outer-background-color, var(--page-background));
+      }
 
-#snippet ::slotted(pre) {
-  margin-bottom: 0 !important;
-}
+      #snippet ::slotted(pre) {
+        margin-bottom: 0 !important;
+      }
 
-:host([loading]) #edit,
-#loading {
-  display: none;
-}
+      :host([loading]) #edit,
+      #loading {
+        display: none;
+      }
 
-:host([loading]) #loading {
-  display: inline-block;
-}
+      :host([loading]) #loading {
+        display: inline-block;
+      }
     </style>
 
     <div id="snippet"><slot></slot></div>
@@ -151,4 +157,5 @@ button:hover {
     </button>
   </template>
   {{- highlight $content $lang "linenos=false" -}}
+{{- .Inner -}}
 </docs-playground>

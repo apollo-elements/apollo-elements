@@ -1,4 +1,7 @@
 <script type="module" src="https://unpkg.com/@microsoft/fast-components"></script>
 <fast-design-system-provider use-defaults>
-<!-- TODO: Include file ../_assets/index.spacex-launches.html - needs Hugo shortcode or static asset -->
+  <script type="module" src="launches.js"></script>
+  <apollo-client uri="https://main--spacex-l4uc6p.apollographos.net/graphql">
+    <spacex-launches></spacex-launches>
+  </apollo-client>
 </fast-design-system-provider>

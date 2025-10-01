@@ -1,1 +1,23 @@
-<!-- TODO: Include file './_assets/style.css' - needs Hugo shortcode or static asset -->
+html, body {
+  font-family: sans-serif;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+#picked {
+  background-image: /* tint image */
+                    linear-gradient(to right, rgba(192, 192, 192, 0.75), rgba(192, 192, 192, 0.75)),
+                    /* checkered effect */
+                    linear-gradient(to right, black 50%, white 50%),
+                    linear-gradient(to bottom, black 50%, white 50%);
+  background-blend-mode: normal, difference, normal;
+  background-size: 2em 2em;
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  height: 400px;
+  display: block;
+}

@@ -19,31 +19,16 @@ sidebar: api
 
 Import `useQuery`, `useMutation`, or `useSubscription` to define your operation.
 
-{{<docs-playground "apollo-haunted" "ts">}}
-{{<include Hello.ts>}}
+{{<docs-playground id="apollo-haunted" lang="ts">}}
+  {{<playground-file name="Hello.ts" include="Hello.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="style.css" include="style.css" />}}
+  {{<playground-file name="Hello.query.graphql.ts" include="Hello.query.graphql.ts" />}}
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
 
-{{<playground-file "apollo-haunted" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-haunted" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-haunted" "Hello.query.graphql.ts">}}
-{{<include Hello.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "apollo-haunted" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}
-
-<!-- TODO: Review and move to Hugo CSS -->
-<!-- STYLE BLOCK:
-
-#apollo-haunted {
-  --playground-preview-width: 300px;
-}
-
--->
+<style>
+  #apollo-haunted {
+    --playground-preview-width: 300px;
+  }
+</style>

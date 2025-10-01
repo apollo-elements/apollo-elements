@@ -142,13 +142,13 @@ This mutation requires an input which is a list of site IDs, which we'll get fro
 Then, when the user is ready to create the Network, she clicks the `Create` button, and the component issues the mutation over the network with variables based on the currently selected sites.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}} {{<include final-html.html>}} {{</code-tab>}}
-  {{<code-tab package="mixins">}} {{<include final-mixins.ts>}} {{</code-tab>}}
-  {{<code-tab package="lit">}} {{<include final-lit.ts>}} {{</code-tab>}}
-  {{<code-tab package="fast">}} {{<include final-fast.ts>}} {{</code-tab>}}
-  {{<code-tab package="haunted">}} {{<include final-haunted.ts>}} {{</code-tab>}}
-  {{<code-tab package="atomico">}} {{<include final-atomico.tsx>}} {{</code-tab>}}
-  {{<code-tab package="hybrids">}} {{<include final-hybrids.ts>}} {{</code-tab>}}
+  {{<code-tab package="html">}} {{<include "final-html.html">}} {{</code-tab>}}
+  {{<code-tab package="mixins">}} {{<include "final-mixins.ts">}} {{</code-tab>}}
+  {{<code-tab package="lit">}} {{<include "final-lit.ts">}} {{</code-tab>}}
+  {{<code-tab package="fast">}} {{<include "final-fast.ts">}} {{</code-tab>}}
+  {{<code-tab package="haunted">}} {{<include "final-haunted.ts">}} {{</code-tab>}}
+  {{<code-tab package="atomico">}} {{<include "final-atomico.tsx">}} {{</code-tab>}}
+  {{<code-tab package="hybrids">}} {{<include "final-hybrids.ts">}} {{</code-tab>}}
 </code-tabs>
 
 ## Update Network Component

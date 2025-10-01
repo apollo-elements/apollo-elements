@@ -63,13 +63,13 @@ mutation UpdateProfileMutation(
 Import the `<apollo-mutation>` element from `@apollo-elements/components` to write declarative mutations right in your template. In this way, we combine our query and mutation into a single component:
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include apollo-mutation-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include apollo-mutation-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include apollo-mutation-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include apollo-mutation-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include apollo-mutation-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include apollo-mutation-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include apollo-mutation-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "apollo-mutation-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "apollo-mutation-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "apollo-mutation-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "apollo-mutation-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "apollo-mutation-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "apollo-mutation-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "apollo-mutation-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutation/).
@@ -77,13 +77,13 @@ Read more about the [`<apollo-mutation>` component](/api/components/apollo-mutat
 ## Using `ApolloMutationController`
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}}{{<include mutation-controller-html.html>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include mutation-controller-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include mutation-controller-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include mutation-controller-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include mutation-controller-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include mutation-controller-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include mutation-controller-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html">}}{{<include "mutation-controller-html.html">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "mutation-controller-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "mutation-controller-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "mutation-controller-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "mutation-controller-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "mutation-controller-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "mutation-controller-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>
 
 Read more about [`ApolloMutationController`](/api/core/controllers/mutation/) in the API docs.

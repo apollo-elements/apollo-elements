@@ -58,11 +58,11 @@ When you pass your `TypedDocumentNode` to a controller (or haunted hook, or hybr
 These examples assume you followed the first approach outlined above. If you are generating types, omit the `typeof` operator.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html" lang="ts">}}{{<include typed-html.ts>}}{{</code-tab>}}
-  {{<code-tab package="mixins">}}{{<include typed-mixins.ts>}}{{</code-tab>}}
-  {{<code-tab package="lit">}}{{<include typed-lit.ts>}}{{</code-tab>}}
-  {{<code-tab package="fast">}}{{<include typed-fast.ts>}}{{</code-tab>}}
-  {{<code-tab package="haunted">}}{{<include typed-haunted.ts>}}{{</code-tab>}}
-  {{<code-tab package="atomico">}}{{<include typed-atomico.tsx>}}{{</code-tab>}}
-  {{<code-tab package="hybrids">}}{{<include typed-hybrids.ts>}}{{</code-tab>}}
+  {{<code-tab package="html" lang="ts">}}{{<include "typed-html.ts">}}{{</code-tab>}}
+  {{<code-tab package="mixins">}}{{<include "typed-mixins.ts">}}{{</code-tab>}}
+  {{<code-tab package="lit">}}{{<include "typed-lit.ts">}}{{</code-tab>}}
+  {{<code-tab package="fast">}}{{<include "typed-fast.ts">}}{{</code-tab>}}
+  {{<code-tab package="haunted">}}{{<include "typed-haunted.ts">}}{{</code-tab>}}
+  {{<code-tab package="atomico">}}{{<include "typed-atomico.tsx">}}{{</code-tab>}}
+  {{<code-tab package="hybrids">}}{{<include "typed-hybrids.ts">}}{{</code-tab>}}
 </code-tabs>

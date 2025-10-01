@@ -26,18 +26,11 @@ Apollo Elements controllers are not limited to Lit. Use them with any object tha
 
 </inline-notification>
 
-{{<docs-playground "mutation-controller" "ts">}}
-{{<include add-user.ts>}}
+{{<docs-playground id="mutation-controller" lang="ts">}}
+  {{<playground-file name="add-user.ts" include="add-user.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="AddUser.mutation.graphql.ts" include="AddUser.mutation.graphql.ts" />}}
+
+  {{<playground-file name="client.js" include="client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "mutation-controller" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-controller" "AddUser.mutation.graphql.ts">}}
-{{<include AddUser.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "mutation-controller" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}

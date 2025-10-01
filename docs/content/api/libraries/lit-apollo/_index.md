@@ -25,31 +25,16 @@ Looking for reactive Apollo controllers? See [`@apollo-elements/core`](/api/core
 
 `lit-apollo` base classes extend from `LitElement`, so you can quickly get up and running creating declarative front-ends with Apollo GraphQL.
 
-{{<docs-playground "lit-apollo" "ts">}}
-{{<include Hello.ts>}}
+{{<docs-playground id="lit-apollo" lang="ts">}}
+  {{<playground-file name="Hello.ts" include="Hello.ts" />}}
+  {{<playground-file name="index.html" include="index.html" />}}
+  {{<playground-file name="style.css" include="style.css" />}}
+  {{<playground-file name="Hello.query.graphql.ts" include="Hello.query.graphql.ts" />}}
+  {{<playground-file name="client.ts" include="client.ts" />}}
 {{</docs-playground>}}
 
-{{<playground-file "lit-apollo" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "lit-apollo" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "lit-apollo" "Hello.query.graphql.ts">}}
-{{<include Hello.query.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "lit-apollo" "client.ts">}}
-{{<include client.ts>}}
-{{</playground-file>}}
-
-<!-- TODO: Review and move to Hugo CSS -->
-<!-- STYLE BLOCK:
-
+<style>
 #lit-apollo {
   --playground-preview-width: 300px;
 }
-
--->
+</style>

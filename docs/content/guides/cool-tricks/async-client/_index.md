@@ -49,11 +49,11 @@ import { getClient } from './client';
 If for whatever reason you'd like to load your component files eagerly, set the `noAutoSubscribe` property on your components, then you can import a promise of a client and wait for it in `connectedCallback`, calling `subscribe` when ready.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}} {{<include async-client-html.html>}} {{</code-tab>}}
-  {{<code-tab package="mixins">}} {{<include async-client-mixins.ts>}} {{</code-tab>}}
-  {{<code-tab package="lit">}} {{<include async-client-lit.ts>}} {{</code-tab>}}
-  {{<code-tab package="fast">}} {{<include async-client-fast.ts>}} {{</code-tab>}}
-  {{<code-tab package="haunted">}} {{<include async-client-haunted.ts>}} {{</code-tab>}}
-  {{<code-tab package="atomico">}} {{<include async-client-atomico.tsx>}} {{</code-tab>}}
-  {{<code-tab package="hybrids">}} {{<include async-client-hybrids.ts>}} {{</code-tab>}}
+  {{<code-tab package="html">}} {{<include "async-client-html.html">}} {{</code-tab>}}
+  {{<code-tab package="mixins">}} {{<include "async-client-mixins.ts">}} {{</code-tab>}}
+  {{<code-tab package="lit">}} {{<include "async-client-lit.ts">}} {{</code-tab>}}
+  {{<code-tab package="fast">}} {{<include "async-client-fast.ts">}} {{</code-tab>}}
+  {{<code-tab package="haunted">}} {{<include "async-client-haunted.ts">}} {{</code-tab>}}
+  {{<code-tab package="atomico">}} {{<include "async-client-atomico.tsx">}} {{</code-tab>}}
+  {{<code-tab package="hybrids">}} {{<include "async-client-hybrids.ts">}} {{</code-tab>}}
 </code-tabs>

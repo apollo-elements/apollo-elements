@@ -21,26 +21,15 @@ Read the [mutation component guides](/guides/usage/mutations/) for examples and 
 
 ## Live Demo
 
-{{<docs-playground "fast-mutation" "ts">}}
-{{<include AddUser.ts>}}
+{{<docs-playground id="fast-mutation" lang="ts">}}
+  {{<playground-file name="AddUser.ts" include="AddUser.ts" />}}
+  {{<playground-file name="AddUser.mutation.graphql.ts" include="AddUser.mutation.graphql.ts" />}}
+
+  {{<playground-file name="index.html" include="index.html" />}}
+
+  {{<playground-file name="style.css" include="style.css" />}}
+
+  {{<playground-file name="add-user.css.js" include="add-user.css.js" />}}
+
+  {{<playground-file name="client.js" include="client.js" />}}
 {{</docs-playground>}}
-
-{{<playground-file "fast-mutation" "AddUser.mutation.graphql.ts">}}
-{{<include AddUser.mutation.graphql.ts>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-mutation" "index.html">}}
-{{<include index.html>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-mutation" "style.css">}}
-{{<include style.css>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-mutation" "add-user.css.js">}}
-{{<include add-user.css.js>}}
-{{</playground-file>}}
-
-{{<playground-file "fast-mutation" "client.js">}}
-{{<include client.js>}}
-{{</playground-file>}}

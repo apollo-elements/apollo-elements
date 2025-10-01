@@ -6,7 +6,20 @@ import '@apollo-elements/components/apollo-client';
 const template = document.createElement('template');
 template.innerHTML = `
   <style>
-    {{ style | trim | indent(6) }}
+    :host {
+      --image-size: 40px;
+    }
+
+    li img {
+      height: var(--image-size);
+      width: auto;
+    }
+
+    li article {
+      height: var(--image-size);
+      display: flex;
+      justify-content: space-between;
+    }
   </style>
   <ol></ol>
 `;
@@ -28,7 +41,13 @@ class SpacexLaunches extends ApolloQueryMixin(HTMLElement) {
     this.shadowRoot.append(template.content.cloneNode(true));
     this.variables = { limit: 3 };
     this.query = gql`
-      {{ query | trim | indent(6) }}
+      query LaunchesQuery($limit: Int) {
+        launchesPast(limit: $limit) {
+          id
+          mission_name
+          links { mission_patch_small }
+        }
+      }
     `;
   }
 

@@ -92,13 +92,13 @@ This option is great when you want to 'set it and forget it', and it works for a
 With this approach, you can control on a per-component basis when to subscribe.
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}} {{<include should-subscribe-html.html>}} {{</code-tab>}}
-  {{<code-tab package="mixins">}} {{<include should-subscribe-mixins.ts>}} {{</code-tab>}}
-  {{<code-tab package="lit">}} {{<include should-subscribe-lit.ts>}} {{</code-tab>}}
-  {{<code-tab package="fast">}} {{<include should-subscribe-fast.ts>}} {{</code-tab>}}
-  {{<code-tab package="haunted">}} {{<include should-subscribe-haunted.ts>}} {{</code-tab>}}
-  {{<code-tab package="atomico">}} {{<include should-subscribe-atomico.tsx>}} {{</code-tab>}}
-  {{<code-tab package="hybrids">}} {{<include should-subscribe-hybrids.ts>}} {{</code-tab>}}
+  {{<code-tab package="html">}} {{<include "should-subscribe-html.html">}} {{</code-tab>}}
+  {{<code-tab package="mixins">}} {{<include "should-subscribe-mixins.ts">}} {{</code-tab>}}
+  {{<code-tab package="lit">}} {{<include "should-subscribe-lit.ts">}} {{</code-tab>}}
+  {{<code-tab package="fast">}} {{<include "should-subscribe-fast.ts">}} {{</code-tab>}}
+  {{<code-tab package="haunted">}} {{<include "should-subscribe-haunted.ts">}} {{</code-tab>}}
+  {{<code-tab package="atomico">}} {{<include "should-subscribe-atomico.tsx">}} {{</code-tab>}}
+  {{<code-tab package="hybrids">}} {{<include "should-subscribe-hybrids.ts">}} {{</code-tab>}}
 </code-tabs>
 
 ## Option 3: Restore the Old Behaviour with `ValidateVariablesMixin`
@@ -106,11 +106,11 @@ With this approach, you can control on a per-component basis when to subscribe.
 The old variable-validating behaviour is still available, but you have to opt-in to get it. Import the `ValidateVariablesMixin` from [`@apollo-elements/mixins/validate-variables-mixin`](../../api/libraries/mixins/validate-variables-mixin.md) and apply it to your base class
 
 <code-tabs collection="libraries" default-tab="lit">
-  {{<code-tab package="html">}} {{<include validate-variables-mixin-html.html>}} {{</code-tab>}}
-  {{<code-tab package="mixins">}} {{<include validate-variables-mixin-mixins.ts>}} {{</code-tab>}}
-  {{<code-tab package="lit">}} {{<include validate-variables-mixin-lit.ts>}} {{</code-tab>}}
-  {{<code-tab package="fast">}} {{<include validate-variables-mixin-fast.ts>}} {{</code-tab>}}
-  {{<code-tab package="haunted">}} {{<include validate-variables-mixin-haunted.md>}} {{</code-tab>}}
-  {{<code-tab package="atomico">}} {{<include validate-variables-mixin-atomico.md>}} {{</code-tab>}}
-  {{<code-tab package="hybrids">}} {{<include validate-variables-mixin-hybrids.md>}} {{</code-tab>}}
+  {{<code-tab package="html">}} {{<include "validate-variables-mixin-html.html">}} {{</code-tab>}}
+  {{<code-tab package="mixins">}} {{<include "validate-variables-mixin-mixins.ts">}} {{</code-tab>}}
+  {{<code-tab package="lit">}} {{<include "validate-variables-mixin-lit.ts">}} {{</code-tab>}}
+  {{<code-tab package="fast">}} {{<include "validate-variables-mixin-fast.ts">}} {{</code-tab>}}
+  {{<code-tab package="haunted">}} {{<include "validate-variables-mixin-haunted.md">}} {{</code-tab>}}
+  {{<code-tab package="atomico">}} {{<include "validate-variables-mixin-atomico.md">}} {{</code-tab>}}
+  {{<code-tab package="hybrids">}} {{<include "validate-variables-mixin-hybrids.md">}} {{</code-tab>}}
 </code-tabs>

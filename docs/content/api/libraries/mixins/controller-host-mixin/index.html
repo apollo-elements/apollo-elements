@@ -1,1 +1,7 @@
-<!-- TODO: Include file './_assets/index.html' - needs Hugo shortcode or static asset -->
+<script type="module" src="color-picker.js"></script>
+<color-picker></color-picker>
+<output id="picked"></output>
+<script>
+  document.querySelector('color-picker')
+    .addEventListener('pick', ({ detail }) => picked.style.background = detail);
+</script>

@@ -13,9 +13,7 @@ A chat app queries for a list of messages, then initiates a subscription for all
 
 Consider this query and subscription:
 
-<!-- TODO: Review and move to Hugo CSS -->
-<!-- STYLE BLOCK:
-
+<style>
 #gql-documents {
   display: grid;
   gap: 12px 6px;
@@ -31,8 +29,7 @@ Consider this query and subscription:
     grid-template: auto / auto auto;
   }
 }
-
--->
+</style>
 
 <div id="gql-documents">
 
@@ -67,25 +64,25 @@ We'll accomplish this by calling `subscribeToMore` on our element once it's conn
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include subscribe-to-more-html.html>}}
+{{<include "subscribe-to-more-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include subscribe-to-more-mixins.ts>}}
+{{<include "subscribe-to-more-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include subscribe-to-more-lit.ts>}}
+{{<include "subscribe-to-more-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include subscribe-to-more-fast.ts>}}
+{{<include "subscribe-to-more-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include subscribe-to-more-haunted.ts>}}
+{{<include "subscribe-to-more-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include subscribe-to-more-atomico.tsx>}}
+{{<include "subscribe-to-more-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include subscribe-to-more-hybrids.ts>}}
+{{<include "subscribe-to-more-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 
@@ -95,25 +92,25 @@ The first approach of calling `subscribeToMore` suits our requirement of updatin
 
 <code-tabs collection="libraries" default-tab="lit">
   {{<code-tab package="html">}}
-{{<include subscription-controller-html.html>}}
+{{<include "subscription-controller-html.html">}}
 {{</code-tab>}}
   {{<code-tab package="mixins">}}
-{{<include subscription-controller-mixins.ts>}}
+{{<include "subscription-controller-mixins.ts">}}
 {{</code-tab>}}
   {{<code-tab package="lit">}}
-{{<include subscription-controller-lit.ts>}}
+{{<include "subscription-controller-lit.ts">}}
 {{</code-tab>}}
   {{<code-tab package="fast">}}
-{{<include subscription-controller-fast.ts>}}
+{{<include "subscription-controller-fast.ts">}}
 {{</code-tab>}}
   {{<code-tab package="haunted">}}
-{{<include subscription-controller-haunted.ts>}}
+{{<include "subscription-controller-haunted.ts">}}
 {{</code-tab>}}
   {{<code-tab package="atomico">}}
-{{<include subscription-controller-atomico.tsx>}}
+{{<include "subscription-controller-atomico.tsx">}}
 {{</code-tab>}}
   {{<code-tab package="hybrids">}}
-{{<include subscription-controller-hybrids.ts>}}
+{{<include "subscription-controller-hybrids.ts">}}
 {{</code-tab>}}
 </code-tabs>
 

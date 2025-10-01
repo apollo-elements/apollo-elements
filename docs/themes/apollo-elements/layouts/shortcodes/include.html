@@ -1,5 +1,10 @@
-{{ $base_path := .Page.File.Dir }}
-{{ $file_path := .Get 0 }}
-{{ $full_file_path := (path.Join $base_path $file_path) }}
+{{ $file_path := "" }}
+{{ if .Get "path" }}
+  {{ $file_path = .Get "path" }}
+{{ else }}
+  {{ $file_path = .Get 0 }}
+{{ end }}
+{{ $page_dir := .Page.File.Dir }}
+{{ $content_path := path.Clean (path.Join "content" $page_dir $file_path) }}
 
-{{ readFile $full_file_path | safeHTML }}
+{{ readFile $content_path | safeHTML }}
