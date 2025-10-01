@@ -136,11 +136,15 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   private nextData(result: ApolloLink.Result<Data<D>>) {
     const { data, error, errors, loading } = this;
 
-    // In Apollo Client v4, subscription errors come through the errors array
+    // In Apollo Client v4, subscription errors come through the error field (singular)
+    if ((result as any).error) {
+      this.nextError((result as any).error);
+      return;
+    }
+
+    // Also check for GraphQL errors in the errors array
     if (result.errors && result.errors.length > 0) {
-      const firstError = result.errors[0];
-      const errorObject = new Error(firstError.message);
-      this.nextError(errorObject);
+      this.nextError(result.errors[0] as any);
       return;
     }
 
@@ -194,19 +198,16 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   }
 
   protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
-    const query = doc ?? undefined;
     if (doc === this.#lastSubscriptionDocument)
       return;
     this.cancel();
-    const opts = query ? { query: query as DocumentNode } as Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>> : undefined;
-    if (this.canSubscribe(opts) && this.shouldSubscribe(opts))
+    if (this.canSubscribe() && this.shouldSubscribe())
       this.subscribe();
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
-    const opts = variables ? { variables } as Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>> : undefined;
-    if (this.canSubscribe(opts) && this.shouldSubscribe(opts))
+    if (this.canSubscribe() && this.shouldSubscribe())
       this.subscribe();
   }
 
