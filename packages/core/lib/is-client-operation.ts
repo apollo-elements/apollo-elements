@@ -17,9 +17,27 @@ const FAIL_DIRECTIVE = Symbol('NO_DIRECTIVE') as unknown as DirectiveNode;
 function hasDirectives(directiveNames: string[], doc?: DocumentNode): boolean {
   if (!doc?.definitions) return false;
 
+  function checkSelections(selections?: readonly SelectionNode[]): boolean {
+    if (!selections) return false;
+    return selections.some(selection => {
+      if (selection.directives?.some(d => directiveNames.includes(d.name.value))) {
+        return true;
+      }
+      if ('selectionSet' in selection && selection.selectionSet) {
+        return checkSelections(selection.selectionSet.selections);
+      }
+      return false;
+    });
+  }
+
   return doc.definitions.some(def => {
     if (def.kind === 'OperationDefinition') {
-      return def.directives?.some(d => directiveNames.includes(d.name.value));
+      // Check operation-level directives
+      if (def.directives?.some(d => directiveNames.includes(d.name.value))) {
+        return true;
+      }
+      // Check field-level directives
+      return checkSelections(def.selectionSet?.selections);
     }
     return false;
   });
