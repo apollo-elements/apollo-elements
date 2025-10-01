@@ -43,7 +43,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
 
   controller = new ApolloMutationBehavior<D, V>(this, null, {
     onCompleted: data => this.onCompleted?.(data),
-    onError: error => this.onError?.(error), /* c8 ignore next */ // covered
+    onError: error => this.onError?.(error),  // covered
   });
 
   /**
@@ -133,7 +133,7 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
     mode: 'fromView',
     attribute: 'refetch-queries',
     converter: {
-      toView() { /* c8 ignore next */ return null; },
+      toView() {  return null; },
       fromView(value: string|string[]): string[] {
         return typeof value !== 'string' ? value : splitCommasAndTrim(value);
       },
@@ -158,8 +158,8 @@ export class ApolloMutation<D, V = VariablesOf<D>> extends ApolloElement<D, V> {
   public updater?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 
   public mutate(
-    params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>
-  ): Promise<C.FetchResult<Data<D>>> {
+    params?: Partial<C.ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>
+  ): Promise<C.ApolloLink.Result<Data<D>>> {
     const update = params?.update ?? this.updater;
     return this.controller.mutate({
       ...params,

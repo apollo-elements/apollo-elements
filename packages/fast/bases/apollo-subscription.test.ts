@@ -116,7 +116,7 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                         (this);
     assertType<FASTElement>                         (this);
@@ -148,7 +148,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                             (this.skip);
     assertType<boolean>                             (this.noAutoSubscribe);
 
-     
+
   }
 }
 

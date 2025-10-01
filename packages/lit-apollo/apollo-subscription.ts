@@ -113,7 +113,7 @@ export class ApolloSubscription<D = unknown, V extends C.OperationVariables = C.
    * Override to prevent subscribing unless your conditions are met
    */
   shouldSubscribe(
-    options?: Partial<C.SubscriptionOptions<Variables<D, V>, Data<D>>>
+    options?: Partial<C.ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>>
   ): boolean {
     return (void options, true);
   }

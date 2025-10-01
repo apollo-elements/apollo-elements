@@ -4,19 +4,14 @@ import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 import type {
   ApolloClient,
-  ApolloQueryResult,
   DocumentNode,
   ErrorPolicy,
   FetchPolicy,
-  FetchResult,
-  MutationOptions,
+  ApolloLink,
   NetworkStatus,
+  ObservableQuery,
   OperationVariables,
-  QueryOptions,
-  SubscribeToMoreOptions,
-  SubscriptionOptions,
   WatchQueryFetchPolicy,
-  WatchQueryOptions,
 } from '@apollo/client';
 
 import { GraphQLError } from 'graphql';
@@ -35,7 +30,7 @@ export type Value<T> = T[keyof T];
 
 export type Entries<T> = [keyof T, Value<T>][];
 
-export type MutationUpdaterFn<D, V extends OperationVariables = OperationVariables> = Required<MutationOptions<D, V>>['update'];
+export type MutationUpdaterFn<D, V extends OperationVariables = OperationVariables> = Required<ApolloClient.MutateOptions<D, V>>['update'];
 
 // GraphQLError is now imported directly from @apollo/client
 
@@ -49,7 +44,9 @@ export type Data<D> =
   : D;
 
 export type Variables<D, V> =
-    D extends TypedDocumentNode<infer _, infer TV> ? TV extends OperationVariables ? TV : OperationVariables
+    D extends TypedDocumentNode<infer _, infer TV> ?
+    TV extends OperationVariables ? TV
+  : OperationVariables
   : V extends OperationVariables ? V
   : OperationVariables;
 
@@ -61,19 +58,19 @@ export type VariablesOf<E> =
 
 export type NextFetchPolicyFunction<D, V> =
   (
-    this: WatchQueryOptions<Variables<D, V>, Data<V>>,
+    this: ApolloClient.WatchQueryOptions<Data<D>, Variables<D, V>>,
     lastFetchPolicy: WatchQueryFetchPolicy
   ) => WatchQueryFetchPolicy
 
 export type RefetchQueriesType<D = TypedDocumentNode|Record<string, unknown>> =
-  MutationOptions<Data<D>>['refetchQueries'];
+  ApolloClient.MutateOptions<Data<D>>['refetchQueries'];
 
 export type OptimisticResponseType<D, V> =
   Data<D> |
   ((vars: Variables<D, V>) =>
     Data<D>);
 
-export type FetchMoreParams<D, V> = QueryOptions<Variables<D, V>, Data<D>>
+export type FetchMoreParams<D, V> = ApolloClient.QueryOptions<Data<D>, Variables<D, V>>
 
 
 /**
@@ -122,7 +119,7 @@ export interface SubscriptionResult<TData> {
 }
 
 export interface SubscriptionDataOptions<D = unknown, V extends OperationVariables = OperationVariables> {
-  context: SubscriptionOptions<V, D>['context'];
+  context: ApolloClient.SubscribeOptions<D, V>['context'];
   subscription: DocumentNode | ComponentDocument<D, V>;
   variables?: Variables<D, V>;
   errorPolicy?: ErrorPolicy;
@@ -218,7 +215,7 @@ export declare class ApolloElementElement<D = unknown, V = VariablesOf<D>> exten
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  *
- * @fires {CustomEvent<FetchResult<Data<D>>>} apollo-mutation-result - The mutation resolved
+ * @fires {CustomEvent<ApolloLink.Result<Data<D>>>} apollo-mutation-result - The mutation resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The mutation rejected
  */
 export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
@@ -314,8 +311,8 @@ export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
    * Promise which is either resolved with the resulting data or rejected with an error.
    */
   public mutate(
-    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
-  ): Promise<FetchResult<Data<D>>>;
+    params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>
+  ): Promise<ApolloLink.Result<Data<D>>>;
 }
 
 /**
@@ -323,7 +320,7 @@ export declare class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
  *
  * See [`ApolloElementInterface`](https://apolloelements.dev/api/core/interfaces/element) for more information on events
  *
- * @fires {CustomEvent<ApolloQueryResult<Data<D>>>} apollo-query-result - The query resolved
+ * @fires {CustomEvent<ObservableQuery.Result<Data<D>>>} apollo-query-result - The query resolved
  * @fires {CustomEvent<ApolloError>} apollo-error - The query rejected
  */
 export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
@@ -428,20 +425,20 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * Update the variables of this observable query, and fetch the new results.
    * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
    */
-  public refetch(variables: Variables<D, V>): Promise<ApolloQueryResult<Data<D>>>
+  public refetch(variables: Variables<D, V>): Promise<ObservableQuery.Result<Data<D>>>
   /**
    * Determines whether the element should attempt to subscribe i.e. begin querying
    * Override to prevent subscribing unless your conditions are met
    */
   public shouldSubscribe(
-    options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+    options?: Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>>
   ): boolean
 
   /**
    * Resets the internal state of the query and subscribes.
    */
   public subscribe(
-    params?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+    params?: Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>>
   ): Subscription
 
   /**
@@ -453,15 +450,15 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    * and returns an object with updated query data based on the new results.
    */
   public subscribeToMore<TSubscriptionVariables extends OperationVariables, TSubscriptionData>(
-    options: SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+    options: ObservableQuery.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
   ): void | (() => void)
 
   /**
    * Executes a Query once and updates the component with the result
    */
   public executeQuery(
-    params?: Partial<QueryOptions<Variables<D, V>, Data<D>>> | undefined
-  ): Promise<ApolloQueryResult<Data<D>>>
+    params?: Partial<ApolloClient.QueryOptions<Data<D>, Variables<D, V>>> | undefined
+  ): Promise<ObservableQuery.Result<Data<D>>>
 
   /**
    * Exposes the `ObservableQuery#fetchMore` method.
@@ -475,7 +472,7 @@ export declare class ApolloQueryElement<D = unknown, V = VariablesOf<D>>
    */
   public fetchMore<D = this['data'], V = this['variables']>(
     params?: Partial<FetchMoreParams<D, V>> | undefined
-  ): Promise<ApolloQueryResult<D>>
+  ): Promise<ObservableQuery.Result<D>>
 }
 
 /**
@@ -530,7 +527,7 @@ export declare class ApolloSubscriptionElement<
   /**
    * @summary Determines if your subscription should be unsubscribed and subscribed again.
    */
-  public shouldResubscribe: boolean | ((options: SubscriptionDataOptions<Data<D>, Variables<D, V>>) => boolean);  
+  public shouldResubscribe: boolean | ((options: SubscriptionDataOptions<D, V>) => boolean);
   /**
    * @summary If true, the query will be skipped entirely
    */
@@ -560,7 +557,7 @@ export declare class ApolloSubscriptionElement<
    * Override to prevent subscribing unless your conditions are met
    */
   public shouldSubscribe(
-    options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
+    options?: Partial<ApolloClient.SubscribeOptions<Data<D>, Variables<D, V>>>
   ): boolean;
 }
 

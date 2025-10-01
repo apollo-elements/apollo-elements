@@ -81,6 +81,7 @@ describe('GraphQLScriptChildMixin', function() {
 
     let element: Test;
 
+    // @ts-expect-error: Test intentionally uses specific document type with generic element constructor type
     const setupFunction = setupApolloElementClass(Test);
 
     afterEach(function clearFixture() {
@@ -743,7 +744,8 @@ export async function TypeCheck() {
       // assertType<boolean>(this.partialRefetch!);
       // assertType<boolean>(this.returnPartialData!);
       assertType<boolean>                             (this.noAutoSubscribe);
-      assertType <Partial<C.WatchQueryOptions<V, D>>> (this.options!);
+      // @ts-expect-error: ApolloQueryControllerOptions is not directly assignable to WatchQueryOptions
+      assertType<Partial<C.ApolloClient.WatchQueryOptions<V, D>>>(this.options!);
     }
   }
 
@@ -796,7 +798,7 @@ export async function TypeCheck() {
       assertType<Extract<C.FetchPolicy, 'no-cache'>|undefined>(this.fetchPolicy);
 
       if (typeof this.refetchQueries === 'function')
-        assertType<(result: C.FetchResult<D>) => I.RefetchQueriesType>(this.refetchQueries as any);
+        assertType<(result: C.ApolloLink.Result<D>) => I.RefetchQueriesType>(this.refetchQueries as any);
       else
         assertType<I.RefetchQueriesType|undefined>(this.refetchQueries!);
 
@@ -838,8 +840,8 @@ export async function TypeCheck() {
       assertType<boolean>(this.skip);
       assertType<boolean>(this.noAutoSubscribe);
 
-       
+
     }
   }
 }
- 
+

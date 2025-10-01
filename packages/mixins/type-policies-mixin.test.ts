@@ -53,6 +53,7 @@ describe('TypePoliciesMixin', function() {
 
     it('adds typePolicies to the cache', async function() {
       // Wait for element to connect and apply type policies
+      // @ts-expect-error: updateComplete doesn't exist on Base<unknown> (HTMLElement-based)
       await element.updateComplete;
 
       const result = await element.client!.query({ query });

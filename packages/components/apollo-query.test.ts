@@ -182,6 +182,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
       });
       it('as TypedDocumentNode', async function() {
         const query = C.gql`{ nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
+        // @ts-expect-error: Test intentionally uses specific document type with generic element type
         element.query = query;
         await element.updateComplete;
         expect(element.controller.query).to.equal(query);

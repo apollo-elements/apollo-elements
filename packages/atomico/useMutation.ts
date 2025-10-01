@@ -1,6 +1,6 @@
 import type { ComponentDocument, Data, Variables } from '@apollo-elements/core/types';
 
-import type { FetchResult, MutationOptions } from '@apollo/client';
+import type { ApolloClient, ApolloLink } from '@apollo/client';
 
 import { useController } from '@atomico/hooks/use-controller';
 
@@ -13,7 +13,7 @@ export function useMutation<D, V>(
   mutation: ComponentDocument<D, V>,
   options?: ApolloMutationControllerOptions<D, V>
 ): [
-  (params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>) => Promise<FetchResult<Data<D>>>,
+  (params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>) => Promise<ApolloLink.Result<Data<D>>>,
   ApolloMutationController<D, V>
 ] {
   const controller = useController(host =>

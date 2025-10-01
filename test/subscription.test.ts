@@ -167,6 +167,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       describe('setting NoParam subscription', function() {
         beforeEach(function setSubscription() {
+          // @ts-expect-error: Test intentionally uses specific document type with generic element type
           element!.subscription = S.NoParamSubscription;
         });
 
@@ -221,6 +222,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
       describe('with no-auto-subscribe attribute set', function() {
         describe('after setting NoParam subscription', function() {
           beforeEach(function setSubscription() {
+            // @ts-expect-error: Test intentionally uses specific document type with generic element type
             element!.subscription = S.NoParamSubscription;
           });
 
@@ -632,6 +634,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
       describe('setting NoParam subscription', function() {
         beforeEach(function setSubscription() {
+          // @ts-expect-error: Test intentionally uses specific document type with generic element type
           element!.subscription = S.NoParamSubscription;
         });
 
@@ -878,13 +881,13 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         afterEach(teardownClient);
 
         describe('with subscription set as a class field', function() {
-          let element: ApolloSubscriptionElement;
+          class Test extends Klass<typeof S.NoParamSubscription> {
+            subscription = S.NoParamSubscription;
+          }
+
+          let element: Test;
 
           beforeEach(async function() {
-            class Test extends Klass {
-              subscription = S.NoParamSubscription;
-            }
-
             const tag = defineCE(Test);
 
             element = await fixture<Test>(`<${tag}></${tag}>`);

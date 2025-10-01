@@ -31,14 +31,14 @@ export class StampinoRender extends ReactiveElement implements ReactiveControlle
    */
   get template(): HTMLTemplateElement | null {
     if (!this.hasAttribute('template'))
-      return this.querySelector('template'); /* c8 ignore next */
+      return this.querySelector('template');
     else
       return this.getTemplateFromRoot();
   }
 
   protected createRenderRoot(): ShadowRoot|HTMLElement {
     if (!this.hasAttribute('no-shadow'))
-      return this.attachShadow({ mode: 'open' }); /* c8 ignore next */
+      return this.attachShadow({ mode: 'open' });
     else {
       const root = this.appendChild(document.createElement('div'));
       root.classList.add(this.getAttribute('no-shadow') || 'output');

@@ -306,9 +306,13 @@ describe('[atomico] useQuery', function() {
         beforeEach(function() {
           subscribeToMore({
             document: S.MessageSentSubscription,
-            updateQuery: (prev, { subscriptionData }) => ({
-              messages: [...(prev.messages || []), subscriptionData.data.messageSent ?? null]
-            }),
+            updateQuery: (prev, { subscriptionData }) => {
+              const newMessage = subscriptionData.data.messageSent ?? null;
+              return {
+                ...prev,
+                messages: [...(prev.messages || []), newMessage].filter((m): m is NonNullable<typeof newMessage> => m !== null)
+              };
+            },
           });
         });
 

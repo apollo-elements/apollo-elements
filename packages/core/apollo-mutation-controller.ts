@@ -10,7 +10,7 @@ import type {
   VariablesOf,
 } from '@apollo-elements/core/types';
 
-import type { FetchPolicy, FetchResult, MutationOptions } from "@apollo/client";
+import type { ApolloClient, ApolloLink, FetchPolicy } from "@apollo/client";
 
 
 import { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
@@ -67,8 +67,8 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
    * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
    */
   @bound public async mutate(
-    params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
-  ): Promise<FetchResult<Data<D>>> {
+    params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>
+  ): Promise<ApolloLink.Result<Data<D>>> {
     if (!this.client)
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
     const mutationId = this.generateMutationId();
@@ -81,20 +81,17 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
     this.data = null;
     this.notify({ called, data, error, errors, loading });
 
-    return this.client.mutate<Data<D>, Variables<D, V>>({
-      // It's better to let Apollo client throw this error
+    return this.client.mutate<Data<D>, Variables<D, V>>(Object.assign({
       mutation: this.mutation!,
-
       awaitRefetchQueries: this.options.awaitRefetchQueries,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
       optimisticResponse: this.options.optimisticResponse,
-      refetchQueries: this.options.refetchQueries ?? undefined,
+      refetchQueries: this.options.refetchQueries,
       update: this.options.update,
-      variables: this.variables ?? undefined,
-      ...params,
-    })
+      variables: this.variables,
+    }, params))
       .then(this.onCompletedMutation.bind(this, mutationId))
       .catch(this.onMutationError.bind(this, mutationId));
   }
@@ -119,8 +116,8 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
    */
   private onCompletedMutation(
     mutationId: number,
-    response: FetchResult<Data<D>>
-  ): FetchResult<Data<D>> {
+    response: ApolloLink.Result<Data<D>>
+  ): ApolloLink.Result<Data<D>> {
     const { data, error, errors, loading } = this;
     this.emitter.dispatchEvent(new CustomEvent('apollo-mutation-result', { detail: response }));
     if (this.isMostRecentMutation(mutationId)) {

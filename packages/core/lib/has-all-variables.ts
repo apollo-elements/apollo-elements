@@ -14,7 +14,7 @@ function isNonNullType<T extends { type: { kind: string } }>(x: T) {
 /** hasNonNullValue :: keyof TVariables VariableName => TVariables -> VariableName -> Boolean */
 function hasNonNullValue<T>(x: T) {
   return (prop: string): boolean =>
-    x?.[prop as keyof T] != null; /* c8 ignore next */ // covered
+    x?.[prop as keyof T] != null;  // covered
 }
 
 function isTrue(x: boolean): x is true {
@@ -25,7 +25,7 @@ function isTrue(x: boolean): x is true {
 function getVariableDefinitions(
   x: OperationDefinitionNode
 ): readonly VariableDefinitionNode[] {
-  return x.variableDefinitions ?? []; /* c8 ignore next */ // couldn't repro
+  return x.variableDefinitions ?? [];  // couldn't repro
 }
 
 /** getVariableValue :: VariableDefinitionNode -> a */
@@ -53,7 +53,7 @@ export function hasAllVariables(operation: Partial<ApolloLink.Operation>): boole
       ?.filter(isNonNullType)
       ?.map(getVariableValue)
       ?.map(hasNonNullValue(operation.variables))
-      ?.every(isTrue) ?? false; /* c8 ignore next */ // covered
+      ?.every(isTrue) ?? false;  // covered
   } catch {
     return false;
   }

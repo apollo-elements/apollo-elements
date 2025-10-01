@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client';
+import type { ApolloClient, ApolloLink, FetchPolicy } from '@apollo/client';
 
 import type {
   ComponentDocument,
@@ -34,7 +34,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     static get observedAttributes(): string[] {
       return [
-        ...(super.observedAttributes ?? []), /* c8 ignore next */
+        ...(super.observedAttributes ?? []),
         'await-refetch-queries',
         'refetch-queries',
       ];
@@ -73,7 +73,7 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     @controlled({ path: 'options' }) refetchQueries: RefetchQueriesType<D> | null = null;
 
-    @controlled({ path: 'options' }) fetchPolicy?: Extract<C.FetchPolicy, 'no-cache'>;
+    @controlled({ path: 'options' }) fetchPolicy?: Extract<FetchPolicy, 'no-cache'>;
 
     @controlled({ path: 'options' }) awaitRefetchQueries?: boolean;
 
@@ -87,24 +87,22 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
 
     override attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
       super.attributeChangedCallback?.(name, oldVal, newVal);
-      /* c8 ignore start */
       // @ts-expect-error: ts is not tracking the static side
       if ((super.constructor?.observedAttributes ?? []).includes(name))
         return;
-      /* c8 ignore stop */
 
-      switch (name) { /* c8 ignore next */
+      switch (name) {
         case 'await-refetch-queries':
           this.awaitRefetchQueries =
             this.hasAttribute('await-refetch-queries');
-          break; /* c8 ignore next */
+          break;
 
         case 'refetch-queries':
           this.refetchQueries =
             !newVal ? null : newVal
               .split(',')
               .map(x => x.trim());
-          break; /* c8 ignore next */
+          break;
       }
     }
 
@@ -112,8 +110,8 @@ function ApolloMutationMixinImpl<B extends Constructor>(base: B): B & MixinInsta
      * This resolves a single mutation according to the options specified and returns a Promise which is either resolved with the resulting data or rejected with an error.
      */
     public async mutate(
-      params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>
-    ): Promise<C.FetchResult<Data<D>>> {
+      params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>
+    ): Promise<ApolloLink.Result<Data<D>>> {
       return this.controller.mutate(params);
     }
   }

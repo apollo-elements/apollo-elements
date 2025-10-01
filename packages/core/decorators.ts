@@ -1,10 +1,15 @@
+// we need to any here in order to let tsc infer types downstream
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { ReactiveElement } from '@lit/reactive-element';
 import type { ApolloController, ApolloControllerOptions } from './apollo-controller.js';
 
-type O = ApolloControllerOptions<any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+type O = ApolloControllerOptions<any, any>;
 type Key = string|number|symbol;
 
 type AnyObj = object;
+
+type ValueOf<T> = T[keyof T];
 
 const initialProps = new WeakMap<AnyObj, Map<Key, unknown>>();
 
@@ -37,23 +42,34 @@ export interface DefineOptions {
   onSet?(x: unknown, old: unknown): void,
 }
 
-interface ApolloReactiveElement extends ReactiveElement {
-  controller: ApolloController<unknown, unknown>;
+interface ApolloReactiveElement<D, V> extends ReactiveElement {
+  controller: ApolloController<D, V>;
 }
 
-function defineOnReactiveElement<T extends ApolloReactiveElement>(
-  proto: T,
-  name: string & keyof T,
+interface ApolloHTMLUpdatableElement<D, V> extends HTMLElement {
+  controller: ApolloController<D, V>;
+  requestUpdate?(name?: string, old?: unknown): void;
+}
+
+interface ApolloHTMLElement<D, V> extends HTMLElement {
+  controller: ApolloController<D, V>;
+}
+
+
+function defineOnReactiveElement(
+  proto: ApolloReactiveElement<any, any>,
+  name: string & keyof ApolloHTMLElement<any, any>,
   opts: DefineOptions
 ): void {
+  const propertyKey: PropertyKey = name;
   // Run our property effects
   defineOnHTMLElement(proto, name, {
     ...opts,
     // In addition to any user-defined side-effects,
     // also notify the ReactiveElement lifecycle
-    onSet(this: T, x: unknown, old: unknown) {
+    onSet(this: ApolloReactiveElement<any, any>, x: unknown, old: unknown) {
       opts?.onSet?.call?.(this, x, old);
-      this.requestUpdate(name, old);
+      this.requestUpdate(propertyKey, old);
     },
   });
   // And also run ReactiveElement's property effects
@@ -61,17 +77,15 @@ function defineOnReactiveElement<T extends ApolloReactiveElement>(
   Class.createProperty(name, { ...Class.getPropertyOptions(name), noAccessor: true });
 }
 
-function defineOnHTMLElement<T extends HTMLElement & {
-  controller: ApolloController<unknown, unknown>;
-  requestUpdate?(name?: string, old?: unknown): void;
-}>(
-  proto: T,
-  name: string & keyof T,
+function defineOnHTMLElement(
+  proto: ApolloHTMLUpdatableElement<any, any>,
+  name: string & keyof ApolloHTMLElement<any, any>,
   opts: DefineOptions
 ): void {
+  const propertyKey: PropertyKey = name;
   Object.defineProperty(proto, name, {
     configurable: true,
-    get(this: T) {
+    get(this: ApolloHTMLUpdatableElement<any, any>) {
       if (opts.path) {
         return (
             !this.controller ? getInitialProp(this, name)
@@ -85,9 +99,9 @@ function defineOnHTMLElement<T extends HTMLElement & {
       }
     },
 
-    set(this: T, value: T[keyof T]) {
+    set(this: ApolloHTMLUpdatableElement<any, any>, value: ValueOf<ApolloHTMLUpdatableElement<any, any>>) {
       if (opts.readonly) return;
-      const old = this[name as keyof T];
+      const old = this[name as keyof ApolloHTMLUpdatableElement<any, any>];
       if (!this.controller)
         setInitialProp(this, name, value);
       else {
@@ -98,7 +112,7 @@ function defineOnHTMLElement<T extends HTMLElement & {
         if (opts.onSet)
           opts.onSet.call(this, value, old);
       }
-      this.requestUpdate?.(name, old);
+      this.requestUpdate?.(propertyKey, old);
     },
   });
 }
@@ -117,15 +131,13 @@ function isReactiveElement(
  * @param  options Options for the controlled field
  */
 export function controlled(options: DefineOptions = {}) {
-  return function<T extends HTMLElement & {
-  controller: ApolloController;
-}>(
+  return function<T extends ApolloHTMLElement<any, any>>(
     proto: T,
     name: string & keyof T
   ): void {
     if (isReactiveElement(proto))
-      defineOnReactiveElement(proto, name, options);
+      defineOnReactiveElement(proto, name as string & keyof ApolloHTMLElement<any, any>, options);
     else
-      defineOnHTMLElement(proto, name, options);
+      defineOnHTMLElement(proto, name as string & keyof ApolloHTMLElement<any, any>, options);
   };
 }

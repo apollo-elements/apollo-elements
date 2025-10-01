@@ -130,7 +130,7 @@ describe('[lit-apollo] ApolloElement', function describeApolloElement() {
 
 class TypeCheck extends ApolloElement {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                         (this);
     assertType<LitElement>                          (this);
@@ -147,6 +147,6 @@ class TypeCheck extends ApolloElement {
       // assertType<readonly I.GraphQLError[]>(this.error.graphQLErrors);
     }
 
-     
+
   }
 }

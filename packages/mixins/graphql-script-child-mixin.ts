@@ -32,7 +32,7 @@ function GraphQLScriptChildMixinImplementation<
      */
     private async matchNode(node: Node): Promise<void> {
       if (!(node instanceof HTMLScriptElement))
-        return; /* c8 ignore next */ // it's covered
+        return;
       if (node.matches(SELECTORS.GQL))
         this.document = await this.getDOMGraphQLDocument();
       if (node.matches(SELECTORS.VAR))
@@ -44,7 +44,6 @@ function GraphQLScriptChildMixinImplementation<
      * declarative GraphQL document or JSON-variable scripts
      */
     private onDOMMutation(records: MutationRecord[]): void {
-       
       for (const { target: node, addedNodes = [] } of records) {
         this.matchNode(node);
         for (const added of addedNodes)
@@ -54,7 +53,7 @@ function GraphQLScriptChildMixinImplementation<
 
     private parseGQL(text: string): this['document'] {
       try {
-        return gql(stripHTMLComments(text)); /* c8 ignore next */ // covered
+        return gql(stripHTMLComments(text));
       } catch (err) {
         this.error = err as Error;
         return null;
@@ -63,7 +62,7 @@ function GraphQLScriptChildMixinImplementation<
 
     private parseVariables(text: string): this['variables'] {
       try {
-        return JSON.parse(text); /* c8 ignore next */ // covered
+        return JSON.parse(text);
       } catch {
         return null;
       }
@@ -80,7 +79,6 @@ function GraphQLScriptChildMixinImplementation<
      */
     protected async getDOMGraphQLDocument(): Promise<this['document']> {
       const script = this.querySelector(SELECTORS.GQL);
-      /* c8 ignore start */ // covered
       if (script?.src)
         return this.fetchDocument(script.src);
       else if (!script?.innerText)

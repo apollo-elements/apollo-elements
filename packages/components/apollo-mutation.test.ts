@@ -218,6 +218,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       });
       it('as TypedDocumentNode', async function() {
         const mutation = C.gql`mutation { nullable }` as C.TypedDocumentNode<{ a: 'b'}, {a: 'b'}>;
+        // @ts-expect-error: Test intentionally uses specific document type with generic element type
         element.mutation = mutation;
         await element.updateComplete;
         expect(element.controller.mutation).to.equal(mutation);

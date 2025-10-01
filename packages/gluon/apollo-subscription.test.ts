@@ -24,6 +24,7 @@ class TestableApolloSubscription<D, V extends C.OperationVariables = C.Operation
 
   static get is() { return 'gluon-test-subscription-element'; }
 
+  // @ts-expect-error: Test intentionally declares controller with specific types matching class type parameters
   declare controller: ApolloSubscriptionController<D, V>;
 
   get template() {
@@ -67,9 +68,10 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                         (this);
+    // @ts-expect-error: TypeCheck class doesn't fully implement GluonElement (missing createRenderRoot)
     assertType<GluonElement>                        (this);
 
     // ApolloElementInterface
@@ -100,7 +102,7 @@ class TypeCheck extends ApolloSubscription<TypeCheckData, TypeCheckVars> {
     assertType<boolean>                                 (this.skip);
     assertType<boolean>                                 (this.noAutoSubscribe);
 
-     
+
   }
 }
 

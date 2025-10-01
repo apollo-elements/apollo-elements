@@ -64,7 +64,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
 
 class TypeCheck extends ApolloElement {
   typeCheck() {
-     
+
 
     assertType<HTMLElement>                         (this);
     assertType<FASTElement>                         (this);
@@ -82,6 +82,6 @@ class TypeCheck extends ApolloElement {
       // and are not directly available on Error objects
     }
 
-     
+
   }
 }

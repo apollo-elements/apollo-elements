@@ -51,8 +51,8 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
 
     controller = new ApolloQueryController<D, V>(this, null, {
       shouldSubscribe: x => this.readyToReceiveDocument && this.shouldSubscribe(x),
-      onData: data => this.onData?.(data), /* c8 ignore next */ // covered
-      onError: error => this.onError?.(error), /* c8 ignore next */ // covered
+      onData: data => this.onData?.(data),  // covered
+      onError: error => this.onError?.(error),  // covered
     });
 
     /** @summary The latest query data. */
@@ -164,7 +164,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       path: 'options',
       onSet(this: ApolloQueryElement, value: ApolloQueryElement['nextFetchPolicy']) {
         if (value && typeof value !== 'function')
-          this.setAttribute('next-fetch-policy', value); /* c8 ignore next */ // covered
+          this.setAttribute('next-fetch-policy', value);  // covered
         else
           this.removeAttribute('next-fetch-policy');
       },
@@ -211,14 +211,14 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
       super.attributeChangedCallback?.(name, oldVal, newVal);
       // @ts-expect-error: ts is not tracking the static side
       if (super.constructor?.observedAttributes?.includes?.(name))
-        return; /* c8 ignore next */ // covered
+        return;  // covered
 
-      switch (name) { /* c8 ignore next */ // covered
+      switch (name) {  // covered
         case 'next-fetch-policy':
           // to allow for case where this.nextFetchPolicy is undefined
-           
+
           if (this.nextFetchPolicy != newVal)
-            this.nextFetchPolicy = newVal as C.WatchQueryFetchPolicy; /* c8 ignore next */ // covered
+            this.nextFetchPolicy = newVal as C.WatchQueryFetchPolicy;  // covered
           break;
         case 'no-auto-subscribe':
           this.noAutoSubscribe = newVal != null;
@@ -230,7 +230,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      *
      * @param variables The new set of variables. If there are missing variables, the previous values of those variables will be used..
      */
-    async refetch(variables: Variables<D, V>): Promise<C.ApolloQueryResult<Data<D>>> {
+    async refetch(variables: Variables<D, V>) {
       return this.controller.refetch(variables);
     }
 
@@ -240,7 +240,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * Override to prevent subscribing unless your conditions are met.
      */
     shouldSubscribe(
-      options?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
+      options?: Partial<C.ApolloClient.WatchQueryOptions<Data<D>, Variables<D, V>>>
     ): boolean {
       return (void options, true);
     }
@@ -250,7 +250,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * @param params options for controlling how the subscription subscribes
      */
     subscribe(
-      params?: Partial<C.WatchQueryOptions<Variables<D, V>, Data<D>>>
+      params?: Partial<C.ApolloClient.WatchQueryOptions<Data<D>, Variables<D, V>>>
     ): Subscription {
       return this.controller.subscribe(params);
     }
@@ -264,7 +264,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * and returns an object with updated query data based on the new results.
      */
     subscribeToMore<TSubscriptionVariables extends C.OperationVariables, TSubscriptionData>(
-      options: C.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData>
+      options: C.ObservableQuery.SubscribeToMoreOptions<Data<D>, TSubscriptionVariables, TSubscriptionData, Variables<D, V>>
     ): void | (() => void) {
       return this.controller.subscribeToMore(options);
     }
@@ -273,8 +273,8 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      * Executes a Query once and updates the component with the result
      */
     async executeQuery(
-      params?: Partial<C.QueryOptions<Variables<D, V>, Data<D>>> | undefined
-    ): Promise<C.ApolloQueryResult<Data<D>>> {
+      params?: Partial<C.ApolloClient.QueryOptions<Data<D>, Variables<D, V>>> | undefined
+    ): Promise<C.ObservableQuery.Result<Data<D>>> {
       return this.controller.executeQuery(params);
     }
 
@@ -290,7 +290,7 @@ function ApolloQueryMixinImpl<B extends Constructor>(superclass: B): MixinInstan
      */
     async fetchMore(
       params?: Partial<FetchMoreParams<D, V>> | undefined
-    ): Promise<C.ApolloQueryResult<Data<D>>> {
+    ): Promise<C.ObservableQuery.Result<Data<D>>> {
       return this.controller.fetchMore(params);
     }
   }

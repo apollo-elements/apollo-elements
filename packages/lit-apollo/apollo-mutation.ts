@@ -1,4 +1,4 @@
-import type * as C from '@apollo/client';
+import type { ApolloClient, ApolloLink, ErrorPolicy } from '@apollo/client';
 
 import type {
   Data,
@@ -103,7 +103,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    */
   @controlled({ path: 'options' })
   @property({ attribute: 'error-policy' })
-    errorPolicy?: C.ErrorPolicy;
+    errorPolicy?: ErrorPolicy;
 
   /**
    * Specifies the FetchPolicy to be used for this mutation.
@@ -150,8 +150,8 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
   public updater?: MutationUpdaterFn<Data<D>, Variables<D, V>>;
 
   public mutate(
-    params?: Partial<C.MutationOptions<Data<D>, Variables<D, V>>>
-  ): Promise<C.FetchResult<Data<D>>> {
+    params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>
+  ): Promise<ApolloLink.Result<Data<D>>> {
     return this.controller.mutate({
       ...params,
       ...(params?.update || this.updater ? { update: params?.update ?? this.updater } : {}),

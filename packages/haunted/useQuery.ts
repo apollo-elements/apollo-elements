@@ -44,11 +44,11 @@ export function useQuery<D, V = VariablesOf<D>>(
 
     if (variablesChanged) {
       prevVariablesRef.current = newVariables;
-      controller.variables = newVariables;
+      controller.variables = newVariables ?? null;
 
       // If we transition from no variables to having variables, or variables change
       // and we have an active query, refetch
-      if (controller.observableQuery && newVariables !== undefined) {
+      if (controller.query && newVariables !== undefined) {
         // Use timeout to avoid immediate re-render loops
         setTimeout(() => controller.refetch(newVariables), 0);
       }

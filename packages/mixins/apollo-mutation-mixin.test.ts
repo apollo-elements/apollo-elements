@@ -92,7 +92,7 @@ type TypeCheckData = { a: 'a', b: number };
 type TypeCheckVars = { d: 'd', e: number };
 export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVars> {
   typeCheck(): void {
-     
+
 
     assertType<HTMLElement>                         (this);
 
@@ -135,13 +135,13 @@ export class TypeCheck extends TestableApolloMutation<TypeCheckData, TypeCheckVa
     else
       assertType<(vars: TypeCheckVars) => TypeCheckData>(this.optimisticResponse);
 
-     
+
   }
 }
 
 type TCV = { hey: 'yo' }
 
- 
+
 export class AccessorTest extends TestableApolloMutation<TypeCheckData, TCV> {
   // @ts-expect-error: don't allow using accessors. Run a function when dependencies change instead
   get variables(): TCV {
@@ -152,7 +152,7 @@ export class AccessorTest extends TestableApolloMutation<TypeCheckData, TCV> {
 export class PropertyTest extends TestableApolloMutation<TypeCheckData, TCV> {
   variables = { hey: 'yo' as const };
 }
- 
+
 
 type TDN = TypedDocumentNode<TypeCheckData, TypeCheckVars>;
 export class TDNTypeCheck extends TestableApolloMutation<TDN> {

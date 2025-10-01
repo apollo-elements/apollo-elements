@@ -31,6 +31,7 @@ describe('ApolloClientMixin', function() {
       client = new ApolloClient({
         cache: instanceCache,
         link: new SchemaLink({ schema }),
+        // @ts-expect-error: name property may not be available in all Apollo Client versions
         name: 'instance-client',
         version: 'instance'
       });
@@ -44,12 +45,14 @@ describe('ApolloClientMixin', function() {
       window.__APOLLO_CLIENT__ = new ApolloClient({
         cache: globalCache,
         link: new SchemaLink({ schema: globalSchema }),
+        // @ts-expect-error: name property may not be available in all Apollo Client versions
         name: 'global-client',
         version: 'global'
       });
 
       class Test<D extends TypedDocumentNode> extends ApolloClientMixin(client, QE)<D> {}
       const tag = defineCE(Test);
+      // @ts-expect-error: Test intentionally uses specific document type with generic element type
       element = fixtureSync<Test<TypedDocumentNode>>(`<${tag}></${tag}>`);
     });
 

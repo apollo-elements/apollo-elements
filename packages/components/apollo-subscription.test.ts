@@ -165,6 +165,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
     describe('setting subscription', function() {
       it('as DocumentNode', async function() {
         const subscription = S.NoParamSubscription;
+        // @ts-expect-error: Test intentionally uses specific document type with generic element type
         element.subscription = subscription;
         await element.updateComplete;
         expect(element.controller.subscription)
@@ -174,6 +175,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       });
       it('as TypedDocumentNode', async function() {
         const subscription = S.NullableParamSubscription as C.TypedDocumentNode<{ nullableParam: { nullable: string }}, { nullable: string }>;
+        // @ts-expect-error: Test intentionally uses specific document type with generic element type
         element.subscription = subscription;
         await element.updateComplete;
         expect(element.controller.subscription).to.equal(subscription);
@@ -247,6 +249,7 @@ describe('[components] <apollo-subscription>', function describeApolloSubscripti
       expect(element.controller.options.noAutoSubscribe, 'options').to.be.true;
     });
     describe('setting subscription', function() {
+      // @ts-expect-error: Test intentionally uses specific document type with generic element type
       beforeEach(() => element.subscription = S.NoParamSubscription);
       beforeEach(() => aTimeout(50));
       it('doesn\'t render anything', function() {
