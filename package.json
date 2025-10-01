@@ -75,6 +75,7 @@
     "@graphql-codegen/typescript": "^2.4.8",
     "@graphql-codegen/typescript-operations": "^2.3.5",
     "@graphql-tools/mock": "^8.6.3",
+    "@graphql-tools/schema": "^9.0.0",
     "@luckycatfactory/esbuild-graphql-loader": "^3.7.0",
     "@microsoft/fast-components": "^2.25.3",
     "@open-wc/testing": "^4.0.0",
