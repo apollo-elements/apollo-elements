@@ -1,6 +1,5 @@
 import type {
   ApolloClient,
-  NormalizedCacheObject,
   TypedDocumentNode,
 } from '@apollo/client';
 

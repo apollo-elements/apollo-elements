@@ -13,11 +13,9 @@ import type {
   DocumentNode,
   FetchPolicy,
   FetchResult,
-  NormalizedCacheObject,
   Observable,
   OperationVariables,
   SubscriptionOptions,
-  WatchQueryOptions,
 } from '@apollo/client';
 
 import type { Subscription } from 'rxjs';
@@ -42,7 +40,7 @@ export interface ApolloSubscriptionControllerOptions<D, V = VariablesOf<D>>
   onError?: (error: Error) => void;
 }
 
-export class ApolloSubscriptionController<D = unknown, V extends OperationVariables = Variables<D, any>>
+export class ApolloSubscriptionController<D = unknown, V extends OperationVariables = Variables<D, unknown>>
   extends ApolloController<D, V> implements ReactiveController {
   private observable?: Observable<FetchResult<Data<D>>>;
 
@@ -74,14 +72,13 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     options?: ApolloSubscriptionControllerOptions<D, V>
   ) {
     super(host, options);
-    this.init(subscription ?? null);/* c8 ignore next */
+    this.init(subscription ?? null);
   }
 
   override hostConnected(): void {
     super.hostConnected();
-    /* c8 ignore start */ // covered
     if (this.#hasDisconnected && this.observableSubscription)
-      this.subscribe(); /* c8 ignore stop */
+      this.subscribe();
     else
       this.documentChanged(this.subscription);
   }
@@ -98,7 +95,6 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   private canSubscribe(
     options?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>
   ): boolean {
-    /* c8 ignore next 4 */
     return (
       !this.options.noAutoSubscribe &&
       !!this.client &&
@@ -113,27 +109,26 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
       client = this.client,
       skip = this.options.skip,
       ...rest
-    } = params ?? {}; /* c8 ignore start */ // covered
+    } = params ?? {};
 
-    if (!client) /* c8 ignore start */ // covered
+    if (!client)
       throw new TypeError('No Apollo client. See https://apolloelements.dev/guides/getting-started/apollo-client/');
 
     if ((this.observable && !shouldResubscribe) || skip)
-      return; /* c8 ignore stop */
+      return;
 
-    const query = params?.subscription ?? this.subscription as DocumentNode; /* c8 ignore next */
+    const query = params?.subscription ?? this.subscription as DocumentNode;
 
     this.#lastSubscriptionDocument = query;
     this.observable = client.subscribe({
       // It's better to let Apollo client throw this error
-       
       variables: this.variables ?? undefined,
       context: this.options.context,
       errorPolicy: this.options.errorPolicy,
       fetchPolicy: this.options.fetchPolicy,
       ...rest,
       query,
-    } as any) as any;
+    });
   }
 
   /**
@@ -142,29 +137,29 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   private nextData(result: FetchResult<Data<D>>) {
     const { data, error, errors, loading } = this;
 
-    // In Apollo Client v4, subscription errors come through the error field (singular)
-    if ((result as any).error) {
-      this.nextError((result as any).error);
+    // In Apollo Client v4,
+    // subscription errors come through the error field (singular)
+    if (result.error) {
+      this.nextError(result.error);
       return;
     }
 
     // Also check for GraphQL errors in the errors array
     if (result.errors && result.errors.length > 0) {
-      this.nextError(result.errors[0] as any);
+      this.nextError(result.errors[0]);
       return;
     }
 
     // If we got to this line without a client, it's because of user error
-     
     const client = this.client!;
     const subscriptionData = { data: result?.data ?? null, loading: false, error: null };
     const detail = { client, subscriptionData };
     this.emitter.dispatchEvent(new CustomEvent('apollo-subscription-result', { detail }));
     this.data = result?.data ?? null;
     this.error = null;
-    this.errors = result?.errors ? result.errors as any : [];
+    this.errors = result?.errors ? result.errors : [];
     this.loading = false;
-    this.options.onData?.(detail); /* c8 ignore next */ // covered
+    this.options.onData?.(detail);
     this.notify({ data, error, errors, loading });
   }
 
@@ -176,7 +171,7 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
     this.emitter.dispatchEvent(new CustomEvent('apollo-error', { detail: apolloError }));
     this.error = apolloError;
     this.loading = false;
-    this.options.onError?.(apolloError); /* c8 ignore next */ // covered
+    this.options.onError?.(apolloError);
     this.notify({ error, loading });
   }
 
@@ -185,7 +180,7 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
    */
   private onComplete(): void {
     const { data, error, loading } = this;
-    this.options.onComplete?.(); /* c8 ignore next */ // covered
+    this.options.onComplete?.();
     this.endSubscription();
     this.notify({ data, error, loading });
   }
@@ -196,27 +191,27 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   }
 
   private shouldSubscribe(opts?: Partial<SubscriptionOptions<Variables<D, V>, Data<D>>>): boolean {
-    return this.options.shouldSubscribe?.(opts) ?? true; /* c8 ignore next */
+    return this.options.shouldSubscribe?.(opts) ?? true;
   }
 
   protected override clientChanged(): void {
-    if (this.canSubscribe() && this.shouldSubscribe())/* c8 ignore next */
-      this.subscribe();/* c8 ignore next */
+    if (this.canSubscribe() && this.shouldSubscribe())
+      this.subscribe();
   }
 
   protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
-    const query = doc ?? undefined;/* c8 ignore next */
+    const query = doc ?? undefined;
     if (doc === this.#lastSubscriptionDocument)
-      return;/* c8 ignore next */
+      return;
     this.cancel();
-    if (this.canSubscribe({ query } as any) && this.shouldSubscribe({ query } as any)) /* c8 ignore next */
-      this.subscribe();/* c8 ignore next */
+    if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
+      this.subscribe();
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     this.cancel();
-    if (this.canSubscribe({ variables } as any) && this.shouldSubscribe({ variables } as any))/* c8 ignore next */
-      this.subscribe();/* c8 ignore next */
+    if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
+      this.subscribe();
   }
 
   /**
@@ -225,10 +220,8 @@ export class ApolloSubscriptionController<D = unknown, V extends OperationVariab
   @bound public subscribe(params?: Partial<SubscriptionDataOptions<D, V>>): void {
     this.initObservable(params);
 
-    /* c8 ignore start */ // covered
     const shouldResubscribe = params?.shouldResubscribe ?? this.options.shouldResubscribe;
     if (this.observableSubscription && !shouldResubscribe) return;
-    /* c8 ignore stop */
 
     const { loading } = this;
     this.loading = true;

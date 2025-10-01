@@ -1,4 +1,4 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
 import type { Data, GraphQLError, Variables } from '@apollo-elements/core/types';
 import type { ApolloController, VariablesOf } from '@apollo-elements/core';
 

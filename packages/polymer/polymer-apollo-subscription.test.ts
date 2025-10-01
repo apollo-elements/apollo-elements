@@ -1,4 +1,3 @@
-import type * as I from '@apollo-elements/core/types';
 import type * as C from '@apollo/client';
 
 import { aTimeout, fixture, expect, oneEvent, nextFrame, defineCE } from '@open-wc/testing';

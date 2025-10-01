@@ -176,7 +176,7 @@ defaultTemplate.innerHTML = `<slot></slot>`;
 @customElement('apollo-mutation')
 export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   extends GraphQLScriptChildMixin(ApolloElement)<D, V> {
-  static readonly is: 'apollo-mutation' = 'apollo-mutation';
+  static readonly is = 'apollo-mutation' as const;
 
   /**
    * False when the element is a link.
@@ -191,7 +191,6 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
 
   private static toVariables<T>(acc: T, element: InputLikeElement): T {
     // querySelectorAll ensures the data-variable attr exists
-     
     return { ...acc, [element.dataset.variable!]: element.value };
   }
 
@@ -447,7 +446,6 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   }
 
   private onLightDomMutation(records: MutationRecord[]) {
-     
     for (const record of records) {
       for (const node of record.removedNodes as NodeListOf<HTMLElement>) {
         const type = this.#listeners.get(node);
@@ -461,7 +459,6 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
           this.addTriggerListener(node);
       }
     }
-     
   }
 
   private onSlotchange(): void {
@@ -511,7 +508,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
     const url =
         typeof this.resolveURL !== 'function' ? href
         // If we get here without `data`, it's due to user error
-      : await this.resolveURL(this.data!, triggeringElement);  
+      : await this.resolveURL(this.data!, triggeringElement);
 
     history.replaceState(data, WillNavigateEvent.type, url);
   }
@@ -534,7 +531,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
 
     try {
       this.willMutate(event.target as HTMLElement);
-    } catch (e) {
+    } catch {
       return;
     }
 
@@ -598,6 +595,6 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
   public mutate(
     params?: Partial<MutationOptions<Data<D>, Variables<D, V>>>
   ): Promise<FetchResult<Data<D>>> {
-    return this.controller.mutate({ ...params, update: this.updater } as any);
+    return this.controller.mutate({ ...params, update: this.updater });
   }
 }

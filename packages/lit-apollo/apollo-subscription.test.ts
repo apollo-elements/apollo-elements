@@ -1,4 +1,3 @@
-import type * as I from '@apollo-elements/core/types';
 import type * as C from '@apollo/client';
 
 import { defineCE, expect, fixture } from '@open-wc/testing';
@@ -8,7 +7,7 @@ import { html as h, unsafeStatic } from 'lit/static-html.js';
 import { ApolloSubscription } from './apollo-subscription';
 import { LitElement, TemplateResult, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { assertType, isApolloError, stringify, TestableElement } from '@apollo-elements/test';
+import { assertType, stringify, TestableElement } from '@apollo-elements/test';
 
 import {
   describeSubscription,

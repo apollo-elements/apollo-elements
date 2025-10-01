@@ -33,7 +33,9 @@ export default [
       'valid-jsdoc': 'off',
       'no-invalid-this': 'off',
       'no-unused-vars': 'off',
+      'no-redeclare': 'off', // Disable base rule for TypeScript overloads
       '@typescript-eslint/no-invalid-this': ['error'],
+      '@typescript-eslint/no-redeclare': ['error'], // Use TS-aware version
       '@typescript-eslint/ban-ts-comment': ['warn', {
         'ts-expect-error': 'allow-with-description',
         'ts-ignore': 'allow-with-description'
@@ -64,6 +66,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.mocha,
+        Mocha: true,
       },
     },
     rules: {

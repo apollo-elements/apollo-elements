@@ -16,7 +16,6 @@ import type {
   QueryOptions,
   RefetchWritePolicy,
   SubscribeToMoreOptions,
-  SubscriptionOptions,
   WatchQueryFetchPolicy,
   WatchQueryOptions,
 } from '@apollo/client';
@@ -194,7 +193,6 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     return this.client.watchQuery({
       // It's better to let Apollo client throw this error
-       
       query: this.query!,
       variables: this.variables ?? undefined,
       context: this.options.context,
@@ -234,22 +232,21 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   }
 
   protected override documentChanged(doc?: ComponentDocument<D, V> | null): void {
-    const query = doc ?? undefined;/* c8 ignore next */
+    const query = doc ?? undefined;
     if (doc === this.#lastQueryDocument)
-      return;/* c8 ignore next */
-    if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))/* c8 ignore next */
-      this.subscribe({ query }); /* c8 ignore next */ // covered
+      return;
+    if (this.canSubscribe({ query }) && this.shouldSubscribe({ query }))
+      this.subscribe({ query });
   }
 
   protected override variablesChanged(variables?: Variables<D, V>): void {
     if (this.observableQuery)
-      this.refetch(variables);/* c8 ignore next */
-    else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))/* c8 ignore next */
-      this.subscribe({ variables });/* c8 ignore next */
+      this.refetch(variables);
+    else if (this.canSubscribe({ variables }) && this.shouldSubscribe({ variables }))
+      this.subscribe({ variables });
   }
 
   protected override optionsChanged(options: ApolloQueryControllerOptions<D, V>): void {
-    // Apollo Client v4: reobserve() replaces setOptions()
     this.observableQuery?.reobserve(options);
   }
 
@@ -288,7 +285,6 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     this.observableQuery = this.watchQuery({
       // It's better to let Apollo client throw this error
-       
       query: this.query!,
       variables: this.variables ?? undefined,
       context: this.options.context,
@@ -307,8 +303,8 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     // Immediately catch any internal Apollo Client promises
     // by using the observable's internal promise if available
-    if ('then' in this.observableQuery) {
-      (this.observableQuery as any).then?.(
+    if ('then' in this.observableQuery && typeof this.observableQuery.then === 'function') {
+      this.observableQuery.then?.(
         () => {},
         (error: Error) => {
           // Handle promise rejections from Apollo Client internals
@@ -421,8 +417,6 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     this.notify({ loading });
 
     const options = {
-      // It's better to let Apollo client throw this error
-       
       query: this.query!,
       context: this.options.context,
       variables: this.variables ?? undefined,
@@ -436,7 +430,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
     return (this.observableQuery)
       .fetchMore(options)
-      .then((x: any) => {
+      .then(x => {
         const { loading } = this;
         this.loading = false;
         this.notify({ loading });

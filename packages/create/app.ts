@@ -5,7 +5,7 @@ import NCP from 'ncp';
 import { promisify } from 'util';
 
 import path from 'path';
-import { execa } from 'execa';
+import { execa, type ExecaError } from 'execa';
 import { promises as fs } from 'fs';
 import { fileURLToPath } from 'url';
 
@@ -19,6 +19,10 @@ const { cyan, greenBright } = Chalk;
 const ncp = promisify(NCP.ncp);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function isExecaError(error: unknown): error is ExecaError {
+  return typeof error == "object" && !!error && 'stdout' in error && typeof error.stdout === 'string'
+}
 
 /**
  * Copy the file structure from `template`, and rename the `__gitignore` file
@@ -109,7 +113,8 @@ export async function app(options: AppOptions): Promise<void> {
     await codegen(options);
   try {
     await execStart(options);
-  } catch (e: any) {
+  } catch (e) {
+    if (isExecaError(e))
     await writeFile(path.join(options.directory, 'start-error.log'), e.stderr, 'utf-8');
     if (!options.silent) {
       console.log(

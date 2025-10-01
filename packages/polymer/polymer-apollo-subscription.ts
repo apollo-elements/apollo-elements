@@ -1,4 +1,4 @@
-import type { Constructor, VariablesOf } from '@apollo-elements/core/types';
+import type { Constructor } from '@apollo-elements/core/types';
 import type { OperationVariables } from '@apollo/client';
 import { ApolloSubscriptionMixin } from '../mixins/apollo-subscription-mixin';
 import { PolymerApolloElement } from './polymer-apollo-element.js';

@@ -4,9 +4,7 @@ import type { ApolloController, ApolloControllerOptions } from './apollo-control
 type O = ApolloControllerOptions<any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 type Key = string|number|symbol;
 
-/* eslint-disable @typescript-eslint/ban-types */
 type AnyObj = object;
-/* eslint-enable @typescript-eslint/ban-types */
 
 const initialProps = new WeakMap<AnyObj, Map<Key, unknown>>();
 
@@ -54,7 +52,7 @@ function defineOnReactiveElement<T extends ApolloReactiveElement>(
     // In addition to any user-defined side-effects,
     // also notify the ReactiveElement lifecycle
     onSet(this: T, x: unknown, old: unknown) {
-      opts?.onSet?.call?.(this, x, old);/* c8 ignore next */
+      opts?.onSet?.call?.(this, x, old);
       this.requestUpdate(name, old);
     },
   });
@@ -74,31 +72,31 @@ function defineOnHTMLElement<T extends HTMLElement & {
   Object.defineProperty(proto, name, {
     configurable: true,
     get(this: T) {
-      if (opts.path) { /* c8 ignore next */
+      if (opts.path) {
         return (
-            !this.controller ? getInitialProp(this, name)/* c8 ignore next */
+            !this.controller ? getInitialProp(this, name)
           : this.controller[opts.path][name as keyof O]
         );
       } else {
         return (
-            !this.controller ? getInitialProp(this, name)/* c8 ignore next */
+            !this.controller ? getInitialProp(this, name)
           : this.controller[name as keyof ApolloController<unknown, unknown>]
         );
       }
     },
 
     set(this: T, value: T[keyof T]) {
-      if (opts.readonly) return;/* c8 ignore next */
+      if (opts.readonly) return;
       const old = this[name as keyof T];
       if (!this.controller)
-        setInitialProp(this, name, value);/* c8 ignore next */
+        setInitialProp(this, name, value);
       else {
         if (opts.path)
           this.controller[opts.path][name as keyof O] = value as O[keyof O];
         else
-          this.controller[name as keyof ApolloController<any, any>] = value as never;
+          this.controller[name as keyof ApolloController] = value as never;
         if (opts.onSet)
-          opts.onSet.call(this, value, old);/* c8 ignore next */
+          opts.onSet.call(this, value, old);
       }
       this.requestUpdate?.(name, old);
     },
@@ -120,14 +118,14 @@ function isReactiveElement(
  */
 export function controlled(options: DefineOptions = {}) {
   return function<T extends HTMLElement & {
-  controller: ApolloController<any, any>;
+  controller: ApolloController;
 }>(
     proto: T,
     name: string & keyof T
   ): void {
     if (isReactiveElement(proto))
-      defineOnReactiveElement(proto, name, options);/* c8 ignore next */
+      defineOnReactiveElement(proto, name, options);
     else
-      defineOnHTMLElement(proto, name, options);/* c8 ignore next */
+      defineOnHTMLElement(proto, name, options);
   };
 }

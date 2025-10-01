@@ -14,7 +14,9 @@ export function useQuery<D, V = VariablesOf<D>>(
 ): ApolloQueryController<D, V> {
   const [, forceUpdate] = useState({});
   const controller = useController(host => new ApolloQueryController<D, V>(host, query, options));
-  const prevVariablesRef = useRef<any>();
+  const prevVariablesRef = useRef<
+    ApolloQueryControllerOptions<D, V>['variables']
+  >(options?.variables);
 
   // Force component updates when controller data changes
   useEffect(() => {

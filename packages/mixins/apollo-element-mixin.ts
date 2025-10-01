@@ -1,7 +1,6 @@
 import type {
   ApolloClient,
   ErrorPolicy,
-  NormalizedCacheObject,
 } from '@apollo/client';
 
 import type {
@@ -95,6 +94,8 @@ function ApolloElementMixinImplementation<B extends Constructor & {
     /** @summary True when the element is connected and ready to receive its GraphQL document */
     public readyToReceiveDocument = false;
 
+    // mixins are notoriously hard to type in ts.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...a: any[]) {
       super(...a);
       this.requestUpdate();
