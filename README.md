@@ -58,7 +58,7 @@ Reactive GraphQL controllers contain sharable, reusable, and stackable logic.
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/core@next
+npm i -S @apollo-elements/core
 ```
 
 </code-copy>
@@ -85,7 +85,7 @@ Write GraphQL apps in HTML.
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/components@next
+npm i -S @apollo-elements/components
 ```
 
 </code-copy>
@@ -133,7 +133,7 @@ These custom element [class mixins](http://justinfagnani.com/2015/12/21/real-mix
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/mixins@next
+npm i -S @apollo-elements/mixins
 ```
 
 </code-copy>
@@ -156,7 +156,7 @@ These base classes extend from [`LitElement`](https://lit.dev), so you can quick
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/lit-apollo@next
+npm i -S @apollo-elements/lit-apollo
 ```
 
 </code-copy>
@@ -179,7 +179,7 @@ These base classes extend from [`FASTElement`](https://fast.design), with all it
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/fast@next
+npm i -S @apollo-elements/fast
 ```
 
 </code-copy>
@@ -203,7 +203,7 @@ Apollo hooks for web components, with [haunted](https://github.com/matthewp/haun
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/haunted@next
+npm i -S @apollo-elements/haunted
 ```
 
 </code-copy>
@@ -227,7 +227,7 @@ Alternate hooks implementation for web components, with [atomico](https://atomic
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/atomico@next
+npm i -S @apollo-elements/atomico
 ```
 
 </code-copy>
@@ -251,7 +251,7 @@ Descriptor factories and object spreads you can roll into your [hybrids](https:/
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/hybrids@next
+npm i -S @apollo-elements/hybrids
 ```
 
 </code-copy>
@@ -272,7 +272,7 @@ These base classes extend from [`GluonElement`](https://github.com/ruphin/gluonj
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/gluon@next
+npm i -S @apollo-elements/gluon
 ```
 
 </code-copy>
@@ -296,7 +296,7 @@ These custom elements fire [polymer](https://polymer-library.polymer-project.org
 <code-copy>
 
 ```bash
-npm i -S @apollo-elements/polymer@next
+npm i -S @apollo-elements/polymer
 ```
 
 </code-copy>
