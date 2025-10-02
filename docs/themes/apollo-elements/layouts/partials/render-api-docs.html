@@ -22,15 +22,15 @@
       {{- range $matchingModules -}}
         {{- $currentTotal := 0 -}}
         {{- range .declarations -}}
-          {{- if .members -}}
-            {{- $currentTotal = add $currentTotal (len .members) -}}
+          {{- with .members -}}
+            {{- $currentTotal = add $currentTotal (len .) -}}
           {{- end -}}
         {{- end -}}
 
         {{- $selectedTotal := 0 -}}
         {{- range $selectedModule.declarations -}}
-          {{- if .members -}}
-            {{- $selectedTotal = add $selectedTotal (len .members) -}}
+          {{- with .members -}}
+            {{- $selectedTotal = add $selectedTotal (len .) -}}
           {{- end -}}
         {{- end -}}
 
