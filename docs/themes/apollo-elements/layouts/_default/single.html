@@ -1,4 +1,5 @@
 {{ define "main" }}
+
 <div class="single-page">
   {{ if .Params.sidebar }}
   <!-- Page Title for sidebar layout -->
@@ -147,11 +148,14 @@
         <!-- Sidebar -->
         <aside class="content-sidebar">
           <!-- Table of Contents -->
-          {{ if .TableOfContents }}
+          {{ if or .TableOfContents (.Scratch.Get "apiToc") }}
             <div class="toc-container">
               <h2 class="toc-title">Table of Contents</h2>
               <div class="toc">
                 {{ .TableOfContents }}
+                {{ with .Scratch.Get "apiToc" }}
+                  {{ . }}
+                {{ end }}
               </div>
             </div>
           {{ end }}

@@ -36,14 +36,12 @@
                     <!-- ToC for current regular page -->
                     {{ if $currentPage.Eq . }}
                       {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
-                      {{ $hasToc := or (and $apiToc (findRE "<li>" $apiToc)) $currentPage.TableOfContents }}
-                      {{ if $hasToc }}
+                      {{ if or $apiToc $currentPage.TableOfContents }}
                         <div class="sidebar-toc-inline">
                           <h4 class="sidebar-toc-title">On This Page</h4>
-                          {{ if and $apiToc (findRE "<li>" $apiToc) }}
-                            <nav id="TableOfContents">{{ $apiToc | safeHTML }}</nav>
-                          {{ else }}
-                            {{ $currentPage.TableOfContents }}
+                          {{ $currentPage.TableOfContents }}
+                          {{ if $apiToc }}
+                            {{ $apiToc | safeHTML }}
                           {{ end }}
                         </div>
                       {{ end }}
