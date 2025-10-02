@@ -18,6 +18,10 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: npm
 
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.7'
+
       - name: Install packages
         run: npm ci
 
