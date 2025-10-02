@@ -64,8 +64,7 @@ table pre[class*="language-"] {
 }
 
 #main-header a,
-#main-header .social-link,
-#main-header rocket-search {
+#main-header .social-link {
   order: initial !important;
 }
 

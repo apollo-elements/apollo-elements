@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
 // Original Apollo Elements Code Tabs component
-// Based on rocket-preset-code-tabs but simplified for Hugo
 
 const INSTANCES = new Set();
 
