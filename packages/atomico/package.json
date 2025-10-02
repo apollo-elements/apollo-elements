@@ -46,5 +46,9 @@
     "@atomico/hooks": "^3.20.2",
     "atomico": "^1.34.0"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "peerDependencies": {
+    "@apollo/client": "^4.0.0",
+    "graphql": "^15.4.0 || ^16"
+  }
 }
