@@ -48,5 +48,9 @@
     "@apollo-elements/mixins": "^5.0.3",
     "tslib": "^2.8.1"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "peerDependencies": {
+    "@apollo/client": "^4.0.0",
+    "graphql": "^15.4.0 || ^16"
+  }
 }
