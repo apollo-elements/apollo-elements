@@ -12,32 +12,63 @@
 "@apollo-elements/fast": major
 ---
 
-Major version release with breaking changes:
+**BREAKING CHANGE**: Apollo Client 4 and Node.js 24
 
-## Apollo Client 4
+This release updates from Apollo Client 3.x to Apollo Client 4.x.
 
-This release updates the peer dependency from Apollo Client 3.x to Apollo Client 4.x. Apollo Client 4 includes several breaking changes that may affect your application:
+## Installing Apollo Client 4
 
-- Removed deprecated APIs and features
-- Updated cache normalization behavior
-- Changes to TypeScript types and generics
-- Stricter type checking for queries and mutations
+**Before:**
+```bash
+npm install @apollo/client@^3.0.0
+```
 
-**Migration Resources:**
-- [Apollo Client 4 Migration Guide](https://www.apollographql.com/docs/react/migrating/apollo-client-4-migration/)
-- [Apollo Elements Migration Guide](https://apolloelements.dev/guides/getting-started/migrating/)
+**After:**
+```bash
+npm install @apollo/client@^4.0.6
+```
 
-## TypeScript and Node.js
+## Requirements
 
-- **TypeScript**: Updated to latest version with improved type inference and stricter type checking
 - **Node.js**: Minimum version is now 24.x (previously 18.x)
+- **TypeScript**: Minimum version is now 4.7 (if using TypeScript)
 
-## Breaking Changes
+## Cache API Changes
 
-Applications using Apollo Elements will need to:
-1. Upgrade to Apollo Client 4.x
-2. Update to Node.js 24.x or later
-3. Review and update TypeScript types as needed
-4. Test GraphQL operations for any behavior changes introduced by Apollo Client 4
+The deprecated `writeData` method has been removed. Use `writeQuery`, `writeFragment`, or `cache.modify` instead:
 
-See the migration guides above for detailed upgrade instructions.
+**Before:**
+```typescript
+cache.writeData({
+  data: { user: { id: '1', name: 'Alice' } }
+});
+```
+
+**After:**
+```typescript
+cache.writeQuery({
+  query: gql`query GetUser { user { id name } }`,
+  data: { user: { id: '1', name: 'Alice' } }
+});
+```
+
+## Error Handling
+
+Error handling is more consistent in Apollo Client 4:
+
+```typescript
+const { data, error, errors } = await client.query({ query });
+
+if (error) {
+  // Network error or single GraphQL error
+}
+if (errors) {
+  // Multiple GraphQL errors
+}
+```
+
+## Migration
+
+See the full migration guides for detailed instructions:
+- [Apollo Elements Migration Guide](https://apolloelements.dev/guides/getting-started/migrating/apollo-client-3/)
+- [Apollo Client 4 Migration Guide](https://www.apollographql.com/docs/react/migration/3.x-to-4.x)
