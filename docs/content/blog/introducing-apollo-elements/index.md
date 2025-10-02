@@ -14,6 +14,8 @@ socialMediaImage: https://thepracticaldev.s3.amazonaws.com/i/rk6u6o9jibsv4vo3cpg
 
 <sup dir="rtl"><abbr title="בסייעתא דשמייא">בס״ד</abbr></sup>
 
+> **Note**: This is a historical blog post from 2019. Some information may be outdated. For current documentation and best practices, please visit the [Apollo Elements documentation](https://apolloelements.dev).
+
 Today I published version 0.0.1 of `apollo-elements`, a collection of packages that help you create web components connected to {% footnoteref "apollo" "Apollo Elements is a community project maintained by myself, it's not affiliated with Meteor." %}Apollo GraphQL{% endfootnoteref %}.
 
 {% github apollo-elements/apollo-elements %}

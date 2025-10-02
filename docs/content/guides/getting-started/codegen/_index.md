@@ -7,6 +7,8 @@ sidebar: guides
 
 Using the `@graphql-codegen/cli` package and its plugins, you can automatically generate TypeScript typings from your schema and query documents.
 
+> **Note**: This guide was written for GraphQL Code Generator v2, but the configuration shown here is also compatible with v5. For the latest features and configuration options, see the [official GraphQL Code Generator documentation](https://the-guild.dev/graphql/codegen).
+
 ## Install Dependencies
 
 ```bash

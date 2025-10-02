@@ -62,7 +62,5 @@ These plugins let you import CSS tagged-template literals and GraphQL files as J
   {{<code-tab package="hybrids">}}{{<include "building-hybrids.js">}}{{</code-tab>}}
 </code-tabs>
 
-To avoid build steps altogether, bundle and export your Apollo client separately, then import it into your browser-friendly component modules, perhaps using a tool like [snowpack](https://snowpack.dev)
-
 ## JavaScript Features
-Apollo Elements generally targets modern browsers up to ECMAScript version 2019, with features like `Array#flatMap` and `Object#fromEntries`. If you need to support to older browsers, we recommend a polyfill, and possibly a compilation step.
+Apollo Elements generally targets modern browsers up to ECMAScript version 2022, with features like `Array#flatMap` and `Object#fromEntries`. If you need to support to older browsers, we recommend a polyfill, and possibly a compilation step.

@@ -13,7 +13,7 @@ socialMediaImage: https://dev-to-uploads.s3.amazonaws.com/i/r3qwfsz9gy2nlndy89gj
 
 Apollo Elements 3 launches into orbit today with tonnes of new features. There's a [brand new docs site](https://apolloelements.dev) complete with guides, full TypeScript support, app/component generators, and more.
 
-Use Apollo Elements to write GraphQL-based apps using web components as the view layer. Apollo Elements supports [lit-element](https://lit-element.polymer-project.org), [hybrids](https://hybrids.js.org), and gluon out of the box, or you can use the custom-element mixins to add support to any custom-element base class.
+Use Apollo Elements to write GraphQL-based apps using web components as the view layer. Apollo Elements supports [lit](https://lit.dev), [hybrids](https://hybrids.js.org), and gluon out of the box, or you can use the custom-element mixins to add support to any custom-element base class.
 
 Apollo Elements 3 supports the new Apollo Client 3 with all it's enhancements to developer experience.
 
