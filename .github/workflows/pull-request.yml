@@ -17,6 +17,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.7'
+
       - name: Install Dependencies
         run: npm ci
 
