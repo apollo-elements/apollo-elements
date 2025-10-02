@@ -1,4 +1,4 @@
-// Docs Playground Component (from rocket-preset-playground-elements)
+// Docs Playground Component
 class DocsPlayground extends HTMLElement {
   static get is() { return 'docs-playground'; }
 

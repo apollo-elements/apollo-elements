@@ -9,7 +9,7 @@ contentDir = "content"
 dataDir = "data"  # Use Hugo-compatible data directory
 layoutDir = "layouts"
 staticDir = "_assets"  # Use existing _assets as static
-publishDir = "../_site"  # Output to same location as Rocket
+publishDir = "../_site"
 
 # Performance and build settings
 buildDrafts = false
@@ -24,7 +24,7 @@ disableKinds = []
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 
-# URL structure (preserve existing URLs from Rocket)
+# URL structure
 [permalinks]
   blog = "/blog/:title/"
 

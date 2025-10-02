@@ -434,8 +434,7 @@ body.with-sidebar > footer {
   margin-block-end: 40px;
 
   a,
-  .social-link,
-  rocket-search {
+  .social-link {
     order: initial !important;
   }
 

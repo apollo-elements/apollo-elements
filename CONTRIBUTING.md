@@ -47,7 +47,6 @@ These files mostly configure tools.
 - `netlify.toml` - Configures the [website](https://apolloelements.dev)'s hosting
 - `package-lock.json` - Package lock file, establishes exactly which versions of each dependency to install
 - `package.json` - The monorepo root, containing most of the development dependencies and some useful scripts
-- `rocket.config.js` - Configures [Rocket](https://rocket.modern-web.dev), the web framework used for the docs
 - `tsconfig.json` - Configures TypeScript
 - `tsconfig.settings.json` - Shared settings for TypeScript
 - `web-test-runner.config.js` - Configures the [test runner](https://modern-web.dev/guides/test-runner/getting-started/)

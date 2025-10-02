@@ -162,14 +162,6 @@
     --wcd-snippet-button-focus-background: var(--code-button-focus-background);
     --wcd-snippet-button-focus-color: var(--code-button-focus-color);
 
-    /* search */
-    --rocket-search-background-color: var(--code-button-focus-background);
-    --rocket-search-highlight-color: var(--primary-color-lighter);
-    --rocket-search-fill-color: var(--primary-lines-color);
-    --rocket-search-hover-background-color: var(--near-black);
-    --rocket-search-input-border-color: var(--page-background);
-    --rocket-search-input-overlay-border-color: var(--page-background);
-
     /* widgets */
     --inline-notification-danger-background-color: #b71c1c44; /* red 900 */
     --inline-notification-danger-heading-color: var(--red-900);
