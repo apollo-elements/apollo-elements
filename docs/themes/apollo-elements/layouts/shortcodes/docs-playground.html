@@ -156,6 +156,6 @@
       </slot>
     </button>
   </template>
-  {{- highlight $content $lang "linenos=false" -}}
+  {{- highlight ($content | htmlUnescape) $lang "linenos=false" | safeHTML -}}
 {{- .Inner -}}
 </docs-playground>
