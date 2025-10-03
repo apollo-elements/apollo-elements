@@ -3,7 +3,7 @@ title: Core
 weight: 10
 description: Core Controllers for Apollo Elements
 layout: layout-api-index
-package: "'@apollo-elements/core'"
+package: core
 sidebar: api
 ---
 

@@ -1,9 +1,9 @@
 ---
-title: "ApolloMutation"
+title: ApolloMutation
 weight: 20
-layout: "layout-api"
-package: "'@apollo-elements/core'"
-module: "types.js"
+layout: layout-api
+package: core
+module: types.js
 sidebar: api
 ---
 

@@ -1,10 +1,10 @@
 ---
-title: "Decorators"
+title: Decorators
 weight: 50
-description: "Property Decorators for Apollo Elements"
-layout: "layout-api"
-package: "'@apollo-elements/core'"
-module: "decorators.js"
+description: Property Decorators for Apollo Elements
+layout: layout-api
+package: core
+module: decorators.js
 sidebar: api
 ---
 

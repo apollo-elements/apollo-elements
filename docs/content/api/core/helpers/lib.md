@@ -1,9 +1,9 @@
 ---
-title: "Library Functions"
+title: Library Functions
 weight: 100
-description: "Apollo Elements core library helpers"
-layout: "layout-api"
-package: "'@apollo-elements/core'"
+description: Apollo Elements core library helpers
+layout: layout-api
+package: core
 sidebar: api
 ---
 

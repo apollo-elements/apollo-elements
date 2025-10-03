@@ -1,9 +1,9 @@
 ---
-title: "ApolloQuery"
+title: ApolloQuery
 weight: 10
-layout: "layout-api"
-package: "'@apollo-elements/core'"
-module: "types.js"
+layout: layout-api
+package: core
+module: types.js
 sidebar: api
 ---
 

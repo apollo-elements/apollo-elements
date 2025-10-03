@@ -1,8 +1,8 @@
 ---
-description: "Events for Apollo Elements"
-layout: "layout-api"
-package: "'@apollo-elements/core'"
-module: "events.js"
+description: Events for Apollo Elements
+layout: layout-api
+package: core
+module: events.js
 sidebar: api
 ---
 
