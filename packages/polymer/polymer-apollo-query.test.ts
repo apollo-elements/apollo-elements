@@ -5,7 +5,7 @@ import { gql } from '@apollo/client';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 
 import { fixture, expect, oneEvent, defineCE, nextFrame } from '@open-wc/testing';
-import { stub } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { setupClient, stringify, teardownClient, TestableElement } from '@apollo-elements/test';
 
@@ -79,11 +79,11 @@ describe('[polymer] <polymer-apollo-query>', function() {
     });
 
     it('notifies on data change', async function() {
-      const queryStub = stub(element.client, 'query');
+      const queryStub = hanbi.stubMethod(element.client, 'query');
 
-      queryStub.resolves({
+      queryStub.returns(Promise.resolve({
         data: { messages: ['hi'] },
-      });
+      }));
 
       const query = gql`query { messages }`;
 

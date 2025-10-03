@@ -21,7 +21,7 @@ import { ApolloQuery } from './apollo-query';
 import { LitElement } from 'lit';
 import { NetworkStatus } from '@apollo/client';
 
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 class TestableApolloQuery<D, V = I.VariablesOf<D>> extends ApolloQuery<D, V> implements TE {
   render() {
@@ -80,11 +80,11 @@ describe('[lit-apollo] ApolloQuery', function() {
     });
 
     it('calls onError', async function() {
-      const s = spy();
+      const s = hanbi.spy();
       class Test extends ApolloQuery {
         client = makeClient();
         onError(err: Error) {
-          s(err);
+          s.handler(err);
         }
       }
 
@@ -97,7 +97,7 @@ describe('[lit-apollo] ApolloQuery', function() {
           nullable: 'error',
         },
       }).catch(() => null);
-      expect(s).to.have.been.calledOnce;
+      expect(s.callCount).to.equal(1);
     });
 
     it('polling', async function() {
@@ -105,14 +105,14 @@ describe('[lit-apollo] ApolloQuery', function() {
       const tagName = defineCE(Test);
       const tag = unsafeStatic(tagName);
       const element = await fixture<Test>(html`<${tag}></${tag}>`);
-      spy(element.controller, 'startPolling');
-      spy(element.controller, 'stopPolling');
+      const startPollingSpy = hanbi.stubMethod(element.controller, 'startPolling');
+      const stopPollingSpy = hanbi.stubMethod(element.controller, 'stopPolling');
       element.startPolling(1000);
-      expect(element.controller.startPolling).to.have.been.calledWith(1000);
+      expect(startPollingSpy.lastCall.args[0]).to.equal(1000);
       element.stopPolling();
-      expect(element.controller.stopPolling).to.have.been.calledOnce;
-      (element.controller.startPolling as SinonSpy).restore();
-      (element.controller.stopPolling as SinonSpy).restore();
+      expect(stopPollingSpy.callCount).to.equal(1);
+      startPollingSpy.restore();
+      stopPollingSpy.restore();
     });
 
     describe('with a class that defines observedAttributes with decorator', function() {
@@ -149,10 +149,10 @@ describe('[lit-apollo] ApolloQuery', function() {
     }
 
     let el: Test;
-    let updatedSpy: SinonSpy;
+    let updatedSpy: ReturnType<typeof hanbi.stubMethod>;
 
     before(function() {
-      updatedSpy = spy(Test.prototype, 'updated');
+      updatedSpy = hanbi.stubMethod(Test.prototype, 'updated').passThrough();
     });
 
     beforeEach(async function() {
@@ -162,22 +162,22 @@ describe('[lit-apollo] ApolloQuery', function() {
     });
 
     it('notifies that data changed once', function() {
-      expect(updatedSpy).to.have.been.calledOnce;
+      expect(updatedSpy.callCount).to.equal(1);
     });
 
     describe('when fetching', function() {
       beforeEach(async function() {
-        updatedSpy.resetHistory();
+        updatedSpy.reset();
         await el.executeQuery();
       });
 
       it('notifies twice again', async function() {
-        expect(updatedSpy).to.have.been.calledTwice;
+        expect(updatedSpy.callCount).to.equal(2);
         const [
           { args: [firstChanged] },
           { args: [secondChanged] },
           ...rest
-        ] = updatedSpy.getCalls();
+        ] = updatedSpy.calls;
         expect(rest.length).to.equal(0);
         expect([...firstChanged.keys()]).to.deep.equal(['loading']);
         expect([...secondChanged.keys()]).to.deep.equal(['data', 'errors', 'loading']);

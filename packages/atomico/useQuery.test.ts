@@ -18,7 +18,8 @@ import { sendKeys } from '@web/test-runner-commands';
 
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { useFakeTimers, SinonFakeTimers } from 'sinon';
+import { useFakeTimers } from 'sinon';
+import * as hanbi from 'hanbi';
 
 describe('[atomico] useQuery', function() {
   function What() { return html`<div></div>`; }
@@ -34,16 +35,11 @@ describe('[atomico] useQuery', function() {
       describe('with HelloQuery and a jaunty little template', function() {
         let element: HTMLElement & { updated: Promise<void>; };
 
-        let refetchCallCount = 0;
-        let originalRefetch: ApolloQueryController<typeof S.HelloQuery>['refetch'];
+        let refetchSpy: ReturnType<typeof hanbi.stubMethod>;
 
         let startPolling: ApolloQueryController<typeof S.HelloQuery>['startPolling'];
         let stopPolling: ApolloQueryController<typeof S.HelloQuery>['stopPolling'];
         let executeQuery: ApolloQueryController<typeof S.HelloQuery>['executeQuery'];
-
-        afterEach(function() {
-          refetchCallCount = 0;
-        });
 
         beforeEach(async function define() {
           function Hello() {
@@ -53,11 +49,7 @@ describe('[atomico] useQuery', function() {
 
             useEffect(() => {
               ({ executeQuery, stopPolling, startPolling } = con);
-              originalRefetch = con.refetch;
-              con.refetch = (...args) => {
-                refetchCallCount++;
-                return originalRefetch.apply(con, args);
-              };
+              refetchSpy = hanbi.stubMethod(con, 'refetch').passThrough();
             }, [con]);
 
             return html`
@@ -80,7 +72,7 @@ describe('[atomico] useQuery', function() {
         beforeEach(nextFrame);
 
         describe('calling startPolling then stopPolling', function() {
-          let clock: SinonFakeTimers;
+          let clock: ReturnType<typeof useFakeTimers>;
 
           beforeEach(() => clock = useFakeTimers());
           afterEach(() => clock.restore());
@@ -90,7 +82,7 @@ describe('[atomico] useQuery', function() {
           beforeEach(() => clock.tick(3500));
 
           it('refetches', function() {
-            expect(refetchCallCount).to.equal(3);
+            expect(refetchSpy.callCount).to.equal(3);
           });
 
           describe('then stopPolling', function() {
@@ -98,7 +90,7 @@ describe('[atomico] useQuery', function() {
             beforeEach(() => clock.tick(5000));
 
             it('stops calling refetch', function() {
-              expect(refetchCallCount).to.equal(3);
+              expect(refetchSpy.callCount).to.equal(3);
             });
           });
         });
@@ -127,21 +119,19 @@ describe('[atomico] useQuery', function() {
 
       let ex: ApolloQueryController<typeof S.NullableParamQuery>['executeQuery'];
 
-      let onErrorCalled = false;
-      let onDataCalled = false;
-
-      const onError = () => { onErrorCalled = true; };
-      const onData = () => { onDataCalled = true; };
+      const onErrorSpy = hanbi.spy();
+      const onDataSpy = hanbi.spy();
 
       afterEach(() => {
-        onErrorCalled = false;
-        onDataCalled = false;
+        onErrorSpy.reset();
+        onDataSpy.reset();
       });
 
       beforeEach(async function define() {
         function Hello() {
           const { data, error, executeQuery } = useQuery(S.NullableParamQuery, {
-            onData, onError,
+            onData: onDataSpy.handler,
+            onError: onErrorSpy.handler,
           });
 
           useEffect(() => {
@@ -164,7 +154,7 @@ describe('[atomico] useQuery', function() {
 
       describe('stam', function() {
         it('calls onData', function() {
-          expect(onDataCalled).to.be.true;
+          expect(onDataSpy.called).to.be.true;
         });
       });
 
@@ -176,7 +166,7 @@ describe('[atomico] useQuery', function() {
         beforeEach(nextFrame);
 
         it('calls onError', function() {
-          expect(onErrorCalled).to.be.true;
+          expect(onErrorSpy.called).to.be.true;
         });
 
         it('renders the error', function() {
@@ -191,11 +181,8 @@ describe('[atomico] useQuery', function() {
     describe('fetchMore', function() {
       let element: HTMLElement & { updated: Promise<void>; };
 
-      let onErrorCalled = false;
-      let onDataCalled = false;
-
-      const onError = () => { onErrorCalled = true; };
-      const onData = () => { onDataCalled = true; };
+      const onErrorSpy = hanbi.spy();
+      const onDataSpy = hanbi.spy();
 
       let offset: number;
       let setOffset: (x: number) => void;
@@ -203,8 +190,8 @@ describe('[atomico] useQuery', function() {
       let fetchMore: ApolloQueryController<typeof S.PaginatedQuery>['fetchMore'];
 
       afterEach(() => {
-        onErrorCalled = false;
-        onDataCalled = false;
+        onErrorSpy.reset();
+        onDataSpy.reset();
       });
 
       beforeEach(async function define() {
@@ -212,8 +199,8 @@ describe('[atomico] useQuery', function() {
           [offset, setOffset] = useState(0);
 
           ({ data, fetchMore } = useQuery(S.PaginatedQuery, {
-            onData,
-            onError,
+            onData: onDataSpy.handler,
+            onError: onErrorSpy.handler,
             variables: {
               offset,
             },
@@ -256,10 +243,10 @@ describe('[atomico] useQuery', function() {
         });
 
         it('calls onData', function() {
-          expect(onDataCalled).to.be.true;
+          expect(onDataSpy.called).to.be.true;
         });
         it('does not call onError', function() {
-          expect(onErrorCalled).to.be.false;
+          expect(onErrorSpy.called).to.be.false;
         });
       });
     });

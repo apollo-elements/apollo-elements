@@ -6,7 +6,7 @@ import { aTimeout, fixture, expect, oneEvent, defineCE, nextFrame } from '@open-
 
 import { gql } from '@apollo/client';
 
-import { stub, spy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import {
   NullableParamMutationData,
@@ -114,8 +114,10 @@ class WrapperElement extends PolymerElement {
     `;
   }
 
+  onCompletedSpy = hanbi.spy();
+
   onClick() {
-    this.$.mutation.onCompleted ??= spy();
+    this.$.mutation.onCompleted ??= this.onCompletedSpy.handler;
     this.$.mutation.mutate();
   }
 }
@@ -137,9 +139,9 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
     });
 
     it('notifies on data change', async function() {
-      const mutationStub = stub(element.client!, 'mutate');
+      const mutationStub = hanbi.stubMethod(element.client!, 'mutate');
 
-      mutationStub.resolves({ data: { messages: ['hi'] } });
+      mutationStub.returns(Promise.resolve({ data: { messages: ['hi'] } }));
 
       const mutation = gql`mutation { messages }`;
 
@@ -209,7 +211,7 @@ describe('[polymer] <polymer-apollo-mutation>', function() {
     });
 
     it('calls onCompleted', function() {
-      expect(wrapper.$.mutation.onCompleted).to.have.been.calledOnce;
+      expect(wrapper.onCompletedSpy.callCount).to.equal(1);
     });
   });
 });

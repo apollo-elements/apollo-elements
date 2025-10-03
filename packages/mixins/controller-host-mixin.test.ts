@@ -1,4 +1,4 @@
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
@@ -17,19 +17,23 @@ describe('ControllerHostMixin', function() {
   }
 
   const controller = new TestController();
+  let hostUpdateSpy: ReturnType<typeof hanbi.stubMethod>;
+  let hostUpdatedSpy: ReturnType<typeof hanbi.stubMethod>;
+  let hostConnectedSpy: ReturnType<typeof hanbi.stubMethod>;
+  let hostDisconnectedSpy: ReturnType<typeof hanbi.stubMethod>;
 
   beforeEach(function() {
-    spy(controller, 'hostUpdate');
-    spy(controller, 'hostUpdated');
-    spy(controller, 'hostConnected');
-    spy(controller, 'hostDisconnected');
+    hostUpdateSpy = hanbi.stubMethod(controller, 'hostUpdate').passThrough();
+    hostUpdatedSpy = hanbi.stubMethod(controller, 'hostUpdated').passThrough();
+    hostConnectedSpy = hanbi.stubMethod(controller, 'hostConnected').passThrough();
+    hostDisconnectedSpy = hanbi.stubMethod(controller, 'hostDisconnected').passThrough();
   });
 
   afterEach(function() {
-    (controller.hostUpdate as SinonSpy).restore();
-    (controller.hostUpdated as SinonSpy).restore();
-    (controller.hostConnected as SinonSpy).restore();
-    (controller.hostDisconnected as SinonSpy).restore();
+    hostUpdateSpy.restore();
+    hostUpdatedSpy.restore();
+    hostConnectedSpy.restore();
+    hostDisconnectedSpy.restore();
   });
 
   describe('on ReactiveElement', function() {
@@ -49,17 +53,19 @@ describe('ControllerHostMixin', function() {
     });
 
     describe('addController', function() {
+      let addControllerSpy: ReturnType<typeof hanbi.stubMethod>;
       beforeEach(function() {
-        spy(LitElement.prototype, 'addController');
+        addControllerSpy = hanbi.stubMethod(LitElement.prototype, 'addController').passThrough();
       });
       afterEach(function() {
-        (LitElement.prototype.addController as SinonSpy).restore();
+        addControllerSpy.restore();
       });
       beforeEach(function() {
         element.addController(controller);
       });
       it('calls superclass\' addController', function() {
-        expect(LitElement.prototype.addController).to.have.been.calledWith(controller);
+        expect(addControllerSpy.called).to.be.true;
+        expect(addControllerSpy.lastCall.args[0]).to.equal(controller);
       });
 
       describe('disconnecting', function() {
@@ -69,51 +75,54 @@ describe('ControllerHostMixin', function() {
           element.remove();
         });
         it('calls hostDisconnected', function() {
-          expect(controller.hostDisconnected).to.have.been.called;
+          expect(hostDisconnectedSpy.called).to.be.true;
         });
         describe('then reconnecting', function() {
           beforeEach(function() {
             parent.append(element);
           });
           it('calls hostConnected', function() {
-            expect(controller.hostConnected).to.have.been.called;
+            expect(hostConnectedSpy.called).to.be.true;
           });
         });
       });
 
       describe('calling requestUpdate', function() {
+        let requestUpdateSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(function() {
-          spy(LitElement.prototype, 'requestUpdate');
+          requestUpdateSpy = hanbi.stubMethod(LitElement.prototype, 'requestUpdate').passThrough();
         });
         afterEach(function() {
-          (LitElement.prototype.requestUpdate as SinonSpy).restore();
+          requestUpdateSpy.restore();
         });
         beforeEach(function() {
           element.requestUpdate();
         });
         beforeEach(() => element.updateComplete);
         it('calls super', function() {
-          expect(LitElement.prototype.requestUpdate).to.have.been.called;
+          expect(requestUpdateSpy.called).to.be.true;
         });
         it('updates controller', function() {
-          expect(controller.hostUpdate).to.have.been.called;
+          expect(hostUpdateSpy.called).to.be.true;
         });
         it('calls updated', function() {
-          expect(controller.hostUpdated).to.have.been.called;
+          expect(hostUpdatedSpy.called).to.be.true;
         });
       });
       describe('removeController', function() {
+        let removeControllerSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(function() {
-          spy(LitElement.prototype, 'removeController');
+          removeControllerSpy = hanbi.stubMethod(LitElement.prototype, 'removeController').passThrough();
         });
         afterEach(function() {
-          (LitElement.prototype.removeController as SinonSpy).restore();
+          removeControllerSpy.restore();
         });
         beforeEach(function() {
           element.removeController(controller);
         });
         it('calls superclass\' removeController', function() {
-          expect(LitElement.prototype.removeController).to.have.been.calledWith(controller);
+          expect(removeControllerSpy.called).to.be.true;
+          expect(removeControllerSpy.lastCall.args[0]).to.equal(controller);
         });
       });
     });
@@ -145,10 +154,10 @@ describe('ControllerHostMixin', function() {
         });
         beforeEach(nextFrame);
         it('updates controller', function() {
-          expect(controller.hostUpdate).to.have.been.called;
+          expect(hostUpdateSpy.called).to.be.true;
         });
         it('calls updated', function() {
-          expect(controller.hostUpdated).to.have.been.called;
+          expect(hostUpdatedSpy.called).to.be.true;
         });
         describe('disconnecting', function() {
           let parent: HTMLElement;
@@ -157,21 +166,21 @@ describe('ControllerHostMixin', function() {
             element.remove();
           });
           it('calls hostDisconnected', function() {
-            expect(controller.hostDisconnected).to.have.been.called;
+            expect(hostDisconnectedSpy.called).to.be.true;
           });
           describe('then reconnecting', function() {
             beforeEach(function() {
               parent.append(element);
             });
             it('calls hostConnected', function() {
-              expect(controller.hostConnected).to.have.been.called;
+              expect(hostConnectedSpy.called).to.be.true;
             });
           });
         });
 
         describe('removeController', function() {
           beforeEach(function() {
-            (controller.hostUpdate as SinonSpy).resetHistory();
+            hostUpdateSpy.reset();
           });
           beforeEach(function() {
             element.removeController(controller);
@@ -182,7 +191,7 @@ describe('ControllerHostMixin', function() {
             });
             beforeEach(nextFrame);
             it('does not update controller', function() {
-              expect(controller.hostUpdate).to.not.have.been.called;
+              expect(hostUpdateSpy.called).to.be.false;
             });
           });
         });

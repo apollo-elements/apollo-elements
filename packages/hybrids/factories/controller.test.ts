@@ -6,7 +6,7 @@ import { define, html, Component } from 'hybrids';
 
 import { controller, HybridsControllerHost } from './controller';
 
-import { spy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 let counter = 0;
 
@@ -20,13 +20,14 @@ describe('[hybrids] HybridsControllerHost', function() {
   it('aliases EventTarget to host element', function() {
     const element = document.createElement('a');
     const host = new HybridsControllerHost(element);
-    const s = spy();
-    host.addEventListener('a', s);
+    const s = hanbi.spy();
+    host.addEventListener('a', s.handler);
     const a = new CustomEvent('a');
     element.dispatchEvent(a);
-    expect(s).to.have.been.calledWith(a);
-    host.removeEventListener('a', s);
-    s.resetHistory();
+    expect(s.callCount).to.equal(1);
+    expect(s.lastCall.args[0]).to.equal(a);
+    host.removeEventListener('a', s.handler);
+    s.reset();
   });
 });
 

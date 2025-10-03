@@ -1,7 +1,5 @@
 import type * as I from '@apollo-elements/core/types';
 
-import type { SinonSpy } from 'sinon';
-
 import type {
   NonNullableParamQueryData,
   NonNullableParamQueryVariables,
@@ -44,16 +42,22 @@ import { ApolloQueryMixin, ApolloMutationMixin } from '@apollo-elements/mixins';
 
 import { ApolloClientElement } from './apollo-client';
 import { makeClient, teardownClient } from '@apollo-elements/test';
-import { spy, stub, SinonStub } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import './apollo-client';
 
+let fetchStub: ReturnType<typeof hanbi.stubMethod> | null = null;
+
 function mockFetch() {
-  stub(window, 'fetch');
+  fetchStub = hanbi.stubMethod(window, 'fetch');
+  return fetchStub;
 }
 
 function restoreFetch() {
-  (window.fetch as SinonStub).restore?.();
+  if (fetchStub) {
+    fetchStub.restore();
+    fetchStub = null;
+  }
 }
 
 describe('<apollo-client>', function() {
@@ -112,7 +116,8 @@ describe('<apollo-client>', function() {
     let query: QueryElement<NoParamQueryData, NoParamQueryVariables> | null;
 
     afterEach(function() {
-      (QueryElement.prototype.subscribe as SinonSpy)?.restore?.();
+      const subscribeStub = (QueryElement.prototype.subscribe as any).restore;
+      if (subscribeStub) subscribeStub();
       delete window.__APOLLO_CLIENT__;
       client = undefined;
       element = null;
@@ -122,8 +127,9 @@ describe('<apollo-client>', function() {
     });
 
     describe('without client', function() {
+      let subscribeStub: ReturnType<typeof hanbi.stubMethod>;
       beforeEach(async function() {
-        spy(QueryElement.prototype, 'subscribe');
+        subscribeStub = hanbi.stubMethod(QueryElement.prototype, 'subscribe');
         element = await fixture<ApolloClientElement>(html`
           <apollo-client>
             <shallow-element></shallow-element>
@@ -136,19 +142,22 @@ describe('<apollo-client>', function() {
         query = deep!.shadowRoot.querySelector('query-element');
         expect(window.__APOLLO_CLIENT__, 'no global client').to.be.undefined;
       });
+      afterEach(() => subscribeStub.restore());
 
       it('does not initialize elements', function() {
-        expect(query!.subscribe).to.not.have.been.called;
+        expect(subscribeStub.called).to.be.false;
       });
     });
 
     describe('with client', function() {
+      let subscribeStub: ReturnType<typeof hanbi.stubMethod>;
+      let watchQueryStub: ReturnType<typeof hanbi.stubMethod>;
       beforeEach(async function setupElements() {
-        spy(QueryElement.prototype, 'subscribe');
+        subscribeStub = hanbi.stubMethod(QueryElement.prototype, 'subscribe').passThrough();
         cached = window.__APOLLO_CLIENT__;
         delete window.__APOLLO_CLIENT__;
         client = makeClient();
-        spy(client, 'watchQuery');
+        watchQueryStub = hanbi.stubMethod(client, 'watchQuery').passThrough();
         element = await fixture<ApolloClientElement>(html`
           <apollo-client>
             <shallow-element></shallow-element>
@@ -164,7 +173,8 @@ describe('<apollo-client>', function() {
       });
 
       afterEach(function() {
-        (client?.watchQuery as SinonSpy).restore?.();
+        watchQueryStub.restore();
+        subscribeStub.restore();
         window.__APOLLO_CLIENT__ = cached;
       });
 
@@ -186,7 +196,7 @@ describe('<apollo-client>', function() {
       });
 
       it('subscribes elements', function() {
-        expect(client!.watchQuery).to.have.been.called;
+        expect(watchQueryStub.called).to.be.true;
       });
 
       describe('when setting client', function() {
@@ -276,20 +286,20 @@ describe('<apollo-client>', function() {
       });
 
       describe('setting non-string uri', function() {
+        let createApolloClientSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(function() {
-          spy(element!, 'createApolloClient');
+          createApolloClientSpy = hanbi.stubMethod(element!, 'createApolloClient');
           // @ts-expect-error: bad input
           element.uri = 1;
         });
 
         afterEach(function() {
-          // @ts-expect-error: spy
-          element.createApolloClient.restore();
+          createApolloClientSpy.restore();
         });
 
         it('does nothing', function() {
           expect(element!.uri).to.be.undefined;
-          expect(element!.createApolloClient).to.not.have.been.called;
+          expect(createApolloClientSpy.called).to.be.false;
         });
       });
     });
@@ -336,7 +346,7 @@ describe('<apollo-client>', function() {
 
         // first call is to introspect, and occurs regardless of operations
 
-        expect(window.fetch).to.not.have.been.calledTwice;
+        expect(fetchStub!.callCount).to.not.equal(2);
       });
     });
   });
@@ -378,8 +388,8 @@ describe('<apollo-client>', function() {
           beforeEach(() => aTimeout(100));
 
           it('fetches the query', async function() {
-            expect(window.fetch).to.have.been.calledOnce;
-            const [, { body }] = (window.fetch as SinonSpy).firstCall.args;
+            expect(fetchStub!.callCount).to.equal(1);
+            const [, { body }] = fetchStub!.firstCall.args;
             expect(JSON.parse(body).variables.tagName).to.equal(tagName);
           });
         });
@@ -439,8 +449,8 @@ describe('<apollo-client>', function() {
           beforeEach(() => aTimeout(50));
 
           it('fetches the query', function() {
-            expect(window.fetch).to.have.been.calledOnce;
-            const [, init] = (window.fetch as SinonSpy).firstCall.args;
+            expect(fetchStub!.callCount).to.equal(1);
+            const [, init] = fetchStub!.firstCall.args;
             expect(JSON.parse(init.body).variables.tagName).to.equal(tagName);
           });
         });

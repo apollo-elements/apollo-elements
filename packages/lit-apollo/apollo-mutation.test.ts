@@ -8,7 +8,7 @@ import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import {
   assertType,
@@ -58,14 +58,14 @@ describe('[lit-apollo] ApolloMutation', function() {
   });
 
   describe('subclassing', function() {
-    let spies: Record<string|keyof ApolloMutation, SinonSpy>;
+    let spies: Record<string|keyof ApolloMutation, ReturnType<typeof hanbi.stubMethod>>;
 
     beforeEach(setupClient);
     afterEach(teardownClient);
 
     beforeEach(function setupSpies() {
       spies = {
-        'client.mutate': spy(window.__APOLLO_CLIENT__!, 'mutate'),
+        'client.mutate': hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'mutate').passThrough(),
       };
     });
 
@@ -116,9 +116,9 @@ describe('[lit-apollo] ApolloMutation', function() {
         });
 
         it('does not use LitElement#update as mutation update', function() {
-          expect(element.client!.mutate).to.not.have.been.calledWithMatch({
-            update: element.update,
-          });
+          const calls = Array.from(spies['client.mutate'].calls);
+          const hasUpdate = calls.some(call => call.args[0]?.update === element.update);
+          expect(hasUpdate).to.be.false;
         });
       });
     });

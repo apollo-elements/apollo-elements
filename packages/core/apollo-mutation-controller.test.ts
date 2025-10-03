@@ -13,7 +13,7 @@ import { ApolloMutationController } from './apollo-mutation-controller';
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { match, spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { setupClient, teardownClient, mockQueriesInCache } from '@apollo-elements/test';
 
@@ -22,22 +22,22 @@ describe('[core] ApolloMutationController', function() {
     let element: ReactiveElement & { mutation: ApolloMutationController<any>; };
 
     const handlers = {
-      [E.ApolloControllerConnectedEvent.type]: spy(),
-      [E.ApolloControllerDisconnectedEvent.type]: spy(),
+      [E.ApolloControllerConnectedEvent.type]: hanbi.spy(),
+      [E.ApolloControllerDisconnectedEvent.type]: hanbi.spy(),
     };
 
-    const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
+    const resetSpies = () => Object.values(handlers).forEach(h => h.reset());
 
     afterEach(resetSpies);
 
     beforeEach(function() {
       for (const [type, handler] of Object.entries(handlers))
-        window.addEventListener(type, handler);
+        window.addEventListener(type, handler.handler);
     });
 
     afterEach(function() {
       for (const [type, handler] of Object.entries(handlers))
-        window.removeEventListener(type, handler);
+        window.removeEventListener(type, handler.handler);
     });
 
     beforeEach(async function() {
@@ -113,13 +113,15 @@ describe('[core] ApolloMutationController', function() {
 
       describe('with NullableParamMutation', function() {
         let element: NullableParamMutationHost;
+        const onCompletedSpy = hanbi.spy();
+        const onErrorSpy = hanbi.spy();
 
         class NullableParamMutationHost extends MirroringHost {
           declare shadowRoot: ShadowRoot;
 
           mutation = new ApolloMutationController(this, S.NullableParamMutation, {
-            onCompleted: spy(),
-            onError: spy(),
+            onCompleted: onCompletedSpy.handler,
+            onError: onErrorSpy.handler,
           });
         }
 
@@ -128,12 +130,13 @@ describe('[core] ApolloMutationController', function() {
           element = await fixture(`<${tag}></${tag}>`);
         });
 
+        let clientMutateSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(function() {
-          spy(element.mutation.client!, 'mutate');
+          clientMutateSpy = hanbi.stubMethod(element.mutation.client!, 'mutate').passThrough();
         });
 
         afterEach(function() {
-          (element.mutation.client!.mutate as SinonSpy).restore();
+          clientMutateSpy.restore();
         });
 
         describe('get mutation', function() {
@@ -179,8 +182,10 @@ describe('[core] ApolloMutationController', function() {
               expect(element.mutation.data?.nullableParam?.nullable).to.equal('Hello World');
             });
             it('calls onCompleted', function() {
-              expect(element.mutation.options.onCompleted).to.have.been.calledWithMatch({
+              expect(onCompletedSpy.called).to.be.true;
+              expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
                 nullableParam: {
+                  __typename: 'Nullable',
                   nullable: 'Hello World',
                 },
               });
@@ -193,8 +198,10 @@ describe('[core] ApolloMutationController', function() {
                 expect(element.mutation.data!.nullableParam?.nullable).to.equal('ניתן להריקה');
               });
               it('calls onCompleted', function() {
-                expect(element.mutation.options.onCompleted).to.have.been.calledWithMatch({
+                expect(onCompletedSpy.called).to.be.true;
+                expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
                   nullableParam: {
+                    __typename: 'Nullable',
                     nullable: 'ניתן להריקה',
                   },
                 });
@@ -204,6 +211,7 @@ describe('[core] ApolloMutationController', function() {
         });
 
         describe('with ignoreResults option', function() {
+          beforeEach(() => onCompletedSpy.reset());
           beforeEach(function() {
             element.mutation.options.ignoreResults = true;
           });
@@ -223,7 +231,7 @@ describe('[core] ApolloMutationController', function() {
                 expect(element.data).to.not.be.ok;
               });
               it('does not call onCompleted', function() {
-                expect(element.mutation.options.onCompleted).to.not.have.been.called;
+                expect(onCompletedSpy.called).to.be.false;
               });
             });
           });
@@ -237,15 +245,17 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with awaitRefetchQueries option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 awaitRefetchQueries,
-              }));
+              });
             });
             describe('calling mutate({ awaitRefetchQueries })', function() {
               const awaitRefetchQueries = false;
               beforeEach(() => element.mutation.mutate({ awaitRefetchQueries }));
               it('calls client.mutate with provided awaitRefetchQueries', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   awaitRefetchQueries,
                 });
               });
@@ -261,15 +271,17 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with context option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 context,
-              }));
+              });
             });
             describe('calling mutate({ context })', function() {
               const context = { hi: 'hi' };
               beforeEach(() => element.mutation.mutate({ context }));
               it('calls client.mutate with provided context', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   context,
                 });
               });
@@ -285,15 +297,17 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with errorPolicy option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 errorPolicy,
-              }));
+              });
             });
             describe('calling mutate({ errorPolicy })', function() {
               const errorPolicy = 'all';
               beforeEach(() => element.mutation.mutate({ errorPolicy }));
               it('calls client.mutate with provided errorPolicy', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   errorPolicy,
                 });
               });
@@ -309,15 +323,17 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with fetchPolicy option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 fetchPolicy,
-              }));
+              });
             });
             describe('calling mutate({ fetchPolicy })', function() {
               const fetchPolicy = undefined;
               beforeEach(() => element.mutation.mutate({ fetchPolicy }));
               it('calls client.mutate with provided fetchPolicy', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   fetchPolicy,
                 });
               });
@@ -338,9 +354,10 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with optimisticResponse option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 optimisticResponse,
-              }));
+              });
             });
             describe('calling mutate({ optimisticResponse })', function() {
               const optimisticResponse = {
@@ -351,7 +368,8 @@ describe('[core] ApolloMutationController', function() {
               };
               beforeEach(() => element.mutation.mutate({ optimisticResponse }));
               it('calls client.mutate with provided optimisticResponse', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   optimisticResponse,
                 });
               });
@@ -371,9 +389,10 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with refetchQueries option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 refetchQueries,
-              }));
+              });
             });
             describe('calling mutate({ refetchQueries })', function() {
               const refetchQueries = [
@@ -383,7 +402,8 @@ describe('[core] ApolloMutationController', function() {
               ];
               beforeEach(() => element.mutation.mutate({ refetchQueries }));
               it('calls client.mutate with provided refetchQueries', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   refetchQueries,
                 });
               });
@@ -399,15 +419,17 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with update option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 update,
-              }));
+              });
             });
             describe('calling mutate({ update })', function() {
               const update = () => void false;
               beforeEach(() => element.mutation.mutate({ update }));
               it('calls client.mutate with provided update', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   update,
                 });
               });
@@ -423,15 +445,17 @@ describe('[core] ApolloMutationController', function() {
           describe('calling mutate()', function() {
             beforeEach(() => element.mutation.mutate());
             it('calls client.mutate with variables option', function() {
-              expect(element.mutation.client!.mutate).to.have.been.calledOnceWith(match({
+              expect(clientMutateSpy.callCount).to.equal(1);
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                 variables,
-              }));
+              });
             });
             describe('calling mutate({ variables })', function() {
               const variables = { nullable: 'aabeilrv' };
               beforeEach(() => element.mutation.mutate({ variables }));
               it('calls client.mutate with provided variables', function() {
-                expect(element.mutation.client!.mutate).to.have.been.calledWithMatch({
+                expect(clientMutateSpy.called).to.be.true;
+              expect(clientMutateSpy.lastCall.args[0]).to.include({
                   variables,
                 });
               });
@@ -441,7 +465,7 @@ describe('[core] ApolloMutationController', function() {
 
         describe('when mutate({ variables }) rejects', function() {
           let err: Error;
-          beforeEach(() => (element.mutation.options.onCompleted! as SinonSpy).resetHistory());
+          beforeEach(() => onCompletedSpy.reset());
           beforeEach(() =>
             element.mutation
               .mutate({ variables: { nullable: 'error' } })
@@ -451,10 +475,11 @@ describe('[core] ApolloMutationController', function() {
             expect(element.data).to.not.be.ok;
           });
           it('does not call onCompleted', function() {
-            expect(element.mutation.options.onCompleted).to.not.have.been.called;
+            expect(onCompletedSpy.called).to.be.false;
           });
           it('calls onError', function() {
-            expect(element.mutation.options.onError).to.have.been.calledWith(err);
+            expect(onErrorSpy.called).to.be.true;
+            expect(onErrorSpy.lastCall.args[0]).to.equal(err);
           });
           it('sets error', function() {
             expect(element.mutation.error!.message, 'message').to.equal('error');
@@ -466,12 +491,12 @@ describe('[core] ApolloMutationController', function() {
         describe('destructuring mutate', function() {
           let mutate: (typeof element.mutation)['mutate'];
           let p: Promise<C.ApolloLink.Result<ResultOf<typeof element.mutation.mutation>>>;
-          beforeEach(() => (element.mutation.options.onCompleted! as SinonSpy).resetHistory());
+          beforeEach(() => onCompletedSpy.reset());
           beforeEach(() => ({ mutate } = element.mutation));
           beforeEach(() => void (p = mutate()));
           beforeEach(() => p);
           it('calls onCompleted', function() {
-            expect(element.mutation.options.onCompleted).to.have.been.called;
+            expect(onCompletedSpy.called).to.be.true;
           });
           it('sets called', function() {
             expect(element.mutation.called).to.be.true;

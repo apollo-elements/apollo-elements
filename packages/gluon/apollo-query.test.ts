@@ -15,7 +15,7 @@ import { describeQuery, setupQueryClass } from '@apollo-elements/test/query.test
 
 import { defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { GluonElement } from '@gluon/gluon';
 
@@ -64,6 +64,8 @@ describe('[gluon] ApolloQuery', function() {
 
   describe('subclassing', function() {
     let element: ApolloQuery;
+    let renderSpy: ReturnType<typeof hanbi.stubMethod>;
+
     beforeEach(async function() {
       const tag = defineCE(class extends ApolloQuery {
         static get is() { return 'apollo-query'; }
@@ -74,12 +76,11 @@ describe('[gluon] ApolloQuery', function() {
         }
       });
       element = await fixture<ApolloQuery>(`<${tag}></${tag}>`);
-      spy(element, 'render');
+      renderSpy = hanbi.stubMethod(element, 'render').passThrough();
     });
 
     afterEach(function() {
-      // @ts-expect-error: testing
-      element.render.restore();
+      renderSpy.restore();
     });
 
     describe('setting networkStatus', function() {
@@ -89,7 +90,7 @@ describe('[gluon] ApolloQuery', function() {
 
       beforeEach(() => element.updateComplete);
       it('renders', function() {
-        expect(element.render).to.have.been.called;
+        expect(renderSpy.called).to.be.true;
       });
 
       it('caches', function() {
@@ -104,12 +105,14 @@ describe('[gluon] ApolloQuery', function() {
 
       beforeEach(nextFrame);
 
+      let subscribeSpy: ReturnType<typeof hanbi.stubMethod>;
+
       beforeEach(function() {
-        spy(element.controller, 'subscribe');
+        subscribeSpy = hanbi.stubMethod(element.controller, 'subscribe');
       });
 
       afterEach(function() {
-        (element.controller.subscribe as SinonSpy).restore();
+        subscribeSpy.restore();
       });
 
       it('sets query on the controller', function() {
