@@ -48,8 +48,12 @@ const schema = makeExecutableSchema({
 
     Subscription: {
 
-      async messageSent() {
-        return {};
+      async *messageSent() {
+        yield {};
+        await aTimeout(10);
+        yield {};
+        await aTimeout(10);
+        yield {};
       },
 
       async nonNullParam(_, { nonNull }) {
