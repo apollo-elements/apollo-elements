@@ -25,7 +25,7 @@ describe('[hybrids] HybridsControllerHost', function() {
     const a = new CustomEvent('a');
     element.dispatchEvent(a);
     expect(s.callCount).to.equal(1);
-    expect(s.lastCall.args[0]).to.equal(a);
+    expect(s.lastCall!.args[0]).to.equal(a);
     host.removeEventListener('a', s.handler);
     s.reset();
   });

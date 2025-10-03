@@ -747,7 +747,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           beforeEach(() => element.hasRendered());
 
           it('calls onCompleted with data', function() {
-            expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
+            expect(onCompletedSpy.lastCall!.args[0]).to.deep.include({
               nullableParam: { nullable: 'Hello World', __typename: 'Nullable' }
             });
           });
@@ -804,7 +804,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           beforeEach(waitForRender(() => element));
 
           it('calls onError with error', function() {
-            expect(onErrorSpy.lastCall.args[0]).to.deep.equal(error);
+            expect(onErrorSpy.lastCall!.args[0]).to.deep.equal(error);
           });
 
           it('sets data, error, errors, and loading', function() {
@@ -830,7 +830,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
           it('calls onCompleted with result', function() {
             expect(onCompletedSpy.callCount).to.equal(1);
-            expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
+            expect(onCompletedSpy.lastCall!.args[0]).to.deep.include({
                 nullableParam: {
                   __typename: 'Nullable',
                   nullable: 'Hello World',
@@ -848,7 +848,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
 
             it('calls onCompleted with result', function() {
               expect(onCompletedSpy.callCount).to.equal(2);
-              expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
+              expect(onCompletedSpy.lastCall!.args[0]).to.deep.include({
                   nullableParam: {
                     nullable: 'second',
                     __typename: 'Nullable',

@@ -19,7 +19,7 @@ import * as hanbi from 'hanbi';
 describe('[core] ApolloQueryController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
     class MirroringHost extends ReactiveElement {
-      query!: ApolloQueryController<any>;
+      query!: ApolloQueryController<any, any>;
 
       data?: unknown;
 
@@ -83,7 +83,7 @@ describe('[core] ApolloQueryController', function() {
 
       it('fires "apollo-controller-connected"', function() {
         const { type } = E.ApolloControllerConnectedEvent;
-        const [event] = handlers[type].lastCall.args;
+        const [event] = handlers[type].lastCall!.args;
         expect(event.controller, 'controller').to.equal(element.query);
         expect(event.type, 'type').to.equal(type);
       });
@@ -94,7 +94,7 @@ describe('[core] ApolloQueryController', function() {
         beforeEach(nextFrame);
         it('fires event on disconnect', function() {
           const { type } = E.ApolloControllerDisconnectedEvent;
-          const [event] = handlers[type].lastCall.args;
+          const [event] = handlers[type].lastCall!.args;
           expect(event.controller, 'controller').to.equal(element.query);
           expect(event.type, 'type').to.equal(type);
         });
@@ -266,7 +266,7 @@ describe('[core] ApolloQueryController', function() {
             beforeEach(nextFrame);
             it('calls onError', function() {
               expect(onErrorSpy.called).to.be.true;
-              expect(onErrorSpy.lastCall.args[0]).to.have.property('message', 'error');
+              expect(onErrorSpy.lastCall!.args[0]).to.have.property('message', 'error');
             });
           });
         });
@@ -383,8 +383,8 @@ describe('[core] ApolloQueryController', function() {
         it('calls onData', function() {
           // Apollo Client v4: onData is called with null during loading, then with data
           expect(onDataSpy.callCount).to.equal(2);
-          expect(onDataSpy.firstCall.args[0]).to.be.null;
-          const lastData = onDataSpy.lastCall.args[0];
+          expect(onDataSpy.firstCall!.args[0]).to.be.null;
+          const lastData = onDataSpy.lastCall!.args[0];
           expect(lastData.helloWorld.name).to.equal('Chaver');
           expect(lastData.helloWorld.greeting).to.equal('Shalom');
         });
@@ -470,7 +470,10 @@ describe('[core] ApolloQueryController', function() {
           });
 
           describe('executeQuery({ context })', function() {
-            beforeEach(() => element.query.executeQuery({ context: 'all' }));
+            beforeEach(() => element.query.executeQuery({
+              // @ts-expect-error: testing with invalid type
+              context: 'all'
+            }));
             it('uses provided context', function() {
               expect(querySpy.called).to.be.true;
               expect(querySpy.lastCall.args[0]).to.include({
@@ -669,7 +672,7 @@ describe('[core] ApolloQueryController', function() {
               onDataSpy.handler(data);
               if (this.shadowRoot) {
                 const el = this.$('data');
-                if (el) el.innerText = data.pages.join(',');
+                if (el) el.innerText = data.pages?.join(',') ?? '';
               }
             },
             onError: onErrorSpy.handler,

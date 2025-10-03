@@ -80,7 +80,7 @@ describe('[core] ApolloSubscriptionController', function() {
 
       it('fires "apollo-controller-connected"', function() {
         const { type } = E.ApolloControllerConnectedEvent;
-        const [event] = handlers[type].lastCall.args;
+        const [event] = handlers[type].lastCall!.args;
         expect(event.controller, 'controller').to.equal(element.subscription);
         expect(event.type, 'type').to.equal(type);
       });
@@ -91,7 +91,7 @@ describe('[core] ApolloSubscriptionController', function() {
         beforeEach(nextFrame);
         it('fires event on disconnect', function() {
           const { type } = E.ApolloControllerDisconnectedEvent;
-          const [event] = handlers[type].lastCall.args;
+          const [event] = handlers[type].lastCall!.args;
           expect(event.controller, 'controller').to.equal(element.subscription);
           expect(event.type, 'type').to.equal(type);
         });
@@ -282,8 +282,8 @@ describe('[core] ApolloSubscriptionController', function() {
             beforeEach(() => aTimeout(200));
             it('calls onError', function() {
               expect(onErrorSpy.called).to.be.true;
-              expect(onErrorSpy.lastCall.args[0]).to.be.ok;
-              expect(onErrorSpy.lastCall.args[0]).to.have.property('message');
+              expect(onErrorSpy.lastCall!.args[0]).to.be.ok;
+              expect(onErrorSpy.lastCall!.args[0]).to.have.property('message');
             });
           });
         });
@@ -350,8 +350,8 @@ describe('[core] ApolloSubscriptionController', function() {
             expect(element.subscription.error).to.be.ok;
             expect(element.subscription.error).to.have.property('message');
             expect(onErrorSpy.called).to.be.true;
-            expect(onErrorSpy.lastCall.args[0]).to.be.ok;
-            expect(onErrorSpy.lastCall.args[0]).to.have.property('message');
+            expect(onErrorSpy.lastCall!.args[0]).to.be.ok;
+            expect(onErrorSpy.lastCall!.args[0]).to.have.property('message');
             expect(element.error, 'element error')
               .to.be.ok;
             expect(element.error)
@@ -639,7 +639,7 @@ describe('[core] ApolloSubscriptionController', function() {
         it('calls onData', function() {
           // Apollo Client v4: onData may be called multiple times during subscription lifecycle
           expect(onDataSpy.callCount).to.equal(2);
-          const [firstArg] = onDataSpy.lastCall.args;
+          const [firstArg] = onDataSpy.lastCall!.args;
           expect(firstArg.subscriptionData).to.deep.include({
             loading: false,
             error: null,
@@ -651,7 +651,7 @@ describe('[core] ApolloSubscriptionController', function() {
             },
           });
 
-          const [{ client }] = onDataSpy.lastCall.args;
+          const [{ client }] = onDataSpy.lastCall!.args;
           expect(client).to.equal(element.subscription.client);
         });
 
@@ -668,7 +668,7 @@ describe('[core] ApolloSubscriptionController', function() {
             // Apollo Client v4: initial (null+data) + refetch (null+data) = 4 calls
             expect(onDataSpy.callCount).to.equal(4);
             const [{ client, subscriptionData, ...res }] =
-              onDataSpy.lastCall.args;
+              onDataSpy.lastCall!.args;
             expect(res).to.be.empty;
             expect(client, 'client')
               .to.equal(element.subscription.client);
