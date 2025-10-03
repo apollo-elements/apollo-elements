@@ -1,5 +1,3 @@
-import type { SinonSpy, SinonStub } from 'sinon';
-
 import * as C from '@apollo/client';
 
 import * as S from '@apollo-elements/test';
@@ -15,7 +13,7 @@ import {
 
 import { html } from 'lit/static-html.js';
 
-import { match, spy, stub } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { setupClient, teardownClient, makeClient } from '@apollo-elements/test';
 
@@ -334,17 +332,18 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('calling mutate({ mutation, variables })', function() {
-      beforeEach(() => spy(element.controller, 'mutate'));
-      afterEach(() => (element.controller.mutate as SinonSpy).restore?.());
+      let mutateSpy: ReturnType<typeof hanbi.stubMethod>;
+      beforeEach(() => { mutateSpy = hanbi.stubMethod(element.controller, 'mutate').passThrough(); });
+      afterEach(() => mutateSpy.restore());
       beforeEach(() => element.mutate({
         mutation: S.NullableParamMutation,
         variables: { nullable: 'nul' },
       }));
       it('calls controller mutate', function() {
-        expect(element.controller.mutate).to.have.been.calledWithMatch({
-          mutation: S.NullableParamMutation,
-          variables: { nullable: 'nul' },
-        });
+        expect(mutateSpy.called).to.be.true;
+        const [options] = mutateSpy.lastCall.args;
+        expect(options.mutation).to.equal(S.NullableParamMutation);
+        expect(options.variables).to.deep.equal({ nullable: 'nul' });
       });
       it('sets called', function() {
         expect(element.called).to.be.true;
@@ -394,14 +393,15 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('calling mutate({ mutation })', function() {
-      beforeEach(() => spy(element.controller.client!, 'mutate'));
-      afterEach(() => (element.controller.client!.mutate as SinonSpy).restore?.());
+      let clientMutateSpy: ReturnType<typeof hanbi.stubMethod>;
+      beforeEach(() => { clientMutateSpy = hanbi.stubMethod(element.controller.client!, 'mutate').passThrough(); });
+      afterEach(() => clientMutateSpy.restore());
       beforeEach(() => element.mutate({ mutation: S.NullableParamMutation }));
       it('calls client mutate', function() {
-        expect(element.controller.client!.mutate).to.have.been.calledWith(match({
-          mutation: S.NullableParamMutation,
-          refetchQueries: ['A', 'B', 'C', 'D', 'E'],
-        }));
+        expect(clientMutateSpy.called).to.be.true;
+        const [options] = clientMutateSpy.lastCall.args;
+        expect(options.mutation).to.equal(S.NullableParamMutation);
+        expect(options.refetchQueries).to.deep.equal(['A', 'B', 'C', 'D', 'E']);
       });
     });
   });
@@ -619,7 +619,6 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         </div>
       `);
       element = container.querySelector('apollo-mutation') as ApolloMutationElement;
-      spy(element, 'mutate');
       await element.updateComplete;
     });
 
@@ -632,11 +631,16 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('clicking the sibling trigger', function() {
+      let mutateSpy: ReturnType<typeof hanbi.stubMethod>;
+      beforeEach(function() {
+        mutateSpy = hanbi.stubMethod(element, 'mutate').passThrough();
+      });
+      afterEach(() => mutateSpy.restore());
       beforeEach(function() {
         container.querySelector('button')!.click();
       });
       it('calls mutate on the element', function() {
-        expect(element.mutate).to.have.been.calledOnce;
+        expect(mutateSpy.callCount).to.equal(1);
       });
     });
   });
@@ -811,7 +815,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   describe('with a link trigger', function() {
     let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
-    let replaceStateStub: SinonStub;
+    let replaceStateStub: ReturnType<typeof hanbi.stubMethod>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
@@ -819,7 +823,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           <a href="#foo" trigger>do it.</a>
         </apollo-mutation>
       `);
-      replaceStateStub = stub(history, 'replaceState');
+      replaceStateStub = hanbi.stubMethod(history, 'replaceState');
     });
 
     afterEach(function() {
@@ -876,7 +880,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
         await oneEvent(element, WillNavigateEvent.type);
 
-        expect(replaceStateStub).to.have.been.called;
+        expect(replaceStateStub.called).to.be.true;
       });
 
       describe('when will-navigate event is canceled', function() {
@@ -891,7 +895,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           await aTimeout(10);
 
-          expect(replaceStateStub).to.not.have.been.called;
+          expect(replaceStateStub.called).to.be.false;
         });
       });
 
@@ -915,12 +919,12 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('clicking twice', function() {
       it('mutates', async function() {
         const link = element.querySelector('a');
-        let count = 0;
-        element.addEventListener(WillMutateEvent.type, function() { count++; });
+        const willMutateSpy = hanbi.spy();
+        element.addEventListener(WillMutateEvent.type, willMutateSpy.handler);
         link!.click();
         link!.click();
         link!.click();
-        expect(count).to.equal(1);
+        expect(willMutateSpy.callCount).to.equal(1);
       });
     });
   });
@@ -928,7 +932,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
   describe('with a link trigger that wraps a button', function() {
     let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
-    let replaceStateStub: SinonStub;
+    let replaceStateStub: ReturnType<typeof hanbi.stubMethod>;
 
     beforeEach(async function() {
       element = await fixture<typeof element>(html`
@@ -939,7 +943,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         </apollo-mutation>
       `);
 
-      replaceStateStub = stub(history, 'replaceState');
+      replaceStateStub = hanbi.stubMethod(history, 'replaceState');
     });
 
     afterEach(function() {
@@ -957,8 +961,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
       beforeEach(nextFrame);
 
       describe('clicking the button', function() {
-        beforeEach(() => spy(element.controller.client!, 'mutate'));
-        afterEach(() => (element.controller.client!.mutate as SinonSpy).restore?.());
+        let clientMutateSpy: ReturnType<typeof hanbi.stubMethod>;
+        beforeEach(() => { clientMutateSpy = hanbi.stubMethod(element.controller.client!, 'mutate').passThrough(); });
+        afterEach(() => clientMutateSpy.restore());
         beforeEach(async function() {
           const button = element.querySelector('button');
           button!.click();
@@ -966,13 +971,14 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         });
 
         it('navigates to the resolved URL', function() {
-          expect(element.controller.client!.mutate).to.have.been.calledWithMatch({
-            variables: {
-              nullable: 'special',
-            },
-          });
-          expect(replaceStateStub)
-            .to.have.been.calledWith(element.data, 'will-navigate', '/nullable/special/');
+          expect(clientMutateSpy.called).to.be.true;
+          const [options] = clientMutateSpy.lastCall.args;
+          expect(options.variables).to.deep.equal({ nullable: 'special' });
+          expect(replaceStateStub.called).to.be.true;
+          const [data, title, url] = replaceStateStub.lastCall.args;
+          expect(data).to.equal(element.data);
+          expect(title).to.equal('will-navigate');
+          expect(url).to.equal('/nullable/special/');
         });
       });
     });
@@ -1027,7 +1033,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
         await oneEvent(element, WillNavigateEvent.type);
 
-        expect(replaceStateStub).to.have.been.called;
+        expect(replaceStateStub.called).to.be.true;
       });
 
       describe('when will-navigate event is canceled', function() {
@@ -1044,7 +1050,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
 
           await aTimeout(100);
 
-          expect(replaceStateStub).to.not.have.been.called;
+          expect(replaceStateStub.called).to.be.false;
         });
       });
 
@@ -1322,8 +1328,9 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     });
 
     describe('setting debounce to 500', function() {
-      beforeEach(() => spy(element.controller, 'mutate'));
-      afterEach(() => (element.controller.mutate as SinonSpy).restore?.());
+      let mutateSpy: ReturnType<typeof hanbi.stubMethod>;
+      beforeEach(() => { mutateSpy = hanbi.stubMethod(element.controller, 'mutate').passThrough(); });
+      afterEach(() => mutateSpy.restore());
 
       beforeEach(function() {
         element.debounce = 500;
@@ -1356,7 +1363,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
         beforeEach(() => aTimeout(1000));
 
         it('only mutates once', function() {
-          expect(element.controller.mutate).to.have.been.calledOnce;
+          expect(mutateSpy.callCount).to.equal(1);
         });
       });
 
@@ -1392,7 +1399,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           beforeEach(() => aTimeout(1000));
 
           it('mutates many times', function() {
-            expect((element.controller.mutate as SinonSpy).callCount).to.be.greaterThan(1);
+            expect(mutateSpy.callCount).to.be.greaterThan(1);
           });
         });
       });
@@ -1503,9 +1510,10 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
     describe('when cheekily moving the trigger', function() {
       let movedTrigger: HTMLButtonElement;
       let newTrigger: HTMLButtonElement;
+      let mutateSpy: ReturnType<typeof hanbi.stubMethod>;
 
-      beforeEach(() => spy(element.controller, 'mutate'));
-      afterEach(() => (element.controller.mutate as SinonSpy).restore?.());
+      beforeEach(() => { mutateSpy = hanbi.stubMethod(element.controller, 'mutate').passThrough(); });
+      afterEach(() => mutateSpy.restore());
 
       beforeEach(function() {
         const node = document.createElement('div');
@@ -1528,7 +1536,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           movedTrigger.click();
         });
         it('does not mutate', function() {
-          expect(element.controller.mutate).to.not.have.been.called;
+          expect(mutateSpy.called).to.be.false;
         });
       });
 
@@ -1548,7 +1556,7 @@ describe('[components] <apollo-mutation>', function describeApolloMutation() {
           });
           beforeEach(nextFrame);
           it('mutates', function() {
-            expect(element.controller.mutate).to.have.been.called;
+            expect(mutateSpy.called).to.be.true;
           });
         });
       });

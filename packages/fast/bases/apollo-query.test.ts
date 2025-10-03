@@ -14,7 +14,9 @@ import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client';
 import { describeQuery } from '@apollo-elements/test/query.test';
-import { spy, useFakeTimers, SinonSpy, SinonFakeTimers } from 'sinon';
+import { useFakeTimers } from 'sinon';
+
+import * as hanbi from 'hanbi';
 
 import * as S from '@apollo-elements/test/schema';
 
@@ -104,32 +106,31 @@ describe('[FAST] ApolloQuery', function() {
       query = S.NullableParamQuery;
     }
     let element: Test;
-    let clock: SinonFakeTimers;
+    let clock: ReturnType<typeof useFakeTimers>;
+    let refetchStub: ReturnType<typeof hanbi.stubMethod>;
     beforeEach(async function() {
       element = await fixture<Test>(`<${name}></${name}>`);
       element.client = makeClient();
     });
-    beforeEach(() => spy(element.controller, 'refetch'));
+    beforeEach(() => { refetchStub = hanbi.stubMethod(element.controller, 'refetch').passThrough(); });
     beforeEach(() => {
       clock = useFakeTimers();
     });
     afterEach(() => clock.restore());
-    afterEach(() => {
-      (element.controller.refetch as SinonSpy).restore?.();
-    });
+    afterEach(() => refetchStub.restore());
     describe('calling startPolling(1000)', function() {
       beforeEach(function startPolling() { element.startPolling(1000); });
       beforeEach(() => {
         clock.tick(3500);
       });
       it('refetches', function() {
-        expect(element.controller.refetch).to.have.been.calledThrice;
+        expect(refetchStub.callCount).to.equal(3);
       });
       describe('then stopPolling', function() {
         beforeEach(function stopPolling() { element.stopPolling(); });
         beforeEach(() => { clock.tick(3500); });
         it('stops calling refetch', function() {
-          expect(element.controller.refetch).to.have.been.calledThrice;
+          expect(refetchStub.callCount).to.equal(3);
         });
       });
     });

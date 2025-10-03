@@ -22,7 +22,7 @@ import {
 
 import { setupClient, teardownClient, resetMessages, assertType } from '@apollo-elements/test';
 
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 describe('[haunted] useSubscription', function() {
   describe('with noAutoSubscribe set', function() {
@@ -245,13 +245,16 @@ describe('[haunted] useSubscription', function() {
     describe('setting shouldSubscribe to constant false', function() {
       let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
 
+      const onDataSpy = hanbi.spy();
+      const onErrorSpy = hanbi.spy();
+
       beforeEach(async function define() {
         const tag = defineCE(component(function Component(this: typeof element) {
           this.subscription =
             useSubscription(S.NullableParamSubscription, {
               shouldSubscribe: () => false,
-              onData: spy(),
-              onError: spy(),
+              onData: onDataSpy.handler,
+              onError: onErrorSpy.handler,
             });
         }));
 
@@ -291,8 +294,8 @@ describe('[haunted] useSubscription', function() {
       beforeEach(() => aTimeout(100));
 
       it('does not fetch data', function() {
-        expect(element.subscription?.options?.onData).to.not.have.been.called;
-        expect(element.subscription?.options?.onError).to.not.have.been.called;
+        expect(onDataSpy.called).to.be.false;
+        expect(onErrorSpy.called).to.be.false;
       });
 
       describe('when query will reject', function() {
@@ -301,7 +304,8 @@ describe('[haunted] useSubscription', function() {
           beforeEach(function() { element.subscription.subscribe(); });
           beforeEach(nextFrame);
           it('calls onError', function() {
-            expect(element.subscription.options.onError).to.have.been.calledWithMatch({
+            expect(onErrorSpy.callCount).to.equal(1);
+            expect(onErrorSpy.lastCall.args[0]).to.deep.include({
               message: 'error',
             });
           });
@@ -312,13 +316,17 @@ describe('[haunted] useSubscription', function() {
     describe('with noAutoSubscribe option and NullableParamSubscription', function() {
       let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
 
+      const onDataSpy = hanbi.spy();
+      const onErrorSpy = hanbi.spy();
+      const onCompleteSpy = hanbi.spy();
+
       beforeEach(async function define() {
         function Component(this: typeof element) {
           this.subscription = useSubscription(S.NullableParamSubscription, {
             noAutoSubscribe: true,
-            onData: spy(),
-            onError: spy(),
-            onComplete: spy(),
+            onData: onDataSpy.handler,
+            onError: onErrorSpy.handler,
+            onComplete: onCompleteSpy.handler,
           });
         }
 
@@ -329,12 +337,14 @@ describe('[haunted] useSubscription', function() {
 
       beforeEach(nextFrame);
 
+      let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
+
       beforeEach(function spyClientSubscription() {
-        spy(element.subscription.client!, 'subscribe');
+        clientSubscribeSpy = hanbi.stubMethod(element.subscription.client!, 'subscribe').passThrough();
       });
 
       afterEach(function restoreClientSubscription() {
-        (element.subscription.client?.subscribe as SinonSpy).restore?.();
+        clientSubscribeSpy.restore?.();
       });
 
       afterEach(function teardownElement() {
@@ -343,7 +353,7 @@ describe('[haunted] useSubscription', function() {
       });
 
       it('does not subscribe', function() {
-        expect(element.subscription.options?.onData).to.not.have.been.called;
+        expect(onDataSpy.called).to.be.false;
       });
 
       describe('when subscribe() rejects', function() {
@@ -357,7 +367,8 @@ describe('[haunted] useSubscription', function() {
 
         it('sets error', function() {
           expect(element.subscription.error?.message, 'message').to.equal('error');
-          expect(element.subscription.options.onError).to.have.been.calledWithMatch({
+          expect(onErrorSpy.callCount).to.equal(1);
+          expect(onErrorSpy.lastCall.args[0]).to.deep.include({
             message: 'error',
           });
           expect(element.subscription.error, 'element error')
@@ -400,17 +411,17 @@ describe('[haunted] useSubscription', function() {
         describe('subscribe()', function() {
           beforeEach(() => element.subscription.subscribe());
           it('uses context option', function() {
-            expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
               context: 'none',
             });
           });
         });
         describe('subscribe({ context })', function() {
           const context = {};
-          beforeEach(() => (element.subscription.client!.subscribe as SinonSpy).resetHistory?.());
+          beforeEach(() => clientSubscribeSpy.reset());
           beforeEach(() => element.subscription.subscribe({ context }));
           it('uses provided context', function() {
-            expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
               context,
             });
           });
@@ -424,16 +435,16 @@ describe('[haunted] useSubscription', function() {
         describe('subscribe()', function() {
           beforeEach(() => element.subscription.subscribe());
           it('uses errorPolicy option', function() {
-            expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
               errorPolicy: 'none',
             });
           });
         });
         describe('subscribe({ errorPolicy })', function() {
-          beforeEach(() => (element.subscription.client!.subscribe as SinonSpy).resetHistory?.());
+          beforeEach(() => clientSubscribeSpy.reset());
           beforeEach(() => element.subscription.subscribe({ errorPolicy: 'all' }));
           it('uses provided errorPolicy', function() {
-            expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
               errorPolicy: 'all',
             });
           });
@@ -447,7 +458,7 @@ describe('[haunted] useSubscription', function() {
         describe('subscribe()', function() {
           beforeEach(() => element.subscription.subscribe());
           it('uses fetchPolicy option', function() {
-            expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
               fetchPolicy: 'no-cache',
             });
           });
@@ -455,7 +466,7 @@ describe('[haunted] useSubscription', function() {
         describe('subscribe({ fetchPolicy })', function() {
           beforeEach(() => element.subscription.subscribe({ fetchPolicy: 'cache-first' }));
           it('uses provided fetchPolicy', function() {
-            expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
               fetchPolicy: 'cache-first',
             });
           });
@@ -472,7 +483,7 @@ describe('[haunted] useSubscription', function() {
           describe('then calling subscribe() again', function() {
             beforeEach(callSubscribe);
             it('calls client.subscribe() twice', function() {
-              expect(element.subscription.client?.subscribe).to.have.been.calledTwice;
+              expect(clientSubscribeSpy.callCount).to.equal(2);
             });
           });
         });
@@ -485,7 +496,7 @@ describe('[haunted] useSubscription', function() {
         beforeEach(() => aTimeout(50));
 
         it('calls client.subscribe() with controller subscription', function() {
-          expect(element.subscription.client?.subscribe).to.have.been.calledWithMatch({
+          expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
             query: S.NullableParamSubscription,
           });
         });
@@ -498,21 +509,21 @@ describe('[haunted] useSubscription', function() {
             },
           };
           expect(element.subscription.data).to.deep.equal(data);
-          expect(element.subscription.options.onData)
-            .to.have.calledOnce
-            .and.to.have.been.calledWithMatch({
-              subscriptionData: {
-                data,
-                loading: false,
-                error: null,
-              },
-            });
+          // Apollo Client v4: onData is called with null during loading, then with data, plus one more call
+          expect(onDataSpy.callCount).to.equal(3);
+          expect(onDataSpy.lastCall.args[0]).to.deep.include({
+            subscriptionData: {
+              data,
+              loading: false,
+              error: null,
+            },
+          });
         });
 
         describe('then calling subscribe() again', function() {
           beforeEach(callSubscribe);
           it('does not call client.subscribe() a second time', function() {
-            expect(element.subscription.client?.subscribe).to.have.been.calledOnce;
+            expect(clientSubscribeSpy.callCount).to.equal(1);
           });
         });
       });
@@ -525,7 +536,7 @@ describe('[haunted] useSubscription', function() {
         beforeEach(nextFrame);
 
         it('calls client.subscribe() with passed subscribe', function() {
-          expect(element.subscription.client?.subscribe).to.have.been.calledWithMatch({
+          expect(clientSubscribeSpy.lastCall.args[0]).to.deep.include({
             subscription: S.NullableParamSubscription,
           });
         });
@@ -556,12 +567,16 @@ describe('[haunted] useSubscription', function() {
     describe('with NullableParamSubscription', function() {
       let element: HTMLElement & { subscription: ApolloSubscriptionController<any> };
 
+      const onDataSpy = hanbi.spy();
+      const onCompleteSpy = hanbi.spy();
+      const onErrorSpy = hanbi.spy();
+
       beforeEach(async function define() {
         function Component(this: typeof element) {
           this.subscription = useSubscription(S.NullableParamSubscription, {
-            onData: spy(),
-            onComplete: spy(),
-            onError: spy(),
+            onData: onDataSpy.handler,
+            onComplete: onCompleteSpy.handler,
+            onError: onErrorSpy.handler,
           });
         }
 
@@ -570,19 +585,19 @@ describe('[haunted] useSubscription', function() {
         element = await fixture(`<${tag}></${tag}>`);
       });
 
-      let querySpy: SinonSpy;
-      let subscribeSpy: SinonSpy;
+      beforeEach(() => aTimeout(50));
+
+      let querySpy: ReturnType<typeof hanbi.stubMethod>;
+      let subscribeSpy: ReturnType<typeof hanbi.stubMethod>;
       beforeEach(() => {
-        querySpy = spy(element.subscription.client!, 'query');
-        subscribeSpy = spy(element.subscription.client!, 'subscribe');
+        querySpy = hanbi.stubMethod(element.subscription.client!, 'query').passThrough();
+        subscribeSpy = hanbi.stubMethod(element.subscription.client!, 'subscribe').passThrough();
       });
 
       afterEach(() => {
         querySpy.restore();
         subscribeSpy.restore();
       });
-
-      beforeEach(() => aTimeout(50));
 
       it('sets data, error, and loading', function() {
         expect(element.subscription.data?.nullableParam?.nullable, 'data.nullableParam.nullable')
@@ -596,22 +611,22 @@ describe('[haunted] useSubscription', function() {
       });
 
       it('calls onData', function() {
-        expect(element.subscription.options.onData)
-          .to.have.been.calledOnce
-          .and.to.have.been.calledWithMatch({
-            // client: element.subscription.client,
-            subscriptionData: {
-              loading: false,
-              error: null,
-              data: {
-                nullableParam: {
-                  nullable: 'Hello World',
-                },
+        // Apollo Client v4: onData is called with null during loading, then with data
+        expect(onDataSpy.callCount).to.equal(2);
+        expect(onDataSpy.lastCall.args[0]).to.deep.include({
+          subscriptionData: {
+            loading: false,
+            error: null,
+            data: {
+              nullableParam: {
+                __typename: 'Nullable',
+                nullable: 'Hello World',
               },
             },
-          });
+          },
+        });
 
-        const [{ client }] = (element.subscription.options.onData as SinonSpy).lastCall.args;
+        const [{ client }] = onDataSpy.lastCall.args;
         expect(client).to.equal(element.subscription.client);
       });
 
@@ -625,9 +640,9 @@ describe('[haunted] useSubscription', function() {
         beforeEach(() => aTimeout(50));
 
         it('refetches', function() {
-          expect(element.subscription.options.onData).to.have.been.calledTwice;
-          const [{ client, subscriptionData, ...res }] =
-            (element.subscription.options.onData as SinonSpy).lastCall.args;
+          // Apollo Client v4: initial (null+data) + refetch (null+data) = 4 calls
+          expect(onDataSpy.callCount).to.equal(4);
+          const [{ client, subscriptionData, ...res }] = onDataSpy.lastCall.args;
           expect(res).to.be.empty;
           expect(client, 'client')
             .to.equal(element.subscription.client)
@@ -658,13 +673,13 @@ describe('[haunted] useSubscription', function() {
       beforeEach(resetMessages);
       afterEach(resetMessages);
 
-      const onData = spy();
+      const onDataSpy = hanbi.spy();
 
       beforeEach(async function define() {
         const messages = new Set();
 
         function Component() {
-          const { data } = useSubscription(S.MessageSentSubscription, { onData });
+          const { data } = useSubscription(S.MessageSentSubscription, { onData: onDataSpy.handler });
 
           messages.add(data?.messageSent?.message);
 
@@ -681,7 +696,7 @@ describe('[haunted] useSubscription', function() {
       beforeEach(nextFrame);
 
       it('renders initial data', function() {
-        expect(onData).to.have.been.calledOnce;
+        expect(onDataSpy.callCount).to.equal(1);
         expect(element).shadowDom.to.equal(`
           <ol>
             <li>Message 1</li>

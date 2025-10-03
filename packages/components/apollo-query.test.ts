@@ -5,7 +5,9 @@ import { ApolloLink } from '@apollo/client';
 
 import { aTimeout, fixture, expect, nextFrame } from '@open-wc/testing';
 
-import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
+import { useFakeTimers } from 'sinon';
+
+import * as hanbi from 'hanbi';
 
 import { html } from 'lit/static-html.js';
 
@@ -240,7 +242,7 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
 
     describe('with a simple template that renders data', function() {
       let element: ApolloQueryElement<typeof S.PaginatedQuery>;
-      let clock: SinonFakeTimers;
+      let clock: ReturnType<typeof useFakeTimers>;
 
       beforeEach(async function() {
         element = await fixture(html`
@@ -338,20 +340,21 @@ describe('[components] <apollo-query>', function describeApolloQuery() {
                   });
                 });
                 describe('then calling startPolling(1000)', function() {
+                  let refetchStub: ReturnType<typeof hanbi.stubMethod>;
                   beforeEach(() => { clock = useFakeTimers(); });
-                  beforeEach(() => spy(element.controller, 'refetch'));
-                  afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
+                  beforeEach(() => { refetchStub = hanbi.stubMethod(element.controller, 'refetch').passThrough(); });
+                  afterEach(() => refetchStub.restore());
                   afterEach(() => clock.restore());
                   beforeEach(function startPolling() { element.startPolling(1000); });
                   beforeEach(() => { clock.tick(3500); });
                   it('refetches', function() {
-                    expect(element.controller.refetch).to.have.been.calledThrice;
+                    expect(refetchStub.callCount).to.equal(3);
                   });
                   describe('then stopPolling', function() {
                     beforeEach(function stopPolling() { element.stopPolling(); });
                     beforeEach(() => { clock.tick(3500); });
                     it('stops calling refetch', function() {
-                      expect(element.controller.refetch).to.have.been.calledThrice;
+                      expect(refetchStub.callCount).to.equal(3);
                     });
                   });
                 });

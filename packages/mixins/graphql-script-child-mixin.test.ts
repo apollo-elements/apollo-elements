@@ -4,9 +4,7 @@ import type * as C from '@apollo/client';
 
 import type { LitElement } from 'lit';
 
-import type { SinonSpy } from 'sinon';
-
-import { spy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import {
   setupApolloElementClass,
@@ -37,8 +35,6 @@ import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 
 import { GraphQLScriptChildMixin } from './graphql-script-child-mixin';
-
-import { stub, SinonStub } from 'sinon';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -255,14 +251,15 @@ describe('GraphQLScriptChildMixin', function() {
 
     describe('with GraphQL script src child', function() {
       let element: Test;
+      let fetchStub: ReturnType<typeof hanbi.stubMethod>;
 
       beforeEach(function() {
-        const s = stub(window, 'fetch');
-        s.returns(Promise.resolve(new Response('query { x }')));
+        fetchStub = hanbi.stubMethod(window, 'fetch');
+        fetchStub.returns(Promise.resolve(new Response('query { x }')));
       });
 
       afterEach(function() {
-        (window.fetch as SinonStub).restore();
+        fetchStub.restore();
       });
 
       beforeEach(async function() {
@@ -278,7 +275,8 @@ describe('GraphQLScriptChildMixin', function() {
       beforeEach(() => aTimeout(100));
 
       it('fetches the script', async function() {
-        expect(window.fetch).to.have.been.calledWith(`${window.location.origin}/query.graphql`);
+        expect(fetchStub.called).to.be.true;
+        expect(fetchStub.lastCall.args[0]).to.equal(`${window.location.origin}/query.graphql`);
       });
 
       it('sets the document', async function() {
@@ -376,12 +374,14 @@ describe('GraphQLScriptChildMixin', function() {
     describe('with GraphQL and JSON script children', function() {
       let element: Test;
 
-      let calls = 0;
+      const documentChangedSpy = hanbi.spy();
+
+      afterEach(() => documentChangedSpy.reset());
 
       beforeEach(async function() {
         const tag = unsafeStatic(defineCE(class extends Test {
           documentChanged() {
-            calls++;
+            documentChangedSpy.handler();
           }
         }));
         element = await fixture<Test>(h`
@@ -400,7 +400,7 @@ describe('GraphQLScriptChildMixin', function() {
         it('does not affect the graphql document or variables', function() {
           expect(element.document).to.deep.equal(gql`{ foo { bar } }`);
           expect(element.variables).to.deep.equal({ 'foo': 'bar' });
-          expect(calls).to.not.be.greaterThan(1);
+          expect(documentChangedSpy.callCount).to.be.lessThanOrEqual(1);
         });
       });
     });
@@ -441,9 +441,10 @@ describe('GraphQLScriptChildMixin', function() {
     const setupFunction = setupQueryClass(Test);
 
     let element: Test;
+    let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
 
-    beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'watchQuery'));
-    afterEach(() => (window.__APOLLO_CLIENT__!.watchQuery as SinonSpy).restore?.());
+    beforeEach(() => { watchQuerySpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'watchQuery').passThrough(); });
+    afterEach(() => watchQuerySpy.restore());
 
     afterEach(function clearFixture() {
       element?.remove?.();
@@ -506,7 +507,7 @@ describe('GraphQLScriptChildMixin', function() {
       });
 
       it('subscribes', function() {
-        expect(element?.client?.watchQuery).to.have.been.called;
+        expect(watchQuerySpy.called).to.be.true;
       });
 
       describe('changing the DOM script to HelloQuery', function() {
@@ -610,7 +611,8 @@ describe('GraphQLScriptChildMixin', function() {
 
     let element: Test;
 
-    let spies: Record<string|keyof Test, SinonSpy>;
+    let spies: Record<string|keyof Test, ReturnType<typeof hanbi.spy>>;
+    let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
 
     afterEach(function clearFixture() {
       element?.remove?.();
@@ -620,10 +622,8 @@ describe('GraphQLScriptChildMixin', function() {
 
     describe('with NoParamSubscription script child', function() {
       beforeEach(function clientSpy() {
-        // @ts-expect-error: spy
-        window.__APOLLO_CLIENT__.subscribe?.restore?.();
+        clientSubscribeSpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'subscribe').passThrough();
         spies ??= {} as typeof spies;
-        spies['client.subscribe'] = spy(window.__APOLLO_CLIENT__!, 'subscribe');
       });
 
       beforeEach(async function setupElement() {
@@ -637,6 +637,7 @@ describe('GraphQLScriptChildMixin', function() {
       beforeEach(waitForRender(() => element));
 
       afterEach(restoreSpies(() => spies));
+      afterEach(() => clientSubscribeSpy.restore());
 
       it('does not remove the script', function() {
         expect(element?.firstElementChild).to.be.an.instanceof(HTMLScriptElement);
@@ -647,7 +648,7 @@ describe('GraphQLScriptChildMixin', function() {
       });
 
       it('calls subscribe()', function() {
-        expect(element?.client?.subscribe).to.have.been.calledOnce;
+        expect(clientSubscribeSpy.callCount).to.equal(1);
       });
     });
   });

@@ -127,6 +127,12 @@ export class ApolloMutationController<D = unknown, V = VariablesOf<D>>
         this.data = (response.data as Data<D>) ?? null;
         this.errors = response.errors ? response.errors : [];
         this.options.onCompleted?.(this.data);
+        // Apollo Client v4: errors are delivered in response.errors
+        if (response.errors && response.errors.length > 0) {
+          const combinedError = new Error(response.errors.map(e => e.message).join(', '));
+          this.error = combinedError;
+          this.options.onError?.(combinedError);
+        }
       }
       this.notify({ data, error, errors, loading });
     }

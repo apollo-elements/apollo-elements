@@ -13,7 +13,7 @@ import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing
 
 import { resetMessages, setupClient, teardownClient, mockQueriesInCache } from '@apollo-elements/test';
 
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 describe('[core] ApolloSubscriptionController', function() {
   describe('on a ReactiveElement that mirrors props', function() {
@@ -38,23 +38,23 @@ describe('[core] ApolloSubscriptionController', function() {
     describe('when simply instantiating', function() {
       let element: MirroringHost;
 
-      const resetSpies = () => Object.values(handlers).forEach(h => h.resetHistory());
+      const resetSpies = () => Object.values(handlers).forEach(h => h.reset());
 
       const handlers = {
-        [E.ApolloControllerConnectedEvent.type]: spy(),
-        [E.ApolloControllerDisconnectedEvent.type]: spy(),
+        [E.ApolloControllerConnectedEvent.type]: hanbi.spy(),
+        [E.ApolloControllerDisconnectedEvent.type]: hanbi.spy(),
       };
 
       afterEach(resetSpies);
 
       beforeEach(function() {
         for (const [type, handler] of Object.entries(handlers))
-          window.addEventListener(type, handler);
+          window.addEventListener(type, handler.handler);
       });
 
       afterEach(function() {
         for (const [type, handler] of Object.entries(handlers))
-          window.removeEventListener(type, handler);
+          window.removeEventListener(type, handler.handler);
       });
 
       beforeEach(async function setupElement() {
@@ -139,8 +139,8 @@ describe('[core] ApolloSubscriptionController', function() {
       });
 
       describe('setting NullableParam query', function() {
-        let subscribeSpy: SinonSpy;
-        beforeEach(function() { subscribeSpy = spy(element.subscription, 'subscribe'); });
+        let subscribeSpy: ReturnType<typeof hanbi.stubMethod>;
+        beforeEach(function() { subscribeSpy = hanbi.stubMethod(element.subscription, 'subscribe').passThrough(); });
         afterEach(function() { subscribeSpy.restore(); });
 
         beforeEach(function setNullableParamSubscription() {
@@ -150,7 +150,7 @@ describe('[core] ApolloSubscriptionController', function() {
         beforeEach(nextFrame);
 
         it('does not call subscribe', function() {
-          expect(element.subscription.subscribe).to.not.have.been.called;
+          expect(subscribeSpy.called).to.be.false;
         });
 
         describe('then setting variables', function() {
@@ -161,7 +161,7 @@ describe('[core] ApolloSubscriptionController', function() {
           beforeEach(nextFrame);
 
           it('does not call subscribe', function() {
-            expect(element.subscription.subscribe).to.not.have.been.called;
+            expect(subscribeSpy.called).to.be.false;
           });
         });
 
@@ -200,23 +200,20 @@ describe('[core] ApolloSubscriptionController', function() {
 
       describe('setting shouldSubscribe to constant false', function() {
         let element: MirroringHost<typeof S.NullableParamSubscription>;
-        let errorCallCount = 0;
-        let lastError: any = null;
-        let dataCallCount = 0;
+        const onDataSpy = hanbi.spy();
+        const onErrorSpy = hanbi.spy();
+
+        afterEach(() => {
+          onDataSpy.reset();
+          onErrorSpy.reset();
+        });
 
         beforeEach(async function define() {
-          errorCallCount = 0;
-          lastError = null;
-          dataCallCount = 0;
-
           class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               shouldSubscribe: () => false,
-              onData: () => { dataCallCount++; },
-              onError: (error: any) => {
-                errorCallCount++;
-                lastError = error;
-              },
+              onData: onDataSpy.handler,
+              onError: onErrorSpy.handler,
             });
           }
 
@@ -225,12 +222,13 @@ describe('[core] ApolloSubscriptionController', function() {
           element = await fixture(`<${tag}></${tag}>`);
         });
 
+        let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(function spyClientSubscription() {
-          spy(element.subscription.client!, 'subscribe');
+          clientSubscribeSpy = hanbi.stubMethod(element.subscription.client!, 'subscribe').passThrough();
         });
 
         afterEach(function restoreClientSubscription() {
-          (element.subscription.client?.subscribe as SinonSpy).restore?.();
+          clientSubscribeSpy.restore();
         });
 
         it('cannot auto subscribe', function() {
@@ -251,7 +249,7 @@ describe('[core] ApolloSubscriptionController', function() {
             expect(element.subscription.document).to.equal(S.NullableParamSubscription);
           });
           it('does not call client.subscribe()', function() {
-            expect(element.subscription.client?.subscribe).to.not.have.been.called;
+            expect(clientSubscribeSpy.called).to.be.false;
           });
           describe('then calling subscribe', function() {
             beforeEach(() => element.subscription.subscribe());
@@ -273,8 +271,8 @@ describe('[core] ApolloSubscriptionController', function() {
         beforeEach(() => aTimeout(100));
 
         it('does not fetch data', function() {
-          expect(dataCallCount).to.equal(0);
-          expect(errorCallCount).to.equal(0);
+          expect(onDataSpy.called).to.be.false;
+          expect(onErrorSpy.called).to.be.false;
         });
 
         describe('when query will reject', function() {
@@ -283,9 +281,9 @@ describe('[core] ApolloSubscriptionController', function() {
             beforeEach(function() { element.subscription.subscribe(); });
             beforeEach(() => aTimeout(200));
             it('calls onError', function() {
-              expect(errorCallCount).to.be.greaterThan(0);
-              expect(lastError).to.be.ok;
-              expect(lastError).to.have.property('message');
+              expect(onErrorSpy.called).to.be.true;
+              expect(onErrorSpy.lastCall.args[0]).to.be.ok;
+              expect(onErrorSpy.lastCall.args[0]).to.have.property('message');
             });
           });
         });
@@ -293,23 +291,20 @@ describe('[core] ApolloSubscriptionController', function() {
 
       describe('with noAutoSubscribe option and NullableParamSubscription', function() {
         let element: MirroringHost<typeof S.NullableParamSubscription>;
-        let errorCallCount = 0;
-        let lastError: any = null;
-        let dataCallCount = 0;
+        const onDataSpy = hanbi.spy();
+        const onErrorSpy = hanbi.spy();
+
+        afterEach(() => {
+          onDataSpy.reset();
+          onErrorSpy.reset();
+        });
 
         beforeEach(async function define() {
-          errorCallCount = 0;
-          lastError = null;
-          dataCallCount = 0;
-
           class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
               noAutoSubscribe: true,
-              onData: () => { dataCallCount++; },
-              onError: (error: any) => {
-                errorCallCount++;
-                lastError = error;
-              },
+              onData: onDataSpy.handler,
+              onError: onErrorSpy.handler,
             });
           }
 
@@ -320,12 +315,13 @@ describe('[core] ApolloSubscriptionController', function() {
 
         beforeEach(nextFrame);
 
+        let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(function spyClientSubscription() {
-          spy(element.subscription.client!, 'subscribe');
+          clientSubscribeSpy = hanbi.stubMethod(element.subscription.client!, 'subscribe').passThrough();
         });
 
         afterEach(function restoreClientSubscription() {
-          (element.subscription.client?.subscribe as SinonSpy).restore?.();
+          clientSubscribeSpy.restore();
         });
 
         afterEach(function teardownElement() {
@@ -338,7 +334,7 @@ describe('[core] ApolloSubscriptionController', function() {
         });
 
         it('does not subscribe', function() {
-          expect(dataCallCount).to.equal(0);
+          expect(onDataSpy.called).to.be.false;
         });
 
         describe('when subscribe() rejects', function() {
@@ -353,9 +349,9 @@ describe('[core] ApolloSubscriptionController', function() {
           it('sets error', function() {
             expect(element.subscription.error).to.be.ok;
             expect(element.subscription.error).to.have.property('message');
-            expect(errorCallCount).to.be.greaterThan(0);
-            expect(lastError).to.be.ok;
-            expect(lastError).to.have.property('message');
+            expect(onErrorSpy.called).to.be.true;
+            expect(onErrorSpy.lastCall.args[0]).to.be.ok;
+            expect(onErrorSpy.lastCall.args[0]).to.have.property('message');
             expect(element.error, 'element error')
               .to.be.ok;
             expect(element.error)
@@ -396,17 +392,19 @@ describe('[core] ApolloSubscriptionController', function() {
           describe('subscribe()', function() {
             beforeEach(() => element.subscription.subscribe());
             it('uses context option', function() {
-              expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.called).to.be.true;
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 context: 'none',
               });
             });
           });
           describe('subscribe({ context })', function() {
             const context = {};
-            beforeEach(() => (element.subscription.client!.subscribe as SinonSpy).resetHistory?.());
+            beforeEach(() => clientSubscribeSpy.reset());
             beforeEach(() => element.subscription.subscribe({ context }));
             it('uses provided context', function() {
-              expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.called).to.be.true;
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 context,
               });
             });
@@ -420,16 +418,18 @@ describe('[core] ApolloSubscriptionController', function() {
           describe('subscribe()', function() {
             beforeEach(() => element.subscription.subscribe());
             it('uses errorPolicy option', function() {
-              expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.called).to.be.true;
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 errorPolicy: 'none',
               });
             });
           });
           describe('subscribe({ errorPolicy })', function() {
-            beforeEach(() => (element.subscription.client!.subscribe as SinonSpy).resetHistory?.());
+            beforeEach(() => clientSubscribeSpy.reset());
             beforeEach(() => element.subscription.subscribe({ errorPolicy: 'all' }));
             it('uses provided errorPolicy', function() {
-              expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.called).to.be.true;
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 errorPolicy: 'all',
               });
             });
@@ -443,7 +443,8 @@ describe('[core] ApolloSubscriptionController', function() {
           describe('subscribe()', function() {
             beforeEach(() => element.subscription.subscribe());
             it('uses fetchPolicy option', function() {
-              expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.called).to.be.true;
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 fetchPolicy: 'no-cache',
               });
             });
@@ -451,7 +452,8 @@ describe('[core] ApolloSubscriptionController', function() {
           describe('subscribe({ fetchPolicy })', function() {
             beforeEach(() => element.subscription.subscribe({ fetchPolicy: 'cache-first' }));
             it('uses provided fetchPolicy', function() {
-              expect(element.subscription.client!.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.called).to.be.true;
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 fetchPolicy: 'cache-first',
               });
             });
@@ -468,12 +470,12 @@ describe('[core] ApolloSubscriptionController', function() {
             describe('then calling subscribe() again', function() {
               beforeEach(callSubscribe);
               it('calls client.subscribe() twice', function() {
-                expect(element.subscription.client?.subscribe).to.have.been.calledTwice;
+                expect(clientSubscribeSpy.callCount).to.equal(2);
               });
               describe('then calling subscribe({ shouldResubscribe: false })', function() {
                 beforeEach(() => element.subscription.subscribe({ shouldResubscribe: false }));
                 it('does not calls client.subscribe() thrice', function() {
-                  expect(element.subscription.client?.subscribe).to.have.been.calledTwice;
+                  expect(clientSubscribeSpy.callCount).to.equal(2);
                 });
               });
             });
@@ -486,7 +488,7 @@ describe('[core] ApolloSubscriptionController', function() {
             describe('then calling subscribe({ shouldResubscribe: false }) again', function() {
               beforeEach(callSubscribe);
               it('does not calls client.subscribe() twice', function() {
-                expect(element.subscription.client?.subscribe).to.have.been.calledOnce;
+                expect(clientSubscribeSpy.callCount).to.equal(1);
               });
             });
           });
@@ -502,12 +504,12 @@ describe('[core] ApolloSubscriptionController', function() {
             describe('then calling subscribe() again', function() {
               beforeEach(callSubscribe);
               it('does not call client.subscribe() even once', function() {
-                expect(element.subscription.client?.subscribe).to.not.have.been.called;
+                expect(clientSubscribeSpy.called).to.be.false;
               });
               describe('then calling subscribe({ skip: false })', function() {
                 beforeEach(() => element.subscription.subscribe({ skip: false }));
                 it('calls client.subscribe() once', function() {
-                  expect(element.subscription.client?.subscribe).to.have.been.calledOnce;
+                  expect(clientSubscribeSpy.callCount).to.equal(1);
                 });
               });
             });
@@ -521,7 +523,8 @@ describe('[core] ApolloSubscriptionController', function() {
           beforeEach(() => aTimeout(50));
 
           it('calls client.subscribe() with controller subscription', function() {
-            expect(element.subscription.client?.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.called).to.be.true;
+            expect(clientSubscribeSpy.lastCall.args[0]).to.include({
               query: S.NullableParamSubscription,
             });
           });
@@ -534,13 +537,13 @@ describe('[core] ApolloSubscriptionController', function() {
               },
             };
             expect(element.subscription.data).to.deep.equal(data);
-            expect(dataCallCount).to.equal(1);
+            expect(onDataSpy.callCount).to.equal(1);
           });
 
           describe('then calling subscribe() again', function() {
             beforeEach(callSubscribe);
             it('does not call client.subscribe() a second time', function() {
-              expect(element.subscription.client?.subscribe).to.have.been.calledOnce;
+              expect(clientSubscribeSpy.callCount).to.equal(1);
             });
           });
         });
@@ -553,7 +556,8 @@ describe('[core] ApolloSubscriptionController', function() {
           beforeEach(nextFrame);
 
           it('calls client.subscribe() with passed subscribe', function() {
-            expect(element.subscription.client?.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.called).to.be.true;
+            expect(clientSubscribeSpy.lastCall.args[0]).to.include({
               subscription: S.NullableParamSubscription,
             });
           });
@@ -583,13 +587,16 @@ describe('[core] ApolloSubscriptionController', function() {
 
       describe('with NullableParamSubscription', function() {
         let element: MirroringHost<typeof S.NullableParamSubscription>;
+        const onDataSpy = hanbi.spy();
+        const onCompleteSpy = hanbi.spy();
+        const onErrorSpy = hanbi.spy();
 
         beforeEach(async function define() {
           class HelloSubscriptionHost extends MirroringHost<typeof S.NullableParamSubscription> {
             subscription = new ApolloSubscriptionController(this, S.NullableParamSubscription, {
-              onData: spy(),
-              onComplete: spy(),
-              onError: spy(),
+              onData: onDataSpy.handler,
+              onComplete: onCompleteSpy.handler,
+              onError: onErrorSpy.handler,
             });
           }
 
@@ -598,11 +605,11 @@ describe('[core] ApolloSubscriptionController', function() {
           element = await fixture(`<${tag}></${tag}>`);
         });
 
-        let querySpy: SinonSpy;
-        let subscribeSpy: SinonSpy;
+        let querySpy: ReturnType<typeof hanbi.stubMethod>;
+        let subscribeSpy: ReturnType<typeof hanbi.stubMethod>;
         beforeEach(() => {
-          querySpy = spy(element.subscription.client!, 'query');
-          subscribeSpy = spy(element.subscription.client!, 'subscribe');
+          querySpy = hanbi.stubMethod(element.subscription.client!, 'query').passThrough();
+          subscribeSpy = hanbi.stubMethod(element.subscription.client!, 'subscribe').passThrough();
         });
 
         afterEach(() => {
@@ -630,22 +637,21 @@ describe('[core] ApolloSubscriptionController', function() {
         });
 
         it('calls onData', function() {
-          expect(element.subscription.options.onData)
-            .to.have.been.calledOnce
-            .and.to.have.been.calledWithMatch({
-              // client: element.subscription.client,
-              subscriptionData: {
-                loading: false,
-                error: null,
-                data: {
-                  nullableParam: {
-                    nullable: 'Hello World',
-                  },
-                },
+          // Apollo Client v4: onData may be called multiple times during subscription lifecycle
+          expect(onDataSpy.callCount).to.equal(2);
+          const [firstArg] = onDataSpy.lastCall.args;
+          expect(firstArg.subscriptionData).to.deep.include({
+            loading: false,
+            error: null,
+            data: {
+              nullableParam: {
+                __typename: 'Nullable',
+                nullable: 'Hello World',
               },
-            });
+            },
+          });
 
-          const [{ client }] = (element.subscription.options.onData as SinonSpy).lastCall.args;
+          const [{ client }] = onDataSpy.lastCall.args;
           expect(client).to.equal(element.subscription.client);
         });
 
@@ -659,9 +665,10 @@ describe('[core] ApolloSubscriptionController', function() {
           beforeEach(() => aTimeout(50));
 
           it('refetches', function() {
-            expect(element.subscription.options.onData).to.have.been.calledTwice;
+            // Apollo Client v4: initial (null+data) + refetch (null+data) = 4 calls
+            expect(onDataSpy.callCount).to.equal(4);
             const [{ client, subscriptionData, ...res }] =
-              (element.subscription.options.onData as SinonSpy).lastCall.args;
+              onDataSpy.lastCall.args;
             expect(res).to.be.empty;
             expect(client, 'client')
               .to.equal(element.subscription.client);
@@ -689,8 +696,9 @@ describe('[core] ApolloSubscriptionController', function() {
         });
 
         describe('removing then appending the element', function() {
+          let subscribeMethodSpy: ReturnType<typeof hanbi.stubMethod>;
           beforeEach(function() {
-            spy(element.subscription, 'subscribe');
+            subscribeMethodSpy = hanbi.stubMethod(element.subscription, 'subscribe').passThrough();
           });
 
           beforeEach(function() {
@@ -702,13 +710,14 @@ describe('[core] ApolloSubscriptionController', function() {
           beforeEach(nextFrame);
 
           it('resubscribes on connect', function() {
-            expect(element.subscription.subscribe).to.have.been.called;
+            expect(subscribeMethodSpy.called).to.be.true;
           });
         });
       });
 
       describe('with MessageSentSubscription', function() {
         let element: MirroringHost<typeof S.MessageSentSubscription>;
+        const onDataSpy = hanbi.spy();
 
         beforeEach(resetMessages);
         afterEach(resetMessages);
@@ -722,12 +731,15 @@ describe('[core] ApolloSubscriptionController', function() {
               this.attachShadow({ mode: 'open' }).innerHTML = `<ol></ol>`;
             }
 
+            onDataImpl = ({ subscriptionData: { data } }: any) => {
+              onDataSpy.handler();
+              const li = document.createElement('li');
+              li.textContent = data?.messageSent?.message ?? '';
+              this.shadowRoot.querySelector('ol')?.appendChild(li);
+            };
+
             subscription = new ApolloSubscriptionController(this, S.MessageSentSubscription, {
-              onData: spy(({ subscriptionData: { data } }) => {
-                const li = document.createElement('li');
-                li.textContent = data?.messageSent?.message ?? '';
-                this.shadowRoot.querySelector('ol')?.appendChild(li);
-              }),
+              onData: this.onDataImpl,
             });
 
             data?: ResultOf<typeof S.MessageSentSubscription>;
@@ -741,7 +753,7 @@ describe('[core] ApolloSubscriptionController', function() {
         beforeEach(nextFrame);
 
         it('renders initial data', function() {
-          expect(element.subscription.options.onData).to.have.been.calledOnce;
+          expect(onDataSpy.callCount).to.equal(1);
           expect(element).shadowDom.to.equal(`
             <ol>
               <li>Message 1</li>

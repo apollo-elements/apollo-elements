@@ -17,7 +17,8 @@ import { sendKeys } from '@web/test-runner-commands';
 
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { spy, useFakeTimers, SinonFakeTimers, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
+import { useFakeTimers } from 'sinon';
 
 describe('[haunted] useQuery', function() {
   describe('with global client', function() {
@@ -29,7 +30,7 @@ describe('[haunted] useQuery', function() {
       describe('with HelloQuery and a jaunty little template', function() {
         let element: HTMLElement;
 
-        let refetchSpy: SinonSpy;
+        let refetchSpy: ReturnType<typeof hanbi.stubMethod>;
 
         afterEach(function() {
           refetchSpy?.restore?.();
@@ -39,7 +40,7 @@ describe('[haunted] useQuery', function() {
           function Hello(this: HTMLElement) {
             const c = useQuery(S.HelloQuery);
 
-            refetchSpy ??= spy(c, 'refetch');
+            refetchSpy ??= hanbi.stubMethod(c, 'refetch');
 
             return html`
               <what-spin-such-loader ?active="${c.loading}"></what-spin-such-loader>
@@ -64,7 +65,7 @@ describe('[haunted] useQuery', function() {
         beforeEach(nextFrame);
 
         describe('calling startPolling then stopPolling', function() {
-          let clock: SinonFakeTimers;
+          let clock: ReturnType<typeof useFakeTimers>;
 
           beforeEach(() => clock = useFakeTimers());
           afterEach(() => clock.restore());
@@ -81,7 +82,7 @@ describe('[haunted] useQuery', function() {
           beforeEach(() => clock.tick(3500));
 
           it('refetches', function() {
-            expect(refetchSpy).to.have.been.calledThrice;
+            expect(refetchSpy.callCount).to.equal(3);
           });
 
           describe('then stopPolling', function() {
@@ -89,7 +90,7 @@ describe('[haunted] useQuery', function() {
             beforeEach(() => clock.tick(5000));
 
             it('stops calling refetch', function() {
-              expect(refetchSpy).to.have.been.calledThrice;
+              expect(refetchSpy.callCount).to.equal(3);
             });
           });
         });
@@ -113,16 +114,16 @@ describe('[haunted] useQuery', function() {
 
       const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
-      const onError = spy();
-      const onData = spy();
+      const onError = hanbi.spy();
+      const onData = hanbi.spy();
 
-      afterEach(() => onError.resetHistory());
-      afterEach(() => onData.resetHistory());
+      afterEach(() => onError.reset());
+      afterEach(() => onData.reset());
 
       beforeEach(async function define() {
         function Hello(this: HTMLElement) {
           const { data, error, executeQuery } = useQuery(S.NullableParamQuery, {
-            onData, onError,
+            onData: onData.handler, onError: onError.handler,
           });
 
           return html`
@@ -139,7 +140,7 @@ describe('[haunted] useQuery', function() {
       });
 
       it('calls onData', function() {
-        expect(onData).to.have.been.called;
+        expect(onData.called).to.be.true;
       });
 
       describe('on error', function() {
@@ -159,7 +160,7 @@ describe('[haunted] useQuery', function() {
         });
 
         it('calls onError', function() {
-          expect(onError).to.have.been.called;
+          expect(onError.called).to.be.true;
         });
       });
     });
@@ -169,19 +170,19 @@ describe('[haunted] useQuery', function() {
 
       const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
-      const onError = spy();
-      const onData = spy();
+      const onError = hanbi.spy();
+      const onData = hanbi.spy();
 
-      afterEach(() => onError.resetHistory());
-      afterEach(() => onData.resetHistory());
+      afterEach(() => onError.reset());
+      afterEach(() => onData.reset());
 
       beforeEach(async function define() {
         function Hello(this: HTMLElement) {
           const [offset] = useState(0);
 
           const { data, fetchMore } = useQuery(S.PaginatedQuery, {
-            onData,
-            onError,
+            onData: onData.handler,
+            onError: onError.handler,
             variables: {
               offset,
             },
@@ -233,11 +234,11 @@ describe('[haunted] useQuery', function() {
 
       const $ = (x: string) => element.shadowRoot!.querySelector<HTMLElement>(x);
 
-      const onError = spy();
-      const onData = spy();
+      const onError = hanbi.spy();
+      const onData = hanbi.spy();
 
-      afterEach(() => onError.resetHistory());
-      afterEach(() => onData.resetHistory());
+      afterEach(() => onError.reset());
+      afterEach(() => onData.reset());
       afterEach(resetMessages);
 
       beforeEach(async function define() {

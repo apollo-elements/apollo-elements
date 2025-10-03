@@ -23,7 +23,7 @@ import { NetworkStatus } from '@apollo/client';
 
 import { ApolloQueryMixin } from './apollo-query-mixin';
 
-import { spy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 class XL extends HTMLElement {
   hi?: 'hi';
@@ -151,22 +151,26 @@ describe('[mixins] ApolloQueryMixin', function() {
 
   describe('with onData and onError', function() {
     let element: I.ApolloQueryElement<any, any>;
-    const s = spy();
+    const onDataSpy = hanbi.spy();
+    const onErrorSpy = hanbi.spy();
     beforeEach(async function() {
       const tag = defineCE(class extends ApolloQueryMixin(HTMLElement)<any, any> {
         client = makeClient();
-        onData(x: unknown) { s(x); }
-        onError(x: Error) { s(x); }
+        onData(x: unknown) { onDataSpy.handler(x); }
+        onError(x: Error) { onErrorSpy.handler(x); }
       });
       element = await fixture(`<${tag}></${tag}>`);
     });
-    afterEach(() => s.resetHistory());
+    afterEach(() => {
+      onDataSpy.reset();
+      onErrorSpy.reset();
+    });
     afterEach(teardownClient);
     describe('resolving a query', function() {
       beforeEach(() => element.executeQuery({ query: S.NullableParamQuery }));
       beforeEach(nextFrame);
       it('calls onData', function() {
-        expect(s).to.have.been.calledOnce;
+        expect(onDataSpy.callCount).to.equal(1);
       });
     });
     describe('getting a query error', function() {
@@ -178,7 +182,7 @@ describe('[mixins] ApolloQueryMixin', function() {
       }).catch(() => null));
       beforeEach(nextFrame);
       it('calls onError', function() {
-        expect(s).to.have.been.calledOnce;
+        expect(onErrorSpy.callCount).to.equal(1);
       });
     });
   });

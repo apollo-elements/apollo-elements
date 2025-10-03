@@ -12,6 +12,7 @@ import { ApolloElementMixin } from './apollo-element-mixin';
 import { assertType } from '@apollo-elements/test';
 
 import * as S from '@apollo-elements/test/schema';
+import * as hanbi from 'hanbi';
 
 class XL extends HTMLElement {}
 class Test extends ApolloElementMixin(XL)<any, any> {
@@ -28,8 +29,9 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   });
 
   describe('when super has a connectedCallback', function() {
-    let calls = 0;
     let element: Test;
+    const connectedCallbackSpy = hanbi.spy();
+
     beforeEach(async function() {
       const tag = unsafeStatic(defineCE(ApolloElementMixin(class extends HTMLElement {
         data: any;
@@ -37,16 +39,18 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
         variables: any;
 
         connectedCallback(): void {
-          calls++;
+          connectedCallbackSpy.handler();
         }
       })));
 
       element = await fixture<Test>(html`<${tag}></${tag}>`);
     });
 
+    afterEach(() => connectedCallbackSpy.reset());
+
     it('calls super.connectedCallback', async function() {
       expect(element).to.be.an.instanceOf(HTMLElement);
-      expect(calls).to.be.greaterThan(0);
+      expect(connectedCallbackSpy.called).to.be.true;
     });
   });
 
@@ -64,12 +68,13 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
   });
 
   describe('when super has a disconnectedCallback', function() {
-    let calls = 0;
     let element: Test;
+    const disconnectedCallbackSpy = hanbi.spy();
+
     beforeEach(async function() {
       const tag = unsafeStatic(defineCE(ApolloElementMixin(class extends HTMLElement {
         disconnectedCallback(): void {
-          calls++;
+          disconnectedCallbackSpy.handler();
         }
       })));
 
@@ -78,9 +83,11 @@ describe('[mixins] ApolloElementMixin', function describeApolloElementMixin() {
       element.remove();
     });
 
+    afterEach(() => disconnectedCallbackSpy.reset());
+
     it('calls super.disconnectedCallback', async function() {
       expect(element).to.be.an.instanceOf(HTMLElement);
-      expect(calls).to.be.greaterThan(0);
+      expect(disconnectedCallbackSpy.called).to.be.true;
     });
   });
 
