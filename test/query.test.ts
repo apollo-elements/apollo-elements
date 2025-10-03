@@ -5,8 +5,8 @@ import type { ApolloQueryElement } from '@apollo-elements/core';
 
 import {
   gql,
+  NetworkStatus,
   type ApolloClient,
-  type NetworkStatus,
   type ObservableQuery,
 } from '@apollo/client';
 
