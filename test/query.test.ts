@@ -800,7 +800,26 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
           });
 
-          // TODO: test fetchMore (see components/apollo-query.test.ts)
+          describe('fetchMore({ variables })', function() {
+            let result: ApolloQueryResult<S.NullableParamQueryData> | undefined;
+
+            beforeEach(async function() {
+              result = await element!.fetchMore({ variables: { nullable: 'more' } });
+            });
+
+            afterEach(function() {
+              result = undefined;
+            });
+
+            it('returns a result', function() {
+              expect(result).to.be.ok;
+              expect(result?.data?.nullableParam?.nullable).to.equal('more');
+            });
+
+            it('does not update element data without updateQuery', function() {
+              expect(element.data?.nullableParam?.nullable).to.equal('Hello World');
+            });
+          });
         });
 
         describe('setting variables', function() {
@@ -1186,7 +1205,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             expect(result).to.be.an.instanceof(Function);
           });
 
-          // TODO: test effects on data
+          it('does not immediately change data', function() {
+            expect(element.data?.noParam?.noParam).to.equal('noParam');
+          });
+
+          it('returns an unsubscribe function', function() {
+            expect(result).to.be.a('function');
+          });
         });
 
         describe('when client has default watchQuery options', function() {
@@ -1680,7 +1705,19 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             expect(isSubscription(subscription)).to.be.true;
           });
 
-          // TODO: test effects
+          it('sets loading to true initially', function() {
+            expect(element.loading).to.be.true;
+          });
+
+          it('eventually sets data', async function() {
+            await aTimeout(50);
+            expect(element.data?.nonNullParam?.nonNull).to.equal('nonNull');
+          });
+
+          it('eventually sets loading to false', async function() {
+            await aTimeout(50);
+            expect(element.loading).to.be.false;
+          });
         });
       });
 
@@ -1733,7 +1770,19 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             expect(element.error?.message).to.equal('Variable "$nonNull" of non-null type "String!" must not be null.');
           });
 
-          // TODO: test effects
+          it('sets loading to true initially', function() {
+            expect(element.loading).to.be.true;
+          });
+
+          it('eventually sets loading to false', async function() {
+            await new Promise(resolve => setTimeout(resolve, 50));
+            expect(element.loading).to.be.false;
+          });
+
+          it('keeps data as null', async function() {
+            await new Promise(resolve => setTimeout(resolve, 50));
+            expect(element.data).to.be.null;
+          });
         });
       });
 
