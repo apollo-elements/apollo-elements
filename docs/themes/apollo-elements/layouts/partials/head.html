@@ -91,6 +91,14 @@
   </style>
 {{ end }}
 
+{{/* Load home.css only for homepage */}}
+{{ if .IsHome }}
+{{ $homeCss := resources.Get "css/home.css" }}
+{{ if $homeCss }}
+  <link rel="stylesheet" href="{{ $homeCss.RelPermalink }}">
+{{ end }}
+{{ end }}
+
 {{/* Process main JavaScript with esbuild */}}
 {{ $js := resources.Get "js/main.js" }}
 {{ if $js }}
