@@ -1,0 +1,8 @@
+generate:
+  files:
+    - "*.ts"
+  exclude:
+    - "*.d.ts"
+    - "*.test.ts"
+    - "./stampino.bundled.*"
+  output: "custom-elements.json"

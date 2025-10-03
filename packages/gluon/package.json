@@ -24,7 +24,7 @@
     "preprepublishOnly": "rimraf declaration.d.ts",
     "prepublishOnly": "npm run analyze && npm run build",
     "build": "tsc -b .",
-    "analyze": "custom-elements-manifest analyze",
+    "analyze": "cem generate && node ../../scripts/postanalyze.js",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },
   "repository": {

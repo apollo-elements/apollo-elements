@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run analyze && npm run build",
-    "analyze": "custom-elements-manifest analyze",
+    "analyze": "cem generate && node ../../scripts/postanalyze.js",
     "build": "tsc -b .",
     "test": "wtr --coverage --config ../../web-test-runner.config.js  --root-dir '../..' './*.test.ts'"
   },

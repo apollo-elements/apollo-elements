@@ -1,0 +1,7 @@
+generate:
+  files:
+    - "*.ts"
+  exclude:
+    - "*.d.ts"
+    - "*.test.ts"
+  output: "custom-elements.json"
