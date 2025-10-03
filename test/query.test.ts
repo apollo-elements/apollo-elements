@@ -3,37 +3,32 @@ import type * as I from '@apollo-elements/core/types';
 
 import type { ApolloQueryElement } from '@apollo-elements/core';
 
+import {
+  gql,
+  type ApolloClient,
+  type NetworkStatus,
+  type ObservableQuery,
+} from '@apollo/client';
+
 import type { TestableElement } from './types';
 
 import * as S from './schema';
 
 import { SetupFunction } from './types';
 
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture,
-  nextFrame,
-} from '@open-wc/testing';
-
-import { gql } from '@apollo/client';
 import type { Subscription } from 'rxjs';
-
-import {
-  ApolloClient,
-  ApolloQueryResult,
-  DefaultOptions,
-  InMemoryCache,
-  NetworkStatus,
-} from '@apollo/client';
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
-import * as hanbi from 'hanbi';
-import { client, makeClient, setupClient, teardownClient } from './client';
-import { isSubscription, restoreSpies, stringify, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql';
+
+import * as hanbi from 'hanbi';
+
+import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
+
+import { client, makeClient, setupClient, teardownClient } from './client';
+
+import { isSubscription, restoreSpies, stringify, waitForRender } from './helpers';
 
 export interface DescribeQueryComponentOptions<E extends ApolloQueryElement<any> = ApolloQueryElement<any>> {
   /**
@@ -691,7 +686,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('executeQuery({ query })', async function() {
-          let result: ApolloQueryResult<any> | void;
+          let result: ObservableQuery.Result<any> | void;
 
           beforeEach(async function() {
             result = await element.executeQuery({ query: S.NullableParamQuery });
@@ -707,8 +702,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('setting NullableParam query', function() {
+          let typedElement: TestableElement & ApolloQueryElement<typeof S.NullableParamQuery>;
+
           beforeEach(function setNullableParamQuery() {
             element!.query = S.NullableParamQuery;
+            typedElement = element as TestableElement & ApolloQueryElement<typeof S.NullableParamQuery>;
           });
 
           beforeEach(() => element.controller.host.updateComplete);
@@ -757,7 +755,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('executeQuery()', function() {
-            let result: ApolloQueryResult<any> | undefined;
+            let result: ObservableQuery.Result<any> | undefined;
 
             beforeEach(async function() {
               result = (await element.executeQuery() || undefined);
@@ -781,7 +779,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('executeQuery({ query })', function() {
-            let result: ApolloQueryResult<S.NoParamQueryData> | null;
+            let result: ObservableQuery.Result<S.NoParamQueryData> | null;
 
             beforeEach(async function() {
               result = await (element as ApolloQueryElement<typeof S.NoParamQuery>).executeQuery({ query: S.NoParamQuery });
@@ -801,7 +799,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           describe('fetchMore({ variables })', function() {
-            let result: ApolloQueryResult<S.NullableParamQueryData> | undefined;
+            let result: ObservableQuery.Result<S.NullableParamQueryData> | undefined;
 
             beforeEach(async function() {
               result = await element!.fetchMore({ variables: { nullable: 'more' } });
@@ -817,7 +815,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             it('does not update element data without updateQuery', function() {
-              expect(element.data?.nullableParam?.nullable).to.equal('Hello World');
+              expect(typedElement.data?.nullableParam?.nullable).to.equal('Hello World');
             });
           });
         });
@@ -834,7 +832,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('fetchMore()', function() {
-          let result: ApolloQueryResult<ApolloQueryElement<unknown>['data']> | undefined;
+          let result: ObservableQuery.Result<ApolloQueryElement<unknown>['data']> | undefined;
           let error: Error | undefined;
 
           beforeEach(async function() {
@@ -1142,7 +1140,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('fetchMore({ updateQuery })', function() {
-          let result: ApolloQueryResult<S.NoParamQueryData | null>;
+          let result: ObservableQuery.Result<S.NoParamQueryData | null>;
 
           beforeEach(async function callFetchMore() {
             result = await element!.fetchMore();
@@ -1215,7 +1213,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('when client has default watchQuery options', function() {
-          let cache: DefaultOptions;
+          let cache: ApolloClient.DefaultOptions;
           let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
           const variables = { foo: 'when client has default watchQuery options' };
 
