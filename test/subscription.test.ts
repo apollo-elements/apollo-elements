@@ -8,7 +8,7 @@ import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing
 
 import { gql, ApolloClient, InMemoryCache } from '@apollo/client';
 
-import { spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 import { makeClient, setupClient, teardownClient } from './client';
 import { restoreSpies, stringify, waitForRender } from './helpers';
 import { TestableElement } from './types';
@@ -50,7 +50,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
     describe('when simply instantiating', function() {
       let element: ApolloSubscriptionElement & TestableElement|undefined;
 
-      let spies: Record<keyof typeof element, SinonSpy>;
+      let spies: Record<keyof typeof element, ReturnType<typeof hanbi.stubMethod>>;
 
       beforeEach(async function setupElement() {
         ({ element, spies } = await setupFunction({
@@ -144,21 +144,22 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         describe('subscribe({ subscription, client })', async function() {
           let client: ApolloClient|undefined;
+          let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
 
           beforeEach(function() {
             client = makeClient();
-            spy(client, 'subscribe');
+            clientSubscribeSpy = hanbi.stubMethod(client, 'subscribe').passThrough();
             element?.subscribe({ client, subscription: S.NullableParamSubscription });
           });
 
           afterEach(function() {
-            (client?.subscribe as SinonSpy).restore();
+            clientSubscribeSpy.restore?.();
             client = undefined;
             delete window.__APOLLO_CLIENT__;
           });
 
           it('calls client subscribe', function() {
-            expect(client?.subscribe).to.have.been.calledWithMatch({
+            expect(clientSubscribeSpy.lastCall.args[0]).to.include({
               query: S.NullableParamSubscription,
             });
           });
@@ -177,7 +178,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         it('does not call subscribe', function() {
           // NB: haunted doesn't like spying on it's element methods
-          expect(element?.subscribe).to.not.have.been.called;
+          expect(spies!.subscribe.called).to.be.false;
         });
       });
 
@@ -194,7 +195,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
     describe('with global client available', function() {
       let element: ApolloSubscriptionElement & TestableElement | undefined;
 
-      let spies: Record<string|keyof ApolloSubscriptionElement, SinonSpy>;
+      let spies: Record<string|keyof ApolloSubscriptionElement, ReturnType<typeof hanbi.stubMethod>>;
 
       beforeEach(setupClient);
 
@@ -205,7 +206,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
       });
 
       beforeEach(function spyClientSubscribe() {
-        spies['client.subscribe'] = spy(element!.client!, 'subscribe');
+        spies['client.subscribe'] = hanbi.stubMethod(element!.client!, 'subscribe').passThrough();
       });
 
       afterEach(restoreSpies(() => spies));
@@ -232,7 +233,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe once', function() {
-              expect(element?.client?.subscribe).to.have.been.calledOnce;
+              expect(spies!['client.subscribe'].callCount).to.equal(1);
             });
 
             describe('then cancelling the subscription', function() {
@@ -251,7 +252,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                   });
 
                   it('calls client subscribe again', function() {
-                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                    expect(spies!['client.subscribe'].callCount).to.equal(2);
                   });
                 });
 
@@ -261,7 +262,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                   });
 
                   it('calls client subscribe again', function() {
-                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                    expect(spies!['client.subscribe'].callCount).to.equal(2);
                   });
                 });
 
@@ -271,7 +272,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                   });
 
                   it('calls client subscribe again', function() {
-                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                    expect(spies!['client.subscribe'].callCount).to.equal(2);
                   });
                 });
               });
@@ -287,7 +288,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                   });
 
                   it('calls client subscribe again', function() {
-                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                    expect(spies!['client.subscribe'].callCount).to.equal(2);
                   });
                 });
 
@@ -297,7 +298,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                   });
 
                   it('calls client subscribe again', function() {
-                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                    expect(spies!['client.subscribe'].callCount).to.equal(2);
                   });
                 });
 
@@ -307,7 +308,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                   });
 
                   it('calls client subscribe again', function() {
-                    expect(element?.client?.subscribe).to.have.been.calledTwice;
+                    expect(spies!['client.subscribe'].callCount).to.equal(2);
                   });
                 });
               });
@@ -319,7 +320,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               });
 
               it('calls client subscribe again', function() {
-                expect(element?.client?.subscribe).to.have.been.calledTwice;
+                expect(spies!['client.subscribe'].callCount).to.equal(2);
               });
             });
 
@@ -334,7 +335,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 });
 
                 it('calls client subscribe again', function() {
-                  expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  expect(spies!['client.subscribe'].callCount).to.equal(2);
                 });
               });
             });
@@ -350,7 +351,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 });
 
                 it('does not call client subscribe again', function() {
-                  expect(element?.client?.subscribe).to.have.been.calledOnce;
+                  expect(spies!['client.subscribe'].callCount).to.equal(1);
                 });
               });
 
@@ -360,7 +361,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 });
 
                 it('does call client subscribe again', function() {
-                  expect(element?.client?.subscribe).to.have.been.calledTwice;
+                  expect(spies!['client.subscribe'].callCount).to.equal(2);
                 });
               });
             });
@@ -378,7 +379,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: S.NullableParamSubscription,
               });
             });
@@ -395,7 +396,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               });
 
               it('does not call client subscribe', function() {
-                expect(element?.client?.subscribe).to.not.have.been.called;
+                expect(spies!['client.subscribe'].called).to.be.false;
               });
             });
 
@@ -408,7 +409,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               });
 
               it('calls client subscribe', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                 });
               });
@@ -417,14 +418,15 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
           describe('subscribe({ subscription, client })', async function() {
             let client: ApolloClient|undefined;
+            let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
 
             beforeEach(function() {
               client = makeClient();
-              spy(client, 'subscribe');
+              clientSubscribeSpy = hanbi.stubMethod(client, 'subscribe').passThrough();
             });
 
             afterEach(function() {
-              (client?.subscribe as SinonSpy).restore();
+              clientSubscribeSpy.restore?.();
               client = undefined;
             });
 
@@ -433,13 +435,13 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe', function() {
-              expect(client?.subscribe).to.have.been.calledWithMatch({
+              expect(clientSubscribeSpy.lastCall.args[0]).to.include({
                 query: S.NullableParamSubscription,
               });
             });
 
             it('does not call element client subscribe', function() {
-              expect(element?.client?.subscribe).to.not.have.been.called;
+              expect(spies!['client.subscribe'].called).to.be.false;
             });
           });
 
@@ -456,7 +458,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               });
 
               it('calls client subscribe with element context', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                   context,
                 });
@@ -471,7 +473,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               });
 
               it('calls client subscribe with context param', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                   context,
                 });
@@ -487,7 +489,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe with context', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: S.NullableParamSubscription,
                 context,
               });
@@ -504,7 +506,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 element?.subscribe({ subscription: S.NullableParamSubscription });
               });
               it('calls client subscribe with element errorPolicy', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                   errorPolicy: 'none',
                 });
@@ -516,7 +518,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 element?.subscribe({ subscription: S.NullableParamSubscription, errorPolicy: 'all' });
               });
               it('calls client subscribe with params errorPolicy', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                   errorPolicy: 'all',
                 });
@@ -530,7 +532,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               element?.subscribe({ subscription: S.NullableParamSubscription, errorPolicy });
             });
             it('calls client subscribe', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: S.NullableParamSubscription,
                 errorPolicy,
               });
@@ -547,7 +549,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 element?.subscribe({ subscription: S.NullableParamSubscription });
               });
               it('calls client subscribe with element fetchPolicy', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                   fetchPolicy: 'cache-first',
                 });
@@ -562,7 +564,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 });
               });
               it('calls client subscribe with params fetchPolicy', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+                expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                   query: S.NullableParamSubscription,
                   fetchPolicy: 'network-only',
                 });
@@ -577,7 +579,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: S.NullableParamSubscription,
                 fetchPolicy,
               });
@@ -590,7 +592,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               element?.subscribe({ subscription: S.NullableParamSubscription, variables });
             });
             it('calls client subscribe', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: S.NullableParamSubscription,
                 variables,
               });
@@ -607,10 +609,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 element?.subscribe({ subscription: S.NullableParamSubscription });
               });
               it('calls client subscribe with element variables', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: S.NullableParamSubscription,
-                  variables: { nullable: 'with' },
-                });
+                const callArgs = spies!['client.subscribe'].lastCall.args[0];
+                expect(callArgs.query).to.equal(S.NullableParamSubscription);
+                expect(callArgs.variables).to.deep.equal({ nullable: 'with' });
               });
             });
 
@@ -622,10 +623,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
                 });
               });
               it('calls client subscribe with params variables', function() {
-                expect(element?.client?.subscribe).to.have.been.calledWithMatch({
-                  query: S.NullableParamSubscription,
-                  variables: { nullable: 'else' },
-                });
+                const callArgs = spies!['client.subscribe'].lastCall.args[0];
+                expect(callArgs.query).to.equal(S.NullableParamSubscription);
+                expect(callArgs.variables).to.deep.equal({ nullable: 'else' });
               });
             });
           });
@@ -639,7 +639,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         it('calls subscribe', function() {
-          expect(element?.client?.subscribe).to.have.been.called;
+          expect(spies!['client.subscribe'].called).to.be.true;
         });
 
         describe('then setting NullableParam subscription', function() {
@@ -687,7 +687,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         beforeEach(waitForRender(() => element));
 
         it('calls subscribe', function() {
-          expect(element?.client?.subscribe).to.have.been.called;
+          expect(spies!['client.subscribe'].called).to.be.true;
         });
 
         beforeEach(() => aTimeout(50));
@@ -714,7 +714,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           beforeEach(waitForRender(() => element));
 
           it('creates a new observable', function() {
-            expect(element?.client?.subscribe).to.have.been.calledTwice;
+            expect(spies!['client.subscribe'].callCount).to.equal(2);
           });
 
           beforeEach(() => aTimeout(50));
@@ -747,7 +747,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           it('does not create a new observable', function() {
-            expect(element?.client?.subscribe).to.not.have.been.calledTwice;
+            expect(spies!['client.subscribe'].callCount).to.not.equal(2);
           });
         });
 
@@ -768,17 +768,17 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             it('calls client subscribe with element subscription', function() {
               const { subscription } = element!;
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: subscription,
               });
             });
 
             it('calls client subscribe with specified FetchPolicy', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ fetchPolicy });
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ fetchPolicy });
             });
 
             it('calls client subscribe with element variables', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ variables });
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ variables });
             });
           });
 
@@ -796,18 +796,18 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe with specified subscription', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({
                 query: subscription,
               });
             });
 
             it('calls client subscribe with specified FetchPolicy', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ fetchPolicy });
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ fetchPolicy });
             });
 
             it('calls client subscribe with element variables', function() {
               const { variables } = element!;
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ variables });
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ variables });
             });
           });
 
@@ -823,20 +823,19 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('calls client subscribe with specified subscription', function() {
-              expect(element?.client?.subscribe)
-                .to.have.been.calledTwice;
-              const [operation] = (element?.client?.subscribe as SinonSpy).lastCall.args;
+              expect(spies!['client.subscribe'].callCount).to.equal(2);
+              const [operation] = spies!['client.subscribe'].lastCall.args;
               expect(operation.query).to.equal(subscription);
               expect(operation.variables).to.equal(variables);
             });
 
             it('calls client subscribe with element FetchPolicy', function() {
               const { fetchPolicy } = element!;
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ fetchPolicy });
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ fetchPolicy });
             });
 
             it('calls client subscribe with specified variables', function() {
-              expect(element?.client?.subscribe).to.have.been.calledWithMatch({ variables });
+              expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ variables });
             });
           });
         });
@@ -856,7 +855,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         });
 
         it('does not subscribe', function() {
-          expect(element?.subscribe).to.not.have.been.called;
+          expect(spies!.subscribe.called).to.be.false;
         });
 
         it('does not set subscription', function() {
@@ -900,9 +899,10 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
         describe('with shouldSubscribe overridden to return false', function() {
           let element: ApolloSubscriptionElement | undefined;
+          let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
 
-          beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'subscribe'));
-          afterEach(() => (window.__APOLLO_CLIENT__!.subscribe as SinonSpy).restore?.());
+          beforeEach(() => { clientSubscribeSpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'subscribe').passThrough(); });
+          afterEach(() => clientSubscribeSpy.restore?.());
 
           afterEach(function teardownElement() {
             element?.remove?.();
@@ -924,15 +924,16 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           it('does not subscribe on connect', function() {
-            expect(element?.client?.subscribe).to.not.have.been.called;
+            expect(clientSubscribeSpy.called).to.be.false;
           });
         });
 
         describe('with noAutoSubscribe set as a class field', function() {
           let element: ApolloSubscriptionElement;
+          let clientSubscribeSpy: ReturnType<typeof hanbi.stubMethod>;
 
-          beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'subscribe'));
-          afterEach(() => (window.__APOLLO_CLIENT__!.subscribe as SinonSpy).restore?.());
+          beforeEach(() => { clientSubscribeSpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'subscribe').passThrough(); });
+          afterEach(() => clientSubscribeSpy.restore?.());
 
           afterEach(function teardownElement() {
             element?.remove?.();
@@ -954,7 +955,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('does not subscribe on connect', function() {
-              expect(element?.client?.subscribe).to.not.have.been.called;
+              expect(clientSubscribeSpy.called).to.be.false;
             });
           });
 
@@ -972,7 +973,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
             });
 
             it('does not subscribe on connect', function() {
-              expect(element?.client?.subscribe).to.not.have.been.called;
+              expect(clientSubscribeSpy.called).to.be.false;
             });
           });
         });
@@ -980,11 +981,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
         describe('with fetchPolicy set as a class field', function() {
           let element: ApolloSubscriptionElement<typeof S.NullableParamSubscription> | undefined;
 
-          let spies: Record<string|Exclude<keyof ApolloSubscriptionElement, symbol>, SinonSpy>;
+          let spies: Record<string|Exclude<keyof ApolloSubscriptionElement, symbol>, ReturnType<typeof hanbi.stubMethod>>;
 
           beforeEach(function spyClientSubscribe() {
             spies = {
-              'client.subscribe': spy(window.__APOLLO_CLIENT__!, 'subscribe'),
+              'client.subscribe': hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'subscribe').passThrough(),
             };
           });
 
@@ -1020,19 +1021,18 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
           });
 
           it('subscribes with the given FetchPolicy', function() {
-            expect(element?.client?.subscribe).to.have.been
-              .calledWithMatch({ fetchPolicy: 'cache-only' });
+            expect(spies!['client.subscribe'].lastCall.args[0]).to.include({ fetchPolicy: 'cache-only' });
           });
         });
 
         describe('with onComplete, onError, and onSubscriptionData set as class methods', function() {
           let element: TestableElement & ApolloSubscriptionElement<typeof S.NonNullableParamSubscription> | undefined;
 
-          let spies: Record<string|Exclude<keyof ApolloSubscriptionElement, symbol>, SinonSpy> | undefined;
+          let spies: Record<string|Exclude<keyof ApolloSubscriptionElement, symbol>, ReturnType<typeof hanbi.stubMethod>> | undefined;
 
           beforeEach(function spyClientSubscribe() {
             spies = {
-              'client.subscribe': spy(window.__APOLLO_CLIENT__!, 'subscribe'),
+              'client.subscribe': hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'subscribe').passThrough(),
             };
           });
 
@@ -1060,9 +1060,9 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
 
             element = await fixture<Test>(`<${tag}></${tag}>`);
 
-            spies!['onSubscriptionComplete'] = spy(element, 'onSubscriptionComplete');
-            spies!['onSubscriptionData'] = spy(element, 'onSubscriptionData');
-            spies!['onError'] = spy(element, 'onError');
+            spies!['onSubscriptionComplete'] = hanbi.stubMethod(element, 'onSubscriptionComplete').passThrough();
+            spies!['onSubscriptionData'] = hanbi.stubMethod(element, 'onSubscriptionData').passThrough();
+            spies!['onError'] = hanbi.stubMethod(element, 'onError').passThrough();
           });
 
           describe('with subscription that will resolve and immediately complete', function() {
@@ -1083,15 +1083,15 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               beforeEach(waitForRender(() => element));
 
               it('calls onSubscriptionData', function() {
-                expect(element?.onSubscriptionData).to.have.been.called;
+                expect(spies!['onSubscriptionData'].called).to.be.true;
               });
 
               it('does not call onError', function() {
-                expect(element?.onError).to.not.have.been.called;
+                expect(spies!['onError'].called).to.be.false;
               });
 
               it('calls onSubscriptionComplete', function() {
-                expect(element?.onSubscriptionComplete).to.have.been.called;
+                expect(spies!['onSubscriptionComplete'].called).to.be.true;
               });
             });
           });
@@ -1111,11 +1111,11 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
               beforeEach(waitForRender(() => element));
 
               it('does not call onSubscriptionData', function() {
-                expect(element?.onSubscriptionData).to.not.have.been.called;
+                expect(spies!['onSubscriptionData'].called).to.be.false;
               });
 
               it('calls onError', function() {
-                expect(element?.onError).to.have.been.called;
+                expect(spies!['onError'].called).to.be.true;
               });
             });
           });

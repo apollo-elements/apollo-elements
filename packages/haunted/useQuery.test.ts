@@ -18,7 +18,6 @@ import { sendKeys } from '@web/test-runner-commands';
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
 import * as hanbi from 'hanbi';
-import { useFakeTimers } from 'sinon';
 
 describe('[haunted] useQuery', function() {
   describe('with global client', function() {
@@ -50,7 +49,7 @@ describe('[haunted] useQuery', function() {
               </article>
               <p>${c.data?.helloWorld?.greeting}, ${c.data?.helloWorld?.name}!</p>
 
-              <button id="start" @click="${() => c.startPolling(1000)}">start</button>
+              <button id="start" @click="${() => c.startPolling(10)}">start</button>
               <button id="stop" @click="${c.stopPolling}">stop</button>
               <button id="executeQuery" @click="${() => c.executeQuery({ variables: { name: 'Mr Magoo', greeting: 'How do you do' } })}"></button>
               <button id="errorQuery" @click="${() => c.executeQuery({ variables: { name: 'Mr Magoo', greeting: 'How do you do' } })}"></button>
@@ -65,10 +64,6 @@ describe('[haunted] useQuery', function() {
         beforeEach(nextFrame);
 
         describe('calling startPolling then stopPolling', function() {
-          let clock: ReturnType<typeof useFakeTimers>;
-
-          beforeEach(() => clock = useFakeTimers());
-          afterEach(() => clock.restore());
           function startPolling() {
             element.shadowRoot!.getElementById('start')!.click();
           }
@@ -79,18 +74,22 @@ describe('[haunted] useQuery', function() {
 
           beforeEach(startPolling);
 
-          beforeEach(() => clock.tick(3500));
+          beforeEach(() => aTimeout(50));
 
           it('refetches', function() {
-            expect(refetchSpy.callCount).to.equal(3);
+            expect(refetchSpy.callCount).to.be.greaterThanOrEqual(3);
           });
 
           describe('then stopPolling', function() {
-            beforeEach(stopPolling);
-            beforeEach(() => clock.tick(5000));
+            let countBeforeStop: number;
+            beforeEach(function() {
+              countBeforeStop = refetchSpy.callCount;
+              stopPolling();
+            });
+            beforeEach(() => aTimeout(50));
 
             it('stops calling refetch', function() {
-              expect(refetchSpy.callCount).to.equal(3);
+              expect(refetchSpy.callCount).to.equal(countBeforeStop);
             });
           });
         });

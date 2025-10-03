@@ -52,7 +52,6 @@ export class StampinoRender extends ReactiveElement implements ReactiveControlle
   }
 
   private getElementByIdFromRoot(id: string|null): HTMLElement | null {
-    // TODO: make actually private in TS 4.3
     const root = this.getRootNode();
     if (!id || !StampinoRender.isQueryable(root))
       return null;
@@ -61,7 +60,6 @@ export class StampinoRender extends ReactiveElement implements ReactiveControlle
   }
 
   private getTemplateFromRoot(): HTMLTemplateElement | null {
-    // TODO: make actually private in TS 4.3
     const maybeTemplate =
       this.getElementByIdFromRoot(this.getAttribute('template'));
     if (maybeTemplate instanceof HTMLTemplateElement)

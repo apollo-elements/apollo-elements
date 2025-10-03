@@ -10,8 +10,6 @@ import { ApolloQueryController } from './apollo-query-controller';
 
 import { gql, NetworkStatus } from "@apollo/client";
 
-import { useFakeTimers } from 'sinon';
-
 import { aTimeout, defineCE, expect, fixture, nextFrame } from '@open-wc/testing';
 
 import { resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
@@ -621,26 +619,26 @@ describe('[core] ApolloQueryController', function() {
         }); // end 'with client query/watchQuery spies'
 
         describe('calling startPolling', function() {
-          let clock: ReturnType<typeof useFakeTimers>;
-          beforeEach(() => clock = useFakeTimers());
-          afterEach(() => clock.restore());
-          beforeEach(function startPolling() { element.query.startPolling(1000); });
+          beforeEach(function startPolling() { element.query.startPolling(10); });
 
-          beforeEach(() => clock.tick(3500));
+          beforeEach(() => aTimeout(50));
 
           it('refetches', function() {
-            expect(element.refetchStub?.callCount).to.equal(3);
+            expect(element.refetchStub?.callCount).to.be.greaterThanOrEqual(3);
           });
 
           describe('then stopPolling', function() {
+            let countBeforeStop: number;
+
             beforeEach(function stopPolling() {
+              countBeforeStop = element.refetchStub?.callCount ?? 0;
               element.query.stopPolling();
             });
 
-            beforeEach(() => clock.tick(3500));
+            beforeEach(() => aTimeout(50));
 
             it('stops calling refetch', function() {
-              expect(element.refetchStub?.callCount).to.equal(3);
+              expect(element.refetchStub?.callCount).to.equal(countBeforeStop);
             });
           });
         });

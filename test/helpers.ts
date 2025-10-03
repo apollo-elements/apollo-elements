@@ -1,4 +1,4 @@
-import { spy, stub, SinonSpy, SinonStub } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { SetupFunction, SetupOptions, SetupResult, TestableElement } from './types';
 
@@ -54,33 +54,33 @@ export const stringify =
   (x: unknown): string =>
     JSON.stringify(x, null);
 
-export function setupSpies<T>(keys: (keyof T)[] = [], object: T): Record<string|keyof T, SinonSpy> {
+export function setupSpies<T>(keys: (keyof T)[] = [], object: T): Record<string|keyof T, ReturnType<typeof hanbi.stubMethod>> {
   return Object.fromEntries(keys
     .map(method =>
-      [method, spy(object, method as keyof T)])) as unknown as Record<string|keyof T, SinonSpy>;
+      [method, hanbi.stubMethod(object as any, method as string).passThrough()])) as unknown as Record<string|keyof T, ReturnType<typeof hanbi.stubMethod>>;
 }
 
-export function setupStubs<T>(keys: (keyof T)[] = [], object: T): Record<string|keyof T, SinonStub> {
+export function setupStubs<T>(keys: (keyof T)[] = [], object: T): Record<string|keyof T, ReturnType<typeof hanbi.stubMethod>> {
   return Object.fromEntries(keys
     .map(method =>
-      [method, stub(object, method as keyof T)])) as unknown as Record<string|keyof T, SinonStub>;
+      [method, hanbi.stubMethod(object as any, method as string)])) as unknown as Record<string|keyof T, ReturnType<typeof hanbi.stubMethod>>;
 }
 
-export function restoreSpies(getSpies: () => (Record<string, SinonSpy> | undefined)): () => void {
+export function restoreSpies(getSpies: () => (Record<string, ReturnType<typeof hanbi.stubMethod>> | undefined)): () => void {
   return function() {
     const spies = getSpies();
     Object.keys(spies ?? {}).forEach(key => {
-      spies?.[key].restore();
+      spies?.[key].restore?.();
       delete spies?.[key];
     });
   };
 }
 
-export function restoreStubs(getStubs: () => (Record<string, SinonStub> | undefined)): () => void {
+export function restoreStubs(getStubs: () => (Record<string, ReturnType<typeof hanbi.stubMethod>> | undefined)): () => void {
   return function() {
     const stubs = getStubs();
     Object.keys(stubs ?? {}).forEach(key => {
-      stubs?.[key].restore();
+      stubs?.[key].restore?.();
       delete stubs?.[key];
     });
   };

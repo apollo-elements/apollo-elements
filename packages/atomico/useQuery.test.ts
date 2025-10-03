@@ -18,7 +18,6 @@ import { sendKeys } from '@web/test-runner-commands';
 
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
-import { useFakeTimers } from 'sinon';
 import * as hanbi from 'hanbi';
 
 describe('[atomico] useQuery', function() {
@@ -72,25 +71,24 @@ describe('[atomico] useQuery', function() {
         beforeEach(nextFrame);
 
         describe('calling startPolling then stopPolling', function() {
-          let clock: ReturnType<typeof useFakeTimers>;
+          beforeEach(() => startPolling(10));
 
-          beforeEach(() => clock = useFakeTimers());
-          afterEach(() => clock.restore());
-
-          beforeEach(() => startPolling(1000));
-
-          beforeEach(() => clock.tick(3500));
+          beforeEach(() => aTimeout(50));
 
           it('refetches', function() {
-            expect(refetchSpy.callCount).to.equal(3);
+            expect(refetchSpy.callCount).to.be.greaterThanOrEqual(3);
           });
 
           describe('then stopPolling', function() {
-            beforeEach(() => stopPolling());
-            beforeEach(() => clock.tick(5000));
+            let countBeforeStop: number;
+            beforeEach(function() {
+              countBeforeStop = refetchSpy.callCount;
+              stopPolling();
+            });
+            beforeEach(() => aTimeout(50));
 
             it('stops calling refetch', function() {
-              expect(refetchSpy.callCount).to.equal(3);
+              expect(refetchSpy.callCount).to.equal(countBeforeStop);
             });
           });
         });

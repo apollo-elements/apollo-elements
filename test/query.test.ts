@@ -30,7 +30,7 @@ import {
 
 import { html, unsafeStatic } from 'lit/static-html.js';
 
-import { match, spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 import { client, makeClient, setupClient, teardownClient } from './client';
 import { isSubscription, restoreSpies, stringify, waitForRender } from './helpers';
 import { GraphQLError } from 'graphql';
@@ -70,7 +70,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
     describe('when simply instantiating', function() {
       let element: TestableElement & ApolloQueryElement<unknown>;
 
-      let spies: Record<string|keyof ApolloQueryElement<unknown>, SinonSpy> | undefined;
+      let spies: Record<string|keyof ApolloQueryElement<unknown>, ReturnType<typeof hanbi.stubMethod>> | undefined;
 
       let connectEvent: Event | undefined;
 
@@ -386,7 +386,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         beforeEach(waitForRender(() => element));
 
         it('does not call subscribe', function() {
-          expect(element.subscribe).to.not.have.been.called;
+          expect(spies!.subscribe.called).to.be.false;
         });
 
         describe('then setting variables', function() {
@@ -397,7 +397,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(waitForRender(() => element));
 
           it('does not call subscribe', function() {
-            expect(element.subscribe).to.not.have.been.called;
+            expect(spies!.subscribe.called).to.be.false;
           });
         });
 
@@ -512,7 +512,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
     describe('with global client available', function() {
       let element: ApolloQueryElement<unknown>;
 
-      let spies: Record<string|keyof ApolloQueryElement<unknown>, SinonSpy> | undefined;
+      let spies: Record<string|keyof ApolloQueryElement<unknown>, ReturnType<typeof hanbi.stubMethod>> | undefined;
 
       let cached: typeof window.__APOLLO_CLIENT__;
 
@@ -543,10 +543,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         beforeEach(function() {
-          spies!['client.subscribe'] = spy(element.client!, 'subscribe');
-          spies!['client.query'] = spy(element.client!, 'query');
-          spies!['client.watchQuery'] = spy(element.client!, 'watchQuery');
-          spies!['controller.refetch'] = spy(element.controller, 'refetch');
+          spies!['client.subscribe'] = hanbi.stubMethod(element.client!, 'subscribe').passThrough();
+          spies!['client.query'] = hanbi.stubMethod(element.client!, 'query').passThrough();
+          spies!['client.watchQuery'] = hanbi.stubMethod(element.client!, 'watchQuery').passThrough();
+          spies!['controller.refetch'] = hanbi.stubMethod(element.controller, 'refetch').passThrough();
         });
 
         it('uses the global client', async function() {
@@ -610,7 +610,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             beforeEach(() => element.controller.host.updateComplete);
 
             it('does not call subscribe', function() {
-              expect(element.subscribe).to.not.have.been.called;
+              expect(spies!.subscribe.called).to.be.false;
             });
 
             describe('then setting variables', function() {
@@ -621,7 +621,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               beforeEach(() => element.controller.host.updateComplete);
 
               it('does not call subscribe', function() {
-                expect(element.subscribe).to.not.have.been.called;
+                expect(spies!.subscribe.called).to.be.false;
               });
             });
           });
@@ -633,8 +633,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls client query', function() {
-            expect(element.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: S.NullableParamQuery }));
+            expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ query: S.NullableParamQuery });
           });
         });
 
@@ -645,8 +644,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls client watchQuery', function() {
-            expect(element.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: S.NullableParamQuery, context }));
+            expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ query: S.NullableParamQuery, context });
           });
         });
 
@@ -656,8 +654,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.subscribe({ query: S.NullableParamQuery, errorPolicy });
           });
           it('calls client watchQuery', function() {
-            expect(element.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: S.NullableParamQuery, errorPolicy }));
+            expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ query: S.NullableParamQuery, errorPolicy });
           });
         });
 
@@ -668,8 +665,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls client watchQuery', function() {
-            expect(element.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: S.NullableParamQuery, fetchPolicy }));
+            expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ query: S.NullableParamQuery, fetchPolicy });
           });
         });
 
@@ -679,8 +675,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             element.subscribe({ query: S.NullableParamQuery, variables });
           });
           it('calls client watchQuery', function() {
-            expect(element.client?.watchQuery).to.have.been
-              .calledWithMatch(match({ query: S.NullableParamQuery, variables }));
+            expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ query: S.NullableParamQuery, variables });
           });
         });
 
@@ -703,7 +698,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls client query', function() {
-            expect(element.client?.query).to.have.been.calledWith(match({ query: S.NullableParamQuery }));
+            expect(spies!['client.query'].lastCall.args[0]).to.include({ query: S.NullableParamQuery });
           });
 
           it('returns a result', function() {
@@ -719,7 +714,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(() => element.controller.host.updateComplete);
 
           it('calls subscribe', function() {
-            expect(element.client?.watchQuery).to.have.been.calledOnce;
+            expect(spies!['client.watchQuery'].callCount).to.equal(1);
           });
 
           describe('then setting variables', function() {
@@ -731,14 +726,18 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             it('calls refetch', function() {
               element!.variables = { nullable: '✈' };
-              expect(element.controller.refetch).to.have.been.calledWithMatch({ nullable: '✈' });
+              expect(spies!['controller.refetch'].lastCall.args[0]).to.include({ nullable: '✈' });
             });
           });
 
           describe('then appending the element elsewhere', function() {
+            let requestSpy: ReturnType<typeof hanbi.stubMethod>;
+
             beforeEach(() => aTimeout(60));
 
-            beforeEach(() => spy(window.__APOLLO_CLIENT__!.link!, 'request'));
+            beforeEach(function() {
+              requestSpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!.link!, 'request').passThrough();
+            });
 
             beforeEach(function() {
               document.body.append(element!);
@@ -746,14 +745,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
             beforeEach(nextFrame);
 
-            afterEach(() => (window.__APOLLO_CLIENT__?.link.request as SinonSpy).restore?.());
+            afterEach(() => requestSpy?.restore?.());
 
             afterEach(() => {
               element.remove();
             });
 
             it('requests', function() {
-              expect(window.__APOLLO_CLIENT__?.link.request).to.have.been.calledOnce;
+              expect(requestSpy.callCount).to.equal(1);
             });
           });
 
@@ -769,7 +768,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             it('calls client query', function() {
-              expect(element.client?.query).to.have.been.calledWith(match({ query: S.NullableParamQuery }));
+              expect(spies!['client.query'].lastCall.args[0]).to.include({ query: S.NullableParamQuery });
             });
 
             it('returns a result', function() {
@@ -789,7 +788,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             it('calls client query', function() {
-              expect(element.client?.query).to.have.been.calledWith(match({ query: S.NoParamQuery }));
+              expect(spies!['client.query'].lastCall.args[0]).to.include({ query: S.NoParamQuery });
             });
 
             it('returns a result', function() {
@@ -811,7 +810,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           it('does not subscribe', function() {
             expect(element.variables).to.deep.equal({ foo: 'foo' });
-            expect(element.client?.watchQuery).to.not.have.been.called;
+            expect(spies!['client.watchQuery'].called).to.be.false;
           });
         });
 
@@ -844,7 +843,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       describe('with no-auto-subscribe attribute set', function() {
         let element: TestableElement & ApolloQueryElement<unknown>;
 
-        let spies: Record<string|keyof ApolloQueryElement<unknown>, SinonSpy> | undefined;
+        let spies: Record<string|keyof ApolloQueryElement<unknown>, ReturnType<typeof hanbi.stubMethod>> | undefined;
 
         beforeEach(function(this: Mocha.Context) {
           if (this.SKIP_ATTRIBUTES) this.skip();
@@ -858,9 +857,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         beforeEach(function() {
-          spies!['client.subscribe'] = spy(element!.client!, 'subscribe');
-          spies!['client.query'] = spy(element!.client!, 'query');
-          spies!['client.watchQuery'] = spy(element!.client!, 'watchQuery');
+          spies!['client.subscribe'] = hanbi.stubMethod(element!.client!, 'subscribe').passThrough();
+          spies!['client.query'] = hanbi.stubMethod(element!.client!, 'query').passThrough();
+          spies!['client.watchQuery'] = hanbi.stubMethod(element!.client!, 'watchQuery').passThrough();
         });
 
         beforeEach(() => element.controller.host.updateComplete);
@@ -883,7 +882,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('does not call subscribe', async function noAutoSubscribe() {
-            expect(element.subscribe).to.not.have.been.called;
+            expect(spies!.subscribe.called).to.be.false;
           });
         });
 
@@ -907,8 +906,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ context: elContext }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ context: elContext });
               });
             });
 
@@ -919,8 +917,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ context }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ context });
               });
             });
 
@@ -931,8 +928,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ context }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ context });
               });
             });
           });
@@ -950,8 +946,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ errorPolicy: elErrorPolicy }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ errorPolicy: elErrorPolicy });
               });
             });
 
@@ -962,8 +957,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ errorPolicy }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ errorPolicy });
               });
             });
           });
@@ -981,8 +975,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ fetchPolicy: elFetchPolicy }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ fetchPolicy: elFetchPolicy });
               });
             });
 
@@ -993,8 +986,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ fetchPolicy }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ fetchPolicy });
               });
             });
           });
@@ -1012,8 +1004,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ variables: elVariables }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ variables: elVariables });
               });
             });
 
@@ -1024,8 +1015,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
               });
 
               it('calls client watchQuery', function() {
-                expect(element.client?.watchQuery).to.have.been
-                  .calledWithMatch(match({ variables }));
+                expect(spies!['client.watchQuery'].lastCall.args[0]).to.include({ variables });
               });
             });
           });
@@ -1046,10 +1036,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       describe('with NoParams query', function() {
         let element: TestableElement & ApolloQueryElement<typeof S.NoParamQuery>;
+        let spies: Record<string, ReturnType<typeof hanbi.stubMethod>>;
 
         function resetPrivateWatchQuerySpy() {
           // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-          (element.client!.queryManager!.watchQuery as SinonSpy).resetHistory?.();
+          (element.client!.queryManager!.watchQuery as any).resetHistory?.();
         }
 
         function callSubscribe() {
@@ -1072,9 +1063,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-        afterEach(() => (element.client!.queryManager.watchQuery as SinonSpy).restore?.());
-        beforeEach(() => spy(element.controller, 'refetch'));
-        afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
+        afterEach(() => (element.client!.queryManager.watchQuery as any).restore?.());
+        beforeEach(function() {
+          spies = { refetch: hanbi.stubMethod(element.controller, 'refetch').passThrough() };
+        });
+        afterEach(() => (element.controller.refetch as any).restore?.());
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1091,7 +1084,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(nextFrame);
 
           it('calls refetch', function() {
-            expect(element.controller.refetch).to.have.been.calledWithMatch({
+            expect(spies!.refetch.lastCall.args[0]).to.include({
               errorPolicy: 'foo',
             });
           });
@@ -1101,7 +1094,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           const query = S.NoParamQuery;
 
           beforeEach(function spyClientQuery() {
-            spies!['client.query'] = spy(element!.client!, 'query');
+            spies!['client.query'] = hanbi.stubMethod(element!.client!, 'query').passThrough();
           });
 
           beforeEach(function executeQuery() {
@@ -1109,7 +1102,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('accepts custom args', function() {
-            expect(element.client?.query).to.have.been.calledWith(match({ query }));
+            expect(spies!['client.query'].lastCall.args[0]).to.include({ query });
           });
         });
 
@@ -1117,7 +1110,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           const query = S.NullableParamQuery;
 
           beforeEach(function spyClientQuery() {
-            spies!['client.query'] = spy(element!.client!, 'query');
+            spies!['client.query'] = hanbi.stubMethod(element!.client!, 'query').passThrough();
           });
 
           beforeEach(function executeQuery() {
@@ -1125,7 +1118,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('accepts custom args', function() {
-            expect(element.client?.query).to.have.been.calledWith(match({ query }));
+            expect(spies!['client.query'].lastCall.args[0]).to.include({ query });
           });
         });
 
@@ -1144,9 +1137,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         describe('with no specific fetchPolicy', function() {
+          let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
+
           beforeEach(resetPrivateWatchQuerySpy);
           // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-          beforeEach(() => spy(element.client!.queryManager!, 'watchQuery'));
+          beforeEach(function() {
+            watchQuerySpy = hanbi.stubMethod(element.client!.queryManager!, 'watchQuery').passThrough();
+          });
 
           beforeEach(callSubscribe);
 
@@ -1155,24 +1152,24 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('respects client default fetchPolicy', async function() {
-            // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-            expect(element.client.queryManager.watchQuery).to.have.been
-              .calledWithMatch({ fetchPolicy: 'network-only' });
+            expect(watchQuerySpy.lastCall.args[0]).to.include({ fetchPolicy: 'network-only' });
           });
         });
 
         describe('with fetchPolicy set on the element', function() {
           const fetchPolicy = 'no-cache';
+          let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
+
           beforeEach(resetPrivateWatchQuerySpy);
           // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-          beforeEach(() => spy(element.client!.queryManager!, 'watchQuery'));
+          beforeEach(function() {
+            watchQuerySpy = hanbi.stubMethod(element.client!.queryManager!, 'watchQuery').passThrough();
+          });
           beforeEach(setProperties({ fetchPolicy }));
           beforeEach(callSubscribe);
           it('respects instance-specific fetchPolicy', async function() {
             expect(element.fetchPolicy).to.equal(fetchPolicy);
-            // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-            expect(element.client.queryManager.watchQuery).to.have.been
-              .calledWithMatch({ fetchPolicy });
+            expect(watchQuerySpy.lastCall.args[0]).to.include({ fetchPolicy });
           });
         });
 
@@ -1194,12 +1191,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('when client has default watchQuery options', function() {
           let cache: DefaultOptions;
+          let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
           const variables = { foo: 'when client has default watchQuery options' };
 
           // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-          beforeEach(() => spy(element.client!.queryManager!, 'watchQuery'));
-          // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-          afterEach(() => (element.client!.queryManager!.watchQuery as SinonSpy).restore?.());
+          beforeEach(function() {
+            watchQuerySpy = hanbi.stubMethod(element.client!.queryManager!, 'watchQuery').passThrough();
+          });
+          afterEach(() => watchQuerySpy?.restore?.());
 
           beforeEach(function setClientDefaults() {
             cache = element!.client!.defaultOptions;
@@ -1222,9 +1221,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('uses default options', function() {
-            // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-            expect(element.client.queryManager.watchQuery)
-              .to.have.been.calledWithMatch({
+            expect(watchQuerySpy.lastCall.args[0]).to.include({
                 notifyOnNetworkStatusChange: true,
                 SOMETHING_SILLY: true,
               });
@@ -1234,6 +1231,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
       describe('with NullableParams query', function() {
         let element: TestableElement & ApolloQueryElement<typeof S.NullableParamQuery>;
+        let spies: Record<string, ReturnType<typeof hanbi.stubMethod>>;
 
         beforeEach(async function setupElement() {
           ({ element } = await setupFunction<any>({
@@ -1243,8 +1241,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           }));
         });
 
-        beforeEach(() => spy(element.controller, 'refetch'));
-        afterEach(() => (element?.controller?.refetch as SinonSpy)?.restore?.());
+        beforeEach(function() {
+          spies = { refetch: hanbi.stubMethod(element.controller, 'refetch').passThrough() };
+        });
+        afterEach(() => (element?.controller?.refetch as any)?.restore?.());
 
         afterEach(function teardownElement() {
           element?.remove?.();
@@ -1269,9 +1269,9 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         describe('setting new variables', function() {
           beforeEach(function() {
             // HACK: 🤷‍♂️ this fails only for haunted if I don't redeclare the spy here
-            (element.controller.refetch as SinonSpy).restore?.();
+            (element.controller.refetch as any).restore?.();
             spies!.refetch?.restore?.();
-            spies!.refetch = spy(element.controller, 'refetch');
+            spies!.refetch = hanbi.stubMethod(element.controller, 'refetch').passThrough();
           });
 
           beforeEach(function setVariables() {
@@ -1279,14 +1279,13 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls refetch', function() {
-            expect(element.controller.refetch)
-              .to.have.been.calledWithMatch({ nullable: '🍟' });
+            expect(spies!.refetch.lastCall.args[0]).to.include({ nullable: '🍟' });
           });
         });
 
         describe('executeQuery()', function() {
           beforeEach(function spyClientQuery() {
-            spies!['client.query'] = spy(element!.client!, 'query');
+            spies!['client.query'] = hanbi.stubMethod(element!.client!, 'query').passThrough();
           });
 
           beforeEach(() => element.executeQuery());
@@ -1294,9 +1293,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(() => element.controller.host.updateComplete);
 
           it('calls client.query with element properties', function() {
-            const { errorPolicy, fetchPolicy, query } = element!;
-            expect(element.client!.query)
-              .to.have.been.calledWith(match({ errorPolicy, fetchPolicy, query }));
+            const { query } = element!;
+            expect(spies!['client.query'].lastCall.args[0]).to.include({ query });
           });
 
           it('sets data from the response', function() {
@@ -1322,7 +1320,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         describe('executeQuery({ query })', function() {
           beforeEach(function spyClientQuery() {
-            spies!['client.query'] = spy(element!.client!, 'query');
+            spies!['client.query'] = hanbi.stubMethod(element!.client!, 'query').passThrough();
           });
 
           beforeEach(function setVariables() {
@@ -1335,15 +1333,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           it('defaults to element variables', async function() {
             const { variables } = element!;
-            expect(element!.client!.query)
-              .to.have.been.calledWithMatch(match({ variables, query: S.NoParamQuery }));
+            expect(spies!['client.query'].lastCall.args[0]).to.include({ variables, query: S.NoParamQuery });
           });
         });
 
         describe('executeQuery({ variables })', function() {
           const variables: S.NullableParamQueryVariables = { nullable: 'WHOOPIE' };
           beforeEach(function spyClientQuery() {
-            spies!['client.query'] = spy(element!.client!, 'query');
+            spies!['client.query'] = hanbi.stubMethod(element!.client!, 'query').passThrough();
           });
 
           beforeEach(function executeQuery() {
@@ -1352,7 +1349,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           it('defaults to element query', async function() {
             const { query } = element!;
-            expect(element!.client!.query).to.have.been.calledWithMatch({ query, variables });
+            expect(spies!['client.query'].lastCall.args[0]).to.include({ query, variables });
           });
 
           it('updates data with the response', function() {
@@ -1372,8 +1369,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           }));
         });
 
-        beforeEach(() => spy(element.controller, 'refetch'));
-        afterEach(() => (element?.controller?.refetch as SinonSpy)?.restore?.());
+        beforeEach(() => hanbi.stubMethod(element.controller, 'refetch').passThrough());
+        afterEach(() => (element?.controller?.refetch as any)?.restore?.());
 
         afterEach(function teardownElement() {
           element?.remove?.();
@@ -1485,14 +1482,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
       describe('with noAutoSubscribe set as a class field', function() {
         let element: ApolloQueryElement<unknown>;
 
-        let spies: Record<string, SinonSpy>;
+        let spies: Record<string, ReturnType<typeof hanbi.stubMethod>>;
 
         beforeEach(setupClient);
         afterEach(teardownClient);
 
         beforeEach(async function setupElement() {
           spies = {
-            subscribe: spy(Klass.prototype, 'subscribe'),
+            subscribe: hanbi.stubMethod(Klass.prototype, 'subscribe').passThrough(),
           };
 
           class Test extends Klass<unknown> {
@@ -1536,7 +1533,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('does not call subscribe', function() {
-            expect(element.subscribe).to.not.have.been.called;
+            expect(spies!.subscribe.called).to.be.false;
           });
         });
       });
@@ -1547,6 +1544,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         }
 
         let element: Test;
+        let spies: Record<string, ReturnType<typeof hanbi.stubMethod>>;
 
         beforeEach(setupClient);
         afterEach(teardownClient);
@@ -1557,8 +1555,10 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           element = await fixture<Test>(html`<${tag}></${tag}>`);
         });
 
-        beforeEach(() => spy(element.controller, 'refetch'));
-        afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
+        beforeEach(function() {
+          spies = { refetch: hanbi.stubMethod(element.controller, 'refetch').passThrough() };
+        });
+        afterEach(() => (element.controller.refetch as any).restore?.());
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1576,7 +1576,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           });
 
           it('calls refetch', function() {
-            expect(element.controller.refetch).to.have.been.calledWith(match({ errorPolicy: 'foo' }));
+            expect(spies!.refetch.lastCall.args[0]).to.include({ errorPolicy: 'foo' });
           });
         });
       });
@@ -1589,10 +1589,14 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         }
 
         let element: Test;
+        let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
+        let refetchSpy: ReturnType<typeof hanbi.stubMethod>;
 
         beforeEach(setupClient);
-        beforeEach(() => spy(window.__APOLLO_CLIENT__!, 'watchQuery'));
-        afterEach(() => (window.__APOLLO_CLIENT__!.watchQuery as SinonSpy).restore?.());
+        beforeEach(function() {
+          watchQuerySpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'watchQuery').passThrough();
+        });
+        afterEach(() => watchQuerySpy?.restore?.());
         afterEach(teardownClient);
 
         beforeEach(async function setupElement() {
@@ -1601,16 +1605,16 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
         });
 
         it('subscribes to the query', function() {
-          expect(window.__APOLLO_CLIENT__!.watchQuery)
-            .to.have.been.calledOnce
-            .and
-            .to.have.been.calledWithMatch({ variables: { nullable: 'nullable' } });
+          expect(watchQuerySpy.callCount).to.equal(1);
+          expect(watchQuerySpy.lastCall.args[0].variables).to.deep.equal({ nullable: 'nullable' });
         });
 
         beforeEach(() => element.controller.host.updateComplete);
 
-        beforeEach(() => spy(element.controller, 'refetch'));
-        afterEach(() => (element.controller.refetch as SinonSpy).restore?.());
+        beforeEach(function() {
+          refetchSpy = hanbi.stubMethod(element.controller, 'refetch').passThrough();
+        });
+        afterEach(() => refetchSpy?.restore?.());
 
         afterEach(function teardownElement() {
           element.remove();
@@ -1628,10 +1632,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           beforeEach(nextFrame);
 
           it('calls refetch', function() {
-            expect(element.controller.refetch)
-              .to.have.been.calledOnce
-              .and
-              .to.have.been.calledWithMatch({ nullable: '🍟' });
+            expect(refetchSpy.callCount).to.equal(1);
+            expect(refetchSpy.lastCall.args[0]).to.include({ nullable: '🍟' });
           });
         });
       });
@@ -1753,11 +1755,15 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           await element.controller.host.updateComplete;
         });
 
-        beforeEach(() => spy(element.client!['queryManager'], 'watchQuery'));
+        let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
+
+        beforeEach(function() {
+          watchQuerySpy = hanbi.stubMethod(element.client!['queryManager'], 'watchQuery').passThrough();
+        });
 
         beforeEach(() => element.subscribe());
 
-        afterEach(() => (element.client?.watchQuery as SinonSpy).restore?.());
+        afterEach(() => watchQuerySpy?.restore?.());
 
         afterEach(() => {
           element.remove();
@@ -1765,9 +1771,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
         it('respects instance-specific fetchPolicy', async function() {
           expect(element.fetchPolicy).to.equal(fetchPolicy);
-          // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
-          expect(element.client!.queryManager.watchQuery).to.have.been
-            .calledWithMatch({ fetchPolicy });
+          expect(watchQuerySpy.lastCall.args[0]).to.include({ fetchPolicy });
         });
       });
 
@@ -1787,7 +1791,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           let element: Test;
 
-          let spies: Record<string | Exclude<keyof typeof element, symbol>, SinonSpy>;
+          let spies: Record<string | Exclude<keyof typeof element, symbol>, ReturnType<typeof hanbi.stubMethod>>;
 
           beforeEach(setupClient);
           afterEach(teardownClient);
@@ -1802,8 +1806,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
 
           beforeEach(function spyMethods() {
             spies = {
-              onData: spy(element, 'onData'),
-              onError: spy(element, 'onError'),
+              onData: hanbi.stubMethod(element, 'onData').passThrough(),
+              onError: hanbi.stubMethod(element, 'onError').passThrough(),
             };
           });
 
@@ -1823,11 +1827,11 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             beforeEach(nextFrame);
 
             it('does not call onData', function() {
-              expect(element.onData).to.not.have.been.called;
+              expect(spies!.onData.called).to.be.false;
             });
 
             it('calls onError', function() {
-              expect(element.onError).to.have.been.called;
+              expect(spies!.onError.called).to.be.true;
             });
           });
 
@@ -1839,7 +1843,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             beforeEach(() => element.controller.host.updateComplete);
 
             it('calls onData', function() {
-              expect(element.onData).to.have.been.calledWithMatch({
+              expect(spies!.onData.lastCall.args[0]).to.deep.include({
                 nonNullParam: {
                   __typename: 'NonNull',
                   nonNull: 'nullable',
@@ -1848,7 +1852,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             });
 
             it('does not call onError', function() {
-              expect(element.onError).to.not.have.been.called;
+              expect(spies!.onError.called).to.be.false;
             });
           });
         });
