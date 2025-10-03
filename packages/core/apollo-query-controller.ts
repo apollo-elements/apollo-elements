@@ -212,6 +212,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     this.partial = result.partial ?? false;
     this.options.onData?.(this.data!);
+    // Apollo Client v4: errors are delivered in result.error, not through error callback
+    if (result.error)
+      this.options.onError?.(result.error);
     this.notify({ data, error, errors, loading, networkStatus, partial });
   }
 
