@@ -50,7 +50,7 @@ export function describeSubscription(options: DescribeSubscriptionComponentOptio
     describe('when simply instantiating', function() {
       let element: ApolloSubscriptionElement & TestableElement|undefined;
 
-      let spies: Record<keyof typeof element, ReturnType<typeof hanbi.stubMethod>>;
+      let spies: Record<string|keyof ApolloSubscriptionElement, ReturnType<typeof hanbi.stubMethod>>;
 
       beforeEach(async function setupElement() {
         ({ element, spies } = await setupFunction({

@@ -58,20 +58,17 @@ describe('[lit-apollo] ApolloMutation', function() {
   });
 
   describe('subclassing', function() {
-    let spies: Record<string|keyof ApolloMutation, ReturnType<typeof hanbi.stubMethod>>;
+    let clientMutateSpy: ReturnType<typeof hanbi.stubMethod>;
 
     beforeEach(setupClient);
     afterEach(teardownClient);
 
     beforeEach(function setupSpies() {
-      spies = {
-        'client.mutate': hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'mutate').passThrough(),
-      };
+      clientMutateSpy = hanbi.stubMethod(window.__APOLLO_CLIENT__!, 'mutate').passThrough();
     });
 
     afterEach(function restoreSpies() {
-      for (const spy of Object.values(spies))
-        spy.restore();
+      clientMutateSpy?.restore();
     });
 
     it('is an instance of LitElement', async function() {
@@ -116,8 +113,8 @@ describe('[lit-apollo] ApolloMutation', function() {
         });
 
         it('does not use LitElement#update as mutation update', function() {
-          const calls = Array.from(spies['client.mutate'].calls);
-          const hasUpdate = calls.some(call => call.args[0]?.update === element.update);
+          const calls = Array.from(clientMutateSpy.calls);
+          const hasUpdate = calls.some((call: any) => call.args[0]?.update === element.update);
           expect(hasUpdate).to.be.false;
         });
       });

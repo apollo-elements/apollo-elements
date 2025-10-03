@@ -22,7 +22,10 @@ function GraphQLScriptChildMixinImplementation<
     variables: unknown|null;
     error: Error|null;
   }>
->(superclass: B): B {
+>(superclass: B): B & Constructor<{
+  getDOMVariables(): unknown | null;
+  getDOMGraphQLDocument(): Promise<DocumentNode | null>;
+}> {
   class GraphQLScriptChild extends superclass {
     /** Updates the element state in reaction to GraphQL or JSON script child changes. */
     private mo?: MutationObserver;
@@ -123,7 +126,38 @@ function GraphQLScriptChildMixinImplementation<
     }
   }
 
-  return GraphQLScriptChild;
+  return GraphQLScriptChild as unknown as B & Constructor<{
+    getDOMVariables(): unknown | null;
+    getDOMGraphQLDocument(): Promise<DocumentNode | null>;
+  }>;
+}
+
+/**
+ * GraphQLScriptChildMixin implementation class.
+ * This declaration allows types and documentation to propagate to subclasses.
+ */
+export declare class GraphQLScriptChildMixinImpl {
+  /**
+   * @summary Get a GraphQL DocumentNode from the element's GraphQL script child
+   */
+  protected getDOMGraphQLDocument(): Promise<DocumentNode | null>;
+
+  /**
+   * @summary Gets operation variables from the element's JSON script child
+   */
+  protected getDOMVariables(): unknown | null;
+
+  /**
+   * Initializes a `MutationObserver` which watches for changes the the element's children.
+   * When a `<script type="application/graphql">` or `<script type="application/json">`
+   * is appended, the mixin asynchrously sets the `document` or `variables`.
+   */
+  connectedCallback(): Promise<void>;
+
+  /**
+   * Disconnects the `MutationObserver`.
+   */
+  disconnectedCallback(): void;
 }
 
 /**

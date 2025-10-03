@@ -54,7 +54,7 @@ describe('[core] ApolloMutationController', function() {
 
     it('fires event on connect', function() {
       const { type } = E.ApolloControllerConnectedEvent;
-      const [event] = handlers[type].lastCall.args;
+      const [event] = handlers[type].lastCall!.args;
       expect(event.controller, 'controller').to.equal(element.mutation);
       expect(event.type, 'type').to.equal(type);
     });
@@ -65,7 +65,7 @@ describe('[core] ApolloMutationController', function() {
       beforeEach(nextFrame);
       it('fires event on disconnect', function() {
         const { type } = E.ApolloControllerDisconnectedEvent;
-        const [event] = handlers[type].lastCall.args;
+        const [event] = handlers[type].lastCall!.args;
         expect(event.controller, 'controller').to.equal(element.mutation);
         expect(event.type, 'type').to.equal(type);
       });
@@ -183,7 +183,7 @@ describe('[core] ApolloMutationController', function() {
             });
             it('calls onCompleted', function() {
               expect(onCompletedSpy.called).to.be.true;
-              expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
+              expect(onCompletedSpy.lastCall!.args[0]).to.deep.include({
                 nullableParam: {
                   __typename: 'Nullable',
                   nullable: 'Hello World',
@@ -199,7 +199,7 @@ describe('[core] ApolloMutationController', function() {
               });
               it('calls onCompleted', function() {
                 expect(onCompletedSpy.called).to.be.true;
-                expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
+                expect(onCompletedSpy.lastCall!.args[0]).to.deep.include({
                   nullableParam: {
                     __typename: 'Nullable',
                     nullable: 'ניתן להריקה',
@@ -479,7 +479,7 @@ describe('[core] ApolloMutationController', function() {
           });
           it('calls onError', function() {
             expect(onErrorSpy.called).to.be.true;
-            expect(onErrorSpy.lastCall.args[0]).to.equal(err);
+            expect(onErrorSpy.lastCall!.args[0]).to.equal(err);
           });
           it('sets error', function() {
             expect(element.mutation.error!.message, 'message').to.equal('error');

@@ -305,7 +305,7 @@ describe('[haunted] useSubscription', function() {
           beforeEach(nextFrame);
           it('calls onError', function() {
             expect(onErrorSpy.callCount).to.equal(1);
-            expect(onErrorSpy.lastCall.args[0]).to.deep.include({
+            expect(onErrorSpy.lastCall!.args[0]).to.deep.include({
               message: 'error',
             });
           });
@@ -368,7 +368,7 @@ describe('[haunted] useSubscription', function() {
         it('sets error', function() {
           expect(element.subscription.error?.message, 'message').to.equal('error');
           expect(onErrorSpy.callCount).to.equal(1);
-          expect(onErrorSpy.lastCall.args[0]).to.deep.include({
+          expect(onErrorSpy.lastCall!.args[0]).to.deep.include({
             message: 'error',
           });
           expect(element.subscription.error, 'element error')
@@ -511,7 +511,7 @@ describe('[haunted] useSubscription', function() {
           expect(element.subscription.data).to.deep.equal(data);
           // Apollo Client v4: onData is called with null during loading, then with data, plus one more call
           expect(onDataSpy.callCount).to.equal(3);
-          expect(onDataSpy.lastCall.args[0]).to.deep.include({
+          expect(onDataSpy.lastCall!.args[0]).to.deep.include({
             subscriptionData: {
               data,
               loading: false,
@@ -613,7 +613,7 @@ describe('[haunted] useSubscription', function() {
       it('calls onData', function() {
         // Apollo Client v4: onData is called with null during loading, then with data
         expect(onDataSpy.callCount).to.equal(2);
-        expect(onDataSpy.lastCall.args[0]).to.deep.include({
+        expect(onDataSpy.lastCall!.args[0]).to.deep.include({
           subscriptionData: {
             loading: false,
             error: null,
@@ -626,7 +626,7 @@ describe('[haunted] useSubscription', function() {
           },
         });
 
-        const [{ client }] = onDataSpy.lastCall.args;
+        const [{ client }] = onDataSpy.lastCall!.args;
         expect(client).to.equal(element.subscription.client);
       });
 
@@ -642,7 +642,7 @@ describe('[haunted] useSubscription', function() {
         it('refetches', function() {
           // Apollo Client v4: initial (null+data) + refetch (null+data) = 4 calls
           expect(onDataSpy.callCount).to.equal(4);
-          const [{ client, subscriptionData, ...res }] = onDataSpy.lastCall.args;
+          const [{ client, subscriptionData, ...res }] = onDataSpy.lastCall!.args;
           expect(res).to.be.empty;
           expect(client, 'client')
             .to.equal(element.subscription.client)

@@ -108,7 +108,7 @@ describe('[lit-apollo] ApolloQuery', function() {
       const startPollingSpy = hanbi.stubMethod(element.controller, 'startPolling');
       const stopPollingSpy = hanbi.stubMethod(element.controller, 'stopPolling');
       element.startPolling(1000);
-      expect(startPollingSpy.lastCall.args[0]).to.equal(1000);
+      expect(startPollingSpy.lastCall!.args[0]).to.equal(1000);
       element.stopPolling();
       expect(stopPollingSpy.callCount).to.equal(1);
       startPollingSpy.restore();

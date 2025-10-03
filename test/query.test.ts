@@ -1140,8 +1140,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
 
           beforeEach(resetPrivateWatchQuerySpy);
-          // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
           beforeEach(function() {
+            // @ts-expect-error: accessing private property queryManager for testing
             watchQuerySpy = hanbi.stubMethod(element.client!.queryManager!, 'watchQuery').passThrough();
           });
 
@@ -1161,8 +1161,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
 
           beforeEach(resetPrivateWatchQuerySpy);
-          // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
           beforeEach(function() {
+            // @ts-expect-error: accessing private property queryManager for testing
             watchQuerySpy = hanbi.stubMethod(element.client!.queryManager!, 'watchQuery').passThrough();
           });
           beforeEach(setProperties({ fetchPolicy }));
@@ -1194,8 +1194,8 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
           let watchQuerySpy: ReturnType<typeof hanbi.stubMethod>;
           const variables = { foo: 'when client has default watchQuery options' };
 
-          // @ts-expect-error: should probably test effects, but for now 🤷‍♂️
           beforeEach(function() {
+            // @ts-expect-error: accessing private property queryManager for testing
             watchQuerySpy = hanbi.stubMethod(element.client!.queryManager!, 'watchQuery').passThrough();
           });
           afterEach(() => watchQuerySpy?.restore?.());
