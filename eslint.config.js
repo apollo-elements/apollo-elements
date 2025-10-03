@@ -13,7 +13,7 @@ export default [
       parserOptions: {
         ecmaVersion: 2022,
         sourceType: 'module',
-        project: ['./tsconfig.json', './packages/*/tsconfig.json'],
+        project: ['./tsconfig.json', './packages/*/tsconfig.json', './test/tsconfig.json'],
       },
       globals: {
         ...globals.node,
@@ -49,21 +49,12 @@ export default [
     },
   },
 
-  // Config files override
-  {
-    files: ['web-test-runner.config.js', 'plugins/**/*.js', 'test/**/*.js'],
-    languageOptions: {
-      parser: tsparser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-      },
-    },
-  },
-
   // Test files override
   {
-    files: ['packages/**/*.test.ts', 'packages/**/*.test.js', 'test/**/*.ts', 'test/**/*.js'],
+    files: [
+      'packages/**/*.test.ts',
+      'test/**/*.ts',
+    ],
     languageOptions: {
       globals: {
         ...globals.mocha,
@@ -77,6 +68,13 @@ export default [
         varsIgnorePattern: 'TypeCheck|ApolloQueryElement|LitApolloQueryController'
       }],
       '@typescript-eslint/no-unused-expressions': 'off',
+    },
+  },
+
+  // Test TypeScript files - enable deprecation warnings
+  {
+    files: ['packages/**/*.test.ts', 'test/**/*.ts'],
+    rules: {
       '@typescript-eslint/no-deprecated': 'warn',
     },
   },
@@ -109,6 +107,7 @@ export default [
       '_site-dev/**',
       'docs/**',
       'plugins/**',
+      'test/**',
       'packages/**/*.js',
       'packages/*/custom-elements.json',
       'packages/*/custom-elements-manifest.config.js',
