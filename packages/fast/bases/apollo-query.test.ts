@@ -6,7 +6,7 @@ import type { ApolloQueryElement } from '@apollo-elements/core';
 
 import { makeClient, SetupOptions } from '@apollo-elements/test';
 
-import { fixture, expect } from '@open-wc/testing';
+import { aTimeout, fixture, expect } from '@open-wc/testing';
 
 import { unsafeStatic, html as h } from 'lit/static-html.js';
 
@@ -14,8 +14,6 @@ import { ApolloQuery } from './apollo-query';
 import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client';
 import { describeQuery } from '@apollo-elements/test/query.test';
-import { useFakeTimers } from 'sinon';
-
 import * as hanbi from 'hanbi';
 
 import * as S from '@apollo-elements/test/schema';
@@ -106,31 +104,28 @@ describe('[FAST] ApolloQuery', function() {
       query = S.NullableParamQuery;
     }
     let element: Test;
-    let clock: ReturnType<typeof useFakeTimers>;
     let refetchStub: ReturnType<typeof hanbi.stubMethod>;
     beforeEach(async function() {
       element = await fixture<Test>(`<${name}></${name}>`);
       element.client = makeClient();
     });
     beforeEach(() => { refetchStub = hanbi.stubMethod(element.controller, 'refetch').passThrough(); });
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
-    afterEach(() => clock.restore());
     afterEach(() => refetchStub.restore());
-    describe('calling startPolling(1000)', function() {
-      beforeEach(function startPolling() { element.startPolling(1000); });
-      beforeEach(() => {
-        clock.tick(3500);
-      });
+    describe('calling startPolling(10)', function() {
+      beforeEach(function startPolling() { element.startPolling(10); });
+      beforeEach(() => aTimeout(50));
       it('refetches', function() {
-        expect(refetchStub.callCount).to.equal(3);
+        expect(refetchStub.callCount).to.be.greaterThanOrEqual(3);
       });
       describe('then stopPolling', function() {
-        beforeEach(function stopPolling() { element.stopPolling(); });
-        beforeEach(() => { clock.tick(3500); });
+        let countBeforeStop: number;
+        beforeEach(function stopPolling() {
+          countBeforeStop = refetchStub.callCount;
+          element.stopPolling();
+        });
+        beforeEach(() => aTimeout(50));
         it('stops calling refetch', function() {
-          expect(refetchStub.callCount).to.equal(3);
+          expect(refetchStub.callCount).to.equal(countBeforeStop);
         });
       });
     });

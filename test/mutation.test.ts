@@ -13,7 +13,7 @@ import {
   fixture,
 } from '@open-wc/testing';
 
-import { match, spy, SinonSpy } from 'sinon';
+import * as hanbi from 'hanbi';
 
 import { makeClient, setupClient, teardownClient } from './client';
 
@@ -260,7 +260,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       describe('when simply instantiating', function() {
         let element: ApolloMutationElement;
 
-        let spies: Record<string | keyof ApolloMutationElement, SinonSpy>;
+        let spies: Record<string | keyof ApolloMutationElement, ReturnType<typeof hanbi.stubMethod>>;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction({
@@ -286,7 +286,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       describe('with NoParam mutation property set', function() {
         let element: ApolloMutationElement<typeof S.NoParamMutation>;
 
-        let spies: Record<string|keyof ApolloMutationElement, SinonSpy>;
+        let spies: Record<string|keyof ApolloMutationElement, ReturnType<typeof hanbi.stubMethod>>;
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction<any>({
@@ -688,14 +688,21 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
       describe('with NullableParam mutation property set', function() {
         let element: TestableElement & ApolloMutationElement<typeof S.NullableParamMutation>;
 
-        let spies: Record<string | keyof typeof element, SinonSpy>;
+        let spies: Record<string | keyof typeof element, ReturnType<typeof hanbi.stubMethod>>;
+        let onCompletedSpy: ReturnType<typeof hanbi.spy>;
+        let onErrorSpy: ReturnType<typeof hanbi.spy>;
+
+        beforeEach(function createCallbackSpies() {
+          onCompletedSpy = hanbi.spy();
+          onErrorSpy = hanbi.spy();
+        });
 
         beforeEach(async function setupElement() {
           ({ element, spies } = await setupFunction<any>({
             properties: {
               mutation: NullableParamMutation,
-              onCompleted: spy(),
-              onError: spy(),
+              onCompleted: onCompletedSpy.handler,
+              onError: onErrorSpy.handler,
             },
           }));
         });
@@ -740,8 +747,9 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           beforeEach(() => element.hasRendered());
 
           it('calls onCompleted with data', function() {
-            expect(element.onCompleted).to.have.been
-              .calledWithMatch({ nullableParam: match({ nullable: 'Hello World' }) });
+            expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
+              nullableParam: { nullable: 'Hello World', __typename: 'Nullable' }
+            });
           });
 
           it('sets loading', function() {
@@ -796,7 +804,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           beforeEach(waitForRender(() => element));
 
           it('calls onError with error', function() {
-            expect(element.onError).to.have.been.calledWithMatch(error);
+            expect(onErrorSpy.lastCall.args[0]).to.deep.equal(error);
           });
 
           it('sets data, error, errors, and loading', function() {
@@ -821,15 +829,13 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
           beforeEach(() => element.mutate());
 
           it('calls onCompleted with result', function() {
-            expect(element.onCompleted)
-              .to.have.been.calledOnce
-              .and
-              .to.have.been.calledWith(match({
+            expect(onCompletedSpy.callCount).to.equal(1);
+            expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
                 nullableParam: {
                   __typename: 'Nullable',
                   nullable: 'Hello World',
                 },
-              }));
+              });
           });
 
           describe('then calling again', function() {
@@ -841,11 +847,11 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
             }));
 
             it('calls onCompleted with result', function() {
-              expect(element.onCompleted)
-                .to.have.been.calledTwice.and
-                .to.have.been.calledWithMatch({
+              expect(onCompletedSpy.callCount).to.equal(2);
+              expect(onCompletedSpy.lastCall.args[0]).to.deep.include({
                   nullableParam: {
                     nullable: 'second',
+                    __typename: 'Nullable',
                   },
                 });
             });
@@ -859,7 +865,7 @@ export function describeMutation(options: DescribeMutationComponentOptions): voi
         describe('with NullableParam mutation in class field', function() {
           let element: ApolloMutationElement<typeof S.NullableParamMutation>;
 
-          let spies: Record<Exclude<keyof typeof element, symbol> | string, SinonSpy>;
+          let spies: Record<Exclude<keyof typeof element, symbol> | string, ReturnType<typeof hanbi.stubMethod>>;
 
           beforeEach(setupClient);
       beforeEach(() => mockQueriesInCache());

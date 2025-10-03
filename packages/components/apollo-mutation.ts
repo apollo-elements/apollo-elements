@@ -431,8 +431,7 @@ export class ApolloMutationElement<D = unknown, V = VariablesOf<D>>
         else {
           return (
             el.getVariablesFromInputs() ??
-            // @ts-expect-error: TODO: Find a better way to do this
-            el.getDOMVariables() as Variables<D, V>
+            el.getDOMVariables() as Variables<D, V> | null
           );
         }
       },

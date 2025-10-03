@@ -1,5 +1,5 @@
 /// <reference types="chai" />
-import type { SinonSpy, SinonStub } from 'sinon';
+import type * as hanbi from 'hanbi';
 
 export type Library =
   'fast' |
@@ -24,8 +24,8 @@ export interface SetupOptions<T extends HTMLElement> {
 
 export interface SetupResult<T extends TestableElement> {
   element: T;
-  spies: Record<keyof T|string, SinonSpy>;
-  stubs: Record<keyof T|string, SinonStub>;
+  spies: Record<keyof T|string, ReturnType<typeof hanbi.stubMethod>>;
+  stubs: Record<keyof T|string, ReturnType<typeof hanbi.stubMethod>>;
 }
 
 export type SetupFunction<Base extends HTMLElement & TestableElement> =
