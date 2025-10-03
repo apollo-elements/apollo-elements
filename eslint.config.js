@@ -63,7 +63,7 @@ export default [
 
   // Test files override
   {
-    files: ['packages/**/*.test.ts', 'packages/**/*.test.js'],
+    files: ['packages/**/*.test.ts', 'packages/**/*.test.js', 'test/**/*.ts', 'test/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.mocha,
@@ -77,6 +77,7 @@ export default [
         varsIgnorePattern: 'TypeCheck|ApolloQueryElement|LitApolloQueryController'
       }],
       '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-deprecated': 'warn',
     },
   },
 
@@ -107,7 +108,6 @@ export default [
       '_site/**',
       '_site-dev/**',
       'docs/**',
-      'test/**',
       'plugins/**',
       'packages/**/*.js',
       'packages/*/custom-elements.json',
