@@ -53,7 +53,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
 
   /** @summary The mutation. */
   @controlled()
-  @state()
+  @property({ attribute: false })
     mutation: ComponentDocument<D, V> | null = null;
 
   /**
@@ -76,7 +76,7 @@ export class ApolloMutation<D = unknown, V = VariablesOf<D>> extends ApolloEleme
    * ```
    */
   @controlled({ path: 'options' })
-  @state()
+  @property({ attribute: false })
     optimisticResponse?: OptimisticResponseType<D, V>;
 
   /**
