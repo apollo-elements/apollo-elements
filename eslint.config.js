@@ -85,10 +85,12 @@ export default [
     languageOptions: {
       parserOptions: {
         ecmaVersion: 2020,
+        project: null,
       },
     },
     rules: {
       'no-console': 'off',
+      '@typescript-eslint/no-deprecated': 'off',
     },
   },
 
