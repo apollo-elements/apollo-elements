@@ -76,6 +76,14 @@ export async function promptApp(
   };
 }
 
+type ComponentAnswers = {
+  type: Operation;
+  name: string;
+  subdir?: string;
+  operationName?: string;
+  operation?: string;
+};
+
 export async function promptComponent(
   options?: Partial<{
     pkgManager: string;
@@ -84,7 +92,9 @@ export async function promptComponent(
     subdir: string;
   }>
 ): Promise<ComponentOptions> {
-  const questions = [{
+  // inquirer v12 types are overly strict for question arrays
+  // type-safety is preserved via ComponentAnswers
+  const rawAnswers = await inquirer.prompt([{
     type: 'list',
     name: 'type',
     message: 'What kind of component is it?',
@@ -111,16 +121,9 @@ export async function promptComponent(
     name: 'operation',
     message: 'Enter your GraphQL operation.',
     when: () => options?.edit,
-  }] as const;
+  }] as unknown as Parameters<typeof inquirer.prompt>[0], { ...options, subdir: options && options.subdir || '' });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const answers = await inquirer.prompt(questions as any, { ...options, subdir: options && options.subdir || '' }) as {
-    type: Operation;
-    name: string;
-    subdir?: string;
-    operationName?: string;
-    operation?: string;
-  };
+  const answers = rawAnswers as unknown as ComponentAnswers;
 
   return {
     ...options,
