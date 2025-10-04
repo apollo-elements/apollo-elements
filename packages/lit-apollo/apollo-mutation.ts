@@ -12,7 +12,7 @@ import type {
 
 import { controlled } from '@apollo-elements/core/decorators';
 
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { ApolloMutationController } from '@apollo-elements/core/apollo-mutation-controller';
 
