@@ -36,14 +36,17 @@ describe('[hybrids] query factory', function() {
         define<H>({
           tag,
           query: query(S.NullableParamQuery, { noAutoSubscribe: true }),
-          render: (host: H) => {
-            return html`
-              <output id="called">${stringify(host.query.called)}</output>
-              <output id="data">${stringify(host.query.data)}</output>
-              <output id="error">${stringify(host.query.error)}</output>
-              <output id="errors">${stringify(host.query.errors)}</output>
-              <output id="loading">${stringify(host.query.loading)}</output>
-            `;
+          render: {
+            value: (host: H) => {
+              return html`
+                <output id="called">${stringify(host.query.called)}</output>
+                <output id="data">${stringify(host.query.data)}</output>
+                <output id="error">${stringify(host.query.error)}</output>
+                <output id="errors">${stringify(host.query.errors)}</output>
+                <output id="loading">${stringify(host.query.loading)}</output>
+              `;
+            },
+            shadow: true,
           },
         });
 

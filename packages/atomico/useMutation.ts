@@ -2,12 +2,14 @@ import type { ComponentDocument, Data, Variables } from '@apollo-elements/core/t
 
 import type { ApolloClient, ApolloLink } from '@apollo/client';
 
-import { useController } from '@atomico/hooks/use-controller';
+import { useHost, useMemo, useUpdate } from 'atomico';
 
 import {
   ApolloMutationController,
   ApolloMutationControllerOptions,
 } from '@apollo-elements/core/apollo-mutation-controller';
+
+import { AtomicoControllerHost } from './atomico-controller-host.js';
 
 export function useMutation<D, V>(
   mutation: ComponentDocument<D, V>,
@@ -16,7 +18,13 @@ export function useMutation<D, V>(
   (params?: Partial<ApolloClient.MutateOptions<Data<D>, Variables<D, V>>>) => Promise<ApolloLink.Result<Data<D>>>,
   ApolloMutationController<D, V>
 ] {
-  const controller = useController(host =>
-    new ApolloMutationController<D, V>(host, mutation, options));
+  const host = useHost();
+  const update = useUpdate();
+  const controller = useMemo(() =>
+    new ApolloMutationController<D, V>(
+      new AtomicoControllerHost(host.current, update),
+      mutation,
+      options
+    ), []);
   return [controller.mutate, controller];
 }

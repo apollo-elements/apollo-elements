@@ -11,7 +11,7 @@ import { aTimeout, fixture, expect } from '@open-wc/testing';
 import { unsafeStatic, html as h } from 'lit/static-html.js';
 
 import { ApolloQuery } from './apollo-query';
-import { FASTElement, customElement, html, DOM } from '@microsoft/fast-element';
+import { FASTElement, customElement, html, Updates } from '@microsoft/fast-element';
 import { NetworkStatus } from '@apollo/client';
 import { describeQuery } from '@apollo-elements/test/query.test';
 import * as hanbi from 'hanbi';
@@ -40,7 +40,7 @@ class TestableApolloQuery<D = unknown, V = I.VariablesOf<D>>
   extends ApolloQuery<D, V>
   implements TestableElement {
   async hasRendered() {
-    await DOM.nextUpdate();
+    await Updates.next();
     return this;
   }
 
@@ -71,7 +71,7 @@ describe('[FAST] ApolloQuery', function() {
       for (const [key, val] of Object.entries(opts?.properties ?? {}) as I.Entries<T>)
         element[key] = val;
 
-      await DOM.nextUpdate();
+      await Updates.next();
 
       return { element, spies, stubs };
     },

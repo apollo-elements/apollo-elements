@@ -32,34 +32,47 @@ export async function promptApp(
     pkgManager: string
   },
 ): Promise<AppOptions> {
+  const answers = await inquirer.prompt<{
+    uri: string;
+    overwrite: boolean;
+    'package-defaults': boolean;
+    install: boolean;
+    start: boolean;
+  }>([{
+    type: 'input',
+    name: 'uri',
+    message: 'What is the URI to your GraphQL endpoint?',
+    default: '/graphql',
+  }, {
+    type: 'confirm',
+    name: 'overwrite',
+    message: 'Overwrite existing files?',
+    default: false,
+  }, {
+    type: 'confirm',
+    name: 'package-defaults',
+    message: 'Use default package.json fields (e.g. author, license, etc)?',
+    default: true,
+  }, {
+    type: 'confirm',
+    name: 'install',
+    message: 'Install dependencies?',
+    default: true,
+  }, {
+    type: 'confirm',
+    name: 'start',
+    message: 'Launch when ready?',
+    default: true,
+  }], options);
+
   return {
     ...options,
-    ...await inquirer.prompt([{
-      type: 'input',
-      name: 'uri',
-      message: 'What is the URI to your GraphQL endpoint?',
-      default: '/graphql',
-    }, {
-      type: 'confirm',
-      name: 'overwrite',
-      message: 'Overwrite existing files?',
-      default: false,
-    }, {
-      type: 'confirm',
-      name: 'package-defaults',
-      message: 'Use default package.json fields (e.g. author, license, etc)?',
-      default: true,
-    }, {
-      type: 'confirm',
-      name: 'install',
-      message: 'Install dependencies?',
-      default: true,
-    }, {
-      type: 'confirm',
-      name: 'start',
-      message: 'Launch when ready?',
-      default: true,
-    }], options),
+    ...answers,
+    pkgManager: options.pkgManager as 'npm' | 'yarn',
+    packageDefaults: answers['package-defaults'],
+    silent: false,
+    codegen: true,
+    directory: process.cwd(),
   };
 }
 
@@ -71,36 +84,55 @@ export async function promptComponent(
     subdir: string;
   }>
 ): Promise<ComponentOptions> {
+  const questions = [{
+    type: 'list',
+    name: 'type',
+    message: 'What kind of component is it?',
+    choices: [
+      { name: 'Query', value: 'query' },
+      { name: 'Mutation', value: 'mutation' },
+      { name: 'Subscription', value: 'subscription' },
+    ],
+  }, {
+    type: 'input',
+    name: 'name',
+    message: 'What is the component\'s tag name?',
+    validate: (name: string) => name.includes('-') || ERR_BAD_CE_TAG_NAME,
+  }, {
+    type: 'input',
+    name: 'subdir',
+    message: 'Sub directory. Leave blank to scaffold to src/components',
+  }, {
+    when: () => !options?.operationName && options?.edit === true,
+    name: 'operationName',
+    message: 'Enter your operation name e.g. AllItems',
+  }, {
+    type: 'editor',
+    name: 'operation',
+    message: 'Enter your GraphQL operation.',
+    when: () => options?.edit,
+  }] as const;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const answers = await inquirer.prompt(questions as any, { ...options, subdir: options && options.subdir || '' }) as {
+    type: Operation;
+    name: string;
+    subdir?: string;
+    operationName?: string;
+    operation?: string;
+  };
+
   return {
     ...options,
-    ...await inquirer.prompt([{
-      type: 'list',
-      name: 'type',
-      message: 'What kind of component is it?',
-      choices: [
-        { name: 'Query', value: 'query' },
-        { name: 'Mutation', value: 'mutation' },
-        { name: 'Subscription', value: 'subscription' },
-      ],
-    }, {
-      type: 'input',
-      name: 'name',
-      message: 'What is the component\'s tag name?',
-      validate: name => name.includes('-') || ERR_BAD_CE_TAG_NAME,
-    }, {
-      type: 'input',
-      name: 'subdir',
-      message: 'Sub directory. Leave blank to scaffold to src/components',
-    }, {
-      when: () => !options?.operationName && options?.edit === true,
-      name: 'operationName',
-      message: 'Enter your operation name e.g. AllItems',
-    }, {
-      type: 'editor',
-      name: 'operation',
-      message: 'Enter your GraphQL operation.',
-      when: () => options?.edit,
-    }], { ...options, subdir: options && options.subdir || '' }),
+    ...answers,
+    pkgManager: (options?.pkgManager ?? 'npm') as 'npm' | 'yarn',
+    silent: false,
+    codegen: true,
+    overwrite: false,
+    directory: process.cwd(),
+    name: answers.name,
+    type: answers.type,
+    operationName: answers.operationName ?? options?.operationName ?? '',
   } as ComponentOptions;
 }
 

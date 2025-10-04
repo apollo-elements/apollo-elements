@@ -9,7 +9,7 @@ import { expect, fixture } from '@open-wc/testing';
 import { unsafeStatic, html as h } from 'lit/static-html.js';
 
 import { ApolloElement } from './apollo-element';
-import { customElement, DOM, FASTElement, html } from '@microsoft/fast-element';
+import { customElement, Updates, FASTElement, html } from '@microsoft/fast-element';
 import { assertType, isApolloError } from '@apollo-elements/test';
 
 describe('[fast] ApolloElement', function describeApolloElement() {
@@ -39,7 +39,7 @@ describe('[fast] ApolloElement', function describeApolloElement() {
     const element = await fixture<Test>(h`<${tag}></${tag}>`);
     // @ts-expect-error: just testing assignment and rendering
     element.client = { test: 'CLIENT' };
-    await DOM.nextUpdate();
+    await Updates.next();
     expect(element.shadowRoot.textContent).to.equal('CLIENT');
   });
 

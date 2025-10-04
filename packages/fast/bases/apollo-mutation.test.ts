@@ -27,7 +27,7 @@ import {
 } from '@apollo-elements/test';
 
 import { ApolloMutation } from './apollo-mutation';
-import { FASTElement, html, customElement, DOM } from '@microsoft/fast-element';
+import { FASTElement, html, customElement, Updates } from '@microsoft/fast-element';
 
 import { describeMutation } from '@apollo-elements/test/mutation.test';
 
@@ -47,7 +47,7 @@ class TestableApolloMutation<D, V = I.VariablesOf<D>>
   declare shadowRoot: ShadowRoot;
 
   async hasRendered(): Promise<this> {
-    await DOM.nextUpdate();
+    await Updates.next();
     return this;
   }
 
@@ -85,7 +85,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
       for (const [key, val] of Object.entries(properties ?? {}) as I.Entries<T>)
         key !== 'onCompleted' && key !== 'onError' && (element[key] = val);
 
-      await DOM.nextUpdate();
+      await Updates.next();
 
       return { element, spies, stubs };
     },
@@ -125,7 +125,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
           @customElement({ name })
           class Klass extends Test { }
           element = await fixture<Klass>(`<${name} refetch-queries="A, B,C,    D"></${name}>`);
-          await DOM.nextUpdate();
+          await Updates.next();
         });
 
         it('sets the property as an array of query names', function() {
@@ -147,7 +147,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
 
         beforeEach(async function setRefetchQueries() {
           element.refetchQueries = refetchQueries;
-          await DOM.nextUpdate();
+          await Updates.next();
         });
 
         it('sets the property as an array of query names', function() {
@@ -171,7 +171,7 @@ describe('[fast] ApolloMutation', function describeApolloMutation() {
 
         beforeEach(async function setRefetchQueries() {
           element.refetchQueries = refetchQueries;
-          await DOM.nextUpdate();
+          await Updates.next();
         });
 
         it('sets the property as an array of query names', function() {

@@ -71,7 +71,10 @@ describe('[hybrids] controller factory', function() {
       define({
         tag,
         clock: controller(ClockController, 100000000),
-        render: (host: typeof element) => html`<output>${host.clock.value.getSeconds()}</output>`,
+        render: {
+          value: (host: typeof element) => html`<output>${host.clock.value.getSeconds()}</output>`,
+          shadow: true,
+        },
       } as Component<typeof element>);
 
       element = await fixture(`<${tag}></${tag}>`);

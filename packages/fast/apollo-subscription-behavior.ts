@@ -1,7 +1,7 @@
 import type { ComponentDocument, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 import type { OperationVariables } from '@apollo/client';
 
-import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
+import type { HostBehavior, HostController, FASTElement } from '@microsoft/fast-element';
 
 import {
   ApolloSubscriptionController,
@@ -17,7 +17,7 @@ import { FASTControllerHost } from './fast-controller-host';
  * 🚀  FAST Behavior that connects to your Apollo cache.
  */
 export class ApolloSubscriptionBehavior<D, V extends OperationVariables = OperationVariables & VariablesOf<D>>
-  extends ApolloSubscriptionController<D, V> implements Behavior {
+  extends ApolloSubscriptionController<D, V> implements HostBehavior {
   /**
    * Latest query data.
    */
@@ -46,14 +46,14 @@ export class ApolloSubscriptionBehavior<D, V extends OperationVariables = Operat
   ) {
     super(new FASTControllerHost(hostElement), subscription, { ...options, hostElement });
     this.variables = options?.variables ?? null;
-    hostElement.$fastController.addBehaviors([this]);
+    hostElement.$fastController.addBehavior(this);
   }
 
-  bind(_source: FASTElement & HTMLElement, _context: ExecutionContext): void {
+  connectedCallback(_controller: HostController): void {
     this.hostConnected();
   }
 
-  unbind(_source: FASTElement): void {
+  disconnectedCallback(_controller: HostController): void {
     this.hostDisconnected();
   }
 }

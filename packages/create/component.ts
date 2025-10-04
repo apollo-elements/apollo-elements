@@ -6,7 +6,7 @@ import { promisify } from 'util';
 import { fileURLToPath } from 'url';
 import { dirname, join, relative } from 'path';
 import fs from 'fs';
-import mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 
 import { codegen } from './codegen.js';
 import { processTemplate, readFile, writeFile } from './files.js';

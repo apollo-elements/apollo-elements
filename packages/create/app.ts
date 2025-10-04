@@ -21,7 +21,7 @@ const ncp = promisify(NCP.ncp);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function isExecaError(error: unknown): error is ExecaError {
-  return typeof error == "object" && !!error && 'stdout' in error && typeof error.stdout === 'string'
+  return typeof error == "object" && !!error && 'stdout' in error && typeof error.stdout === 'string' && 'stderr' in error
 }
 
 /**
@@ -114,8 +114,10 @@ export async function app(options: AppOptions): Promise<void> {
   try {
     await execStart(options);
   } catch (e) {
-    if (isExecaError(e))
-    await writeFile(path.join(options.directory, 'start-error.log'), e.stderr, 'utf-8');
+    if (isExecaError(e)) {
+      const stderr = typeof e.stderr === 'string' ? e.stderr : String(e.stderr ?? '');
+      await writeFile(path.join(options.directory, 'start-error.log'), stderr, 'utf-8');
+    }
     if (!options.silent) {
       console.log(
         'Something went wrong starting the app.\n',
