@@ -29,7 +29,8 @@ function normalizeOptions<T extends BaseOptions>(options: T): T {
 
 export async function promptApp(
   options: {
-    pkgManager: string
+    pkgManager: string;
+    directory?: string;
   },
 ): Promise<AppOptions> {
   const answers = await inquirer.prompt<{
@@ -72,7 +73,7 @@ export async function promptApp(
     packageDefaults: answers['package-defaults'],
     silent: false,
     codegen: true,
-    directory: process.cwd(),
+    directory: options.directory ?? process.cwd(),
   };
 }
 
@@ -90,6 +91,7 @@ export async function promptComponent(
     operationName: Operation;
     edit: boolean;
     subdir: string;
+    directory: string;
   }>
 ): Promise<ComponentOptions> {
   // inquirer v12 types are overly strict for question arrays
@@ -132,7 +134,7 @@ export async function promptComponent(
     silent: false,
     codegen: true,
     overwrite: false,
-    directory: process.cwd(),
+    directory: options?.directory ?? process.cwd(),
     name: answers.name,
     type: answers.type,
     operationName: answers.operationName ?? options?.operationName ?? '',

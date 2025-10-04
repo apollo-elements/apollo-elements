@@ -69,7 +69,7 @@ async function initPackage(options: AppOptions) {
   await execa(
     options.pkgManager,
     ['init', ...(options.packageDefaults ? ['--yes', '--quiet'] : [])],
-    { stderr: 'inherit' }
+    { stderr: 'inherit', cwd: options.directory }
   );
 }
 
@@ -80,7 +80,7 @@ async function execInstall(options: AppOptions) {
   await execa(
     options.pkgManager,
     ['install'],
-    { stdio: 'inherit' }
+    { stdio: 'inherit', cwd: options.directory }
   );
 }
 
@@ -95,7 +95,7 @@ async function execStart(options: AppOptions) {
     return execa(
       options.pkgManager,
       ['start'],
-      { stdio: 'inherit' }
+      { stdio: 'inherit', cwd: options.directory }
     );
   }
 }
