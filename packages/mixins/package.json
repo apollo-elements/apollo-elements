@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/mixins",
-  "version": "5.0.3",
+  "version": "6.0.0",
   "description": "👩‍🚀🌛 Custom Element class mixins for Apollo GraphQL 🚀👨‍🚀",
   "main": "index.js",
   "module": "index.js",
@@ -44,7 +44,7 @@
   },
   "homepage": "https://apolloelements.dev/api/libraries/mixins/",
   "dependencies": {
-    "@apollo-elements/core": "^2.1.2",
+    "@apollo-elements/core": "^3.0.0",
     "@open-wc/dedupe-mixin": "^2.0.1",
     "tslib": "^2.8.1"
   },
