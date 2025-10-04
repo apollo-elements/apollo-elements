@@ -25,7 +25,7 @@ export class AtomicoControllerHost implements ReactiveControllerHost {
   }
 
   constructor(public element: HTMLElement, update: ReturnType<typeof useUpdate>) {
-    if (hosts.has(element))
+    if (hosts.has(element) && hosts.get(element) instanceof AtomicoControllerHost)
       return hosts.get(element) as AtomicoControllerHost;
 
     this.#update = update;
