@@ -33,6 +33,7 @@ export interface ApolloQueryControllerOptions<D, V = VariablesOf<D>> extends
   onData?: (data: Data<D>) => void;
   onError?: (error: Error) => void;
   fetchPolicy?: WatchQueryFetchPolicy;
+  notifyOnNetworkStatusChange?: boolean;
   pollInterval?: number;
   nextFetchPolicy?: WatchQueryFetchPolicy;
   refetchWritePolicy?: RefetchWritePolicy;
