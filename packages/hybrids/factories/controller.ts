@@ -64,6 +64,24 @@ export class HybridsControllerHost extends EventTarget implements ReactiveContro
 
 const hosts = new WeakMap<HTMLElement, HybridsControllerHost>();
 
+const ensureHost = <E extends HTMLElement>(element: E): HybridsControllerHost =>
+  hosts.get(element) ?? (() => {
+    const host = new HybridsControllerHost(element);
+    hosts.set(element, host);
+    return host;
+  })();
+
+const ensureController = <E extends HTMLElement, C extends ReactiveController>(
+  element: E,
+  controllers: WeakMap<E, ReactiveController>,
+  create: () => C
+): C =>
+  (controllers.get(element) as C) ?? (() => {
+    const controller = create();
+    controllers.set(element, controller);
+    return controller;
+  })();
+
 export function controller<E extends HTMLElement, C extends ReactiveController>(
   Controller: Constructor<C>,
   // mixins are notoriously hard to type in ts.
@@ -71,40 +89,21 @@ export function controller<E extends HTMLElement, C extends ReactiveController>(
   ...args: any[]
 ): Descriptor<E, C> {
   const controllers = new WeakMap<E, ReactiveController>();
+  const createController = (element: E) => () =>
+    new Controller(ensureHost(element), ...args) as C;
+
   return {
-    value(element: E) {
-      let controller = controllers.get(element) as C;
+    value: (element: E) =>
+      ensureController(element, controllers, createController(element)),
 
-      if (!controller) {
-        if (!hosts.get(element))
-          hosts.set(element, new HybridsControllerHost(element));
-
-        controller = new Controller(hosts.get(element), ...args) as C;
-        controllers.set(element, controller);
-      }
-
-      return controller;
-    },
     connect(element: E, key: string, invalidate: Invalidate) {
-      if (!hosts.get(element))
-        hosts.set(element, new HybridsControllerHost(element));
-
-      const host = hosts.get(element) as HybridsControllerHost;
-
-      let controller = controllers.get(element);
-
-      if (!controller) {
-        controller = new Controller(hosts.get(element), ...args);
-        controllers.set(element, controller);
-      }
+      const host = ensureHost(element);
+      const controller = ensureController(element, controllers, createController(element));
 
       host.register(key, { invalidate, controller });
-
       controller.hostConnected?.();
 
-      return () => {
-        controller?.hostDisconnected?.();
-      };
+      return () => controller?.hostDisconnected?.();
     },
   };
 }
