@@ -72,9 +72,18 @@ export function controller<E extends HTMLElement, C extends ReactiveController>(
 ): Descriptor<E, C> {
   const controllers = new WeakMap<E, ReactiveController>();
   return {
-    get(element: E) {
-      const c = controllers.get(element) as C;
-      return (x => x)(c);
+    value(element: E) {
+      let controller = controllers.get(element) as C;
+
+      if (!controller) {
+        if (!hosts.get(element))
+          hosts.set(element, new HybridsControllerHost(element));
+
+        controller = new Controller(hosts.get(element), ...args) as C;
+        controllers.set(element, controller);
+      }
+
+      return controller;
     },
     connect(element: E, key: string, invalidate: Invalidate) {
       if (!hosts.get(element))
@@ -84,8 +93,10 @@ export function controller<E extends HTMLElement, C extends ReactiveController>(
 
       let controller = controllers.get(element);
 
-      controller ??= new Controller(hosts.get(element), ...args);
-      controllers.set(element, controller);
+      if (!controller) {
+        controller = new Controller(hosts.get(element), ...args);
+        controllers.set(element, controller);
+      }
 
       host.register(key, { invalidate, controller });
 

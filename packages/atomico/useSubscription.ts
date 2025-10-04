@@ -1,20 +1,28 @@
 import type { ComponentDocument } from '@apollo-elements/core/types';
 import type { OperationVariables } from '@apollo/client';
 
-import { useController } from '@atomico/hooks/use-controller';
-import { useEffect, useState } from 'atomico';
+import { useEffect, useState, useHost, useMemo, useUpdate } from 'atomico';
 
 import {
   ApolloSubscriptionController,
   ApolloSubscriptionControllerOptions,
 } from '@apollo-elements/core/apollo-subscription-controller';
 
+import { AtomicoControllerHost } from './atomico-controller-host.js';
+
 export function useSubscription<D, V extends OperationVariables = OperationVariables>(
   query: ComponentDocument<D, V>,
   options?: ApolloSubscriptionControllerOptions<D, V>
 ): ApolloSubscriptionController<D, V> {
   const [, forceUpdate] = useState({});
-  const controller = useController(host => new ApolloSubscriptionController<D, V>(host, query, options));
+  const host = useHost();
+  const update = useUpdate();
+  const controller = useMemo(() =>
+    new ApolloSubscriptionController<D, V>(
+      new AtomicoControllerHost(host.current, update),
+      query,
+      options
+    ), []);
 
   // Force component updates when controller data changes
   useEffect(() => {

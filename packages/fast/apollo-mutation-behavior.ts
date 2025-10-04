@@ -1,6 +1,6 @@
 import type { ComponentDocument, Data, Variables, VariablesOf } from '@apollo-elements/core/types';
 
-import type { Behavior, ExecutionContext, FASTElement } from '@microsoft/fast-element';
+import type { HostBehavior, HostController, FASTElement } from '@microsoft/fast-element';
 
 import {
   ApolloMutationController as AMC,
@@ -15,7 +15,7 @@ import { FASTControllerHost } from './fast-controller-host';
  *
  * 🚀  FAST Behavior that connects to your Apollo cache.
  */
-export class ApolloMutationBehavior<D, V = VariablesOf<D>> extends AMC<D, V> implements Behavior {
+export class ApolloMutationBehavior<D, V = VariablesOf<D>> extends AMC<D, V> implements HostBehavior {
   /**
    * Latest query data.
    */
@@ -46,14 +46,14 @@ export class ApolloMutationBehavior<D, V = VariablesOf<D>> extends AMC<D, V> imp
   ) {
     super(new FASTControllerHost(hostElement), mutation, { ...options, hostElement });
     this.variables = options?.variables ?? null;
-    hostElement.$fastController.addBehaviors([this]);
+    hostElement.$fastController.addBehavior(this);
   }
 
-  bind(_source: FASTElement & HTMLElement, _context: ExecutionContext): void {
+  connectedCallback(_controller: HostController): void {
     this.hostConnected();
   }
 
-  unbind(_source: FASTElement): void {
+  disconnectedCallback(_controller: HostController): void {
     this.hostDisconnected();
     this.host.removeController(this);
   }

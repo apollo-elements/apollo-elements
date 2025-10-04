@@ -48,14 +48,17 @@ describe('[hybrids] mutation factory', function() {
             await host.mutation.host.updateComplete;
             return host;
           },
-          render: (host: H) => {
-            return html`
-              <output id="called">${stringify(host.mutation.called)}</output>
-              <output id="data">${stringify(host.mutation.data)}</output>
-              <output id="error">${stringify(host.mutation.error)}</output>
-              <output id="errors">${stringify(host.mutation.errors)}</output>
-              <output id="loading">${stringify(host.mutation.loading)}</output>
-            `;
+          render: {
+            value: (host: H) => {
+              return html`
+                <output id="called">${stringify(host.mutation.called)}</output>
+                <output id="data">${stringify(host.mutation.data)}</output>
+                <output id="error">${stringify(host.mutation.error)}</output>
+                <output id="errors">${stringify(host.mutation.errors)}</output>
+                <output id="loading">${stringify(host.mutation.loading)}</output>
+              `;
+            },
+            shadow: true,
           },
         });
 

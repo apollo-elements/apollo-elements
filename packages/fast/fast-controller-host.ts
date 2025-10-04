@@ -1,5 +1,5 @@
 import { ReactiveController, ReactiveControllerHost } from 'lit';
-import { DOM, FASTElement } from '@microsoft/fast-element';
+import { FASTElement, Updates } from '@microsoft/fast-element';
 
 const hosts = new WeakMap<FASTElement, FASTControllerHost>();
 
@@ -13,7 +13,7 @@ export class FASTControllerHost implements ReactiveControllerHost {
   requestUpdate(): void { }
 
   get updateComplete(): Promise<boolean> {
-    return DOM.nextUpdate().then(() => true);
+    return Updates.next().then(() => true);
   }
 
   constructor(public $fastElement: FASTElement) {

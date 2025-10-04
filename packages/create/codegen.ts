@@ -1,5 +1,5 @@
 import path from 'path';
-import { execa, ExecaReturnValue, ExecaError } from 'execa';
+import { execa, type Result, ExecaError } from 'execa';
 import { AppOptions, BaseOptions, ComponentOptions } from './options.js';
 import { getOperationFileName, getUnprefixedTagName } from './component.js';
 import Chalk from 'chalk';
@@ -8,7 +8,7 @@ const { blue, cyan, yellow, red, greenBright } = Chalk;
 const cwd = process.cwd();
 
 function isExecaError(error: unknown): error is ExecaError {
-  return typeof error == "object" && !!error && 'stdout' in error && typeof error.stdout === 'string'
+  return typeof error == "object" && !!error && 'stdout' in error && typeof error.stdout === 'string' && 'stderr' in error
 }
 
 function getFailedFilename(options: ComponentOptions): string {
@@ -61,10 +61,11 @@ function logNameError(options: BaseOptions, error: ExecaError): void {
     console.log(`${red('ERROR:')} Code generation failed.`);
   const uri = isAppOptions(options) ? cyan(options.uri) : 'the specified URI';
   if (!options.silent) {
+    const stdout = typeof error.stdout === 'string' ? error.stdout : String(error.stdout ?? '');
     console.log(
       `       Is your graphql server running at ${uri}?`,
       `\n${red('ORIGINAL ERROR:')}\n`,
-      error.stdout.split('\n').join('\n  '),
+      stdout.split('\n').join('\n  '),
       '\n'
     );
   }
@@ -94,18 +95,19 @@ function logAnyError(options: BaseOptions, error: unknown): void {
 function logError(options: BaseOptions, error: ExecaError): void {
   if (options.silent) return;
   const filename = getFilename(options);
+  const stdout = typeof error.stdout === 'string' ? error.stdout : String(error.stdout ?? '');
   console.log(
     `${yellow('WARNING:')} Code generation failed. Do the generated GraphQL operations match your schema?`,
     `         Check ${filename}`,
     `\n${red('ORIGINAL ERROR:')}\n`,
-    error.stdout.split('\n').join('\n  '),
+    stdout.split('\n').join('\n  '),
   );
 }
 
 /**
  * Run GraphQL codegen to develop an initial TypeScript schema
  */
-export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|void> {
+export async function codegen(options: BaseOptions): Promise<Result|void> {
   if (!options.codegen) return;
   if (!options.silent)
     console.log(`\n${cyan('Generating types from schema')}...\n`);
@@ -122,9 +124,12 @@ export async function codegen(options: BaseOptions): Promise<ExecaReturnValue|vo
         logListrError(options, error as { errors: Error[] });
       else
         logAnyError(options, error);
-    } else if (error?.stdout.includes('Cannot read property \'name\' of undefined'))
-      logNameError(options, error);
-    else
-      logError(options, error);
+    } else {
+      const stdout = typeof error.stdout === 'string' ? error.stdout : String(error.stdout ?? '');
+      if (stdout.includes('Cannot read property \'name\' of undefined'))
+        logNameError(options, error);
+      else
+        logError(options, error);
+    }
   }
 }

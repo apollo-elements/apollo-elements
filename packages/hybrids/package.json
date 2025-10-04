@@ -43,8 +43,8 @@
   "homepage": "https://apolloelements.dev/api/libraries/hybrids",
   "dependencies": {
     "@apollo-elements/core": "^2.1.2",
-    "@lit/reactive-element": "^1.0.2",
-    "hybrids": "^7",
+    "@lit/reactive-element": "^2.1.1",
+    "hybrids": "^9",
     "tslib": "^2.8.1"
   },
   "customElements": "custom-elements.json",

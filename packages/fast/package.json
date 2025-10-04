@@ -50,7 +50,7 @@
   "dependencies": {
     "@apollo-elements/core": "^2.1.2",
     "@apollo-elements/mixins": "^5.0.3",
-    "@microsoft/fast-element": "^1.6.2",
+    "@microsoft/fast-element": "^2.7.0",
     "tslib": "^2.8.1"
   },
   "customElements": "custom-elements.json",

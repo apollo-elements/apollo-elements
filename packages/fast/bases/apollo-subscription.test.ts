@@ -20,7 +20,7 @@ import { expect, fixture } from '@open-wc/testing';
 
 import { html as h, unsafeStatic } from 'lit/static-html.js';
 
-import { FASTElement, customElement, DOM, html } from '@microsoft/fast-element';
+import { FASTElement, customElement, Updates, html } from '@microsoft/fast-element';
 import { assertType, isApolloError } from '@apollo-elements/test';
 import { describeSubscription } from '@apollo-elements/test/subscription.test';
 
@@ -39,7 +39,7 @@ class TestableApolloSubscription<D = unknown, V extends C.OperationVariables = C
   declare shadowRoot: ShadowRoot;
 
   async hasRendered() {
-    await DOM.nextUpdate();
+    await Updates.next();
     return this;
   }
 
@@ -70,7 +70,7 @@ describe('[FAST] ApolloSubscription', function() {
       for (const [key, val] of Object.entries(opts?.properties ?? {}) as I.Entries<T>)
         element[key] = val;
 
-      await DOM.nextUpdate();
+      await Updates.next();
 
       return { element, spies, stubs };
     },

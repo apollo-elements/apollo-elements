@@ -36,12 +36,15 @@ describe('[hybrids] subscription factory', function() {
         define<H>({
           tag,
           subscription: subscription(S.NullableParamSubscription, { noAutoSubscribe: true }),
-          render: (host: H) => {
-            return html`
-              <output id="data">${stringify(host.subscription.data)}</output>
-              <output id="error">${stringify(host.subscription.error)}</output>
-              <output id="loading">${stringify(host.subscription.loading)}</output>
-            `;
+          render: {
+            value: (host: H) => {
+              return html`
+                <output id="data">${stringify(host.subscription.data)}</output>
+                <output id="error">${stringify(host.subscription.error)}</output>
+                <output id="loading">${stringify(host.subscription.loading)}</output>
+              `;
+            },
+            shadow: true,
           },
         });
 
