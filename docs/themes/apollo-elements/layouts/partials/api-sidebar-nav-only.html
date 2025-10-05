@@ -75,27 +75,29 @@
                     {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}
                       <ul class="sidebar-tertiary">
                         {{ range .RegularPages.ByWeight }}
-                          <li class="sidebar-tertiary-item">
-                            <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
-                              {{ .Title }}
-                            </a>
+                          {{ if not (strings.HasSuffix .File.Path ".html") }}
+                            <li class="sidebar-tertiary-item">
+                              <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
+                                {{ .Title }}
+                              </a>
 
-                            <!-- ToC for current third-level page -->
-                            {{ if $currentPage.Eq . }}
-                              {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
-                              {{ if $apiToc }}
-                                <div class="sidebar-toc-inline">
-                                  <h4 class="sidebar-toc-title">On This Page</h4>
-                                  <nav id="TableOfContents">{{ $apiToc }}</nav>
-                                </div>
-                              {{ else if $currentPage.TableOfContents }}
-                                <div class="sidebar-toc-inline">
-                                  <h4 class="sidebar-toc-title">On This Page</h4>
-                                  {{ $currentPage.TableOfContents }}
-                                </div>
+                              <!-- ToC for current third-level page -->
+                              {{ if $currentPage.Eq . }}
+                                {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
+                                {{ if $apiToc }}
+                                  <div class="sidebar-toc-inline">
+                                    <h4 class="sidebar-toc-title">On This Page</h4>
+                                    <nav id="TableOfContents">{{ $apiToc }}</nav>
+                                  </div>
+                                {{ else if $currentPage.TableOfContents }}
+                                  <div class="sidebar-toc-inline">
+                                    <h4 class="sidebar-toc-title">On This Page</h4>
+                                    {{ $currentPage.TableOfContents }}
+                                  </div>
+                                {{ end }}
                               {{ end }}
-                            {{ end }}
-                          </li>
+                            </li>
+                          {{ end }}
                         {{ end }}
                         {{ range .Sections.ByWeight }}
                           <li class="sidebar-tertiary-item">
