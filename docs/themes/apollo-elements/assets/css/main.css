@@ -573,6 +573,12 @@ body.with-sidebar {
   padding: 0 var(--space-lg);
 }
 
+#mobile-main-menu {
+  display: flex; 
+  justify-content: space-between;
+  border-bottom: 1px solid var(--primary-lines-color);
+}
+
 .mobile-nav-item {
   margin-bottom: var(--space-sm);
 }
@@ -596,13 +602,6 @@ body.with-sidebar {
 .mobile-search {
   padding: 0 var(--space-lg) var(--space-lg);
   border-bottom: 1px solid var(--primary-lines-color);
-  margin-bottom: var(--space-lg);
-}
-
-.mobile-sidebar-nav {
-  padding: 0 var(--space-lg) var(--space-lg);
-  border-bottom: 1px solid var(--primary-lines-color);
-  margin-bottom: var(--space-lg);
 }
 
 .mobile-sidebar-nav .sidebar-nav {

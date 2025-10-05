@@ -66,6 +66,16 @@
     </div>
     {{ end }}
 
+    <ul id="mobile-main-menu" class="mobile-nav-list">
+      {{ range .Site.Menus.main }}
+        <li class="mobile-nav-item">
+          <a href="{{ .URL }}" class="mobile-nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}">
+            {{ .Name }}
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+
     <!-- Page-specific navigation (API/Guides sidebar) -->
     {{ if .Params.sidebar }}
       <div class="mobile-sidebar-nav">
@@ -76,16 +86,6 @@
         {{ end }}
       </div>
     {{ end }}
-
-    <ul class="mobile-nav-list">
-      {{ range .Site.Menus.main }}
-        <li class="mobile-nav-item">
-          <a href="{{ .URL }}" class="mobile-nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}">
-            {{ .Name }}
-          </a>
-        </li>
-      {{ end }}
-    </ul>
 
     <div class="mobile-social">
       {{ range .Site.Menus.social }}
