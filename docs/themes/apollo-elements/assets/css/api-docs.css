@@ -58,6 +58,13 @@
     align-items: center;
   }
 
+  h2,h3,h4,h5,h6 {
+    margin: 0;
+    & svg {
+      fill: currentColor;
+    }
+  }
+
   em[slot=name] {
     color: light-dark(black, white);
     &:first-of-type {
@@ -254,13 +261,16 @@ json-viewer:not([hydrated]) {
   padding: var(--space-md);
   background: var(--color-surface-secondary);
 
+  &[open] summary {
+    margin-bottom: var(--space-md);
+  }
+
   summary {
     cursor: pointer;
     user-select: none;
     list-style: none;
     padding: var(--space-sm);
     margin: calc(var(--space-md) * -1);
-    margin-bottom: var(--space-md);
     border-radius: var(--radius-md);
     transition: background var(--transition-fast);
 

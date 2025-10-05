@@ -22,9 +22,8 @@
 
   {{- with $method.parameters -}}
     <h4 id="{{ $id }}-parameters" class="parameter">
-      <a class="anchor" href="#{{ $id }}-parameters">
-        {{ partial "cem/octicon-link.html" $ }}
-      </a>Parameters
+      Parameters
+      <a class="anchor" href="#{{ $id }}-parameters">{{ partial "cem/octicon-link.html" $ }}</a>
     </h4>
     {{- range . -}}
       {{- $paramEmptyBody := and (not .summary) (not .description) -}}
@@ -49,12 +48,8 @@
     {{- $returnEmptyBody := and (not .summary) (not .description) -}}
     <type-doc kind="return"{{- if $returnEmptyBody }} data-empty-body{{- end -}}>
       {{ partial "cem/type-doc-dsd.html" $ }}
-
-      <h4 id="{{ $id }}-returns" slot="name" class="return">
-        <a class="anchor" href="#{{ $id }}-returns">
-          {{ partial "cem/octicon-link.html" $ }}
-        </a>Returns
-      </h4>
+      <h4 id="{{ $id }}-returns" slot="name" class="return">Returns</h4>
+      <a slot="anchor" href="#{{ $id }}-returns">{{ partial "cem/octicon-link.html" $ }}</a>
       {{- with .type -}}
         <span slot="type">{{ highlight .text "typescript" "" }}</span>
       {{- end -}}

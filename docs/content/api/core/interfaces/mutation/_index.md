@@ -14,7 +14,8 @@ sidebar: api
      Thank you for your interest in Apollo Elements 😁
 ------------------------------------------------------------------------------------------ -->
 
-
-Mutation components affect your app's state by issuing mutations to the GraphQL server. Manage your cache by implementing an [updater](#updater) function, and provide the perception of performance with [Optimistic UI](#optimisticresponse).
+Mutation components affect your app's state by issuing mutations to the GraphQL 
+server. Manage your cache by implementing an [updater](#updater) function, and 
+provide the perception of performance with [Optimistic UI](#optimisticresponse).
 
 Mutation components inherit the [ApolloElementInterface](../element/).

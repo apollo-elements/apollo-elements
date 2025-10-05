@@ -42,18 +42,46 @@
 
     {{/* Render the selected module */}}
     {{- with $selectedModule -}}
-      {{/* Generate ToC from declarations and store in page scratch */}}
+      {{/* Find the class that best matches the page title */}}
+      {{- $pageTitle := $.Title | lower -}}
+      {{- $targetClass := "" -}}
+
+      {{/* First try exact match (case-insensitive) */}}
       {{- range .declarations -}}
         {{- if eq .kind "class" -}}
-          {{- $.Scratch.Set "apiToc" (partial "cem/render-toc.html" .) -}}
+          {{- $className := .name | lower -}}
+          {{- if eq $className $pageTitle -}}
+            {{- $targetClass = . -}}
+          {{- end -}}
         {{- end -}}
       {{- end -}}
 
-      {{/* Render its declarations */}}
-      {{- range .declarations -}}
-        {{- if eq .kind "class" -}}
-          {{ partial "cem/render-class.html" . }}
+      {{/* If no exact match, try partial match (class name contains title) */}}
+      {{- if not $targetClass -}}
+        {{- range .declarations -}}
+          {{- if eq .kind "class" -}}
+            {{- $className := .name | lower -}}
+            {{- if in $className $pageTitle -}}
+              {{- $targetClass = . -}}
+            {{- end -}}
+          {{- end -}}
         {{- end -}}
+      {{- end -}}
+
+      {{/* If still no match, use the first class declaration */}}
+      {{- if not $targetClass -}}
+        {{- range .declarations -}}
+          {{- if eq .kind "class" -}}
+            {{- $targetClass = . -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{/* Generate ToC from target class and store in page scratch */}}
+      {{- with $targetClass -}}
+        {{- $.Scratch.Set "apiToc" (partial "cem/render-toc.html" .) -}}
+        {{/* Render the target class */}}
+        {{ partial "cem/render-class.html" . }}
       {{- end -}}
 
       {{/* Render exports section */}}
