@@ -8,11 +8,8 @@
           data-property="{{ $property.name }}"
           {{- if $emptyBody }} data-empty-body{{- end -}}>
   {{ partial "cem/type-doc-dsd.html" . }}
-  <h3 id="{{ $id }}" slot="name">
-    <a class="anchor" href="#{{ $id }}">
-      {{ partial "cem/octicon-link.html" . }}
-    </a>{{ $property.name }}
-  </h3>
+  <h3 id="{{ $id }}" slot="name">{{ $property.name }}</h3>
+  <a slot="anchor" href="#{{ $id }}">{{ partial "cem/octicon-link.html" . }}</a>
   {{- if $property.privacy -}}<em slot="attribute">{{ $property.privacy }}</em>{{- end -}}
   {{- if $property.static -}}<em slot="attribute">static</em>{{- end -}}
   {{- if $property.optional -}}<span slot="attribute">(optional)</span>{{- end -}}

@@ -6,18 +6,11 @@
 
 <type-doc kind="event" data-event="{{ $event.name }}"{{- if $emptyBody }} data-empty-body{{- end -}}>
   {{ partial "cem/type-doc-dsd.html" . }}
-
-
-  <h3 id="{{ $id }}" class="" slot="name">
-    <a class="anchor" href="#{{ $id }}">
-      {{ partial "cem/octicon-link.html" . }}
-    </a>{{ $event.name }}
-  </h3>
-
+  <h3 id="{{ $id }}" class="" slot="name">{{ $event.name }}</h3>
+  <a slot="anchor" href="#{{ $id }}">{{ partial "cem/octicon-link.html" . }}</a>
   {{- with $event.type -}}
     <span slot="type"><pre class="language-ts"><code class="language-ts">{{ .text }}</code></pre></span>
   {{- end -}}
-
   {{- with $event.description -}}
     {{ . | replaceRE "\\{lang=\\w+\\}" "" | markdownify }}
   {{- end -}}

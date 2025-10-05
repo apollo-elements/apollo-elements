@@ -18,7 +18,7 @@
   header {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 4px;
     flex-flow: row wrap;
     border-start-start-radius: 6px;
     border-start-end-radius: 6px;
@@ -157,6 +157,16 @@
   @media (min-width: 500px) {
     :host([data-inherited-from]) header ::slotted([slot="type"]) {
       display: inline !important;
+    }
+  }
+  #anchor {
+    &::slotted(a) {
+      margin-inline-start: auto;
+      line-height: 1;
+      color: inherit;
+      &:focus {
+        outline: none;
+      }
     }
   }
 </style>

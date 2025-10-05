@@ -79,18 +79,24 @@
 
 {{/* Private Properties */}}
 {{- if $privateFields -}}
-  <h2 id="private-properties">Private Properties</h2>
-
-  {{- range $privateFields -}}
-    {{ partial "cem/render-property.html" . }}
-  {{- end -}}
+  <details>
+    <summary>
+      <h2 id="private-properties">Private Properties</h2>
+    </summary>
+    {{- range $privateFields -}}
+      {{ partial "cem/render-property.html" . }}
+    {{- end -}}
+  </details>
 {{- end -}}
 
 {{/* Private Methods */}}
 {{- if $privateMethods -}}
-  <h2 id="private-methods">Private Methods</h2>
-
-  {{- range $privateMethods -}}
-    {{ partial "cem/render-method.html" . }}
-  {{- end -}}
+  <details>
+    <summary>
+      <h2 id="private-methods">Private Methods</h2>
+    </summary>
+    {{- range $privateMethods -}}
+      {{ partial "cem/render-method.html" . }}
+    {{- end -}}
+  </details>
 {{- end -}}

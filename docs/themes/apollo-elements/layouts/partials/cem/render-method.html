@@ -6,12 +6,8 @@
 
 <type-doc kind="method" data-method="{{ $method.name }}"{{- if $emptyBody }} data-empty-body{{- end -}}>
   {{ partial "cem/type-doc-dsd.html" . }}
-
-  <h3 id="{{ $id }}" class="" slot="name">
-    <a class="anchor" href="#{{ $id }}">
-      {{ partial "cem/octicon-link.html" . }}
-    </a>{{ $method.name }}
-  </h3>
+  <h3 id="{{ $id }}" slot="name">{{ $method.name }}</h3>
+  <a slot="anchor" href="#{{ $id }}">{{ partial "cem/octicon-link.html" . }}</a>
   {{- if $method.privacy -}}<em slot="attribute">{{ $method.privacy }}</em>{{- end -}}
   {{- if $method.async -}}<em slot="attribute">async</em>{{- end -}}
   {{- if $method.optional -}}<span slot="attribute">(optional)</span>{{- end -}}

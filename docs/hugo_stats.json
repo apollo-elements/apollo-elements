@@ -390,6 +390,7 @@
       "addtriggerlistener-parameters",
       "aggregationEnd",
       "aggregationStart",
+      "anchor",
       "apollo-atomico",
       "apollo-client",
       "apollo-client-4-dependency",
