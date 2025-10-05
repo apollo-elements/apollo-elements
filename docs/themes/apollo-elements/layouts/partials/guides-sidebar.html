@@ -61,11 +61,13 @@
                       {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}
                         <ul class="sidebar-tertiary">
                           {{ range .RegularPages.ByWeight }}
-                            <li class="sidebar-tertiary-item">
-                              <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
-                                {{ .Title }}
-                              </a>
-                            </li>
+                            {{ if ne .File.Ext "html" }}
+                              <li class="sidebar-tertiary-item">
+                                <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
+                                  {{ .Title }}
+                                </a>
+                              </li>
+                            {{ end }}
                           {{ end }}
                           {{ range .Sections.ByWeight }}
                             <li class="sidebar-tertiary-item">

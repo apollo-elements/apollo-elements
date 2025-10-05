@@ -75,7 +75,7 @@
                     {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}
                       <ul class="sidebar-tertiary">
                         {{ range .RegularPages.ByWeight }}
-                          {{ if not (strings.HasSuffix .File.Path ".html") }}
+                          {{ if ne .File.Ext "html" }}
                             <li class="sidebar-tertiary-item">
                               <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
                                 {{ .Title }}
