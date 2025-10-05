@@ -90,9 +90,11 @@
 }
 
 /* Homepage Sections */
-.markdown-body h2 {
-  border: 0;
-  text-align: center;
+.markdown-body {
+  h2 {
+    border: 0;
+    text-align: center;
+  }
 }
 
 h2 {
@@ -114,14 +116,6 @@ h2 {
 }
 
 /* Reasons Section */
-.reason-header {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 3rem 0 1.5rem;
-  border-bottom: 1px solid var(--color-border, #e1e4e8);
-  padding-bottom: 0.3em;
-}
-
 .reasons {
   display: flex;
   flex-flow: row wrap;
@@ -152,6 +146,14 @@ section.reasons {
   margin: 0 auto;
   padding-left: var(--space-md);
   padding-right: var(--space-md);
+}
+
+.reason-header {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 3rem 0 1.5rem;
+  border-bottom: 1px solid var(--color-border, #e1e4e8);
+  padding-bottom: 0.3em;
 }
 
 /* Playground Section */
@@ -201,6 +203,13 @@ code-tab::part(content) {
       color: var(--primary-color-lighter);
       text-shadow: 2px 2px 2px var(--footer-background);
     }
+
+    @media (prefers-color-scheme: dark) {
+      &:hover figcaption,
+      &:focus figcaption {
+        text-shadow: 2px 2px 2px var(--primary-color-darker);
+      }
+    }
   }
 
   figure {
@@ -216,15 +225,6 @@ code-tab::part(content) {
   svg {
     width: 100px;
     height: 100px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  #libraries a {
-    &:hover figcaption,
-    &:focus figcaption {
-      text-shadow: 2px 2px 2px var(--primary-color-darker);
-    }
   }
 }
 

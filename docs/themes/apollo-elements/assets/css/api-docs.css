@@ -1,0 +1,253 @@
+:root {
+  --type-doc-header-font-family: 'Recursive';
+}
+
+#main type-doc {
+  /* Reduce padding in type-doc on very small screens */
+  &::part(body) {
+    padding: 0.5rem 0.75rem;
+  }
+
+  &::part(header) {
+    padding: 0.25rem 0.5rem;
+    gap: 4px;
+  }
+  --markdown-link-color: light-dark(black, white);
+  /* Type-doc Component Mobile Improvements */
+  /* Mobile-specific Code Improvements for API Pages */
+  @media (max-width: 768px) {
+    h3 {
+      font-size: 1rem;
+      flex-wrap: wrap;
+    }
+
+    em[slot=name] {
+      font-size: 0.875rem;
+    }
+    [slot=type] code {
+      font-size: 0.75rem;
+      word-break: break-word;
+    }
+    /* Inline code in API docs */
+    code:not(pre code) {
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
+    }
+
+    /* Function signatures and type definitions */
+    [slot="type"] {
+      display: block;
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    /* Parameter lists and return types */
+    dl,
+    ul {
+      padding-left: var(--space-md);
+    }
+  }
+
+  /* Type-doc custom element - light DOM styles */
+  &:not([data-inherited-from]) [slot="type"]::before {
+    content: 'type: ';
+  }
+
+  h3 {
+    margin: 0;
+    color: var(--markdown-syntax-function-color);
+    display: flex;
+    gap: 7px;
+    align-items: center;
+  }
+
+  em[slot=name] {
+    color: light-dark(black, white);
+    &:first-of-type {
+      margin-inline-start: auto;
+    }
+  }
+
+  .anchor svg {
+    fill: currentColor;
+  }
+
+  [slot=type] {
+    .highlight {
+      background: none !important;
+      border: none !important;
+      margin: 0;
+      display: inline;
+    }
+
+    pre {
+      background: none !important;
+      border: none !important;
+      padding: 0;
+      margin: 0;
+      display: inline;
+    }
+
+    button {
+      display: none !important;
+    }
+
+    code {
+      background: none !important;
+      border: none !important;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  /* Zebra stripes for tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    code {
+      background: none !important;
+      border: none !important;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: var(--type-doc-header-background, var(--markdown-table-row-odd-background-color, #f6f8fa));
+    }
+
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    @media (max-width: 768px) {
+      font-size: 0.875rem;
+      th,
+      td {
+        padding: 0.5rem;
+        min-width: 100px;
+      }
+      code {
+        font-size: 0.8rem;
+        word-break: break-word;
+      }
+    }
+  }
+}
+
+.api-docs-container {
+  margin: 2rem 0;
+}
+
+.element-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border, #e1e5e9);
+}
+
+.element-name {
+  margin: 0 0 0.5rem 0;
+  font-family: var(--font-mono, 'Monaco', 'Menlo', monospace);
+  font-size: 1.5rem;
+  color: var(--color-primary, #0066cc);
+}
+
+.element-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #6c757d);
+}
+
+.element-package {
+  background: var(--color-surface-secondary, #f8f9fa);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono, monospace);
+}
+
+.element-since {
+  background: var(--color-success-surface, #d4edda);
+  color: var(--color-success, #155724);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.element-description {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--color-surface-secondary, #f8f9fa);
+  border-radius: 6px;
+  border-left: 4px solid var(--color-primary, #0066cc);
+}
+
+.element-usage {
+  margin: 1.5rem 0;
+}
+
+.api-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border, #e1e5e9);
+  border-radius: 8px;
+}
+
+.api-section h3 {
+  margin: 0 0 1rem 0;
+  color: var(--color-heading, #1a1a1a);
+  border-bottom: 1px solid var(--color-border, #e1e5e9);
+  padding-bottom: 0.5rem;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .element-header {
+    border-bottom-color: var(--color-border-dark, #404040);
+  }
+
+  .element-package {
+    background: var(--color-surface-secondary-dark, #2a2a2a);
+    color: var(--color-text-dark, #e1e1e1);
+  }
+
+  .element-since {
+    background: var(--color-success-surface-dark, #1e3a2e);
+    color: var(--color-success-dark, #4caf50);
+  }
+
+  .element-description {
+    background: var(--color-surface-secondary-dark, #2a2a2a);
+    border-left-color: var(--color-primary-dark, #4a90e2);
+  }
+
+  .api-section {
+    border-color: var(--color-border-dark, #404040);
+    background: var(--color-surface-dark, #1a1a1a);
+  }
+
+  .api-section h3 {
+    color: var(--color-heading-dark, #e1e1e1);
+    border-bottom-color: var(--color-border-dark, #404040);
+  }
+}
+
+/* Loading states */
+css-value-doc:not([hydrated]),
+json-viewer:not([hydrated]) {
+  display: block;
+  min-height: 3rem;
+  background: var(--color-surface-secondary, #f8f9fa);
+  padding: 1rem;
+  color: var(--color-text-secondary, #6c757d);
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  css-value-doc:not([hydrated]),
+  json-viewer:not([hydrated]) {
+    background: var(--color-surface-secondary-dark, #2a2a2a);
+    color: var(--color-text-secondary-dark, #a1a1a1);
+  }
+}
+

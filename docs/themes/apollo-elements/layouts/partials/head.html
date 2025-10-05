@@ -99,6 +99,14 @@
 {{ end }}
 {{ end }}
 
+{{/* Load api-docs.css only for API documentation pages */}}
+{{ if eq .Section "api" }}
+{{ $apiCss := resources.Get "css/api-docs.css" }}
+{{ if $apiCss }}
+  <link rel="stylesheet" href="{{ $apiCss.RelPermalink }}">
+{{ end }}
+{{ end }}
+
 {{/* Process main JavaScript with esbuild */}}
 {{ $js := resources.Get "js/main.js" }}
 {{ if $js }}

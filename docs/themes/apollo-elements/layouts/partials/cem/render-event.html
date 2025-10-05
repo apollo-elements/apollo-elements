@@ -1,23 +1,11 @@
 {{/* render-event.html - Renders an event in <type-doc> format with DSD */}}
+{{/* Note: Uses same structure as type-doc shortcode */}}
 {{- $event := . -}}
 {{- $id := $event.name | lower -}}
 {{- $emptyBody := not $event.description -}}
 
 <type-doc kind="event" data-event="{{ $event.name }}"{{- if $emptyBody }} data-empty-body{{- end -}}>
-  <template shadowrootmode="open">
-    {{ partial "cem/type-doc-styles.html" . }}
-    <header>
-      <span>
-        <slot name="name"></slot>
-      </span>
-      <span class="visually-hidden"></span>
-      <slot name="attribute"></slot>
-      <slot name="type"></slot>
-    </header>
-    <article id="body">
-      <slot></slot>
-    </article>
-  </template>
+  {{ partial "cem/type-doc-dsd.html" . }}
 
 
   <h3 id="{{ $id }}" class="" slot="name">

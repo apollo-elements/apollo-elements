@@ -1,0 +1,12 @@
+{{/* type-doc-dsd.html - Declarative Shadow DOM template for type-doc elements */}}
+<template shadowrootmode="open">
+  {{ partial "cem/type-doc-styles.html" . }}
+  <header>
+    <span><slot name="name"></slot></span>
+    <slot name="attribute"></slot>
+    <slot name="type"></slot>
+  </header>
+  <article id="body">
+    <slot></slot>
+  </article>
+</template>
