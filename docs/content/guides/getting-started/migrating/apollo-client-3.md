@@ -4,92 +4,112 @@ weight: 30
 sidebar: guides
 ---
 
-Apollo Client 4 and Apollo Elements 4 bring important updates and improvements. When upgrading your app to `@apollo-elements` 4, follow these steps:
+Apollo Elements 4 updates to Apollo Client 4 and includes one breaking change to subscriptions. This guide will help you migrate your app from Apollo Elements 3 to 4.
 
-## Install Apollo Client 4
+## Apollo Elements Breaking Changes
 
-Update your dependencies to use Apollo Client 4:
+### Subscription Error Handling
 
-```bash
-npm install @apollo/client@^4.0.0
+**This is the main breaking change in Apollo Elements 4.** Subscription controllers no longer maintain an `errors` (plural) array. Subscriptions now only use the `error` (singular) field, matching Apollo Client's `useSubscription` behavior.
+
+**Before (Apollo Elements 3):**
+```typescript
+class MyElement extends LitElement {
+  subscription = new ApolloSubscriptionController(this, MessageSubscription);
+
+  render() {
+    // ❌ No longer available
+    if (this.subscription.errors?.length) {
+      return html`<p>Errors: ${this.subscription.errors.map(e => e.message).join(', ')}</p>`;
+    }
+    return html`<p>${this.subscription.data?.message}</p>`;
+  }
+}
 ```
 
-## Breaking Changes
+**After (Apollo Elements 4):**
+```typescript
+class MyElement extends LitElement {
+  subscription = new ApolloSubscriptionController(this, MessageSubscription);
 
-### Node.js Compatibility
+  render() {
+    // ✅ Use singular error instead
+    if (this.subscription.error) {
+      return html`<p>Error: ${this.subscription.error.message}</p>`;
+    }
+    return html`<p>${this.subscription.data?.message}</p>`;
+  }
+}
+```
 
-Apollo Client 4 requires Node.js 24 or higher. If you're using an older version of Node.js, update to at least version 24:
+**Migration:** If you're reading `subscription.errors`, replace it with `subscription.error`.
+
+## Environment Requirements
+
+### Node.js 24
+
+Apollo Elements 4 requires Node.js 24 or higher (previously 18.x):
 
 ```bash
 node --version  # Should be 24.x or higher
 ```
 
-### TypeScript Compatibility
+### TypeScript 4.7
 
-Apollo Client 4 requires TypeScript 4.7 or higher. Update your TypeScript version if needed:
+If you use TypeScript, you'll need version 4.7 or higher:
 
 ```bash
 npm install --save-dev typescript@^4.7.0
 ```
 
-### Removed Deprecated APIs
+## Apollo Client 4 Dependency
 
-Apollo Client 4 removes several previously deprecated APIs:
+Apollo Elements 4 depends on Apollo Client 4. Update your dependency:
 
-- `InMemoryCache.writeData` - use `writeQuery`, `writeFragment`, or `cache.modify` instead
-- `ObservableQuery.setOptions` - use `ObservableQuery.reobserve` instead
-- `useLazyQuery` in `@apollo/client/react` - this doesn't affect Apollo Elements
-
-### Updated Error Handling
-
-Error handling has been improved in Apollo Client 4. Network errors and GraphQL errors are now handled more consistently:
-
-```ts
-const { data, error, errors } = await client.query({ query });
-
-if (error) {
-  // Network error or single GraphQL error
-  console.error(error);
-}
-
-if (errors) {
-  // Multiple GraphQL errors
-  console.error(errors);
-}
+```bash
+npm install @apollo/client@^4.0.6
 ```
 
-### Cache Updates
+Most Apollo Client 4 changes are internal and won't affect Apollo Elements users. However, if you use the cache API directly, note these changes:
 
-The `InMemoryCache` now uses stricter type checking for cache updates. Ensure your `cache.modify` calls match the expected types:
+### Removed `InMemoryCache.writeData`
 
-```ts
-cache.modify({
-  fields: {
-    myField(existingValue, { readField }) {
-      // Return value must match the field's type
-      return existingValue;
-    }
-  }
+The deprecated `writeData` method has been removed. Use `writeQuery`, `writeFragment`, or `cache.modify` instead:
+
+**Before:**
+```typescript
+cache.writeData({
+  data: { user: { id: "1", name: "Alice" } },
 });
 ```
 
-## Apollo Elements 4 Changes
+**After:**
+```typescript
+cache.writeQuery({
+  query: gql`
+    query GetUser {
+      user {
+        id
+        name
+      }
+    }
+  `,
+  data: { user: { id: "1", name: "Alice" } },
+});
+```
 
-### Updated Reactive Controllers
+## Migration Checklist
 
-Apollo Elements 4 updates the reactive controller implementations to better support Apollo Client 4's new features:
-
-- Improved error handling
-- Better TypeScript inference
-- Enhanced subscription handling
-
-### Migration Steps
-
-1. **Update imports** - All imports should continue to work as before
-2. **Check custom type policies** - Verify your type policies work with the new cache implementation
-3. **Test error handling** - Review error handling code to ensure compatibility with the new error model
-4. **Update tests** - Ensure your tests account for the updated behavior
+1. ✅ **Update Node.js** to version 24.x or higher
+2. ✅ **Update TypeScript** (if used) to version 4.7 or higher
+3. ✅ **Install Apollo Client 4**: `npm install @apollo/client@^4.0.6`
+4. ✅ **Update Apollo Elements packages** to version 4.x
+5. ✅ **Search for `subscription.errors`** in your codebase and replace with `subscription.error`
+6. ✅ **If using `cache.writeData`**, replace with `writeQuery`, `writeFragment`, or `cache.modify`
+7. ✅ **Run your tests** to verify everything works
 
 ## Need Help?
 
-If you encounter issues migrating from Apollo Client 3 to 4, check the [Apollo Client migration guide](https://www.apollographql.com/docs/react/migration/3.x-to-4.x) or [open an issue](https://github.com/apollo-elements/apollo-elements/issues/new).
+If you encounter issues migrating:
+- Check the [Apollo Client 4 migration guide](https://www.apollographql.com/docs/react/migration/3.x-to-4.x)
+- [Open an issue](https://github.com/apollo-elements/apollo-elements/issues/new) on GitHub
