@@ -66,6 +66,17 @@
     </div>
     {{ end }}
 
+    <!-- Page-specific navigation (API/Guides sidebar) -->
+    {{ if .Params.sidebar }}
+      <div class="mobile-sidebar-nav">
+        {{ if eq .Section "api" }}
+          {{ partial "api-sidebar-nav-only.html" . }}
+        {{ else if eq .Section "guides" }}
+          {{ partial "guides-sidebar-nav-only.html" . }}
+        {{ end }}
+      </div>
+    {{ end }}
+
     <ul class="mobile-nav-list">
       {{ range .Site.Menus.main }}
         <li class="mobile-nav-item">

@@ -124,10 +124,35 @@
   }
 
   @media (max-width: 640px) {
-    #body,
-    header,
-    #body ::slotted(:not(type-doc):not(h2):not(h3)) {
-      overflow: auto;
+    header {
+      gap: 8px;
+      padding: 4px 8px;
+    }
+
+    #body {
+      padding: 0.75rem 1rem;
+    }
+
+    /* Only allow horizontal scroll for wide content like tables and pre blocks */
+    #body ::slotted(table),
+    #body ::slotted(pre) {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+
+    /* Prevent other content from overflowing */
+    #body ::slotted(:not(type-doc):not(h2):not(h3):not(table):not(pre)) {
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* Make code elements wrap better */
+    #body ::slotted(code) {
+      white-space: pre-wrap;
+      word-break: break-all;
     }
   }
 

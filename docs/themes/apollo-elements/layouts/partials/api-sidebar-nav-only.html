@@ -1,0 +1,134 @@
+<!-- API Navigation (Mobile) -->
+<nav class="sidebar-nav" aria-label="API Navigation">
+  {{ $currentPage := . }}
+  {{ $apiSection := .Site.GetPage "/api" }}
+
+  {{ if $apiSection }}
+    <ul class="sidebar-menu">
+      {{ range $apiSection.Sections.ByWeight }}
+        {{ $section := . }}
+        <li class="sidebar-item {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}active{{ end }}">
+          <a href="{{ .RelPermalink }}" class="sidebar-link {{ if $currentPage.Eq . }}current{{ end }}">
+            {{ .Title }}
+          </a>
+
+          <!-- ToC for current section page -->
+          {{ if $currentPage.Eq . }}
+            {{ if $currentPage.TableOfContents }}
+              <div class="sidebar-toc-inline">
+                <h4 class="sidebar-toc-title">On This Page</h4>
+                {{ $currentPage.TableOfContents }}
+              </div>
+            {{ end }}
+          {{ end }}
+
+          <!-- Subsections and pages -->
+          {{ if or .Sections .RegularPages }}
+            <ul class="sidebar-submenu">
+              <!-- Direct pages of this section -->
+              {{ range .RegularPages.ByWeight }}
+                <li class="sidebar-subitem">
+                  <a href="{{ .RelPermalink }}" class="sidebar-sublink {{ if $currentPage.Eq . }}current{{ end }}">
+                    {{ .Title }}
+                  </a>
+
+                  <!-- ToC for current regular page -->
+                  {{ if $currentPage.Eq . }}
+                    {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
+                    {{ if or $apiToc $currentPage.TableOfContents }}
+                      <div class="sidebar-toc-inline">
+                        <h4 class="sidebar-toc-title">On This Page</h4>
+                        {{ $currentPage.TableOfContents }}
+                        {{ if $apiToc }}
+                          {{ $apiToc | safeHTML }}
+                        {{ end }}
+                      </div>
+                    {{ end }}
+                  {{ end }}
+                </li>
+              {{ end }}
+
+              <!-- Subsections -->
+              {{ range .Sections.ByWeight }}
+                <li class="sidebar-subitem {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}active{{ end }}">
+                  <a href="{{ .RelPermalink }}" class="sidebar-sublink {{ if $currentPage.Eq . }}current{{ end }}">
+                    {{ .Title }}
+                  </a>
+
+                  <!-- ToC for current subsection page -->
+                  {{ if $currentPage.Eq . }}
+                    {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
+                    {{ if or $apiToc $currentPage.TableOfContents }}
+                      <div class="sidebar-toc-inline">
+                        <h4 class="sidebar-toc-title">On This Page</h4>
+                        {{ if $apiToc }}
+                          <nav id="TableOfContents">{{ $apiToc }}</nav>
+                        {{ else }}
+                          {{ $currentPage.TableOfContents }}
+                        {{ end }}
+                      </div>
+                    {{ end }}
+                  {{ end }}
+
+                  <!-- Third level pages and sections - only show for current section -->
+                  {{ if or .RegularPages .Sections }}
+                    {{ if or ($currentPage.IsDescendant .) ($currentPage.Eq .) }}
+                      <ul class="sidebar-tertiary">
+                        {{ range .RegularPages.ByWeight }}
+                          <li class="sidebar-tertiary-item">
+                            <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
+                              {{ .Title }}
+                            </a>
+
+                            <!-- ToC for current third-level page -->
+                            {{ if $currentPage.Eq . }}
+                              {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
+                              {{ if $apiToc }}
+                                <div class="sidebar-toc-inline">
+                                  <h4 class="sidebar-toc-title">On This Page</h4>
+                                  <nav id="TableOfContents">{{ $apiToc }}</nav>
+                                </div>
+                              {{ else if $currentPage.TableOfContents }}
+                                <div class="sidebar-toc-inline">
+                                  <h4 class="sidebar-toc-title">On This Page</h4>
+                                  {{ $currentPage.TableOfContents }}
+                                </div>
+                              {{ end }}
+                            {{ end }}
+                          </li>
+                        {{ end }}
+                        {{ range .Sections.ByWeight }}
+                          <li class="sidebar-tertiary-item">
+                            <a href="{{ .RelPermalink }}" class="sidebar-tertiary-link {{ if $currentPage.Eq . }}current{{ end }}">
+                              {{ .Title }}
+                            </a>
+
+                            <!-- ToC for current third-level section page -->
+                            {{ if $currentPage.Eq . }}
+                              {{ $apiToc := $currentPage.Scratch.Get "apiToc" }}
+                              {{ if $apiToc }}
+                                <div class="sidebar-toc-inline">
+                                  <h4 class="sidebar-toc-title">On This Page</h4>
+                                  <nav id="TableOfContents">{{ $apiToc }}</nav>
+                                </div>
+                              {{ else if $currentPage.TableOfContents }}
+                                <div class="sidebar-toc-inline">
+                                  <h4 class="sidebar-toc-title">On This Page</h4>
+                                  {{ $currentPage.TableOfContents }}
+                                </div>
+                              {{ end }}
+                            {{ end }}
+                          </li>
+                        {{ end }}
+                      </ul>
+                    {{ end }}
+                  {{ end }}
+                </li>
+              {{ end }}
+            </ul>
+          {{ end }}
+        </li>
+      {{ end }}
+    </ul>
+  {{ end }}
+</nav>

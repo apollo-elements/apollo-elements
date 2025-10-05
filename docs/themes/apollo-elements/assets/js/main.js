@@ -22,22 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Mobile menu toggle
-  const mobileToggle = document.querySelector('.mobile-menu-toggle');
-  const mobileNav = document.querySelector('.mobile-nav');
-
-  if (mobileToggle && mobileNav) {
-    mobileToggle.addEventListener('click', () => {
-      const isHidden = mobileNav.hasAttribute('hidden');
-      if (isHidden) {
-        mobileNav.removeAttribute('hidden');
-        mobileToggle.setAttribute('aria-expanded', 'true');
-      } else {
-        mobileNav.setAttribute('hidden', '');
-        mobileToggle.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
+  // Mobile menu toggle is handled inline in header.html
 
   // Back to top button
   const backToTop = document.querySelector('.back-to-top');
