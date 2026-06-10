@@ -22,8 +22,8 @@
   },
   "homepage": "https://github.com/apollo-elements/apollo-elements#readme",
   "dependencies": {
-    "@apollo/client": "^4.0.7",
-    "@graphql-tools/schema": "^10.0.25",
+    "@apollo/client": "^4.2.3",
+    "@graphql-tools/schema": "^10.0.33",
     "tslib": "^2.8.1"
   },
   "devDependencies": {

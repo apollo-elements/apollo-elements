@@ -46,7 +46,7 @@
   "homepage": "https://apolloelements.dev/api/libraries/lit-apollo/",
   "dependencies": {
     "@apollo-elements/core": "^3.0.0",
-    "lit": "^3.3.1",
+    "lit": "^3.3.3",
     "tslib": "^2.8.1"
   },
   "customElements": "custom-elements.json",
