@@ -11,37 +11,37 @@
   },
   "scripts": {
     "analyze": "npm run --workspaces --if-present analyze",
-    "build": "run-s build:*",
-    "build:codegen": "graphql-codegen",
-    "build:analyze": "npm run analyze",
-    "build:compile": "tsc -b .",
-    "build:packages": "npm run --workspaces --if-present build",
+    "build": "wireit",
+    "build:codegen": "wireit",
+    "build:analyze": "wireit",
+    "build:compile": "wireit",
+    "build:packages": "wireit",
     "clean": "git clean -fX -e node_modules",
-    "clean:packages": "rimraf 'packages/!(create|docs)/**/!(*.config).{js,js.map,d.ts,tgz,tsbuildinfo}'",
-    "clean:create-app": "rimraf 'packages/create/*.{js,js.map,d.ts,tgz}'",
-    "clean:node-modules": "rimraf 'packages/**/node_modules'",
-    "clean:docs": "rimraf _site docs/_data/customElementsManifests",
-    "clean:test": "rimraf test/*.{js,d.ts,js.map}",
+    "clean:packages": "node -e \"const g=require('node:fs').globSync('packages/!(create|docs)/**/!(*.config).{js,js.map,d.ts,tgz,tsbuildinfo}');g.forEach(f=>require('node:fs').rmSync(f,{force:true}))\"",
+    "clean:create-app": "rm -f packages/create/*.js packages/create/*.js.map packages/create/*.d.ts packages/create/*.tgz",
+    "clean:node-modules": "rm -rf packages/*/node_modules",
+    "clean:docs": "rm -rf _site docs/_data/customElementsManifests",
+    "clean:test": "rm -f test/*.js test/*.d.ts test/*.js.map",
     "release": "sh scripts/release.sh",
     "release:prerelease": "sh scripts/prerelease.sh",
     "postrelease": "npm run clean",
-    "docs": "run-s build:codegen docs:**",
-    "docs:analyze": "npm run analyze",
-    "docs:hugo": "cd docs && npm run build",
-    "lint": "run-s lint:*",
-    "lint:clean": "rimraf packages/gluon/declaration.d.ts",
-    "lint:eslint": "eslint .",
-    "lint:types": "tsc -p tsconfig.noEmit.json --tsBuildInfoFile null",
-    "postinstall": "run-s postinstall:**",
-    "postinstall:stampino:bundle": "npx esbuild node_modules/stampino/stampino.js --outfile=packages/components/stampino.bundled.js --minify --external:lit-html --bundle --format=esm",
-    "postinstall:stampino:copy": "cp node_modules/stampino/stampino.d.ts packages/components/stampino.bundled.d.ts",
-    "start": "run-p start:*",
-    "start:clean": "npm run clean",
-    "start:codegen": "graphql-codegen --watch",
-    "start:bundle": "run-s postinstall:stampino:*",
-    "start:tsc": "tsc -b . -w",
-    "start:docs": "run-s docs:analyze start:docs:hugo",
-    "start:docs:hugo": "cd docs && npm run serve",
+    "docs": "wireit",
+    "docs:analyze": "wireit",
+    "docs:hugo": "wireit",
+    "lint": "wireit",
+    "lint:clean": "wireit",
+    "lint:eslint": "wireit",
+    "lint:types": "wireit",
+    "postinstall": "wireit",
+    "postinstall:stampino:bundle": "wireit",
+    "postinstall:stampino:copy": "wireit",
+    "start": "wireit",
+    "start:clean": "wireit",
+    "start:codegen": "wireit",
+    "start:bundle": "wireit",
+    "start:tsc": "wireit",
+    "start:docs": "wireit",
+    "start:docs:hugo": "wireit",
     "test": "wtr",
     "watch:test": "wtr --watch",
     "watch:eslint": "esw",
@@ -65,16 +65,14 @@
     "@changesets/cli": "^2.29.7",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@pwrs/cem": "^0.6.2",
+    "@pwrs/cem": "^0.10.6",
     "@eslint/js": "^9.37.0",
-    "@gluon/keybinding": "^1.1.0",
     "@graphql-codegen/cli": "^6.0.0",
     "@graphql-codegen/typed-document-node": "^6.0.1",
     "@graphql-codegen/typescript": "^5.0.1",
     "@graphql-codegen/typescript-operations": "^5.0.1",
     "@graphql-tools/mock": "^9.0.25",
     "@graphql-tools/schema": "^10.0.25",
-    "@luckycatfactory/esbuild-graphql-loader": "^3.8.1",
     "@microsoft/fast-components": "^2.30.6",
     "@open-wc/testing": "^4.0.0",
     "@polymer/polymer": "^3.5.2",
@@ -83,12 +81,8 @@
     "@rollup/plugin-node-resolve": "^16.0.2",
     "@rollup/plugin-typescript": "^12.1.4",
     "@types/chai": "^5.2.2",
-    "@types/graphql": "^14.5.0",
-    "@types/inquirer": "^9.0.9",
     "@types/mocha": "^10.0.10",
-    "@types/ncp": "^2.0.8",
     "@types/node": "^24.6.2",
-    "@types/ramda": "^0.31.1",
     "@types/tape": "^5.8.1",
     "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
@@ -106,7 +100,6 @@
     "event-iterator": "^2.0.0",
     "execa": "^9.6.0",
     "graphql": "^16.11.0",
-    "graphql-subscriptions": "^3.0.0",
     "graphql-tag": "^2.12.6",
     "hanbi": "^2.0.0",
     "husky": "^9.1.7",
@@ -115,20 +108,95 @@
     "lit": "^3.3.1",
     "lit-html": "^3.3.1",
     "mocha": "^11.7.4",
-    "node-fetch": "^3.3.2",
-    "npm-run-all": "^4.1.5",
-    "ramda": "^0.31.3",
-    "rimraf": "^6.0.1",
     "rollup": "^4.52.4",
     "rollup-plugin-esbuild": "^6.2.1",
-    "sanitize-html": "^2.17.0",
     "tap-difflet": "^0.7.2",
-    "tap-spec": "^5.0.0",
     "tape-es": "^1.2.17",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wireit": "^0.14.12"
   },
   "dependencies": {
     "playground-elements": "^0.21.2",
     "tslib": "^2.8.1"
+  },
+  "wireit": {
+    "build": {
+      "dependencies": ["build:packages"]
+    },
+    "build:codegen": {
+      "command": "graphql-codegen"
+    },
+    "build:analyze": {
+      "command": "npm run analyze",
+      "dependencies": ["build:codegen"]
+    },
+    "build:compile": {
+      "command": "tsc -b .",
+      "dependencies": ["build:analyze"]
+    },
+    "build:packages": {
+      "command": "npm run --workspaces --if-present build",
+      "dependencies": ["build:compile"]
+    },
+    "docs": {
+      "dependencies": ["docs:hugo"]
+    },
+    "docs:analyze": {
+      "command": "npm run analyze",
+      "dependencies": ["build:codegen"]
+    },
+    "docs:hugo": {
+      "command": "cd docs && npm run build",
+      "dependencies": ["docs:analyze"]
+    },
+    "lint": {
+      "dependencies": ["lint:types"]
+    },
+    "lint:clean": {
+      "command": "rm -f packages/gluon/declaration.d.ts"
+    },
+    "lint:eslint": {
+      "command": "eslint .",
+      "dependencies": ["lint:clean"]
+    },
+    "lint:types": {
+      "command": "tsc -p tsconfig.noEmit.json --tsBuildInfoFile null",
+      "dependencies": ["lint:eslint"]
+    },
+    "postinstall": {
+      "dependencies": ["postinstall:stampino:copy"]
+    },
+    "postinstall:stampino:bundle": {
+      "command": "npx esbuild node_modules/stampino/stampino.js --outfile=packages/components/stampino.bundled.js --minify --external:lit-html --bundle --format=esm"
+    },
+    "postinstall:stampino:copy": {
+      "command": "cp node_modules/stampino/stampino.d.ts packages/components/stampino.bundled.d.ts",
+      "dependencies": ["postinstall:stampino:bundle"]
+    },
+    "start": {
+      "dependencies": ["start:clean", "start:codegen", "start:bundle", "start:tsc", "start:docs"]
+    },
+    "start:clean": {
+      "command": "npm run clean"
+    },
+    "start:codegen": {
+      "command": "graphql-codegen --watch",
+      "service": true
+    },
+    "start:bundle": {
+      "dependencies": ["postinstall:stampino:copy"]
+    },
+    "start:tsc": {
+      "command": "tsc -b . -w",
+      "service": true
+    },
+    "start:docs": {
+      "dependencies": ["start:docs:hugo"]
+    },
+    "start:docs:hugo": {
+      "command": "cd docs && npm run serve",
+      "service": true,
+      "dependencies": ["docs:analyze"]
+    }
   }
 }
