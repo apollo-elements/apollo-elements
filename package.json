@@ -76,7 +76,7 @@
     "@microsoft/fast-components": "^2.30.6",
     "@open-wc/testing": "^4.0.0",
     "@polymer/polymer": "^3.5.2",
-    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-graphql": "^2.0.5",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
