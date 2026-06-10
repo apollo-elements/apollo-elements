@@ -322,6 +322,7 @@ describe('[core] ApolloQueryController', function() {
               query: element.query.query!,
               data: {
                 helloWorld: {
+                  name: null,
                   greeting: 'partial',
                 },
               },

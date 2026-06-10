@@ -802,7 +802,7 @@ export function describeQuery(options: DescribeQueryComponentOptions): void {
             let result: ObservableQuery.Result<S.NullableParamQueryData> | undefined;
 
             beforeEach(async function() {
-              result = await element!.fetchMore({ variables: { nullable: 'more' } });
+              result = await element!.fetchMore({ variables: { nullable: 'more' } }) as typeof result;
             });
 
             afterEach(function() {
