@@ -23,8 +23,8 @@
     "prepublishOnly": "npm run build",
     "build": "tsc -b .",
     "rebuild": "rm -f tsconfig.tsbuildinfo && tsc -b .",
-    "test": "run-s rebuild test:unit",
-    "test:unit": "tape-es test/unit.test.js | tap-difflet"
+    "test": "wireit",
+    "test:unit": "wireit"
   },
   "bugs": {
     "url": "https://github.com/apollo-elements/apollo-elements/issues"
@@ -42,10 +42,7 @@
     "case": "^1.6.3",
     "chalk": "^5.6.2",
     "execa": "^9.6.0",
-    "globby": "^15.0.0",
     "inquirer": "^12.9.6",
-    "mkdirp": "^3.0.1",
-    "ncp": "^2.0.0",
     "tslib": "^2.8.1",
     "yargs": "^18.0.0"
   },
@@ -53,5 +50,14 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "wireit": {
+    "test": {
+      "dependencies": ["test:unit"]
+    },
+    "test:unit": {
+      "command": "tape-es test/unit.test.js | tap-difflet",
+      "dependencies": ["rebuild"]
+    }
+  }
 }

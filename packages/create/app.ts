@@ -1,13 +1,9 @@
 import type { AppOptions } from './options';
 
-import NCP from 'ncp';
-
-import { promisify } from 'util';
-
-import path from 'path';
+import path from 'node:path';
 import { execa, type ExecaError } from 'execa';
-import { promises as fs } from 'fs';
-import { fileURLToPath } from 'url';
+import { cp, rename } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 
 import { codegen } from './codegen.js';
 import { readFile, processTemplate, writeFile } from './files.js';
@@ -15,8 +11,6 @@ import { readFile, processTemplate, writeFile } from './files.js';
 import Chalk from 'chalk';
 
 const { cyan, greenBright } = Chalk;
-
-const ncp = promisify(NCP.ncp);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -31,8 +25,8 @@ async function initFiles(options: AppOptions) {
   if (!options.silent)
     console.log(`\n${cyan('Scaffolding App Files')}...\n`);
   const templatePath = path.resolve(__dirname, 'template', 'app');
-  await ncp(templatePath, options.directory);
-  await fs.rename(
+  await cp(templatePath, options.directory, { recursive: true });
+  await rename(
     path.join(options.directory, '__gitignore'),
     path.join(options.directory, '.gitignore')
   );

@@ -21,7 +21,7 @@
     "**/*.js.map"
   ],
   "scripts": {
-    "preprepublishOnly": "rimraf declaration.d.ts",
+    "preprepublishOnly": "rm -f declaration.d.ts",
     "prepublishOnly": "npm run analyze && npm run build",
     "build": "tsc -b .",
     "analyze": "cem generate && node ../../scripts/postanalyze.js",
