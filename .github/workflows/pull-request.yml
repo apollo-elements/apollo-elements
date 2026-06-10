@@ -11,8 +11,8 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -42,7 +42,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CLEAN_MVN_REPO }}
         if: env.CC_TEST_REPORTER_ID != null
-        uses: paambaati/codeclimate-action@v3.0.0
+        uses: paambaati/codeclimate-action@v9
 
       - name: Build
         run: npm run build

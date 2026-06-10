@@ -11,8 +11,8 @@ jobs:
     if: github.repository == 'apollo-elements/apollo-elements'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
@@ -41,7 +41,7 @@ jobs:
 
       - name: Create Prerelease Pull Request or Publish next tag to npm
         id: changesets
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           publish: npm run release
           version: npm run release:prerelease
