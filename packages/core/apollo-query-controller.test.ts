@@ -550,6 +550,12 @@ describe('[core] ApolloQueryController', function() {
             });
           });
 
+          it('does not pass notifyOnNetworkStatusChange to client.query()', function() {
+            expect(querySpy.called).to.be.true;
+            expect(querySpy.lastCall.args[0])
+              .to.not.have.property('notifyOnNetworkStatusChange');
+          });
+
           it('refetches and updates state', function() {
             // Apollo Client v4: initial (null+data) + executeQuery (data) = 3 calls
             expect(onDataSpy.callCount).to.equal(3);
