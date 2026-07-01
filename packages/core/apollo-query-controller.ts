@@ -391,7 +391,6 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
         ...(this.options.context && { context: this.options.context }),
         ...(this.options.errorPolicy && { errorPolicy: this.options.errorPolicy }),
         ...(fetchPolicy && { fetchPolicy }),
-        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange ?? true,
         ...params,
       });
       if (result) // NB: not sure why, but sometimes this returns undefined
