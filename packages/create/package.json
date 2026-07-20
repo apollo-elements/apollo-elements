@@ -1,6 +1,6 @@
 {
   "name": "@apollo-elements/create",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Scaffold apps and components with GraphQL and Lit",
   "author": "Benny Powers <web@bennypowers.com>",
   "license": "ISC",
@@ -53,11 +53,15 @@
   "devDependencies": {},
   "wireit": {
     "test": {
-      "dependencies": ["test:unit"]
+      "dependencies": [
+        "test:unit"
+      ]
     },
     "test:unit": {
       "command": "tape-es test/unit.test.js | tap-difflet",
-      "dependencies": ["rebuild"]
+      "dependencies": [
+        "rebuild"
+      ]
     }
   }
 }
