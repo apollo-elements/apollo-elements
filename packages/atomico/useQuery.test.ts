@@ -80,15 +80,22 @@ describe('[atomico] useQuery', function() {
           });
 
           describe('then stopPolling', function() {
-            let countBeforeStop: number;
+            let countAfterStop: number;
+
             beforeEach(function() {
-              countBeforeStop = refetchSpy.callCount;
               stopPolling();
             });
+
+            beforeEach(() => aTimeout(50));
+
+            beforeEach(function() {
+              countAfterStop = refetchSpy.callCount;
+            });
+
             beforeEach(() => aTimeout(50));
 
             it('stops calling refetch', function() {
-              expect(refetchSpy.callCount).to.equal(countBeforeStop);
+              expect(refetchSpy.callCount).to.equal(countAfterStop);
             });
           });
         });
