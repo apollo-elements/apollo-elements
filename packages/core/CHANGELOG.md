@@ -1,5 +1,11 @@
 # @apollo-elements/core
 
+## 3.0.1
+
+### Patch Changes
+
+- c385a80: Fixed `executeQuery()` throwing under Apollo Client 4 by removing `notifyOnNetworkStatusChange` from `client.query()` options, where it is not supported.
+
 ## 3.0.0
 
 ### Major Changes

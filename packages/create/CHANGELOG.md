@@ -1,5 +1,15 @@
 # @apollo-elements/create
 
+## 6.0.0
+
+### Major Changes
+
+- 6a70be4: BREAKING: requires Node 24.
+
+  - Replaced `mkdirp` with `fs.promises.mkdir`
+  - Replaced `ncp` with `fs.promises.cp`
+  - Removed unused `globby` dependency
+
 ## 5.0.0
 
 ### Major Changes
