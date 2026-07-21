@@ -15,4 +15,4 @@ npm run postinstall:stampino:copy
 # endhack
 
 npm run build
-npx changeset publish
+npx changeset publish --provenance

@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+      - next
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -15,14 +21,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
           cache: npm
+
+      - run: npm install -g npm@latest
 
       - uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: '0.147.7'
 
       - name: Install packages
-        run: npm i --prefer-offline
+        run: npm ci
 
       - name: Codegen
         run: npm run build:codegen
@@ -44,13 +53,11 @@ jobs:
         if: env.CC_TEST_REPORTER_ID != null
         uses: paambaati/codeclimate-action@v9
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
+      - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
         with:
           publish: npm run release
-          createGithubReleases: true
+          version: ${{ github.ref_name == 'next' && 'npm run release:prerelease' || '' }}
+          createGithubReleases: ${{ github.ref_name == 'main' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
