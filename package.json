@@ -114,7 +114,7 @@
     "tap-difflet": "^0.7.2",
     "tape-es": "^1.2.17",
     "typescript": "^5.9.3",
-    "wireit": "^0.14.12"
+    "wireit": "^0.14.13"
   },
   "dependencies": {
     "playground-elements": "^0.21.2",
