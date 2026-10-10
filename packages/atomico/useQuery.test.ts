@@ -71,7 +71,7 @@ describe('[atomico] useQuery', function() {
         beforeEach(nextFrame);
 
         describe('calling startPolling then stopPolling', function() {
-          beforeEach(() => startPolling(10));
+          beforeEach(() => startPolling(25));
 
           beforeEach(() => aTimeout(50));
 
@@ -80,22 +80,20 @@ describe('[atomico] useQuery', function() {
           });
 
           describe('then stopPolling', function() {
-            let countAfterStop: number;
-
-            beforeEach(function() {
+            it('stops calling refetch', async function() {
               stopPolling();
-            });
 
-            beforeEach(() => aTimeout(50));
+              // allow any in-flight poll/refetch to settle
+              await aTimeout(50);
 
-            beforeEach(function() {
-              countAfterStop = refetchSpy.callCount;
-            });
+              let previous = refetchSpy.callCount;
 
-            beforeEach(() => aTimeout(50));
-
-            it('stops calling refetch', function() {
-              expect(refetchSpy.callCount).to.equal(countAfterStop);
+              // verify the count stays stable across multiple windows
+              for (let i = 0; i < 3; i++) {
+                await aTimeout(50);
+                expect(refetchSpy.callCount).to.equal(previous);
+                previous = refetchSpy.callCount;
+              }
             });
           });
         });
