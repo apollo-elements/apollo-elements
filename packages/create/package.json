@@ -36,7 +36,7 @@
     "directory": "packages/create"
   },
   "dependencies": {
-    "@graphql-codegen/cli": "^7.1.2",
+    "@graphql-codegen/cli": "^7.4.6",
     "@graphql-codegen/typescript-operations": "^6.0.3",
     "@graphql-codegen/typescript": "^6.0.2",
     "case": "^1.6.3",
