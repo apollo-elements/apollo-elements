@@ -119,6 +119,7 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
 
   override hostDisconnected(): void {
     this.#hasDisconnected = true;
+    this.stopPolling();
     // Properly clean up the RxJS subscription to prevent unhandled promise rejections
     this.cleanupSubscription();
     super.hostDisconnected();
@@ -460,10 +461,12 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
   }
 
   /**
-   * @summary Start polling this query
+   * @summary Start polling this query, replacing any existing polling timer.
+   * Polling stops when this controller's host disconnects.
    * @param ms milliseconds to wait between fetches
    */
   @bound public startPolling(ms: number): void {
+    this.stopPolling();
     this.pollingInterval = window.setInterval(() => {
       this.refetch();
     }, ms);
@@ -473,6 +476,9 @@ export class ApolloQueryController<D, V = VariablesOf<D>>
    * @summary Stop polling this query
    */
   @bound public stopPolling(): void {
-    clearInterval(this.pollingInterval);
+    if (this.pollingInterval !== undefined) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = undefined;
+    }
   }
 }
