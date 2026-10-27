@@ -652,6 +652,41 @@ describe('[core] ApolloQueryController', function() {
             });
           });
         });
+
+        describe('polling timer lifecycle', function() {
+          let originalSetInterval: typeof window.setInterval;
+          let originalClearInterval: typeof window.clearInterval;
+          let nextTimerId: number;
+          let clearedTimerIds: number[];
+
+          beforeEach(function stubTimers() {
+            originalSetInterval = window.setInterval;
+            originalClearInterval = window.clearInterval;
+            nextTimerId = 0;
+            clearedTimerIds = [];
+            window.setInterval = (() => ++nextTimerId) as unknown as typeof window.setInterval;
+            window.clearInterval = ((id?: number) => {
+              if (id !== undefined)
+                clearedTimerIds.push(id);
+            }) as typeof window.clearInterval;
+          });
+
+          afterEach(function restoreTimers() {
+            window.setInterval = originalSetInterval;
+            window.clearInterval = originalClearInterval;
+          });
+
+          it('replaces the prior timer and stops it when the host disconnects', function() {
+            element.query.startPolling(10);
+            element.query.startPolling(20);
+
+            expect(clearedTimerIds).to.deep.equal([1]);
+
+            element.remove();
+
+            expect(clearedTimerIds).to.deep.equal([1, 2]);
+          });
+        });
       });
 
       describe('with PaginatedQuery', function() {
