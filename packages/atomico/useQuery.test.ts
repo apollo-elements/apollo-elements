@@ -9,7 +9,7 @@ import * as S from '@apollo-elements/test/schema';
 
 import { gql } from '@apollo/client';
 
-import { c, html, useState, useEffect } from 'atomico';
+import { c, html, useState, useEffect, useHost } from 'atomico';
 import { fixture } from 'atomico/test-dom';
 import { useQuery } from './useQuery';
 
@@ -19,6 +19,16 @@ import { sendKeys } from '@web/test-runner-commands';
 import { assertType, resetMessages, setupClient, teardownClient } from '@apollo-elements/test';
 
 import * as hanbi from 'hanbi';
+
+/** Wait until `condition` returns true, or fail after `timeout` ms. */
+async function until(condition: () => boolean, timeout = 1000): Promise<void> {
+  const start = performance.now();
+  while (!condition()) {
+    if (performance.now() - start > timeout)
+      throw new Error('timed out waiting for condition');
+    await aTimeout(10);
+  }
+}
 
 describe('[atomico] useQuery', function() {
   function What() { return html`<div></div>`; }
@@ -32,23 +42,23 @@ describe('[atomico] useQuery', function() {
 
     describe('README usage', function() {
       describe('with HelloQuery and a jaunty little template', function() {
-        let element: HTMLElement & { updated: Promise<void>; };
+        interface HelloElement extends HTMLElement {
+          updated: Promise<void>;
+          query: ApolloQueryController<S.HelloQueryData, S.HelloQueryVariables>;
+        }
 
-        let refetchSpy: ReturnType<typeof hanbi.stubMethod>;
-
-        let startPolling: ApolloQueryController<typeof S.HelloQuery>['startPolling'];
-        let stopPolling: ApolloQueryController<typeof S.HelloQuery>['stopPolling'];
-        let executeQuery: ApolloQueryController<typeof S.HelloQuery>['executeQuery'];
+        let element: HelloElement;
 
         beforeEach(async function define() {
           function Hello() {
+            const host = useHost();
             const con = useQuery(S.HelloQuery);
 
             const { data, error, loading } = con;
 
+            // expose the controller on the element so tests never share state between fixtures
             useEffect(() => {
-              ({ executeQuery, stopPolling, startPolling } = con);
-              refetchSpy = hanbi.stubMethod(con, 'refetch').passThrough();
+              (host.current as unknown as HelloElement).query = con;
             }, [con]);
 
             return html`
@@ -64,24 +74,37 @@ describe('[atomico] useQuery', function() {
           }
 
           const Component = defineCE(c(Hello as any));
-          element = fixture(html`<${Component}></${Component}>`);
+          element = fixture(html`<${Component}></${Component}>`) as unknown as HelloElement;
           await element.updated;
+          await until(() => !!element.query);
         });
 
         beforeEach(nextFrame);
 
         describe('calling startPolling then stopPolling', function() {
-          beforeEach(() => startPolling(25));
+          let refetchSpy: ReturnType<typeof hanbi.stubMethod>;
 
-          beforeEach(() => aTimeout(50));
+          beforeEach(function start() {
+            refetchSpy = hanbi.stubMethod(element.query, 'refetch').passThrough();
+            element.query.startPolling(10);
+          });
 
-          it('refetches', function() {
+          afterEach(function stop() {
+            element.query.stopPolling();
+          });
+
+          it('refetches', async function() {
+            await until(() => refetchSpy.callCount >= 3);
+
             expect(refetchSpy.callCount).to.be.greaterThanOrEqual(3);
           });
 
           describe('then stopPolling', function() {
             it('stops calling refetch', async function() {
-              stopPolling();
+              // wait for polling to ramp up before stopping
+              await until(() => refetchSpy.callCount >= 2);
+
+              element.query.stopPolling();
 
               // allow any in-flight poll/refetch to settle
               await aTimeout(50);
@@ -100,7 +123,7 @@ describe('[atomico] useQuery', function() {
 
         describe('calling executeQuery', function() {
           beforeEach(async function() {
-            await executeQuery({
+            await element.query.executeQuery({
               variables: {
                 name: 'Mr Magoo',
                 greeting: 'How do you do',
